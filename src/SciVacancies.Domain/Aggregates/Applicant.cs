@@ -12,6 +12,7 @@ namespace SciVacancies.Domain.Aggregates
     {
         private bool Deleted { get; set; }
         private List<Request> Requests { get; set; }
+        private List<Notification> Notifications { get; set; }
 
         public Applicant()
         {
@@ -35,6 +36,7 @@ namespace SciVacancies.Domain.Aggregates
                 });
             }
         }
+
         public void CreateRequest(Guid competitionGuid)
         {
             RaiseEvent(new RequestCreated()
@@ -43,13 +45,15 @@ namespace SciVacancies.Domain.Aggregates
                 CompetitionGuid = competitionGuid
             });
         }
-        public void SendRequest()
+        public void SendRequest(Guid requestGuid)
         {
             RaiseEvent(new RequestSent()
             {
-
+                RequestGuid = requestGuid,
+                CompetitionGuid = this.Requests.Find(f => f.RequestGuid == requestGuid).CompetitionGuid
             });
         }
+
         #region Apply-Handlers
         public void Apply(ApplicantCreated @event)
         {
@@ -59,19 +63,19 @@ namespace SciVacancies.Domain.Aggregates
         {
             this.Deleted = true;
         }
+        
         public void Apply(RequestCreated @event)
         {
             this.Requests.Add(new Request()
             {
                 RequestGuid = @event.RequestGuid,
                 CompetitionGuid = @event.CompetitionGuid,
-                Status=RequestStatus.InProcess
+                Status = RequestStatus.InProcess
             });
         }
-
         public void Apply(RequestSent @event)
         {
-     
+            this.Requests.Find(f => f.RequestGuid == @event.RequestGuid).Status = RequestStatus.Sent;
         }
         #endregion
     }

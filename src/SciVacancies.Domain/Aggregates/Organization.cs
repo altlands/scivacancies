@@ -1,4 +1,5 @@
-﻿using SciVacancies.Domain.Events;
+﻿using SciVacancies.Domain.Core;
+using SciVacancies.Domain.Events;
 
 using System;
 using System.Collections.Generic;

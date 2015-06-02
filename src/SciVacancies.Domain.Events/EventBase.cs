@@ -1,8 +1,10 @@
 ﻿using System;
 
+using MediatR;
+
 namespace SciVacancies.Domain.Events
 {
-    public abstract class EventBase
+    public abstract class EventBase:INotification
     {
         private Guid id { get; set; }
         private DateTime timeStamp { get; set; }
