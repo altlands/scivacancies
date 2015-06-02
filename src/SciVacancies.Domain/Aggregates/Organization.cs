@@ -1,7 +1,9 @@
-﻿using System;
+﻿using SciVacancies.Domain.Events;
+
+using System;
 using System.Collections.Generic;
+
 using CommonDomain.Core;
-using SciVacancies.Domain.Events;
 
 namespace SciVacancies.Domain.Aggregates
 {

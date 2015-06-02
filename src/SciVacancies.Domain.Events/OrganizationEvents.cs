@@ -8,11 +8,15 @@ namespace SciVacancies.Domain.Events
 {
     public class OrganizationEventBase : EventBase
     {
-        public Guid OrganizationId { get; set; }
+        public OrganizationEventBase() : base() { }
+
+        public Guid OrganizationGuid { get; set; }
     }
     
     public class OrganizationCreated : OrganizationEventBase
     {
+        public OrganizationCreated() : base() { }
+
         public string Name { get; set; }
         public string ShortName { get; set; }
     }
