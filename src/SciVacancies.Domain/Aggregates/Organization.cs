@@ -12,8 +12,8 @@ namespace SciVacancies.Domain.Aggregates
     {
 
         private bool Deleted { get; set; }
-        //private List<Guid> VacanciesId { get; set; }
-        public List<Vacancy> Vacancies { get; set; }
+        private List<Vacancy> Vacancies { get; set; }
+
         public string Name { get; set; }
         public string ShortName { get; set; }
 
@@ -22,15 +22,13 @@ namespace SciVacancies.Domain.Aggregates
         {
 
         }
-        public Organization(Guid id, string name, string shortName)
+        public Organization(Guid guid, string name, string shortName)
         {
-            this.Vacancies = new List<Vacancy>();
+            //this.Vacancies = new List<Vacancy>();
 
             RaiseEvent(new OrganizationCreated()
             {
-                Id = Guid.NewGuid(),
-                TimeStamp = DateTime.UtcNow,
-                OrganizationId = id,
+                OrganizationGuid = guid,
                 Name = name,
                 ShortName = shortName
             });
@@ -41,20 +39,20 @@ namespace SciVacancies.Domain.Aggregates
             {
                 RaiseEvent(new OrganizationRemoved()
                 {
-                    Id = Guid.NewGuid(),
-                    TimeStamp = DateTime.UtcNow,
-                    OrganizationId = this.Id
+                    OrganizationGuid = this.Id
                 });
             }
         }
+
         public void CreateVacancy()
         {
-            this.Vacancies.Add(new Vacancy(Guid.NewGuid(), this.Id));
+
+
         }
         #region Apply-Handlers
         public void Apply(OrganizationCreated @event)
         {
-            Id = @event.OrganizationId;
+            Id = @event.OrganizationGuid;
             Name = @event.Name;
             ShortName = @event.ShortName;
         }
@@ -65,6 +63,11 @@ namespace SciVacancies.Domain.Aggregates
         public void Apply(OrganizationUpdated @event)
         {
 
+        }
+
+        public void Apply(VacancyCreated @event)
+        {
+            //this.Vacancies.Add(new Vacancy());
         }
         #endregion
     }

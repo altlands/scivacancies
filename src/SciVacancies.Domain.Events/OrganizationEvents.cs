@@ -23,10 +23,12 @@ namespace SciVacancies.Domain.Events
     
     public class OrganizationRemoved : OrganizationEventBase
     {
-
+        public OrganizationRemoved() : base() { }
     }
     public class OrganizationUpdated : OrganizationEventBase
     {
+        public OrganizationUpdated() : base() { }
+
         public DateTime UpdateDate { get; set; }
         //public Guid Id { get; set; }
         //public string Login { get; set; }

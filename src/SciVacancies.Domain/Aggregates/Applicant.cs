@@ -18,11 +18,11 @@ namespace SciVacancies.Domain.Aggregates
         {
 
         }
-        public Applicant(Guid Id)
+        public Applicant(Guid guid)
         {
             RaiseEvent(new ApplicantCreated()
             {
-                ApplicantGuid = Guid.NewGuid()
+                ApplicantGuid = guid
             });
         }
 
