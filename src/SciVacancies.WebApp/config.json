@@ -1,0 +1,8 @@
+{
+    "AppSettings": {
+        "SiteTitle": "SciVacancies.WebApp"
+    },
+    "DB": {
+        "ConnectionString":  "Server=.\\SQLEXPRESS;Database=SciVacancies;Trusted_Connection=True;MultipleActiveResultSets=true"
+    }
+}
