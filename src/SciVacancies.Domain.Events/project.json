@@ -7,8 +7,7 @@
     "licenseUrl": "",
 
     "dependencies": {
-        "MediatR": "2.0.0-beta-004",
-        "SciVacancies.Domain.Core": "1.0.0-*"
+        "MediatR": "2.0.0-beta-004"
     },
 
     "frameworks": {
