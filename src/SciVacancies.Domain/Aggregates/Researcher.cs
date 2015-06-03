@@ -41,7 +41,8 @@ namespace SciVacancies.Domain.Aggregates
             RaiseEvent(new VacancyApplicationCreated()
             {
                 VacancyApplicationGuid = vacancyApplicationGuid,
-                VacancyGuid = vacancyGuid
+                VacancyGuid = vacancyGuid,
+                ResearcherGuid = this.Id
             });
 
             return vacancyApplicationGuid;
@@ -55,7 +56,8 @@ namespace SciVacancies.Domain.Aggregates
                 RaiseEvent(new VacancyApplicationApplied()
                 {
                     VacancyApplicationGuid = vacancyApplicationGuid,
-                    VacancyGuid = vacancyApplication.VacancyGuid
+                    VacancyGuid = vacancyApplication.VacancyGuid,
+                    ResearcherGuid = this.Id
                 });
             }
         }

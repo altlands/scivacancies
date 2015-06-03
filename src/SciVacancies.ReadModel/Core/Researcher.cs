@@ -18,7 +18,7 @@ namespace SciVacancies.ReadModel.Core
         public DateTime BirthDay { get; set; }
         public string Nationality { get; set; }
 
-        public DateTime? UpdateDate { get; set; }
         public DateTime CreationDate { get; set; }
+        public DateTime? UpdateDate { get; set; }
     }
 }

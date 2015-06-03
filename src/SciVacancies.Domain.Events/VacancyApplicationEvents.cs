@@ -11,6 +11,7 @@ namespace SciVacancies.Domain.Events
 
         public Guid VacancyApplicationGuid { get; set; }
         public Guid VacancyGuid { get; set; }
+        public Guid ResearcherGuid { get; set; }
     }
     public class VacancyApplicationCreated : VacancyApplicationEventBase
     {
