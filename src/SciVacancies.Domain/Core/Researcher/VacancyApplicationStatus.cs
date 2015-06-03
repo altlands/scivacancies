@@ -5,10 +5,10 @@ using System.Threading.Tasks;
 
 namespace SciVacancies.Domain.Core
 {
-    public enum RequestStatus
+    public enum VacancyApplicationStatus
     {
         InProcess = 0,
-        Sent = 1,
+        Applied = 1,
         Cancelled = 2,
         Won = 3,
         Pretended = 4,

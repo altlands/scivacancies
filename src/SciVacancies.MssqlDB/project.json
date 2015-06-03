@@ -6,11 +6,6 @@
   "projectUrl": "",
   "licenseUrl": "",
 
-  "dependencies": {
-    "NPoco": "2.9.103",
-    "MediatR": "2.0.0-beta-004",
-    "SciVacancies.Domain.Events": "1.0.0-*"
-  },
 
   "frameworks": {
     "dnx451": { }
