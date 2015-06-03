@@ -1,4 +1,5 @@
-﻿using SciVacancies.Domain.Events;
+﻿using SciVacancies.Domain.Enums;
+using SciVacancies.Domain.Events;
 using SciVacancies.ReadModel.Core;
 
 using System;
@@ -21,7 +22,7 @@ namespace SciVacancies.ReadModel.Handlers
                 VacancyGuid = msg.VacancyGuid,
                 ResearcherGuid =msg.ResearcherGuid,
                 CreationdDate = msg.TimeStamp,
-                Status = VacancyApplicationStatus.InProcess
+                Status =  VacancyApplicationStatus.InProcess
             };
 
             _db.Insert(vacancyApplication);

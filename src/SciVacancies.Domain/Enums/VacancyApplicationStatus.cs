@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace SciVacancies.Domain.Core
+namespace SciVacancies.Domain.Enums
 {
     public enum VacancyApplicationStatus
     {
