@@ -5,11 +5,11 @@ using System.Threading.Tasks;
 
 using NPoco;
 
-namespace SciVacancies.MssqlDB.Core
+namespace SciVacancies.ReadModel.Core
 {
-    [TableName("Applicants")]
-    [PrimaryKey("Id", AutoIncrement = false)]
-    public class Applicant:BaseEntity
+    [TableName("Researchers")]
+    [PrimaryKey("Guid", AutoIncrement = false)]
+    public class Researcher:BaseEntity
     {
         public string FirstName { get; set; }
         public string SecondName { get; set; }

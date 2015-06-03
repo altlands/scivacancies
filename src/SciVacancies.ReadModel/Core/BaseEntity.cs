@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace SciVacancies.MssqlDB.Core
+namespace SciVacancies.ReadModel.Core
 {
     public class BaseEntity
     {

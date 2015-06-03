@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 using NPoco;
 
-namespace SciVacancies.MssqlDB.Handlers
+namespace SciVacancies.ReadModel.Handlers
 {
     public class ResearcherCreatedHandler : EventBaseHandler<ResearcherCreated>
     {

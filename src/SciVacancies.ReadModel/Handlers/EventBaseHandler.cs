@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 using MediatR;
 using NPoco;
 
-namespace SciVacancies.MssqlDB.Handlers
+namespace SciVacancies.ReadModel.Handlers
 {
     public abstract class EventBaseHandler<T> : INotificationHandler<T> where T : EventBase
     {
