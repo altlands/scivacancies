@@ -31,15 +31,25 @@ namespace SciVacancies.ReadModel.Handlers
 
                 PreviousSecondName = msg.Data.PreviousSecondName,
 
-                BirthDate=msg.Data.BirthDate,
+                BirthDate = msg.Data.BirthDate,
 
-                Email=msg.Data.Email,
-                ExtraEmail=msg.Data.ExtraEmail,
+                Email = msg.Data.Email,
+                ExtraEmail = msg.Data.ExtraEmail,
 
-                Phone=msg.Data.Phone,
-                ExtraPhone=msg.Data.ExtraPhone,
+                Phone = msg.Data.Phone,
+                ExtraPhone = msg.Data.ExtraPhone,
 
-                Nationality=msg.Data.Nationality,
+                Nationality = msg.Data.Nationality,
+
+                ResearchActivity = msg.Data.ResearchActivity,
+                TeachingActivity = msg.Data.TeachingActivity,
+                OtherActivity = msg.Data.OtherActivity,
+
+                ScienceDegree = msg.Data.ScienceDegree,
+                AcademicStatus = msg.Data.AcademicStatus,
+                Rewards = msg.Data.Rewards,
+                Memberships = msg.Data.Memberships,
+                Conferences = msg.Data.Conferences,
 
                 CreationDate = msg.TimeStamp
             };
@@ -47,7 +57,7 @@ namespace SciVacancies.ReadModel.Handlers
             _db.Insert(researcher);
         }
     }
-    public class ResearcherUpdateHandler:EventBaseHandler<ResearcherUpdated>
+    public class ResearcherUpdateHandler : EventBaseHandler<ResearcherUpdated>
     {
         public ResearcherUpdateHandler(IDatabase db) : base(db) { }
         public override void Handle(ResearcherUpdated msg)
@@ -71,6 +81,16 @@ namespace SciVacancies.ReadModel.Handlers
             researcher.ExtraPhone = msg.Data.ExtraPhone;
 
             researcher.Nationality = msg.Data.Nationality;
+
+            researcher.ResearchActivity = msg.Data.ResearchActivity;
+            researcher.TeachingActivity = msg.Data.TeachingActivity;
+            researcher.OtherActivity = msg.Data.OtherActivity;
+
+            researcher.ScienceDegree = msg.Data.ScienceDegree;
+            researcher.AcademicStatus = msg.Data.AcademicStatus;
+            researcher.Rewards = msg.Data.Rewards;
+            researcher.Memberships = msg.Data.Memberships;
+            researcher.Conferences = msg.Data.Conferences;
 
             researcher.UpdateDate = msg.TimeStamp;
 

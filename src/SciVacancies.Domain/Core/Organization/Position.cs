@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace SciVacancies.Domain.Core
 {
-    public class Postition
+    public class Position
     {
     }
 }

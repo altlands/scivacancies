@@ -13,6 +13,9 @@ namespace SciVacancies.Domain.Interfaces
         void UpdateResearcher(Guid researcherGuid, ResearcherDataModel data);
         void RemoveResearcher(Guid researcherGuid);
 
+        int AddVacancyToFavorites(Guid researcherGuid, Guid vacancyGuid);
+        int RemoveVacancyFromFavorites(Guid researcherGuid, Guid vacancyGuid);
+
         Guid CreateVacancyApplicationTemplate(Guid researcherGuid, Guid vacancyGuid);
         void ApplyToVacancy(Guid researcherGuid, Guid vacancyApplicationGuid);
     }
