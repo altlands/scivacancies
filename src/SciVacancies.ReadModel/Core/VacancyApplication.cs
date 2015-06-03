@@ -21,6 +21,6 @@ namespace SciVacancies.ReadModel.Core
         public DateTime CreationdDate { get; set; }
         public DateTime? UpdateDate { get; set; }
 
-        public string CoveringLetter { get; set; }
+        //public string CoveringLetter { get; set; }
     }
 }

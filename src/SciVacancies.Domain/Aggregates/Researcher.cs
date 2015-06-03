@@ -1,4 +1,5 @@
 ﻿using SciVacancies.Domain.Core;
+using SciVacancies.Domain.Enums;
 using SciVacancies.Domain.Events;
 
 using System;
@@ -11,17 +12,27 @@ namespace SciVacancies.Domain.Aggregates
     public class Researcher : AggregateBase
     {
         private bool Removed { get; set; }
+        private ResearcherDataModel Data { get; set; }
         private List<VacancyApplication> VacancyApplications { get; set; }
 
         public Researcher()
         {
 
         }
-        public Researcher(Guid guid)
+        public Researcher(Guid guid, ResearcherDataModel data)
         {
             RaiseEvent(new ResearcherCreated()
             {
-                ResearcherGuid = guid
+                ResearcherGuid = guid,
+                Data = data
+            });
+        }
+        public void UpdateResearcher(ResearcherDataModel data)
+        {
+            RaiseEvent(new ResearcherUpdated()
+            {
+                ResearcherGuid = this.Id,
+                Data = data
             });
         }
         public void RemoveResearcher()
@@ -66,6 +77,27 @@ namespace SciVacancies.Domain.Aggregates
         public void Apply(ResearcherCreated @event)
         {
             this.Id = @event.ResearcherGuid;
+            this.Data = @event.Data;
+        }
+        public void Apply(ResearcherUpdated @event)
+        {
+            this.Data.FirstName = @event.Data.FirstName;
+            this.Data.SecondName = @event.Data.SecondName;
+            this.Data.Patronymic = @event.Data.Patronymic;
+
+            this.Data.FirstNameEng = @event.Data.FirstNameEng;
+            this.Data.SecondNameEng = @event.Data.SecondNameEng;
+            this.Data.PatronymicEng = @event.Data.PatronymicEng;
+
+            this.Data.PreviousSecondName = @event.Data.PreviousSecondName;
+
+            this.Data.BirthDate = @event.Data.BirthDate;
+
+            this.Data.ExtraEmail = @event.Data.ExtraEmail;
+
+            this.Data.ExtraPhone = @event.Data.ExtraPhone;
+
+            this.Data.Nationality = @event.Data.Nationality;
         }
         public void Apply(ResearcherRemoved @event)
         {

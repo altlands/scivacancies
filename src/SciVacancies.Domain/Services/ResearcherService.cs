@@ -1,4 +1,5 @@
-﻿using SciVacancies.Domain.Interfaces;
+﻿using SciVacancies.Domain.Events;
+using SciVacancies.Domain.Interfaces;
 using SciVacancies.Domain.Aggregates;
 
 using System;
@@ -13,18 +14,24 @@ namespace SciVacancies.Domain.Services
     public class ResearcherService : IResearcherService
     {
         private EventStoreRepository _repository;
-        
+
         public ResearcherService(EventStoreRepository repository)
         {
             _repository = repository;
         }
 
-        public Guid CreateResearcher()
+        public Guid CreateResearcher(ResearcherDataModel data)
         {
-            Researcher researcher = new Researcher(Guid.NewGuid());
+            Researcher researcher = new Researcher(Guid.NewGuid(), data);
             _repository.Save(researcher, Guid.NewGuid(), null);
 
             return researcher.Id;
+        }
+        public void UpdateResearcher(Guid researcherGuid, ResearcherDataModel data)
+        {
+            Researcher researcher = _repository.GetById<Researcher>(researcherGuid);
+            researcher.UpdateResearcher(data);
+            _repository.Save(researcher, Guid.NewGuid(), null);
         }
         public void RemoveResearcher(Guid researcherGuid)
         {

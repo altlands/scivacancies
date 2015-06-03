@@ -15,12 +15,16 @@ namespace SciVacancies.Domain.Events
     {
         public ResearcherCreated() : base() { }
 
+        public ResearcherDataModel Data { get; set; }
+    }
+    public class ResearcherUpdated : ResearcherEventBase
+    {
+        public ResearcherUpdated() : base() { }
 
+        public ResearcherDataModel Data { get; set; }
     }
     public class ResearcherRemoved : ResearcherEventBase
     {
         public ResearcherRemoved() : base() { }
-
-
     }
 }

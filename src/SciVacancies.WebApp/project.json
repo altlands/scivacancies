@@ -19,8 +19,7 @@
     "MediatR": "2.0.0-beta-004",
     "SciVacancies.Domain": "1.0.0-*",
     "SciVacancies.Domain.Events": "1.0.0-*",
-    "Autofac.Dnx": "4.0.0-alpha2",
-    "SciVacancies.Interfaces": "1.0.0-*"
+    "Autofac.Dnx": "4.0.0-alpha2"
   },
 
   "commands": {

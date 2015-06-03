@@ -3,15 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-using NPoco;
-
-namespace SciVacancies.ReadModel.Core
+namespace SciVacancies.Domain.Core
 {
-    [TableName("Researchers")]
-    [PrimaryKey("Guid", AutoIncrement = false)]
-    public class Researcher:BaseEntity
+    public class ResearcherDataModel
     {
         public string Login { get; set; }
+        public string Password { get; set; }
 
         public string FirstName { get; set; }
         public string SecondName { get; set; }
@@ -20,8 +17,6 @@ namespace SciVacancies.ReadModel.Core
         public string FirstNameEng { get; set; }
         public string SecondNameEng { get; set; }
         public string PatronymicEng { get; set; }
-
-        public string PreviousSecondName { get; set; }
 
         public DateTime BirthDate { get; set; }
 
@@ -33,7 +28,8 @@ namespace SciVacancies.ReadModel.Core
 
         public string Nationality { get; set; }
 
-        public DateTime CreationDate { get; set; }
-        public DateTime? UpdateDate { get; set; }
+        public DateTime RegistrationDate { get; set; }
+        public DateTime UpdateDate { get; set; }
+        public DateTime LastEntryDate { get; set; }
     }
 }

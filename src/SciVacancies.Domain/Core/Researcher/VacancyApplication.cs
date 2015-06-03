@@ -11,6 +11,9 @@ namespace SciVacancies.Domain.Core
     {
         public Guid VacancyApplicationGuid { get; set; }
         public Guid VacancyGuid { get; set; }
+
+        public string CoveringLetter { get; set; }
+
         public VacancyApplicationStatus Status { get; set; }
     }
 }

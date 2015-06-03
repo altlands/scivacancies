@@ -10,6 +10,7 @@ namespace SciVacancies.WebApp.Controllers
 {
     public class ResearcherController : Controller
     {
+        
         // GET: /<controller>/
         public IActionResult Index()
         {

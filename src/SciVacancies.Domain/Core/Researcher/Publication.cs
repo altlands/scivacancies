@@ -5,7 +5,9 @@ using System.Threading.Tasks;
 
 namespace SciVacancies.Domain.Core
 {
-    public class Postition
+    public class Publication
     {
+        public Guid PublicationGuid { get; set; }
+        public string Name { get; set; }
     }
 }
