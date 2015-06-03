@@ -1,17 +1,29 @@
-﻿using System;
+﻿using SciVacancies.Domain.Events;
+using SciVacancies.WebApp.Infrastructure;
+
+using System;
+using System.Collections.Generic;
+
 using Microsoft.AspNet.Builder;
 using Microsoft.AspNet.Diagnostics;
 using Microsoft.AspNet.Hosting;
 using Microsoft.Framework.ConfigurationModel;
 using Microsoft.Framework.DependencyInjection;
 using Microsoft.Framework.Logging;
+
+using NEventStore;
+using NEventStore.Dispatcher;
+using NEventStore.Persistence.Sql.SqlDialects;
+
+using CommonDomain;
+using CommonDomain.Core;
+using CommonDomain.Persistence;
+using CommonDomain.Persistence.EventStore;
+
 using MediatR;
-using System.Collections.Generic;
 using Autofac;
 using Autofac.Dnx;
 using Autofac.Features.Variance;
-using SciVacancies.WebApp.Infrastructure;
-using SciVacancies.Domain.Events;
 
 namespace SciVacancies.WebApp
 {
@@ -77,9 +89,11 @@ namespace SciVacancies.WebApp
             });
         }
 
-        public void ConfigureContainer(ContainerBuilder builder) {
+        public void ConfigureContainer(ContainerBuilder builder)
+        {
             ConfigureMediatr(builder);
             builder.RegisterType<Fart>().As<IFart>();
+
         }
 
         public void ConfigureMediatr(ContainerBuilder builder)
@@ -87,7 +101,7 @@ namespace SciVacancies.WebApp
             builder.RegisterSource(new ContravariantRegistrationSource());
             builder.RegisterAssemblyTypes(typeof(IMediator).Assembly).AsImplementedInterfaces();
             builder.RegisterAssemblyTypes(typeof(EventBase).Assembly).AsImplementedInterfaces();
-            
+
             builder.Register<SingleInstanceFactory>(ctx =>
             {
                 var c = ctx.Resolve<IComponentContext>();
@@ -100,7 +114,14 @@ namespace SciVacancies.WebApp
             });
         }
 
+        public void ConfigureEventStore(ContainerBuilder builder)
+        {
 
+        }
 
+        public void ConfigureAggregateServices(ContainerBuilder builder)
+        {
+
+        }
     }
 }

@@ -1,50 +1,51 @@
 {
-    "webroot": "wwwroot",
-    "version": "1.0.0-*",
+  "webroot": "wwwroot",
+  "version": "1.0.0-*",
 
-    "dependencies": {
-        "Microsoft.AspNet.Diagnostics": "1.0.0-beta4",
-        "Microsoft.AspNet.Mvc": "6.0.0-beta4",
-        "Microsoft.AspNet.Mvc.TagHelpers": "6.0.0-beta4",
-        "Microsoft.AspNet.Server.IIS": "1.0.0-beta4",
-        "Microsoft.AspNet.Server.WebListener": "1.0.0-beta4",
-        "Microsoft.AspNet.StaticFiles": "1.0.0-beta4",
-        "Microsoft.AspNet.Tooling.Razor": "1.0.0-beta4",
-        "Microsoft.Framework.ConfigurationModel.Json": "1.0.0-beta4",
-        "Microsoft.Framework.CodeGenerators.Mvc": "1.0.0-beta4",
-        "Microsoft.Framework.Logging": "1.0.0-beta4",
-        "Microsoft.Framework.Logging.Console": "1.0.0-beta4",
-        "Microsoft.VisualStudio.Web.BrowserLink.Loader": "14.0.0-beta4",
-        "Microsoft.Framework.DependencyInjection": "1.0.0-beta4",
-        "MediatR": "2.0.0-beta-004",
-        "SciVacancies.Domain": "1.0.0-*",
-        "SciVacancies.Domain.Events": "1.0.0-*",
-        "Autofac.Dnx": "4.0.0-alpha2"
-    },
+  "dependencies": {
+    "Microsoft.AspNet.Diagnostics": "1.0.0-beta4",
+    "Microsoft.AspNet.Mvc": "6.0.0-beta4",
+    "Microsoft.AspNet.Mvc.TagHelpers": "6.0.0-beta4",
+    "Microsoft.AspNet.Server.IIS": "1.0.0-beta4",
+    "Microsoft.AspNet.Server.WebListener": "1.0.0-beta4",
+    "Microsoft.AspNet.StaticFiles": "1.0.0-beta4",
+    "Microsoft.AspNet.Tooling.Razor": "1.0.0-beta4",
+    "Microsoft.Framework.ConfigurationModel.Json": "1.0.0-beta4",
+    "Microsoft.Framework.CodeGenerators.Mvc": "1.0.0-beta4",
+    "Microsoft.Framework.Logging": "1.0.0-beta4",
+    "Microsoft.Framework.Logging.Console": "1.0.0-beta4",
+    "Microsoft.VisualStudio.Web.BrowserLink.Loader": "14.0.0-beta4",
+    "Microsoft.Framework.DependencyInjection": "1.0.0-beta4",
+    "MediatR": "2.0.0-beta-004",
+    "SciVacancies.Domain": "1.0.0-*",
+    "SciVacancies.Domain.Events": "1.0.0-*",
+    "Autofac.Dnx": "4.0.0-alpha2",
+    "SciVacancies.Interfaces": "1.0.0-*"
+  },
 
-    "commands": {
-        "web": "Microsoft.AspNet.Hosting --server Microsoft.AspNet.Server.WebListener --server.urls http://localhost:5000",
-        "gen": "Microsoft.Framework.CodeGeneration"
-    },
+  "commands": {
+    "web": "Microsoft.AspNet.Hosting --server Microsoft.AspNet.Server.WebListener --server.urls http://localhost:5000",
+    "gen": "Microsoft.Framework.CodeGeneration"
+  },
 
-    "frameworks": {
-        "dnx451": { }
-    },
+  "frameworks": {
+    "dnx451": { }
+  },
 
-    "exclude": [
-        "wwwroot",
-        "node_modules",
-        "bower_components"
-    ],
-    "publishExclude": [
-        "node_modules",
-        "bower_components",
-        "**.xproj",
-        "**.user",
-        "**.vspscc"
-    ],
-    "scripts": {
-        "postrestore": [ "npm install", "bower install" ],
-        "prepare": [ "gulp copy" ]
-    }
+  "exclude": [
+    "wwwroot",
+    "node_modules",
+    "bower_components"
+  ],
+  "publishExclude": [
+    "node_modules",
+    "bower_components",
+    "**.xproj",
+    "**.user",
+    "**.vspscc"
+  ],
+  "scripts": {
+    "postrestore": [ "npm install", "bower install" ],
+    "prepare": [ "gulp copy" ]
+  }
 }
