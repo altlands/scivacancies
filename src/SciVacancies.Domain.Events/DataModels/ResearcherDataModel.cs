@@ -1,0 +1,32 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+
+namespace SciVacancies.Domain.Events
+{
+    public class ResearcherDataModel
+    {
+        public string Login { get; set; }
+
+        public string FirstName { get; set; }
+        public string SecondName { get; set; }
+        public string Patronymic { get; set; }
+
+        public string FirstNameEng { get; set; }
+        public string SecondNameEng { get; set; }
+        public string PatronymicEng { get; set; }
+
+        public string PreviousSecondName { get; set; }
+
+        public DateTime BirthDate { get; set; }
+
+        public string Email { get; set; }
+        public string ExtraEmail { get; set; }
+
+        public string Phone { get; set; }
+        public string ExtraPhone { get; set; }
+
+        public string Nationality { get; set; }
+    }
+}
