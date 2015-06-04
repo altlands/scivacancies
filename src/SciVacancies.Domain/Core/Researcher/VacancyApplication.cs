@@ -1,4 +1,5 @@
 ﻿using SciVacancies.Domain.Enums;
+using SciVacancies.Domain.Events;
 
 using System;
 using System.Collections.Generic;
@@ -12,7 +13,11 @@ namespace SciVacancies.Domain.Core
         public Guid VacancyApplicationGuid { get; set; }
         public Guid VacancyGuid { get; set; }
 
-        public string CoveringLetter { get; set; }
+        public VacancyApplicationDataModel Data { get; set; }
+
+        //public List<Publication> Publications { get; set; }
+        //public List<AttachedFile> AttachedFiles { get; set; }
+        //public string CoveringLetter { get; set; }
 
         public VacancyApplicationStatus Status { get; set; }
     }

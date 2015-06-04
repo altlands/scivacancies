@@ -33,6 +33,16 @@ namespace SciVacancies.ReadModel.Core
 
         public string Nationality { get; set; }
 
+        public string ResearchActivity { get; set; }
+        public string TeachingActivity { get; set; }
+        public string OtherActivity { get; set; }
+
+        public string ScienceDegree { get; set; }
+        public string AcademicStatus { get; set; }
+        public string Rewards { get; set; }
+        public string Memberships { get; set; }
+        public string Conferences { get; set; }
+
         public DateTime CreationDate { get; set; }
         public DateTime? UpdateDate { get; set; }
     }

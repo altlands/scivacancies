@@ -13,6 +13,12 @@ namespace SciVacancies.Domain.Aggregates
     {
         private bool Removed { get; set; }
         private ResearcherDataModel Data { get; set; }
+
+        //private List<Education> EducationList { get; set; }
+        //private List<Publication> Publications { get; set; }
+        private List<Guid> FavoriteVacancyGuids { get; set; }
+        //private List<SearchSubscription> SearchSubscriptions { get; set; }
+
         private List<VacancyApplication> VacancyApplications { get; set; }
 
         public Researcher()
@@ -46,6 +52,40 @@ namespace SciVacancies.Domain.Aggregates
             }
         }
 
+        public int AddVacancyToFavorites(Guid vacancyGuid)
+        {
+            if(!this.FavoriteVacancyGuids.Contains(vacancyGuid))
+            {
+                RaiseEvent(new VacancyAddedToFavorites()
+                {
+                    VacancyGuid = vacancyGuid,
+                    ResearcherGuid = this.Id
+                });
+                return this.FavoriteVacancyGuids.Count + 1;
+            }
+            else
+            {
+                return this.FavoriteVacancyGuids.Count;
+            }
+
+        }
+        public int RemoveVacancyFromFavorites(Guid vacancyGuid)
+        {
+            if(this.FavoriteVacancyGuids.Contains(vacancyGuid))
+            {
+                RaiseEvent(new VacancyRemovedFromFavorites()
+                {
+                    VacancyGuid = vacancyGuid,
+                    ResearcherGuid = this.Id
+                });
+                return this.FavoriteVacancyGuids.Count - 1;
+            }
+            else
+            {
+                return this.FavoriteVacancyGuids.Count;
+            }
+        }
+
         public Guid CreateVacancyApplicationTemplate(Guid vacancyGuid)
         {
             Guid vacancyApplicationGuid = Guid.NewGuid();
@@ -58,7 +98,6 @@ namespace SciVacancies.Domain.Aggregates
 
             return vacancyApplicationGuid;
         }
-
         public void ApplyToVacancy(Guid vacancyApplicationGuid)
         {
             VacancyApplication vacancyApplication = this.VacancyApplications.Find(f => f.VacancyApplicationGuid == vacancyApplicationGuid);
@@ -98,10 +137,31 @@ namespace SciVacancies.Domain.Aggregates
             this.Data.ExtraPhone = @event.Data.ExtraPhone;
 
             this.Data.Nationality = @event.Data.Nationality;
+
+            this.Data.ResearchActivity = @event.Data.ResearchActivity;
+            this.Data.TeachingActivity = @event.Data.TeachingActivity;
+            this.Data.OtherActivity = @event.Data.OtherActivity;
+
+            this.Data.ScienceDegree = @event.Data.ScienceDegree;
+            this.Data.AcademicStatus = @event.Data.AcademicStatus;
+            this.Data.Rewards = @event.Data.Rewards;
+            this.Data.Memberships = @event.Data.Memberships;
+            this.Data.Conferences = @event.Data.Conferences;
+
+            //this.Data.Publications = @event.Data.Publications;
         }
         public void Apply(ResearcherRemoved @event)
         {
             this.Removed = true;
+        }
+
+        public void Apply(VacancyAddedToFavorites @event)
+        {
+            this.FavoriteVacancyGuids.Add(@event.VacancyGuid);
+        }
+        public void Apply(VacancyRemovedFromFavorites @event)
+        {
+            this.FavoriteVacancyGuids.Remove(@event.VacancyGuid);
         }
 
         public void Apply(VacancyApplicationCreated @event)

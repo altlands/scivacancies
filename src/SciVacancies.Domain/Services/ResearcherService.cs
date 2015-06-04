@@ -40,6 +40,23 @@ namespace SciVacancies.Domain.Services
             _repository.Save(researcher, Guid.NewGuid(), null);
         }
 
+        public int AddVacancyToFavorites(Guid researcherGuid, Guid vacancyGuid)
+        {
+            Researcher researcher = _repository.GetById<Researcher>(researcherGuid);
+            int favoritesCount = researcher.AddVacancyToFavorites(vacancyGuid);
+            _repository.Save(researcher, Guid.NewGuid(), null);
+
+            return favoritesCount;
+        }
+        public int RemoveVacancyFromFavorites(Guid researcherGuid, Guid vacancyGuid)
+        {
+            Researcher researcher = _repository.GetById<Researcher>(researcherGuid);
+            int favoritesCount = researcher.RemoveVacancyFromFavorites(vacancyGuid);
+            _repository.Save(researcher, Guid.NewGuid(), null);
+
+            return favoritesCount;
+        }
+
         public Guid CreateVacancyApplicationTemplate(Guid researcherGuid, Guid vacancyGuid)
         {
             Researcher researcher = _repository.GetById<Researcher>(researcherGuid);
