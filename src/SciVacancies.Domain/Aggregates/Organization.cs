@@ -12,37 +12,46 @@ namespace SciVacancies.Domain.Aggregates
     public class Organization : AggregateBase
     {
 
-        private bool Deleted { get; set; }
+        private bool Removed { get; set; }
         private List<Vacancy> Vacancies { get; set; }
+        public OrganizationDataModel Data { get; set; }
 
-        public string Name { get; set; }
-        public string ShortName { get; set; }
 
 
         public Organization()
         {
 
         }
-        public Organization(Guid guid, string name, string shortName)
+        public Organization(Guid guid, OrganizationDataModel data)
         {
             //this.Vacancies = new List<Vacancy>();
 
             RaiseEvent(new OrganizationCreated()
             {
                 OrganizationGuid = guid,
-                Name = name,
-                ShortName = shortName
+                Data=data
             });
         }
-        public void Delete()
+
+        
+        public void Remove()
         {
-            if (!this.Deleted)
+            if (!this.Removed)
             {
                 RaiseEvent(new OrganizationRemoved()
                 {
                     OrganizationGuid = this.Id
                 });
             }
+        }
+
+        public void Update(OrganizationDataModel data)
+        {
+            RaiseEvent(new OrganizationUpdated()
+            {
+                OrganizationGuid = this.Id,
+                Data = data
+            });
         }
 
         public void CreateVacancy()
@@ -54,15 +63,15 @@ namespace SciVacancies.Domain.Aggregates
         public void Apply(OrganizationCreated @event)
         {
             Id = @event.OrganizationGuid;
-            Name = @event.Name;
-            ShortName = @event.ShortName;
+            Data = @event.Data;
         }
         public void Apply(OrganizationRemoved @event)
         {
-            this.Deleted = true;
+            this.Removed = true;
         }
         public void Apply(OrganizationUpdated @event)
         {
+            Data = @event.Data;
 
         }
 

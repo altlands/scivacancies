@@ -30,13 +30,13 @@ namespace SciVacancies.Domain.Services
         public void UpdateResearcher(Guid researcherGuid, ResearcherDataModel data)
         {
             Researcher researcher = _repository.GetById<Researcher>(researcherGuid);
-            researcher.UpdateResearcher(data);
+            researcher.Update(data);
             _repository.Save(researcher, Guid.NewGuid(), null);
         }
         public void RemoveResearcher(Guid researcherGuid)
         {
             Researcher researcher = _repository.GetById<Researcher>(researcherGuid);
-            researcher.RemoveResearcher();
+            researcher.Remove();
             _repository.Save(researcher, Guid.NewGuid(), null);
         }
 
