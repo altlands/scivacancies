@@ -19,15 +19,15 @@ namespace SciVacancies.Domain.Events
         public OrganizationCreated() : base() { }
 
     }
-    
-    public class OrganizationRemoved : OrganizationEventBase
-    {
-        public OrganizationRemoved() : base() { }
-    }
     public class OrganizationUpdated : OrganizationEventBase
     {
         public OrganizationUpdated() : base() { }
 
-     
+
     }
+    public class OrganizationRemoved : OrganizationEventBase
+    {
+        public OrganizationRemoved() : base() { }
+    }
+
 }
