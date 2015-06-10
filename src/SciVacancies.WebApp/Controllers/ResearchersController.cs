@@ -6,12 +6,11 @@ namespace SciVacancies.WebApp.Controllers
 {
     public class ResearchersController: Controller
     {
-        [ActionName("details")]
         [NavigationTitle("Информация")]
         public ViewResult Account()
         {
             var model = new ResearcherDetailsViewModel();
-            return View("Account", model);
+            return View(model);
         }
 
         public ViewResult Edit()

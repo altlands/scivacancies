@@ -8,6 +8,9 @@ using SciVacancies.WebApp.Engine.CustomAttribute;
 
 namespace SciVacancies.WebApp.ViewComponents
 {
+	/// <summary>
+	/// Поулчиьт спеисок закладок в личном кабинете
+	/// </summary>
     public class ResearcherTabs : ViewComponent
     {
         public ResearcherTabs()
@@ -16,6 +19,7 @@ namespace SciVacancies.WebApp.ViewComponents
             _tabs = new Dictionary<string, string>()
             ;
 
+            //получить список закладок (названий методов), для которых указан атрибут NavigationTitle. 
             typeof (ResearchersController)
                 .GetMethods()
                 .Where(
@@ -29,6 +33,9 @@ namespace SciVacancies.WebApp.ViewComponents
                 );
         }
 
+        /// <summary>
+        /// Закладки в личном кабинете
+        /// </summary>
         private readonly Dictionary<string, string> _tabs;
 
         public IViewComponentResult Invoke()

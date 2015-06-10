@@ -52,6 +52,10 @@ $(document).ready(function(){
 	$('.close-popup').click(function() {
 		$('.popup-bg, .window-popup, .bg-window').fadeOut(300); 
 	});
+	$('#cancellogin').click(function () {
+	    $($(this).parents('form')[0]).find('input[type!="submit"]').val(null);
+        $('.close-popup').click();
+    });
 	// function centering
 	function alignCenter(elem) {
 		elem.css({

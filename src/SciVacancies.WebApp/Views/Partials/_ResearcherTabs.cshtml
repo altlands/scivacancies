@@ -6,7 +6,6 @@
 <ul class="tabs">
     @foreach (var item in Model)
     {
-        var actionName = item.Key;
         <text>
         <li class="@( currentAction.ToUriComponent().Contains(item.Key) ? "active" : string.Empty)">
             <a href="/researchers/@item.Key">
@@ -17,5 +16,4 @@
         </li>
         </text>
     }
-    @*class="active"*@
 </ul>
