@@ -1,0 +1,120 @@
+﻿@using SciVacancies.WebApp.ViewModels
+
+<div class="crumbs">
+    <a href="/">Главная страница</a>
+    <span class="separator">/</span>
+    Личная карточка
+</div>
+
+<h3>Личная карточка пользователя</h3>
+
+@Component.Invoke("ResearcherTabs")
+
+<h4>Избранные вакансии</h4>
+
+<div class="table-control">
+    <a href="#" class="close-table"><span class="italic">Очистить фильтры</span></a>
+    <a href="#" class="reload-table"><span class="italic">Обновить список</span></a>
+</div>
+
+<table class="table request-table">
+    <thead>
+        <tr>
+            <th><div class="inline-block"><img src="/images/icons/tab-head.png" class="va-middle" /></div><div class="inline-block ml6 va-middle">ID конкурса</div></th>
+            <th><div class="inline-block"><img src="/images/icons/arrow-bottom-tab.png" class="va-middle" /></div><div class="inline-block ml6 va-middle">Должность</div></th>
+            <th><div class="inline-block"><img src="/images/icons/tab-head.png" class="va-middle" /></div><div class="inline-block ml6 va-middle">Заработная<br /> плата</div></th>
+            <th><div class="inline-block"><img src="/images/icons/tab-head.png" class="va-middle" /></div><div class="inline-block ml6 va-middle">Дата<br /> закрытия</div></th>
+            <th><div class="inline-block"><img src="/images/icons/tab-head.png" class="va-middle" /></div><div class="inline-block ml6 va-middle">Статус<br />конкурса</div></th>
+            <th><div class="inline-block"><img src="/images/icons/tab-head.png" class="va-middle" /></div><div class="inline-block ml6 va-middle">Статус<br />заявки</div></th>
+            <th><div class="pl21 va-middle">Действия</div></th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>ГНС600001</td>
+            <td>Главный<br /> научный сотрудник</td>
+            <td>60000 руб.</td>
+            <td>01-09-14, 16:04</td>
+            <td><span class="status executed">Завершён</span></td>
+            <td><span class="status executed">Победитель</span></td>
+            <td>
+                <a href="#" class="view-td-icon"></a>
+            </td>
+        </tr>
+        <tr>
+            <td>ИИС60290004</td>
+            <td>Инженер-исследователь</td>
+            <td>60000 руб.</td>
+            <td>01-09-14, 16:04</td>
+            <td><span class="status work">Приём заявок</span></td>
+            <td><a href="#" class="send-request-icon"><span class="italic">Подать заявку</span></a></td>
+            <td>
+                <a href="#" class="view-td-icon"></a>
+            </td>
+        </tr>
+        <tr>
+            <td>РНП58000322</td>
+            <td>Руководитель<br /> научного подразделения</td>
+            <td>60000 руб.</td>
+            <td>01-09-14, 16:04</td>
+            <td><span class="status work">Объявлен</span></td>
+            <td><span class="status work">В работе</span></td>
+            <td>
+                <a href="#" class="view-td-icon"></a>
+            </td>
+        </tr>
+        <tr>
+            <td>СНС6000021</td>
+            <td>Старший<br /> научный сотрудник</td>
+            <td>60000 руб.</td>
+            <td>01-09-14, 16:04</td>
+            <td><span class="status executed">Завершён</span></td>
+            <td><a href="#" class="success-request-icon"><span class="italic">Победитель</span></a></td>
+            <td>
+                <a href="#" class="view-td-icon"></a>
+            </td>
+        </tr>
+    </tbody>
+</table>
+<div class="bottom-nav">
+    <div class="bottom-nav-left">
+        <div class="count-news">
+            1-4 из 4 записей
+        </div>
+        <div class="count-line-page">
+            <input type="text" value="10"> записей на странице
+        </div>
+    </div>
+    <div class="bottom-nav-right">
+        <ul>
+            <li>
+                <span class="first disable">
+                    <span>Первая</span>
+                </span>
+            </li>
+            <li>
+                <span class="prev disable">
+                    <span>Предыдущая</span>
+                </span>
+            </li>
+            <li>
+                <div class="count-page">
+                    <input type="text" value="1"> из 306
+                </div>
+            </li>
+            <li>
+                <span class="next disable">
+                    <span>Следующая</span>
+                </span>
+            </li>
+            <li>
+                <span class="latest disable">
+                    <span>Последняя</span>
+                </span>
+            </li>
+        </ul>
+    </div>
+</div>
+
+
+@Component.Invoke("ApplicationCreate", new ApplicationCreateViewModel())

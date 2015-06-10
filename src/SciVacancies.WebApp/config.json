@@ -1,8 +1,8 @@
-{
+﻿{
     "AppSettings": {
-        "SiteTitle": "SciVacancies.WebApp"
+        "SiteTitle": "Портал вакансий"
     },
     "DB": {
-        "ConnectionString":  "Server=.\\SQLEXPRESS;Database=SciVacancies;Trusted_Connection=True;MultipleActiveResultSets=true"
+        "ConnectionString": "Server=.\\SQLEXPRESS;Database=SciVacancies;Trusted_Connection=True;MultipleActiveResultSets=true"
     }
 }

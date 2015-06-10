@@ -1,0 +1,23 @@
+﻿<div class="header">
+    <div class="b-wrap-header">
+        <div class="logo">
+            <a href="/">
+                <img src="/images/logo.png">
+                <span class="logo-desc">Министерство образования и науки РФ</span>
+                <span class="logo-title">Портал вакансий</span>
+            </a>
+        </div>
+
+        @Component.Invoke("Login")
+
+    </div>
+</div>
+
+<div class="b-search">
+    <div class="b-wrap">
+        <form asp-controller="vacancies" asp-action="search" method="POST">
+            <input class="search-input" type="text" name="search" placeholder="поиск по порталу" />
+            <button type="submit" class="search-button"><i class="icon icon-search"></i></button>
+        </form>
+    </div>
+</div>
