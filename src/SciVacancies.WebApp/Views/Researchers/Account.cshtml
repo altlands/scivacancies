@@ -1,17 +1,13 @@
 ﻿@using System.Threading.Tasks
+@using SciVacancies.WebApp.Controllers
 @model SciVacancies.WebApp.ViewModels.ResearcherDetailsViewModel
 
-@{
-    ViewBag.Title = Model.NavigationTitle;
-}
-
-@Component.Invoke("Breadcrumbs", Model.NavigationTitle)
+@Component.Invoke("Breadcrumbs", ViewBag.Title)
 
 <h3>@Model.Title</h3>
 
-@Component.Invoke("ResearcherTabs")
+@Component.Invoke("AccountTabs", typeof(ResearchersController))
 
-<h4>Информация</h4>
 <div class="l-information">
     <div class="row">
         <div class="profile">
@@ -72,7 +68,7 @@
     <div class="link-edit">
         <a asp-controller="researchers" 
            asp-action="edit"
-           asp-route-id="@Model.Id" 
+           asp-route-id="@Model.Guid" 
            class="arial italic">Редактировать</a>
     </div>
 </div>

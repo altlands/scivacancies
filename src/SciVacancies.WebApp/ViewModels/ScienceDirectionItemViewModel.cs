@@ -6,8 +6,10 @@ using SciVacancies.WebApp.ViewModels.Base;
 
 namespace SciVacancies.WebApp.ViewModels
 {
-    public class ApplicationCreateViewModel: PageViewModelBase
+    /// <summary>
+    /// Классификатор Регионов
+    /// </summary>
+    public class ScienceDirectionItemViewModel : ClassisierItemViewModelBase
     {
-        public Guid VacancyGuid { get; set; }
     }
 }

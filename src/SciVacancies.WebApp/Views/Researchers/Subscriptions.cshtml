@@ -1,14 +1,12 @@
-﻿<div class="crumbs">
-    <a href="#">Главная страница</a>
-    <span class="separator">/</span>
-    Личная карточка
-</div>
+﻿@using System.Threading.Tasks
+@using SciVacancies.WebApp.Controllers
+@model SciVacancies.WebApp.ViewModels.ResearcherDetailsViewModel
 
-<h3>Личная карточка пользователя</h3>
+@Component.Invoke("Breadcrumbs", ViewBag.Title)
 
-@Component.Invoke("ResearcherTabs")
+<h3>@Model.Title</h3>
 
-<h4>Подписки</h4>
+@Component.Invoke("AccountTabs", typeof(ResearchersController))
 
 <div class="table-control">
     <a href="#" class="close-table"><span class="italic">Очистить фильтры</span></a>
