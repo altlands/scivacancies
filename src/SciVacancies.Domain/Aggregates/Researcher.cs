@@ -33,7 +33,7 @@ namespace SciVacancies.Domain.Aggregates
                 Data = data
             });
         }
-        public void UpdateResearcher(ResearcherDataModel data)
+        public void Update(ResearcherDataModel data)
         {
             RaiseEvent(new ResearcherUpdated()
             {
@@ -41,7 +41,7 @@ namespace SciVacancies.Domain.Aggregates
                 Data = data
             });
         }
-        public void RemoveResearcher()
+        public void Remove()
         {
             if (!Removed)
             {
