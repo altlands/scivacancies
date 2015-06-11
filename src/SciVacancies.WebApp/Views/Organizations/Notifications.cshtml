@@ -1,14 +1,15 @@
 ﻿@using System.Threading.Tasks
 @using SciVacancies.WebApp.Controllers
-@model SciVacancies.WebApp.ViewModels.ResearcherDetailsViewModel
 
-@Component.Invoke("Breadcrumbs", ViewBag.Title)
+<div class="crumbs">
+    <a href="#">Главная страница</a><span class="separator">/</span>Московский государственный университет им. М.В. Ломоносова
+</div>
 
-<h3>@Model.Title</h3>
+<h3>Личная карточка пользователя</h3>
 
-@Component.Invoke("AccountTabs", typeof(ResearchersController))
+@Component.Invoke("AccountTabs", typeof(OrganizationsController))
 
-<h4>Уведомления</h4>
+<h4>Центр уведомлений</h4>
 
 <div class="table-control">
     <a href="#" class="close-table"><span class="italic">Очистить фильтры</span></a>
@@ -18,12 +19,11 @@
 <table class="table request-table">
     <thead>
         <tr>
-            <th><div class="inline-block"><img src="/images/icons/arrow-bottom-tab.png" class="va-middle" /></div><div class="inline-block ml6 va-middle">№</div></th>
-            <th><div class="inline-block"><img src="/images/icons/tab-head.png" class="va-middle" /></div><div class="inline-block ml6 va-middle">Дата</div></th>
-            <th><div class="inline-block"><img src="/images/icons/tab-head.png" class="va-middle" /></div><div class="inline-block ml6 va-middle">От кого</div></th>
-            <th><div class="inline-block"><img src="/images/icons/tab-head.png" class="va-middle" /></div><div class="inline-block ml6 va-middle">Текст</div></th>
-            <th><div class="pl21 va-middle">Оповещения</div></th>
-            <th><div class="pl21 va-middle">Действия</div></th>
+            <th><div class="inline-block"><img src="/images/icons/arrow-bottom-tab.png" class="va-middle"></div><div class="inline-block ml6 va-middle">№</div></th>
+            <th><div class="inline-block"><img src="/images/icons/tab-head.png" class="va-middle"></div><div class="inline-block ml6 va-middle">Дата</div></th>
+            <th><div class="inline-block"><img src="/images/icons/tab-head.png" class="va-middle"></div><div class="inline-block ml6 va-middle">Вакансия</div></th>
+            <th><div class="inline-block"><img src="/images/icons/tab-head.png" class="va-middle"></div><div class="inline-block ml6 va-middle">Текст</div></th>
+            <th><div class="pl21 va-middle lh30">Действия</div></th>
         </tr>
     </thead>
     <tbody>
@@ -32,9 +32,8 @@
             <td class="bold">03-05-15, 16:47</td>
             <td class="bold">ID РНП6000013</td>
             <td><a href="#" class="success-request-icon"><span class="italic bold">Вы победили в конкурсе</span></a></td>
-            <td><a href="#" class="mail-td-icon"></a></td>
             <td>
-                <a href="#" class="view-td-icon"></a>
+                <a href="#" class="view-td-icon open-popup"></a>
                 <a href="#" class="close-td-icon"></a>
             </td>
         </tr>
@@ -43,9 +42,8 @@
             <td class="bold">01-09-14, 16:04</td>
             <td class="bold">ID СНС6000567</td>
             <td class="bold">Вы заняли второе место в конкурсе</td>
-            <td><a href="#" class="mail-td-icon"></a></td>
             <td>
-                <a href="#" class="view-td-icon"></a>
+                <a href="#" class="view-td-icon open-popup"></a>
                 <a href="#" class="close-td-icon"></a>
             </td>
         </tr>
@@ -54,9 +52,8 @@
             <td>01-09-14, 16:04</td>
             <td>ID СНС6000567</td>
             <td>Вы заняли второе место в конкурсе</td>
-            <td><a href="#" class="mail-td-icon"></a></td>
             <td>
-                <a href="#" class="view-td-icon"></a>
+                <a href="#" class="view-td-icon open-popup"></a>
                 <a href="#" class="close-td-icon"></a>
             </td>
         </tr>
@@ -65,9 +62,8 @@
             <td>01-09-14, 16:04</td>
             <td>ID СНС6000567</td>
             <td>Вы заняли второе место в конкурсе</td>
-            <td><a href="#" class="unmail-td-icon"></a></td>
             <td>
-                <a href="#" class="view-td-icon"></a>
+                <a href="#" class="view-td-icon open-popup"></a>
                 <a href="#" class="close-td-icon"></a>
             </td>
         </tr>

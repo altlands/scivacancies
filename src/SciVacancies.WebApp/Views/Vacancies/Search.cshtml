@@ -1,4 +1,9 @@
-﻿@{
+﻿@using System.Threading.Tasks
+@using PagedList
+@using SciVacancies.WebApp.ViewModels
+@model IPagedList<VacanciesItemViewModel>
+
+@{
     ViewBag.Title = "Результаты поиска";
 }
 
@@ -260,136 +265,34 @@
         </div>
 
         <div class="list-results">
-            <div>
-                <div class="index-number">17.</div>
-                <div class="index-text">
-                    <div class="title">Инженер-исследователь</div>
-                    <div class="inform">
-                        <p>Дата размещения: 2014-12-25</p>
-                        <p>Регион: <a href="#">Москва</a></p>
-                        <p>Заработная плата: 56000 – 67000 руб.</p>
-                        <p><a href="#">Организация: Московский гусударственный университет имени М. В. Ломоносова</a></p>
-                        <p>Научные направления: <a href="#">Физика</a>, <a href="#">Механика</a>, <a href="#">Инструменты и приборы</a>, <a href="#">Компьютерная техника</a>, <a href="#">Программирование</a>, <a href="#">Экономика</a>, <a href="#">Материаловедение – междисциплинарное</a></p>
+
+            @foreach (var item in Model)
+            {
+                <div>
+                    <div class="index-number">17.</div>
+                    <div class="index-text">
+                        <div class="title">@item.Title</div>
+                        <div class="inform">
+                            <p>Дата размещения: @item.PublishedDate.ToShortDateString()</p>
+                            <p>
+                                Регион: <a href="#">@item.Region.Name</a>
+                            </p>
+                            <p>Заработная плата: @item.MinSalary – @item.MaxSalary руб.</p>
+                            <p>
+                                <a href="#">Организация: @item.Organization.Name</a>
+                            </p>
+                            <p>
+                                Научные направления:
+                                @foreach (var direction in item.ScienceDirections)
+                                {
+                                    <a href="#">@direction.Name</a>
+                                }
+                            </p>
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div>
-                <div class="index-number">172.</div>
-                <div class="index-text">
-                    <div class="title">Ведущий научный сотрудник</div>
-                    <div class="inform">
-                        <p>Дата размещения: 2014-12-25</p>
-                        <p>Регион: <a href="#">Москва</a></p>
-                        <p>Заработная плата: 56000 – 67000 руб.</p>
-                        <p><a href="#">Организация: Московский гусударственный университет имени М. В. Ломоносова</a></p>
-                        <p>Научные направления: <a href="#">Физика</a>, <a href="#">Механика</a>, <a href="#">Инструменты и приборы</a></p>
-                    </div>
-                </div>
-            </div>
-            <div>
-                <div class="index-number">173.</div>
-                <div class="index-text">
-                    <div class="title">Старший научный сотрудник</div>
-                    <div class="inform">
-                        <p>Дата размещения: 2014-12-25</p>
-                        <p>Регион: <a href="#">Москва</a></p>
-                        <p>Заработная плата: 56000 – 67000 руб.</p>
-                        <p><a href="#">Организация: Московский гусударственный университет имени М. В. Ломоносова</a></p>
-                        <p>Научные направления: <a href="#">Физика</a>, <a href="#">Механика</a>, <a href="#">Инструменты и приборы</a></p>
-                    </div>
-                </div>
-            </div>
-            <div>
-                <div class="index-number">174.</div>
-                <div class="index-text">
-                    <div class="title">Инженер-исследователь</div>
-                    <div class="inform">
-                        <p>Дата размещения: 2014-12-25</p>
-                        <p>Регион: <a href="#">Москва</a></p>
-                        <p>Заработная плата: 56000 – 67000 руб.</p>
-                        <p><a href="#">Организация: Московский гусударственный университет имени М. В. Ломоносова</a></p>
-                        <p>Научные направления: <a href="#">Физика</a>, <a href="#">Механика</a></p>
-                    </div>
-                </div>
-            </div>
-            <div>
-                <div class="index-number">175.</div>
-                <div class="index-text">
-                    <div class="title">Ведущий научный сотрудник</div>
-                    <div class="inform">
-                        <p>Дата размещения: 2014-12-25</p>
-                        <p>Регион: <a href="#">Москва</a></p>
-                        <p>Заработная плата: 56000 – 67000 руб.</p>
-                        <p><a href="#">Организация: Московский гусударственный университет имени М. В. Ломоносова</a></p>
-                        <p>Научные направления: <a href="#">Физика</a>, <a href="#">Механика</a>, <a href="#">Инструменты и приборы</a></p>
-                    </div>
-                </div>
-            </div>
-            <div>
-                <div class="index-number">176.</div>
-                <div class="index-text">
-                    <div class="title">Старший научный сотрудник</div>
-                    <div class="inform">
-                        <p>Дата размещения: 2014-12-25</p>
-                        <p>Регион: <a href="#">Москва</a></p>
-                        <p>Заработная плата: 56000 – 67000 руб.</p>
-                        <p><a href="#">Организация: Московский гусударственный университет имени М. В. Ломоносова</a></p>
-                        <p>Научные направления: <a href="#">Физика</a>, <a href="#">Механика</a>, <a href="#">Инструменты и приборы</a></p>
-                    </div>
-                </div>
-            </div>
-            <div>
-                <div class="index-number">177.</div>
-                <div class="index-text">
-                    <div class="title">Инженер-исследователь</div>
-                    <div class="inform">
-                        <p>Дата размещения: 2014-12-25</p>
-                        <p>Регион: <a href="#">Москва</a></p>
-                        <p>Заработная плата: 56000 – 67000 руб.</p>
-                        <p><a href="#">Организация: Московский гусударственный университет имени М. В. Ломоносова</a></p>
-                        <p>Научные направления: <a href="#">Физика</a>, <a href="#">Механика</a>, <a href="#">Инструменты и приборы</a>, <a href="#">Компьютерная техника</a>, <a href="#">Программирование</a>, <a href="#">Экономика</a>, <a href="#">Материаловедение – междисциплинарное</a></p>
-                    </div>
-                </div>
-            </div>
-            <div>
-                <div class="index-number">178.</div>
-                <div class="index-text">
-                    <div class="title">Ведущий научный сотрудник</div>
-                    <div class="inform">
-                        <p>Дата размещения: 2014-12-25</p>
-                        <p>Регион: <a href="#">Москва</a></p>
-                        <p>Заработная плата: 56000 – 67000 руб.</p>
-                        <p><a href="#">Организация: Московский гусударственный университет имени М. В. Ломоносова</a></p>
-                        <p>Научные направления: <a href="#">Физика</a>, <a href="#">Механика</a>, <a href="#">Инструменты и приборы</a></p>
-                    </div>
-                </div>
-            </div>
-            <div>
-                <div class="index-number">179.</div>
-                <div class="index-text">
-                    <div class="title">Старший научный сотрудник</div>
-                    <div class="inform">
-                        <p>Дата размещения: 2014-12-25</p>
-                        <p>Регион: <a href="#">Москва</a></p>
-                        <p>Заработная плата: 56000 – 67000 руб.</p>
-                        <p><a href="#">Организация: Московский гусударственный университет имени М. В. Ломоносова</a></p>
-                        <p>Научные направления: <a href="#">Физика</a>, <a href="#">Механика</a>, <a href="#">Инструменты и приборы</a></p>
-                    </div>
-                </div>
-            </div>
-            <div>
-                <div class="index-number">180.</div>
-                <div class="index-text">
-                    <div class="title">Старший научный сотрудник</div>
-                    <div class="inform">
-                        <p>Дата размещения: 2014-12-25</p>
-                        <p>Регион: <a href="#">Москва</a></p>
-                        <p>Заработная плата: 56000 – 67000 руб.</p>
-                        <p><a href="#">Организация: Московский гусударственный университет имени М. В. Ломоносова</a></p>
-                        <p>Научные направления: <a href="#">Физика</a>, <a href="#">Механика</a>, <a href="#">Инструменты и приборы</a></p>
-                    </div>
-                </div>
-            </div>
+            }
+
         </div>
     </div>
 </div>
@@ -397,7 +300,7 @@
 <div class="bottom-nav" style="margin:80px 0 20px 0;">
     <div class="bottom-nav-left">
         <div class="count-news" style="margin:0 20px 0 0;">
-            171-180 из 2681110 вакансий
+            171-180 из @Model.TotalItemCount вакансий
         </div>
         <div class="count-line-page">
             <input type="text" value="10"> записей на странице
@@ -417,7 +320,7 @@
             </li>
             <li>
                 <div class="count-page">
-                    <input type="text" value="18"> из 653
+                    <input type="text" value="@Model.PageNumber"> из @Model.PageCount
                 </div>
             </li>
             <li>

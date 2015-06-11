@@ -19,6 +19,7 @@
     "Microsoft.VisualStudio.Web.BrowserLink.Loader": "14.0.0-beta4",
     "Microsoft.Framework.DependencyInjection": "1.0.0-beta4",
     "MediatR": "2.0.0-beta-004",
+    "PagedList.Mvc": "4.5.0",
     "SciVacancies.Domain": "1.0.0-*",
     "SciVacancies.Domain.Events": "1.0.0-*",
     "Autofac.Dnx": "4.0.0-alpha2"

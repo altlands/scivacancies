@@ -2,9 +2,9 @@
 
 namespace SciVacancies.WebApp.ViewModels
 {
-    public class ResearcherDetailsViewModel: PageViewModelBase
+    public class OrganizationDetailsViewModel : PageViewModelBase
     {
-        public ResearcherDetailsViewModel()
+        public OrganizationDetailsViewModel()
         {
             Title = "Личная карточка";
         }

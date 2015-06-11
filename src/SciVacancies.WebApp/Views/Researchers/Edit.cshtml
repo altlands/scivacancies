@@ -1,4 +1,6 @@
-﻿@model SciVacancies.WebApp.ViewModels.ResearcherEditViewModel
+﻿@using System.Threading.Tasks
+@using SciVacancies.WebApp.Controllers
+@model SciVacancies.WebApp.ViewModels.ResearcherEditViewModel
 @{
 
 }
@@ -13,10 +15,10 @@
 
 <h3>Личная карточка пользователя</h3>
 
-@Component.Invoke("ResearcherTabs")
+@Component.Invoke("AccountTabs", typeof(ResearchersController))
 
 <h4>@Model.Title</h4>
-<div class="l-information e-information b-edit">
+<form asp-controller="researchers" asp-action="edit" method="POST" class="l-information e-information b-edit">
     <div class="row">
         <div class="bold mb20">Общая информация</div>
         <a href="#" class="link-upload fs13">Загрузить данные из системы «Карта науки»</a>
@@ -299,8 +301,8 @@
     </div>
     <div class="row">
         <div class="ctr-buttons button-align mt12 mb5">
-            <a asp-controller="researchers" asp-action="account" class="save-button">Сохранить изменения</a>
+            <input type="submit" asp-controller="researchers" asp-action="account" class="save-button" value="Сохранить изменения"/>
             <a asp-controller="researchers" asp-action="account" class="close-button">Закрыть</a>
         </div>
     </div>
-</div>
+</form>
