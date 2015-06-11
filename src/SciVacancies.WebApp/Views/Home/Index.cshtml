@@ -1,98 +1,303 @@
 ﻿@{
-    ViewBag.Title = "Home Page";
+    ViewBag.Title = "Главная страница";
 }
+<div class="crumbs">
+    @ViewBag.Title
+</div>
 
-<div id="myCarousel" class="carousel slide" data-ride="carousel" data-interval="6000">
-    <ol class="carousel-indicators">
-        <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
-        <li data-target="#myCarousel" data-slide-to="1"></li>
-        <li data-target="#myCarousel" data-slide-to="2"></li>
-        <li data-target="#myCarousel" data-slide-to="3"></li>
-    </ol>
-    <div class="carousel-inner" role="listbox">
-        <div class="item active">
-            <img src="~/images/ASP-NET-Banners-01.png" alt="ASP.NET" class="img-responsive">
-            <div class="container">
-                <div class="carousel-caption">
-                    <p>
-                        Learn how to build ASP.NET apps that can run anywhere.
-                        <a class="btn btn-default btn-default" href="http://go.microsoft.com/fwlink/?LinkID=525028&clcid=0x409">
-                            Learn More
-                        </a>
-                    </p>
-                </div>
-            </div>
+<div class="b-list-vac">
+    <div class="row-2">
+        <h4>Работа в организациях</h4>
+        <div class="b-vacancies">
+
+
+            <a asp-controller="vacancies" asp-action="details" asp-route-id="3" class="row-4">
+                <img class="img-vac" src="/images/im.jpg">
+                <span class="text-vac">
+                    Московский государственный университет имени М.В.Ломоносова
+                </span>
+            </a>
+            <a asp-controller="vacancies" asp-action="details" asp-route-id="3" class="row-4">
+                <img class="img-vac" src="/images/im.jpg">
+                <span class="text-vac">
+                    Московский государственный университет имени М.В.Ломоносова
+                </span>
+            </a>
+            <a asp-controller="vacancies" asp-action="details" asp-route-id="3" class="row-4">
+                <img class="img-vac" src="/images/im.jpg">
+                <span class="text-vac">
+                    Московский государственный университет имени М.В.Ломоносова
+                </span>
+            </a>
+            <a asp-controller="vacancies" asp-action="details" asp-route-id="3" class="row-4">
+                <img class="img-vac" src="/images/im.jpg">
+                <span class="text-vac">
+                    Московский государственный университет имени М.В.Ломоносова
+                </span>
+            </a>
+
         </div>
-        <div class="item">
-            <img src="~/images/Banner-02-VS.png" alt="Visual Studio" class="img-responsive">
-            <div class="container">
-                <div class="carousel-caption">
-                    <p>
-                        There are powerful new features in Visual Studio for building modern web apps.
-                        <a class="btn btn-default btn-default" href="http://go.microsoft.com/fwlink/?LinkID=525030&clcid=0x409">
-                            Learn More
-                        </a>
-                    </p>
+        <a asp-controller="vacancies" asp-action="search">
+            <span class="small-icon icon-sm-eye inline-block ml9 mt13"><span>Показать все</span></span>
+        </a>
+    </div>
+    <div class="row-2">
+        <h4>Вакансии дня</h4>
+        <div class="b-vacancies b-vacancies-day">
+
+            <a asp-controller="vacancies" asp-action="details" asp-route-id="3" class="row-4">
+                <div class="iblock-middle">
+                    <div class="title-vac">Младший научный сотрудник</div>
+                    <div class="sal-vac">30 000 – 40 000 руб.</div>
+                    <p>Московский государственный университет имени М.В.Ломоносова</p>
                 </div>
-            </div>
+            </a>
+            <a asp-controller="vacancies" asp-action="details" asp-route-id="3" class="row-4">
+                <div class="iblock-middle">
+                    <div class="title-vac">Младший научный сотрудник</div>
+                    <div class="sal-vac">30 000 – 40 000 руб.</div>
+                    <p>Московский государственный университет имени М.В.Ломоносова</p>
+                </div>
+            </a>
+            <a asp-controller="vacancies" asp-action="details" asp-route-id="3" class="row-4">
+                <div class="iblock-middle">
+                    <div class="title-vac">Младший научный сотрудник</div>
+                    <div class="sal-vac">30 000 – 40 000 руб.</div>
+                    <p>Московский государственный университет имени М.В.Ломоносова</p>
+                </div>
+            </a>
+            <a asp-controller="vacancies" asp-action="details" asp-route-id="3" class="row-4">
+                <div class="iblock-middle">
+                    <div class="title-vac">Младший научный сотрудник</div>
+                    <div class="sal-vac">30 000 – 40 000 руб.</div>
+                    <p>Московский государственный университет имени М.В.Ломоносова</p>
+                </div>
+            </a>
+
         </div>
-        <div class="item">
-            <img src="~/images/ASP-NET-Banners-02.png" alt="Package Management" class="img-responsive">
-            <div class="container">
-                <div class="carousel-caption">
-                    <p>
-                        Bring in libraries from NuGet, Bower, and npm, and automate tasks using Grunt or Gulp.
-                        <a class="btn btn-default btn-default" href="http://go.microsoft.com/fwlink/?LinkID=525029&clcid=0x409">
-                            Learn More
-                        </a>
-                    </p>
-                </div>
+        <a asp-controller="vacancies" asp-action="search">
+            <span class="small-icon icon-sm-eye inline-block ml9 mt13"><span>Показать все</span></span>
+        </a>
+    </div>
+</div>
+
+<div class="b-tabs">
+    <h4 class="mb10">Вакансии по областям науки</h4>
+
+    <ul class="nav nav-tabs" id="myTab">
+        <li>
+            <a href="#natural">Естественные</a>
+        </li>
+        <li>
+            <a href="#medical">Медицинские</a>
+        </li>
+        <li>
+            <a href="#humanities">Гуманитарные</a>
+        </li>
+        <li>
+            <a href="#technical">Технические</a>
+        </li>
+        <li>
+            <a href="#social">Социальные</a>
+        </li>
+        <li>
+            <a href="#agricultural">Сельскохозяйственные</a>
+        </li>
+    </ul>
+
+    <div class="tab-content tab-content-main-page">
+        <div class="tab-pane" id="natural">
+
+            <div class="float-right">
+                <input type="text" placeholder="Поиск по научным направлениям" />
             </div>
+
+            <h4>Естественные и точные науки</h4>
+
+            <div class="read-italic">В данной категории – 2681110 вакансий</div>
+
+            <ul class="tabs">
+                <li class="active">
+                    <span>Науки о Земле и смежные экологические науки	</span>
+                </li>
+                <li>
+                    <span>Математика</span>
+                </li>
+                <li>
+                    <span>Компьютерные и информационные науки</span>
+                </li>
+                <li>
+                    <span>Биологические науки</span>
+                </li>
+                <li>
+                    <span>Химические науки</span>
+                </li>
+                <li>
+                    <span>Физика и Астрономия</span>
+                </li>
+                <li>
+                    <span>Прочие естественные науки</span>
+                </li>
+            </ul>
+
+            <ul class="list-sections-science">
+                <li>
+                    <a href="#">Океанография</a>
+                    <p>1256 вакансий</p>
+                    <p>Средняя заработная плата – 67000 руб.</p>
+                </li>
+                <li>
+                    <a href="#">Водные ресурсы</a>
+                    <p>1256 вакансий</p>
+                    <p>Средняя заработная плата – 67000 руб.</p>
+                </li>
+                <li>
+                    <a href="#">Минералогия</a>
+                    <p>1256 вакансий</p>
+                    <p>Средняя заработная плата – 67000 руб.</p>
+                </li>
+                <li>
+                    <a href="#">Палеонтология</a>
+                    <p>1256 вакансий</p>
+                    <p>Средняя заработная плата – 67000 руб.</p>
+                </li>
+                <li>
+                    <a href="#">Геология</a>
+                    <p>1256 вакансий</p>
+                    <p>Средняя заработная плата – 67000 руб.</p>
+                </li>
+                <li>
+                    <a href="#">Науки о земле – междисциплинарные</a>
+                    <p>1256 вакансий</p>
+                    <p>Средняя заработная плата – 67000 руб.</p>
+                </li>
+                <li>
+                    <a href="#">Физическая география</a>
+                    <p>1256 вакансий</p>
+                    <p>Средняя заработная плата – 67000 руб.</p>
+                </li>
+                <li>
+                    <a href="#">Геохимия и геофизика</a>
+                    <p>1256 вакансий</p>
+                    <p>Средняя заработная плата – 67000 руб.</p>
+                </li>
+                <li>
+                    <a href="#">Науки об окружающей среде</a>
+                    <p>1256 вакансий</p>
+                    <p>Средняя заработная плата – 67000 руб.</p>
+                </li>
+                <li>
+                    <a href="#">Геоинформационные системы</a>
+                    <p>1256 вакансий</p>
+                    <p>Средняя заработная плата – 67000 руб.</p>
+                </li>
+                <li>
+                    <a href="#">Метеорология и науки об атмосфере</a>
+                    <p>1256 вакансий</p>
+                    <p>Средняя заработная плата – 67000 руб.</p>
+                </li>
+            </ul>
         </div>
-        <div class="item">
-            <img src="~/images/Banner-01-Azure.png" alt="Microsoft Azure" class="img-responsive">
-            <div class="container">
-                <div class="carousel-caption">
-                    <p>
-                        Learn how Microsoft's Azure cloud platform allows you to build, deploy, and scale web apps.
-                        <a class="btn btn-default btn-default" href="http://go.microsoft.com/fwlink/?LinkID=525027&clcid=0x409">
-                            Learn More
-                        </a>
-                    </p>
-                </div>
-            </div>
+        <div class="tab-pane" id="medical">
+            <h4>Медицинские науки</h4>
+        </div>
+        <div class="tab-pane" id="humanities">
+            <h4>Гуманитарные науки</h4>
+        </div>
+        <div class="tab-pane" id="technical">
+            <h4>Технические науки</h4>
+        </div>
+        <div class="tab-pane" id="social">
+            <h4>Социальные науки</h4>
+        </div>
+        <div class="tab-pane" id="agricultural">
+            <h4>Сельскохозяйственные науки</h4>
         </div>
     </div>
 </div>
 
-<div class="row">
-    <div class="col-md-4">
-        <h2>This application consists of:</h2>
-        <ul>
-            <li>Sample pages showing basic nav</li>
-            <li>Theming using <a href="http://go.microsoft.com/fwlink/?LinkID=398939">Bootstrap</a></li>
-        </ul>
+<div class="b-graphics">
+    <h4>Вакансии в графиках</h4>
+
+    <ul class="tabs">
+        <li class="active">
+            <span>День</span>
+        </li>
+        <li>
+            <span>Неделя</span>
+        </li>
+        <li>
+            <span>Месяц</span>
+        </li>
+    </ul>
+
+    <div class="graphics">
+        <div class="row-2">
+            <div class="title-graphic">Число вакансий ( среднее предложение в месяц )</div>
+            <div class="/image"><img style="margin-top: 5px;" src="/images/graph1.png" /></div>
+            <style>
+                .graph-details {
+                    margin: 7px 0 0 36px;
+                }
+
+                    .graph-details li:before {
+                        content: "";
+                        display: inline-block;
+                        width: 10px;
+                        height: 10px;
+                        margin-right: 8px;
+                    }
+
+                    .graph-details li.color1:before {
+                        background-color: #041833;
+                    }
+
+                    .graph-details li.color2:before {
+                        background-color: #06365c;
+                    }
+
+                    .graph-details li.color3:before {
+                        background-color: #3a5e90;
+                    }
+
+                    .graph-details li.color4:before {
+                        background-color: #d8e1e9;
+                    }
+
+                    .graph-details li span {
+                        font-size: 10px;
+                        font-family: Arial;
+                        line-height: 16px;
+                    }
+
+                .graph-region-select-block {
+                    margin: 10px 0 0 38px;
+                    width: 372px;
+                }
+            </style>
+            <ul class="graph-details">
+                <li class="color1"><span>Руководители групп структурных подразделений</span></li>
+                <li class="color2"><span>Руководители структурных подразделений</span></li>
+                <li class="color3"><span>Сотрудники</span></li>
+                <li class="color4"><span>Прочие</span></li>
+            </ul>
+        </div>
+
+        <div class="row-2">
+            <div class="title-graphic">Средняя зарплата и количество вакансий</div>
+            <div class="/image"><img src="/images/graph2.png" /></div>
+            <ul class="graph-details">
+                <li class="color3"><span>Средняя заработная плата</span></li>
+                <li class="color1"><span>Количество вакансий</span></li>
+            </ul>
+            <div class="graph-region-select-block">
+                <select name="region" class="graph-region-select" id="region">
+                    <option value="1">Выбор региона</option>
+                    <option value="2">Выбор региона 1</option>
+                    <option value="3">Выбор региона 2</option>
+                </select>
+            </div>
+        </div>
     </div>
-    <div class="col-md-4">
-        <h2>Customize app</h2>
-        <ul>
-            <li><a href="http://go.microsoft.com/fwlink/?LinkID=398600">Add Controllers and Views</a></li>
-            <li><a href="http://go.microsoft.com/fwlink/?LinkID=398602">Add Data using EntityFramework</a></li>
-            <li><a href="http://go.microsoft.com/fwlink/?LinkID=398603">Add Authentication using Identity</a></li>
-            <li><a href="http://go.microsoft.com/fwlink/?LinkID=398606">Add real time support using SignalR</a></li>
-            <li><a href="http://go.microsoft.com/fwlink/?LinkID=398604">Add Class library</a></li>
-            <li><a href="http://go.microsoft.com/fwlink/?LinkID=517848">Add client packages using Bower</a></li>
-            <li><a href="http://go.microsoft.com/fwlink/?LinkID=517849">Manage client packages using Grunt</a></li>
-            <li><a href="http://go.microsoft.com/fwlink/?LinkID=517850">Develop on different platforms</a></li>
-        </ul>
-    </div>
-    <div class="col-md-4">
-        <h2>Run & Deploy</h2>
-        <ul>
-            <li><a href="http://go.microsoft.com/fwlink/?LinkID=517851">Run your app locally</a></li>
-            <li><a href="http://go.microsoft.com/fwlink/?LinkID=517852">Run your app on ASP.NET Core 5</a></li>
-            <li><a href="http://go.microsoft.com/fwlink/?LinkID=517853">Run commands defined in your project.json</a></li>
-            <li><a href="http://go.microsoft.com/fwlink/?LinkID=398609">Publish to Microsoft Azure Web Sites</a></li>
-        </ul>
-    </div>
+    <!--img src="/images/graph.png"/-->
 </div>

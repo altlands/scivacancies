@@ -1,0 +1,306 @@
+﻿@model SciVacancies.WebApp.ViewModels.ResearcherEditViewModel
+@{
+
+}
+
+<div class="crumbs">
+    <a href="/">Главная страница</a>
+    <span class="separator">/</span>
+    <a asp-controller="researchers" asp-action="account">Личная карточка пользователя</a>
+    <span class="separator">/</span>
+    @Model.NavigationTitle
+</div>
+
+<h3>Личная карточка пользователя</h3>
+
+@Component.Invoke("ResearcherTabs")
+
+<h4>@Model.Title</h4>
+<div class="l-information e-information b-edit">
+    <div class="row">
+        <div class="bold mb20">Общая информация</div>
+        <a href="#" class="link-upload fs13">Загрузить данные из системы «Карта науки»</a>
+        <div class="table-form">
+            <div class="table-row mb15">
+                <div class="left-cell">
+                    <label class="mb10">Ваше фото</label>
+                    <a href="#" class="link-upload fs13">Загрузить фото</a>
+                    <div class="description mt10">
+                        Выберите изображение размером<br /> не более 500 кБ<br />Рекомендуемое соотношение сторон – 3:4
+                    </div>
+                </div>
+                <div class="right-cell">
+                    <div class="user-photo">
+                        <img src="/images/photo.jpg" />
+                    </div>
+                </div>
+            </div>
+            <div class="table-row form-row">
+                <div class="left-cell">
+                    <label>Фамилия</label>
+                </div>
+                <div class="right-cell">
+                    <input type="text" value="Глаголев" />
+                </div>
+            </div>
+            <div class="table-row form-row">
+                <div class="left-cell">
+                    <label>Имя</label>
+                </div>
+                <div class="right-cell">
+                    <input type="text" value="Виктор" />
+                </div>
+            </div>
+            <div class="table-row form-row">
+                <div class="left-cell">
+                    <label>Отчество</label>
+                </div>
+                <div class="right-cell">
+                    <input type="text" value="Александрович" />
+                </div>
+            </div>
+            <div class="table-row form-row">
+                <div class="left-cell">
+                    <label>Фамилия (англ.)</label>
+                </div>
+                <div class="right-cell">
+                    <input type="text" value="" />
+                </div>
+            </div>
+            <div class="table-row form-row">
+                <div class="left-cell">
+                    <label>Имя (англ.)</label>
+                </div>
+                <div class="right-cell">
+                    <input type="text" value="" />
+                </div>
+            </div>
+            <div class="table-row form-row">
+                <div class="left-cell">
+                    <label>Отчество (англ.)</label>
+                </div>
+                <div class="right-cell">
+                    <input type="text" value="" />
+                </div>
+            </div>
+            <div class="table-row form-row">
+                <div class="left-cell">
+                    <label>Прежняя фамилия</label>
+                </div>
+                <div class="right-cell">
+                    <input type="text" value="" />
+                </div>
+            </div>
+            <div class="table-row form-row">
+                <div class="left-cell">
+                    <label>Год рождения</label>
+                </div>
+                <div class="right-cell">
+                    <select>
+                        <option selected>1931</option>
+                        <option selected>1932</option>
+                        <option selected>1933</option>
+                        <option selected>1934</option>
+                    </select>
+                </div>
+            </div>
+            <div class="table-row form-row">
+                <div class="left-cell">
+                    <label>Электронная почта</label>
+                </div>
+                <div class="right-cell">
+                    <input type="text" value="vaglagolev@pisem.net" />
+                    <a href="#" class="link-add lk-icon italic link-add-field">Добавить дополнительный адрес</a>
+                </div>
+            </div>
+            <div class="table-row form-row">
+                <div class="left-cell">
+                    <label>Контактный телефон</label>
+                </div>
+                <div class="right-cell">
+                    <input type="text" value="+7 (495) 123-4567" />
+                    <a href="#" class="link-add lk-icon italic link-add-field">Добавить дополнительный номер</a>
+                </div>
+            </div>
+            <div class="table-row form-row mt17">
+                <div class="left-cell">
+                    <label>Гражданство</label>
+                </div>
+                <div class="right-cell">
+                    <a href="#" class="link-add lk-icon italic link-add-field">Добавить гражданство</a>
+                </div>
+            </div>
+            <div class="table-row form-row mt23">
+                <div class="left-cell">
+                    <label>Научные интересы</label>
+                </div>
+                <div class="right-cell">
+                    <a href="#" class="italic link-add lk-icon link-add-field">Добавить из Государственного рубрикатора научно-технической информации</a>
+                    <ul class="list-tags research-interests">
+                        <li>Автоматизация и автоматизированные системы в области науковедения <a href="#" class="link-remove lk-icon italic">Удалить</a></li>
+                        <li>Библиотечное дело, библиотековедение <a href="#" class="link-remove lk-icon italic">Удалить</a></li>
+                        <li>Информационная деятельность в области науковедения <a href="#" class="link-remove lk-icon italic">Удалить</a></li>
+                        <li>Научные и технические библиотеки и библиотечные сети <a href="#" class="link-remove lk-icon italic">Удалить</a></li>
+                        <li>Техническое оснащение библиотек <a href="#" class="link-remove lk-icon italic">Удалить</a></li>
+                        <li>Электронные библиотеки <a href="#" class="link-remove lk-icon italic">Удалить</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row mb13">
+        <div class="bold">Образование</div>
+        <div class="table-form mt15">
+            <div class="table-row form-row">
+                <div class="left-cell">
+                    <label>Город:</label>
+                </div>
+                <div class="right-cell">
+                    <input type="text" value="Челябинск" class="big-input" />
+                </div>
+            </div>
+            <div class="table-row form-row">
+                <div class="left-cell">
+                    <label>ВУЗ:</label>
+                </div>
+                <div class="right-cell">
+                    <input type="text" value="ЧГАКИ" class="big-input" />
+                </div>
+            </div>
+            <div class="table-row form-row">
+                <div class="left-cell">
+                    <label>Факультет:</label>
+                </div>
+                <div class="right-cell">
+                    <input type="text" value="Информационных ресурсов и технологий" class="big-input" />
+                </div>
+            </div>
+            <div class="table-row form-row">
+                <div class="left-cell">
+                    <label>Год окончания:</label>
+                </div>
+                <div class="right-cell">
+                    <input type="text" value="2000" class="big-input" />
+                </div>
+            </div>
+            <div class="table-row form-row mt17">
+                <div class="left-cell">
+                    <label></label>
+                </div>
+                <div class="right-cell">
+                    <a href="#" class="link-add lk-icon italic link-add-field">Добавить Образование</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row mb13">
+        <div class="bold">Опыт работы</div>
+        <div class="table-form mt15">
+            <div class="table-row form-row">
+                <div class="left-cell">
+                    <label>Исследовательская деятельность:</label>
+                </div>
+                <div class="right-cell">
+                    <textarea></textarea>
+                </div>
+            </div>
+            <div class="table-row form-row">
+                <div class="left-cell">
+                    <label>Преподавательская деятельность:</label>
+                </div>
+                <div class="right-cell">
+                    <textarea></textarea>
+                </div>
+            </div>
+            <div class="table-row form-row">
+                <div class="left-cell">
+                    <label>Прочая деятельность:</label>
+                </div>
+                <div class="right-cell">
+                    <textarea></textarea>
+                </div>
+            </div>
+            <div class="table-row form-row mt17">
+                <div class="left-cell">
+                    <label></label>
+                </div>
+                <div class="right-cell">
+                    <a href="#" class="link-add lk-icon italic link-add-field">Добавить Опыт работы</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row mb6">
+        <div class="bold">Научная деятельность<br /> и достижения</div>
+        <div class="table-form mt15">
+            <div class="table-row form-row">
+                <div class="left-cell">
+                    <label>Ученая степень:</label>
+                </div>
+                <div class="right-cell">
+                    <input type="text" value="без степени" class="big-input" />
+                </div>
+            </div>
+            <div class="table-row form-row">
+                <div class="left-cell">
+                    <label>Ученые звания:</label>
+                </div>
+                <div class="right-cell">
+                    <input type="text" value="без звания" class="big-input" />
+                </div>
+            </div>
+            <div class="table-row form-row">
+                <div class="left-cell">
+                    <label>Награды:</label>
+                </div>
+                <div class="right-cell">
+                    <input type="text" value="" class="big-input" />
+                </div>
+            </div>
+            <div class="table-row form-row">
+                <div class="left-cell">
+                    <label>Членство в профессиональных сообществах:</label>
+                </div>
+                <div class="right-cell">
+                    <textarea></textarea>
+                </div>
+            </div>
+            <div class="table-row form-row">
+                <div class="left-cell">
+                    <label>Конференции, симпозиумы, конгрессы:</label>
+                </div>
+                <div class="right-cell">
+                    <textarea></textarea>
+                </div>
+            </div>
+            <div class="table-row form-row">
+                <div class="left-cell">
+                    <label>Публикации:</label>
+                </div>
+                <div class="right-cell">
+                    <ol class="list-publications content-list">
+                        <li>
+                            Научная публикация поколения 2.0: перспектива или реальность?
+                            <div class="buttons">
+                                <span class="big-link-edit"></span><span class="big-link-remove"></span>
+                            </div>
+                        </li>
+                        <li>
+                            Электронно-библиотечная система: перевод понятия на «библиотечный» английский
+                            <div class="buttons">
+                                <span class="big-link-edit"></span><span class="big-link-remove"></span>
+                            </div>
+                        </li>
+                    </ol>
+                    <a class="link-add lk-icon italic link-add-field" href="#">Добавить публикацию</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="ctr-buttons button-align mt12 mb5">
+            <a asp-controller="researchers" asp-action="account" class="save-button">Сохранить изменения</a>
+            <a asp-controller="researchers" asp-action="account" class="close-button">Закрыть</a>
+        </div>
+    </div>
+</div>

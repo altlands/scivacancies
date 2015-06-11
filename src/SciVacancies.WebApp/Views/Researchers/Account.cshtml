@@ -1,0 +1,78 @@
+﻿@using System.Threading.Tasks
+@model SciVacancies.WebApp.ViewModels.ResearcherDetailsViewModel
+
+@{
+    ViewBag.Title = Model.NavigationTitle;
+}
+
+@Component.Invoke("Breadcrumbs", Model.NavigationTitle)
+
+<h3>@Model.Title</h3>
+
+@Component.Invoke("ResearcherTabs")
+
+<h4>Информация</h4>
+<div class="l-information">
+    <div class="row">
+        <div class="profile">
+            <div class="photo inline-block">
+                <img src="/images/profile-photo.png" width="140" height="180" />
+            </div>
+            <div class="info inline-block">
+                <h4>Глаголев Виктор Александрович</h4>
+                <span>Год рождения: 1931</span>
+            </div>
+        </div>
+    </div>
+    <div class="row pt15 fs12">
+        <div><span class="bold">Индивидуальный номер ученого:</span> 00005444<br /></div>
+        <span class="bold">Научные интересы (Государственный рубрикатор научно-технической информации):</span><br />
+        Автоматизация и автоматизированные системы в области науковедения; Библиотечное дело, библиотековедение;<br />
+        Информационная деятельность в области науковедения; Научные и технические библиотеки и библиотечные сети; Техническое оснащение библиотек;<br />
+        Электронные библиотеки
+    </div>
+    <div class="row">
+        <span class="bold">Образование</span>
+        <ul class="table-emulation">
+            <li>
+                <span class="w85 italic inline-block">Город</span> <span class="italic grey">Челябинск</span>
+            </li>
+            <li>
+                <span class="w85 italic inline-block">ВУЗ</span> <span class="italic grey">ЧГАКИ</span>
+            </li>
+            <li>
+                <span class="w85 italic inline-block">Факультет</span> <span class="italic grey">Информационных ресурсов и технологий</span>
+            </li>
+            <li>
+                <span class="w85 italic inline-block">Год окончания</span> <span class="italic grey">2000</span>
+            </li>
+        </ul>
+    </div>
+    <div class="row">
+        <span class="bold">Ученая степень</span>
+    </div>
+    <div class="row">
+        <span class="bold">Ученые звания</span>
+    </div>
+    <div class="row">
+        <span class="bold">Награды</span>
+    </div>
+    <div class="row">
+        <span class="bold">Членство в профессиональных сообществах</span><br />
+        <span class="italic">Редколлегии и консультативные советы рецензируемых научных изданий<br /> Научные общества и организации</span>
+    </div>
+    <div class="row">
+        <span class="bold">Конференции, симпозиумы, конгрессы</span>
+    </div>
+    <div class="row">
+        <span class="bold">Публикации</span>
+    </div>
+</div>
+<div class="b-links mt-2 ml3">
+    <div class="link-edit">
+        <a asp-controller="researchers" 
+           asp-action="edit"
+           asp-route-id="@Model.Id" 
+           class="arial italic">Редактировать</a>
+    </div>
+</div>
