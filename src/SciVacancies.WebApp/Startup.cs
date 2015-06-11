@@ -6,6 +6,7 @@ using System.Collections.Generic;
 
 using Microsoft.AspNet.Builder;
 using Microsoft.AspNet.Diagnostics;
+using Microsoft.AspNet.Http;
 using Microsoft.AspNet.Hosting;
 using Microsoft.Framework.ConfigurationModel;
 using Microsoft.Framework.DependencyInjection;
@@ -57,6 +58,7 @@ namespace SciVacancies.WebApp
         // Configure is called after ConfigureServices is called.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerfactory)
         {
+            app.UseInMemorySession(configure: s => s.IdleTimeout = TimeSpan.FromMinutes(30));
             // Configure the HTTP request pipeline.
 
             // Add the console logger.

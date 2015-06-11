@@ -1,0 +1,129 @@
+﻿@{
+    ViewBag.Title = "Регистрация";
+}
+
+<div class="crumbs">
+    <a href="/">Главная страница</a><span class="separator">/</span>Регистрация
+</div>
+
+<h4>@ViewBag.Title</h4>
+
+<div class="text">
+    <p>Уважаемые посетители Портала! На данной странице вы можете создать учетную запись пользователя Соискателя.<br /> Введенные данные будут сохранены в вашей личной карточке и использованы в качестве резюме при подаче заявок на вакансии.<br /> Впоследствии их можно будет отредактировать.</p>
+
+    <p><a href="#">Организациям</a> и их представителям заполнять регистрационную форму не нужно - для входа в Личный кабинет необходимо использовать<br /> логин и пароль, полученные на сайте <a href="#">Федеральной системы мониторинга результативности деятельности научных организаций</a>(ФСМНО).</p>
+</div>
+
+<a href="#" class="middle-icon icon-download lk-icon"><span>Загрузить данные из системы «Карта науки»</span></a>
+
+<div class="b-form">
+    <form>
+        <div class="form-line form-row">
+            <label>Фамилия</label>
+            <div class="b-r-form">
+                <div class="input">
+                    <input type="text" />
+                </div>
+            </div>
+        </div>
+
+        <div class="form-line form-row">
+            <label>Имя</label>
+            <div class="b-r-form">
+                <div class="input">
+                    <input type="text" />
+                </div>
+            </div>
+        </div>
+
+        <div class="form-line form-row">
+            <label>Отчество</label>
+            <div class="b-r-form">
+                <div class="input">
+                    <input type="text" />
+                </div>
+            </div>
+        </div>
+
+        <div class="form-line form-row">
+            <label>Год рождения</label>
+            <div class="b-r-form w120">
+                <select name="3" id="3">
+                    <option value="XXXX">XXXX</option>
+                    <option value="YYYY">YYYY</option>
+                    <option value="ZZZZ">ZZZZ</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="form-line mt27 form-row">
+            <label>Электронная почта</label>
+            <div class="b-r-form">
+                <div class="input">
+                    <input type="text" />
+                </div>
+            </div>
+        </div>
+
+        <div class="form-line form-row">
+            <label>Контактный телефон</label>
+            <div class="b-r-form">
+                <div class="input">
+                    <input type="text" />
+                </div>
+            </div>
+        </div>
+
+        <div class="form-line mtop30 form-row">
+            <label>Пароль</label>
+            <div class="b-r-form">
+                <div class="input">
+                    <input type="text" />
+                </div>
+                <div class="description">
+                    Введите пароль, удовлетворяющий следующим требованиям:
+                    <br />
+                    не менее 8 символов, использование латиницы, разных регистров и цифр
+                </div>
+            </div>
+        </div>
+
+        <div class="form-line form-row">
+            <label>Подтверждение пароля</label>
+            <div class="b-r-form">
+                <div class="input">
+                    <input type="text" />
+                </div>
+            </div>
+        </div>
+
+        <div class="form-line mtop30 form-row">
+            <label>Введите текст с картинки</label>
+            <div class="b-r-form">
+                <div class="captcha">
+                    <img src="/images/cptch-img.jpg" />
+                </div>
+                <div class="form-line">
+                    <span class="small-icon icon-update"><span>Обновить</span></span>
+                </div>
+                <div class="form-line">
+                    <input type="text" class="middle-input" />
+                </div>
+            </div>
+        </div>
+
+        <div class="form-line">
+            <div class="b-r-form">
+                <div class="agree mtop30">
+                    <span class="checkbox checked">
+                        <input type="checkbox" checked id="ag" />
+                    </span><label for="ag">Я согласен на обработку моих персональных данных</label>
+                </div>
+                <span class="mtop30 green-btn middle-icon icon-arr-right">Отправить заявку</span>
+            </div>
+        </div>
+    </form>
+</div>
+<div class="b-bottom-nav">
+    <a href="/" class="small-icon icon-prev">На главную страницу</a>
+</div>

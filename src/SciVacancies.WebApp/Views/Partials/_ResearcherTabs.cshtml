@@ -1,0 +1,19 @@
+﻿@using System.Threading.Tasks
+@model Dictionary<string, string>
+@{
+    var currentAction = ViewContext.HttpContext.Request.Path;
+}
+<ul class="tabs">
+    @foreach (var item in Model)
+    {
+        <text>
+        <li class="@( currentAction.ToUriComponent().Contains(item.Key) ? "active" : string.Empty)">
+            <a href="/researchers/@item.Key">
+                <span>
+                    @item.Value
+                </span>
+            </a>
+        </li>
+        </text>
+    }
+</ul>
