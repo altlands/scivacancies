@@ -8,9 +8,5 @@ namespace SciVacancies.WebApp.ViewModels
 {
     public class ResearcherEditViewModel: PageViewModelBase
     {
-        public ResearcherEditViewModel()
-        {
-            Title = "Редактирование информации пользователя";
-        }
     }
 }

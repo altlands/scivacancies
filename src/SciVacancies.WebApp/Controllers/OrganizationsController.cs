@@ -19,14 +19,16 @@ namespace SciVacancies.WebApp.Controllers
         [PageTitle("Вакансии")]
         public ViewResult Vacancies()
         {
-            return View();
+            var model = new OrganizationDetailsViewModel();
+            return View(model);
         }
 
         [SiblingPage]
         [PageTitle("Уведомления")]
         public ViewResult Notifications()
         {
-            return View();
+            var model = new OrganizationDetailsViewModel();
+            return View(model);
         }
     }
 }
