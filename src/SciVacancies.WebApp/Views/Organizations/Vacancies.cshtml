@@ -1,15 +1,16 @@
 ﻿@using System.Threading.Tasks
 @using SciVacancies.WebApp.Controllers
+@model SciVacancies.WebApp.ViewModels.OrganizationDetailsViewModel
 
 <div class="crumbs">
     <a href="#">Главная страница</a><span class="separator">/</span>Московский государственный университет им. М.В. Ломоносова
 </div>
 
-<h3>Личная карточка пользователя</h3>
+<h3>@Model.Title</h3>
 
 @Component.Invoke("AccountTabs", typeof(OrganizationsController))
 
-<h4>Вакансии</h4>
+<h4>@ViewBag.Title</h4>
 
 <div class="table-control">
     <a href="#" class="close-table"><span class="italic">Очистить фильтры</span></a>
