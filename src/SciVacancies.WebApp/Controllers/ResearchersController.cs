@@ -23,6 +23,7 @@ namespace SciVacancies.WebApp.Controllers
         }
         [HttpPut]
         [HttpPost]
+        [PageTitle("Редактирование информации пользователя")]
         public RedirectToActionResult Edit(ResearcherEditViewModel model)
         {
             return RedirectToAction("account");
@@ -52,6 +53,7 @@ namespace SciVacancies.WebApp.Controllers
             return View(model);
         }
 
+        [SiblingPage]
         [PageTitle("Уведомления")]
         public ViewResult Notifications()
         {

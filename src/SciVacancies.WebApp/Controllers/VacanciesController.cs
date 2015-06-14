@@ -78,46 +78,34 @@ namespace SciVacancies.WebApp.Controllers
         /// <summary>
         /// фильтрация, страницы, сортировка 
         /// </summary>
-        /// <param name="salaries"></param>
-        /// <param name="contestStates"></param>
-        /// <param name="period"></param>
-        /// <param name="orderBy"></param>
-        /// <param name="orderDescending"></param>
-        /// <param name="pageSize"></param>
-        /// <param name="page"></param>
         /// <returns></returns>
-        public ViewResult Search(
-            List<int> salaries,
-            List<int> contestStates,
-            int period = 0 /* 0=all | 1=1 day |  7=7 days | 30=30 days */,
-            string orderBy = "date" /* maxSalary */,
-            bool orderDescending = true,
-            int pageSize = 10,
-            int page = 1
-            )
+        [HttpGet]
+        [PageTitle("Результаты поиска")]
+        public ViewResult Search(VacanciesFilter model)
         {
+            model.ValidateValues();
+
+
             IOrderedQueryable<VacanciesItemViewModel> orderedData;
-            if (orderDescending)
-                orderedData = data.AsQueryable().OrderByDescending(c => GetOrderingProperty(c, orderBy));
+            if (model.OrderBy.EndsWith("_descending"))
+                orderedData = data.AsQueryable().OrderByDescending(c => GetOrderingProperty(c, model.OrderBy));
             else
-                orderedData = data.AsQueryable().OrderBy(c => GetOrderingProperty(c, orderBy));
+                orderedData = data.AsQueryable().OrderBy(c => GetOrderingProperty(c, model.OrderBy));
 
-            var result = orderedData.ToPagedList(page, pageSize);
+            ViewBag.PagedData = orderedData.ToPagedList(model.PageNumber, model.PageSize);
+            ViewBag.FilterSource = new VacanciesFilterSource();
+            ViewBag.Search = model.Search;
 
-            return View(result);
+            return View(model);
         }
 
         private static object GetOrderingProperty(VacanciesItemViewModel c, string orderBy)
         {
-            switch (orderBy.ToLower())
-            {
-                case "date":
-                    return c.PublishedDate;
-                default: // case "maxSalary":
-                    return c.MaxSalary;
-            }
-
+            if (orderBy.StartsWith("date_"))
+                return c.PublishedDate;
+            return c.MaxSalary;
         }
+
 
         public ViewResult Details(string id) => View();
     }

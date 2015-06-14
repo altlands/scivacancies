@@ -10,14 +10,14 @@
     <span class="separator">/</span>
     <a asp-controller="researchers" asp-action="account">Личная карточка пользователя</a>
     <span class="separator">/</span>
-    @Model.NavigationTitle
+    @ViewBag.Title
 </div>
 
 <h3>Личная карточка пользователя</h3>
 
 @Component.Invoke("AccountTabs", typeof(ResearchersController))
 
-<h4>@Model.Title</h4>
+<h4>@ViewBag.Title</h4>
 <form asp-controller="researchers" asp-action="edit" method="POST" class="l-information e-information b-edit">
     <div class="row">
         <div class="bold mb20">Общая информация</div>

@@ -1,342 +1,397 @@
 ﻿@using System.Threading.Tasks
 @using PagedList
 @using SciVacancies.WebApp.ViewModels
-@model IPagedList<VacanciesItemViewModel>
+@model VacanciesFilter
 
 @{
-    ViewBag.Title = "Результаты поиска";
+    var pagedData = (IPagedList<VacanciesItemViewModel>)ViewBag.PagedData;
 }
 
 <div class="crumbs">
     <a href="/">Главная страница</a><span class="separator">/</span>@ViewBag.Title
 </div>
-<div class="l-search">
-    <div class="b-filter float-right">
-        <h4>Фильтр по результатам</h4>
 
-        <div class="filter-contents">
-            <div class="ctr-filter">
-                <span class="small-icon icon-sm-ok">Выбрать все</span>
-                <span class="small-icon icon-sm-close">Очистить фильтр</span>
-            </div>
+<form method="GET">
+    <div class="l-search">
+        <div class="b-filter float-right">
+            <h4>Фильтр по результатам</h4>
 
-            <div class="cat-filter">
-                <div class="title">Регион</div>
-                <ul class="list-checkboxes">
-                    <li>
-                        <span class="checkbox checked">
-                            <input type="checkbox" checked />
-                        </span><label>Москва и область (500)</label>
-                    </li>
-                    <li>
-                        <span class="checkbox checked">
-                            <input type="checkbox" checked />
-                        </span><label>Санкт-Петербург (430)</label>
-                    </li>
-                    <li>
-                        <span class="checkbox">
-                            <input type="checkbox" />
-                        </span><label>Новосибирск (357)</label>
-                    </li>
-                    <li>
-                        <span class="checkbox checked">
-                            <input type="checkbox" checked />
-                        </span><label>Самара (15)</label>
-                    </li>
-                    <li>
-                        <span class="checkbox">
-                            <input type="checkbox" />
-                        </span><label>Владивосток (12)</label>
-                    </li>
-                </ul>
-                <span class="small-icon icon-sm-eye"><span>Показать ещё 10 ( из 453 )</span></span>
-            </div>
+            <div class="filter-contents">
+                <div class="ctr-filter">
+                    <span class="small-icon icon-sm-ok">Выбрать все</span>
+                    <span class="small-icon icon-sm-close">Очистить фильтр</span>
+                </div>
 
-            <div class="cat-filter">
-                <div class="title">ФОИВ</div>
-                <ul class="list-checkboxes">
-                    <li>
-                        <span class="checkbox checked">
-                            <input type="checkbox" checked />
-                        </span><label>Минздрав РФ (456)</label>
-                    </li>
-                    <li>
-                        <span class="checkbox checked">
-                            <input type="checkbox" checked />
-                        </span><label>Минобонауки РФ (56)</label>
-                    </li>
-                    <li>
-                        <span class="checkbox">
-                            <input type="checkbox" />
-                        </span><label>РАМН (2)</label>
-                    </li>
-                    <li>
-                        <span class="checkbox checked">
-                            <input type="checkbox" checked />
-                        </span><label>РАН (7)</label>
-                    </li>
-                    <li>
-                        <span class="checkbox">
-                            <input type="checkbox" />
-                        </span><label>РосГидроМет (1)</label>
-                    </li>
-                </ul>
-                <span class="small-icon icon-sm-eye"><span>Показать ещё 10 ( из 682 )</span></span>
-            </div>
+                <div class="cat-filter">
+                    <div class="title">Регион</div>
+                    <ul class="list-checkboxes">
+                        <checkboxing items="ViewBag.FilterSource.Regions"
+                                     values="Model.Regions"
+                                     property="Regions" />
+                        @*<li>
+                                <span class="checkbox checked">
+                                    <input type="checkbox" id="regions1" name="regions" checked />
+                                </span>
+                                <label for="regions1">Москва и область (500)</label>
+                            </li>
+                            <li>
+                                <span class="checkbox checked">
+                                    <input type="checkbox" id="regions2" name="regions" checked />
+                                </span><label for="regions2">Санкт-Петербург (430)</label>
+                            </li>
+                            <li>
+                                <span class="checkbox">
+                                    <input type="checkbox" id="regions3" name="regions" />
+                                </span><label for="regions3">Новосибирск (357)</label>
+                            </li>
+                            <li>
+                                <span class="checkbox checked">
+                                    <input type="checkbox" checked />
+                                </span><label>Самара (15)</label>
+                            </li>
+                            <li>
+                                <span class="checkbox">
+                                    <input type="checkbox" />
+                                </span><label>Владивосток (12)</label>
+                            </li>*@
+                    </ul>
+                    <span class="small-icon icon-sm-eye"><span>Показать ещё 10 ( из 453 )</span></span>
+                </div>
 
-            <div class="cat-filter">
-                <div class="title">Научное направление</div>
-                <ul class="list-checkboxes">
-                    <li>
-                        <span class="checkbox checked">
-                            <input type="checkbox" checked />
-                        </span><label>Экономика (7)</label>
-                    </li>
-                    <li>
-                        <span class="checkbox checked">
-                            <input type="checkbox" checked />
-                        </span><label>Юриспруденция (15)</label>
-                    </li>
-                    <li>
-                        <span class="checkbox">
-                            <input type="checkbox" />
-                        </span><label>Инструменты и приборы (239)</label>
-                    </li>
-                    <li>
-                        <span class="checkbox checked">
-                            <input type="checkbox" checked />
-                        </span><label>Материаловедение – междисциплинарное (351)</label>
-                    </li>
-                    <li>
-                        <span class="checkbox">
-                            <input type="checkbox" />
-                        </span><label>Науки об окружающей среде (63)</label>
-                    </li>
-                </ul>
-                <span class="small-icon icon-sm-eye"><span>Показать ещё 10 ( из 897 )</span></span>
-            </div>
+                <div class="cat-filter">
+                    <div class="title">ФОИВ</div>
+                    <ul class="list-checkboxes">
+                        <li>
+                            <span class="checkbox checked">
+                                <input type="checkbox" checked />
+                            </span><label>Минздрав РФ (456)</label>
+                        </li>
+                        <li>
+                            <span class="checkbox checked">
+                                <input type="checkbox" checked />
+                            </span><label>Минобонауки РФ (56)</label>
+                        </li>
+                        <li>
+                            <span class="checkbox">
+                                <input type="checkbox" />
+                            </span><label>РАМН (2)</label>
+                        </li>
+                        <li>
+                            <span class="checkbox checked">
+                                <input type="checkbox" checked />
+                            </span><label>РАН (7)</label>
+                        </li>
+                        <li>
+                            <span class="checkbox">
+                                <input type="checkbox" />
+                            </span><label>РосГидроМет (1)</label>
+                        </li>
+                    </ul>
+                    <span class="small-icon icon-sm-eye"><span>Показать ещё 10 ( из 682 )</span></span>
+                </div>
 
-            <div class="cat-filter">
-                <div class="title">Категория должности</div>
-                <ul class="list-checkboxes">
-                    <li>
-                        <span class="checkbox checked">
-                            <input type="checkbox" checked />
-                        </span><label>Руководитель научного подразделения (12)</label>
-                    </li>
-                    <li>
-                        <span class="checkbox checked">
-                            <input type="checkbox" checked />
-                        </span><label>Ведущий научный сотрудник (63)</label>
-                    </li>
-                    <li>
-                        <span class="checkbox checked">
-                            <input type="checkbox" checked />
-                        </span><label>Старший научный сотрудник (59)</label>
-                    </li>
-                    <li>
-                        <span class="checkbox checked">
-                            <input type="checkbox" checked />
-                        </span><label>Младший научный сотрудник (114)</label>
-                    </li>
-                    <li>
-                        <span class="checkbox checked">
-                            <input type="checkbox" checked />
-                        </span><label>Инженер-исследователь (187)</label>
-                    </li>
-                </ul>
-                <span class="small-icon icon-sm-eye"><span>Показать ещё 5 ( из 10 )</span></span>
-            </div>
+                <div class="cat-filter">
+                    <div class="title">Научное направление</div>
+                    <ul class="list-checkboxes">
+                        <li>
+                            <span class="checkbox checked">
+                                <input type="checkbox" checked />
+                            </span><label>Экономика (7)</label>
+                        </li>
+                        <li>
+                            <span class="checkbox checked">
+                                <input type="checkbox" checked />
+                            </span><label>Юриспруденция (15)</label>
+                        </li>
+                        <li>
+                            <span class="checkbox">
+                                <input type="checkbox" />
+                            </span><label>Инструменты и приборы (239)</label>
+                        </li>
+                        <li>
+                            <span class="checkbox checked">
+                                <input type="checkbox" checked />
+                            </span><label>Материаловедение – междисциплинарное (351)</label>
+                        </li>
+                        <li>
+                            <span class="checkbox">
+                                <input type="checkbox" />
+                            </span><label>Науки об окружающей среде (63)</label>
+                        </li>
+                    </ul>
+                    <span class="small-icon icon-sm-eye"><span>Показать ещё 10 ( из 897 )</span></span>
+                </div>
 
-            <div class="cat-filter">
-                <div class="title">Организация</div>
-                <ul class="list-checkboxes">
-                    <li>
-                        <span class="checkbox checked">
-                            <input type="checkbox" checked />
-                        </span><label>Новосибирский государственный технический университет (4)</label>
-                    </li>
-                    <li>
-                        <span class="checkbox checked">
-                            <input type="checkbox" checked />
-                        </span><label>Ульяновский государственный технический университет (23)</label>
-                    </li>
-                    <li>
-                        <span class="checkbox">
-                            <input type="checkbox" />
-                        </span><label>ОАО "Российские железные дороги" (31)</label>
-                    </li>
-                    <li>
-                        <span class="checkbox checked">
-                            <input type="checkbox" checked />
-                        </span><label>Дагестанский государственный технический университет (1)</label>
-                    </li>
-                    <li>
-                        <span class="checkbox">
-                            <input type="checkbox" />
-                        </span><label>Волгоградский государственный технический университет (5)</label>
-                    </li>
-                </ul>
-                <span class="small-icon icon-sm-eye"><span>Показать ещё 10 ( из 682 )</span></span>
-            </div>
+                <div class="cat-filter">
+                    <div class="title">Категория должности</div>
+                    <ul class="list-checkboxes">
+                        <li>
+                            <span class="checkbox checked">
+                                <input type="checkbox" checked />
+                            </span><label>Руководитель научного подразделения (12)</label>
+                        </li>
+                        <li>
+                            <span class="checkbox checked">
+                                <input type="checkbox" checked />
+                            </span><label>Ведущий научный сотрудник (63)</label>
+                        </li>
+                        <li>
+                            <span class="checkbox checked">
+                                <input type="checkbox" checked />
+                            </span><label>Старший научный сотрудник (59)</label>
+                        </li>
+                        <li>
+                            <span class="checkbox checked">
+                                <input type="checkbox" checked />
+                            </span><label>Младший научный сотрудник (114)</label>
+                        </li>
+                        <li>
+                            <span class="checkbox checked">
+                                <input type="checkbox" checked />
+                            </span><label>Инженер-исследователь (187)</label>
+                        </li>
+                    </ul>
+                    <span class="small-icon icon-sm-eye"><span>Показать ещё 5 ( из 10 )</span></span>
+                </div>
 
-            <div class="cat-filter">
-                <div class="title">Заработная плата</div>
-                <ul class="list-checkboxes">
-                    <li>
-                        <span class="checkbox checked">
-                            <input type="checkbox" checked />
-                        </span><label>До 30 000 руб. (457)</label>
-                    </li>
-                    <li>
-                        <span class="checkbox checked">
-                            <input type="checkbox" checked />
-                        </span><label>30 000 – 60 000 руб. (831)</label>
-                    </li>
-                    <li>
-                        <span class="checkbox checked">
-                            <input type="checkbox" checked />
-                        </span><label>От 60 000 руб. и выше (52)</label>
-                    </li>
-                </ul>
-            </div>
+                <div class="cat-filter">
+                    <div class="title">Организация</div>
+                    <ul class="list-checkboxes">
+                        <li>
+                            <span class="checkbox checked">
+                                <input type="checkbox" checked />
+                            </span><label>Новосибирский государственный технический университет (4)</label>
+                        </li>
+                        <li>
+                            <span class="checkbox checked">
+                                <input type="checkbox" checked />
+                            </span><label>Ульяновский государственный технический университет (23)</label>
+                        </li>
+                        <li>
+                            <span class="checkbox">
+                                <input type="checkbox" />
+                            </span><label>ОАО "Российские железные дороги" (31)</label>
+                        </li>
+                        <li>
+                            <span class="checkbox checked">
+                                <input type="checkbox" checked />
+                            </span><label>Дагестанский государственный технический университет (1)</label>
+                        </li>
+                        <li>
+                            <span class="checkbox">
+                                <input type="checkbox" />
+                            </span><label>Волгоградский государственный технический университет (5)</label>
+                        </li>
+                    </ul>
+                    <span class="small-icon icon-sm-eye"><span>Показать ещё 10 ( из 682 )</span></span>
+                </div>
 
-            <div class="cat-filter">
-                <div class="title">Статус конкурса</div>
-                <ul class="list-checkboxes">
-                    <li>
-                        <span class="checkbox checked">
-                            <input type="checkbox" checked />
-                        </span><label>Объявлен (182)</label>
-                    </li>
-                    <li>
-                        <span class="checkbox checked">
-                            <input type="checkbox" checked />
-                        </span><label>Приём заявок (45)</label>
-                    </li>
-                    <li>
-                        <span class="checkbox">
-                            <input type="checkbox" />
-                        </span><label>Завершён (7)</label>
-                    </li>
-                </ul>
-            </div>
-        </div>
-    </div>
+                <div class="cat-filter">
+                    <div class="title">Заработная плата</div>
+                    <ul class="list-checkboxes">
+                        <li>
+                            <span class="checkbox checked">
+                                <input type="checkbox" checked />
+                            </span><label>До 30 000 руб. (457)</label>
+                        </li>
+                        <li>
+                            <span class="checkbox checked">
+                                <input type="checkbox" checked />
+                            </span><label>30 000 – 60 000 руб. (831)</label>
+                        </li>
+                        <li>
+                            <span class="checkbox checked">
+                                <input type="checkbox" checked />
+                            </span><label>От 60 000 руб. и выше (52)</label>
+                        </li>
+                    </ul>
+                </div>
 
-    <div class="b-search-result">
-        <h4>@ViewBag.Title</h4>
-
-        <div class="italic">По запросу «исследователь» с учетом фильтрации найдено 2681110 записей.</div>
-
-        <div class="ctr-buttons" style="margin-top:20px;">
-            <span class="green-btn middle-icon icon-ok" id="subscribe" rel="tooltip">Подписаться</span>
-            <div id="subscribe-popover" style="display:none;">
-                Задав поисковый запрос и выбрав необходимые критерии поиска в фильтре результатов, вы можете подписаться на данную конфигурацию запроса. Это позволит в дальнейшем оперативно отслеживать необходимую информацию с учётом выбранных предпочтений. Ваши подписки отображаются в Личном Кабинете в соответствующей вкладке
+                <div class="cat-filter">
+                    <div class="title">Статус конкурса</div>
+                    <ul class="list-checkboxes">
+                        <li>
+                            <span class="checkbox checked">
+                                <input type="checkbox" checked />
+                            </span><label>Объявлен (182)</label>
+                        </li>
+                        <li>
+                            <span class="checkbox checked">
+                                <input type="checkbox" checked />
+                            </span><label>Приём заявок (45)</label>
+                        </li>
+                        <li>
+                            <span class="checkbox">
+                                <input type="checkbox" />
+                            </span><label>Завершён (7)</label>
+                        </li>
+                    </ul>
+                </div>
             </div>
         </div>
 
-        <!--div class="ctr-buttons" style="margin-top:20px;">
-            <span class="blue-btn middle-icon icon-close" rel="tooltip" title="">Отменить подписку</span>
-        </div-->
-        <!--div class="ctr-buttons" style="margin-top:20px;">
-            <span class="white-btn middle-icon icon-lgr-ok" id="subscribed" rel="tooltip">Подписка оформлена</span>
-            <div id="subscribed-popover" style="display:none;text-align:center;">
-                Поздравляем!<br />Теперь вы подписаны на запрос по теме «исследователь»
+        <div class="b-search-result">
+            <h4>@ViewBag.Title</h4>
+            <div class="italic">
+                @Html.Raw(!string.IsNullOrWhiteSpace(Model.Search) ? string.Format("По запросу «{1}» с учетом фильтрации найдено {0} записей.", pagedData.TotalItemCount, Model.Search) : "&nbsp;")
             </div>
-        </div-->
 
-        <div class="sorting">
-            <div class="inline-block w120">
-                <select name="1" id="1">
-                    <option value="1.1">За все время</option>
-                    <option value="1.2">За месяц</option>
-                    <option value="1.3">За неделю</option>
-                    <option value="1.4">За день</option>
-                </select>
+            <div class="ctr-buttons" style="margin-top:20px;">
+                <span class="green-btn middle-icon icon-ok" id="subscribe" rel="tooltip">Подписаться</span>
+                <div id="subscribe-popover" style="display:none;">
+                    Задав поисковый запрос и выбрав необходимые критерии поиска в фильтре результатов, вы можете подписаться на данную конфигурацию запроса. Это позволит в дальнейшем оперативно отслеживать необходимую информацию с учётом выбранных предпочтений. Ваши подписки отображаются в Личном Кабинете в соответствующей вкладке
+                </div>
             </div>
-            <div class="inline-block w160">
-                <select name="2" id="2">
-                    <option value="2.1">Сначала последние</option>
-                    <option value="2.2">Сначала первые</option>
-                </select>
+
+            <!--div class="ctr-buttons" style="margin-top:20px;">
+                <span class="blue-btn middle-icon icon-close" rel="tooltip" title="">Отменить подписку</span>
+            </div-->
+            <!--div class="ctr-buttons" style="margin-top:20px;">
+                <span class="white-btn middle-icon icon-lgr-ok" id="subscribed" rel="tooltip">Подписка оформлена</span>
+                <div id="subscribed-popover" style="display:none;text-align:center;">
+                    Поздравляем!<br />Теперь вы подписаны на запрос по теме «исследователь»
+                </div>
+            </div-->
+
+            <div class="sorting">
+                <div class="inline-block w120">
+                    <select asp-for="Period"
+                            asp-items="ViewBag.FilterSource.Periods"></select>
+                </div>
+                <div class="inline-block w160">
+                    <select asp-for="OrderBy"
+                            asp-items="ViewBag.FilterSource.OrderBys"></select>
+                </div>
+                <input type="submit" class="blue-btn-sm small-icon icon-sm-eye-wh" value="Показать" />
             </div>
-            <span class="blue-btn-sm small-icon icon-sm-eye-wh">Показать</span>
-        </div>
 
-        <div class="list-results">
+            <div class="list-results">
 
-            @foreach (var item in Model)
+                @foreach (var item in pagedData)
             {
-                <div>
-                    <div class="index-number">17.</div>
-                    <div class="index-text">
-                        <div class="title">@item.Title</div>
-                        <div class="inform">
-                            <p>Дата размещения: @item.PublishedDate.ToShortDateString()</p>
-                            <p>
-                                Регион: <a href="#">@item.Region.Name</a>
-                            </p>
-                            <p>Заработная плата: @item.MinSalary – @item.MaxSalary руб.</p>
-                            <p>
-                                <a href="#">Организация: @item.Organization.Name</a>
-                            </p>
-                            <p>
-                                Научные направления:
-                                @foreach (var direction in item.ScienceDirections)
-                                {
-                                    <a href="#">@direction.Name</a>
-                                }
-                            </p>
+                    <div>
+                        <div class="index-number">17.</div>
+                        <div class="index-text">
+                            <div class="title">@item.Title</div>
+                            <div class="inform">
+                                <p>Дата размещения: @item.PublishedDate.ToShortDateString()</p>
+                                <p>
+                                    Регион: <a asp-controller="regions" asp-action="details" asp-route-id="@item.RegionGuid">@item.Region.Name</a>
+                                </p>
+                                <p>Заработная плата: @item.MinSalary – @item.MaxSalary руб.</p>
+                                <p>
+                                    Организация: <a asp-controller="organizations" asp-action="details" asp-route-id="@item.OrganizationGuid">@item.Organization.Name</a>
+                                </p>
+                                <p>
+                                    Научные направления:
+                                    @foreach (var direction in item.ScienceDirections)
+                                    {
+                                        <a asp-controller="directions" asp-action="details" asp-route-id="@direction.Guid">@direction.Name</a>
+                                    }
+                                </p>
+                            </div>
                         </div>
                     </div>
-                </div>
-            }
+                }
 
+            </div>
         </div>
     </div>
-</div>
 
-<div class="bottom-nav" style="margin:80px 0 20px 0;">
-    <div class="bottom-nav-left">
-        <div class="count-news" style="margin:0 20px 0 0;">
-            171-180 из @Model.TotalItemCount вакансий
+    <div class="bottom-nav" style="margin: 80px 0 20px 0;">
+        <div class="bottom-nav-left">
+            <div class="count-news" style="margin: 0 20px 0 0;">
+                171-180 из @pagedData.TotalItemCount вакансий
+            </div>
+            <div class="count-line-page">
+                <input asp-for="PageSize" /> записей на странице
+            </div>
         </div>
-        <div class="count-line-page">
-            <input type="text" value="10"> записей на странице
+        <div class="bottom-nav-right">
+            <ul>
+                <li>
+                    @if (pagedData.IsFirstPage)
+                    {
+                        <text>
+                        <span class="first disable">
+                            <span>Первая</span>
+                        </span>
+                        </text>
+                    }
+                    else
+                    {
+                        <text>
+                        <span class="first">
+                            <a href="#">Первая</a>
+                        </span>
+                        </text>
+                    }
+                </li>
+                <li>
+                    @if (pagedData.IsFirstPage)
+                    {
+                        <text>
+                        <span class="prev disable">
+                            <span>Предыдущая</span>
+                        </span>
+                        </text>
+                    }
+                    else
+                    {
+                        <text>
+                        <span class="prev">
+                            <a href="#">Предыдущая</a>
+                        </span>
+                        </text>
+                    }
+                </li>
+                <li>
+                    <div class="count-page">
+                        <input asp-for="PageNumber" /> из @pagedData.PageCount
+                    </div>
+                </li>
+                <li>
+                    @if (pagedData.IsLastPage)
+                    {
+                        <text>
+                        <span class="next disable">
+                            <span>Следующая</span>
+                        </span>
+                        </text>
+                    }
+                    else
+                    {
+                        <text>
+                        <span class="next">
+                            <a href="#">Следующая</a>
+                        </span>
+                        </text>
+                    }
+                </li>
+                <li>
+                    @if (pagedData.IsLastPage)
+                    {
+                        <text>
+                        <span class="latest disable">
+                            <span>Последняя</span>
+                        </span>
+                        </text>
+                    }
+                    else
+                    {
+                        <text>
+                        <span class="latest">
+                            <a href="#">Последняя</a>
+                        </span>
+                        </text>
+                    }
+                </li>
+            </ul>
         </div>
     </div>
-    <div class="bottom-nav-right">
-        <ul>
-            <li>
-                <span class="first disable">
-                    <span>Первая</span>
-                </span>
-            </li>
-            <li>
-                <span class="prev disable">
-                    <span>Предыдущая</span>
-                </span>
-            </li>
-            <li>
-                <div class="count-page">
-                    <input type="text" value="@Model.PageNumber"> из @Model.PageCount
-                </div>
-            </li>
-            <li>
-                <span class="next">
-                    <a href="#">Следующая</a>
-                </span>
-            </li>
-            <li>
-                <span class="latest">
-                    <a href="#">Последняя</a>
-                </span>
-            </li>
-        </ul>
-    </div>
-</div>
+</form>
+
 
 <div class="b-bottom-nav" style="margin:30px 0;">
-    <a href="#" class="small-icon icon-prev">На главную страницу</a>
+    <a href="/" class="small-icon icon-prev">На главную страницу</a>
 </div>
