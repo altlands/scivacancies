@@ -96,6 +96,9 @@ namespace SciVacancies.WebApp
             ConfigureMediatr(builder);
             builder.RegisterType<Fart>().As<IFart>();
 
+
+            //builder.Register(c=>new agg)
+
         }
 
         public void ConfigureMediatr(ContainerBuilder builder)
