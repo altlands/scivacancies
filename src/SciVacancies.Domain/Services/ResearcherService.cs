@@ -65,6 +65,14 @@ namespace SciVacancies.Domain.Services
 
             return vacancyApplicationGuid;
         }
+        public void UpdateVacancyApplicationTemplate(Guid vacancyApplicationGuid, VacancyApplicationDataModel data)
+        {
+            //TODO
+        }
+        public void RemoveVacancyApplicationTemplate(Guid vacancyApplicationGuid)
+        {
+            //TODO
+        }
         public void ApplyToVacancy(Guid researcherGuid, Guid vacancyApplicationGuid)
         {
             Researcher researcher = _repository.GetById<Researcher>(researcherGuid);

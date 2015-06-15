@@ -11,19 +11,19 @@ namespace SciVacancies.Domain.Events
         public OrganizationEventBase() : base() { }
 
         public Guid OrganizationGuid { get; set; }
-        public OrganizationDataModel Data { get; set; }
     }
     
     public class OrganizationCreated : OrganizationEventBase
     {
         public OrganizationCreated() : base() { }
 
+        public OrganizationDataModel Data { get; set; }
     }
     public class OrganizationUpdated : OrganizationEventBase
     {
         public OrganizationUpdated() : base() { }
 
-
+        public OrganizationDataModel Data { get; set; }
     }
     public class OrganizationRemoved : OrganizationEventBase
     {
