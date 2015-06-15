@@ -27,7 +27,7 @@
                     <ul class="list-checkboxes">
                         <checkboxing items="ViewBag.FilterSource.Regions"
                                      values="Model.Regions"
-                                     property="Regions" />
+                                     property="Regions"></checkboxing>
                         @*<li>
                                 <span class="checkbox checked">
                                     <input type="checkbox" id="regions1" name="regions" checked />
@@ -304,7 +304,7 @@
                 171-180 из @pagedData.TotalItemCount вакансий
             </div>
             <div class="count-line-page">
-                <input asp-for="PageSize" /> записей на странице
+                <input asp-for="PageSize"  type="text" /> записей на странице
             </div>
         </div>
         <div class="bottom-nav-right">
@@ -347,7 +347,7 @@
                 </li>
                 <li>
                     <div class="count-page">
-                        <input asp-for="PageNumber" /> из @pagedData.PageCount
+                        <input asp-for="PageNumber" type="text" /> из @pagedData.PageCount
                     </div>
                 </li>
                 <li>
