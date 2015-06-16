@@ -9,7 +9,8 @@ namespace SciVacancies.ReadModel.Core
 {
     [TableName("SearchSubscriptions")]
     [PrimaryKey("Guid", AutoIncrement = false)]
-    public class SearchSubscription
+    public class SearchSubscription : BaseEntity
     {
+
     }
 }

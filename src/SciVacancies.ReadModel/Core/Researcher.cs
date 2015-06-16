@@ -9,7 +9,7 @@ namespace SciVacancies.ReadModel.Core
 {
     [TableName("Researchers")]
     [PrimaryKey("Guid", AutoIncrement = false)]
-    public class Researcher:BaseEntity
+    public class Researcher : BaseEntity
     {
         public string Login { get; set; }
 
