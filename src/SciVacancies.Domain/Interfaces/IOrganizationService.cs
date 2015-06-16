@@ -22,5 +22,10 @@ namespace SciVacancies.Domain.Interfaces
         void SwitchVacancyInCommittee(Guid organizationGuid, Guid vacancyGuid);
         void CloseVacancy(Guid organizationGuid, Guid vacancyGuid, Guid winnerGuid, Guid pretenderGuid);
         void CancelVacancy(Guid organizationGuid, Guid vacancyGuid, string reason);
+
+        //TODO
+        //int AddApplicationToVacancy(Guid organizationGuid, Guid vacancyGuid, Guid vacancyApplicationGuid);
+        //void SetVacancyWinner(Guid organizationGuid, Guid vacancyGuid, Guid vacancyApplicationGuid);
+        //void SetVacancyPretender(Guid organizationGuid, Guid vacancyGuid, Guid vacancyApplicationGuid);
     }
 }

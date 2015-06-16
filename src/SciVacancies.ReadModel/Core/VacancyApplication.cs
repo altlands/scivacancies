@@ -11,7 +11,7 @@ namespace SciVacancies.ReadModel.Core
 {
     [TableName("VacancyApplications")]
     [PrimaryKey("Guid", AutoIncrement = false)]
-    public class VacancyApplication:BaseEntity
+    public class VacancyApplication : BaseEntity
     {
         public Guid VacancyGuid { get; set; }
         public Guid ResearcherGuid { get; set; }

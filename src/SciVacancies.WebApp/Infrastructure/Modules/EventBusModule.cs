@@ -4,17 +4,25 @@ using System.Linq;
 using System.Threading.Tasks;
 
 using Autofac;
-using NEventStore.Dispatcher;
 using MediatR;
 
-namespace SciVacancies.WebApp.Infrastructure.Modules
+namespace SciVacancies.WebApp.Infrastructure
 {
-    public class EventBusModule:Module
+    public class EventBusModule : Module
     {
         protected override void Load(ContainerBuilder builder)
         {
-            builder.RegisterType<Mediator>().As<IMediator>().SingleInstance();
-            //builder.RegisterInstance<SingleInstanceFactory>();
+            builder.RegisterAssemblyTypes(typeof(IMediator).Assembly).AsImplementedInterfaces();
+            builder.Register<SingleInstanceFactory>(ctx =>
+            {
+                var c = ctx.Resolve<IComponentContext>();
+                return t => c.Resolve(t);
+            });
+            builder.Register<MultiInstanceFactory>(ctx =>
+            {
+                var c = ctx.Resolve<IComponentContext>();
+                return t => (IEnumerable<object>)c.Resolve(typeof(IEnumerable<>).MakeGenericType(t));
+            });
         }
     }
 }

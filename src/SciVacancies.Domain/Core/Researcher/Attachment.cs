@@ -5,9 +5,9 @@ using System.Threading.Tasks;
 
 namespace SciVacancies.Domain.Core
 {
-    public class AttachedFile
+    public class Attachment
     {
-        public Guid AttachedFileGuid { get; set; }
+        public Guid AttachmentGuid { get; set; }
 
         public string Name { get; set; }
         public string Size { get; set; }
