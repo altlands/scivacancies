@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNet.Mvc;
+using SciVacancies.WebApp.ViewModels;
 
 namespace SciVacancies.WebApp.Controllers
 {
@@ -7,10 +8,30 @@ namespace SciVacancies.WebApp.Controllers
     /// </summary>
     public class VacanciesController : Controller
     {
+        [PageTitle("Карточка конкурса")]
+        public ViewResult Show(/*Guid id*/)
+        {
+            return View();
+        }
 
-        public ViewResult Details(string id) => View();
+        [PageTitle("Карточка конкурса")]
+        public ViewResult Details(/*Guid id*/)
+        {
+            return View();
+        }
 
-        public ViewResult Closed() =>View();
+        [PageTitle("Завершенные конкурсы")]
+        public ViewResult Closed() => View();
 
+        [PageTitle("Новая вакансия")]
+        public ViewResult Create() => View();
+
+
+        [PageTitle("Новая вакансия")]
+        [HttpPost]
+        public RedirectToActionResult Create(VacancyCreateViewModel model)
+        {
+            return RedirectToAction("details");
+        }
     }
 }

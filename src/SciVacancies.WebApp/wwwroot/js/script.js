@@ -124,4 +124,18 @@ $(document).ready(function(){
 
 function setIsResearcher(value) {
     $('form').find('input[type="hidden"][name="IsResearcher"]').val(value);
-}
+};
+
+function vacancySaveOptions(options) {
+
+    if (options.publish !== undefined && options.publish) {
+        $('form').find('input[type="hidden"][name="ToPublish"]').val(true);
+        return true;
+    }
+
+    if (options.saveDraft !== undefined && options.saveDraft) {
+        $('form').find('input[type="hidden"][name="ToPublish"]').val(false);
+        return true;
+    }
+
+};
