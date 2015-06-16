@@ -23,9 +23,11 @@ namespace SciVacancies.WebApp
                     </span><label>Владивосток (12)</label>
                 </li>
             */
-            var i = 1;
+            var i = 0;
             foreach (var item in Items)
             {
+                i++;
+
                 var input = new TagBuilder("input");
                 var span = new TagBuilder("span");
 
@@ -53,25 +55,7 @@ namespace SciVacancies.WebApp
                 };
 
                 output.Content.Append(li.ToString());
-                i++;
             }
-
-            //output.Attributes.Add("itemscope", null);
-            //output.Attributes.Add("itemtype", "http://schema.org/Organization");
-            //var name = new TagBuilder("span");
-            //name.MergeAttribute("itemprop", "name");
-
-            //var span = new TagBuilder("span");
-            //span.MergeAttribute("itemprop", "streetAddress");
-            //span.SetInnerText(Organisation.StreetAddress);
-            //address.InnerHtml = span.ToString() + br;
-
-            //span.MergeAttribute("itemprop", "postalCode");
-            //span.SetInnerText($" {Organisation.PostalCode}");
-
-            //address.InnerHtml += span.ToString();
-
-
 
         }
     }
