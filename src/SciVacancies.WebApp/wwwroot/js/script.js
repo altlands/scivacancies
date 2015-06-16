@@ -120,3 +120,8 @@ $(document).ready(function(){
 		}
 	});
 });
+
+
+function setIsResearcher(value) {
+    $('form').find('input[type="hidden"][name="IsResearcher"]').val(value);
+}

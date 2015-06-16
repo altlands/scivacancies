@@ -11,6 +11,16 @@
     }
 }
 
+@section scripts
+{
+    <script type="text/javascript">
+
+        function setIsResearcher(value) {
+            $('form').find('input[type="hidden"][name="IsResearcher"]').val(value);
+        }
+    </script>
+}
+
 @if (string.IsNullOrWhiteSpace(Context.Request.HttpContext.Session.GetString(AccountController.UserNameKey)))
 {
 
@@ -29,15 +39,15 @@
         </div>
         <div class="content-popup">
             <form asp-controller="account" asp-action="login" method="POST">
+                <input type="hidden" id="IsResearcher1" name="IsResearcher" value="true" checked="checked"/>
+
                 <div class="b-tabs">
                     <ul class="nav nav-tabs" id="tab">
                         <li>
-                            <input type="radio" id="IsResearcher1" name="IsResearcher_TrueProperty" value="true" checked="checked" />
-                            <a href="#b-user">Пользователь</a>
+                            <a href="#b-user" onclick="return setIsResearcher(true);">Пользователь</a>
                         </li>
                         <li>
-                            <input type="radio" id="IsResearcher2" name="IsResearcher_TrueProperty" value="false" />
-                            <a href="#b-organization">Организация</a>
+                            <a href="#b-organization" onclick="return setIsResearcher(false);">Организация</a>
                         </li>
                     </ul>
                     <div class="tab-content">
@@ -52,13 +62,6 @@
                             </p>
                         </div>
                     </div>
-                </div>
-
-                <div class="form-line">
-                    <input type="radio" class="long-input" style="display: inline" id="IsResearcher1" name="IsResearcher" value="true" checked="checked" />Пользователь
-                </div>
-                <div class="form-line">
-                    <input type="radio" class="long-input" style="display: inline" id="IsResearcher2" name="IsResearcher" value="false" /> Организация
                 </div>
 
                 <div class="form-line">
