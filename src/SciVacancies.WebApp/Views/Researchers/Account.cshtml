@@ -2,7 +2,10 @@
 @using SciVacancies.WebApp.Controllers
 @model SciVacancies.WebApp.ViewModels.ResearcherDetailsViewModel
 
-@Component.Invoke("Breadcrumbs", ViewBag.Title)
+<div class="crumbs">
+    <a href="/">Главная страница</a><span class="separator">/</span>
+    @ViewBag.Title
+</div>
 
 <h3>@Model.Title</h3>
 
@@ -68,9 +71,12 @@
 </div>
 <div class="b-links mt-2 ml3">
     <div class="link-edit">
-        <a asp-controller="researchers" 
+        <a asp-controller="researchers"
            asp-action="edit"
-           asp-route-id="@Model.Guid" 
            class="arial italic">Редактировать</a>
     </div>
+</div>
+
+<div class="b-bottom-nav">
+    <a href="/" class="small-icon icon-prev">На главную страницу</a>
 </div>

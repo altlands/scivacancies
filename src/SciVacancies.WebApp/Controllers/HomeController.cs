@@ -1,23 +1,32 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNet.Mvc;
+﻿using Microsoft.AspNet.Mvc;
+using SciVacancies.ReadModel;
+using SciVacancies.WebApp.Engine;
 using SciVacancies.WebApp.Infrastructure;
+using SciVacancies.WebApp.ViewModels;
 
 namespace SciVacancies.WebApp.Controllers
 {
     public class HomeController : Controller
     {
+        private readonly IReadModelService _readModelService;
         public IFart Fart {get;set;}
 
-        public HomeController(IFart fart){
+        public HomeController(IFart fart, IReadModelService readModelService)
+        {
             Fart = fart;
+            _readModelService = readModelService;
         }
         
+        [PageTitle("Главная страница")]
         public IActionResult Index()
         {
-            return View();
+            var model = new IndexViewModel
+            {
+                OrganizationsList = _readModelService.SelectOrganizations(ConstTerms.OrderByCountDescending, 4, 1)
+            };
+
+
+            return View(model);
         }
 
         public IActionResult About()

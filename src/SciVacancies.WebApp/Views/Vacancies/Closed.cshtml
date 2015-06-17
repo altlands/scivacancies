@@ -1,8 +1,10 @@
 ﻿@model dynamic
-@{
-    ViewBag.Title = "Завершенные конкурсы";
-}
-<h4>@ViewBag.Title </h4>
+    
+<div class="crumbs">
+    <a href="/">Главная страница</a><span class="separator">/</span>@ViewBag.Title
+</div>
+
+<h3>@ViewBag.Title</h3>
 
 <div class="table-control">
     <a href="#" class="reload-table"><span class="italic">Обновить список</span></a>
@@ -22,7 +24,27 @@
     <tbody>
         <tr>
             <td>001</td>
-            <td>ГНС600001</td>
+            <td><a asp-controller="vacancies" asp-action="show" asp-route-id="15">ГНС600001</a></td>
+            <td>Главный<br /> научный сотрудник</td>
+            <td>01-09-14, 16:04</td>
+            <td class="view-col">
+                <a href="#" class="view-td-icon"></a>
+            </td>
+            <td class="ta-left"><a href="#" class="success-request-icon"><span class="italic bold">Определен</span></a></td>
+        </tr>
+        <tr>
+            <td>001</td>
+            <td><a asp-controller="vacancies" asp-action="show" asp-route-id="15">ГНС600001</a></td>
+            <td>Главный<br /> научный сотрудник</td>
+            <td>01-09-14, 16:04</td>
+            <td class="view-col">
+                <a href="#" class="view-td-icon"></a>
+            </td>
+            <td class="ta-left"><a href="#" class="success-request-icon"><span class="italic bold">Определен</span></a></td>
+        </tr>
+        <tr>
+            <td>001</td>
+            <td><a asp-controller="vacancies" asp-action="show" asp-route-id="15">ГНС600001</a></td>
             <td>Главный<br /> научный сотрудник</td>
             <td>01-09-14, 16:04</td>
             <td class="view-col">
@@ -33,27 +55,7 @@
         <tr>
             <td>001</td>
             <td>ГНС600001</td>
-            <td>Главный<br /> научный сотрудник</td>
-            <td>01-09-14, 16:04</td>
-            <td class="view-col">
-                <a href="#" class="view-td-icon"></a>
-            </td>
-            <td class="ta-left"><a href="#" class="success-request-icon"><span class="italic bold">Определен</span></a></td>
-        </tr>
-        <tr>
-            <td>001</td>
-            <td>ГНС600001</td>
-            <td>Главный<br /> научный сотрудник</td>
-            <td>01-09-14, 16:04</td>
-            <td class="view-col">
-                <a href="#" class="view-td-icon"></a>
-            </td>
-            <td class="ta-left"><a href="#" class="success-request-icon"><span class="italic bold">Определен</span></a></td>
-        </tr>
-        <tr>
-            <td>001</td>
-            <td>ГНС600001</td>
-            <td>Главный<br /> научный сотрудник</td>
+            <td><a asp-controller="vacancies" asp-action="show" asp-route-id="15">ГНС600001</a></td>
             <td>01-09-14, 16:04</td>
             <td class="view-col">
                 <a href="#" class="view-td-icon"></a>
@@ -62,7 +64,7 @@
         </tr>
         <tr>
             <td>001</td>
-            <td>ГНС600001</td>
+            <td><a asp-controller="vacancies" asp-action="show" asp-route-id="15">ГНС600001</a></td>
             <td>Главный<br /> научный сотрудник</td>
             <td>01-09-14, 16:04</td>
             <td class="view-col">

@@ -76,7 +76,7 @@ a {
     text-decoration: underline;
 }
 
-input[type="text"] {
+input[type="text"], input[type="password"] {
     font: italic 14px Arial;
     -webkit-border-radius: 4px;
     -moz-border-radius: 4px;
@@ -85,6 +85,7 @@ input[type="text"] {
 }
 
 input[type="text"],
+input[type="password"],
 textarea {
     padding: 5px 10px;
     border: 1px solid #d1d1d1;
@@ -256,7 +257,7 @@ input[type="text"] {
         width: 315px;
     }
 
-.window-popup input[type="text"].long-input {
+.window-popup input[type="text"].long-input, .window-popup input[type="password"].long-input {
     width: 305px;
 }
 
@@ -370,6 +371,9 @@ select:focus {
     background: -moz-linear-gradient(center bottom, #eaeef5 0%, #ffffff 100%);
     background: -o-linear-gradient(#ffffff, #eaeef5);
     filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffffff', endColorstr='#eaeef5', GradientType=0);
+    width: 71px;
+    height: 54px;
+    background: url(../images/icons/search-icon.png) #eaeef5 no-repeat center center;
 }
 
 .b-search .icon-search {
@@ -714,7 +718,7 @@ a.search-icons {
 }
 
 .link-remove:before {
-    /* В HTML заменить все link-remove на icon-sm-close */
+    /* пїЅ HTML пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ link-remove пїЅпїЅ icon-sm-close */
     background: url(../images/sprite.png) -183px -204px no-repeat;
 }
 
@@ -786,6 +790,15 @@ a.search-icons {
     background: -moz-linear-gradient(center bottom, #4c854c 0%, #b1deb1 100%);
     background: -o-linear-gradient(#b1deb1, #4c854c);
     filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#b1deb1', endColorstr='#4c854c', GradientType=0);
+}
+
+.green-btn {
+    padding: 0 13px 0 39px;
+    background: #4c854c url(../images/but-arrow-s.png) no-repeat 10px 9px;
+    background: url(../images/but-arrow-s.png) no-repeat 10px 9px, -webkit-gradient(linear, left bottom, left top, color-stop(0, #4c854c), color-stop(1, #b1deb1));
+    background: url(../images/but-arrow-s.png) no-repeat 10px 9px, -ms-linear-gradient(bottom, #4c854c, #b1deb1);
+    background: url(../images/but-arrow-s.png) no-repeat 10px 9px, -moz-linear-gradient(center bottom, #4c854c 0%, #b1deb1 100%);
+    background: url(../images/but-arrow-s.png) no-repeat 10px 9px, -o-linear-gradient(#b1deb1, #4c854c);
 }
 
 .close-button,
@@ -1848,7 +1861,7 @@ span.close-popup {
     margin: 28px 0 0 0;
 }
 
-.window-popup input[type="text"] {
+.window-popup input[type="text"], .window-popup input[type="password"] {
     border-radius: 0;
 }
 
@@ -2134,7 +2147,7 @@ span + input.small-input {
     }
 
 .row-2 {
-    width: 450px;
+    width: 455px;
 }
 
 .row-4 {
@@ -2152,14 +2165,15 @@ h4 + .b-vacancies {
     .b-vacancies .row-4 {
         border: 1px solid #d1d1d1;
         padding: 29px 9px 14px;
-        margin: 0 0 0 10px;
+        margin: 0 0 10px 10px;
         height: 123px;
+        text-decoration: none;
     }
 
     .b-vacancies.b-vacancies-day .row-4 {
         padding: 15px 9px 0px;
         height: 122px;
-        margin-bottom: 1px;
+        margin-bottom: 11px;
     }
 
     .b-vacancies .row-4:after {
@@ -2169,7 +2183,7 @@ h4 + .b-vacancies {
         vertical-align: middle;
     }
 
-    .row-4:first-child,
+    
     .b-vacancies .img-vac {
         margin-right: -.36em;
     }
@@ -2520,6 +2534,7 @@ h4 + .b-vacancies {
     border: 1px solid #d1d1d1;
     margin-left: 5px;
     min-height: 335px;
+    width: 450px;
 }
 
 .graphics .image {

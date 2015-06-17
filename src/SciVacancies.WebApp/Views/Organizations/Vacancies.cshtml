@@ -3,7 +3,9 @@
 @model SciVacancies.WebApp.ViewModels.OrganizationDetailsViewModel
 
 <div class="crumbs">
-    <a href="#">Главная страница</a><span class="separator">/</span>Московский государственный университет им. М.В. Ломоносова
+    <a href="/">Главная страница</a><span class="separator">/</span>
+    <a asp-controller="organizations" asp-action="account">Московский государственный университет им. М.В. Ломоносова</a><span class="separator">/</span>    
+    @ViewBag.Title
 </div>
 
 <h3>@Model.Title</h3>
@@ -147,6 +149,14 @@
         </ul>
     </div>
 </div>
+
 <div class="ctr-buttons mb5 mt-30">
-    <span class="green-btn middle-icon icon-edit">Добавить вакансию</span>
+    <a asp-controller="vacancies" asp-action="create">
+        <span class="green-btn middle-icon">Добавить вакансию</span>
+    </a>
+</div>
+
+
+<div class="b-bottom-nav">
+    <a href="/" class="small-icon icon-prev">На главную страницу</a>
 </div>

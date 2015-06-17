@@ -52,5 +52,10 @@ namespace SciVacancies.Domain.DataModels
         /// ИНН
         /// </summary>
         public string INN { get; set; }
+
+        /// <summary>
+        /// Количество опубликованных вакансий на данный момент
+        /// </summary>
+        public int PublishedVacancies { get; set; }
     }
 }

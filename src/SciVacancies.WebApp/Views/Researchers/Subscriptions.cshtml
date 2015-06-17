@@ -2,7 +2,11 @@
 @using SciVacancies.WebApp.Controllers
 @model SciVacancies.WebApp.ViewModels.ResearcherDetailsViewModel
 
-@Component.Invoke("Breadcrumbs", ViewBag.Title)
+<div class="crumbs">
+    <a href="/">Главная страница</a><span class="separator">/</span>
+    <a asp-controller="researchers" asp-action="account">Личная карточка</a><span class="separator">/</span>
+    @ViewBag.Title
+</div>
 
 <h3>@Model.Title</h3>
 
@@ -110,4 +114,9 @@
             </li>
         </ul>
     </div>
+</div>
+
+
+<div class="b-bottom-nav">
+    <a asp-controller="researchers" asp-action="account" class="small-icon icon-prev">К личной карточке</a>
 </div>
