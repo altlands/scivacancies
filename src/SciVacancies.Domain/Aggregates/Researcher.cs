@@ -17,7 +17,7 @@ namespace SciVacancies.Domain.Aggregates
         //private List<Education> EducationList { get; set; }
         //private List<Publication> Publications { get; set; }
         private List<Guid> FavoriteVacancyGuids { get; set; }
-        //private List<SearchSubscription> SearchSubscriptions { get; set; }
+        private List<SearchSubscription> SearchSubscriptions { get; set; }
 
         private List<VacancyApplication> VacancyApplications { get; set; }
 
@@ -83,6 +83,54 @@ namespace SciVacancies.Domain.Aggregates
             else
             {
                 return this.FavoriteVacancyGuids.Count;
+            }
+        }
+
+        public Guid CreateSearchSubscription(SearchSubscriptionDataModel data)
+        {
+            Guid searchSubscriptionGuid = Guid.NewGuid();
+            RaiseEvent(new SearchSubscriptionCreated()
+            {
+                SearchSubscriptionGuid = searchSubscriptionGuid,
+                ResearcherGuid = this.Id
+            });
+
+            return searchSubscriptionGuid;
+        }
+        public void ActivateSearchSubscription(Guid searchSubscriptionGuid)
+        {
+            SearchSubscription searchSubscription = this.SearchSubscriptions.Find(f => f.SearchSubscriptionGuid == searchSubscriptionGuid);
+            if (searchSubscription != null && searchSubscription.Status == SearchSubscriptionStatus.Cancelled)
+            {
+                RaiseEvent(new SearchSubscriptionActivated()
+                {
+                    SearchSubscriptionGuid = searchSubscriptionGuid,
+                    ResearcherGuid = this.Id
+                });
+            }
+        }
+        public void CancelSearchSubscription(Guid searchSubscriptionGuid)
+        {
+            SearchSubscription searchSubscription = this.SearchSubscriptions.Find(f => f.SearchSubscriptionGuid == searchSubscriptionGuid);
+            if (searchSubscription != null && searchSubscription.Status == SearchSubscriptionStatus.Active)
+            {
+                RaiseEvent(new SearchSubscriptionCanceled()
+                {
+                    SearchSubscriptionGuid = searchSubscriptionGuid,
+                    ResearcherGuid = this.Id
+                });
+            }
+        }
+        public void RemoveSearchSubscription(Guid searchSubscriptionGuid)
+        {
+            SearchSubscription searchSubscription = this.SearchSubscriptions.Find(f => f.SearchSubscriptionGuid == searchSubscriptionGuid);
+            if (searchSubscription != null)
+            {
+                RaiseEvent(new SearchSubscriptionRemoved()
+                {
+                    SearchSubscriptionGuid = searchSubscriptionGuid,
+                    ResearcherGuid = this.Id
+                });
             }
         }
 
@@ -190,13 +238,34 @@ namespace SciVacancies.Domain.Aggregates
             this.FavoriteVacancyGuids.Remove(@event.VacancyGuid);
         }
 
+        public void Apply(SearchSubscriptionCreated @event)
+        {
+            this.SearchSubscriptions.Add(new SearchSubscription()
+            {
+                SearchSubscriptionGuid = @event.SearchSubscriptionGuid,
+                Status = SearchSubscriptionStatus.Active
+            });
+        }
+        public void Apply(SearchSubscriptionActivated @event)
+        {
+            this.SearchSubscriptions.Find(f => f.SearchSubscriptionGuid == @event.SearchSubscriptionGuid).Status = SearchSubscriptionStatus.Active;
+        }
+        public void Apply(SearchSubscriptionCanceled @event)
+        {
+            this.SearchSubscriptions.Find(f => f.SearchSubscriptionGuid == @event.SearchSubscriptionGuid).Status = SearchSubscriptionStatus.Cancelled;
+        }
+        public void Apply(SearchSubscriptionRemoved @event)
+        {
+            this.SearchSubscriptions.Remove(this.SearchSubscriptions.Find(f => f.SearchSubscriptionGuid == @event.SearchSubscriptionGuid));
+        }
+
         public void Apply(VacancyApplicationCreated @event)
         {
             this.VacancyApplications.Add(new VacancyApplication()
             {
                 VacancyApplicationGuid = @event.VacancyApplicationGuid,
                 VacancyGuid = @event.VacancyGuid,
-                Data=@event.Data,
+                Data = @event.Data,
                 Status = VacancyApplicationStatus.InProcess
             });
         }

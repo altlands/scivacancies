@@ -7,15 +7,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-using CommonDomain.Persistence.EventStore;
+using CommonDomain.Persistence;
 
 namespace SciVacancies.Domain.Services
 {
     public class OrganizationService : IOrganizationService
     {
-        private EventStoreRepository _repository;
+        private IRepository _repository;
 
-        public OrganizationService(EventStoreRepository repository)
+        public OrganizationService(IRepository repository)
         {
             _repository = repository;
         }
