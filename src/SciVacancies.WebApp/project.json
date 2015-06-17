@@ -26,7 +26,8 @@
         "Autofac.Dnx": "4.0.0-alpha2",
         "SciVacancies.ReadModel": "1.0.0-*",
         "Npgsql": "3.0.0-beta0001",
-        "NPoco": "2.9.103"
+        "NPoco": "2.9.103",
+        "SciVacancies.Domain.Aggregates": "1.0.0-*"
     },
 
     "commands": {

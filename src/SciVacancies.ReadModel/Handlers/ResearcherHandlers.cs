@@ -1,4 +1,5 @@
-﻿using SciVacancies.Domain.Events;
+﻿using SciVacancies.Domain.Enums;
+using SciVacancies.Domain.Events;
 using SciVacancies.ReadModel.Core;
 
 using System;

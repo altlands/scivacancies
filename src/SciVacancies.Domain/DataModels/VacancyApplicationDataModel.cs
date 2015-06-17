@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace SciVacancies.Domain.Events
+namespace SciVacancies.Domain.DataModels
 {
     public class VacancyApplicationDataModel
     {
