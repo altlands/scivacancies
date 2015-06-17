@@ -1,19 +1,33 @@
-﻿using System;
+﻿using SciVacancies.Domain.Interfaces;
+using SciVacancies.Domain.Events;
+using SciVacancies.ReadModel;
+using SciVacancies.ReadModel.Core;
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNet.Mvc;
 
-// For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
-
 namespace SciVacancies.WebApp.Controllers
 {
     public class ResearcherController : Controller
     {
-        
+        private readonly IResearcherService _res;
+        private readonly IReadModelService _rm;
+
+        public ResearcherController(IResearcherService researcherService,IReadModelService readModelService)
+        {
+            _res = researcherService;
+            _rm = readModelService;
+        }
         // GET: /<controller>/
         public IActionResult Index()
         {
+            Guid researcherGuid = _res.CreateResearcher(new ResearcherDataModel());
+
+            Researcher researcher = _rm.SingleResearcher(Guid.NewGuid());
+
             return View();
         }
     }

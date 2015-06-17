@@ -44,6 +44,7 @@ namespace SciVacancies.WebApp
         public IServiceProvider ConfigureServices(IServiceCollection services)
         {
             services.Configure<AppSettings>(Configuration.GetSubKey("AppSettings"));
+
             services.AddMvc();
 
             var builder = new ContainerBuilder();
@@ -93,9 +94,14 @@ namespace SciVacancies.WebApp
 
         public void ConfigureContainer(ContainerBuilder builder)
         {
-            ConfigureMediatr(builder);
-            builder.RegisterType<Fart>().As<IFart>();
+            builder.RegisterModule(new EventStoreModule(Configuration));
+            builder.RegisterModule(new EventBusModule());
+            builder.RegisterModule(new EventHandlersModule());
+            builder.RegisterModule(new ReadModelModule(Configuration));
+            builder.RegisterModule(new ServicesModule());
 
+            //ConfigureMediatr(builder);
+            builder.RegisterType<Fart>().As<IFart>();
         }
 
         public void ConfigureMediatr(ContainerBuilder builder)
@@ -114,16 +120,6 @@ namespace SciVacancies.WebApp
                 var c = ctx.Resolve<IComponentContext>();
                 return t => (IEnumerable<object>)c.Resolve(typeof(IEnumerable<>).MakeGenericType(t));
             });
-        }
-
-        public void ConfigureEventStore(ContainerBuilder builder)
-        {
-
-        }
-
-        public void ConfigureAggregateServices(ContainerBuilder builder)
-        {
-
         }
     }
 }

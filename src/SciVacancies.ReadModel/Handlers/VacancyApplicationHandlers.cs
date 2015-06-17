@@ -20,12 +20,28 @@ namespace SciVacancies.ReadModel.Handlers
             {
                 Guid = msg.VacancyApplicationGuid,
                 VacancyGuid = msg.VacancyGuid,
-                ResearcherGuid =msg.ResearcherGuid,
+                ResearcherGuid = msg.ResearcherGuid,
                 CreationdDate = msg.TimeStamp,
-                Status =  VacancyApplicationStatus.InProcess
+                Status = VacancyApplicationStatus.InProcess
             };
 
             _db.Insert(vacancyApplication);
+        }
+    }
+    public class VacancyApplicationUpdatedHandler : EventBaseHandler<VacancyApplicationUpdated>
+    {
+        public VacancyApplicationUpdatedHandler(IDatabase db) : base(db) { }
+        public override void Handle(VacancyApplicationUpdated msg)
+        {
+            //TODO
+        }
+    }
+    public class VacancyApplicationRemovedHandler : EventBaseHandler<VacancyApplicationRemoved>
+    {
+        public VacancyApplicationRemovedHandler(IDatabase db) : base(db) { }
+        public override void Handle(VacancyApplicationRemoved msg)
+        {
+            //TODO
         }
     }
     public class VacancyApplicationAppliedHandler : EventBaseHandler<VacancyApplicationApplied>
@@ -38,6 +54,38 @@ namespace SciVacancies.ReadModel.Handlers
             vacancyApplication.UpdateDate = msg.TimeStamp;
 
             _db.Update(vacancyApplication);
+        }
+    }
+    public class VacancyApplicationCancelledHandler : EventBaseHandler<VacancyApplicationCancelled>
+    {
+        public VacancyApplicationCancelledHandler(IDatabase db) : base(db) { }
+        public override void Handle(VacancyApplicationCancelled msg)
+        {
+            //TODO
+        }
+    }
+    public class VacancyApplicationWonHandler : EventBaseHandler<VacancyApplicationWon>
+    {
+        public VacancyApplicationWonHandler(IDatabase db) : base(db) { }
+        public override void Handle(VacancyApplicationWon msg)
+        {
+            //TODO
+        }
+    }
+    public class VacancyApplicationPretendedHandler : EventBaseHandler<VacancyApplicationPretended>
+    {
+        public VacancyApplicationPretendedHandler(IDatabase db) : base(db) { }
+        public override void Handle(VacancyApplicationPretended msg)
+        {
+            //TODO
+        }
+    }
+    public class VacancyApplicationLostHandler : EventBaseHandler<VacancyApplicationLost>
+    {
+        public VacancyApplicationLostHandler(IDatabase db) : base(db) { }
+        public override void Handle(VacancyApplicationLost msg)
+        {
+            //TODO
         }
     }
 }
