@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNet.Mvc;
+﻿using System;
+using Microsoft.AspNet.Mvc;
 using SciVacancies.WebApp.Engine.CustomAttribute;
 using SciVacancies.WebApp.ViewModels;
 
@@ -6,46 +7,54 @@ namespace SciVacancies.WebApp.Controllers
 {
     public class ResearchersController: Controller
     {
-        [NavigationTitle("Информация")]
+        [SiblingPage]
+        [PageTitle("Информация")]
         public ViewResult Account()
         {
             var model = new ResearcherDetailsViewModel();
             return View(model);
         }
 
-        public ViewResult Edit()
+        [PageTitle("Изменить данные")]
+        public ViewResult Edit(Guid id)
         {
-            var model = new ResearcherEditViewModel();
+            var model = new ResearcherEditViewModel {Guid = id };
             return View(model);
         }
         [HttpPut]
+        [HttpPost]
+        [PageTitle("Редактирование информации пользователя")]
         public RedirectToActionResult Edit(ResearcherEditViewModel model)
         {
             return RedirectToAction("account");
         }
 
-        [NavigationTitle("Мои заявки")]
+        [SiblingPage]
+        [PageTitle("Мои заявки")]
         public ViewResult Applications()
         {
             var model = new ResearcherDetailsViewModel();
             return View(model);
         }
 
-        [NavigationTitle("Избранные вакансии")]
+        [SiblingPage]
+        [PageTitle("Избранные вакансии")]
         public ActionResult Favorities()
         {
             var model = new ResearcherDetailsViewModel();
             return View(model);
         }
 
-        [NavigationTitle("Подписки")]
+        [SiblingPage]
+        [PageTitle("Подписки")]
         public ViewResult Subscriptions()
         {
             var model = new ResearcherDetailsViewModel();
             return View(model);
         }
 
-        [NavigationTitle("Уведомления")]
+        [SiblingPage]
+        [PageTitle("Уведомления")]
         public ViewResult Notifications()
         {
             var model = new ResearcherDetailsViewModel();

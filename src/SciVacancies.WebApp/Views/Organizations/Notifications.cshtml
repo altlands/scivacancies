@@ -1,0 +1,117 @@
+﻿@using System.Threading.Tasks
+@using SciVacancies.WebApp.Controllers
+@model SciVacancies.WebApp.ViewModels.OrganizationDetailsViewModel
+
+<div class="crumbs">
+    <a href="/">Главная страница</a><span class="separator">/</span>
+    <a asp-controller="organizations" asp-action="account">Московский государственный университет им. М.В. Ломоносова</a><span class="separator">/</span>
+    @ViewBag.Title
+</div>
+
+<h3>@Model.Title</h3>
+
+@Component.Invoke("AccountTabs", typeof(OrganizationsController))
+
+<h4>@ViewBag.Title</h4>
+
+<div class="table-control">
+    <a href="#" class="close-table"><span class="italic">Очистить фильтры</span></a>
+    <a href="#" class="reload-table"><span class="italic">Обновить список</span></a>
+</div>
+
+<table class="table request-table">
+    <thead>
+        <tr>
+            <th><div class="inline-block"><img src="/images/icons/arrow-bottom-tab.png" class="va-middle"></div><div class="inline-block ml6 va-middle">№</div></th>
+            <th><div class="inline-block"><img src="/images/icons/tab-head.png" class="va-middle"></div><div class="inline-block ml6 va-middle">Дата</div></th>
+            <th><div class="inline-block"><img src="/images/icons/tab-head.png" class="va-middle"></div><div class="inline-block ml6 va-middle">Вакансия</div></th>
+            <th><div class="inline-block"><img src="/images/icons/tab-head.png" class="va-middle"></div><div class="inline-block ml6 va-middle">Текст</div></th>
+            <th><div class="pl21 va-middle lh30">Действия</div></th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td class="bold">001</td>
+            <td class="bold">03-05-15, 16:47</td>
+            <td class="bold">ID РНП6000013</td>
+            <td><a href="#" class="success-request-icon"><span class="italic bold">Вы победили в конкурсе</span></a></td>
+            <td>
+                <a href="#" class="view-td-icon open-popup"></a>
+                <a href="#" class="close-td-icon"></a>
+            </td>
+        </tr>
+        <tr>
+            <td class="bold">002</td>
+            <td class="bold">01-09-14, 16:04</td>
+            <td class="bold">ID СНС6000567</td>
+            <td class="bold">Вы заняли второе место в конкурсе</td>
+            <td>
+                <a href="#" class="view-td-icon open-popup"></a>
+                <a href="#" class="close-td-icon"></a>
+            </td>
+        </tr>
+        <tr>
+            <td>003</td>
+            <td>01-09-14, 16:04</td>
+            <td>ID СНС6000567</td>
+            <td>Вы заняли второе место в конкурсе</td>
+            <td>
+                <a href="#" class="view-td-icon open-popup"></a>
+                <a href="#" class="close-td-icon"></a>
+            </td>
+        </tr>
+        <tr>
+            <td>004</td>
+            <td>01-09-14, 16:04</td>
+            <td>ID СНС6000567</td>
+            <td>Вы заняли второе место в конкурсе</td>
+            <td>
+                <a href="#" class="view-td-icon open-popup"></a>
+                <a href="#" class="close-td-icon"></a>
+            </td>
+        </tr>
+    </tbody>
+</table>
+<div class="bottom-nav">
+    <div class="bottom-nav-left">
+        <div class="count-news">
+            1-4 из 4 записей
+        </div>
+        <div class="count-line-page">
+            <input type="text" value="10"> записей на странице
+        </div>
+    </div>
+    <div class="bottom-nav-right">
+        <ul>
+            <li>
+                <span class="first disable">
+                    <span>Первая</span>
+                </span>
+            </li>
+            <li>
+                <span class="prev disable">
+                    <span>Предыдущая</span>
+                </span>
+            </li>
+            <li>
+                <div class="count-page">
+                    <input type="text" value="1"> из 306
+                </div>
+            </li>
+            <li>
+                <span class="next disable">
+                    <span>Следующая</span>
+                </span>
+            </li>
+            <li>
+                <span class="latest disable">
+                    <span>Последняя</span>
+                </span>
+            </li>
+        </ul>
+    </div>
+</div>
+
+<div class="b-bottom-nav">
+    <a href="/" class="small-icon icon-prev">На главную страницу</a>
+</div>

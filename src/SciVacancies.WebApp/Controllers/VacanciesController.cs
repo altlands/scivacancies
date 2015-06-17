@@ -1,31 +1,37 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
-using Microsoft.AspNet.Mvc;
+﻿using Microsoft.AspNet.Mvc;
+using SciVacancies.WebApp.ViewModels;
 
 namespace SciVacancies.WebApp.Controllers
 {
+    /// <summary>
+    /// страница с вакансиями (конкурсами)
+    /// </summary>
     public class VacanciesController : Controller
     {
-
-        public ViewResult Search(
-            List<int> salaries,
-            List<int> contestStates,
-            
-            int period = 0 /* 0=all | 1=1 day |  7=7 days | 30=30 days */,
-            string orderBy = "date" /* count */, 
-            bool orderDescending = true,
-            int pageSize = 10,
-            int page = 1 
-            )
+        [PageTitle("Карточка конкурса")]
+        public ViewResult Show(/*Guid id*/)
         {
-
             return View();
         }
 
+        [PageTitle("Карточка конкурса")]
+        public ViewResult Details(/*Guid id*/)
+        {
+            return View();
+        }
 
-        public ViewResult Details(string id) => View();
+        [PageTitle("Завершенные конкурсы")]
+        public ViewResult Closed() => View();
+
+        [PageTitle("Новая вакансия")]
+        public ViewResult Create() => View();
+
+
+        [PageTitle("Новая вакансия")]
+        [HttpPost]
+        public RedirectToActionResult Create(VacancyCreateViewModel model)
+        {
+            return RedirectToAction("details");
+        }
     }
 }

@@ -8,7 +8,6 @@ namespace SciVacancies.WebApp.ViewModels
 {
     public class ApplicationCreateViewModel: PageViewModelBase
     {
-
-        public string VacancyId { get; set; }
+        public Guid VacancyGuid { get; set; }
     }
 }

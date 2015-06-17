@@ -6,8 +6,7 @@ namespace SciVacancies.WebApp.ViewModels
     {
         public ResearcherDetailsViewModel()
         {
-            Title = "Личная карточка";
-            NavigationTitle = "Личная карточка пользователя";
+            Title = "Личная карточка пользователя";
         }
     }
 }

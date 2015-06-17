@@ -8,7 +8,7 @@
     {
         <text>
         <li class="@( currentAction.ToUriComponent().Contains(item.Key) ? "active" : string.Empty)">
-            <a href="/researchers/@item.Key">
+            <a href="/@ViewContext.RouteData.Values["controller"]/@item.Key">
                 <span>
                     @item.Value
                 </span>

@@ -1,16 +1,19 @@
-﻿@using SciVacancies.WebApp.ViewModels
+﻿@using System.Threading.Tasks
+@using SciVacancies.WebApp.Controllers
+@using SciVacancies.WebApp.ViewModels
+@model SciVacancies.WebApp.ViewModels.ResearcherDetailsViewModel
 
 <div class="crumbs">
-    <a href="/">Главная страница</a>
-    <span class="separator">/</span>
-    Личная карточка
+    <a href="/">Главная страница</a><span class="separator">/</span>
+    <a asp-controller="researchers" asp-action="account">Личная карточка</a><span class="separator">/</span>
+    @ViewBag.Title
 </div>
 
-<h3>Личная карточка пользователя</h3>
+<h3>@Model.Title</h3>
 
-@Component.Invoke("ResearcherTabs")
+@Component.Invoke("AccountTabs", typeof(ResearchersController))
 
-<h4>Избранные вакансии</h4>
+<h4>@ViewBag.Title</h4>
 
 <div class="table-control">
     <a href="#" class="close-table"><span class="italic">Очистить фильтры</span></a>
@@ -117,4 +120,7 @@
 </div>
 
 
-@Component.Invoke("ApplicationCreate", new ApplicationCreateViewModel())
+<div class="b-bottom-nav">
+    <a href="/" class="small-icon icon-prev">На главную страницу</a>
+    <a asp-controller="researchers" asp-action="account" class="small-icon icon-prev">К личной карточке</a>
+</div>

@@ -8,6 +8,7 @@ namespace SciVacancies.Domain.Core
     public class Publication
     {
         public Guid PublicationGuid { get; set; }
+
         public string Name { get; set; }
     }
 }

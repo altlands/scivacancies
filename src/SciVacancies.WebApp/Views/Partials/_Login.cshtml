@@ -3,18 +3,29 @@
 @using Microsoft.AspNet.Http
 @using SciVacancies.WebApp.Controllers
 @using SciVacancies.WebApp.ViewModels
-
-
-@if (string.IsNullOrWhiteSpace(Context.Request.HttpContext.Session.GetString(AccountController.UserNameKey)))
-{
+@{
     bool isResearcher;
-    if (bool.TryParse(Context.Request.HttpContext.Session.GetString(AccountController.IsResearcherKey), out isResearcher))
+    if (!bool.TryParse(Context.Request.HttpContext.Session.GetString(AccountController.IsResearcherKey), out isResearcher))
     {
         isResearcher = false;
     }
+}
+
+@section scripts
+{
+    <script type="text/javascript">
+
+        function setIsResearcher(value) {
+            $('form').find('input[type="hidden"][name="IsResearcher"]').val(value);
+        }
+    </script>
+}
+
+@if (string.IsNullOrWhiteSpace(Context.Request.HttpContext.Session.GetString(AccountController.UserNameKey)))
+{
 
     <div class="control control-registration">
-        <a asp-controller="@(isResearcher ? "researchers" : "organizations")" asp-action="account" asp-route-username="nikita" class="enter-head open-popup"><span class="dashed italic">Вход в Личный кабинет</span></a>
+        <a href="#" class="enter-head open-popup"><span class="dashed italic">Вход в Личный кабинет</span></a>
         <div class="sub-control">
             <a asp-controller="account" asp-action="register" class="underline">Регистрация</a>
             <a asp-controller="account" asp-action="forgotpassword" class="underline">Забыли пароль?</a>
@@ -28,15 +39,15 @@
         </div>
         <div class="content-popup">
             <form asp-controller="account" asp-action="login" method="POST">
+                <input type="hidden" id="IsResearcher1" name="IsResearcher" value="true" checked="checked"/>
+
                 <div class="b-tabs">
                     <ul class="nav nav-tabs" id="tab">
                         <li>
-                            <input type="radio" id="IsResearcher1" name="IsResearcher" value="true" checked="checked" />
-                            <a href="#b-user">Пользователь</a>
+                            <a href="#b-user" onclick="return setIsResearcher(true);">Пользователь</a>
                         </li>
                         <li>
-                            <input type="radio" id="IsResearcher2" name="IsResearcher" value="false" />
-                            <a href="#b-organization">Организация</a>
+                            <a href="#b-organization" onclick="return setIsResearcher(false);">Организация</a>
                         </li>
                     </ul>
                     <div class="tab-content">
@@ -52,6 +63,7 @@
                         </div>
                     </div>
                 </div>
+
                 <div class="form-line">
                     <input asp-for="Login" class="long-input" placeholder="Логин (e-mail)" />
                 </div>
@@ -71,7 +83,7 @@
 else
 {
     <div class="control">
-        <a asp-controller="researcher" asp-action="account" class="cab-head">
+        <a asp-controller="@(isResearcher ? "researchers" : "organizations")" asp-action="account" class="cab-head">
             <span class="lk-head-icon" id="lk" rel="tooltip"></span>
             <span class="underline white italic">Личный кабинет</span>
         </a>

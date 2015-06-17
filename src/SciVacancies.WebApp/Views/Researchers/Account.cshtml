@@ -1,17 +1,18 @@
 ﻿@using System.Threading.Tasks
+@using SciVacancies.WebApp.Controllers
 @model SciVacancies.WebApp.ViewModels.ResearcherDetailsViewModel
 
-@{
-    ViewBag.Title = Model.NavigationTitle;
-}
-
-@Component.Invoke("Breadcrumbs", Model.NavigationTitle)
+<div class="crumbs">
+    <a href="/">Главная страница</a><span class="separator">/</span>
+    @ViewBag.Title
+</div>
 
 <h3>@Model.Title</h3>
 
-@Component.Invoke("ResearcherTabs")
+@Component.Invoke("AccountTabs", typeof(ResearchersController))
 
-<h4>Информация</h4>
+<h4>@ViewBag.Title</h4>
+
 <div class="l-information">
     <div class="row">
         <div class="profile">
@@ -70,9 +71,12 @@
 </div>
 <div class="b-links mt-2 ml3">
     <div class="link-edit">
-        <a asp-controller="researchers" 
+        <a asp-controller="researchers"
            asp-action="edit"
-           asp-route-id="@Model.Id" 
            class="arial italic">Редактировать</a>
     </div>
+</div>
+
+<div class="b-bottom-nav">
+    <a href="/" class="small-icon icon-prev">На главную страницу</a>
 </div>

@@ -17,7 +17,7 @@ namespace SciVacancies.Domain.Aggregates
         //private List<Education> EducationList { get; set; }
         //private List<Publication> Publications { get; set; }
         private List<Guid> FavoriteVacancyGuids { get; set; }
-        //private List<SearchSubscription> SearchSubscriptions { get; set; }
+        private List<SearchSubscription> SearchSubscriptions { get; set; }
 
         private List<VacancyApplication> VacancyApplications { get; set; }
 
@@ -54,7 +54,7 @@ namespace SciVacancies.Domain.Aggregates
 
         public int AddVacancyToFavorites(Guid vacancyGuid)
         {
-            if(!this.FavoriteVacancyGuids.Contains(vacancyGuid))
+            if (!this.FavoriteVacancyGuids.Contains(vacancyGuid))
             {
                 RaiseEvent(new VacancyAddedToFavorites()
                 {
@@ -71,7 +71,7 @@ namespace SciVacancies.Domain.Aggregates
         }
         public int RemoveVacancyFromFavorites(Guid vacancyGuid)
         {
-            if(this.FavoriteVacancyGuids.Contains(vacancyGuid))
+            if (this.FavoriteVacancyGuids.Contains(vacancyGuid))
             {
                 RaiseEvent(new VacancyRemovedFromFavorites()
                 {
@@ -86,6 +86,54 @@ namespace SciVacancies.Domain.Aggregates
             }
         }
 
+        public Guid CreateSearchSubscription(SearchSubscriptionDataModel data)
+        {
+            Guid searchSubscriptionGuid = Guid.NewGuid();
+            RaiseEvent(new SearchSubscriptionCreated()
+            {
+                SearchSubscriptionGuid = searchSubscriptionGuid,
+                ResearcherGuid = this.Id
+            });
+
+            return searchSubscriptionGuid;
+        }
+        public void ActivateSearchSubscription(Guid searchSubscriptionGuid)
+        {
+            SearchSubscription searchSubscription = this.SearchSubscriptions.Find(f => f.SearchSubscriptionGuid == searchSubscriptionGuid);
+            if (searchSubscription != null && searchSubscription.Status == SearchSubscriptionStatus.Cancelled)
+            {
+                RaiseEvent(new SearchSubscriptionActivated()
+                {
+                    SearchSubscriptionGuid = searchSubscriptionGuid,
+                    ResearcherGuid = this.Id
+                });
+            }
+        }
+        public void CancelSearchSubscription(Guid searchSubscriptionGuid)
+        {
+            SearchSubscription searchSubscription = this.SearchSubscriptions.Find(f => f.SearchSubscriptionGuid == searchSubscriptionGuid);
+            if (searchSubscription != null && searchSubscription.Status == SearchSubscriptionStatus.Active)
+            {
+                RaiseEvent(new SearchSubscriptionCanceled()
+                {
+                    SearchSubscriptionGuid = searchSubscriptionGuid,
+                    ResearcherGuid = this.Id
+                });
+            }
+        }
+        public void RemoveSearchSubscription(Guid searchSubscriptionGuid)
+        {
+            SearchSubscription searchSubscription = this.SearchSubscriptions.Find(f => f.SearchSubscriptionGuid == searchSubscriptionGuid);
+            if (searchSubscription != null)
+            {
+                RaiseEvent(new SearchSubscriptionRemoved()
+                {
+                    SearchSubscriptionGuid = searchSubscriptionGuid,
+                    ResearcherGuid = this.Id
+                });
+            }
+        }
+
         public Guid CreateVacancyApplicationTemplate(Guid vacancyGuid)
         {
             Guid vacancyApplicationGuid = Guid.NewGuid();
@@ -97,6 +145,32 @@ namespace SciVacancies.Domain.Aggregates
             });
 
             return vacancyApplicationGuid;
+        }
+        public void UpdateVacancyApplicationTemplate(Guid vacancyApplicationGuid, VacancyApplicationDataModel data)
+        {
+            VacancyApplication vacancyApplication = this.VacancyApplications.Find(f => f.VacancyApplicationGuid == vacancyApplicationGuid);
+            if (vacancyApplication != null && vacancyApplication.Status == VacancyApplicationStatus.InProcess)
+            {
+                RaiseEvent(new VacancyApplicationUpdated()
+                {
+                    VacancyApplicationGuid = vacancyApplication.VacancyApplicationGuid,
+                    ResearcherGuid = this.Id,
+                    Data = data
+                });
+            }
+        }
+        public void RemoveVacancyApplicationTemplate(Guid vacancyApplicationGuid)
+        {
+            VacancyApplication vacancyApplication = this.VacancyApplications.Find(f => f.VacancyApplicationGuid == vacancyApplicationGuid);
+            if (vacancyApplication != null && vacancyApplication.Status == VacancyApplicationStatus.InProcess)
+            {
+                RaiseEvent(new VacancyApplicationRemoved()
+                {
+                    VacancyApplicationGuid = vacancyApplicationGuid,
+                    VacancyGuid = vacancyApplication.VacancyGuid,
+                    ResearcherGuid = this.Id
+                });
+            }
         }
         public void ApplyToVacancy(Guid vacancyApplicationGuid)
         {
@@ -164,14 +238,46 @@ namespace SciVacancies.Domain.Aggregates
             this.FavoriteVacancyGuids.Remove(@event.VacancyGuid);
         }
 
+        public void Apply(SearchSubscriptionCreated @event)
+        {
+            this.SearchSubscriptions.Add(new SearchSubscription()
+            {
+                SearchSubscriptionGuid = @event.SearchSubscriptionGuid,
+                Status = SearchSubscriptionStatus.Active
+            });
+        }
+        public void Apply(SearchSubscriptionActivated @event)
+        {
+            this.SearchSubscriptions.Find(f => f.SearchSubscriptionGuid == @event.SearchSubscriptionGuid).Status = SearchSubscriptionStatus.Active;
+        }
+        public void Apply(SearchSubscriptionCanceled @event)
+        {
+            this.SearchSubscriptions.Find(f => f.SearchSubscriptionGuid == @event.SearchSubscriptionGuid).Status = SearchSubscriptionStatus.Cancelled;
+        }
+        public void Apply(SearchSubscriptionRemoved @event)
+        {
+            this.SearchSubscriptions.Remove(this.SearchSubscriptions.Find(f => f.SearchSubscriptionGuid == @event.SearchSubscriptionGuid));
+        }
+
         public void Apply(VacancyApplicationCreated @event)
         {
             this.VacancyApplications.Add(new VacancyApplication()
             {
                 VacancyApplicationGuid = @event.VacancyApplicationGuid,
                 VacancyGuid = @event.VacancyGuid,
+                Data = @event.Data,
                 Status = VacancyApplicationStatus.InProcess
             });
+        }
+        public void Apply(VacancyApplicationUpdated @event)
+        {
+            VacancyApplication vacancyApplication = this.VacancyApplications.Find(f => f.VacancyApplicationGuid == @event.VacancyApplicationGuid);
+            //TODO - маппинг изменяемых данных
+            //vacancyApplication.Data.
+        }
+        public void Apply(VacancyApplicationRemoved @event)
+        {
+            this.VacancyApplications.Remove(this.VacancyApplications.Find(f => f.VacancyApplicationGuid == @event.VacancyApplicationGuid));
         }
         public void Apply(VacancyApplicationApplied @event)
         {

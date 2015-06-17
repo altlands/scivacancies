@@ -15,9 +15,9 @@
 
 <div class="b-search">
     <div class="b-wrap">
-        <form asp-controller="vacancies" asp-action="search" method="POST">
-            <input class="search-input" type="text" name="search" placeholder="поиск по порталу" />
-            <button type="submit" class="search-button"><i class="icon icon-search"></i></button>
+        <form asp-controller="search" asp-action="index" method="GET">
+            <input class="search-input" type="text" name="search" placeholder="поиск по порталу" value="@ViewBag.Search" />
+            <input type="submit" class="search-button" value=""/><!--i class="icon icon-search"></i-->
         </form>
     </div>
 </div>
