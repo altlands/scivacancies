@@ -1,6 +1,5 @@
-﻿@{
-    ViewBag.Title = "Главная страница";
-}
+﻿@using System.Threading.Tasks
+@model SciVacancies.WebApp.ViewModels.IndexViewModel
 <div class="crumbs">
     @ViewBag.Title
 </div>
@@ -10,34 +9,20 @@
         <h4>Работа в организациях</h4>
         <div class="b-vacancies">
 
-
-            <a asp-controller="vacancies" asp-action="details" asp-route-id="3" class="row-4">
-                <img class="img-vac" src="/images/im.jpg">
-                <span class="text-vac">
-                    Московский государственный университет имени М.В.Ломоносова
-                </span>
-            </a>
-            <a asp-controller="vacancies" asp-action="details" asp-route-id="3" class="row-4">
-                <img class="img-vac" src="/images/im.jpg">
-                <span class="text-vac">
-                    Московский государственный университет имени М.В.Ломоносова
-                </span>
-            </a>
-            <a asp-controller="vacancies" asp-action="details" asp-route-id="3" class="row-4">
-                <img class="img-vac" src="/images/im.jpg"/>
-                <span class="text-vac">
-                    Московский государственный университет имени М.В.Ломоносова
-                </span>
-            </a>
-            <a asp-controller="vacancies" asp-action="details" asp-route-id="3" class="row-4">
-                <img class="img-vac" src="/images/im.jpg">
-                <span class="text-vac">
-                    Московский государственный университет имени М.В.Ломоносова
-                </span>
-            </a>
+            @foreach (var item in Model.OrganizationsList.Items)
+            {
+                <text>
+                <a asp-controller="organizations" asp-action="card" asp-route-id="@item.Guid" class="row-4">
+                    @*<img class="img-vac" src="/images/im.jpg">*@
+                    <span class="text-vac">
+                        @item.Name
+                    </span>
+                </a>
+                </text>
+            }
 
         </div>
-        <a asp-controller="vacancies" asp-action="search">
+        <a asp-controller="search" asp-route-order="">
             <span class="small-icon icon-sm-eye inline-block ml9 mt13"><span>Показать все</span></span>
         </a>
     </div>
