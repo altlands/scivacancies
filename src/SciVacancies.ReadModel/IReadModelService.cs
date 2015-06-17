@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using NPoco;
 
 namespace SciVacancies.ReadModel
 {
@@ -35,6 +36,16 @@ namespace SciVacancies.ReadModel
 
         Organization SingleOrganization(Guid organizationGuid);
         List<Organization> SelectOrganizations();
+        /// <summary>
+        /// получить список организаций по условия
+        /// </summary>
+        /// <param name="orderBy">поле для сортировки</param>
+        /// <param name="pageSize">размер страницы</param>
+        /// <param name="pageIndex">Номер страницы (начиная с 1)</param>
+        /// <param name="nameFilterValue">Значение фильтра для свойства Название организации (не обязательно)</param>
+        /// <param name="addressFilterValue">Значение фильтра для свойства Адрес организации (не обязательно)</param>
+        /// <returns></returns>
+        Page<Organization> SelectOrganizations(string orderBy, long pageSize, long pageIndex, string nameFilterValue = null, string addressFilterValue = null);
 
         Position SinglePosition(Guid positionGuid);
         List<Position> SelectPositions(Guid organizationGuid);

@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using Microsoft.AspNet.Mvc.Rendering;
+using SciVacancies.WebApp.Engine;
 
 namespace SciVacancies.WebApp.ViewModels
 {
@@ -17,8 +18,8 @@ namespace SciVacancies.WebApp.ViewModels
 
             OrderBys = new List<SelectListItem>
             {
-                new SelectListItem {Value = "date_descending", Text = "Сначала последние"}
-                ,new SelectListItem {Value ="date_ascending" , Text ="Сначала первые" }
+                new SelectListItem {Value = ConstTerms.OrderByDateDescending, Text = "Сначала последние"}
+                ,new SelectListItem {Value =ConstTerms.OrderByDateAscending , Text ="Сначала первые" }
             };
 
             Regions = new List<SelectListItem>
