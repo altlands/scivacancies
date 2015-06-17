@@ -1,4 +1,4 @@
-﻿{
+{
     "version": "1.0.0-*",
     "description": "",
     "authors": [ "" ],
@@ -7,8 +7,6 @@
     "licenseUrl": "",
 
     "dependencies": {
-        "SciVacancies.Domain.Events": "1.0.0-*",
-        "NEventStore": "5.2.0"
     },
 
     "frameworks": {
