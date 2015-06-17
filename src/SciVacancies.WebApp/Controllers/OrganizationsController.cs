@@ -7,6 +7,9 @@ namespace SciVacancies.WebApp.Controllers
 {
     public class OrganizationsController: Controller
     {
+        [PageTitle("Карточка организации")]
+        public ViewResult Card() => View();
+
         [SiblingPage]
         [PageTitle("Информация")]
         public ViewResult Account()

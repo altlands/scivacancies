@@ -9,7 +9,7 @@ using NPoco;
 
 namespace SciVacancies.ReadModel
 {
-    public class ReadModelService:IReadModelService
+    public class ReadModelService : IReadModelService
     {
         private readonly IDatabase _db;
         public ReadModelService(IDatabase db)
@@ -119,6 +119,21 @@ namespace SciVacancies.ReadModel
         public List<Organization> SelectOrganizations()
         {
             var result = new List<Organization>();
+            return result;
+        }
+        public Page<Organization> SelectOrganizations(string orderBy, long pageSize, long pageIndex, string nameFilterValue,
+            string addressFilterValue)
+        {
+            if (pageSize < 1)
+                throw new Exception($"PageSize too small: {pageSize}");
+            if (pageIndex < 1)
+                throw new Exception($"PageIndex too small: {pageIndex}");
+
+            if (string.IsNullOrWhiteSpace(orderBy))
+                orderBy = "Guid_descending";
+
+            var result = _db.Page<Organization>(pageIndex, pageSize, new Sql());
+
             return result;
         }
 
