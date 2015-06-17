@@ -1,5 +1,5 @@
 ﻿using SciVacancies.Domain.Enums;
-using SciVacancies.Domain.Events;
+using SciVacancies.Domain.DataModels;
 
 using System;
 using System.Collections.Generic;

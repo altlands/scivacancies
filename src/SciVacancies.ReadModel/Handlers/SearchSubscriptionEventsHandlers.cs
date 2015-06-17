@@ -1,4 +1,5 @@
-﻿using SciVacancies.Domain.Events;
+﻿using SciVacancies.Domain.Enums;
+using SciVacancies.Domain.Events;
 using SciVacancies.ReadModel.Core;
 
 using System;
@@ -39,7 +40,7 @@ namespace SciVacancies.ReadModel.Handlers
         public SearchSubscriptionRemovedHandler(IDatabase db) : base(db) { }
         public override void Handle(SearchSubscriptionRemoved msg)
         {
-            //TODO
+            _db.Delete<SearchSubscription>(msg.SearchSubscriptionGuid);
         }
     }
 }

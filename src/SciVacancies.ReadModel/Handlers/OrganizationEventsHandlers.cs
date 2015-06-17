@@ -1,4 +1,5 @@
-﻿using SciVacancies.Domain.Events;
+﻿using SciVacancies.Domain.Enums;
+using SciVacancies.Domain.Events;
 using SciVacancies.ReadModel.Core;
 
 using System;
@@ -31,7 +32,7 @@ namespace SciVacancies.ReadModel.Handlers
         public OrganizationRemovedHandler(IDatabase db) : base(db) { }
         public override void Handle(OrganizationRemoved msg)
         {
-            //TODO
+            _db.Delete<Organization>(msg.OrganizationGuid);
         }
     }
 }
