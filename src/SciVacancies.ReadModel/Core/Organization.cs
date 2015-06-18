@@ -35,8 +35,6 @@ namespace SciVacancies.ReadModel.Core
 
         /// <summary>
         /// Населенный пункт
-        public DateTime CreationdDate { get; set; }
-        public DateTime? UpdateDate { get; set; }
         /// </summary>
         public string CityName { get; set; }
 
