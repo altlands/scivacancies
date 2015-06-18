@@ -1,11 +1,17 @@
 ﻿@model dynamic
 
-<div class="crumbs">
-    <a href="/">Главная страница</a><span class="separator">/</span>
-    <a asp-controller="organizations" asp-action="account">Московский государственный университет им. М.В. Ломоносова</a><span class="separator">/</span>
-    <a asp-controller="organizations" asp-action="vacancies">Вакансии</a><span class="separator">/</span>
-    @ViewBag.Title
-</div>
+@{
+    var referer = Context.Request.Headers["referer"];
+}
+@if (!string.IsNullOrWhiteSpace(referer))
+{
+    <text>
+    <div class="crumbs">
+        <a href="@referer.ToLower()">Назад</a><span class="separator">/</span>
+        @ViewBag.Title
+    </div>
+    </text>
+}
 
 <h3>@ViewBag.Title</h3>
 
@@ -42,7 +48,11 @@
     </li>
 </ul>
 
-
-<div class="b-bottom-nav">
-    <a asp-controller="organizations" asp-action="account" class="small-icon icon-prev">К карточке организации</a>
-</div>
+@if (!string.IsNullOrWhiteSpace(referer))
+{
+    <text>
+    <div class="b-bottom-nav">
+        <a href="@referer.ToLower()" class="small-icon icon-prev">Назад</a>
+    </div>
+    </text>
+}

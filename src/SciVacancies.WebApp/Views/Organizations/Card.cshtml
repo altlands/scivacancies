@@ -1,0 +1,170 @@
+﻿@model dynamic
+
+
+<div class="crumbs">
+    <a href="/">Главная страница</a><span class="separator">/</span>
+    @ViewBag.Title
+</div>
+
+<h4>Информация</h4>
+<div class="l-information">
+    <div class="row">
+        <div class="profile">
+            <div class="photo inline-block">
+                <img src="images/profile-photo.png" width="140" height="180" />
+            </div>
+            <div class="info info-view inline-block">
+                <h4>Московский государственный университет<br /> им. М.В. Ломоносова</h4>
+                <span><a href="#" class="big-link-compare lk-icon bold">Добавить в сравнение</a></span>
+
+                <div class="profile-description">
+                    <div>Сокращенное наименование: <span class="bold">МГУ</span></div>
+
+                    <div>
+                        Сокращенное наименование: <span class="bold">MSU</span><br />
+                        <span class="sub">(на английском языке)</span>
+                    </div>
+
+                    <div>
+                        Полное наименование: <span class="bold">Moscow MV Lomonosov State Univ</span><br />
+                        <span class="sub">(на английском языке)</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row pt15 fs12">
+        <div class="profile-description profile-description-place">
+            <div>Населенный пункт: <span class="bold">г. Москва</span></div>
+
+            <div>Веб-сайт: <a href="#"><span class="bold">information@msu.ru</span></a></div>
+
+            <div>Почтовый адрес: <span class="bold">119991, Российская Федерация, Москва, ГСП-1, Ленинские горы, Московский государственный университет имени М.В.Ломоносова</span><br /></div>
+        </div>
+    </div>
+</div>
+
+<div class="mt30">
+    <h4>Вакансии</h4>
+
+    <div class="table-control">
+        <a href="#" class="close-table"><span class="italic">Очистить фильтры</span></a>
+        <a href="#" class="reload-table"><span class="italic">Обновить список</span></a>
+    </div>
+
+    <table class="table request-table">
+        <thead>
+            <tr>
+                <th><div class="inline-block"><img src="images/icons/arrow-bottom-tab.png" class="va-middle"></div><div class="inline-block ml6 va-middle">№</div></th>
+                <th><div class="inline-block"><img src="images/icons/tab-head.png" class="va-middle"></div><div class="inline-block ml6 va-middle">ID конкурса</div></th>
+                <th><div class="pl21 va-middle">Вакансия</div></th>
+                <th><div class="inline-block"><img src="images/icons/tab-head.png" class="va-middle"></div><div class="inline-block ml6 va-middle">Дата<br /> создания</div></th>
+                <th><div class="inline-block"><img src="images/icons/tab-head.png" class="va-middle"></div><div class="inline-block ml6 va-middle">Дата<br /> публикации</div></th>
+                <th><div class="inline-block"><img src="images/icons/tab-head.png" class="va-middle"></div><div class="inline-block ml6 va-middle">Статус<br /> конкурса</div></th>
+                <th class="view-col"><div class="pl21 va-middle"><span>Просмотр</span></div></th>
+                <th><div class="pl21 va-middle">Победитель</div></th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>001</td>
+                <td>ГНС600001</td>
+                <td>Главный<br> научный сотрудник</td>
+                <td>01-09-14, 16:04</td>
+                <td>01-09-14, 16:04</td>
+                <td><span class="status work">Объявлен</span></td>
+                <td class="view-col">
+                    <a href="#" class="view-td-icon"></a>
+                </td>
+                <td class="ta-left"></td>
+            </tr>
+            <tr>
+                <td>001</td>
+                <td>ГНС600001</td>
+                <td>Главный<br> научный сотрудник</td>
+                <td>01-09-14, 16:04</td>
+                <td>01-09-14, 16:04</td>
+                <td><span class="status work">В работе</span></td>
+                <td class="view-col">
+                    <a href="#" class="view-td-icon"></a>
+                </td>
+                <td class="ta-left"></td>
+            </tr>
+            <tr>
+                <td>001</td>
+                <td>ГНС600001</td>
+                <td>Главный<br> научный сотрудник</td>
+                <td>01-09-14, 16:04</td>
+                <td>01-09-14, 16:04</td>
+                <td><span class="status work">Прием заявок</span></td>
+                <td class="view-col">
+                    <a href="#" class="view-td-icon"></a>
+                </td>
+                <td class="ta-left"></td>
+            </tr>
+            <tr>
+                <td>001</td>
+                <td>ГНС600001</td>
+                <td>Главный<br> научный сотрудник</td>
+                <td>01-09-14, 16:04</td>
+                <td>01-09-14, 16:04</td>
+                <td><span class="status executed">Завершен</span></td>
+                <td class="view-col">
+                    <a href="#" class="view-td-icon"></a>
+                </td>
+                <td class="ta-left"><a href="#" class="success-request-icon"><span class="italic bold">Определен</span></a></td>
+            </tr>
+            <tr>
+                <td>001</td>
+                <td>ГНС600001</td>
+                <td>Главный<br> научный сотрудник</td>
+                <td>01-09-14, 16:04</td>
+                <td>01-09-14, 16:04</td>
+                <td><span class="status work">В работе</span></td>
+                <td class="view-col">
+                    <a href="#" class="view-td-icon"></a>
+                </td>
+                <td class="ta-left"></td>
+            </tr>
+        </tbody>
+    </table>
+    <div class="bottom-nav">
+        <div class="bottom-nav-left">
+            <div class="count-news">
+                1-4 из 4 записей
+            </div>
+            <div class="count-line-page">
+                <input type="text" value="10"> записей на странице
+            </div>
+        </div>
+        <div class="bottom-nav-right">
+            <ul>
+                <li>
+                    <span class="first disable">
+                        <span>Первая</span>
+                    </span>
+                </li>
+                <li>
+                    <span class="prev disable">
+                        <span>Предыдущая</span>
+                    </span>
+                </li>
+                <li>
+                    <div class="count-page">
+                        <input type="text" value="1"> из 306
+                    </div>
+                </li>
+                <li>
+                    <span class="next disable">
+                        <span>Следующая</span>
+                    </span>
+                </li>
+                <li>
+                    <span class="latest disable">
+                        <span>Последняя</span>
+                    </span>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
