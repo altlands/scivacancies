@@ -1,10 +1,18 @@
-﻿@model dynamic
-    
+﻿@using System.Threading.Tasks
+@using SciVacancies.WebApp.Controllers
+@model dynamic
+
 <div class="crumbs">
-    <a href="/">Главная страница</a><span class="separator">/</span>@ViewBag.Title
+    <a href="/">Главная страница</a><span class="separator">/</span>
+    <a asp-controller="organizations" asp-action="account">Московский государственный университет им. М.В. Ломоносова</a><span class="separator">/</span>
+    @ViewBag.Title
 </div>
 
-<h3>@ViewBag.Title</h3>
+<h3>@Model.Title</h3>
+
+@Component.Invoke("AccountTabs", typeof(OrganizationsController))
+
+<h4>@ViewBag.Title</h4>
 
 <div class="table-control">
     <a href="#" class="reload-table"><span class="italic">Обновить список</span></a>
@@ -28,9 +36,9 @@
             <td>Главный<br /> научный сотрудник</td>
             <td>01-09-14, 16:04</td>
             <td class="view-col">
-                <a href="#" class="view-td-icon"></a>
+                <a asp-controller="vacancies" asp-action="details" asp-route-id="15" class="view-td-icon"></a>
             </td>
-            <td class="ta-left"><a href="#" class="success-request-icon"><span class="italic bold">Определен</span></a></td>
+            <td><a href="#" class="success-request-icon"><span class="italic bold">Победитель</span></a></td>
         </tr>
         <tr>
             <td>001</td>
@@ -38,9 +46,9 @@
             <td>Главный<br /> научный сотрудник</td>
             <td>01-09-14, 16:04</td>
             <td class="view-col">
-                <a href="#" class="view-td-icon"></a>
+                <a asp-controller="vacancies" asp-action="details" asp-route-id="15" class="view-td-icon"></a>
             </td>
-            <td class="ta-left"><a href="#" class="success-request-icon"><span class="italic bold">Определен</span></a></td>
+            <td><a href="#" class="success-request-icon"><span class="italic bold">Победитель</span></a></td>
         </tr>
         <tr>
             <td>001</td>
@@ -48,19 +56,9 @@
             <td>Главный<br /> научный сотрудник</td>
             <td>01-09-14, 16:04</td>
             <td class="view-col">
-                <a href="#" class="view-td-icon"></a>
+                <a asp-controller="vacancies" asp-action="details" asp-route-id="15" class="view-td-icon"></a>
             </td>
-            <td class="ta-left"><a href="#" class="success-request-icon"><span class="italic bold">Определен</span></a></td>
-        </tr>
-        <tr>
-            <td>001</td>
-            <td>ГНС600001</td>
-            <td><a asp-controller="vacancies" asp-action="details" asp-route-id="15">ГНС600001</a></td>
-            <td>01-09-14, 16:04</td>
-            <td class="view-col">
-                <a href="#" class="view-td-icon"></a>
-            </td>
-            <td class="ta-left"><a href="#" class="inav-success-request-icon"><span class="italic bold">Не определен</span></a></td>
+            <td><a href="#" class="success-request-icon"><span class="italic bold">Победитель</span></a></td>
         </tr>
         <tr>
             <td>001</td>
@@ -68,9 +66,9 @@
             <td>Главный<br /> научный сотрудник</td>
             <td>01-09-14, 16:04</td>
             <td class="view-col">
-                <a href="#" class="view-td-icon"></a>
+                <a asp-controller="vacancies" asp-action="details" asp-route-id="15" class="view-td-icon"></a>
             </td>
-            <td class="ta-left"><a href="#" class="success-request-icon"><span class="italic bold">Определен</span></a></td>
+            <td><a href="#" class="success-request-icon"><span class="italic bold">Победитель</span></a></td>
         </tr>
     </tbody>
 </table>

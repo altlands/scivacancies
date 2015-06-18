@@ -41,7 +41,7 @@
             <td><span class="status executed">Завершён</span></td>
             <td><span class="status executed">Победитель</span></td>
             <td>
-                <a href="#" class="view-td-icon"></a>
+                <a asp-controller="vacancies" asp-action="preview" asp-route-id="@Guid.NewGuid()" class="view-td-icon"></a>
             </td>
         </tr>
         <tr>
@@ -50,9 +50,9 @@
             <td>60000 руб.</td>
             <td>01-09-14, 16:04</td>
             <td><span class="status work">Приём заявок</span></td>
-            <td><a asp-controller="application" asp-action="create" asp-route-vacancyid="@Guid.NewGuid()" asp-route-researcherguid="@Guid.NewGuid()" class="send-request-icon"><span class="italic">Подать заявку</span></a></td>
+            <td><a asp-controller="applications" asp-action="create" asp-route-vacancyid="@Guid.NewGuid()" asp-route-researcherguid="@Guid.NewGuid()" class="send-request-icon"><span class="italic">Подать заявку</span></a></td>
             <td>
-                <a href="#" class="view-td-icon"></a>
+                <a asp-controller="vacancies" asp-action="preview" asp-route-id="@Guid.NewGuid()" class="view-td-icon"></a>
             </td>
         </tr>
         <tr>
@@ -63,7 +63,7 @@
             <td><span class="status work">Объявлен</span></td>
             <td><span class="status work">В работе</span></td>
             <td>
-                <a href="#" class="view-td-icon"></a>
+                <a asp-controller="vacancies" asp-action="preview" asp-route-id="@Guid.NewGuid()" class="view-td-icon"></a>
             </td>
         </tr>
         <tr>
@@ -74,7 +74,7 @@
             <td><span class="status executed">Завершён</span></td>
             <td><a href="#" class="success-request-icon"><span class="italic">Победитель</span></a></td>
             <td>
-                <a href="#" class="view-td-icon"></a>
+                <a asp-controller="vacancies" asp-action="preview" asp-route-id="@Guid.NewGuid()" class="view-td-icon"></a>
             </td>
         </tr>
     </tbody>

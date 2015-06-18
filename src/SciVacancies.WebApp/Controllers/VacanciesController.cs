@@ -15,9 +15,11 @@ namespace SciVacancies.WebApp.Controllers
             return View();
         }
 
-
-        [PageTitle("Завершенные конкурсы")]
-        public ViewResult Closed() => View();
+        [PageTitle("Карточка конкурса")]
+        public ViewResult Preview(Guid id)
+        {
+            return View();
+        }
 
         [PageTitle("Новая вакансия")]
         public ViewResult Create() => View();
@@ -27,7 +29,7 @@ namespace SciVacancies.WebApp.Controllers
         [HttpPost]
         public RedirectToActionResult Create(VacancyCreateViewModel model)
         {
-            return RedirectToAction("details");
+            return RedirectToAction("vacancies", "organizations");
         }
     }
 }

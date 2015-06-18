@@ -23,14 +23,13 @@ namespace SciVacancies.Domain.DataModels
         /// <summary>
         /// Отрасль науки
         /// </summary>
-        public string FieldOfScience { get; set; }
-        public int FieldOfScienceId { get; set; }
+        public string ResearchDirection { get; set; }
+        public int ResearchDirectionId { get; set; }
 
         /// <summary>
         /// Тематика исследований
         /// </summary>
         public string ResearchTheme { get; set; }
-        public int ResearchThemeId { get; set; }
 
         /// <summary>
         /// Задачи

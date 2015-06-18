@@ -1,4 +1,4 @@
-﻿/// <binding Clean='clean' />
+﻿/// <binding BeforeBuild='copy' Clean='clean' />
 
 var gulp = require("gulp"),
   rimraf = require("rimraf"),

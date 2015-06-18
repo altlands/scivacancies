@@ -29,7 +29,6 @@
             <th><div class="inline-block"><img src="/images/icons/tab-head.png" class="va-middle" /></div><div class="inline-block ml6 va-middle">Дата<br />публикации</div></th>
             <th><div class="inline-block"><img src="/images/icons/tab-head.png" class="va-middle" /></div><div class="inline-block ml6 va-middle">Статус<br />конкурса</div></th>
             <th><div class="pl21 va-middle">Действия</div></th>
-            <th><div class="pl21 va-middle">Победить</div></th>
         </tr>
     </thead>
     <tbody>
@@ -41,12 +40,11 @@
             <td>01-09-14, 16:04</td>
             <td><span class="status work">Объявлен</span></td>
             <td>
-                <a href="#" class="view-td-icon open-popup"></a>
+                <a asp-controller="vacancies" asp-action="details" asp-route-id="@Guid.NewGuid()" class="view-td-icon"></a>
                 <a href="#" class="edit-td-icon"></a>
                 <a href="#" class="close-td-icon"></a>
                 <a href="#" class="class-td-icon"></a>
             </td>
-            <td></td>
         </tr>
         <tr>
             <td>002</td>
@@ -56,12 +54,11 @@
             <td>01-09-14, 16:04</td>
             <td><span class="status work">В работе</span></td>
             <td>
-                <a href="#" class="view-td-icon open-popup"></a>
+                <a asp-controller="vacancies" asp-action="details" asp-route-id="@Guid.NewGuid()" class="view-td-icon"></a>
                 <a href="#" class="edit-td-icon"></a>
                 <a href="#" class="close-td-icon"></a>
                 <a href="#" class="class-td-icon"></a>
             </td>
-            <td></td>
         </tr>
         <tr>
             <td>003</td>
@@ -71,27 +68,11 @@
             <td>01-09-14, 16:04</td>
             <td><span class="status work">Прием заявок</span></td>
             <td>
-                <a href="#" class="view-td-icon open-popup"></a>
+                <a asp-controller="vacancies" asp-action="details" asp-route-id="@Guid.NewGuid()" class="view-td-icon"></a>
                 <a href="#" class="edit-td-icon"></a>
                 <a href="#" class="close-td-icon"></a>
                 <a href="#" class="minus-td-icon"></a>
             </td>
-            <td></td>
-        </tr>
-        <tr>
-            <td>004</td>
-            <td>СНС6000021</td>
-            <td>Старший<br /> научный сотрудник</td>
-            <td>01-09-14, 16:04</td>
-            <td>01-09-14, 16:04</td>
-            <td><span class="status executed">Завершен</span></td>
-            <td>
-                <a href="#" class="view-td-icon open-popup"></a>
-                <a href="#" class="empty-td-icon"></a>
-                <a href="#" class="close-td-icon"></a>
-                <a href="#" class="minus-td-icon"></a>
-            </td>
-            <td><a href="#" class="success-request-icon"><span class="italic bold">Победитель</span></a></td>
         </tr>
         <tr>
             <td>005</td>
@@ -101,12 +82,11 @@
             <td>01-09-14, 16:04</td>
             <td><span class="status failed">В работе</span></td>
             <td>
-                <a href="#" class="view-td-icon open-popup"></a>
+                <a asp-controller="vacancies" asp-action="details" asp-route-id="@Guid.NewGuid()" class="view-td-icon"></a>
                 <a href="#" class="edit-td-icon"></a>
                 <a href="#" class="close-td-icon"></a>
                 <a href="#" class="class-td-icon"></a>
             </td>
-            <td></td>
         </tr>
     </tbody>
 </table>

@@ -11,5 +11,18 @@ namespace SciVacancies.WebApp.Controllers
         {
             return View(new PageViewModelBase());
         }
+
+
+        [HttpPost]
+        public ActionResult Create(PageViewModelBase model)
+        {
+            return RedirectToAction("applications", "researchers", new {id = Guid.NewGuid()});
+        }
+
+        [PageTitle("Детали заявки")]
+        public ViewResult Details(Guid id) => View();
+
+        [PageTitle("Детали заявки")]
+        public ViewResult ApplicationInVacancy(Guid id) => View();
     }
 }
