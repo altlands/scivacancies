@@ -25,7 +25,7 @@
         "SciVacancies.Domain.Events": "1.0.0-*",
         "Autofac.Dnx": "4.0.0-alpha2",
         "SciVacancies.ReadModel": "1.0.0-*",
-        "Npgsql": "3.0.0-beta0001",
+        "Npgsql": "2.2.5",
         "NPoco": "2.9.103",
         "SciVacancies.Domain.Aggregates": "1.0.0-*",
         "EntityFramework": "6.1.3",
