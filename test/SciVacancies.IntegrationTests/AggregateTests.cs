@@ -16,6 +16,7 @@ using CommonDomain.Core;
 using System.Data;
 using System.Data.SqlClient;
 using NEventStore.Persistence.Sql.SqlDialects;
+using SciVacancies.Domain.DataModels;
 
 namespace SciVacancies.IntegrationTests
 {
@@ -75,7 +76,7 @@ namespace SciVacancies.IntegrationTests
             var store = GetEventStore();
             var repository = new EventStoreRepository(store, new NullAggregateFactory(), new ConflictDetector());
             var id = Guid.NewGuid();
-            var org1 = new Organization(id, new Domain.Events.OrganizationDataModel() { Name = "Российский Фонд Фундаментальных Исследований", ShortName="РФФИ" });            
+            var org1 = new Organization(id, new OrganizationDataModel() { Name = "Российский Фонд Фундаментальных Исследований", ShortName="РФФИ" });            
             repository.Save(org1, Guid.NewGuid(), null);
             var org2 = repository.GetById<Organization>(id);
 
