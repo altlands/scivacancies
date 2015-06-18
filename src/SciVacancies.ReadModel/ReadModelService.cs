@@ -154,6 +154,12 @@ namespace SciVacancies.ReadModel
             return result;
         }
 
+        public List<Activity> SelectActivities(Guid organizationGuid)
+        {
+            var result = new List<Activity>();
+            return result;
+        }
+
         public List<Foiv> SelectFoivs(Guid organizationGuid)
         {
             var result = new List<Foiv>();

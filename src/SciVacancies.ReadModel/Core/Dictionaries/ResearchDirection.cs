@@ -22,6 +22,6 @@ namespace SciVacancies.ReadModel.Core
         public int Lvl { get; set; }
         public string OecdCode { get; set; }
         public string WosCode { get; set; }
-
+        public int Root { get;  set; }
     }
 }

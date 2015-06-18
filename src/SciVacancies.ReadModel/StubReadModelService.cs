@@ -234,7 +234,7 @@ namespace SciVacancies.ReadModel
                     Guid=Guid.NewGuid(),
                     Id =24,
                     ParentId=null,
-                    Title ="Министерство культуры Российской Федерации
+                    Title ="Министерство культуры Российской Федерации"
 
                 }
                 ,
@@ -276,20 +276,96 @@ namespace SciVacancies.ReadModel
         public List<OrgForm> SelectOrgForms(Guid organizationGuid)
         {
             var result = new List<OrgForm>() {
-
+                new OrgForm()
+                {
+                    Guid=Guid.NewGuid(),
+                    Id =12,
+                    Title="Автономная некоммерческая организация"
+                }
+                ,
+                new OrgForm()
+                {
+                    Guid=Guid.NewGuid(),
+                    Id =12,
+                    Title="Автономная некоммерческая организация"
+                }
             };
             return result;
         }
 
         public List<Region> SelectRegions(Guid organizationGuid)
         {
-            var result = new List<Region>();
+            var result = new List<Region>() {
+
+                new Region()
+                {
+                    Guid=Guid.NewGuid(),
+                    Id=77,
+                    Title="Москва",
+                    Code=77,
+                    FedDistrictId=1,
+                    OsmId=102269,
+                    Okato="45000000",
+                    Slug="moscow"
+                }
+                ,
+                new Region()
+                {
+                    Guid=Guid.NewGuid(),
+                    Id=78,
+                    Title="Санкт-Петербург",
+                    Code=78,
+                    FedDistrictId=2,
+                    OsmId=337422,
+                    Okato="40000000",
+                    Slug="s-petersburg"
+                }
+
+            };
+
             return result;
         }
 
         public List<ResearchDirection> SelectResearchDirections(Guid organizationGuid)
         {
-            var result = new List<ResearchDirection>();
+            var result = new List<ResearchDirection>()
+            {
+                new ResearchDirection()
+                {
+                    Guid=Guid.NewGuid(),
+                    Id=2850,
+                    Title="Социальные науки",
+                    ParentId=2780,
+                    Lft=160,
+                    Rgt=269,
+                    Root=2780,
+                    Lvl=1
+                }
+                ,
+                new ResearchDirection()
+                {
+                    Guid=Guid.NewGuid(),
+                    Id=2862,
+                    Title="Прочие социальные науки",
+                    ParentId=2850,
+                    Lft=183,
+                    Rgt=192,
+                    Root=2780,
+                    Lvl=2
+                }
+                ,
+                new ResearchDirection()
+                {
+                    Guid=Guid.NewGuid(),
+                    Id=2865,
+                    Title="Культурология",
+                    ParentId=2862,
+                    Lft=188,
+                    Rgt=189,
+                    Root=2780,
+                    Lvl=3
+                }
+            };
             return result;
         }
     }
