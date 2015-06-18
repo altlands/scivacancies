@@ -11,7 +11,7 @@
     <div class="row">
         <div class="profile">
             <div class="photo inline-block">
-                <img src="images/profile-photo.png" width="140" height="180" />
+                <img src="/images/profile-photo.png" width="140" height="180" />
             </div>
             <div class="info info-view inline-block">
                 <h4>Московский государственный университет<br /> им. М.В. Ломоносова</h4>
@@ -55,12 +55,12 @@
     <table class="table request-table">
         <thead>
             <tr>
-                <th><div class="inline-block"><img src="images/icons/arrow-bottom-tab.png" class="va-middle"></div><div class="inline-block ml6 va-middle">№</div></th>
-                <th><div class="inline-block"><img src="images/icons/tab-head.png" class="va-middle"></div><div class="inline-block ml6 va-middle">ID конкурса</div></th>
+                <th><div class="inline-block"><img src="/images/icons/arrow-bottom-tab.png" class="va-middle"></div><div class="inline-block ml6 va-middle">№</div></th>
+                <th><div class="inline-block"><img src="/images/icons/tab-head.png" class="va-middle"></div><div class="inline-block ml6 va-middle">ID конкурса</div></th>
                 <th><div class="pl21 va-middle">Вакансия</div></th>
-                <th><div class="inline-block"><img src="images/icons/tab-head.png" class="va-middle"></div><div class="inline-block ml6 va-middle">Дата<br /> создания</div></th>
-                <th><div class="inline-block"><img src="images/icons/tab-head.png" class="va-middle"></div><div class="inline-block ml6 va-middle">Дата<br /> публикации</div></th>
-                <th><div class="inline-block"><img src="images/icons/tab-head.png" class="va-middle"></div><div class="inline-block ml6 va-middle">Статус<br /> конкурса</div></th>
+                <th><div class="inline-block"><img src="/images/icons/tab-head.png" class="va-middle"></div><div class="inline-block ml6 va-middle">Дата<br /> создания</div></th>
+                <th><div class="inline-block"><img src="/images/icons/tab-head.png" class="va-middle"></div><div class="inline-block ml6 va-middle">Дата<br /> публикации</div></th>
+                <th><div class="inline-block"><img src="/images/icons/tab-head.png" class="va-middle"></div><div class="inline-block ml6 va-middle">Статус<br /> конкурса</div></th>
                 <th class="view-col"><div class="pl21 va-middle"><span>Просмотр</span></div></th>
                 <th><div class="pl21 va-middle">Победитель</div></th>
             </tr>
@@ -74,7 +74,7 @@
                 <td>01-09-14, 16:04</td>
                 <td><span class="status work">Объявлен</span></td>
                 <td class="view-col">
-                    <a href="#" class="view-td-icon"></a>
+                    <a asp-controller="vacancies" asp-action="details" asp-route-id="@Guid.NewGuid()" class="view-td-icon"></a>
                 </td>
                 <td class="ta-left"></td>
             </tr>
@@ -86,7 +86,7 @@
                 <td>01-09-14, 16:04</td>
                 <td><span class="status work">В работе</span></td>
                 <td class="view-col">
-                    <a href="#" class="view-td-icon"></a>
+                    <a asp-controller="vacancies" asp-action="details" asp-route-id="@Guid.NewGuid()" class="view-td-icon"></a>
                 </td>
                 <td class="ta-left"></td>
             </tr>
@@ -98,7 +98,7 @@
                 <td>01-09-14, 16:04</td>
                 <td><span class="status work">Прием заявок</span></td>
                 <td class="view-col">
-                    <a href="#" class="view-td-icon"></a>
+                    <a asp-controller="vacancies" asp-action="details" asp-route-id="@Guid.NewGuid()" class="view-td-icon"></a>
                 </td>
                 <td class="ta-left"></td>
             </tr>
@@ -110,7 +110,7 @@
                 <td>01-09-14, 16:04</td>
                 <td><span class="status executed">Завершен</span></td>
                 <td class="view-col">
-                    <a href="#" class="view-td-icon"></a>
+                    <a asp-controller="vacancies" asp-action="details" asp-route-id="@Guid.NewGuid()" class="view-td-icon"></a>
                 </td>
                 <td class="ta-left"><a href="#" class="success-request-icon"><span class="italic bold">Определен</span></a></td>
             </tr>
@@ -122,7 +122,7 @@
                 <td>01-09-14, 16:04</td>
                 <td><span class="status work">В работе</span></td>
                 <td class="view-col">
-                    <a href="#" class="view-td-icon"></a>
+                    <a asp-controller="vacancies" asp-action="details" asp-route-id="@Guid.NewGuid()" class="view-td-icon"></a>
                 </td>
                 <td class="ta-left"></td>
             </tr>
