@@ -50,7 +50,7 @@
             <td>60000 руб.</td>
             <td>01-09-14, 16:04</td>
             <td><span class="status work">Приём заявок</span></td>
-            <td><a href="#" class="send-request-icon"><span class="italic">Подать заявку</span></a></td>
+            <td><a asp-controller="application" asp-action="create" asp-route-vacancyid="@Guid.NewGuid()" asp-route-researcherguid="@Guid.NewGuid()" class="send-request-icon"><span class="italic">Подать заявку</span></a></td>
             <td>
                 <a href="#" class="view-td-icon"></a>
             </td>
@@ -121,6 +121,5 @@
 
 
 <div class="b-bottom-nav">
-    <a href="/" class="small-icon icon-prev">На главную страницу</a>
     <a asp-controller="researchers" asp-action="account" class="small-icon icon-prev">К личной карточке</a>
 </div>
