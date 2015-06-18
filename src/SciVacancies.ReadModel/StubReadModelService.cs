@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using NPoco;
 
 namespace SciVacancies.ReadModel
 {
@@ -111,6 +112,64 @@ namespace SciVacancies.ReadModel
         public List<Organization> SelectOrganizations()
         {
             var result = new List<Organization>();
+            return result;
+        }
+
+        public Page<Organization> SelectOrganizations(string orderBy, long pageSize, long pageIndex, string nameFilterValue,
+            string addressFilterValue)
+        {
+            if (pageSize < 1)
+                throw new Exception($"PageSize too small: {pageSize}");
+            if (pageIndex < 1)
+                throw new Exception($"PageIndex too small: {pageIndex}");
+
+            if (string.IsNullOrWhiteSpace(orderBy))
+                orderBy = "Guid_descending";
+
+            var data = new List<Organization>
+            {
+                new Organization
+                {
+                    Guid = Guid.NewGuid(),
+                    Name = "Московский государственный университет им. М.В. Ломоносова",
+                    NameEng = "Moscow State University",
+                    ShortName = "МГУ им.М.В.Ломоносова",
+                    ShortNameEng = "MSU"
+                },
+                new Organization
+                {
+                    Guid = Guid.NewGuid(),
+                    Name = "Московский государственный университет им. М.В. Ломоносова",
+                    NameEng = "Moscow State University",
+                    ShortName = "МГУ им.М.В.Ломоносова",
+                    ShortNameEng = "MSU"
+                },
+                new Organization
+                {
+                    Guid = Guid.NewGuid(),
+                    Name = "Московский государственный университет им. М.В. Ломоносова",
+                    NameEng = "Moscow State University",
+                    ShortName = "МГУ им.М.В.Ломоносова",
+                    ShortNameEng = "MSU"
+                },
+                new Organization
+                {
+                    Guid = Guid.NewGuid(),
+                    Name = "Московский государственный университет им. М.В. Ломоносова",
+                    NameEng = "Moscow State University",
+                    ShortName = "МГУ им.М.В.Ломоносова",
+                    ShortNameEng = "MSU"
+                }
+            };
+
+            var result = new Page<Organization>
+            {
+                Items = data.Take((int)pageSize).ToList(),
+                CurrentPage = pageIndex,
+                ItemsPerPage = pageSize,
+                TotalItems = data.Count,
+                TotalPages = data.Count / pageSize + ((data.Count % pageSize) > 0 ? 1 : 0)
+            };
             return result;
         }
 

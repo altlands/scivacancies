@@ -1,17 +1,14 @@
 ﻿using System.Collections.Generic;
+using SciVacancies.WebApp.Engine;
 
 namespace SciVacancies.WebApp.ViewModels
 {
 
     public class VacanciesFilter
     {
-        public VacanciesFilter()
-        {
-            Regions = new List<string>();
-        }
         public IEnumerable<string> Salaries { get; set; }
         public IEnumerable<string> ContestStates { get; set; }
-        public IEnumerable<string> Regions { get; set; }
+        public IEnumerable<string> Regions { get; set; } = new List<string>();
 
         public int Period { get; set; }
         public int PageSize { get; set; }
@@ -24,7 +21,7 @@ namespace SciVacancies.WebApp.ViewModels
         {
             get
             {
-                _orderBy = string.IsNullOrWhiteSpace(_orderBy) ? "date_descending" : _orderBy.ToLower();
+                _orderBy = string.IsNullOrWhiteSpace(_orderBy) ? ConstTerms.OrderByDateDescending : _orderBy.ToLower();
                 return _orderBy;
             }
             set { _orderBy = value; }

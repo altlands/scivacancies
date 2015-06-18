@@ -1,5 +1,5 @@
-﻿using SciVacancies.Domain.Interfaces;
-using SciVacancies.Domain.Services;
+﻿using SciVacancies.Domain.Aggregates.Interfaces;
+using SciVacancies.Domain.Aggregates.Services;
 
 using System;
 using System.Collections.Generic;

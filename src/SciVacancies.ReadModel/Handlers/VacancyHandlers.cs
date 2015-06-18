@@ -1,4 +1,5 @@
-﻿using SciVacancies.Domain.Events;
+﻿using SciVacancies.Domain.Enums;
+using SciVacancies.Domain.Events;
 using SciVacancies.ReadModel.Core;
 
 using System;
@@ -15,7 +16,12 @@ namespace SciVacancies.ReadModel.Handlers
         public VacancyPublishedHandler(IDatabase db) : base(db) { }
         public override void Handle(VacancyPublished msg)
         {
+            Vacancy vacancy = new Vacancy()
+            {
+                
+            };
             //TODO
+            _db.Insert(vacancy);
         }
     }
     public class VacancyAcceptApplicationsHandler : EventBaseHandler<VacancyAcceptApplications>
@@ -23,7 +29,9 @@ namespace SciVacancies.ReadModel.Handlers
         public VacancyAcceptApplicationsHandler(IDatabase db) : base(db) { }
         public override void Handle(VacancyAcceptApplications msg)
         {
+            Vacancy vacancy = _db.SingleById<Vacancy>(msg.VacancyGuid);
             //TODO
+            _db.Update(vacancy);
         }
     }
     public class VacancyInCommitteeHandler : EventBaseHandler<VacancyInCommittee>
@@ -31,7 +39,9 @@ namespace SciVacancies.ReadModel.Handlers
         public VacancyInCommitteeHandler(IDatabase db) : base(db) { }
         public override void Handle(VacancyInCommittee msg)
         {
+            Vacancy vacancy = _db.SingleById<Vacancy>(msg.VacancyGuid);
             //TODO
+            _db.Update(vacancy);
         }
     }
     public class VacancyClosedHandler : EventBaseHandler<VacancyClosed>
@@ -39,7 +49,9 @@ namespace SciVacancies.ReadModel.Handlers
         public VacancyClosedHandler(IDatabase db) : base(db) { }
         public override void Handle(VacancyClosed msg)
         {
+            Vacancy vacancy = _db.SingleById<Vacancy>(msg.VacancyGuid);
             //TODO
+            _db.Update(vacancy);
         }
     }
     public class VacancyCancelledHandler : EventBaseHandler<VacancyCancelled>
@@ -47,7 +59,9 @@ namespace SciVacancies.ReadModel.Handlers
         public VacancyCancelledHandler(IDatabase db) : base(db) { }
         public override void Handle(VacancyCancelled msg)
         {
+            Vacancy vacancy = _db.SingleById<Vacancy>(msg.VacancyGuid);
             //TODO
+            _db.Update(vacancy);
         }
     }
 

@@ -72,7 +72,7 @@ namespace SciVacancies.WebApp.Infrastructure
                 .Build();
         }
     }
-    public class NpgsqlConnectionFactory:IConnectionFactory
+    public class NpgsqlConnectionFactory : IConnectionFactory
     {
         private string _connectionString;
         public NpgsqlConnectionFactory(string connectionString)

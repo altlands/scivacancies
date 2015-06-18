@@ -1,10 +1,9 @@
-﻿
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace SciVacancies.Domain.Events
+namespace SciVacancies.Domain.DataModels
 {
     public class OrganizationDataModel
     {
@@ -53,5 +52,10 @@ namespace SciVacancies.Domain.Events
         /// ИНН
         /// </summary>
         public string INN { get; set; }
+
+        /// <summary>
+        /// Количество опубликованных вакансий на данный момент
+        /// </summary>
+        public int PublishedVacancies { get; set; }
     }
 }
