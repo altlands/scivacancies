@@ -15,11 +15,6 @@ namespace SciVacancies.ReadModel.Core
     {
 
         /// <summary>
-        /// Статус
-        /// </summary>
-        public PositionStatus Status { get; set; }
-
-        /// <summary>
         /// Должность
         /// </summary>
         public string Name { get; set; }
@@ -34,11 +29,13 @@ namespace SciVacancies.ReadModel.Core
         /// Отрасль науки
         /// </summary>
         public string FieldOfScience { get; set; }
+        public int FieldOfScienceId { get; set; }
 
         /// <summary>
         /// Тематика исследований
         /// </summary>
         public string ResearchTheme { get; set; }
+        public int ResearchThemeId { get; set; }
 
         /// <summary>
         /// Задачи
@@ -62,6 +59,16 @@ namespace SciVacancies.ReadModel.Core
         /// </summary>
         public string Bonuses { get; set; }
 
+
+        /// <summary>
+        /// Тип трудового договора
+        /// </summary>
+        public ContractType ContractType { get; set; }
+
+        /// <summary>
+        /// Срок трудового договора (для срочного договора)
+        /// </summary>
+        public decimal ContractTime { get; set; }
 
         /// <summary>
         /// Социальный пакет
