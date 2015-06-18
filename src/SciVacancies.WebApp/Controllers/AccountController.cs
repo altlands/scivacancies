@@ -1,20 +1,28 @@
 ﻿using System;
 using Microsoft.AspNet.Http;
 using Microsoft.AspNet.Mvc;
+using SciVacancies.WebApp.Engine;
 using SciVacancies.WebApp.ViewModels;
 
 namespace SciVacancies.WebApp.Controllers
 {
     public class AccountController : Controller
     {
-        public const string UserNameKey = "UserTempName";
-        public const string IsResearcherKey = "IsResearcher";
+
+        private void DeleteUserCookies()
+        {
+            Context.Response.Cookies.Append(ConstTerms.CookieKeyForUserRole, string.Empty, new CookieOptions { Expires = DateTime.Now.AddDays(-1) });
+            Context.Response.Cookies.Append(ConstTerms.CookieKeyForUserName, string.Empty, new CookieOptions { Expires = DateTime.Now.AddDays(-1) });
+
+        }
 
         [HttpPost]
         public ActionResult Login(AccountLoginViewModel model)
         {
-            Context.Session.SetString(UserNameKey, model.Login);
-            Context.Session.SetString(IsResearcherKey, model.IsResearcher.ToString());
+            DeleteUserCookies();
+            var timeStamp = GetExpiresTime();
+            Context.Response.Cookies.Append(ConstTerms.CookieKeyForUserName, model.Login, new CookieOptions { Expires = timeStamp});
+            Context.Response.Cookies.Append(ConstTerms.CookieKeyForUserRole, model.IsResearcher.ToString(), new CookieOptions { Expires = timeStamp });
             return RedirectToHome();
         }
 
@@ -26,8 +34,16 @@ namespace SciVacancies.WebApp.Controllers
         [HttpPost]
         public IActionResult Register(AccountRegisterViewModel model)
         {
-            Context.Session.SetString(UserNameKey, model.UserName);
+            DeleteUserCookies();
+            var timeStamp = GetExpiresTime();
+            Context.Response.Cookies.Append(ConstTerms.CookieKeyForUserName, model.UserName, new CookieOptions { Expires = timeStamp });
+            //Context.Response.Cookies.Append(ConstTerms.CookieKeyForUserRole, model.IsResearcher.ToString(), new CookieOptions { Expires = timeStamp });
             return RedirectToHome();
+        }
+
+        private static DateTime GetExpiresTime()
+        {
+            return DateTime.Now.AddMinutes(10);
         }
 
 
@@ -38,7 +54,7 @@ namespace SciVacancies.WebApp.Controllers
 
         public ActionResult Logout()
         {
-            Context.Session.SetString(UserNameKey, string.Empty);
+            DeleteUserCookies();
             return RedirectToHome();
         }
 
