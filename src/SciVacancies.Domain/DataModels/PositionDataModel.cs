@@ -1,22 +1,17 @@
 ﻿using SciVacancies.Domain.Enums;
-
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-using NPoco;
-
-namespace SciVacancies.ReadModel.Core
+namespace SciVacancies.Domain.DataModels
 {
-    [TableName("Positions")]
-    [PrimaryKey("Guid", AutoIncrement = false)]
-    public class Position : BaseEntity
+    public class PositionDataModel
     {
         /// <summary>
         /// Должность
         /// </summary>
-        public string Name { get; set; }
+        public string Name { get;set;}
 
         /// <summary>
         /// Должность (Полное наименование)
@@ -42,7 +37,7 @@ namespace SciVacancies.ReadModel.Core
         /// <summary>
         /// Критерии оценки 
         /// </summary>
-        public KeyValuePair<int, int> Criteria { get; set; } //<CriteriaId, Amount>
+        public KeyValuePair<int,int> Criteria { get; set; } //<CriteriaId, Amount>
 
         /// <summary>
         /// Зарплата в месяц
@@ -58,6 +53,11 @@ namespace SciVacancies.ReadModel.Core
 
 
         /// <summary>
+        /// Дополнительно
+        /// </summary>
+        public ContractType ContractType { get; set; }
+
+        /// <summary>
         /// Социальный пакет
         /// </summary>
         public bool SocialPackage { get; set; }
@@ -65,7 +65,7 @@ namespace SciVacancies.ReadModel.Core
         /// <summary>
         /// Найм жилья
         /// </summary>
-        public bool Rent { get; set; }
+        public bool Rent{ get; set; }
 
         /// <summary>
         /// Служебное жильё
@@ -100,5 +100,6 @@ namespace SciVacancies.ReadModel.Core
         public string ContactEmail { get; set; }
         public string ContactPhone { get; set; }
         public string ContactDetails { get; set; }
+
     }
 }

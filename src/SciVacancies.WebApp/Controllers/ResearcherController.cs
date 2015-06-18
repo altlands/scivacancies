@@ -1,5 +1,5 @@
-﻿using SciVacancies.Domain.Interfaces;
-using SciVacancies.Domain.Events;
+﻿using SciVacancies.Domain.DataModels;
+using SciVacancies.Domain.Aggregates.Interfaces;
 using SciVacancies.ReadModel;
 using SciVacancies.ReadModel.Core;
 

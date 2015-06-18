@@ -1,6 +1,5 @@
-﻿using SciVacancies.Domain.Events;
-using SciVacancies.Domain.Interfaces;
-using SciVacancies.Domain.Aggregates;
+﻿using SciVacancies.Domain.Aggregates.Interfaces;
+using SciVacancies.Domain.DataModels;
 
 using System;
 using System.Collections.Generic;
@@ -9,7 +8,7 @@ using System.Threading.Tasks;
 
 using CommonDomain.Persistence;
 
-namespace SciVacancies.Domain.Services
+namespace SciVacancies.Domain.Aggregates.Services
 {
     public class ResearcherService : IResearcherService
     {

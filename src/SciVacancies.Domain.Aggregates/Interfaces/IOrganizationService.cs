@@ -1,11 +1,11 @@
-﻿using SciVacancies.Domain.Events;
+﻿using SciVacancies.Domain.DataModels;
 
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace SciVacancies.Domain.Interfaces
+namespace SciVacancies.Domain.Aggregates.Interfaces
 {
     public interface IOrganizationService
     {

@@ -7,10 +7,12 @@
     "licenseUrl": "",
 
     "dependencies": {
+        "SciVacancies.Domain": "1.0.0-*",
+        "SciVacancies.Domain.Events": "1.0.0-*",
+        "NEventStore": "5.2.0"
     },
 
     "frameworks": {
-        "dnx451": {
-        }
+        "dnx451": { },
     }
 }

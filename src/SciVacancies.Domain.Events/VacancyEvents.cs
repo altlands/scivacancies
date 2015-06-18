@@ -1,4 +1,6 @@
-﻿using System;
+﻿using SciVacancies.Domain.DataModels;
+
+using System;
 
 namespace SciVacancies.Domain.Events
 {
