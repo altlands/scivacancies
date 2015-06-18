@@ -8,6 +8,7 @@ namespace SciVacancies.Domain.DataModels
 {
     public class PositionDataModel
     {
+
         /// <summary>
         /// Должность
         /// </summary>
@@ -23,11 +24,13 @@ namespace SciVacancies.Domain.DataModels
         /// Отрасль науки
         /// </summary>
         public string FieldOfScience { get; set; }
+        public int FieldOfScienceId { get; set; }
 
         /// <summary>
         /// Тематика исследований
         /// </summary>
         public string ResearchTheme { get; set; }
+        public int ResearchThemeId { get; set; }
 
         /// <summary>
         /// Задачи
@@ -53,9 +56,14 @@ namespace SciVacancies.Domain.DataModels
 
 
         /// <summary>
-        /// Дополнительно
+        /// Тип трудового договора
         /// </summary>
         public ContractType ContractType { get; set; }
+
+        /// <summary>
+        /// Срок трудового договора (для срочного договора)
+        /// </summary>
+        public decimal ContractTime { get; set; }
 
         /// <summary>
         /// Социальный пакет
@@ -100,6 +108,7 @@ namespace SciVacancies.Domain.DataModels
         public string ContactEmail { get; set; }
         public string ContactPhone { get; set; }
         public string ContactDetails { get; set; }
+
 
     }
 }
