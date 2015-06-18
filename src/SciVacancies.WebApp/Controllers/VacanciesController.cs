@@ -15,6 +15,12 @@ namespace SciVacancies.WebApp.Controllers
             return View();
         }
 
+        [PageTitle("Карточка конкурса")]
+        public ViewResult Preview(Guid id)
+        {
+            return View();
+        }
+
         [PageTitle("Новая вакансия")]
         public ViewResult Create() => View();
 

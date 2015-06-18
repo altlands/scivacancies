@@ -1,0 +1,58 @@
+﻿@model dynamic
+
+@{
+    var referer = Context.Request.Headers["referer"];
+}
+@if (!string.IsNullOrWhiteSpace(referer))
+{
+    <text>
+    <div class="crumbs">
+        <a href="@referer.ToLower()">Назад</a><span class="separator">/</span>
+        @ViewBag.Title
+    </div>
+    </text>
+}
+
+<h3>@ViewBag.Title</h3>
+
+<div class="title-cat-inform">Конкурсная информация:</div>
+<ul class="list-information">
+    <li class="odd">
+        <span>ID конкурса:</span>СНС890056
+    </li>
+    <li class="even">
+        <span>Статус:</span><span class="status executed">Конкурс завершен</span>
+        <span class="dashed-link float-right">Протокол решения конкурсной комиссии</span>
+    </li>
+    <li class="odd">
+        <span>Первое место (победитель):</span>Петров Сергей Иванович
+    </li>
+    <li class="even">
+        <span>Второе место:</span>Голованов Иван Константинович
+    </li>
+</ul>
+
+<div class="title-cat-inform">Дополнительная информация:</div>
+<ul class="list-information">
+    <li class="odd">
+        <span>Научное направление:</span>Материаловедение – оценка и испытания
+    </li>
+    <li class="even">
+        <span>Профессия (должность):</span>Конструктор-технолог
+    </li>
+    <li class="odd">
+        <span>Режим работы:</span>Пролный рабочий день; 5/2
+    </li>
+    <li class="even">
+        <span>Тип занятости:</span>Постоянная работа
+    </li>
+</ul>
+
+@if (!string.IsNullOrWhiteSpace(referer))
+{
+    <text>
+    <div class="b-bottom-nav">
+        <a href="@referer.ToLower()" class="small-icon icon-prev">Назад</a>
+    </div>
+    </text>
+}

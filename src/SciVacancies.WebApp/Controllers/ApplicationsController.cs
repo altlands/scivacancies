@@ -21,5 +21,8 @@ namespace SciVacancies.WebApp.Controllers
 
         [PageTitle("Детали заявки")]
         public ViewResult Details(Guid id) => View();
+
+        [PageTitle("Детали заявки")]
+        public ViewResult ApplicationInVacancy(Guid id) => View();
     }
 }

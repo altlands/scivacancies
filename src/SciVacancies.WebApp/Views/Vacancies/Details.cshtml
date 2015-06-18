@@ -14,39 +14,156 @@
 }
 
 <h3>@ViewBag.Title</h3>
+<div class="title-popup">
+    <h4>Вакансия ID МНС6000567</h4>
+</div>
+<div class="content-popup">
+    <div class="title-cat-inform">Специализация:</div>
+    <ul class="list-information">
+        <li class="odd">
+            <span>Должность:</span>Младший научный сотрудник
+        </li>
+        <li class="even">
+            <span>Полное наименование:</span><span class="status executed">Младший научный сотрудник отраслевой лаборатории ядерных исследований</span>
+        </li>
+        <li class="odd">
+            <span>Отрасль науки:</span>Естественные науки - Физика и астрономия - Ядерная физика
+        </li>
+        <li class="even">
+            <span>Тематика исследований:</span>Ядерная физика и технологии
+        </li>
+    </ul>
 
-<div class="title-cat-inform">Конкурсная информация:</div>
-<ul class="list-information">
-    <li class="odd">
-        <span>ID конкурса:</span>СНС890056
-    </li>
-    <li class="even">
-        <span>Статус:</span><span class="status executed">Конкурс завершен</span>
-        <span class="dashed-link float-right">Протокол решения конкурсной комиссии</span>
-    </li>
-    <li class="odd">
-        <span>Первое место (победитель):</span>Петров Сергей Иванович
-    </li>
-    <li class="even">
-        <span>Второе место:</span>Голованов Иван Константинович
-    </li>
-</ul>
+    <div class="title-cat-inform">Задачи и критерии:</div>
+    <ul class="list-information">
+        <li class="odd">
+            <span>Задачи:</span>Основные задачи - описание
+        </li>
+        <li class="even">
+            <span>Критерии оценки:</span>Добавленные критерии
+        </li>
+    </ul>
 
-<div class="title-cat-inform">Дополнительная информация:</div>
-<ul class="list-information">
-    <li class="odd">
-        <span>Научное направление:</span>Материаловедение – оценка и испытания
-    </li>
-    <li class="even">
-        <span>Профессия (должность):</span>Конструктор-технолог
-    </li>
-    <li class="odd">
-        <span>Режим работы:</span>Пролный рабочий день; 5/2
-    </li>
-    <li class="even">
-        <span>Тип занятости:</span>Постоянная работа
-    </li>
-</ul>
+    <div class="title-cat-inform">Условия:</div>
+    <ul class="list-information">
+        <li class="odd">
+            <span>Заработная плата:</span>65 000 рублей/месяц
+        </li>
+        <li class="even">
+            <span>Стимулирующие выплаты:</span>предусмотрены
+        </li>
+        <li class="odd">
+            <span>Трудовой договор:</span>Бессрочный
+        </li>
+        <li class="even">
+            <span>Социальный пакет:</span>Да
+        </li>
+        <li class="odd">
+            <span>Найм жилья:</span>Да
+        </li>
+        <li class="even">
+            <span>Компенсация проезда:</span>Да
+        </li>
+    </ul>
+
+    <div class="title-cat-inform">Лицо для получения дополнительных справок:</div>
+    <ul class="list-information">
+        <li class="odd">
+            <span>Фамилия, имя, отчество:</span>Пушкин Дадон Гвидонович
+        </li>
+        <li class="even">
+            <span>E-mail:</span>dadon@yandex.ru
+        </li>
+        <li class="even">
+            <span>Телефон:</span>+7 (903) 123-4567
+        </li>
+    </ul>
+    <h4 class="mt45 mb12">Поданные заявки</h4>
+
+    <table class="table request-table">
+        <thead>
+        <tr>
+            <th>
+                <div class="inline-block"><img src="/images/icons/arrow-bottom-tab.png" class="va-middle"/>
+                </div>
+                <div class="inline-block ml6 va-middle">№</div></th>
+            <th>
+                <div class="inline-block"><img src="/images/icons/tab-head.png" class="va-middle"/>
+                </div>
+                <div class="inline-block ml6 va-middle">Дата подачи заявки</div></th>
+            <th>
+                <div class="pl21 va-middle lh30">Фамилия, имя, отчество</div></th>
+            <th>
+                <div class="pl21 va-middle">Победители</div></th>
+            <th>
+                <div class="pl21 va-middle">Действия</div></th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td>001</td>
+            <td>01-09-14, 16:04</td>
+            <td>Глаголев<br/>Виктор Александрович</td>
+            <td class="align-center pl0"></td>
+            <td>
+                <a asp-controller="applications" asp-action="applicationinvacancy" asp-route-id="@Guid.NewGuid()" class="view-td-icon"></a>
+                <a href="#" class="close-td-icon"></a>
+                <a href="#" class="print-td-icon"></a>
+            </td>
+        </tr>
+        <tr>
+            <td>002</td>
+            <td>01-09-14, 16:04</td>
+            <td>Лермонторидзе<br/> Мцири Вахтангович</td>
+            <td class="align-center pl0">
+                <div class="td-gr-bg">1</div></td>
+            <td>
+                <a asp-controller="applications" asp-action="applicationinvacancy" asp-route-id="@Guid.NewGuid()" class="view-td-icon"></a>
+                <a href="#" class="close-td-icon"></a>
+                <a href="#" class="print-td-icon"></a>
+            </td>
+        </tr>
+        <tr>
+            <td>003</td>
+            <td>01-09-14, 16:04</td>
+            <td>Кочергин-Никитский<br/> Константин Вениаминович</td>
+            <td class="align-center pl0"></td>
+            <td>
+                <a asp-controller="applications" asp-action="applicationinvacancy" asp-route-id="@Guid.NewGuid()" class="view-td-icon"></a>
+                <a href="#" class="close-td-icon"></a>
+                <a href="#" class="print-td-icon"></a>
+            </td>
+        </tr>
+        <tr>
+            <td>004</td>
+            <td>01-09-14, 16:04</td>
+            <td>Беляев<br/> Евгений Петрович</td>
+            <td class="align-center pl0">
+                <div class="td-gr-bg">2</div></td>
+            <td>
+                <a asp-controller="applications" asp-action="applicationinvacancy" asp-route-id="@Guid.NewGuid()" class="view-td-icon"></a>
+                <a href="#" class="close-td-icon"></a>
+                <a href="#" class="print-td-icon"></a>
+            </td>
+        </tr>
+        <tr>
+            <td>005</td>
+            <td>01-09-14, 16:04</td>
+            <td>Каримбаева<br/> Жасмин Алибабаевна</td>
+            <td class="align-center pl0"></td>
+            <td>
+                <a asp-controller="applications" asp-action="applicationinvacancy" asp-route-id="@Guid.NewGuid()" class="view-td-icon"></a>
+                <a href="#" class="close-td-icon"></a>
+                <a href="#" class="print-td-icon"></a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+
+    <div class="ctr-buttons">
+        <span class="blue-btn middle-icon icon-print-button" rel="tooltip" title="">Распечатать все заявки</span>
+    </div>
+</div>
 
 @if (!string.IsNullOrWhiteSpace(referer))
 {
