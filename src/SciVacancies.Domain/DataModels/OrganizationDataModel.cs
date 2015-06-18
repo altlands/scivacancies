@@ -57,5 +57,12 @@ namespace SciVacancies.Domain.DataModels
         /// Количество опубликованных вакансий на данный момент
         /// </summary>
         public int PublishedVacancies { get; set; }
+
+        public List<int> Foivs { get; set; }
+
+        /// <summary>
+        /// Отрасли науки
+        /// </summary>
+        public List<int> ResearchDirections { get; set; }
     }
 }
