@@ -189,5 +189,108 @@ namespace SciVacancies.ReadModel
             var result = new List<VacancyApplication>();
             return result;
         }
+
+        public List<Activity> SelectActivities(Guid organizationGuid)
+        {
+            var result = new List<Activity>() {
+                new Activity()
+                {
+                    Guid=Guid.NewGuid(),
+                    Id=1,
+                    Title="Государственный сектор"
+                },
+                new Activity()
+                {
+                    Guid=Guid.NewGuid(),
+                    Id=16,
+                    Title="Федеральные университеты"
+                }
+            };
+            return result;
+        }
+
+        public List<Foiv> SelectFoivs(Guid organizationGuid)
+        {
+            var result = new List<Foiv>()
+            {
+                 new Foiv()
+                {
+                    Guid=Guid.NewGuid(),
+                    Id =7,
+                    ParentId=null,
+                    Title ="Министерство обороны Российской Федерации"
+                }
+                 ,
+                new Foiv()
+                {
+                    Guid=Guid.NewGuid(),
+                    Id =11,
+                    ParentId=7,
+                    Title ="Федеральное агентство специального строительства"
+                }
+                ,
+                 new Foiv()
+                {
+                    Guid=Guid.NewGuid(),
+                    Id =24,
+                    ParentId=null,
+                    Title ="Министерство культуры Российской Федерации
+
+                }
+                ,
+                new Foiv()
+                {
+                    Guid=Guid.NewGuid(),
+                    Id =26,
+                    ParentId=24,
+                    Title ="Федеральное агентство по туризму"
+                }
+            };
+            return result;
+        }
+
+        public List<Criteria> SelectCriterias(Guid organizationGuid)
+        {
+            var result = new List<Criteria>() {
+                new Criteria()
+                {
+                    Guid=Guid.NewGuid(),
+                    Title="Web of science"
+                }
+                ,
+                new Criteria()
+                {
+                    Guid=Guid.NewGuid(),
+                    Title="Scopus"
+                }
+                ,
+                new Criteria()
+                {
+                    Guid=Guid.NewGuid(),
+                    Title="Российский индекс научного цитирования"
+                }
+            };
+            return result;
+        }
+
+        public List<OrgForm> SelectOrgForms(Guid organizationGuid)
+        {
+            var result = new List<OrgForm>() {
+
+            };
+            return result;
+        }
+
+        public List<Region> SelectRegions(Guid organizationGuid)
+        {
+            var result = new List<Region>();
+            return result;
+        }
+
+        public List<ResearchDirection> SelectResearchDirections(Guid organizationGuid)
+        {
+            var result = new List<ResearchDirection>();
+            return result;
+        }
     }
 }

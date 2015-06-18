@@ -49,5 +49,12 @@ namespace SciVacancies.ReadModel
 
         Position SinglePosition(Guid positionGuid);
         List<Position> SelectPositions(Guid organizationGuid);
+
+        List<Activity> SelectActivities(Guid organizationGuid);
+        List<Foiv> SelectFoivs(Guid organizationGuid);
+        List<Criteria> SelectCriterias(Guid organizationGuid);
+        List<OrgForm> SelectOrgForms(Guid organizationGuid);
+        List<Region> SelectRegions(Guid organizationGuid);
+        List<ResearchDirection> SelectResearchDirections(Guid organizationGuid);
     }
 }

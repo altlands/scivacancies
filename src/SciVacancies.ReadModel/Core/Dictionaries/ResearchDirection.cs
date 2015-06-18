@@ -11,7 +11,7 @@ namespace SciVacancies.ReadModel.Core
 {
     [TableName("ResearchDirections")]
     [PrimaryKey("Guid", AutoIncrement = false)]
-    public class ResearchDirections : BaseEntity
+    public class ResearchDirection : BaseEntity
     {
         public int Id { get; set; }
         public int ParentId { get; set; }

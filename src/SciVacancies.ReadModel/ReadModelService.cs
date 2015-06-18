@@ -153,5 +153,35 @@ namespace SciVacancies.ReadModel
             var result = new List<VacancyApplication>();
             return result;
         }
+
+        public List<Foiv> SelectFoivs(Guid organizationGuid)
+        {
+            var result = new List<Foiv>();
+            return result;
+        }
+
+        public List<Criteria> SelectCriterias(Guid organizationGuid)
+        {
+            var result = new List<Criteria>();
+            return result;
+        }
+
+        public List<OrgForm> SelectOrgForms(Guid organizationGuid)
+        {
+            var result = new List<OrgForm>();
+            return result;
+        }
+
+        public List<Region> SelectRegions(Guid organizationGuid)
+        {
+            var result = new List<Region>();
+            return result;
+        }
+
+        public List<ResearchDirection> SelectResearchDirections(Guid organizationGuid)
+        {
+            var result = new List<ResearchDirection>();
+            return result;
+        }
     }
 }

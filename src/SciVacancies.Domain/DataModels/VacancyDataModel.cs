@@ -88,6 +88,7 @@ namespace SciVacancies.Domain.DataModels
         /// <summary>
         /// Регион
         /// </summary>
+        public string Region { get; set; }
         public int RegionId { get; set; }
 
         /// <summary>
