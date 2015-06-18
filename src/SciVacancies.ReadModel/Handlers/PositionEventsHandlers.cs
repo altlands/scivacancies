@@ -16,7 +16,12 @@ namespace SciVacancies.ReadModel.Handlers
         public PositionCreatedHandler(IDatabase db) : base(db) { }
         public override void Handle(PositionCreated msg)
         {
-            //TODO
+            Position position = new Position()
+            {
+
+            };
+
+            _db.Insert(position);
         }
     }
     public class PositionUpdatedHandler : EventBaseHandler<PositionUpdated>
@@ -24,7 +29,10 @@ namespace SciVacancies.ReadModel.Handlers
         public PositionUpdatedHandler(IDatabase db) : base(db) { }
         public override void Handle(PositionUpdated msg)
         {
+            Position position = _db.SingleById<Position>(msg.PositionGuid);
             //TODO
+
+            _db.Update(position);
         }
     }
     public class PositionRemovedHandler : EventBaseHandler<PositionRemoved>

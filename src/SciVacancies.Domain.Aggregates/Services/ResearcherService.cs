@@ -83,10 +83,10 @@ namespace SciVacancies.Domain.Aggregates.Services
             _repository.Save(researcher, Guid.NewGuid(), null);
         }
 
-        public Guid CreateVacancyApplicationTemplate(Guid researcherGuid, Guid vacancyGuid)
+        public Guid CreateVacancyApplicationTemplate(Guid researcherGuid, Guid vacancyGuid, VacancyApplicationDataModel data)
         {
             Researcher researcher = _repository.GetById<Researcher>(researcherGuid);
-            Guid vacancyApplicationGuid = researcher.CreateVacancyApplicationTemplate(vacancyGuid);
+            Guid vacancyApplicationGuid = researcher.CreateVacancyApplicationTemplate(vacancyGuid, data);
             _repository.Save(researcher, Guid.NewGuid(), null);
 
             return vacancyApplicationGuid;

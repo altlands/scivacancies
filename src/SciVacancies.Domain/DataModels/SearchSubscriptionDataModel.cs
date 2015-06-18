@@ -7,5 +7,6 @@ namespace SciVacancies.Domain.DataModels
 {
     public class SearchSubscriptionDataModel
     {
+
     }
 }

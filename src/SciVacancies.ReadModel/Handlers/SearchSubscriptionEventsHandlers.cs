@@ -16,7 +16,12 @@ namespace SciVacancies.ReadModel.Handlers
         public SearchSubscriptionCreatedHandler(IDatabase db) : base(db) { }
         public override void Handle(SearchSubscriptionCreated msg)
         {
-            //TODO
+            SearchSubscription searchSubscription = new SearchSubscription()
+            {
+                Status = SearchSubscriptionStatus.Active
+            };
+
+            _db.Insert(searchSubscription);
         }
     }
     public class SearchSubscriptionActivatedHandler : EventBaseHandler<SearchSubscriptionActivated>
@@ -24,7 +29,11 @@ namespace SciVacancies.ReadModel.Handlers
         public SearchSubscriptionActivatedHandler(IDatabase db) : base(db) { }
         public override void Handle(SearchSubscriptionActivated msg)
         {
-            //TODO
+            SearchSubscription searchSubscription = _db.SingleById<SearchSubscription>(msg.SearchSubscriptionGuid);
+
+            searchSubscription.Status = SearchSubscriptionStatus.Active;
+
+            _db.Update(searchSubscription);
         }
     }
     public class SearchSubscriptionCanceledHandler : EventBaseHandler<SearchSubscriptionCanceled>
@@ -32,7 +41,11 @@ namespace SciVacancies.ReadModel.Handlers
         public SearchSubscriptionCanceledHandler(IDatabase db) : base(db) { }
         public override void Handle(SearchSubscriptionCanceled msg)
         {
-            //TODO
+            SearchSubscription searchSubscription = _db.SingleById<SearchSubscription>(msg.SearchSubscriptionGuid);
+
+            searchSubscription.Status = SearchSubscriptionStatus.Cancelled;
+
+            _db.Update(searchSubscription);
         }
     }
     public class SearchSubscriptionRemovedHandler : EventBaseHandler<SearchSubscriptionRemoved>

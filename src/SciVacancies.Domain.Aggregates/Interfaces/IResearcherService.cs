@@ -21,7 +21,7 @@ namespace SciVacancies.Domain.Aggregates.Interfaces
         void CancelSearchSubscription(Guid researcherGuid, Guid searchSubscriptionGuid);
         void RemoveSearchSubscription(Guid researcherGuid, Guid searchSubscriptionGuid);
 
-        Guid CreateVacancyApplicationTemplate(Guid researcherGuid, Guid vacancyGuid);
+        Guid CreateVacancyApplicationTemplate(Guid researcherGuid, Guid vacancyGuid, VacancyApplicationDataModel data);
         void UpdateVacancyApplicationTemplate(Guid researcherGuid, Guid vacancyApplicationGuid, VacancyApplicationDataModel data);
         void RemoveVacancyApplicationTemplate(Guid researcherGuid, Guid vacancyApplicationGuid);
         void ApplyToVacancy(Guid researcherGuid, Guid vacancyApplicationGuid);

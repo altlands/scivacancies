@@ -14,5 +14,7 @@ namespace SciVacancies.ReadModel.Core
     public class Notification:BaseEntity
     {
 
+        public DateTime CreationdDate { get; set; }
+        public DateTime? UpdateDate { get; set; }
     }
 }

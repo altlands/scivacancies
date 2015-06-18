@@ -106,5 +106,8 @@ namespace SciVacancies.ReadModel.Core
         public string ContactEmail { get; set; }
         public string ContactPhone { get; set; }
         public string ContactDetails { get; set; }
+
+        public DateTime CreationdDate { get; set; }
+        public DateTime? UpdateDate { get; set; }
     }
 }

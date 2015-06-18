@@ -31,5 +31,8 @@ namespace SciVacancies.ReadModel.Core
         /// Сокращенное наименование (на английском языке)
         /// </summary>
         public string ShortNameEng { get; set; }
+
+        public DateTime CreationdDate { get; set; }
+        public DateTime? UpdateDate { get; set; }
     }
 }

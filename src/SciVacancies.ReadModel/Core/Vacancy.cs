@@ -13,6 +13,7 @@ namespace SciVacancies.ReadModel.Core
     [PrimaryKey("Guid", AutoIncrement = false)]
     public class Vacancy : BaseEntity
     {
-
+        public DateTime CreationdDate { get; set; }
+        public DateTime? UpdateDate { get; set; }
     }
 }

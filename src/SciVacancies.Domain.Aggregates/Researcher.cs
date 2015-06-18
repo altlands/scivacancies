@@ -93,7 +93,8 @@ namespace SciVacancies.Domain.Aggregates
             RaiseEvent(new SearchSubscriptionCreated()
             {
                 SearchSubscriptionGuid = searchSubscriptionGuid,
-                ResearcherGuid = this.Id
+                ResearcherGuid = this.Id,
+                Data = data
             });
 
             return searchSubscriptionGuid;
@@ -135,14 +136,15 @@ namespace SciVacancies.Domain.Aggregates
             }
         }
 
-        public Guid CreateVacancyApplicationTemplate(Guid vacancyGuid)
+        public Guid CreateVacancyApplicationTemplate(Guid vacancyGuid, VacancyApplicationDataModel data)
         {
             Guid vacancyApplicationGuid = Guid.NewGuid();
             RaiseEvent(new VacancyApplicationCreated()
             {
                 VacancyApplicationGuid = vacancyApplicationGuid,
                 VacancyGuid = vacancyGuid,
-                ResearcherGuid = this.Id
+                ResearcherGuid = this.Id,
+                Data = data
             });
 
             return vacancyApplicationGuid;
@@ -244,6 +246,7 @@ namespace SciVacancies.Domain.Aggregates
             this.SearchSubscriptions.Add(new SearchSubscription()
             {
                 SearchSubscriptionGuid = @event.SearchSubscriptionGuid,
+                Data = @event.Data,
                 Status = SearchSubscriptionStatus.Active
             });
         }

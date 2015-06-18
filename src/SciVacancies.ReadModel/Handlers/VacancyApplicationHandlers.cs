@@ -33,7 +33,11 @@ namespace SciVacancies.ReadModel.Handlers
         public VacancyApplicationUpdatedHandler(IDatabase db) : base(db) { }
         public override void Handle(VacancyApplicationUpdated msg)
         {
+            VacancyApplication vacancyApplication = _db.SingleById<VacancyApplication>(msg.VacancyApplicationGuid);
             //TODO
+            vacancyApplication.UpdateDate = msg.TimeStamp;
+
+            _db.Update(vacancyApplication);
         }
     }
     public class VacancyApplicationRemovedHandler : EventBaseHandler<VacancyApplicationRemoved>
@@ -61,7 +65,11 @@ namespace SciVacancies.ReadModel.Handlers
         public VacancyApplicationCancelledHandler(IDatabase db) : base(db) { }
         public override void Handle(VacancyApplicationCancelled msg)
         {
-            //TODO
+            VacancyApplication vacancyApplication = _db.SingleById<VacancyApplication>(msg.VacancyApplicationGuid);
+            vacancyApplication.Status = VacancyApplicationStatus.Cancelled;
+            vacancyApplication.UpdateDate = msg.TimeStamp;
+
+            _db.Update(vacancyApplication);
         }
     }
     public class VacancyApplicationWonHandler : EventBaseHandler<VacancyApplicationWon>
@@ -69,7 +77,11 @@ namespace SciVacancies.ReadModel.Handlers
         public VacancyApplicationWonHandler(IDatabase db) : base(db) { }
         public override void Handle(VacancyApplicationWon msg)
         {
-            //TODO
+            VacancyApplication vacancyApplication = _db.SingleById<VacancyApplication>(msg.VacancyApplicationGuid);
+            vacancyApplication.Status = VacancyApplicationStatus.Won;
+            vacancyApplication.UpdateDate = msg.TimeStamp;
+
+            _db.Update(vacancyApplication);
         }
     }
     public class VacancyApplicationPretendedHandler : EventBaseHandler<VacancyApplicationPretended>
@@ -77,7 +89,11 @@ namespace SciVacancies.ReadModel.Handlers
         public VacancyApplicationPretendedHandler(IDatabase db) : base(db) { }
         public override void Handle(VacancyApplicationPretended msg)
         {
-            //TODO
+            VacancyApplication vacancyApplication = _db.SingleById<VacancyApplication>(msg.VacancyApplicationGuid);
+            vacancyApplication.Status = VacancyApplicationStatus.Pretended;
+            vacancyApplication.UpdateDate = msg.TimeStamp;
+
+            _db.Update(vacancyApplication);
         }
     }
     public class VacancyApplicationLostHandler : EventBaseHandler<VacancyApplicationLost>
@@ -85,7 +101,11 @@ namespace SciVacancies.ReadModel.Handlers
         public VacancyApplicationLostHandler(IDatabase db) : base(db) { }
         public override void Handle(VacancyApplicationLost msg)
         {
-            //TODO
+            VacancyApplication vacancyApplication = _db.SingleById<VacancyApplication>(msg.VacancyApplicationGuid);
+            vacancyApplication.Status = VacancyApplicationStatus.Lost;
+            vacancyApplication.UpdateDate = msg.TimeStamp;
+
+            _db.Update(vacancyApplication);
         }
     }
 }

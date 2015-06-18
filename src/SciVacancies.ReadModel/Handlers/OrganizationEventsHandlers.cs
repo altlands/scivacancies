@@ -16,7 +16,11 @@ namespace SciVacancies.ReadModel.Handlers
         public OrganizationCreatedHandler(IDatabase db) : base(db) { }
         public override void Handle(OrganizationCreated msg)
         {
-            //TODO
+            Organization organization = new Organization()
+            {
+
+            };
+            _db.Insert(organization);
         }
     }
     public class OrganizationUpdatedHandler : EventBaseHandler<OrganizationUpdated>
@@ -24,7 +28,11 @@ namespace SciVacancies.ReadModel.Handlers
         public OrganizationUpdatedHandler(IDatabase db) : base(db) { }
         public override void Handle(OrganizationUpdated msg)
         {
-            //TODO
+            Organization organization = _db.SingleById<Organization>(msg.OrganizationGuid);
+
+
+
+            _db.Update(organization);
         }
     }
     public class OrganizationRemovedHandler : EventBaseHandler<OrganizationRemoved>

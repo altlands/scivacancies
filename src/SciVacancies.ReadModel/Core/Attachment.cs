@@ -11,6 +11,6 @@ namespace SciVacancies.ReadModel.Core
     [PrimaryKey("Guid", AutoIncrement = false)]
     public class Attachment:BaseEntity
     {
-
+        public DateTime CreationdDate { get; set; }
     }
 }
