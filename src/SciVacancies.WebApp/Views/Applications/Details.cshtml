@@ -1,0 +1,18 @@
+﻿@model dynamic
+
+@using System.Threading.Tasks
+
+<div class="crumbs">
+    <a href="/">Главная страница</a><span class="separator">/</span>
+    <a asp-controller="researchers" asp-action="account">Личная карточка пользователя</a><span class="separator">/</span>
+    <a asp-controller="researchers" asp-action="applications">Мои заявки</a><span class="separator">/</span>
+    @ViewBag.Title
+</div>
+
+<h3>Личная карточка пользователя</h3>
+
+<h4>@ViewBag.Title</h4>
+
+<div class="b-bottom-nav">
+    <a asp-controller="researchers" asp-action="applications" class="small-icon icon-prev">К моим заявкам</a>
+</div>

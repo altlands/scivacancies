@@ -23,7 +23,7 @@ namespace SciVacancies.WebApp.Controllers
         [HttpPost]
         public RedirectToActionResult Create(VacancyCreateViewModel model)
         {
-            return RedirectToAction("details");
+            return RedirectToAction("vacancies", "organizations");
         }
     }
 }

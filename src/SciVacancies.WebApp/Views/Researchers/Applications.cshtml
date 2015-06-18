@@ -40,7 +40,7 @@
             <td><span class="status executed">Завершён</span></td>
             <td><span class="status executed">Победитель</span></td>
             <td>
-                <a href="#" class="view-td-icon"></a>
+                <a asp-controller="applications" asp-action="details" asp-route-id="@Guid.NewGuid()" class="view-td-icon"></a>
                 <a href="#" class="close-td-icon"></a>
             </td>
         </tr>
@@ -52,7 +52,7 @@
             <td><span class="status work">Приём заявок</span></td>
             <td><span class="status work">Подана</span></td>
             <td>
-                <a href="#" class="view-td-icon"></a>
+                <a asp-controller="applications" asp-action="details" asp-route-id="@Guid.NewGuid()" class="view-td-icon"></a>
                 <a href="#" class="close-td-icon"></a>
             </td>
         </tr>
@@ -64,7 +64,7 @@
             <td><span class="status work">Объявлен</span></td>
             <td><span class="status work">В работе</span></td>
             <td>
-                <a href="#" class="view-td-icon"></a>
+                <a asp-controller="applications" asp-action="details" asp-route-id="@Guid.NewGuid()" class="view-td-icon"></a>
                 <a href="#" class="close-td-icon"></a>
             </td>
         </tr>
@@ -76,7 +76,7 @@
             <td><span class="status executed">Завершён</span></td>
             <td><span class="status failed">Не прошла</span></td>
             <td>
-                <a href="#" class="view-td-icon"></a>
+                <a asp-controller="applications" asp-action="details" asp-route-id="@Guid.NewGuid()" class="view-td-icon"></a>
                 <a href="#" class="close-td-icon"></a>
             </td>
         </tr>
@@ -122,11 +122,12 @@
     </div>
 </div>
 
-<div class="ctr-buttons mb5 mt-30">
+
+@*<div class="ctr-buttons mb5 mt-30">
     <a asp-controller="applications" asp-action="create">
         <span class="green-btn middle-icon">Создать заявку</span>
     </a>
-</div>
+</div>*@
 
 
 
