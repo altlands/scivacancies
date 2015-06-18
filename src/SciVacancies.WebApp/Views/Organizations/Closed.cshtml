@@ -1,7 +1,9 @@
 ﻿@model dynamic
-    
+
 <div class="crumbs">
-    <a href="/">Главная страница</a><span class="separator">/</span>@ViewBag.Title
+    <a href="/">Главная страница</a><span class="separator">/</span>
+    <a asp-controller="organizations" asp-action="account">Московский государственный университет им. М.В. Ломоносова</a><span class="separator">/</span>
+    @ViewBag.Title
 </div>
 
 <h3>@ViewBag.Title</h3>

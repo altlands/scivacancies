@@ -15,10 +15,6 @@ namespace SciVacancies.WebApp.Controllers
             return View();
         }
 
-
-        [PageTitle("Завершенные конкурсы")]
-        public ViewResult Closed() => View();
-
         [PageTitle("Новая вакансия")]
         public ViewResult Create() => View();
 

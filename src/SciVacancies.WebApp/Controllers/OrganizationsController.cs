@@ -26,6 +26,9 @@ namespace SciVacancies.WebApp.Controllers
             return View(model);
         }
 
+        [PageTitle("Закрытые вакансии")]
+        public ViewResult Closed() => View();
+
         [SiblingPage]
         [PageTitle("Уведомления")]
         public ViewResult Notifications()
