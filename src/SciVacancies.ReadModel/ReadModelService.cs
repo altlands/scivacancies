@@ -157,6 +157,20 @@ namespace SciVacancies.ReadModel
 
             return organizations;
         }
+        public List<Organization> SelectOrganizations(string title, int count)
+        {
+            List<Organization> organizations;
+            if(count!=0)
+            {
+                organizations = _db.FetchBy<Organization>(f => f.Where(w => w.Name.Contains(title))).Take(count).ToList();
+            }
+            else
+            {
+                organizations = _db.FetchBy<Organization>(f => f.Where(w => w.Name.Contains(title)));
+            }
+
+            return organizations;
+        }
 
         public Position SinglePosition(Guid positionGuid)
         {
@@ -176,6 +190,19 @@ namespace SciVacancies.ReadModel
             List<VacancyApplication> vacancyApplication = _db.FetchBy<VacancyApplication>(f => f.Where(w => w.VacancyGuid == vacancyGuid));
 
             return vacancyApplication;
+        }
+
+        public List<PositionType> SelectPositionTypes()
+        {
+            List<PositionType> positionTypes = _db.Fetch<PositionType>();
+
+            return positionTypes;
+        }
+        public List<PositionType> SelectPositionTypes(string query)
+        {
+            List<PositionType> positionTypes = _db.FetchBy<PositionType>(f => f.Where(w => w.Title.Contains(query)));
+
+            return positionTypes;
         }
 
         public List<Activity> SelectActivities()

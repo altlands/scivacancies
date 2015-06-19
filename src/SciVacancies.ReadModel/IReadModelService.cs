@@ -46,24 +46,55 @@ namespace SciVacancies.ReadModel
         /// <param name="addressFilterValue">Значение фильтра для свойства Адрес организации (не обязательно)</param>
         /// <returns></returns>
         Page<Organization> SelectOrganizations(string orderBy, long pageSize, long pageIndex, string nameFilterValue = null, string addressFilterValue = null);
+        /// <summary>
+        /// Получить заданное количество организаций, офильтрованных по title
+        /// </summary>
+        /// <param name="title">Значение фильтра для свойства Title</param>
+        /// <param name="count">Если count=0, то возвращается весь отфильтрованный список</param>
+        /// <returns></returns>
+        List<Organization> SelectOrganizations(string title, int count);
 
+        /// <summary>
+        /// Список позиций(шаблонов вакансий)
+        /// </summary>
+        /// <param name="positionGuid"></param>
+        /// <returns></returns>
         Position SinglePosition(Guid positionGuid);
         List<Position> SelectPositions(Guid organizationGuid);
 
+        #region Dictionaries
+        /// <summary>
+        /// Список должностей
+        /// </summary>
+        /// <returns></returns>
+        List<PositionType> SelectPositionTypes();
+        /// <summary>
+        /// Список должностей с фильтрацией
+        /// </summary>
+        /// <param name="query">LIKE '%query%'</param>
+        /// <returns></returns>
+        List<PositionType> SelectPositionTypes(string query);
+
         List<Activity> SelectActivities();
         List<Activity> SelectActivities(string query);
+
         List<Foiv> SelectFoivs();
         List<Foiv> SelectFoivs(string query);
         List<Foiv> SelectFoivs(int parentId);
+
         List<Criteria> SelectCriterias();
         List<Criteria> SelectCriterias(string query);
         List<Criteria> SelectCriterias(int parentId);
+
         List<OrgForm> SelectOrgForms();
         List<OrgForm> SelectOrgForms(string query);
+
         List<Region> SelectRegions();
         List<Region> SelectRegions(string query);
+
         List<ResearchDirection> SelectResearchDirections();
         List<ResearchDirection> SelectResearchDirections(string query);
         List<ResearchDirection> SelectResearchDirections(int parentId);
+        #endregion
     }
 }
