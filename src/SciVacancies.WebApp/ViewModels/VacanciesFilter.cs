@@ -6,13 +6,13 @@ namespace SciVacancies.WebApp.ViewModels
 
     public class VacanciesFilter
     {
-        public IEnumerable<string> Regions { get; set; } = new List<string>();
-        public IEnumerable<string> Foivs { get; set; } = new List<string>();
-        public IEnumerable<string> ResearchDirections { get; set; } = new List<string>();
-        public IEnumerable<string> Positions { get; set; } = new List<string>();
-        public IEnumerable<string> Organizations { get; set; } = new List<string>();
-        public IEnumerable<string> Salaries { get; set; } = new List<string>();
-        public IEnumerable<string> VacancyStates { get; set; } = new List<string>();
+        public IEnumerable<string> Regions { get; set; }
+        public IEnumerable<string> Foivs { get; set; }
+        public IEnumerable<string> ResearchDirections { get; set; }
+        public IEnumerable<string> Positions { get; set; }
+        public IEnumerable<string> Organizations { get; set; }
+        public IEnumerable<string> Salaries { get; set; }
+        public IEnumerable<string> VacancyStates { get; set; }
 
         public int Period { get; set; }
         public int PageSize { get; set; }

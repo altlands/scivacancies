@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using Microsoft.AspNet.Mvc.Rendering;
+using SciVacancies.Domain.Enums;
 using SciVacancies.ReadModel;
 using SciVacancies.WebApp.Engine;
 
@@ -7,12 +9,8 @@ namespace SciVacancies.WebApp.ViewModels
 {
     public class VacanciesFilterSource
     {
-        private IReadModelService _readModelService;
-
         public VacanciesFilterSource(IReadModelService readModelService)
         {
-            _readModelService = readModelService;
-
             Periods = new List<SelectListItem>
             {
                 new SelectListItem {Value = "0", Text = "За всё время"}
@@ -27,51 +25,6 @@ namespace SciVacancies.WebApp.ViewModels
                 ,new SelectListItem {Value =ConstTerms.OrderByDateAscending , Text ="Сначала первые" }
             };
 
-            Regions = new List<SelectListItem>
-            {
-                new SelectListItem {Value = "1", Text = "Москва и область"}
-                ,new SelectListItem {Value ="2" , Text ="Санкт-Петербург" }
-                ,new SelectListItem {Value ="3" , Text ="Новосибирск" }
-                ,new SelectListItem {Value ="4" , Text ="Самара" }
-                ,new SelectListItem {Value ="5" , Text ="Владивосток" }
-            };
-
-            Foivs = new List<SelectListItem>
-            {
-                new SelectListItem {Value = "1", Text = "Минздрав РФ"}
-                ,new SelectListItem {Value ="2" , Text ="Минобонауки РФ" }
-                ,new SelectListItem {Value ="3" , Text ="РАМН" }
-                ,new SelectListItem {Value ="4" , Text ="РАН" }
-                ,new SelectListItem {Value ="5" , Text ="РосГидроМет" }
-            };
-
-            ResearchDirections = new List<SelectListItem>
-            {
-                new SelectListItem {Value = "1", Text = "Экономика"}
-                ,new SelectListItem {Value ="2" , Text ="Юриспруденция " }
-                ,new SelectListItem {Value ="3" , Text ="Инструменты и приборы" }
-                ,new SelectListItem {Value ="4" , Text ="Материаловедение – междисциплинарное " }
-                ,new SelectListItem {Value ="5" , Text ="Науки об окружающей среде" }
-            };
-
-            Positions = new List<SelectListItem>
-            {
-                new SelectListItem {Value = "1", Text = "Руководитель научного подразделения"}
-                ,new SelectListItem {Value ="2" , Text ="Ведущий научный сотрудник" }
-                ,new SelectListItem {Value ="3" , Text ="Старший научный сотрудник" }
-                ,new SelectListItem {Value ="4" , Text ="Младший научный сотрудник" }
-                ,new SelectListItem {Value ="5" , Text ="Инженер-исследователь" }
-            };
-
-            Organizations = new List<SelectListItem>
-            {
-                new SelectListItem {Value = "1", Text = "Новосибирский государственный технический университет"}
-                ,new SelectListItem {Value ="2" , Text ="Ульяновский государственный технический университет" }
-                ,new SelectListItem {Value ="3" , Text ="ОАО \"Российские железные дороги\"" }
-                ,new SelectListItem {Value ="4" , Text ="Дагестанский государственный технический университет" }
-                ,new SelectListItem {Value ="5" , Text ="Волгоградский государственный технический университет" }
-            };
-
             Salaries = new List<SelectListItem>
             {
                 new SelectListItem {Value = "1", Text = "До 30 000 руб."}
@@ -79,13 +32,37 @@ namespace SciVacancies.WebApp.ViewModels
                 ,new SelectListItem {Value ="3" , Text ="От 60 000 руб. и выше" }
             };
 
-            VacancyStates = new List<SelectListItem>
+            VacancyStates = new List<VacancyStatus>
             {
-                new SelectListItem {Value = "1", Text = "Объявлен"}
-                ,new SelectListItem {Value ="2" , Text ="Приём заявок" }
-                ,new SelectListItem {Value ="3" , Text ="Завершён" }
-            };
+                VacancyStatus.Published
+                ,VacancyStatus.AppliesAcceptance
+                ,VacancyStatus.Closed
+            }.Select(c => new SelectListItem { Value = ((int)c).ToString(), Text = c.GetDescription() });
+
+            if (readModelService != null)
+            {
+                Regions =
+                    readModelService.SelectRegions()
+                        .Select(c => new SelectListItem { Value = c.Id.ToString(), Text = c.Title });
+
+                Foivs =
+                    readModelService.SelectFoivs()
+                        .Select(c => new SelectListItem { Value = c.Id.ToString(), Text = c.Title });
+
+                ResearchDirections =
+                    readModelService.SelectResearchDirections()
+                        .Select(c => new SelectListItem { Value = c.Id.ToString(), Text = c.Title });
+
+                //Positions =
+                //    _readModelService.SelectPositionTypes()
+                //        .Select(c => new SelectListItem { Value = c.Id.ToString(), Text = c.Title }); ;
+
+                Organizations =
+                    readModelService.SelectOrganizations("name_descending", 50, 1).Items
+                        .Select(c => new SelectListItem { Value = c.Guid.ToString(), Text = c.Name });
+            }
         }
+
 
         public IEnumerable<SelectListItem> Periods;
         public IEnumerable<SelectListItem> OrderBys;
