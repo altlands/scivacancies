@@ -7,8 +7,12 @@
       "ConnectionString": "Server=localhost; Database=VPortalRM; User Id=postgres; Password=1234;",
       "ProviderName": "Npgsql"
     },
+    //"EventStoreDb": {
+    //  "ConnectionString": "Server=localhost; Database=VPortalEventStore; User Id=postgres; Password=1234;",
+    //  "ProviderName": "Npgsql"
+    //},
     "EventStoreDb": {
-      "ConnectionString": "Server=localhost; Database=VPortalEventStore; User Id=postgres; Password=1234;",
+      "ConnectionString": "Server=altlandev05.cloudapp.net; Database=eventstore; User Id=dev; Password=1234;",
       "ProviderName": "Npgsql"
     }
   }

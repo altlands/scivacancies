@@ -19,175 +19,254 @@ namespace SciVacancies.ReadModel
 
         public Researcher SingleResearcher(Guid researcherGuid)
         {
-            var result = new Researcher();
-            return result;
+            Researcher researcher = _db.SingleById<Researcher>(researcherGuid);
+
+            return researcher;
         }
         public List<Researcher> SelectResearchers()
         {
-            var result = new List<Researcher>();
-            return result;
+            List<Researcher> researchers = _db.Fetch<Researcher>();
+
+            return researchers;
         }
 
         public VacancyApplication SingleVacancyApplication(Guid vacancyApplicationGuid)
         {
-            var result = new VacancyApplication();
-            return result;
+            VacancyApplication vacancyApplication = _db.SingleById<VacancyApplication>(vacancyApplicationGuid);
+
+            return vacancyApplication;
         }
         public List<VacancyApplication> SelectVacancyApplicationsByResearcher(Guid researcherGuid)
         {
-            var result = new List<VacancyApplication>();
-            return result;
+            List<VacancyApplication> vacancyApplications = _db.FetchBy<VacancyApplication>(f => f.Where(w => w.ResearcherGuid == researcherGuid));
+
+            return vacancyApplications;
         }
         public List<VacancyApplication> SelectVacancyApplicationsByVacancy(Guid vacancyGuid)
         {
-            var result = new List<VacancyApplication>();
-            return result;
+            List<VacancyApplication> vacancyApplication = _db.FetchBy<VacancyApplication>(f => f.Where(w => w.VacancyGuid == vacancyGuid));
+
+            return vacancyApplication;
         }
 
         public SearchSubscription SingleSearchSubscription(Guid searchSubscriptionGuid)
         {
-            var result = new SearchSubscription();
-            return result;
+            SearchSubscription searchSubscription = _db.SingleById<SearchSubscription>(searchSubscriptionGuid);
+
+            return searchSubscription;
         }
         public List<SearchSubscription> SelectSearchSubscriptions()
         {
-            var result = new List<SearchSubscription>();
-            return result;
+            List<SearchSubscription> searchSubscriptions = _db.Fetch<SearchSubscription>();
+
+            return searchSubscriptions;
         }
         public List<SearchSubscription> SelectSearchSubscriptions(Guid researcherGuid)
         {
-            var result = new List<SearchSubscription>();
-            return result;
+            List<SearchSubscription> searchSubscriptions = _db.FetchBy<SearchSubscription>(f => f.Where(w => w.ResearcherGuid == researcherGuid));
+
+            return searchSubscriptions;
         }
 
         public Attachment SingleAttachment(Guid attachmentGuid)
         {
-            var result = new Attachment();
-            return result;
+            Attachment attachment = _db.SingleById<Attachment>(attachmentGuid);
+
+            return attachment;
         }
         public List<Attachment> SelectAttachments(Guid vacancyApplicationGuid)
         {
-            var result = new List<Attachment>();
-            return result;
+            List<Attachment> attachments = _db.FetchBy<Attachment>(f => f.Where(w => w.VacancyApplicationGuid == vacancyApplicationGuid));
+
+            return attachments;
         }
 
         public Vacancy SingleVacancy(Guid vacancyGuid)
         {
-            var result = new Vacancy();
-            return result;
+            Vacancy vacancy = _db.SingleById<Vacancy>(vacancyGuid);
+
+            return vacancy;
         }
         public List<Vacancy> SelectVacancies(Guid organizationGuid)
         {
-            var result = new List<Vacancy>();
-            return result;
+            List<Vacancy> vacancies = _db.FetchBy<Vacancy>(f => f.Where(w => w.OrganizationGuid == organizationGuid));
+
+            return vacancies;
         }
         public List<Vacancy> SelectFavoriteVacancies(Guid researcherGuid)
         {
-            var result = new List<Vacancy>();
-            return result;
+            List<Guid> guids = _db.FetchBy<FavoriteVacancy>(f => f.Where(w => w.ResearcherGuid == researcherGuid)).Select(s => s.VacancyGuid).ToList();
+            List<Vacancy> vacancies = _db.FetchBy<Vacancy>(f => f.Where(w => guids.Contains(w.Guid)));
+
+            return vacancies;
         }
 
         public Notification SingleNotification(Guid notificationGuid)
         {
-            var result = new Notification();
-            return result;
+            Notification notification = _db.SingleById<Notification>(notificationGuid);
+
+            return notification;
         }
         public List<Notification> SelectNotificationsByResearcher(Guid researcherGuid)
         {
-            var result = new List<Notification>();
-            return result;
+            List<Notification> notifications = _db.FetchBy<Notification>(f => f.Where(w => w.ResearcherGuid == researcherGuid));
+
+            return notifications;
         }
         public List<Notification> SelectNotificationsByOrganization(Guid organizationGuid)
         {
-            var result = new List<Notification>();
-            return result;
+            List<Notification> notifications = _db.FetchBy<Notification>(f => f.Where(w => w.OrganizationGuid == organizationGuid));
+
+            return notifications;
         }
         public int CountNotificationsByResearcher(Guid researcherGuid)
         {
-            return 10;
+            int counter = _db.FetchBy<Notification>(f => f.Where(w => w.ResearcherGuid == researcherGuid)).Count();
+
+            return counter;
         }
         public int CountNotificationsByOrganization(Guid organizationGuid)
         {
-            return 121;
+            int counter = _db.FetchBy<Notification>(f => f.Where(w => w.OrganizationGuid == organizationGuid)).Count();
+
+            return counter;
         }
 
-        public Organization SingleOrganization(Guid orgnizationGuid)
+        public Organization SingleOrganization(Guid organizationGuid)
         {
-            var result = new Organization();
-            return result;
+            Organization organization = _db.SingleById<Organization>(organizationGuid);
+
+            return organization;
         }
         public List<Organization> SelectOrganizations()
         {
-            var result = new List<Organization>();
-            return result;
+            List<Organization> organizations = _db.Fetch<Organization>();
+
+            return organizations;
         }
-        public Page<Organization> SelectOrganizations(string orderBy, long pageSize, long pageIndex, string nameFilterValue,
-            string addressFilterValue)
+        public Page<Organization> SelectOrganizations(string orderBy, long pageSize, long pageIndex, string nameFilterValue, string addressFilterValue)
         {
-            if (pageSize < 1)
-                throw new Exception($"PageSize too small: {pageSize}");
-            if (pageIndex < 1)
-                throw new Exception($"PageIndex too small: {pageIndex}");
+            //TODO - Complete this method by filter and proper ordering
+            if (pageSize < 1) throw new Exception($"PageSize too small: {pageSize}");
+            if (pageIndex < 1) throw new Exception($"PageIndex too small: {pageIndex}");
 
             if (string.IsNullOrWhiteSpace(orderBy))
                 orderBy = "Guid_descending";
 
-            var result = _db.Page<Organization>(pageIndex, pageSize, new Sql());
+            Page<Organization> organizations = _db.Page<Organization>(pageIndex, pageSize, new Sql("SELECT o.* FROM Organizations o ORDER BY o.Guid DESC"));
 
-            return result;
+            return organizations;
         }
 
         public Position SinglePosition(Guid positionGuid)
         {
-            var result = new Position();
-            return result;
+            Position position = _db.SingleById<Position>(positionGuid);
+
+            return position;
         }
         public List<Position> SelectPositions(Guid organizationGuid)
         {
-            var result = new List<Position>();
-            return result;
-        }
+            List<Position> positions = _db.FetchBy<Position>(f => f.Where(w => w.OrganizationGuid == organizationGuid));
 
+            return positions;
+        }
+        [Obsolete("Метод будет удалён, использовать SelectVacancyApplicationsByVacancy(Guid vacancyGuid)")]
         public List<VacancyApplication> SelectApplicationsToVacancy(Guid vacancyGuid)
         {
-            var result = new List<VacancyApplication>();
-            return result;
+            List<VacancyApplication> vacancyApplication = _db.FetchBy<VacancyApplication>(f => f.Where(w => w.VacancyGuid == vacancyGuid));
+
+            return vacancyApplication;
         }
 
-        public List<Activity> SelectActivities(Guid organizationGuid)
+        public List<Activity> SelectActivities()
         {
-            var result = new List<Activity>();
-            return result;
-        }
+            List<Activity> activities = _db.Fetch<Activity>();
 
-        public List<Foiv> SelectFoivs(Guid organizationGuid)
-        {
-            var result = new List<Foiv>();
-            return result;
+            return activities;
         }
-
-        public List<Criteria> SelectCriterias(Guid organizationGuid)
+        public List<Activity> SelectActivities(string query)
         {
-            var result = new List<Criteria>();
-            return result;
+            List<Activity> activities = _db.FetchBy<Activity>(f => f.Where(w => w.Title.Contains(query)));
+
+            return activities;
         }
-
-        public List<OrgForm> SelectOrgForms(Guid organizationGuid)
+        public List<Foiv> SelectFoivs()
         {
-            var result = new List<OrgForm>();
-            return result;
+            List<Foiv> foivs = _db.Fetch<Foiv>();
+
+            return foivs;
         }
-
-        public List<Region> SelectRegions(Guid organizationGuid)
+        public List<Foiv> SelectFoivs(string query)
         {
-            var result = new List<Region>();
-            return result;
+            List<Foiv> foivs = _db.FetchBy<Foiv>(f => f.Where(w => w.Title.Contains(query)));
+
+            return foivs;
         }
-
-        public List<ResearchDirection> SelectResearchDirections(Guid organizationGuid)
+        public List<Foiv> SelectFoivs(int parentId)
         {
-            var result = new List<ResearchDirection>();
-            return result;
+            List<Foiv> foivs = _db.FetchBy<Foiv>(f => f.Where(w => w.ParentId == parentId));
+
+            return foivs;
+        }
+        public List<Criteria> SelectCriterias()
+        {
+            List<Criteria> criterias = _db.Fetch<Criteria>();
+
+            return criterias;
+        }
+        public List<Criteria> SelectCriterias(string query)
+        {
+            List<Criteria> criterias = _db.FetchBy<Criteria>(f => f.Where(w => w.Title.Contains(query)));
+
+            return criterias;
+        }
+        public List<Criteria> SelectCriterias(int parentId)
+        {
+            List<Criteria> criterias = _db.FetchBy<Criteria>(f => f.Where(w => w.ParentId == parentId));
+
+            return criterias;
+        }
+        public List<OrgForm> SelectOrgForms()
+        {
+            List<OrgForm> orgForms = _db.Fetch<OrgForm>();
+
+            return orgForms;
+        }
+        public List<OrgForm> SelectOrgForms(string query)
+        {
+            List<OrgForm> orgForms = _db.FetchBy<OrgForm>(f => f.Where(w => w.Title.Contains(query)));
+
+            return orgForms;
+        }
+        public List<Region> SelectRegions()
+        {
+            List<Region> regions = _db.Fetch<Region>();
+
+            return regions;
+        }
+        public List<Region> SelectRegions(string query)
+        {
+            List<Region> regions = _db.FetchBy<Region>(f => f.Where(w => w.Title.Contains(query)));
+
+            return regions;
+        }
+        public List<ResearchDirection> SelectResearchDirections()
+        {
+            List<ResearchDirection> researchDirections = _db.Fetch<ResearchDirection>();
+
+            return researchDirections;
+        }
+        public List<ResearchDirection> SelectResearchDirections(string query)
+        {
+            List<ResearchDirection> researchDirections = _db.FetchBy<ResearchDirection>(f => f.Where(w => w.Title.Contains(query)));
+
+            return researchDirections;
+        }
+        public List<ResearchDirection> SelectResearchDirections(int parentId)
+        {
+            List<ResearchDirection> researchDirections = _db.FetchBy<ResearchDirection>(f => f.Where(w => w.ParentId == parentId));
+
+            return researchDirections;
         }
     }
 }
