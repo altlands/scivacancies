@@ -47,23 +47,47 @@ namespace SciVacancies.ReadModel
         /// <returns></returns>
         Page<Organization> SelectOrganizations(string orderBy, long pageSize, long pageIndex, string nameFilterValue = null, string addressFilterValue = null);
 
+        /// <summary>
+        /// Список позиций(шаблонов вакансий)
+        /// </summary>
+        /// <param name="positionGuid"></param>
+        /// <returns></returns>
         Position SinglePosition(Guid positionGuid);
         List<Position> SelectPositions(Guid organizationGuid);
 
+        #region Dictionaries
+        /// <summary>
+        /// Список должностей
+        /// </summary>
+        /// <returns></returns>
+        List<PositionType> SelectPositionTypes();
+        /// <summary>
+        /// Список должностей с фильтрацией
+        /// </summary>
+        /// <param name="query">LIKE '%query%'</param>
+        /// <returns></returns>
+        List<PositionType> SelectPositionTypes(string query);
+
         List<Activity> SelectActivities();
         List<Activity> SelectActivities(string query);
+
         List<Foiv> SelectFoivs();
         List<Foiv> SelectFoivs(string query);
         List<Foiv> SelectFoivs(int parentId);
+
         List<Criteria> SelectCriterias();
         List<Criteria> SelectCriterias(string query);
         List<Criteria> SelectCriterias(int parentId);
+
         List<OrgForm> SelectOrgForms();
         List<OrgForm> SelectOrgForms(string query);
+
         List<Region> SelectRegions();
         List<Region> SelectRegions(string query);
+
         List<ResearchDirection> SelectResearchDirections();
         List<ResearchDirection> SelectResearchDirections(string query);
         List<ResearchDirection> SelectResearchDirections(int parentId);
+        #endregion
     }
 }
