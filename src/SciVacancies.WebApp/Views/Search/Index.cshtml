@@ -18,7 +18,7 @@
 
             <div class="filter-contents">
                 <div class="ctr-filter">
-                    <span class="small-icon icon-sm-ok">Выбрать все</span>
+                    <span class="small-icon icon-sm-ok" onclick="javascript: void (0);">Выбрать все</span>
                     <span class="small-icon icon-sm-close">Очистить фильтр</span>
                 </div>
 
@@ -28,32 +28,6 @@
                         <checkboxing items="ViewBag.FilterSource.Regions"
                                      values="Model.Regions"
                                      property="Regions"></checkboxing>
-                        @*<li>
-                                <span class="checkbox checked">
-                                    <input type="checkbox" id="regions1" name="regions" checked />
-                                </span>
-                                <label for="regions1">Москва и область (500)</label>
-                            </li>
-                            <li>
-                                <span class="checkbox checked">
-                                    <input type="checkbox" id="regions2" name="regions" checked />
-                                </span><label for="regions2">Санкт-Петербург (430)</label>
-                            </li>
-                            <li>
-                                <span class="checkbox">
-                                    <input type="checkbox" id="regions3" name="regions" />
-                                </span><label for="regions3">Новосибирск (357)</label>
-                            </li>
-                            <li>
-                                <span class="checkbox checked">
-                                    <input type="checkbox" checked />
-                                </span><label>Самара (15)</label>
-                            </li>
-                            <li>
-                                <span class="checkbox">
-                                    <input type="checkbox" />
-                                </span><label>Владивосток (12)</label>
-                            </li>*@
                     </ul>
                     <span class="small-icon icon-sm-eye"><span>Показать ещё 10 ( из 453 )</span></span>
                 </div>
@@ -61,31 +35,9 @@
                 <div class="cat-filter">
                     <div class="title">ФОИВ</div>
                     <ul class="list-checkboxes">
-                        <li>
-                            <span class="checkbox checked">
-                                <input type="checkbox" checked />
-                            </span><label>Минздрав РФ (456)</label>
-                        </li>
-                        <li>
-                            <span class="checkbox checked">
-                                <input type="checkbox" checked />
-                            </span><label>Минобонауки РФ (56)</label>
-                        </li>
-                        <li>
-                            <span class="checkbox">
-                                <input type="checkbox" />
-                            </span><label>РАМН (2)</label>
-                        </li>
-                        <li>
-                            <span class="checkbox checked">
-                                <input type="checkbox" checked />
-                            </span><label>РАН (7)</label>
-                        </li>
-                        <li>
-                            <span class="checkbox">
-                                <input type="checkbox" />
-                            </span><label>РосГидроМет (1)</label>
-                        </li>
+                        <checkboxing items="ViewBag.FilterSource.Foivs"
+                                     values="Model.Foivs"
+                                     property="Foivs"></checkboxing>
                     </ul>
                     <span class="small-icon icon-sm-eye"><span>Показать ещё 10 ( из 682 )</span></span>
                 </div>
@@ -93,31 +45,9 @@
                 <div class="cat-filter">
                     <div class="title">Научное направление</div>
                     <ul class="list-checkboxes">
-                        <li>
-                            <span class="checkbox checked">
-                                <input type="checkbox" checked />
-                            </span><label>Экономика (7)</label>
-                        </li>
-                        <li>
-                            <span class="checkbox checked">
-                                <input type="checkbox" checked />
-                            </span><label>Юриспруденция (15)</label>
-                        </li>
-                        <li>
-                            <span class="checkbox">
-                                <input type="checkbox" />
-                            </span><label>Инструменты и приборы (239)</label>
-                        </li>
-                        <li>
-                            <span class="checkbox checked">
-                                <input type="checkbox" checked />
-                            </span><label>Материаловедение – междисциплинарное (351)</label>
-                        </li>
-                        <li>
-                            <span class="checkbox">
-                                <input type="checkbox" />
-                            </span><label>Науки об окружающей среде (63)</label>
-                        </li>
+                        <checkboxing items="ViewBag.FilterSource.ResearchDirections"
+                                     values="Model.ResearchDirections"
+                                     property="ResearchDirections"></checkboxing>
                     </ul>
                     <span class="small-icon icon-sm-eye"><span>Показать ещё 10 ( из 897 )</span></span>
                 </div>
@@ -125,31 +55,9 @@
                 <div class="cat-filter">
                     <div class="title">Категория должности</div>
                     <ul class="list-checkboxes">
-                        <li>
-                            <span class="checkbox checked">
-                                <input type="checkbox" checked />
-                            </span><label>Руководитель научного подразделения (12)</label>
-                        </li>
-                        <li>
-                            <span class="checkbox checked">
-                                <input type="checkbox" checked />
-                            </span><label>Ведущий научный сотрудник (63)</label>
-                        </li>
-                        <li>
-                            <span class="checkbox checked">
-                                <input type="checkbox" checked />
-                            </span><label>Старший научный сотрудник (59)</label>
-                        </li>
-                        <li>
-                            <span class="checkbox checked">
-                                <input type="checkbox" checked />
-                            </span><label>Младший научный сотрудник (114)</label>
-                        </li>
-                        <li>
-                            <span class="checkbox checked">
-                                <input type="checkbox" checked />
-                            </span><label>Инженер-исследователь (187)</label>
-                        </li>
+                        <checkboxing items="ViewBag.FilterSource.Positions"
+                                     values="Model.Positions"
+                                     property="Positions"></checkboxing>
                     </ul>
                     <span class="small-icon icon-sm-eye"><span>Показать ещё 5 ( из 10 )</span></span>
                 </div>
@@ -157,31 +65,9 @@
                 <div class="cat-filter">
                     <div class="title">Организация</div>
                     <ul class="list-checkboxes">
-                        <li>
-                            <span class="checkbox checked">
-                                <input type="checkbox" checked />
-                            </span><label>Новосибирский государственный технический университет (4)</label>
-                        </li>
-                        <li>
-                            <span class="checkbox checked">
-                                <input type="checkbox" checked />
-                            </span><label>Ульяновский государственный технический университет (23)</label>
-                        </li>
-                        <li>
-                            <span class="checkbox">
-                                <input type="checkbox" />
-                            </span><label>ОАО "Российские железные дороги" (31)</label>
-                        </li>
-                        <li>
-                            <span class="checkbox checked">
-                                <input type="checkbox" checked />
-                            </span><label>Дагестанский государственный технический университет (1)</label>
-                        </li>
-                        <li>
-                            <span class="checkbox">
-                                <input type="checkbox" />
-                            </span><label>Волгоградский государственный технический университет (5)</label>
-                        </li>
+                        <checkboxing items="ViewBag.FilterSource.Organizations"
+                                     values="Model.Organizations"
+                                     property="Organizations"></checkboxing>
                     </ul>
                     <span class="small-icon icon-sm-eye"><span>Показать ещё 10 ( из 682 )</span></span>
                 </div>
@@ -189,42 +75,18 @@
                 <div class="cat-filter">
                     <div class="title">Заработная плата</div>
                     <ul class="list-checkboxes">
-                        <li>
-                            <span class="checkbox checked">
-                                <input type="checkbox" checked />
-                            </span><label>До 30 000 руб. (457)</label>
-                        </li>
-                        <li>
-                            <span class="checkbox checked">
-                                <input type="checkbox" checked />
-                            </span><label>30 000 – 60 000 руб. (831)</label>
-                        </li>
-                        <li>
-                            <span class="checkbox checked">
-                                <input type="checkbox" checked />
-                            </span><label>От 60 000 руб. и выше (52)</label>
-                        </li>
+                        <checkboxing items="ViewBag.FilterSource.Salaries"
+                                     values="Model.Salaries"
+                                     property="Salaries"></checkboxing>
                     </ul>
                 </div>
 
                 <div class="cat-filter">
                     <div class="title">Статус конкурса</div>
                     <ul class="list-checkboxes">
-                        <li>
-                            <span class="checkbox checked">
-                                <input type="checkbox" checked />
-                            </span><label>Объявлен (182)</label>
-                        </li>
-                        <li>
-                            <span class="checkbox checked">
-                                <input type="checkbox" checked />
-                            </span><label>Приём заявок (45)</label>
-                        </li>
-                        <li>
-                            <span class="checkbox">
-                                <input type="checkbox" />
-                            </span><label>Завершён (7)</label>
-                        </li>
+                        <checkboxing items="ViewBag.FilterSource.VacancyStates"
+                                     values="Model.VacancyStates"
+                                     property="VacancyStates"></checkboxing>
                     </ul>
                 </div>
             </div>
@@ -237,7 +99,7 @@
             </div>
 
             <div class="ctr-buttons" style="margin-top:20px;">
-                <span class="green-btn middle-icon icon-ok" id="subscribe" rel="tooltip">Подписаться</span>
+                <a class="green-btn middle-icon icon-ok open-popup" id="subscribe" rel="tooltip">Подписаться</a>
                 <div id="subscribe-popover" style="display:none;">
                     Задав поисковый запрос и выбрав необходимые критерии поиска в фильтре результатов, вы можете подписаться на данную конфигурацию запроса. Это позволит в дальнейшем оперативно отслеживать необходимую информацию с учётом выбранных предпочтений. Ваши подписки отображаются в Личном Кабинете в соответствующей вкладке
                 </div>
@@ -304,7 +166,7 @@
                 171-180 из @pagedData.TotalItemCount вакансий
             </div>
             <div class="count-line-page">
-                <input asp-for="PageSize"  type="text" /> записей на странице
+                <input asp-for="PageSize" type="text" /> записей на странице
             </div>
         </div>
         <div class="bottom-nav-right">
@@ -390,6 +252,38 @@
         </div>
     </div>
 </form>
+
+
+<div class="window-popup middle" style="display:none;">
+    <span class="close-popup"></span>
+    <div class="title-popup">
+        <h4>Подписка на поисковый запрос</h4>
+    </div>
+    <div class="content-popup">
+        <p class="fs14 arial">Подписываясь на запрос, вы сможете быстро перейти к соответствующим результатам из Личного кабинета, а также будете получать электронные уведомления обо всех обновлениях по теме данного запроса</p>
+        <div class="form-line">
+            <input type="text" style="width:340px;" placeholder="Название запроса" />
+        </div>
+
+        <div class="form-line">
+            <input type="text" style="width:340px;" placeholder="Ключевые слова" />
+        </div>
+
+        <div class="form-line mt25">
+            <span class="checkbox checked">
+                <input type="checkbox" checked />
+            </span><label>Получать уведомления по электронной почте</label>
+        </div>
+
+        <div class="ctr-buttons mt40">
+            <span class="green-btn middle-icon icon-arr-right">Подписаться</span><span class="blue-btn middle-icon icon-close">Отмена</span>
+        </div>
+    </div>
+</div>
+<div class="bg-window" style="display: none;"></div>
+
+
+
 
 
 <div class="b-bottom-nav">
