@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNet.Mvc;
 using System;
+using SciVacancies.Domain.Aggregates.Interfaces;
+using SciVacancies.ReadModel;
 using SciVacancies.WebApp.ViewModels;
 
 namespace SciVacancies.WebApp.Controllers
@@ -9,27 +11,27 @@ namespace SciVacancies.WebApp.Controllers
     /// </summary>
     public class VacanciesController : Controller
     {
-        [PageTitle("Карточка конкурса")]
-        public ViewResult Details(Guid id)
+        private readonly IReadModelService _readModelService;
+        private readonly IOrganizationService _organizationService;
+
+        public VacanciesController(IOrganizationService organizationService, IReadModelService readModelService)
         {
-            return View();
+            _organizationService = organizationService;
+            _readModelService = readModelService;
         }
 
         [PageTitle("Карточка конкурса")]
-        public ViewResult Preview(Guid id)
-        {
-            return View();
-        }
+        public ViewResult Details(Guid id) => View();
+
+        [PageTitle("Карточка конкурса")]
+        public ViewResult Preview(Guid id) => View();
 
         [PageTitle("Новая вакансия")]
-        public ViewResult Create() => View();
+        public ViewResult Create() => View(new ApplicationCreateViewModel().InitDictionaries(_readModelService));
 
 
         [PageTitle("Новая вакансия")]
         [HttpPost]
-        public RedirectToActionResult Create(VacancyCreateViewModel model)
-        {
-            return RedirectToAction("vacancies", "organizations");
-        }
+        public RedirectToActionResult Create(VacancyCreateViewModel model) => RedirectToAction("vacancies", "organizations");
     }
 }
