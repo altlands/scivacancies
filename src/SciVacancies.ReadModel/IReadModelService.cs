@@ -46,6 +46,13 @@ namespace SciVacancies.ReadModel
         /// <param name="addressFilterValue">Значение фильтра для свойства Адрес организации (не обязательно)</param>
         /// <returns></returns>
         Page<Organization> SelectOrganizations(string orderBy, long pageSize, long pageIndex, string nameFilterValue = null, string addressFilterValue = null);
+        /// <summary>
+        /// Получить заданное количество организаций, офильтрованных по title
+        /// </summary>
+        /// <param name="title">Значение фильтра для свойства Title</param>
+        /// <param name="count">Если count=0, то возвращается весь отфильтрованный список</param>
+        /// <returns></returns>
+        List<Organization> SelectOrganizations(string title, int count);
 
         /// <summary>
         /// Список позиций(шаблонов вакансий)

@@ -8,11 +8,14 @@ namespace SciVacancies.Domain.DataModels
 {
     public class PositionDataModel
     {
-
+        /// <summary>
+        /// Guid должности из справочника
+        /// </summary>
+        public Guid PositionTypeGuid { get; set; }
         /// <summary>
         /// Должность
         /// </summary>
-        public string Name { get;set;}
+        public string Name { get; set; }
 
         /// <summary>
         /// Должность (Полное наименование)
@@ -39,7 +42,7 @@ namespace SciVacancies.Domain.DataModels
         /// <summary>
         /// Критерии оценки 
         /// </summary>
-        public KeyValuePair<int,int> Criteria { get; set; } //<CriteriaId, Amount>
+        public KeyValuePair<int, int> Criteria { get; set; } //<CriteriaId, Amount>
 
         /// <summary>
         /// Зарплата в месяц
@@ -72,7 +75,7 @@ namespace SciVacancies.Domain.DataModels
         /// <summary>
         /// Найм жилья
         /// </summary>
-        public bool Rent{ get; set; }
+        public bool Rent { get; set; }
 
         /// <summary>
         /// Служебное жильё
@@ -109,6 +112,6 @@ namespace SciVacancies.Domain.DataModels
         public string ContactPhone { get; set; }
         public string ContactDetails { get; set; }
 
-
+        public PositionStatus Status { get; set; }
     }
 }
