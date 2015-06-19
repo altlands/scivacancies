@@ -1,4 +1,6 @@
-﻿using System;
+﻿using SciVacancies.Domain.Core;
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -39,6 +41,7 @@ namespace SciVacancies.Domain.DataModels
         public string Memberships { get; set; }
         public string Conferences { get; set; }
 
-        //public List<string> Publications { get; set; }
+        public List<Education> Educations { get; set; }
+        public List<Publication> Publications { get; set; }
     }
 }

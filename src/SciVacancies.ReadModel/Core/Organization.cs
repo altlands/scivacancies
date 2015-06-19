@@ -68,6 +68,7 @@ namespace SciVacancies.ReadModel.Core
         /// </summary>
         public string OrgForm { get; set; }
         public int OrgFormId { get; set; }
+        public Guid OrgFormGuid { get; set; }
 
         /// <summary>
         /// Количество опубликованных вакансий на данный момент
@@ -79,6 +80,7 @@ namespace SciVacancies.ReadModel.Core
         /// </summary>
         public string Foiv { get; set; }
         public int FoivId { get; set; }
+        public Guid FoivGuid { get; set; }
 
 
         /// <summary>
@@ -86,6 +88,7 @@ namespace SciVacancies.ReadModel.Core
         /// </summary>
         public string Activity { get; set; }
         public int ActivityId { get; set; }
+        public Guid ActivityGuid { get; set; }
 
         /// <summary>
         /// Отрасли науки

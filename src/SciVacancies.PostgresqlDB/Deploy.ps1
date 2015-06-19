@@ -1,0 +1,1 @@
+﻿./rh.exe -c "#{IdSvrDBConnectionString}" -vf version.txt -env=#{DbEnvironment} --silent
