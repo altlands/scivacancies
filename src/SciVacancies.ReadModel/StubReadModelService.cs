@@ -191,6 +191,12 @@ namespace SciVacancies.ReadModel
 
             return result;
         }
+        public List<Organization> SelectOrganizations(string title, int count)
+        {
+            var result = SelectOrganizations("desc", 2, 4, "", "").Items;
+
+            return result;
+        }
 
         public Position SinglePosition(Guid positionGuid)
         {

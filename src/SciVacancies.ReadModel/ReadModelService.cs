@@ -157,6 +157,20 @@ namespace SciVacancies.ReadModel
 
             return organizations;
         }
+        public List<Organization> SelectOrganizations(string title, int count)
+        {
+            List<Organization> organizations;
+            if(count!=0)
+            {
+                organizations = _db.FetchBy<Organization>(f => f.Where(w => w.Name.Contains(title))).Take(count).ToList();
+            }
+            else
+            {
+                organizations = _db.FetchBy<Organization>(f => f.Where(w => w.Name.Contains(title)));
+            }
+
+            return organizations;
+        }
 
         public Position SinglePosition(Guid positionGuid)
         {
