@@ -13,6 +13,8 @@ namespace SciVacancies.ReadModel.Core
     [PrimaryKey("Guid", AutoIncrement = false)]
     public class Notification:BaseEntity
     {
+        public Guid ResearcherGuid { get; set; }
+        public Guid OrganizationGuid { get; set; }
 
         public DateTime CreationdDate { get; set; }
         public DateTime? UpdateDate { get; set; }

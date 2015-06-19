@@ -22,13 +22,13 @@ namespace SciVacancies.WebApp.Controllers
             _rm = readModelService;
         }
         // GET: /<controller>/
-        public IActionResult Index()
+        public void Index()
         {
             Guid researcherGuid = _res.CreateResearcher(new ResearcherDataModel());
 
             Researcher researcher = _rm.SingleResearcher(Guid.NewGuid());
 
-            return View();
+            //return View();
         }
     }
 }

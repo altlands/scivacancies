@@ -13,7 +13,10 @@ namespace SciVacancies.ReadModel.Core
     [PrimaryKey("Guid", AutoIncrement = false)]
     public class Position : BaseEntity
     {
-
+        /// <summary>
+        /// Идентификатор организации
+        /// </summary>
+        public Guid OrganizationGuid { get; set; }
         /// <summary>
         /// Должность
         /// </summary>

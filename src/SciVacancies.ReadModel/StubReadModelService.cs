@@ -183,7 +183,7 @@ namespace SciVacancies.ReadModel
             var result = new List<Position>();
             return result;
         }
-
+        [Obsolete("Метод будет удалён, использовать SelectVacancyApplicationsByVacancy(Guid vacancyGuid)")]
         public List<VacancyApplication> SelectApplicationsToVacancy(Guid vacancyGuid)
         {
             var result = new List<VacancyApplication>();

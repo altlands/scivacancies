@@ -19,107 +19,130 @@ namespace SciVacancies.ReadModel
 
         public Researcher SingleResearcher(Guid researcherGuid)
         {
-            var result = new Researcher();
-            return result;
+            Researcher researcher = _db.SingleById<Researcher>(researcherGuid);
+
+            return researcher;
         }
         public List<Researcher> SelectResearchers()
         {
-            var result = new List<Researcher>();
-            return result;
+            List<Researcher> researchers = _db.Fetch<Researcher>();
+
+            return researchers;
         }
 
         public VacancyApplication SingleVacancyApplication(Guid vacancyApplicationGuid)
         {
-            var result = new VacancyApplication();
-            return result;
+            VacancyApplication vacancyApplication = _db.SingleById<VacancyApplication>(vacancyApplicationGuid);
+
+            return vacancyApplication;
         }
         public List<VacancyApplication> SelectVacancyApplicationsByResearcher(Guid researcherGuid)
         {
-            var result = new List<VacancyApplication>();
-            return result;
+            List<VacancyApplication> vacancyApplications = _db.FetchBy<VacancyApplication>(f => f.Where(w => w.ResearcherGuid == researcherGuid));
+
+            return vacancyApplications;
         }
         public List<VacancyApplication> SelectVacancyApplicationsByVacancy(Guid vacancyGuid)
         {
-            var result = new List<VacancyApplication>();
-            return result;
+            List<VacancyApplication> vacancyApplication = _db.FetchBy<VacancyApplication>(f => f.Where(w => w.VacancyGuid == vacancyGuid));
+
+            return vacancyApplication;
         }
 
         public SearchSubscription SingleSearchSubscription(Guid searchSubscriptionGuid)
         {
-            var result = new SearchSubscription();
-            return result;
+            SearchSubscription searchSubscription = _db.SingleById<SearchSubscription>(searchSubscriptionGuid);
+
+            return searchSubscription;
         }
         public List<SearchSubscription> SelectSearchSubscriptions()
         {
-            var result = new List<SearchSubscription>();
-            return result;
+            List<SearchSubscription> searchSubscriptions = _db.Fetch<SearchSubscription>();
+
+            return searchSubscriptions;
         }
         public List<SearchSubscription> SelectSearchSubscriptions(Guid researcherGuid)
         {
-            var result = new List<SearchSubscription>();
-            return result;
+            List<SearchSubscription> searchSubscriptions = _db.FetchBy<SearchSubscription>(f => f.Where(w => w.ResearcherGuid == researcherGuid));
+
+            return searchSubscriptions;
         }
 
         public Attachment SingleAttachment(Guid attachmentGuid)
         {
-            var result = new Attachment();
-            return result;
+            Attachment attachment = _db.SingleById<Attachment>(attachmentGuid);
+
+            return attachment;
         }
         public List<Attachment> SelectAttachments(Guid vacancyApplicationGuid)
         {
-            var result = new List<Attachment>();
-            return result;
+            List<Attachment> attachments = _db.FetchBy<Attachment>(f => f.Where(w => w.VacancyApplicationGuid == vacancyApplicationGuid));
+
+            return attachments;
         }
 
         public Vacancy SingleVacancy(Guid vacancyGuid)
         {
-            var result = new Vacancy();
-            return result;
+            Vacancy vacancy = _db.SingleById<Vacancy>(vacancyGuid);
+
+            return vacancy;
         }
         public List<Vacancy> SelectVacancies(Guid organizationGuid)
         {
-            var result = new List<Vacancy>();
-            return result;
+            List<Vacancy> vacancies = _db.FetchBy<Vacancy>(f => f.Where(w => w.OrganizationGuid == organizationGuid));
+
+            return vacancies;
         }
         public List<Vacancy> SelectFavoriteVacancies(Guid researcherGuid)
         {
-            var result = new List<Vacancy>();
-            return result;
+            List<Guid> guids = _db.FetchBy<FavoriteVacancy>(f => f.Where(w => w.ResearcherGuid == researcherGuid)).Select(s => s.VacancyGuid).ToList();
+            List<Vacancy> vacancies = _db.FetchBy<Vacancy>(f => f.Where(w => guids.Contains(w.Guid)));
+
+            return vacancies;
         }
 
         public Notification SingleNotification(Guid notificationGuid)
         {
-            var result = new Notification();
-            return result;
+            Notification notification = _db.SingleById<Notification>(notificationGuid);
+
+            return notification;
         }
         public List<Notification> SelectNotificationsByResearcher(Guid researcherGuid)
         {
-            var result = new List<Notification>();
-            return result;
+            List<Notification> notifications = _db.FetchBy<Notification>(f => f.Where(w => w.ResearcherGuid == researcherGuid));
+
+            return notifications;
         }
         public List<Notification> SelectNotificationsByOrganization(Guid organizationGuid)
         {
-            var result = new List<Notification>();
-            return result;
+            List<Notification> notifications = _db.FetchBy<Notification>(f => f.Where(w => w.OrganizationGuid == organizationGuid));
+
+            return notifications;
         }
         public int CountNotificationsByResearcher(Guid researcherGuid)
         {
-            return 10;
+            int counter = _db.FetchBy<Notification>(f => f.Where(w => w.ResearcherGuid == researcherGuid)).Count();
+
+            return counter;
         }
         public int CountNotificationsByOrganization(Guid organizationGuid)
         {
-            return 121;
+            int counter = _db.FetchBy<Notification>(f => f.Where(w => w.OrganizationGuid == organizationGuid)).Count();
+
+            return counter;
         }
 
-        public Organization SingleOrganization(Guid orgnizationGuid)
+        public Organization SingleOrganization(Guid organizationGuid)
         {
-            var result = new Organization();
-            return result;
+            Organization organization = _db.SingleById<Organization>(organizationGuid);
+
+            return organization;
         }
         public List<Organization> SelectOrganizations()
         {
-            var result = new List<Organization>();
-            return result;
+            List<Organization> organizations = _db.Fetch<Organization>();
+
+            return organizations;
         }
         public Page<Organization> SelectOrganizations(string orderBy, long pageSize, long pageIndex, string nameFilterValue,
             string addressFilterValue)
@@ -139,19 +162,22 @@ namespace SciVacancies.ReadModel
 
         public Position SinglePosition(Guid positionGuid)
         {
-            var result = new Position();
-            return result;
+            Position position = _db.SingleById<Position>(positionGuid);
+
+            return position;
         }
         public List<Position> SelectPositions(Guid organizationGuid)
         {
-            var result = new List<Position>();
-            return result;
-        }
+            List<Position> positions = _db.FetchBy<Position>(f => f.Where(w => w.OrganizationGuid == organizationGuid));
 
+            return positions;
+        }
+        [Obsolete("Метод будет удалён, использовать SelectVacancyApplicationsByVacancy(Guid vacancyGuid)")]
         public List<VacancyApplication> SelectApplicationsToVacancy(Guid vacancyGuid)
         {
-            var result = new List<VacancyApplication>();
-            return result;
+            List<VacancyApplication> vacancyApplication = _db.FetchBy<VacancyApplication>(f => f.Where(w => w.VacancyGuid == vacancyGuid));
+
+            return vacancyApplication;
         }
 
         public List<Activity> SelectActivities(Guid organizationGuid)

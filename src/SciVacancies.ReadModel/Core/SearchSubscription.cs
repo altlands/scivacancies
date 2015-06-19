@@ -13,6 +13,8 @@ namespace SciVacancies.ReadModel.Core
     [PrimaryKey("Guid", AutoIncrement = false)]
     public class SearchSubscription : BaseEntity
     {
+        public Guid ResearcherGuid { get; set; }
+
         public SearchSubscriptionStatus Status { get; set; }
 
         public DateTime CreationdDate { get; set; }
