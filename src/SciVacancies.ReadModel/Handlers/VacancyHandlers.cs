@@ -16,11 +16,42 @@ namespace SciVacancies.ReadModel.Handlers
         public VacancyPublishedHandler(IDatabase db) : base(db) { }
         public override void Handle(VacancyPublished msg)
         {
+            Position position = _db.SingleById<Position>(msg.PositionGuid);
+            position.Status = PositionStatus.Published;
+
+            _db.Update(position);
+
             Vacancy vacancy = new Vacancy()
             {
-                
+                OrganizationGuid = msg.OrganizationGuid,
+                Name = msg.Data.Name,
+                FullName = msg.Data.FullName,
+                FieldOfScience = msg.Data.FieldOfScience,
+                ResearchTheme = msg.Data.ResearchTheme,
+                Tasks = msg.Data.Tasks,
+                Criteria = msg.Data.Criteria,
+                SalaryFrom = msg.Data.SalaryFrom,
+                SalaryTo = msg.Data.SalaryTo,
+                Bonuses = msg.Data.Bonuses,
+                ContractType = msg.Data.ContractType,
+                ContractTime = msg.Data.ContractTime,
+                SocialPackage = msg.Data.SocialPackage,
+                Rent = msg.Data.Rent,
+                OfficeAccomodation = msg.Data.OfficeAccomodation,
+                TransportCompensation = msg.Data.TransportCompensation,
+                Region = msg.Data.Region,
+                RegionId = msg.Data.RegionId,
+                CityName = msg.Data.CityName,
+                Details = msg.Data.Details,
+                ContactName = msg.Data.ContactName,
+                ContactEmail = msg.Data.ContactEmail,
+                ContactPhone = msg.Data.ContactPhone,
+                ContactDetails = msg.Data.ContactDetails,
+                DateStart = msg.Data.DateStart,
+                DateStartResearcher = msg.Data.DateStartResearcher,
+                DateFinish = msg.Data.DateFinish
             };
-            //TODO
+
             _db.Insert(vacancy);
         }
     }
@@ -30,7 +61,7 @@ namespace SciVacancies.ReadModel.Handlers
         public override void Handle(VacancyAcceptApplications msg)
         {
             Vacancy vacancy = _db.SingleById<Vacancy>(msg.VacancyGuid);
-            //TODO
+            vacancy.Status = VacancyStatus.AppliesAcceptance;
             _db.Update(vacancy);
         }
     }
@@ -40,7 +71,8 @@ namespace SciVacancies.ReadModel.Handlers
         public override void Handle(VacancyInCommittee msg)
         {
             Vacancy vacancy = _db.SingleById<Vacancy>(msg.VacancyGuid);
-            //TODO
+            vacancy.Status = VacancyStatus.InCommittee;
+
             _db.Update(vacancy);
         }
     }
@@ -50,7 +82,8 @@ namespace SciVacancies.ReadModel.Handlers
         public override void Handle(VacancyClosed msg)
         {
             Vacancy vacancy = _db.SingleById<Vacancy>(msg.VacancyGuid);
-            //TODO
+            vacancy.Status = VacancyStatus.Closed;
+
             _db.Update(vacancy);
         }
     }
@@ -60,7 +93,8 @@ namespace SciVacancies.ReadModel.Handlers
         public override void Handle(VacancyCancelled msg)
         {
             Vacancy vacancy = _db.SingleById<Vacancy>(msg.VacancyGuid);
-            //TODO
+            vacancy.Status = VacancyStatus.Cancelled;
+
             _db.Update(vacancy);
         }
     }
@@ -70,6 +104,11 @@ namespace SciVacancies.ReadModel.Handlers
         public VacancyAddedToFavoritesHandler(IDatabase db) : base(db) { }
         public override void Handle(VacancyAddedToFavorites msg)
         {
+            Vacancy vacancy = _db.SingleById<Vacancy>(msg.VacancyGuid);
+            vacancy.FollowersCounter++;
+
+            _db.Update(vacancy);
+
             FavoriteVacancy favoriteVacancy = new FavoriteVacancy()
             {
                 VacancyGuid = msg.VacancyGuid,
@@ -84,6 +123,11 @@ namespace SciVacancies.ReadModel.Handlers
         public VacancyRemovedFromFavoritesHandler(IDatabase db) : base(db) { }
         public override void Handle(VacancyRemovedFromFavorites msg)
         {
+            Vacancy vacancy = _db.SingleById<Vacancy>(msg.VacancyGuid);
+            vacancy.FollowersCounter--;
+
+            _db.Update(vacancy);
+
             FavoriteVacancy favoriteVacancy = _db.FetchBy<FavoriteVacancy>(sql => sql.Where(x => x.VacancyGuid == msg.VacancyGuid && x.ResearcherGuid == msg.ResearcherGuid)).FirstOrDefault();
             _db.Delete(favoriteVacancy);
         }

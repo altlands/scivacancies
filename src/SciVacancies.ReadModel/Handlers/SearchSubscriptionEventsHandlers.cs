@@ -18,6 +18,9 @@ namespace SciVacancies.ReadModel.Handlers
         {
             SearchSubscription searchSubscription = new SearchSubscription()
             {
+                Guid=msg.SearchSubscriptionGuid,
+                ResearcherGuid=msg.ResearcherGuid,
+                CreationdDate=msg.TimeStamp,
                 Status = SearchSubscriptionStatus.Active
             };
 
@@ -30,7 +33,8 @@ namespace SciVacancies.ReadModel.Handlers
         public override void Handle(SearchSubscriptionActivated msg)
         {
             SearchSubscription searchSubscription = _db.SingleById<SearchSubscription>(msg.SearchSubscriptionGuid);
-
+            
+            searchSubscription.UpdateDate = msg.TimeStamp;
             searchSubscription.Status = SearchSubscriptionStatus.Active;
 
             _db.Update(searchSubscription);
@@ -43,6 +47,7 @@ namespace SciVacancies.ReadModel.Handlers
         {
             SearchSubscription searchSubscription = _db.SingleById<SearchSubscription>(msg.SearchSubscriptionGuid);
 
+            searchSubscription.UpdateDate = msg.TimeStamp;
             searchSubscription.Status = SearchSubscriptionStatus.Cancelled;
 
             _db.Update(searchSubscription);

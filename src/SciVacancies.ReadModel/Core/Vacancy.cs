@@ -134,5 +134,8 @@ namespace SciVacancies.ReadModel.Core
         /// Дата окончания публикации
         /// </summary>
         public DateTime DateFinish { get; set; }
+
+        public VacancyStatus Status { get; set; }
+        public int FollowersCounter { get; set; }
     }
 }

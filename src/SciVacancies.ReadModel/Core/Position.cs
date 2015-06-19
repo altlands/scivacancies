@@ -17,6 +17,11 @@ namespace SciVacancies.ReadModel.Core
         /// Идентификатор организации
         /// </summary>
         public Guid OrganizationGuid { get; set; }
+
+        /// <summary>
+        /// Guid должности из справочника
+        /// </summary>
+        public Guid PositionTypeGuid { get; set; }
         /// <summary>
         /// Должность
         /// </summary>
@@ -119,5 +124,7 @@ namespace SciVacancies.ReadModel.Core
 
         public DateTime CreationdDate { get; set; }
         public DateTime? UpdateDate { get; set; }
+
+        public PositionStatus Status { get; set; }
     }
 }
