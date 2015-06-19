@@ -178,6 +178,19 @@ namespace SciVacancies.ReadModel
             return vacancyApplication;
         }
 
+        public List<PositionType> SelectPositionTypes()
+        {
+            List<PositionType> positionTypes = _db.Fetch<PositionType>();
+
+            return positionTypes;
+        }
+        public List<PositionType> SelectPositionTypes(string query)
+        {
+            List<PositionType> positionTypes = _db.FetchBy<PositionType>(f => f.Where(w => w.Title.Contains(query)));
+
+            return positionTypes;
+        }
+
         public List<Activity> SelectActivities()
         {
             List<Activity> activities = _db.Fetch<Activity>();

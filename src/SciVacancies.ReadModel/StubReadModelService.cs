@@ -212,6 +212,51 @@ namespace SciVacancies.ReadModel
             return result;
         }
 
+        public List<PositionType> SelectPositionTypes()
+        {
+            var result = new List<PositionType>
+            {
+                new PositionType()
+                {
+                    Guid=Guid.NewGuid(),
+                    Id=1,
+                    Title="Младший научный сотрудник"
+                },
+                new PositionType()
+                {
+                    Guid=Guid.NewGuid(),
+                    Id=2,
+                    Title="Научный сотрудник"
+                },
+                new PositionType()
+                {
+                    Guid=Guid.NewGuid(),
+                    Id=3,
+                    Title="Старший научный сотрудник"
+                },
+                new PositionType()
+                {
+                    Guid=Guid.NewGuid(),
+                    Id=4,
+                    Title="Професор зло"
+                },
+                new PositionType()
+                {
+                    Guid=Guid.NewGuid(),
+                    Id=5,
+                    Title="Заведующий лабораторей ужаса"
+                }
+            };
+
+            return result;
+        }
+        public List<PositionType> SelectPositionTypes(string query)
+        {
+            var result = SelectPositionTypes();
+
+            return result;
+        }
+
         public List<Activity> SelectActivities()
         {
             var result = new List<Activity>() {

@@ -3,8 +3,12 @@
     "SiteTitle": "Портал вакансий"
   },
   "Data": {
+    //"ReadModelDb": {
+    //  "ConnectionString": "Server=localhost; Database=VPortalRM; User Id=postgres; Password=1234;",
+    //  "ProviderName": "Npgsql"
+    //},
     "ReadModelDb": {
-      "ConnectionString": "Server=localhost; Database=VPortalRM; User Id=postgres; Password=1234;",
+      "ConnectionString": "Server=altlandev05.cloudapp.net; Database=scivacancies; User Id=dev; Password=1234;",
       "ProviderName": "Npgsql"
     },
     //"EventStoreDb": {

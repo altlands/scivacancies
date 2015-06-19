@@ -18,7 +18,12 @@ namespace SciVacancies.ReadModel.Handlers
         {
             Position position = new Position()
             {
+                Guid = msg.PositionGuid,
+                OrganizationGuid = msg.OrganizationGuid,
+                Name = msg.Data.Name,
+                FullName = msg.Data.FullName,
 
+                CreationdDate = msg.TimeStamp
             };
 
             _db.Insert(position);
