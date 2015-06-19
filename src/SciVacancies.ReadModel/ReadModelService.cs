@@ -144,20 +144,18 @@ namespace SciVacancies.ReadModel
 
             return organizations;
         }
-        public Page<Organization> SelectOrganizations(string orderBy, long pageSize, long pageIndex, string nameFilterValue,
-            string addressFilterValue)
+        public Page<Organization> SelectOrganizations(string orderBy, long pageSize, long pageIndex, string nameFilterValue, string addressFilterValue)
         {
-            if (pageSize < 1)
-                throw new Exception($"PageSize too small: {pageSize}");
-            if (pageIndex < 1)
-                throw new Exception($"PageIndex too small: {pageIndex}");
+            //TODO - Complete this method by filter and proper ordering
+            if (pageSize < 1) throw new Exception($"PageSize too small: {pageSize}");
+            if (pageIndex < 1) throw new Exception($"PageIndex too small: {pageIndex}");
 
             if (string.IsNullOrWhiteSpace(orderBy))
                 orderBy = "Guid_descending";
 
-            var result = _db.Page<Organization>(pageIndex, pageSize, new Sql());
+            Page<Organization> organizations = _db.Page<Organization>(pageIndex, pageSize, new Sql("SELECT o.* FROM Organizations o ORDER BY o.Guid DESC"));
 
-            return result;
+            return organizations;
         }
 
         public Position SinglePosition(Guid positionGuid)
@@ -180,40 +178,95 @@ namespace SciVacancies.ReadModel
             return vacancyApplication;
         }
 
-        public List<Activity> SelectActivities(Guid organizationGuid)
+        public List<Activity> SelectActivities()
         {
-            var result = new List<Activity>();
-            return result;
-        }
+            List<Activity> activities = _db.Fetch<Activity>();
 
-        public List<Foiv> SelectFoivs(Guid organizationGuid)
-        {
-            var result = new List<Foiv>();
-            return result;
+            return activities;
         }
-
-        public List<Criteria> SelectCriterias(Guid organizationGuid)
+        public List<Activity> SelectActivities(string query)
         {
-            var result = new List<Criteria>();
-            return result;
+            List<Activity> activities = _db.FetchBy<Activity>(f => f.Where(w => w.Title.Contains(query)));
+
+            return activities;
         }
-
-        public List<OrgForm> SelectOrgForms(Guid organizationGuid)
+        public List<Foiv> SelectFoivs()
         {
-            var result = new List<OrgForm>();
-            return result;
+            List<Foiv> foivs = _db.Fetch<Foiv>();
+
+            return foivs;
         }
-
-        public List<Region> SelectRegions(Guid organizationGuid)
+        public List<Foiv> SelectFoivs(string query)
         {
-            var result = new List<Region>();
-            return result;
+            List<Foiv> foivs = _db.FetchBy<Foiv>(f => f.Where(w => w.Title.Contains(query)));
+
+            return foivs;
         }
-
-        public List<ResearchDirection> SelectResearchDirections(Guid organizationGuid)
+        public List<Foiv> SelectFoivs(int parentId)
         {
-            var result = new List<ResearchDirection>();
-            return result;
+            List<Foiv> foivs = _db.FetchBy<Foiv>(f => f.Where(w => w.ParentId == parentId));
+
+            return foivs;
+        }
+        public List<Criteria> SelectCriterias()
+        {
+            List<Criteria> criterias = _db.Fetch<Criteria>();
+
+            return criterias;
+        }
+        public List<Criteria> SelectCriterias(string query)
+        {
+            List<Criteria> criterias = _db.FetchBy<Criteria>(f => f.Where(w => w.Title.Contains(query)));
+
+            return criterias;
+        }
+        public List<Criteria> SelectCriterias(int parentId)
+        {
+            List<Criteria> criterias = _db.FetchBy<Criteria>(f => f.Where(w => w.ParentId == parentId));
+
+            return criterias;
+        }
+        public List<OrgForm> SelectOrgForms()
+        {
+            List<OrgForm> orgForms = _db.Fetch<OrgForm>();
+
+            return orgForms;
+        }
+        public List<OrgForm> SelectOrgForms(string query)
+        {
+            List<OrgForm> orgForms = _db.FetchBy<OrgForm>(f => f.Where(w => w.Title.Contains(query)));
+
+            return orgForms;
+        }
+        public List<Region> SelectRegions()
+        {
+            List<Region> regions = _db.Fetch<Region>();
+
+            return regions;
+        }
+        public List<Region> SelectRegions(string query)
+        {
+            List<Region> regions = _db.FetchBy<Region>(f => f.Where(w => w.Title.Contains(query)));
+
+            return regions;
+        }
+        public List<ResearchDirection> SelectResearchDirections()
+        {
+            List<ResearchDirection> researchDirections = _db.Fetch<ResearchDirection>();
+
+            return researchDirections;
+        }
+        public List<ResearchDirection> SelectResearchDirections(string query)
+        {
+            List<ResearchDirection> researchDirections = _db.FetchBy<ResearchDirection>(f => f.Where(w => w.Title.Contains(query)));
+
+            return researchDirections;
+        }
+        public List<ResearchDirection> SelectResearchDirections(int parentId)
+        {
+            List<ResearchDirection> researchDirections = _db.FetchBy<ResearchDirection>(f => f.Where(w => w.ParentId == parentId));
+
+            return researchDirections;
         }
     }
 }

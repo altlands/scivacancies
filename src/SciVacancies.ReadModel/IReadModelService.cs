@@ -37,7 +37,7 @@ namespace SciVacancies.ReadModel
         Organization SingleOrganization(Guid organizationGuid);
         List<Organization> SelectOrganizations();
         /// <summary>
-        /// получить список организаций по условия
+        /// Получить список организаций по условиям
         /// </summary>
         /// <param name="orderBy">поле для сортировки</param>
         /// <param name="pageSize">размер страницы</param>
@@ -50,11 +50,20 @@ namespace SciVacancies.ReadModel
         Position SinglePosition(Guid positionGuid);
         List<Position> SelectPositions(Guid organizationGuid);
 
-        List<Activity> SelectActivities(Guid organizationGuid);
-        List<Foiv> SelectFoivs(Guid organizationGuid);
-        List<Criteria> SelectCriterias(Guid organizationGuid);
-        List<OrgForm> SelectOrgForms(Guid organizationGuid);
-        List<Region> SelectRegions(Guid organizationGuid);
-        List<ResearchDirection> SelectResearchDirections(Guid organizationGuid);
+        List<Activity> SelectActivities();
+        List<Activity> SelectActivities(string query);
+        List<Foiv> SelectFoivs();
+        List<Foiv> SelectFoivs(string query);
+        List<Foiv> SelectFoivs(int parentId);
+        List<Criteria> SelectCriterias();
+        List<Criteria> SelectCriterias(string query);
+        List<Criteria> SelectCriterias(int parentId);
+        List<OrgForm> SelectOrgForms();
+        List<OrgForm> SelectOrgForms(string query);
+        List<Region> SelectRegions();
+        List<Region> SelectRegions(string query);
+        List<ResearchDirection> SelectResearchDirections();
+        List<ResearchDirection> SelectResearchDirections(string query);
+        List<ResearchDirection> SelectResearchDirections(int parentId);
     }
 }

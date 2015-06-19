@@ -13,86 +13,102 @@ namespace SciVacancies.ReadModel
         public Researcher SingleResearcher(Guid researcherGuid)
         {
             var result = new Researcher();
+
             return result;
         }
         public List<Researcher> SelectResearchers()
         {
             var result = new List<Researcher>();
+
             return result;
         }
 
         public VacancyApplication SingleVacancyApplication(Guid vacancyApplicationGuid)
         {
             var result = new VacancyApplication();
+
             return result;
         }
         public List<VacancyApplication> SelectVacancyApplicationsByResearcher(Guid researcherGuid)
         {
             var result = new List<VacancyApplication>();
+
             return result;
         }
         public List<VacancyApplication> SelectVacancyApplicationsByVacancy(Guid vacancyGuid)
         {
             var result = new List<VacancyApplication>();
+
             return result;
         }
 
         public SearchSubscription SingleSearchSubscription(Guid searchSubscriptionGuid)
         {
             var result = new SearchSubscription();
+
             return result;
         }
         public List<SearchSubscription> SelectSearchSubscriptions()
         {
             var result = new List<SearchSubscription>();
+
             return result;
         }
         public List<SearchSubscription> SelectSearchSubscriptions(Guid researcherGuid)
         {
             var result = new List<SearchSubscription>();
+
             return result;
         }
 
         public Attachment SingleAttachment(Guid attachmentGuid)
         {
             var result = new Attachment();
+
             return result;
         }
         public List<Attachment> SelectAttachments(Guid vacancyApplicationGuid)
         {
             var result = new List<Attachment>();
+
             return result;
         }
 
         public Vacancy SingleVacancy(Guid vacancyGuid)
         {
             var result = new Vacancy();
+
             return result;
         }
         public List<Vacancy> SelectVacancies(Guid organizationGuid)
         {
             var result = new List<Vacancy>();
+
             return result;
         }
         public List<Vacancy> SelectFavoriteVacancies(Guid researcherGuid)
         {
             var result = new List<Vacancy>();
+
             return result;
         }
 
         public Notification SingleNotification(Guid notificationGuid)
         {
             var result = new Notification();
+
             return result;
         }
         public List<Notification> SelectNotificationsByResearcher(Guid researcherGuid)
         {
             var result = new List<Notification>();
+
             return result;
         }
         public List<Notification> SelectNotificationsByOrganization(Guid organizationGuid)
         {
             var result = new List<Notification>();
+
             return result;
         }
         public int CountNotificationsByResearcher(Guid researcherGuid)
@@ -107,11 +123,13 @@ namespace SciVacancies.ReadModel
         public Organization SingleOrganization(Guid orgnizationGuid)
         {
             var result = new Organization();
+
             return result;
         }
         public List<Organization> SelectOrganizations()
         {
             var result = new List<Organization>();
+
             return result;
         }
 
@@ -170,27 +188,31 @@ namespace SciVacancies.ReadModel
                 TotalItems = data.Count,
                 TotalPages = data.Count / pageSize + ((data.Count % pageSize) > 0 ? 1 : 0)
             };
+
             return result;
         }
 
         public Position SinglePosition(Guid positionGuid)
         {
             var result = new Position();
+
             return result;
         }
         public List<Position> SelectPositions(Guid organizationGuid)
         {
             var result = new List<Position>();
+
             return result;
         }
         [Obsolete("Метод будет удалён, использовать SelectVacancyApplicationsByVacancy(Guid vacancyGuid)")]
         public List<VacancyApplication> SelectApplicationsToVacancy(Guid vacancyGuid)
         {
             var result = new List<VacancyApplication>();
+
             return result;
         }
 
-        public List<Activity> SelectActivities(Guid organizationGuid)
+        public List<Activity> SelectActivities()
         {
             var result = new List<Activity>() {
                 new Activity()
@@ -206,10 +228,17 @@ namespace SciVacancies.ReadModel
                     Title="Федеральные университеты"
                 }
             };
+
+            return result;
+        }
+        public List<Activity> SelectActivities(string query)
+        {
+            var result = SelectActivities();
+
             return result;
         }
 
-        public List<Foiv> SelectFoivs(Guid organizationGuid)
+        public List<Foiv> SelectFoivs()
         {
             var result = new List<Foiv>()
             {
@@ -246,10 +275,23 @@ namespace SciVacancies.ReadModel
                     Title ="Федеральное агентство по туризму"
                 }
             };
+
+            return result;
+        }
+        public List<Foiv> SelectFoivs(string query)
+        {
+            var result = SelectFoivs();
+
+            return result;
+        }
+        public List<Foiv> SelectFoivs(int parentId)
+        {
+            var result = SelectFoivs();
+
             return result;
         }
 
-        public List<Criteria> SelectCriterias(Guid organizationGuid)
+        public List<Criteria> SelectCriterias()
         {
             var result = new List<Criteria>() {
                 new Criteria()
@@ -270,10 +312,23 @@ namespace SciVacancies.ReadModel
                     Title="Российский индекс научного цитирования"
                 }
             };
+
+            return result;
+        }
+        public List<Criteria> SelectCriterias(string query)
+        {
+            var result = SelectCriterias();
+
+            return result;
+        }
+        public List<Criteria> SelectCriterias(int parentId)
+        {
+            var result = SelectCriterias();
+
             return result;
         }
 
-        public List<OrgForm> SelectOrgForms(Guid organizationGuid)
+        public List<OrgForm> SelectOrgForms()
         {
             var result = new List<OrgForm>() {
                 new OrgForm()
@@ -290,10 +345,17 @@ namespace SciVacancies.ReadModel
                     Title="Автономная некоммерческая организация"
                 }
             };
+
+            return result;
+        }
+        public List<OrgForm> SelectOrgForms(string query)
+        {
+            var result = SelectOrgForms();
+
             return result;
         }
 
-        public List<Region> SelectRegions(Guid organizationGuid)
+        public List<Region> SelectRegions()
         {
             var result = new List<Region>() {
 
@@ -325,8 +387,14 @@ namespace SciVacancies.ReadModel
 
             return result;
         }
+        public List<Region> SelectRegions(string query)
+        {
+            var result = SelectRegions();
 
-        public List<ResearchDirection> SelectResearchDirections(Guid organizationGuid)
+            return result;
+        }
+
+        public List<ResearchDirection> SelectResearchDirections()
         {
             var result = new List<ResearchDirection>()
             {
@@ -366,6 +434,19 @@ namespace SciVacancies.ReadModel
                     Lvl=3
                 }
             };
+
+            return result;
+        }
+        public List<ResearchDirection> SelectResearchDirections(string query)
+        {
+            var result = SelectResearchDirections();
+
+            return result;
+        }
+        public List<ResearchDirection> SelectResearchDirections(int parentId)
+        {
+            var result = SelectResearchDirections();
+
             return result;
         }
     }
