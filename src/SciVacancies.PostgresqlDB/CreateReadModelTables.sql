@@ -3,80 +3,91 @@
 
 CREATE TABLE "Activities"
 (
-"Guid" uuid NOT NULL,
-"Id" integer NOT NULL,
-"Title" text,
-CONSTRAINT "PrimaryKey" PRIMARY KEY ("Guid")
-)
+  "Guid" uuid NOT NULL DEFAULT uuid_in((md5(((random())::text || (now())::text)))::cstring),
+  "Title" text,
+  "Id" integer,
+  CONSTRAINT "Activity_pkey" PRIMARY KEY ("Guid")
+);
+
 CREATE TABLE "Criterias"
 (
-"Guid" uuid NOT NULL,
-"Parentid" integer NOT NULL,
-"Title" text,
-"Code" text,
-CONSTRAINT "PrimaryKey" PRIMARY KEY ("Guid")
-)
+  "Guid" uuid NOT NULL DEFAULT uuid_in((md5(((random())::text || (now())::text)))::cstring),
+  "ParentId" integer,
+  "Id" integer,
+  "Title" text,
+  "Code" text,
+  CONSTRAINT "Criteria_pkey" PRIMARY KEY ("Guid")
+);
 CREATE TABLE "Foivs"
 (
-"Guid" uuid NOT NULL,
-"Id" integer NOT NULL,
-"Parentid" integer,
-"Title" text,
-"Code" text,
-CONSTRAINT "PrimaryKey" PRIMARY KEY ("Guid")
-)
+  "Guid" uuid NOT NULL DEFAULT uuid_in((md5(((random())::text || (now())::text)))::cstring),
+  "Id" integer,
+  "ParentId" integer,
+  "Title" text,
+  "ShortTitle" text,
+  CONSTRAINT "Foiv_pkey" PRIMARY KEY ("Guid")
+);
 CREATE TABLE "OrgForms"
 (
-"Guid" uuid NOT NULL,
-"Id" integer NOT NULL,
-"Title" text,
-CONSTRAINT "PrimaryKey" PRIMARY KEY ("Guid")
-)
+  "Guid" uuid NOT NULL DEFAULT uuid_in((md5(((random())::text || (now())::text)))::cstring),
+  "Id" integer,
+  "Title" text,
+  CONSTRAINT "OrgForm_pkey" PRIMARY KEY ("Guid")
+);
+CREATE TABLE "PositionTypes"
+(
+  "Guid" uuid NOT NULL DEFAULT uuid_in((md5(((random())::text || (now())::text)))::cstring),
+  "Id" integer,
+  "Title" text,
+  CONSTRAINT "PositionType_pkey" PRIMARY KEY ("Guid")
+);
 CREATE TABLE "Regions"
 (
-"Guid" uuid NOT NULL,
-"Id" integer NOT NULL,
-"FedDistrictId" integer NOT NULL,
-"Title" text,
-"OsmId" integer,
-"Okato" text,
-"Slug" text,
-"Code" integer
-CONSTRAINT "PrimaryKey" PRIMARY KEY ("Guid")
-)
+  "Guid" uuid NOT NULL DEFAULT uuid_in((md5(((random())::text || (now())::text)))::cstring),
+  "Id" integer,
+  "FedDistrictId" integer,
+  "Title" text,
+  "OsmId" integer,
+  "Okato" text,
+  "Slug" text,
+  "Code" integer,
+  CONSTRAINT "Region_pkey" PRIMARY KEY ("Guid")
+);
 CREATE TABLE "ResearchDirections"
 (
-"Guid" uuid NOT NULL,
-"Id" integer NOT NULL,
-"ParentId" integer,
-"Title" text,
-"TitleEng" text,
-"Lft" integer,
-"Rgt" integer,
-"Lvl" integer,
-"OecdCode" text,
-"WosCode" text
-CONSTRAINT "PrimaryKey" PRIMARY KEY ("Guid")
-)
+  "Guid" uuid NOT NULL DEFAULT uuid_in((md5(((random())::text || (now())::text)))::cstring),
+  "Id" integer,
+  "ParentId" integer,
+  "Title" text,
+  "TitleEng" text,
+  "Lft" integer,
+  "Rgt" integer,
+  "Lvl" integer,
+  "OecdCode" text,
+  "WosCode" text,
+  "Root" integer,
+  CONSTRAINT "ResearchDirection_pkey" PRIMARY KEY ("Guid")
+);
 
 --CORE
 
 CREATE TABLE "Attachments"
 (
-"Guid" uuid NOT NULL
+"Guid" uuid NOT NULL,
 
-CONSTRAINT "PrimaryKey" PRIMARY KEY ("Guid")
-)
+CONSTRAINT "Attachment_pkey" PRIMARY KEY ("Guid")
+);
+
 CREATE TABLE "FavoriteVacancies"
 (
 "VacancyGuid" uuid NOT NULL,
 "ResearcherGuid" uuid NOT NULL
-)
+);
 CREATE TABLE "Notifications"
 (
 "Guid" uuid NOT NULL,
-CONSTRAINT "PrimaryKey" PRIMARY KEY ("Guid")
-)
+CONSTRAINT "Notification_pkey" PRIMARY KEY ("Guid")
+);
 CREATE TABLE "Organizations"
 (
 "Guid" uuid NOT NULL,
@@ -100,32 +111,32 @@ CREATE TABLE "Organizations"
 "HeadFirstName" text,
 "HeadLastName" text,
 "HeadPatronymic" text,
-CONSTRAINT "PrimaryKey" PRIMARY KEY ("Guid")
-)
+CONSTRAINT "Organization_pkey" PRIMARY KEY ("Guid")
+);
 CREATE TABLE "Positions"
 (
 
 "Guid" uuid NOT NULL,
 "Name" text,
 "FullName" text,
-"FieldOfScience" text,
-"FieldOfScienceId" integer,
+"ResearchDirection" text,
+"ResearchDirectionId" integer,
 "ResearchTheme" text,
-"ResearchThemeId" integer,
 "Tasks" text,
 "SalaryFrom" integer,
 "SalaryTo" integer,
 "Bonuses" text,
 "ContractType" integer,
-"ContractTime" 
-"SocialPackage" 
-"Rent"
-"OfficeAccomodation"
-"TransportCompensation"
-"RegionId"
-"CityName"
-"Details"
+"ContractTime" integer,
+"SocialPackage" bit,
+"Rent" bit,
+"OfficeAccomodation" bit,
+"TransportCompensation" bit,
+"RegionId" integer,
+"CityName" text,
+"Details" text,
 
-)
+CONSTRAINT "Position_pkey" PRIMARY KEY ("Guid")
+);
 
 

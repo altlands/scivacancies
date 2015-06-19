@@ -9,10 +9,11 @@ using NPoco;
 
 namespace SciVacancies.ReadModel.Core
 {
-    [TableName("Criteria")]
+    [TableName("Criterias")]
     [PrimaryKey("Guid", AutoIncrement = false)]
     public class Criteria : BaseEntity
     {
+        public int Id { get; set; }
         public int ParentId { get; set; }
         public string Title { get; set; }
         public string Code { get; set; }

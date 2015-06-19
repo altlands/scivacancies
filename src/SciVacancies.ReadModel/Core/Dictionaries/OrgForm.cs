@@ -9,7 +9,7 @@ using NPoco;
 
 namespace SciVacancies.ReadModel.Core
 {
-    [TableName("OrgForm")]
+    [TableName("OrgForms")]
     [PrimaryKey("Guid", AutoIncrement = false)]
     public class OrgForm : BaseEntity
     {
