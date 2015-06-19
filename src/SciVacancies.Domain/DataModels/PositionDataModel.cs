@@ -8,7 +8,10 @@ namespace SciVacancies.Domain.DataModels
 {
     public class PositionDataModel
     {
-
+        /// <summary>
+        /// Guid должности из справочника
+        /// </summary>
+        public Guid PositionTypeGuid { get; set; }
         /// <summary>
         /// Должность
         /// </summary>

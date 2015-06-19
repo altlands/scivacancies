@@ -20,6 +20,8 @@ namespace SciVacancies.ReadModel.Handlers
             {
                 Guid = msg.PositionGuid,
                 OrganizationGuid = msg.OrganizationGuid,
+                PositionTypeGuid=msg.Data.PositionTypeGuid,
+
                 Name = msg.Data.Name,
                 FullName = msg.Data.FullName,
 
@@ -35,7 +37,8 @@ namespace SciVacancies.ReadModel.Handlers
         public override void Handle(PositionUpdated msg)
         {
             Position position = _db.SingleById<Position>(msg.PositionGuid);
-            //TODO
+            
+            //position.
 
             _db.Update(position);
         }
