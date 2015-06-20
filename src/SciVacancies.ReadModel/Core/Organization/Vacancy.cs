@@ -52,6 +52,7 @@ namespace SciVacancies.ReadModel.Core
         /// <summary>
         /// Критерии оценки 
         /// </summary>
+        [Ignore]
         public KeyValuePair<int, int> Criteria { get; set; } //<CriteriaId, Amount>
 
         /// <summary>
@@ -146,6 +147,6 @@ namespace SciVacancies.ReadModel.Core
         /// </summary>
         public DateTime DateFinish { get; set; }
 
-        public DateTime CreationdDate { get; set; }
+        public DateTime CreationDate { get; set; }
     }
 }

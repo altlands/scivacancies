@@ -23,6 +23,8 @@ namespace SciVacancies.ReadModel.Handlers
 
             Vacancy vacancy = new Vacancy()
             {
+                Guid=msg.VacancyGuid,
+                PositionGuid=msg.PositionGuid,
                 OrganizationGuid = msg.OrganizationGuid,
                 Name = msg.Data.Name,
                 FullName = msg.Data.FullName,

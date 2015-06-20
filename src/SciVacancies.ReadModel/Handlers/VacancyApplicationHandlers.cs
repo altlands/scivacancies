@@ -21,7 +21,7 @@ namespace SciVacancies.ReadModel.Handlers
                 Guid = msg.VacancyApplicationGuid,
                 VacancyGuid = msg.VacancyGuid,
                 ResearcherGuid = msg.ResearcherGuid,
-                CreationdDate = msg.TimeStamp,
+                CreationDate = msg.TimeStamp,
                 Status = VacancyApplicationStatus.InProcess
             };
 

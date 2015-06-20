@@ -20,7 +20,7 @@ namespace SciVacancies.ReadModel.Handlers
             {
                 Guid=msg.SearchSubscriptionGuid,
                 ResearcherGuid=msg.ResearcherGuid,
-                CreationdDate=msg.TimeStamp,
+                CreationDate=msg.TimeStamp,
                 Status = SearchSubscriptionStatus.Active
             };
 

@@ -21,10 +21,13 @@ namespace SciVacancies.Domain.Aggregates
 
         public Organization()
         {
-
+            Positions = new List<Position>();
+            Vacancies = new List<Vacancy>();
         }
         public Organization(Guid guid, OrganizationDataModel data)
         {
+            Positions = new List<Position>();
+            Vacancies = new List<Vacancy>();
             RaiseEvent(new OrganizationCreated()
             {
                 OrganizationGuid = guid,

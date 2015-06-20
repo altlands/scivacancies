@@ -23,8 +23,8 @@ namespace SciVacancies.WebApp.Infrastructure
 
         protected override void Load(ContainerBuilder builder)
         {
-            builder.RegisterType<StubReadModelService>().As<IReadModelService>().SingleInstance();
-            //builder.RegisterType<ReadModelService>().As<IReadModelService>().SingleInstance();
+            //builder.RegisterType<StubReadModelService>().As<IReadModelService>().SingleInstance();
+            builder.RegisterType<ReadModelService>().As<IReadModelService>().SingleInstance();
 
             builder.Register(c => new Database(Config.Get("Data:ReadModelDb:ConnectionString"), NpgsqlFactory.Instance))
             .As<IDatabase>()

@@ -34,6 +34,6 @@ namespace SciVacancies.ReadModel.Core
         /// <summary>
         /// Дата создания
         /// </summary>
-        public DateTime CreationdDate { get; set; }
+        public DateTime CreationDate { get; set; }
     }
 }
