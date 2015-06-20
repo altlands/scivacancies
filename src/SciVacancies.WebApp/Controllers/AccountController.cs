@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Linq;
 using Microsoft.AspNet.Http;
 using Microsoft.AspNet.Mvc;
+using SciVacancies.ReadModel;
 using SciVacancies.WebApp.Engine;
 using SciVacancies.WebApp.ViewModels;
 
@@ -8,6 +10,12 @@ namespace SciVacancies.WebApp.Controllers
 {
     public class AccountController : Controller
     {
+        private readonly IReadModelService _readModelService;
+
+        public AccountController(IReadModelService readModelService)
+        {
+            _readModelService = readModelService;
+        }
 
         private void DeleteUserCookies()
         {
@@ -25,10 +33,15 @@ namespace SciVacancies.WebApp.Controllers
             var timeStamp = GetExpiresTime();
             Context.Response.Cookies.Append(ConstTerms.CookieKeyForUserName, model.Login, new CookieOptions { Expires = timeStamp });
             Context.Response.Cookies.Append(ConstTerms.CookieKeyForUserRole, model.IsResearcher.ToString(), new CookieOptions { Expires = timeStamp });
-            if (model.IsResearcher)
-                Context.Response.Cookies.Append(ConstTerms.CookieKeyForResearcherGuid, Guid.NewGuid().ToString(), new CookieOptions { Expires = timeStamp });
-            else
-                Context.Response.Cookies.Append(ConstTerms.CookieKeyForOrganizationGuid, Guid.NewGuid().ToString(), new CookieOptions { Expires = timeStamp });
+
+            //попытка получить существующий Guid из БД
+            var userGuid = (model.IsResearcher
+                ? _readModelService.SelectResearchers().Any() ? _readModelService.SelectResearchers().First().Guid : Guid.NewGuid()
+                : _readModelService.SelectOrganizations().Any() ? _readModelService.SelectOrganizations().First().Guid : Guid.NewGuid()
+                ).ToString();
+            var userGuidKey = model.IsResearcher ? ConstTerms.CookieKeyForResearcherGuid : ConstTerms.CookieKeyForOrganizationGuid;
+            Context.Response.Cookies.Append(userGuidKey, userGuid, new CookieOptions { Expires = timeStamp });
+
             return RedirectToHome();
         }
 
