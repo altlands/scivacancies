@@ -30,6 +30,8 @@ namespace SciVacancies.WebApp.Infrastructure
             Mapper.CreateMap<Researcher, ResearcherCreated>();
             //Обновление исследователя
             Mapper.CreateMap<Researcher, ResearcherDataModel>();
+            //Информация об исследователе
+            Mapper.CreateMap<Researcher, ResearcherDetailsViewModel>();
 
 
             /*Vacancy*/
