@@ -32,7 +32,8 @@
         "Npgsql.EntityFramework": "2.2.5",
         "Microsoft.AspNet.Identity.Core": "2.2.1",
         "Microsoft.AspNet.Identity.EntityFramework": "2.2.1",
-        "AutoMapper": "3.3.1"
+        "AutoMapper": "3.3.1",
+        "NEventStore": "5.2.0"
     },
 
     "commands": {
