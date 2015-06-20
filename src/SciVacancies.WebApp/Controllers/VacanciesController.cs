@@ -1,6 +1,9 @@
 ﻿using System;
+using System.Linq;
+using AutoMapper;
 using Microsoft.AspNet.Mvc;
 using SciVacancies.Domain.Aggregates.Interfaces;
+using SciVacancies.Domain.DataModels;
 using SciVacancies.ReadModel;
 using SciVacancies.WebApp.Engine;
 using SciVacancies.WebApp.Engine.CustomAttribute;
@@ -32,7 +35,7 @@ namespace SciVacancies.WebApp.Controllers
         [BindArgumentFromCookies(ConstTerms.CookieKeyForOrganizationGuid, "organizationGuid")]
         public ViewResult Create(Guid organizationGuid)
         {
-            if(organizationGuid==Guid.Empty)
+            if (organizationGuid == Guid.Empty)
                 throw new ArgumentNullException($"{nameof(organizationGuid)}");
 
             var model = new PositionCreateViewModel(organizationGuid).InitDictionaries(_readModelService);
@@ -42,12 +45,16 @@ namespace SciVacancies.WebApp.Controllers
 
         [PageTitle("Новая вакансия")]
         [HttpPost]
-        [BindArgumentFromCookies(ConstTerms.CookieKeyForOrganizationGuid, "organizationGuid")]
         public ActionResult Create(PositionCreateViewModel model)
         {
-            //_organizationService.CreatePosition()
-            //return RedirectToAction("vacancies", "organizations");
+            var errors = ModelState.Values.Where(c => c.Errors.Count > 0).ToList();
+            var tempCount = errors.Count;
 
+            if (false /*ModelState.IsValid*/)
+            {
+                _organizationService.CreatePosition(model.OrganizationGuid, Mapper.Map<PositionDataModel>(model));
+                return RedirectToAction("vacancies", "organizations");
+            }
             model.InitDictionaries(_readModelService);
             return View(model);
 

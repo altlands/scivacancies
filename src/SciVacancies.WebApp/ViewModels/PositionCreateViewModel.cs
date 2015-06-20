@@ -46,7 +46,7 @@ namespace SciVacancies.WebApp.ViewModels
                 throw new NullReferenceException($"Property {nameof(OrganizationGuid)} has Empty value");
 
             PositionTypes = readModelService.SelectPositionTypes().Select(c => new SelectListItem { Text = c.Title, Value = c.Guid.ToString() });
-            ResearchDirections = readModelService.SelectResearchDirections().Select(c => new SelectListItem { Text = c.Title, Value = c.Guid.ToString() });
+            ResearchDirections = readModelService.SelectResearchDirections().Select(c => new SelectListItem { Text = c.Title, Value = c.Id.ToString() });
 
             ContractTypes = new List<ContractType>{ ContractType.Permanent, ContractType.FixedTerm}
                 .Select(c => new SelectListItem { Value = ((int)c).ToString(), Text = c.GetDescription() });

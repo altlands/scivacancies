@@ -91,7 +91,7 @@ namespace SciVacancies.WebApp
                 // routes.MapWebApiRoute("DefaultApi", "api/{controller}/{id?}");
             });
 
-            //MappingConfiguration.Initialize();
+            MappingConfiguration.Initialize();
         }
 
         public void ConfigureContainer(ContainerBuilder builder)
