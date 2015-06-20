@@ -1,4 +1,5 @@
-﻿using SciVacancies.ReadModel.Core;
+﻿using SciVacancies.Domain.Enums;
+using SciVacancies.ReadModel.Core;
 
 using System;
 using System.Collections.Generic;
@@ -113,6 +114,27 @@ namespace SciVacancies.ReadModel
             //TODO - Complete this method by filter and proper ordering
             if (pageSize < 1) throw new Exception($"PageSize too small: {pageSize}");
             if (pageIndex < 1) throw new Exception($"PageIndex too small: {pageIndex}");
+
+            if (string.IsNullOrWhiteSpace(orderBy))
+                orderBy = "Guid_descending";
+
+            Page<Vacancy> vacancies = _db.Page<Vacancy>(pageIndex, pageSize, new Sql("SELECT o.* FROM \"Vacancies\" o ORDER BY o.\"Guid\" DESC"));
+
+            return vacancies;
+        }
+
+        public List<Vacancy> SelectClosedVacancies(Guid organizationGuid)
+        {
+            List<Vacancy> vacancies = _db.FetchBy<Vacancy>(f => f.Where(w => w.OrganizationGuid == organizationGuid&&w.Status==VacancyStatus.Closed));
+
+            return vacancies;
+        }
+        public Page<Vacancy> SelectClosedVacancies(string orderBy, long pageSize, long pageIndex, string nameFilterValue = null, string addressFilterValue = null)
+        {
+            if (pageSize < 1)
+                throw new Exception($"PageSize too small: {pageSize}");
+            if (pageIndex < 1)
+                throw new Exception($"PageIndex too small: {pageIndex}");
 
             if (string.IsNullOrWhiteSpace(orderBy))
                 orderBy = "Guid_descending";

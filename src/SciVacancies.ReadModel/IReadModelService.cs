@@ -29,6 +29,9 @@ namespace SciVacancies.ReadModel
         List<Vacancy> SelectVacancies(string title, int count);
         Page<Vacancy> SelectVacancies(string orderBy, long pageSize, long pageIndex, string nameFilterValue = null, string addressFilterValue = null);
 
+        List<Vacancy> SelectClosedVacancies(Guid organizationGuid);
+        Page<Vacancy> SelectClosedVacancies(string orderBy, long pageSize, long pageIndex, string nameFilterValue = null, string addressFilterValue = null);
+
         List<Vacancy> SelectFavoriteVacancies(Guid researcherGuid);
 
 
