@@ -1,7 +1,9 @@
-﻿using Microsoft.AspNet.Mvc;
-using System;
+﻿using System;
+using Microsoft.AspNet.Mvc;
 using SciVacancies.Domain.Aggregates.Interfaces;
 using SciVacancies.ReadModel;
+using SciVacancies.WebApp.Engine;
+using SciVacancies.WebApp.Engine.CustomAttribute;
 using SciVacancies.WebApp.ViewModels;
 
 namespace SciVacancies.WebApp.Controllers
@@ -27,7 +29,15 @@ namespace SciVacancies.WebApp.Controllers
         public ViewResult Preview(Guid id) => View();
 
         [PageTitle("Новая вакансия")]
-        public ViewResult Create() => View(new ApplicationCreateViewModel().InitDictionaries(_readModelService));
+        [BindArgumentFromCookies(ConstTerms.CookieKeyForOrganizationGuid, "organizationGuid")]
+        public ViewResult Create(Guid organizationGuid)
+        {
+            if(organizationGuid==Guid.Empty)
+                throw new ArgumentNullException($"{nameof(organizationGuid)}");
+
+            var model = new VacancyCreateViewModel(organizationGuid).InitDictionaries(_readModelService);
+            return View(model);
+        }
 
 
         [PageTitle("Новая вакансия")]

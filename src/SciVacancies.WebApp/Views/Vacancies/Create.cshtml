@@ -1,4 +1,6 @@
-﻿@model dynamic
+﻿@using System.Threading.Tasks
+@using SciVacancies.WebApp.ViewModels
+@model VacancyCreateViewModel
 
 <div class="crumbs">
     <a href="/">Главная страница</a><span class="separator">/</span>
@@ -20,13 +22,8 @@
             </div>
             <div class="right-cell">
                 <div class="inline-block w290 sorting">
-                    <select name="5" id="5">
-                        <option value="Выбрать">Выбрать</option>
-                        <option value="Выбрать1">Выбрать1</option>
-                        <option value="Выбрать2">Выбрать2</option>
-                        <option value="Выбрать3">Выбрать3</option>
-                        <option value="Выбрать3">Выбрать4</option>
-                    </select>
+                    <select asp-for="PositionTypeGuid"
+                            asp-items="Model.PositionTypes"></select>
                 </div>
             </div>
         </div>
