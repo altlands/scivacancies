@@ -25,7 +25,7 @@ namespace SciVacancies.Domain.DataModels
         /// <summary>
         /// Отрасль науки
         /// </summary>
-        public string FieldOfScience { get; set; }
+        public string ResearchDirection { get; set; }
 
         /// <summary>
         /// Тематика исследований
@@ -118,7 +118,7 @@ namespace SciVacancies.Domain.DataModels
         /// <summary>
         /// Дата начала приёма заявок на вакансию
         /// </summary>
-        public DateTime DateStartResearcher { get; set; }
+        public DateTime DateStartAcceptance { get; set; }
 
         /// <summary>
         /// Дата окончания публикации

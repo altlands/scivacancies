@@ -26,7 +26,7 @@ namespace SciVacancies.ReadModel.Handlers
                 OrganizationGuid = msg.OrganizationGuid,
                 Name = msg.Data.Name,
                 FullName = msg.Data.FullName,
-                FieldOfScience = msg.Data.FieldOfScience,
+                ResearchDirection = msg.Data.ResearchDirection,
                 ResearchTheme = msg.Data.ResearchTheme,
                 Tasks = msg.Data.Tasks,
                 Criteria = msg.Data.Criteria,
@@ -48,7 +48,7 @@ namespace SciVacancies.ReadModel.Handlers
                 ContactPhone = msg.Data.ContactPhone,
                 ContactDetails = msg.Data.ContactDetails,
                 DateStart = msg.Data.DateStart,
-                DateStartResearcher = msg.Data.DateStartResearcher,
+                DateStartAcceptance = msg.Data.DateStartAcceptance,
                 DateFinish = msg.Data.DateFinish
             };
 
