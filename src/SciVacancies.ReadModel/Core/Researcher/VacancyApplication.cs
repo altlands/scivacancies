@@ -36,7 +36,7 @@ namespace SciVacancies.ReadModel.Core
 
         public VacancyApplicationStatus Status { get; set; }
 
-        public DateTime CreationdDate { get; set; }
+        public DateTime CreationDate { get; set; }
         public DateTime? UpdateDate { get; set; }
         public DateTime? SentDate { get; set; }
 

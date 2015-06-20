@@ -93,6 +93,7 @@ namespace SciVacancies.ReadModel.Core
         /// <summary>
         /// Отрасли науки
         /// </summary>
+        [Ignore]
         public List<int> ResearchDirections { get; set; }
 
         /// <summary>
@@ -102,7 +103,7 @@ namespace SciVacancies.ReadModel.Core
         public string HeadLastName { get; set; }
         public string HeadPatronymic { get; set; } //HeadMiddleName
 
-        public DateTime CreationdDate { get; set; }
+        public DateTime CreationDate { get; set; }
         public DateTime? UpdateDate { get; set; }
     }
 }

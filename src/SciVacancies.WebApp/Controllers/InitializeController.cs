@@ -30,19 +30,19 @@ namespace SciVacancies.WebApp.Controllers
         {
             Guid resGuid = _res.CreateResearcher(new ResearcherDataModel()
             {
-                Login="Cartman",
-                FirstName="Генрих",
-                SecondName="Пупкин",
-                Patronymic="Дубощит",
-                FirstNameEng="Genrih",
-                SecondNameEng="Pupkin",
-                PatronymicEng="Duboit",
-                BirthDate=DateTime.Now
+                Login = "Cartman",
+                FirstName = "Генрих",
+                SecondName = "Пупкин",
+                Patronymic = "Дубощит",
+                FirstNameEng = "Genrih",
+                SecondNameEng = "Pupkin",
+                PatronymicEng = "Duboit",
+                BirthDate = DateTime.Now
             });
 
             Guid subGuid = _res.CreateSearchSubscription(resGuid, new SearchSubscriptionDataModel()
             {
-                Title="Разведение лазерных акул"
+                Title = "Разведение лазерных акул"
             });
 
             Guid orgGuid = _org.CreateOrganization(new OrganizationDataModel()

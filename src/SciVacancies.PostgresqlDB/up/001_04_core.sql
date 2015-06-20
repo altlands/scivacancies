@@ -202,10 +202,10 @@ CREATE TABLE "Positions"
 "ContractType" integer,
 "ContractTime" integer,
 
-"SocialPackage" bit,
-"Rent" bit,
-"OfficeAccomodation" bit,
-"TransportCompensation" bit,
+"SocialPackage" boolean,
+"Rent" boolean,
+"OfficeAccomodation" boolean,
+"TransportCompensation" boolean,
 
 "RegionId" integer,
 
@@ -254,10 +254,10 @@ CREATE TABLE "Vacancies"
 "ContractType" integer,
 "ContractTime" integer,
 
-"SocialPackage" bit,
-"Rent" bit,
-"OfficeAccomodation" bit,
-"TransportCompensation" bit,
+"SocialPackage" boolean,
+"Rent" boolean,
+"OfficeAccomodation" boolean,
+"TransportCompensation" boolean,
 
 "Region" text,
 "RegionId" integer,
@@ -278,7 +278,7 @@ CREATE TABLE "Vacancies"
 "DateStart" date,
 "DateStartAcceptance" date,
 "DateFinishAcceptance" date,
-"dateFinish" date,
+"DateFinish" date,
 
 "CreationDate" timestamp without time zone NOT NULL,
 
