@@ -3,21 +3,7 @@
     "SiteTitle": "Портал вакансий"
   },
   "Data": {
-    "ReadModelDb": {
-      "ConnectionString": "Server=localhost; Database=scivacancies; User Id=postgres; Password=postgres;",
-      "ProviderName": "Npgsql"
-    },
-    //"ReadModelDb": {
-    //  "ConnectionString": "Server=altlandev05.cloudapp.net; Database=scivacancies; User Id=dev; Password=1234;",
-    //  "ProviderName": "Npgsql"
-    //},
-    "EventStoreDb": {
-      "ConnectionString": "Server=localhost; Database=eventstore; User Id=postgres; Password=postgres;",
-      "ProviderName": "Npgsql"
-    }
-    //"EventStoreDb": {
-    //  "ConnectionString": "Server=altlandev05.cloudapp.net; Database=eventstore; User Id=dev; Password=1234;",
-    //  "ProviderName": "Npgsql"
-    //}
+        "ReadModelDb": "Server=localhost;Database=ZZZ;User Id=postgres;Password=postgres",
+        "EventStoreDb": "Server=localhost;Database=ZZZ;User Id=postgres;Password=postgres"        
   }
 }

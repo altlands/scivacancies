@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Linq;
 using Microsoft.AspNet.Http;
+using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Mvc;
 using SciVacancies.ReadModel;
 using SciVacancies.WebApp.Engine;
+using SciVacancies.WebApp.Infrastructure;
 using SciVacancies.WebApp.ViewModels;
 
 namespace SciVacancies.WebApp.Controllers
@@ -11,10 +13,12 @@ namespace SciVacancies.WebApp.Controllers
     public class AccountController : Controller
     {
         private readonly IReadModelService _readModelService;
+        private readonly SciVacUserManager _userManager;
 
-        public AccountController(IReadModelService readModelService)
+        public AccountController(SciVacUserManager userManager, IReadModelService readModelService)
         {
             _readModelService = readModelService;
+            _userManager = userManager;
         }
 
         private void DeleteUserCookies()
@@ -42,6 +46,10 @@ namespace SciVacancies.WebApp.Controllers
             var userGuidKey = model.IsResearcher ? ConstTerms.CookiesKeyForResearcherGuid : ConstTerms.CookiesKeyForOrganizationGuid;
             Context.Response.Cookies.Append(userGuidKey, userGuid, new CookieOptions { Expires = timeStamp });
 
+            //var user = _userManager.FindByName("SashaOzz");            
+            //var identity = _userManager.CreateIdentity(user, DefaultAuthenticationTypes.ApplicationCookie);
+            //var cp = new ClaimsPrincipal(identity);
+            //Context.Response.SignIn(DefaultAuthenticationTypes.ApplicationCookie,cp);            
             return RedirectToHome();
         }
 
@@ -74,6 +82,7 @@ namespace SciVacancies.WebApp.Controllers
         public ActionResult Logout()
         {
             DeleteUserCookies();
+            //Context.Response.SignOut(DefaultAuthenticationTypes.ApplicationCookie);
             return RedirectToHome();
         }
 

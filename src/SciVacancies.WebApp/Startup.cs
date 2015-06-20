@@ -2,11 +2,15 @@
 using SciVacancies.WebApp.Infrastructure;
 
 using System;
+using System.Collections;
 using System.Collections.Generic;
-
+using System.Linq;
 using Microsoft.AspNet.Builder;
 using Microsoft.AspNet.Diagnostics;
 using Microsoft.AspNet.Http;
+using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.Authentication;
+using Microsoft.AspNet.Authorization;
 using Microsoft.AspNet.Hosting;
 using Microsoft.Framework.ConfigurationModel;
 using Microsoft.Framework.DependencyInjection;
@@ -25,6 +29,8 @@ using MediatR;
 using Autofac;
 using Autofac.Dnx;
 using Autofac.Features.Variance;
+using System.Linq;
+using Microsoft.AspNet.Identity.EntityFramework;
 
 namespace SciVacancies.WebApp
 {
@@ -32,9 +38,12 @@ namespace SciVacancies.WebApp
     {
         public Startup(IHostingEnvironment env)
         {
+            var vars = Environment.GetEnvironmentVariables();
+            var dev_env = vars.Cast<DictionaryEntry>().FirstOrDefault(e => e.Key.Equals("dev_env")).Value;
             // Setup configuration sources.
             Configuration = new Configuration()
-                .AddJsonFile("config.json")
+                .AddJsonFile("config.json")                
+                .AddJsonFile($"config.{dev_env}.json", optional:true)
                 .AddEnvironmentVariables();
         }
 
@@ -44,7 +53,12 @@ namespace SciVacancies.WebApp
         public IServiceProvider ConfigureServices(IServiceCollection services)
         {
             services.Configure<AppSettings>(Configuration.GetSubKey("AppSettings"));
+            services.Configure<DbSettings>(Configuration.GetSubKey("Data"));
 
+            services.ConfigureCookieAuthentication(options =>
+            {
+                options.AutomaticAuthentication = true;
+            });
             services.AddMvc();
 
             var builder = new ContainerBuilder();
@@ -59,8 +73,14 @@ namespace SciVacancies.WebApp
         // Configure is called after ConfigureServices is called.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerfactory)
         {
+            app.UseCookieAuthentication(options =>
+            {
+                options.AuthenticationScheme = DefaultAuthenticationTypes.ApplicationCookie;                
+            });
+            //app.UseOpenIdConnectAuthentication();
+
             app.UseInMemorySession(configure: s => s.IdleTimeout = TimeSpan.FromMinutes(30));
-            // Configure the HTTP request pipeline.
+            // Configure the HTTP request pipeline.          
 
             // Add the console logger.
             loggerfactory.AddConsole();
@@ -101,9 +121,26 @@ namespace SciVacancies.WebApp
             builder.RegisterModule(new EventHandlersModule());
             builder.RegisterModule(new ReadModelModule(Configuration));
             builder.RegisterModule(new ServicesModule());
+            builder.RegisterModule(new IdentityModule());
 
             //ConfigureMediatr(builder);
             builder.RegisterType<Fart>().As<IFart>();
+
+
+            //builder.RegisterType<PostgresSciVacUserDbContext>().AsSelf().InstancePerRequest();
+            //builder.RegisterType<SciVacUserStore>().As<IUserStore<SciVacUser>>().InstancePerRequest();
+            //builder.RegisterType<SciVacUserManager>().AsSelf().InstancePerRequest();
+
+            //builder.RegisterType<PostgresSciVacUserDbContext>().AsSelf().InstancePerRequest();
+            //builder.RegisterType<SciVacUserStore>().As<IUserStore<SciVacUser>>();
+            //builder.RegisterType<SciVacUserManager>().AsSelf();
+
+            //builder.RegisterType<SciVacSignInManager>().AsSelf().InstancePerRequest();
+            //builder.Register<IAuthenticationManager>(c => HttpContext.Current.GetOwinContext().Authentication).InstancePerRequest();
+            //builder.Register<IDataProtectionProvider>(c => app.GetDataProtectionProvider()).InstancePerRequest();
+
+
+
         }
 
         public void ConfigureMediatr(ContainerBuilder builder)
