@@ -93,17 +93,17 @@ namespace SciVacancies.WebApp.Controllers
                 HeadPatronymic = "Сауронович"
             });
 
-            Guid posGuid3 = _org.CreatePosition(orgGuid, new PositionDataModel()
+            Guid posGuid3 = _org.CreatePosition(orgGuid1, new PositionDataModel()
             {
-                Name = "Ремонтни всевидящего ока",
+                Name = "Ремонтник всевидящего ока",
                 FullName = "Младший сотрудник по калибровке фокусного зеркала",
                 PositionTypeGuid = Guid.Parse("b7280ace-d237-c007-42fe-ec4aed8f52d4"),
                 ResearchDirection = "Аналитическая химия",
                 ResearchDirectionId = 3026
             });
-            Guid vacGuid2 = _org.PublishVacancy(orgGuid1, posGuid2, new VacancyDataModel()
+            Guid vacGuid3 = _org.PublishVacancy(orgGuid1, posGuid3, new VacancyDataModel()
             {
-                Name = "Ремонтни всевидящего ока",
+                Name = "Ремонтник всевидящего ока",
                 FullName = "Младший сотрудник по калибровке фокусного зеркала",
                 ResearchDirection = "Аналитическая химия",
             });
