@@ -14,5 +14,8 @@
         public const string CookieKeyForUserName = "UserName";
         public const string CookieKeyForUserRole = "UserRole";
 
+        public const string CookieKeyForResearcherGuid = "ResearcherGuid";
+        public const string CookieKeyForOrganizationGuid = "OrganizationGuid";
+
     }
 }

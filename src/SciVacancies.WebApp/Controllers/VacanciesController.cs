@@ -1,5 +1,12 @@
-﻿using Microsoft.AspNet.Mvc;
-using System;
+﻿using System;
+using System.Linq;
+using AutoMapper;
+using Microsoft.AspNet.Mvc;
+using SciVacancies.Domain.Aggregates.Interfaces;
+using SciVacancies.Domain.DataModels;
+using SciVacancies.ReadModel;
+using SciVacancies.WebApp.Engine;
+using SciVacancies.WebApp.Engine.CustomAttribute;
 using SciVacancies.WebApp.ViewModels;
 
 namespace SciVacancies.WebApp.Controllers
@@ -9,27 +16,48 @@ namespace SciVacancies.WebApp.Controllers
     /// </summary>
     public class VacanciesController : Controller
     {
-        [PageTitle("Карточка конкурса")]
-        public ViewResult Details(Guid id)
+        private readonly IReadModelService _readModelService;
+        private readonly IOrganizationService _organizationService;
+
+        public VacanciesController(IOrganizationService organizationService, IReadModelService readModelService)
         {
-            return View();
+            _organizationService = organizationService;
+            _readModelService = readModelService;
         }
 
         [PageTitle("Карточка конкурса")]
-        public ViewResult Preview(Guid id)
-        {
-            return View();
-        }
+        public ViewResult Details(Guid id) => View();
+
+        [PageTitle("Карточка конкурса")]
+        public ViewResult Preview(Guid id) => View();
 
         [PageTitle("Новая вакансия")]
-        public ViewResult Create() => View();
+        [BindArgumentFromCookies(ConstTerms.CookieKeyForOrganizationGuid, "organizationGuid")]
+        public ViewResult Create(Guid organizationGuid)
+        {
+            if (organizationGuid == Guid.Empty)
+                throw new ArgumentNullException($"{nameof(organizationGuid)}");
+
+            var model = new PositionCreateViewModel(organizationGuid).InitDictionaries(_readModelService);
+            return View(model);
+        }
 
 
         [PageTitle("Новая вакансия")]
         [HttpPost]
-        public RedirectToActionResult Create(VacancyCreateViewModel model)
+        public ActionResult Create(PositionCreateViewModel model)
         {
-            return RedirectToAction("vacancies", "organizations");
+            var errors = ModelState.Values.Where(c => c.Errors.Count > 0).ToList();
+            var tempCount = errors.Count;
+
+            if (true /*ModelState.IsValid*/)
+            {
+                _organizationService.CreatePosition(model.OrganizationGuid, Mapper.Map<PositionDataModel>(model));
+                return RedirectToAction("vacancies", "organizations");
+            }
+            model.InitDictionaries(_readModelService);
+            return View(model);
+
         }
     }
 }

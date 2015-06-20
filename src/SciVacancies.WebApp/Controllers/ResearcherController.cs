@@ -24,9 +24,9 @@ namespace SciVacancies.WebApp.Controllers
         // GET: /<controller>/
         public void Index()
         {
-            Guid researcherGuid = _res.CreateResearcher(new ResearcherDataModel());
+            //Guid researcherGuid = _res.CreateResearcher(new ResearcherDataModel());
 
-            Researcher researcher = _rm.SingleResearcher(Guid.NewGuid());
+            //Researcher researcher = _rm.SingleResearcher(Guid.NewGuid());
 
             //return View();
         }

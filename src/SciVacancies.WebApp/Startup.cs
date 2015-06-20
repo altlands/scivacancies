@@ -2,8 +2,9 @@
 using SciVacancies.WebApp.Infrastructure;
 
 using System;
+using System.Collections;
 using System.Collections.Generic;
-
+using System.Linq;
 using Microsoft.AspNet.Builder;
 using Microsoft.AspNet.Diagnostics;
 using Microsoft.AspNet.Http;
@@ -28,6 +29,7 @@ using MediatR;
 using Autofac;
 using Autofac.Dnx;
 using Autofac.Features.Variance;
+using System.Linq;
 using Microsoft.AspNet.Identity.EntityFramework;
 
 namespace SciVacancies.WebApp
@@ -36,9 +38,12 @@ namespace SciVacancies.WebApp
     {
         public Startup(IHostingEnvironment env)
         {
+            var vars = Environment.GetEnvironmentVariables();
+            var dev_env = vars.Cast<DictionaryEntry>().FirstOrDefault(e => e.Key.Equals("dev_env")).Value;
             // Setup configuration sources.
             Configuration = new Configuration()
-                .AddJsonFile("config.json")
+                .AddJsonFile("config.json")                
+                .AddJsonFile($"config.{dev_env}.json", optional:true)
                 .AddEnvironmentVariables();
         }
 
@@ -105,6 +110,8 @@ namespace SciVacancies.WebApp
                 // Uncomment the following line to add a route for porting Web API 2 controllers.
                 // routes.MapWebApiRoute("DefaultApi", "api/{controller}/{id?}");
             });
+
+            MappingConfiguration.Initialize();
         }
 
         public void ConfigureContainer(ContainerBuilder builder)

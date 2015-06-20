@@ -1,4 +1,6 @@
-﻿using System;
+﻿using SciVacancies.Domain.Enums;
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -7,31 +9,20 @@ using NPoco;
 
 namespace SciVacancies.ReadModel.Core
 {
-    [TableName("Researchers")]
+    [TableName("VacancyApplications")]
     [PrimaryKey("Guid", AutoIncrement = false)]
-    public class Researcher : BaseEntity
+    public class VacancyApplication : BaseEntity
     {
-        public string Login { get; set; }
+        public Guid VacancyGuid { get; set; }
+        public Guid ResearcherGuid { get; set; }
 
-        public string FirstName { get; set; }
-        public string SecondName { get; set; }
-        public string Patronymic { get; set; }
+        public int PositionTypeId { get; set; }
 
-        public string FirstNameEng { get; set; }
-        public string SecondNameEng { get; set; }
-        public string PatronymicEng { get; set; }
-
-        public string PreviousSecondName { get; set; }
-
-        public DateTime BirthDate { get; set; }
-
+        public string Fullname { get; set; }
         public string Email { get; set; }
         public string ExtraEmail { get; set; }
-
         public string Phone { get; set; }
         public string ExtraPhone { get; set; }
-
-        public string Nationality { get; set; }
 
         public string ResearchActivity { get; set; }
         public string TeachingActivity { get; set; }
@@ -43,7 +34,12 @@ namespace SciVacancies.ReadModel.Core
         public string Memberships { get; set; }
         public string Conferences { get; set; }
 
+        public VacancyApplicationStatus Status { get; set; }
+
         public DateTime CreationDate { get; set; }
         public DateTime? UpdateDate { get; set; }
+        public DateTime? SentDate { get; set; }
+
+        //public string CoveringLetter { get; set; }
     }
 }

@@ -17,10 +17,13 @@ namespace SciVacancies.ReadModel.Core
         /// Идентификатор организации
         /// </summary>
         public Guid OrganizationGuid { get; set; }
+        public Guid PositionGuid { get; set; }
+        public Guid PositionTypeGuid { get; set; }
 
         public Guid WinnerGuid { get; set; }
         public Guid PretenderGuid { get; set; }
 
+        public string OrganizationName { get; set; }
         /// <summary>
         /// Должность
         /// </summary>
@@ -35,13 +38,13 @@ namespace SciVacancies.ReadModel.Core
         /// <summary>
         /// Отрасль науки
         /// </summary>
-        public string FieldOfScience { get; set; }
-
+        public string ResearchDirection { get; set; }
+        public int ResearchDirectionId { get; set; }
         /// <summary>
         /// Тематика исследований
         /// </summary>
         public string ResearchTheme { get; set; }
-
+        public int ResearchThemeId { get; set; }
         /// <summary>
         /// Задачи
         /// </summary>
@@ -50,6 +53,7 @@ namespace SciVacancies.ReadModel.Core
         /// <summary>
         /// Критерии оценки 
         /// </summary>
+        [Ignore]
         public KeyValuePair<int, int> Criteria { get; set; } //<CriteriaId, Amount>
 
         /// <summary>
@@ -120,6 +124,12 @@ namespace SciVacancies.ReadModel.Core
         public string ContactPhone { get; set; }
         public string ContactDetails { get; set; }
 
+        public VacancyStatus Status { get; set; }
+        /// <summary>
+        /// Количество добавивших вакансию в избранное
+        /// </summary>
+        public int FollowersCounter { get; set; }
+
         /// <summary>
         /// Дата начала публикации
         /// </summary>
@@ -128,14 +138,16 @@ namespace SciVacancies.ReadModel.Core
         /// <summary>
         /// Дата начала приёма заявок на вакансию
         /// </summary>
-        public DateTime DateStartResearcher { get; set; }
-
+        public DateTime DateStartAcceptance { get; set; }
+        /// <summary>
+        /// Дата окончания приёма заявок на вакансию
+        /// </summary>
+        public DateTime DateFinishAcceptance { get; set; }
         /// <summary>
         /// Дата окончания публикации
         /// </summary>
         public DateTime DateFinish { get; set; }
 
-        public VacancyStatus Status { get; set; }
-        public int FollowersCounter { get; set; }
+        public DateTime CreationDate { get; set; }
     }
 }

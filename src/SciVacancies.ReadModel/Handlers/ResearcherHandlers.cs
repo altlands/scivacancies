@@ -96,6 +96,8 @@ namespace SciVacancies.ReadModel.Handlers
             researcher.UpdateDate = msg.TimeStamp;
 
             _db.Update(researcher);
+
+
         }
     }
     public class ResearcherRemovedHandler : EventBaseHandler<ResearcherRemoved>

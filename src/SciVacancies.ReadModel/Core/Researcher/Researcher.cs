@@ -1,14 +1,17 @@
-﻿using SciVacancies.Domain.Core;
-
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace SciVacancies.Domain.DataModels
+using NPoco;
+
+namespace SciVacancies.ReadModel.Core
 {
-    public class ResearcherDataModel
+    [TableName("Researchers")]
+    [PrimaryKey("Guid", AutoIncrement = false)]
+    public class Researcher : BaseEntity
     {
+        [Ignore]
         public string Login { get; set; }
 
         public string FirstName { get; set; }
@@ -41,7 +44,7 @@ namespace SciVacancies.Domain.DataModels
         public string Memberships { get; set; }
         public string Conferences { get; set; }
 
-        public List<Education> Educations { get; set; }
-        public List<Publication> Publications { get; set; }
+        public DateTime CreationDate { get; set; }
+        public DateTime? UpdateDate { get; set; }
     }
 }

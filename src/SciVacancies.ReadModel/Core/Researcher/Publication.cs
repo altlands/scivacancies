@@ -7,12 +7,12 @@ using NPoco;
 
 namespace SciVacancies.ReadModel.Core
 {
-    [TableName("Attachments")]
+    [TableName("Publications")]
     [PrimaryKey("Guid", AutoIncrement = false)]
-    public class Attachment:BaseEntity
+    public class Publication : BaseEntity
     {
-        public Guid VacancyApplicationGuid { get; set; }
+        public Guid ResearcherGuid { get; set; }
 
-        public DateTime CreationdDate { get; set; }
+        public string Name { get; set; }
     }
 }

@@ -15,8 +15,6 @@ namespace SciVacancies.Domain.Aggregates
         private bool Removed { get; set; }
         private ResearcherDataModel Data { get; set; }
 
-        //private List<Education> EducationList { get; set; }
-        //private List<Publication> Publications { get; set; }
         private List<Guid> FavoriteVacancyGuids { get; set; }
         private List<SearchSubscription> SearchSubscriptions { get; set; }
 
@@ -24,10 +22,16 @@ namespace SciVacancies.Domain.Aggregates
 
         public Researcher()
         {
-
+            FavoriteVacancyGuids = new List<Guid>();
+            SearchSubscriptions = new List<SearchSubscription>();
+            VacancyApplications = new List<VacancyApplication>();
         }
         public Researcher(Guid guid, ResearcherDataModel data)
         {
+            FavoriteVacancyGuids = new List<Guid>();
+            SearchSubscriptions = new List<SearchSubscription>();
+            VacancyApplications = new List<VacancyApplication>();
+
             RaiseEvent(new ResearcherCreated()
             {
                 ResearcherGuid = guid,
@@ -225,7 +229,8 @@ namespace SciVacancies.Domain.Aggregates
             this.Data.Memberships = @event.Data.Memberships;
             this.Data.Conferences = @event.Data.Conferences;
 
-            //this.Data.Publications = @event.Data.Publications;
+            this.Data.Educations = @event.Data.Educations;
+            this.Data.Publications = @event.Data.Publications;
         }
         public void Apply(ResearcherRemoved @event)
         {

@@ -35,7 +35,9 @@
         "SciVacancies.Domain": "1.0.0-*",
         "SciVacancies.Domain.Aggregates": "1.0.0-*",
         "SciVacancies.Domain.Events": "1.0.0-*",
-        "SciVacancies.ReadModel": "1.0.0-*"
+        "SciVacancies.ReadModel": "1.0.0-*",
+        "AutoMapper": "3.3.1",
+        "NEventStore": "5.2.0"
     },
 
     "commands": {
@@ -46,6 +48,7 @@
     "frameworks": {
         "dnx451": {
             "frameworkAssemblies": {
+                "System.Core": "4.0.0.0",
                 "System.Data": "4.0.0.0"
             }
         }

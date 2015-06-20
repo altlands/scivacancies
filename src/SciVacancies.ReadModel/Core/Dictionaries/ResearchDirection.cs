@@ -23,5 +23,6 @@ namespace SciVacancies.ReadModel.Core
         public string OecdCode { get; set; }
         public string WosCode { get; set; }
         public int Root { get;  set; }
+
     }
 }

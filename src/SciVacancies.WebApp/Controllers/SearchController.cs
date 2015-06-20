@@ -3,15 +3,19 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNet.Mvc;
 using PagedList;
+using SciVacancies.ReadModel;
 using SciVacancies.WebApp.ViewModels;
 
 namespace SciVacancies.WebApp
 {
     public class SearchController: Controller
     {
+        private readonly IReadModelService _readModelService;
+        private List<VacanciesItemViewModel> data = new List<VacanciesItemViewModel>();
 
-        public SearchController()
+        public SearchController(IReadModelService readModelService)
         {
+            _readModelService = readModelService;
 
             var organization = new OrganizationItemViewModel { Guid = Guid.NewGuid(), Name = "Московский гусударственный университет имени М. В. Ломоносова" };
             var direction1 = new ScienceDirectionItemViewModel { Guid = Guid.NewGuid(), Name = "Физика" };
@@ -74,7 +78,6 @@ namespace SciVacancies.WebApp
             }
         }
 
-        private List<VacanciesItemViewModel> data = new List<VacanciesItemViewModel>();
 
         /// <summary>
         /// фильтрация, страницы, сортировка 
@@ -93,8 +96,13 @@ namespace SciVacancies.WebApp
             else
                 orderedData = data.AsQueryable().OrderBy(c => GetOrderingProperty(c, model.OrderBy));
 
+            //result data
             ViewBag.PagedData = orderedData.ToPagedList(model.PageNumber, model.PageSize);
-            ViewBag.FilterSource = new VacanciesFilterSource();
+
+            //dicitonaries
+            ViewBag.FilterSource = new VacanciesFilterSource(_readModelService); //.SelectRegions(Guid.NewGuid());
+
+            //search request term
             ViewBag.Search = model.Search;
 
             return View(model);

@@ -49,7 +49,7 @@ namespace SciVacancies.ReadModel.Handlers
 
                 Status = msg.Data.Status,
 
-                CreationdDate = msg.TimeStamp
+                CreationDate = msg.TimeStamp
             };
 
             _db.Insert(position);
@@ -90,6 +90,8 @@ namespace SciVacancies.ReadModel.Handlers
             position.ContactDetails = msg.Data.ContactDetails;
 
             position.Status = msg.Data.Status;
+
+            position.UpdateDate = msg.TimeStamp;
 
             _db.Update(position);
         }

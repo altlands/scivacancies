@@ -1,9 +1,9 @@
 ﻿{
-    "AppSettings": {
-        "SiteTitle": "Портал вакансий"
-    },
-    "Data": {
+  "AppSettings": {
+    "SiteTitle": "Портал вакансий"
+  },
+  "Data": {
         "ReadModelDb": "Server=localhost;Database=ZZZ;User Id=postgres;Password=postgres",
         "EventStoreDb": "Server=localhost;Database=ZZZ;User Id=postgres;Password=postgres"        
-    }
+  }
 }

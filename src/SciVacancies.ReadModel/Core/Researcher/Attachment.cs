@@ -3,14 +3,18 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace SciVacancies.Domain.Core
+using NPoco;
+
+namespace SciVacancies.ReadModel.Core
 {
-    public class Attachment
+    [TableName("Attachments")]
+    [PrimaryKey("Guid", AutoIncrement = false)]
+    public class Attachment : BaseEntity
     {
         /// <summary>
-        /// Guid файла
+        /// Guid заявки
         /// </summary>
-        public Guid AttachmentGuid { get; set; }
+        public Guid VacancyApplicationGuid { get; set; }
         /// <summary>
         /// Наименование файла
         /// </summary>
@@ -27,5 +31,9 @@ namespace SciVacancies.Domain.Core
         /// Путь к файлу
         /// </summary>
         public string Url { get; set; }
+        /// <summary>
+        /// Дата создания
+        /// </summary>
+        public DateTime CreationDate { get; set; }
     }
 }

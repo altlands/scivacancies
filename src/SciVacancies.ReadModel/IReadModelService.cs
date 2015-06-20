@@ -26,7 +26,14 @@ namespace SciVacancies.ReadModel
 
         Vacancy SingleVacancy(Guid vacancyGuid);
         List<Vacancy> SelectVacancies(Guid organizationGuid);
+        List<Vacancy> SelectVacancies(string title, int count);
+        Page<Vacancy> SelectVacancies(string orderBy, long pageSize, long pageIndex, string nameFilterValue = null, string addressFilterValue = null);
+
+        List<Vacancy> SelectClosedVacancies(Guid organizationGuid);
+        Page<Vacancy> SelectClosedVacancies(string orderBy, long pageSize, long pageIndex, string nameFilterValue = null, string addressFilterValue = null);
+
         List<Vacancy> SelectFavoriteVacancies(Guid researcherGuid);
+
 
         Notification SingleNotification(Guid notificationGuid);
         List<Notification> SelectNotificationsByResearcher(Guid researcherGuid);
@@ -37,6 +44,13 @@ namespace SciVacancies.ReadModel
         Organization SingleOrganization(Guid organizationGuid);
         List<Organization> SelectOrganizations();
         /// <summary>
+        /// Получить заданное количество организаций, офильтрованных по title
+        /// </summary>
+        /// <param name="title">Значение фильтра для свойства Title</param>
+        /// <param name="count">Если count=0, то возвращается весь отфильтрованный список</param>
+        /// <returns></returns>
+        List<Organization> SelectOrganizations(string title, int count);
+        /// <summary>
         /// Получить список организаций по условиям
         /// </summary>
         /// <param name="orderBy">поле для сортировки</param>
@@ -46,13 +60,7 @@ namespace SciVacancies.ReadModel
         /// <param name="addressFilterValue">Значение фильтра для свойства Адрес организации (не обязательно)</param>
         /// <returns></returns>
         Page<Organization> SelectOrganizations(string orderBy, long pageSize, long pageIndex, string nameFilterValue = null, string addressFilterValue = null);
-        /// <summary>
-        /// Получить заданное количество организаций, офильтрованных по title
-        /// </summary>
-        /// <param name="title">Значение фильтра для свойства Title</param>
-        /// <param name="count">Если count=0, то возвращается весь отфильтрованный список</param>
-        /// <returns></returns>
-        List<Organization> SelectOrganizations(string title, int count);
+
 
         /// <summary>
         /// Список позиций(шаблонов вакансий)

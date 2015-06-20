@@ -36,8 +36,8 @@ namespace SciVacancies.ReadModel.Core
         /// <summary>
         /// Отрасль науки
         /// </summary>
-        public string FieldOfScience { get; set; }
-        public int FieldOfScienceId { get; set; }
+        public string ResearchDirection { get; set; }
+        public int ResearchDirectionId { get; set; }
 
         /// <summary>
         /// Тематика исследований
@@ -53,6 +53,7 @@ namespace SciVacancies.ReadModel.Core
         /// <summary>
         /// Критерии оценки 
         /// </summary>
+        [Ignore]
         public KeyValuePair<int, int> Criteria { get; set; } //<CriteriaId, Amount>
 
         /// <summary>
@@ -122,9 +123,9 @@ namespace SciVacancies.ReadModel.Core
         public string ContactPhone { get; set; }
         public string ContactDetails { get; set; }
 
-        public DateTime CreationdDate { get; set; }
-        public DateTime? UpdateDate { get; set; }
-
         public PositionStatus Status { get; set; }
+
+        public DateTime CreationDate { get; set; }
+        public DateTime? UpdateDate { get; set; }
     }
 }
