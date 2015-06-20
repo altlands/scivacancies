@@ -15,6 +15,8 @@ namespace SciVacancies.ReadModel.Core
     {
         public Guid ResearcherGuid { get; set; }
 
+        public string Title { get; set; }
+
         public SearchSubscriptionStatus Status { get; set; }
 
         public DateTime CreationdDate { get; set; }

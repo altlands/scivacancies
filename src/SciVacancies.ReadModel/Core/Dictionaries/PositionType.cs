@@ -9,7 +9,7 @@ using NPoco;
 
 namespace SciVacancies.ReadModel.Core
 {
-    [TableName("PositionType")]
+    [TableName("PositionTypes")]
     [PrimaryKey("Guid", AutoIncrement = false)]
     public class PositionType : BaseEntity
     {

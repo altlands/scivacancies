@@ -9,7 +9,7 @@ using NPoco;
 
 namespace SciVacancies.ReadModel.Core
 {
-    [TableName("Activity")]
+    [TableName("Activities")]
     [PrimaryKey("Guid", AutoIncrement = false)]
     public class Activity : BaseEntity
     {

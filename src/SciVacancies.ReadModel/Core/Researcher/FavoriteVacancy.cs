@@ -8,7 +8,8 @@ using NPoco;
 namespace SciVacancies.ReadModel.Core
 {
     [TableName("FavoriteVacancies")]
-    public class FavoriteVacancy
+    [PrimaryKey("Guid", AutoIncrement = false)]
+    public class FavoriteVacancy:BaseEntity
     {
         public Guid VacancyGuid { get; set; }
         public Guid ResearcherGuid { get; set; }
