@@ -26,7 +26,9 @@ namespace SciVacancies.ReadModel
 
         Vacancy SingleVacancy(Guid vacancyGuid);
         List<Vacancy> SelectVacancies(Guid organizationGuid);
+        List<Vacancy> SelectVacancies(string title, int count);
         List<Vacancy> SelectFavoriteVacancies(Guid researcherGuid);
+
 
         Notification SingleNotification(Guid notificationGuid);
         List<Notification> SelectNotificationsByResearcher(Guid researcherGuid);

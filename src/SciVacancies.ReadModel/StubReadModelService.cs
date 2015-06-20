@@ -86,6 +86,12 @@ namespace SciVacancies.ReadModel
 
             return result;
         }
+        public List<Vacancy> SelectVacancies(string title, int count)
+        {
+            var result = new List<Vacancy>();
+
+            return result;
+        }
         public List<Vacancy> SelectFavoriteVacancies(Guid researcherGuid)
         {
             var result = new List<Vacancy>();

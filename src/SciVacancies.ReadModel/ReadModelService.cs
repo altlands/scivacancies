@@ -93,6 +93,21 @@ namespace SciVacancies.ReadModel
 
             return vacancies;
         }
+        public List<Vacancy> SelectVacancies(string title, int count)
+        {
+
+            List<Vacancy> vacancies;
+            if (count != 0)
+            {
+                vacancies = _db.FetchBy<Vacancy>(f => f.Where(w => w.Name.Contains(title))).Take(count).ToList();
+            }
+            else
+            {
+                vacancies = _db.FetchBy<Vacancy>(f => f.Where(w => w.Name.Contains(title)));
+            }
+
+            return vacancies;
+        }
         public List<Vacancy> SelectFavoriteVacancies(Guid researcherGuid)
         {
             List<Guid> guids = _db.FetchBy<FavoriteVacancy>(f => f.Where(w => w.ResearcherGuid == researcherGuid)).Select(s => s.VacancyGuid).ToList();
