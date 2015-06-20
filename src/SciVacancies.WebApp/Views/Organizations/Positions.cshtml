@@ -32,49 +32,30 @@
         </tr>
     </thead>
     <tbody>
-        @foreach (var item in Model.Positions)
-        {
-            <text>
+        @if (Model != null && Model.Count > 0)
+            {
+                foreach (var item in Model)
+                {
+                <text>
 
-            <tr>
-                <td>@item.Guid.ToString().Substring(0, 4)...</td>
-                <td>ГНС600001</td>
-                <td>@item.Name</td>
-                <!--TODO: проверить правильность информации-->
-                <td>@item.CreationDate.ToShortDateString() <!--01-09-14, 16:04--></td>
-                <td>@{ item.UpdateDate?.ToShortDateString();} <!--01-09-14, 16:04--></td>
-                <td><span class="status work">@item.Status.GetDescription() <!--Объявлен--></span></td>
-                <td>
-                    <a asp-controller="vacancies" asp-action="details" asp-route-id="@item.Guid" class="view-td-icon"></a>
-                    <a href="#" class="edit-td-icon"></a>
-                    <a href="#" class="close-td-icon"></a>
-                    <a href="#" class="class-td-icon"></a>
-                </td>
-            </tr>
-            </text>
-                    }
-
-        @foreach (var item in Model.Vacancies)
-        {
-            <text>
-
-            <tr>
-                <td>@item.Guid.ToString().Substring(0, 4)...</td>
-                <td>ГНС600001</td>
-                <td>@item.Name</td>
-                <!--TODO: проверить правильность информации-->
-                <td>@item.CreationDate.ToShortDateString() <!--01-09-14, 16:04--></td>
-                <td>@{ item.DateStart.ToShortDateString();} <!--01-09-14, 16:04--></td>
-                <td><span class="status work">@item.Status.GetDescription() <!--Объявлен--></span></td>
-                <td>
-                    <a asp-controller="positions" asp-action="details" asp-route-id="@item.Guid" class="view-td-icon"></a>
-                    <a href="#" class="edit-td-icon"></a>
-                    <a href="#" class="close-td-icon"></a>
-                    <a href="#" class="class-td-icon"></a>
-                </td>
-            </tr>
-            </text>
-                    }
+                <tr>
+                    <td>@item.Guid</td>
+                    <td>ГНС600001</td>
+                    <td>@item.Name</td>
+                    <!--TODO: проверить правильность информации-->
+                    <td>@item.CreationDate.ToShortDateString() <!--01-09-14, 16:04--></td>
+                    <td>@item.UpdateDate??.ToShortDateString() <!--01-09-14, 16:04--></td>
+                    <td><span class="status work">@item.Status.GetDescription() <!--Объявлен--></span></td>
+                    <td>
+                        <a asp-controller="vacancies" asp-action="details" asp-route-id="@item.Guid" class="view-td-icon"></a>
+                        <a href="#" class="edit-td-icon"></a>
+                        <a href="#" class="close-td-icon"></a>
+                        <a href="#" class="class-td-icon"></a>
+                    </td>
+                </tr>
+                </text>
+            }
+        }
         @*<tr>
                 <td>001</td>
                 <td>ГНС600001</td>

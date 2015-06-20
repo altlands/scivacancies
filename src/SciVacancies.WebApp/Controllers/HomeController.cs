@@ -22,7 +22,8 @@ namespace SciVacancies.WebApp.Controllers
         {
             var model = new IndexViewModel
             {
-                OrganizationsList = _readModelService.SelectOrganizations(ConstTerms.OrderByCountDescending, 4, 1)
+                OrganizationsList = _readModelService.SelectOrganizations(ConstTerms.OrderByCountDescending, 4, 1),
+                VacanciesList = _readModelService.SelectVacancies(ConstTerms.OrderByDateDescending, 4, 1)
             };
 
 

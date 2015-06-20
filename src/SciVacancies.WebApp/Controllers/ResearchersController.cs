@@ -1,5 +1,9 @@
 ﻿using System;
+using AutoMapper;
 using Microsoft.AspNet.Mvc;
+using SciVacancies.Domain.Aggregates.Interfaces;
+using SciVacancies.ReadModel;
+using SciVacancies.WebApp.Engine;
 using SciVacancies.WebApp.Engine.CustomAttribute;
 using SciVacancies.WebApp.ViewModels;
 
@@ -7,11 +11,25 @@ namespace SciVacancies.WebApp.Controllers
 {
     public class ResearchersController: Controller
     {
+        private IResearcherService _researcherService;
+        private IReadModelService _readModelService;
+
+        public ResearchersController(IReadModelService readModelService, IResearcherService researcherService)
+        {
+            _researcherService = researcherService;
+            _readModelService = readModelService;
+        }
+
         [SiblingPage]
         [PageTitle("Информация")]
-        public ViewResult Account()
+        [BindArgumentFromCookies(ConstTerms.CookieKeyForResearcherGuid, "researcherGuid")]
+        public ViewResult Account(Guid researcherGuid)
         {
-            var model = new ResearcherDetailsViewModel();
+            if(researcherGuid == Guid.Empty)
+                throw new ArgumentNullException(nameof(researcherGuid));
+
+            var model = Mapper.Map<ResearcherDetailsViewModel>(_readModelService.SingleResearcher(researcherGuid));
+
             return View(model);
         }
 

@@ -19,19 +19,18 @@
                 <img src="/images/profile-photo.png" width="140" height="180" />
             </div>
             <div class="info info-view inline-block">
-                <h4>Московский государственный университет<br /> им. М.В. Ломоносова</h4>
-                <span><a href="#" class="big-link-compare lk-icon bold">Добавить в сравнение</a></span>
+                <h4>@Model.Name</h4>
 
                 <div class="profile-description">
-                    <div>Сокращенное наименование: <span class="bold">МГУ</span></div>
+                    <div>Сокращенное наименование: <span class="bold">@Model.ShortName</span></div>
 
                     <div>
-                        Сокращенное наименование: <span class="bold">MSU</span><br />
+                        Сокращенное наименование: <span class="bold">@Model.ShortNameEng</span><br />
                         <span class="sub">(на английском языке)</span>
                     </div>
 
                     <div>
-                        Полное наименование: <span class="bold">Moscow MV Lomonosov State Univ</span><br />
+                        Полное наименование: <span class="bold">@Model.NameEng</span><br />
                         <span class="sub">(на английском языке)</span>
                     </div>
                 </div>
@@ -40,11 +39,11 @@
     </div>
     <div class="row pt15 fs12">
         <div class="profile-description profile-description-place">
-            <div>Населенный пункт: <span class="bold">г. Москва</span></div>
+            <div>Населенный пункт: <span class="bold">@Model.CityName</span></div>
 
-            <div>Веб-сайт: <a href="#"><span class="bold">information@msu.ru</span></a></div>
+            <div>Веб-сайт: <a href="#"><span class="bold">@Model.Email</span></a></div>
 
-            <div>Почтовый адрес: <span class="bold">119991, Российская Федерация, Москва, ГСП-1, Ленинские горы, Московский государственный университет имени М.В.Ломоносова</span><br /></div>
+            <div>Почтовый адрес: <span class="bold">@Model.Address</span><br /></div>
         </div>
     </div>
 </div>

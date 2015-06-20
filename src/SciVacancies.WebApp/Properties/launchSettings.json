@@ -1,0 +1,12 @@
+{
+  "profiles": {
+    "IIS Express": {
+      "commandName": "IISExpress",
+      "launchBrowser": true,
+      "environmentVariables": {
+        "Key": "jhjkhk",
+        "ASPNET_ENV": "Development"
+      }
+    }
+  }
+}

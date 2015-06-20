@@ -22,20 +22,24 @@ namespace SciVacancies.WebApp.Infrastructure
             Mapper.CreateMap<Organization, OrganizationCreated>();
             //Обновление организации
             Mapper.CreateMap<Organization, OrganizationDataModel>();
-            
+            //информация об организации
+            Mapper.CreateMap<Organization, OrganizationDetailsViewModel>();
 
             /*Researcher*/
-            
+
             //Создание исследователя
             Mapper.CreateMap<Researcher, ResearcherCreated>();
             //Обновление исследователя
             Mapper.CreateMap<Researcher, ResearcherDataModel>();
+            //Информация об исследователе
+            Mapper.CreateMap<Researcher, ResearcherDetailsViewModel>();
 
 
             /*Vacancy*/
 
             //create position
             Mapper.CreateMap<PositionCreateViewModel, PositionDataModel>();
+            Mapper.CreateMap<PositionDataModel, VacancyDataModel>();
         }
     }
 }

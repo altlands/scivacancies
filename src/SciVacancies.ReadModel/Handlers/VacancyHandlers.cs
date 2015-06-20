@@ -83,6 +83,11 @@ namespace SciVacancies.ReadModel.Handlers
         public VacancyClosedHandler(IDatabase db) : base(db) { }
         public override void Handle(VacancyClosed msg)
         {
+            Position position = _db.SingleById<Position>(msg.PositionGuid);
+            position.Status = PositionStatus.InProcess;
+
+            _db.Update(position);
+
             Vacancy vacancy = _db.SingleById<Vacancy>(msg.VacancyGuid);
             vacancy.Status = VacancyStatus.Closed;
 
@@ -94,6 +99,11 @@ namespace SciVacancies.ReadModel.Handlers
         public VacancyCancelledHandler(IDatabase db) : base(db) { }
         public override void Handle(VacancyCancelled msg)
         {
+            Position position = _db.SingleById<Position>(msg.PositionGuid);
+            position.Status = PositionStatus.InProcess;
+
+            _db.Update(position);
+
             Vacancy vacancy = _db.SingleById<Vacancy>(msg.VacancyGuid);
             vacancy.Status = VacancyStatus.Cancelled;
 

@@ -1,10 +1,11 @@
 ﻿@using System.Threading.Tasks
-@using PagedList
+@using NPoco
+@using SciVacancies.ReadModel.Core
 @using SciVacancies.WebApp.ViewModels
 @model VacanciesFilter
 
 @{
-    var pagedData = (IPagedList<VacanciesItemViewModel>)ViewBag.PagedData;
+    var pagedData = (Page<Vacancy>)ViewBag.PagedData;
 }
 
 <div class="crumbs">
@@ -95,7 +96,7 @@
         <div class="b-search-result">
             <h4>@ViewBag.Title</h4>
             <div class="italic">
-                @Html.Raw(!string.IsNullOrWhiteSpace(Model.Search) ? string.Format("По запросу «{1}» с учетом фильтрации найдено {0} записей.", pagedData.TotalItemCount, Model.Search) : "&nbsp;")
+                @Html.Raw(!string.IsNullOrWhiteSpace(Model.Search) ? string.Format("По запросу «{1}» с учетом фильтрации найдено {0} записей.", pagedData.TotalItems, Model.Search) : "&nbsp;")
             </div>
 
             <div class="ctr-buttons" style="margin-top:20px;">
@@ -129,27 +130,23 @@
 
             <div class="list-results">
 
-                @foreach (var item in pagedData)
+                @foreach (var item in pagedData.Items)
             {
                     <div>
                         <div class="index-number">17.</div>
                         <div class="index-text">
-                            <div class="title">@item.Title</div>
+                            <div class="title">@item.Name</div>
                             <div class="inform">
-                                <p>Дата размещения: @item.PublishedDate.ToShortDateString()</p>
+                                <p>Дата размещения: @item.DateStart.ToShortDateString()</p>
                                 <p>
-                                    Регион: <a asp-controller="regions" asp-action="details" asp-route-id="@item.RegionGuid">@item.Region.Name</a>
+                                    Регион: <span>@item.CityName</span>
                                 </p>
-                                <p>Заработная плата: @item.MinSalary – @item.MaxSalary руб.</p>
+                                <p>Заработная плата: @item.SalaryFrom – @item.SalaryTo руб.</p>
                                 <p>
-                                    Организация: <a asp-controller="organizations" asp-action="details" asp-route-id="@item.OrganizationGuid">@item.Organization.Name</a>
+                                    Организация: <a asp-controller="organizations" asp-action="details" asp-route-id="@item.OrganizationGuid">@item.OrganizationName</a>
                                 </p>
                                 <p>
-                                    Научные направления:
-                                    @foreach (var direction in item.ScienceDirections)
-                                    {
-                                        <a asp-controller="directions" asp-action="details" asp-route-id="@direction.Guid">@direction.Name</a>
-                                    }
+                                    Научные направления: <span>@item.ResearchDirection</span>
                                 </p>
                             </div>
                         </div>
@@ -163,7 +160,7 @@
     <div class="bottom-nav" style="margin: 80px 0 20px 0;">
         <div class="bottom-nav-left">
             <div class="count-news" style="margin: 0 20px 0 0;">
-                171-180 из @pagedData.TotalItemCount вакансий
+                171-180 из @pagedData.TotalItems вакансий
             </div>
             <div class="count-line-page">
                 <input asp-for="PageSize" type="text" /> записей на странице
@@ -172,7 +169,7 @@
         <div class="bottom-nav-right">
             <ul>
                 <li>
-                    @if (pagedData.IsFirstPage)
+                    @if (pagedData.CurrentPage == 1)
                     {
                         <text>
                         <span class="first disable">
@@ -190,7 +187,7 @@
                     }
                 </li>
                 <li>
-                    @if (pagedData.IsFirstPage)
+                    @if (pagedData.CurrentPage == 1)
                     {
                         <text>
                         <span class="prev disable">
@@ -209,11 +206,11 @@
                 </li>
                 <li>
                     <div class="count-page">
-                        <input asp-for="PageNumber" type="text" /> из @pagedData.PageCount
+                        <input asp-for="PageNumber" type="text" /> из @pagedData.TotalPages
                     </div>
                 </li>
                 <li>
-                    @if (pagedData.IsLastPage)
+                    @if (pagedData.CurrentPage == pagedData.TotalPages)
                     {
                         <text>
                         <span class="next disable">
@@ -231,7 +228,7 @@
                     }
                 </li>
                 <li>
-                    @if (pagedData.IsLastPage)
+                    @if (pagedData.CurrentPage == pagedData.TotalPages)
                     {
                         <text>
                         <span class="latest disable">
@@ -255,32 +252,32 @@
 
 
 @*<div class="window-popup middle" style="display:none;">
-    <span class="close-popup"></span>
-    <div class="title-popup">
-        <h4>Подписка на поисковый запрос</h4>
+        <span class="close-popup"></span>
+        <div class="title-popup">
+            <h4>Подписка на поисковый запрос</h4>
+        </div>
+        <div class="content-popup">
+            <p class="fs14 arial">Подписываясь на запрос, вы сможете быстро перейти к соответствующим результатам из Личного кабинета, а также будете получать электронные уведомления обо всех обновлениях по теме данного запроса</p>
+            <div class="form-line">
+                <input type="text" style="width:340px;" placeholder="Название запроса" />
+            </div>
+
+            <div class="form-line">
+                <input type="text" style="width:340px;" placeholder="Ключевые слова" />
+            </div>
+
+            <div class="form-line mt25">
+                <span class="checkbox checked">
+                    <input type="checkbox" checked />
+                </span><label>Получать уведомления по электронной почте</label>
+            </div>
+
+            <div class="ctr-buttons mt40">
+                <span class="green-btn middle-icon icon-arr-right">Подписаться</span><span class="blue-btn middle-icon icon-close">Отмена</span>
+            </div>
+        </div>
     </div>
-    <div class="content-popup">
-        <p class="fs14 arial">Подписываясь на запрос, вы сможете быстро перейти к соответствующим результатам из Личного кабинета, а также будете получать электронные уведомления обо всех обновлениях по теме данного запроса</p>
-        <div class="form-line">
-            <input type="text" style="width:340px;" placeholder="Название запроса" />
-        </div>
-
-        <div class="form-line">
-            <input type="text" style="width:340px;" placeholder="Ключевые слова" />
-        </div>
-
-        <div class="form-line mt25">
-            <span class="checkbox checked">
-                <input type="checkbox" checked />
-            </span><label>Получать уведомления по электронной почте</label>
-        </div>
-
-        <div class="ctr-buttons mt40">
-            <span class="green-btn middle-icon icon-arr-right">Подписаться</span><span class="blue-btn middle-icon icon-close">Отмена</span>
-        </div>
-    </div>
-</div>
-<div class="bg-window" style="display: none;"></div>*@
+    <div class="bg-window" style="display: none;"></div>*@
 
 
 

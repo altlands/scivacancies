@@ -2,6 +2,7 @@
 using System.Linq;
 using AutoMapper;
 using Microsoft.AspNet.Mvc;
+using Microsoft.Framework.CodeGeneration;
 using SciVacancies.Domain.Aggregates.Interfaces;
 using SciVacancies.Domain.DataModels;
 using SciVacancies.ReadModel;
@@ -47,12 +48,16 @@ namespace SciVacancies.WebApp.Controllers
         [HttpPost]
         public ActionResult Create(PositionCreateViewModel model)
         {
-            var errors = ModelState.Values.Where(c => c.Errors.Count > 0).ToList();
-            var tempCount = errors.Count;
-
-            if (true /*ModelState.IsValid*/)
+            if (ModelState.IsValid)
             {
-                _organizationService.CreatePosition(model.OrganizationGuid, Mapper.Map<PositionDataModel>(model));
+                var positionDataModel = Mapper.Map<PositionDataModel>(model);
+                var positionGuid = _organizationService.CreatePosition(model.OrganizationGuid, positionDataModel);
+
+                if (model.ToPublish)
+                {
+                    var vacancyGuid = _organizationService.PublishVacancy(model.OrganizationGuid, positionGuid, Mapper.Map<VacancyDataModel>(positionDataModel));
+                }
+
                 return RedirectToAction("vacancies", "organizations");
             }
             model.InitDictionaries(_readModelService);
