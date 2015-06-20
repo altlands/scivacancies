@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Security.Cryptography;
 using AutoMapper;
 using Microsoft.AspNet.Mvc;
@@ -41,8 +42,13 @@ namespace SciVacancies.WebApp.Controllers
             if (organizationId == Guid.Empty)
                 throw new ArgumentNullException(nameof(organizationId));
 
-            var model = Mapper.Map<VacanciesInOrganizationIndexViewModel>(_readModelService.SelectPositions(organizationId));
-            model.OrganizationGuid = organizationId;
+            var model = new VacanciesInOrganizationIndexViewModel
+            {
+                OrganizationGuid = organizationId,
+                Positions = _readModelService.SelectPositions(organizationId),
+                Vacancies = _readModelService.SelectVacancies(organizationId)
+            };
+
             return View(model);
         }
 
