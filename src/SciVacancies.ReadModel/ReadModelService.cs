@@ -184,13 +184,6 @@ namespace SciVacancies.ReadModel
 
             return positions;
         }
-        [Obsolete("Метод будет удалён, использовать SelectVacancyApplicationsByVacancy(Guid vacancyGuid)")]
-        public List<VacancyApplication> SelectApplicationsToVacancy(Guid vacancyGuid)
-        {
-            List<VacancyApplication> vacancyApplication = _db.FetchBy<VacancyApplication>(f => f.Where(w => w.VacancyGuid == vacancyGuid));
-
-            return vacancyApplication;
-        }
 
         public List<PositionType> SelectPositionTypes()
         {
