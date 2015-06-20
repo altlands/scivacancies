@@ -11,7 +11,7 @@ namespace SciVacancies.WebApp
     public class SearchController: Controller
     {
         private readonly IReadModelService _readModelService;
-        private List<VacanciesItemViewModel> data = new List<VacanciesItemViewModel>();
+        private List<VacancyItemViewModel> data = new List<VacancyItemViewModel>();
 
         public SearchController(IReadModelService readModelService)
         {
@@ -33,7 +33,7 @@ namespace SciVacancies.WebApp
             while (x < 5)
             {
 
-                data.Add(new VacanciesItemViewModel
+                data.Add(new VacancyItemViewModel
                 {
                     Guid = Guid.NewGuid(),
                     Title = "Инженер-исследователь",
@@ -47,7 +47,7 @@ namespace SciVacancies.WebApp
                     ScienceDirections = new List<ScienceDirectionItemViewModel> { direction1, direction2, direction3, direction4, direction5, direction6, direction7 }
                 });
 
-                data.Add(new VacanciesItemViewModel
+                data.Add(new VacancyItemViewModel
                 {
                     Guid = Guid.NewGuid(),
                     Title = "Ведущий научный сотрудник",
@@ -61,7 +61,7 @@ namespace SciVacancies.WebApp
                     ScienceDirections = new List<ScienceDirectionItemViewModel> { direction1, direction2, direction3 }
                 });
 
-                data.Add(new VacanciesItemViewModel
+                data.Add(new VacancyItemViewModel
                 {
                     Guid = Guid.NewGuid(),
                     Title = "Старший научный сотрудник",
@@ -90,7 +90,7 @@ namespace SciVacancies.WebApp
             model.ValidateValues();
 
 
-            IOrderedQueryable<VacanciesItemViewModel> orderedData;
+            IOrderedQueryable<VacancyItemViewModel> orderedData;
             if (model.OrderBy.EndsWith("_descending"))
                 orderedData = data.AsQueryable().OrderByDescending(c => GetOrderingProperty(c, model.OrderBy));
             else
@@ -108,7 +108,7 @@ namespace SciVacancies.WebApp
             return View(model);
         }
 
-        private static object GetOrderingProperty(VacanciesItemViewModel c, string orderBy)
+        private static object GetOrderingProperty(VacancyItemViewModel c, string orderBy)
         {
             if (orderBy.StartsWith("date_"))
                 return c.PublishedDate;
