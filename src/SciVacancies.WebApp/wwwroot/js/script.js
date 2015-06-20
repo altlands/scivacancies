@@ -119,6 +119,9 @@ $(document).ready(function(){
 			$(this).parent("div").hide().prev("div").show();
 		}
 	});
+
+	findRemovableCreateriaItem($('.has-removable-items').find('li'));
+	recountCriteriaItem();
 });
 
 
@@ -139,3 +142,24 @@ function vacancySaveOptions(options) {
     }
 
 };
+
+function addNewCriteriaItem(ulName) {
+    var $ul = $('#' + ulName);
+    var newItem = $ul.find('li:hidden').clone().show();
+    findRemovableCreateriaItem(newItem);
+    $ul.append(newItem);
+    recountCriteriaItem();
+};
+function findRemovableCreateriaItem($lis) {
+    $lis.find('span.big-link-remove').click(function () {
+        var removeMe = $(this).parents('li')[0];
+        $(removeMe).remove();
+        recountCriteriaItem();
+    });
+};
+function recountCriteriaItem() {
+    var inputs = $('#CriteriaInputs').find('li:visible').find('input');
+    for (var i = 1; i <= inputs.length; i++) {
+        $(inputs[i-1]).attr('id', 'Criteria[' + i + ']');
+    }
+}

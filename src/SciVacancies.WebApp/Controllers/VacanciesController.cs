@@ -35,13 +35,22 @@ namespace SciVacancies.WebApp.Controllers
             if(organizationGuid==Guid.Empty)
                 throw new ArgumentNullException($"{nameof(organizationGuid)}");
 
-            var model = new VacancyCreateViewModel(organizationGuid).InitDictionaries(_readModelService);
+            var model = new PositionCreateViewModel(organizationGuid).InitDictionaries(_readModelService);
             return View(model);
         }
 
 
         [PageTitle("Новая вакансия")]
         [HttpPost]
-        public RedirectToActionResult Create(VacancyCreateViewModel model) => RedirectToAction("vacancies", "organizations");
+        [BindArgumentFromCookies(ConstTerms.CookieKeyForOrganizationGuid, "organizationGuid")]
+        public ActionResult Create(PositionCreateViewModel model)
+        {
+            //_organizationService.CreatePosition()
+            //return RedirectToAction("vacancies", "organizations");
+
+            model.InitDictionaries(_readModelService);
+            return View(model);
+
+        }
     }
 }
