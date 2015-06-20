@@ -13,6 +13,8 @@ namespace SciVacancies.WebApp.Controllers
         {
             Context.Response.Cookies.Append(ConstTerms.CookieKeyForUserRole, string.Empty, new CookieOptions { Expires = DateTime.Now.AddDays(-1) });
             Context.Response.Cookies.Append(ConstTerms.CookieKeyForUserName, string.Empty, new CookieOptions { Expires = DateTime.Now.AddDays(-1) });
+            Context.Response.Cookies.Append(ConstTerms.CookieKeyForResearcherGuid, string.Empty, new CookieOptions { Expires = DateTime.Now.AddDays(-1) });
+            Context.Response.Cookies.Append(ConstTerms.CookieKeyForOrganizationGuid, string.Empty, new CookieOptions { Expires = DateTime.Now.AddDays(-1) });
 
         }
 
@@ -21,8 +23,12 @@ namespace SciVacancies.WebApp.Controllers
         {
             DeleteUserCookies();
             var timeStamp = GetExpiresTime();
-            Context.Response.Cookies.Append(ConstTerms.CookieKeyForUserName, model.Login, new CookieOptions { Expires = timeStamp});
+            Context.Response.Cookies.Append(ConstTerms.CookieKeyForUserName, model.Login, new CookieOptions { Expires = timeStamp });
             Context.Response.Cookies.Append(ConstTerms.CookieKeyForUserRole, model.IsResearcher.ToString(), new CookieOptions { Expires = timeStamp });
+            if (model.IsResearcher)
+                Context.Response.Cookies.Append(ConstTerms.CookieKeyForResearcherGuid, Guid.NewGuid().ToString(), new CookieOptions { Expires = timeStamp });
+            else
+                Context.Response.Cookies.Append(ConstTerms.CookieKeyForOrganizationGuid, Guid.NewGuid().ToString(), new CookieOptions { Expires = timeStamp });
             return RedirectToHome();
         }
 
