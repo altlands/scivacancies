@@ -4,9 +4,9 @@
 @model AccountLoginViewModel
 @{
     bool isResearcher = false;
-    if (!string.IsNullOrWhiteSpace(Context.Request.Cookies.Get(ConstTerms.CookieKeyForUserRole)))
+    if (!string.IsNullOrWhiteSpace(Context.Request.Cookies.Get(ConstTerms.CookiesKeyForUserRole)))
     {
-        isResearcher = bool.Parse(Context.Request.Cookies.Get(ConstTerms.CookieKeyForUserRole));
+        isResearcher = bool.Parse(Context.Request.Cookies.Get(ConstTerms.CookiesKeyForUserRole));
     }
 }
 
@@ -20,7 +20,7 @@
     </script>
 }
 
-@if (string.IsNullOrWhiteSpace(Context.Request.Cookies.Get(ConstTerms.CookieKeyForUserName)))
+@if (string.IsNullOrWhiteSpace(Context.Request.Cookies.Get(ConstTerms.CookiesKeyForUserName)))
 {
 
     <div class="control control-registration">

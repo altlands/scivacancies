@@ -1,4 +1,7 @@
-﻿@model dynamic
+﻿@using System.Threading.Tasks
+@using SciVacancies.Domain.Enums
+@using SciVacancies.WebApp.Engine
+@model SciVacancies.ReadModel.Core.Vacancy
 
 @{
     var referer = Context.Request.Headers["referer"];
@@ -17,6 +20,24 @@
 <div class="title-popup">
     <h4>Вакансия ID МНС6000567</h4>
 </div>
+
+@if (bool.Parse(ViewData["ShowAddFavorite"].ToString()))
+{
+    <text>
+        <a asp-controller="researchers" asp-action="addtofavorite" asp-route-vacancyguid="@Model.Guid" class="success-btn middle-icon">Добавить в избранное</a>
+    <br />
+    <br />
+    </text>
+}
+@if (bool.Parse(ViewData["VacancyInFavorites"].ToString()))
+{
+    <text>
+    <span asp-controller="researchers" asp-action="addtofavorite" asp-route-vacancyguid="@Model.Guid" class="success-btn middle-icon" style="pointer-events: none;">В избранном</span>
+    <br />
+    <br />
+    </text>
+}
+
 <div class="content-popup">
     <div class="title-cat-inform">Специализация:</div>
     <ul class="list-information">
@@ -82,81 +103,90 @@
 
     <table class="table request-table">
         <thead>
-        <tr>
-            <th>
-                <div class="inline-block"><img src="/images/icons/arrow-bottom-tab.png" class="va-middle"/>
-                </div>
-                <div class="inline-block ml6 va-middle">№</div></th>
-            <th>
-                <div class="inline-block"><img src="/images/icons/tab-head.png" class="va-middle"/>
-                </div>
-                <div class="inline-block ml6 va-middle">Дата подачи заявки</div></th>
-            <th>
-                <div class="pl21 va-middle lh30">Фамилия, имя, отчество</div></th>
-            <th>
-                <div class="pl21 va-middle">Победители</div></th>
-            <th>
-                <div class="pl21 va-middle">Действия</div></th>
-        </tr>
+            <tr>
+                <th>
+                    <div class="inline-block">
+                        <img src="/images/icons/arrow-bottom-tab.png" class="va-middle" />
+                    </div>
+                    <div class="inline-block ml6 va-middle">№</div>
+                </th>
+                <th>
+                    <div class="inline-block">
+                        <img src="/images/icons/tab-head.png" class="va-middle" />
+                    </div>
+                    <div class="inline-block ml6 va-middle">Дата подачи заявки</div>
+                </th>
+                <th>
+                    <div class="pl21 va-middle lh30">Фамилия, имя, отчество</div>
+                </th>
+                <th>
+                    <div class="pl21 va-middle">Победители</div>
+                </th>
+                <th>
+                    <div class="pl21 va-middle">Действия</div>
+                </th>
+            </tr>
         </thead>
         <tbody>
-        <tr>
-            <td>001</td>
-            <td>01-09-14, 16:04</td>
-            <td>Глаголев<br/>Виктор Александрович</td>
-            <td class="align-center pl0"></td>
-            <td>
-                <a asp-controller="applications" asp-action="applicationinvacancy" asp-route-id="@Guid.NewGuid()" class="view-td-icon"></a>
-                <a href="#" class="close-td-icon"></a>
-                <a href="#" class="print-td-icon"></a>
-            </td>
-        </tr>
-        <tr>
-            <td>002</td>
-            <td>01-09-14, 16:04</td>
-            <td>Лермонторидзе<br/> Мцири Вахтангович</td>
-            <td class="align-center pl0">
-                <div class="td-gr-bg">1</div></td>
-            <td>
-                <a asp-controller="applications" asp-action="applicationinvacancy" asp-route-id="@Guid.NewGuid()" class="view-td-icon"></a>
-                <a href="#" class="close-td-icon"></a>
-                <a href="#" class="print-td-icon"></a>
-            </td>
-        </tr>
-        <tr>
-            <td>003</td>
-            <td>01-09-14, 16:04</td>
-            <td>Кочергин-Никитский<br/> Константин Вениаминович</td>
-            <td class="align-center pl0"></td>
-            <td>
-                <a asp-controller="applications" asp-action="applicationinvacancy" asp-route-id="@Guid.NewGuid()" class="view-td-icon"></a>
-                <a href="#" class="close-td-icon"></a>
-                <a href="#" class="print-td-icon"></a>
-            </td>
-        </tr>
-        <tr>
-            <td>004</td>
-            <td>01-09-14, 16:04</td>
-            <td>Беляев<br/> Евгений Петрович</td>
-            <td class="align-center pl0">
-                <div class="td-gr-bg">2</div></td>
-            <td>
-                <a asp-controller="applications" asp-action="applicationinvacancy" asp-route-id="@Guid.NewGuid()" class="view-td-icon"></a>
-                <a href="#" class="close-td-icon"></a>
-                <a href="#" class="print-td-icon"></a>
-            </td>
-        </tr>
-        <tr>
-            <td>005</td>
-            <td>01-09-14, 16:04</td>
-            <td>Каримбаева<br/> Жасмин Алибабаевна</td>
-            <td class="align-center pl0"></td>
-            <td>
-                <a asp-controller="applications" asp-action="applicationinvacancy" asp-route-id="@Guid.NewGuid()" class="view-td-icon"></a>
-                <a href="#" class="close-td-icon"></a>
-                <a href="#" class="print-td-icon"></a>
-            </td>
-        </tr>
+            <tr>
+                <td>001</td>
+                <td>01-09-14, 16:04</td>
+                <td>Глаголев<br />Виктор Александрович</td>
+                <td class="align-center pl0"></td>
+                <td>
+                    <a asp-controller="applications" asp-action="applicationinvacancy" asp-route-id="@Guid.NewGuid()" class="view-td-icon"></a>
+                    <a href="#" class="close-td-icon"></a>
+                    <a href="#" class="print-td-icon"></a>
+                </td>
+            </tr>
+            <tr>
+                <td>002</td>
+                <td>01-09-14, 16:04</td>
+                <td>Лермонторидзе<br /> Мцири Вахтангович</td>
+                <td class="align-center pl0">
+                    <div class="td-gr-bg">1</div>
+                </td>
+                <td>
+                    <a asp-controller="applications" asp-action="applicationinvacancy" asp-route-id="@Guid.NewGuid()" class="view-td-icon"></a>
+                    <a href="#" class="close-td-icon"></a>
+                    <a href="#" class="print-td-icon"></a>
+                </td>
+            </tr>
+            <tr>
+                <td>003</td>
+                <td>01-09-14, 16:04</td>
+                <td>Кочергин-Никитский<br /> Константин Вениаминович</td>
+                <td class="align-center pl0"></td>
+                <td>
+                    <a asp-controller="applications" asp-action="applicationinvacancy" asp-route-id="@Guid.NewGuid()" class="view-td-icon"></a>
+                    <a href="#" class="close-td-icon"></a>
+                    <a href="#" class="print-td-icon"></a>
+                </td>
+            </tr>
+            <tr>
+                <td>004</td>
+                <td>01-09-14, 16:04</td>
+                <td>Беляев<br /> Евгений Петрович</td>
+                <td class="align-center pl0">
+                    <div class="td-gr-bg">2</div>
+                </td>
+                <td>
+                    <a asp-controller="applications" asp-action="applicationinvacancy" asp-route-id="@Guid.NewGuid()" class="view-td-icon"></a>
+                    <a href="#" class="close-td-icon"></a>
+                    <a href="#" class="print-td-icon"></a>
+                </td>
+            </tr>
+            <tr>
+                <td>005</td>
+                <td>01-09-14, 16:04</td>
+                <td>Каримбаева<br /> Жасмин Алибабаевна</td>
+                <td class="align-center pl0"></td>
+                <td>
+                    <a asp-controller="applications" asp-action="applicationinvacancy" asp-route-id="@Guid.NewGuid()" class="view-td-icon"></a>
+                    <a href="#" class="close-td-icon"></a>
+                    <a href="#" class="print-td-icon"></a>
+                </td>
+            </tr>
         </tbody>
     </table>
 
