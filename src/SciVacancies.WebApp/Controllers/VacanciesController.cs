@@ -48,14 +48,7 @@ namespace SciVacancies.WebApp.Controllers
         [HttpPost]
         public ActionResult Create(PositionCreateViewModel model)
         {
-<<<<<<< HEAD
-            var errors = ModelState.Values.Where(c => c.Errors.Count > 0).ToList();
-            var tempCount = errors.Count;
-
-            if (true /*ModelState.IsValid*/)
-=======
             if (ModelState.IsValid)
->>>>>>> Interpage-navigation
             {
                 var positionDataModel = Mapper.Map<PositionDataModel>(model);
                 var positionGuid = _organizationService.CreatePosition(model.OrganizationGuid, positionDataModel);
