@@ -1,0 +1,6 @@
+﻿{
+  "Data": {
+        "ReadModelDb": "Server=localhost;Database=scivacancies;User Id=postgres;Password=postgres",
+        "EventStoreDb": "Server=localhost;Database=eventstore;User Id=postgres;Password=postgres"        
+  }
+}
