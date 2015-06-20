@@ -153,7 +153,7 @@ namespace SciVacancies.ReadModel
             if (string.IsNullOrWhiteSpace(orderBy))
                 orderBy = "Guid_descending";
 
-            Page<Organization> organizations = _db.Page<Organization>(pageIndex, pageSize, new Sql("SELECT o.* FROM Organizations o ORDER BY o.Guid DESC"));
+            Page<Organization> organizations = _db.Page<Organization>(pageIndex, pageSize, new Sql("SELECT o.* FROM \"Organizations\" o ORDER BY o.\"Guid\" DESC"));
 
             return organizations;
         }

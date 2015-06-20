@@ -11,6 +11,7 @@ namespace SciVacancies.ReadModel.Core
     [PrimaryKey("Guid", AutoIncrement = false)]
     public class Researcher : BaseEntity
     {
+        [Ignore]
         public string Login { get; set; }
 
         public string FirstName { get; set; }

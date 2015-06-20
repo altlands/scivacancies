@@ -8,7 +8,7 @@ CREATE TABLE "Researchers"
 "FirstNameEng" text,
 "SecondName" text,
 "SecondNameEng" text,
-"PreviouseSecondName" text,
+"PreviousSecondName" text,
 "Patronymic" text,
 "PatronymicEng" text,
 
