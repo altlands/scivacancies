@@ -24,7 +24,7 @@ namespace SciVacancies.WebApp.Controllers
 
         [SiblingPage]
         [PageTitle("Информация")]
-        [BindArgumentFromCookies(ConstTerms.CookieKeyForOrganizationGuid, "organizationId")]
+        [BindArgumentFromCookies(ConstTerms.CookiesKeyForOrganizationGuid, "organizationId")]
         public ViewResult Account(Guid organizationId)
         {
             if (organizationId == Guid.Empty)
@@ -36,7 +36,7 @@ namespace SciVacancies.WebApp.Controllers
 
         [SiblingPage]
         [PageTitle("Вакансии")]
-        [BindArgumentFromCookies(ConstTerms.CookieKeyForOrganizationGuid, "organizationId")]
+        [BindArgumentFromCookies(ConstTerms.CookiesKeyForOrganizationGuid, "organizationId")]
         public ViewResult Vacancies(Guid organizationId)
         {
             if (organizationId == Guid.Empty)

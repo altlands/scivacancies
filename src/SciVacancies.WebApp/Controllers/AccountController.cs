@@ -19,10 +19,10 @@ namespace SciVacancies.WebApp.Controllers
 
         private void DeleteUserCookies()
         {
-            Context.Response.Cookies.Append(ConstTerms.CookieKeyForUserRole, string.Empty, new CookieOptions { Expires = DateTime.Now.AddDays(-1) });
-            Context.Response.Cookies.Append(ConstTerms.CookieKeyForUserName, string.Empty, new CookieOptions { Expires = DateTime.Now.AddDays(-1) });
-            Context.Response.Cookies.Append(ConstTerms.CookieKeyForResearcherGuid, string.Empty, new CookieOptions { Expires = DateTime.Now.AddDays(-1) });
-            Context.Response.Cookies.Append(ConstTerms.CookieKeyForOrganizationGuid, string.Empty, new CookieOptions { Expires = DateTime.Now.AddDays(-1) });
+            Context.Response.Cookies.Append(ConstTerms.CookiesKeyForUserRole, string.Empty, new CookieOptions { Expires = DateTime.Now.AddDays(-1) });
+            Context.Response.Cookies.Append(ConstTerms.CookiesKeyForUserName, string.Empty, new CookieOptions { Expires = DateTime.Now.AddDays(-1) });
+            Context.Response.Cookies.Append(ConstTerms.CookiesKeyForResearcherGuid, string.Empty, new CookieOptions { Expires = DateTime.Now.AddDays(-1) });
+            Context.Response.Cookies.Append(ConstTerms.CookiesKeyForOrganizationGuid, string.Empty, new CookieOptions { Expires = DateTime.Now.AddDays(-1) });
 
         }
 
@@ -31,15 +31,15 @@ namespace SciVacancies.WebApp.Controllers
         {
             DeleteUserCookies();
             var timeStamp = GetExpiresTime();
-            Context.Response.Cookies.Append(ConstTerms.CookieKeyForUserName, model.Login, new CookieOptions { Expires = timeStamp });
-            Context.Response.Cookies.Append(ConstTerms.CookieKeyForUserRole, model.IsResearcher.ToString(), new CookieOptions { Expires = timeStamp });
+            Context.Response.Cookies.Append(ConstTerms.CookiesKeyForUserName, model.Login, new CookieOptions { Expires = timeStamp });
+            Context.Response.Cookies.Append(ConstTerms.CookiesKeyForUserRole, model.IsResearcher.ToString(), new CookieOptions { Expires = timeStamp });
 
             //попытка получить существующий Guid из БД
             var userGuid = (model.IsResearcher
                 ? _readModelService.SelectResearchers().Any() ? _readModelService.SelectResearchers().First().Guid : Guid.NewGuid()
                 : _readModelService.SelectOrganizations().Any() ? _readModelService.SelectOrganizations().First().Guid : Guid.NewGuid()
                 ).ToString();
-            var userGuidKey = model.IsResearcher ? ConstTerms.CookieKeyForResearcherGuid : ConstTerms.CookieKeyForOrganizationGuid;
+            var userGuidKey = model.IsResearcher ? ConstTerms.CookiesKeyForResearcherGuid : ConstTerms.CookiesKeyForOrganizationGuid;
             Context.Response.Cookies.Append(userGuidKey, userGuid, new CookieOptions { Expires = timeStamp });
 
             return RedirectToHome();
@@ -55,8 +55,8 @@ namespace SciVacancies.WebApp.Controllers
         {
             DeleteUserCookies();
             var timeStamp = GetExpiresTime();
-            Context.Response.Cookies.Append(ConstTerms.CookieKeyForUserName, model.UserName, new CookieOptions { Expires = timeStamp });
-            //Context.Response.Cookies.Append(ConstTerms.CookieKeyForUserRole, model.IsResearcher.ToString(), new CookieOptions { Expires = timeStamp });
+            Context.Response.Cookies.Append(ConstTerms.CookiesKeyForUserName, model.UserName, new CookieOptions { Expires = timeStamp });
+            //Context.Response.Cookies.Append(ConstTerms.CookiesKeyForUserRole, model.IsResearcher.ToString(), new CookieOptions { Expires = timeStamp });
             return RedirectToHome();
         }
 
