@@ -4,12 +4,16 @@ using System.Data.Entity;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNet.Identity.EntityFramework;
+using Microsoft.Framework.OptionsModel;
 
 namespace SciVacancies.WebApp.Infrastructure
 {
     [DbConfigurationType(typeof(PostgresDbConfiguration))]
     public class PostgresSciVacUserDbContext : SciVacUserDbContext
     {
+        public PostgresSciVacUserDbContext(IOptions<DbSettings> dbOptions) : base(dbOptions.Options.ReadModelDb)
+        {
+        }
         public PostgresSciVacUserDbContext(string connectionString) : base(connectionString)
         {
         }
