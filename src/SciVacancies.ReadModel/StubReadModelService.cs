@@ -92,6 +92,52 @@ namespace SciVacancies.ReadModel
 
             return result;
         }
+        public Page<Vacancy> SelectVacancies(string orderBy, long pageSize, long pageIndex, string nameFilterValue = null, string addressFilterValue = null)
+        {
+            if (pageSize < 1)
+                throw new Exception($"PageSize too small: {pageSize}");
+            if (pageIndex < 1)
+                throw new Exception($"PageIndex too small: {pageIndex}");
+
+            if (string.IsNullOrWhiteSpace(orderBy))
+                orderBy = "Guid_descending";
+
+            var data = new List<Vacancy>
+            {
+                new Vacancy
+                {
+                    Guid = Guid.NewGuid(),
+                    Name = "первая вакансия",
+                },
+                new Vacancy
+                {
+                    Guid = Guid.NewGuid(),
+                    Name = "Вторая вакансия",
+                },
+                new Vacancy
+                {
+                    Guid = Guid.NewGuid(),
+                    Name = "Третья вакансия",
+                },
+                new Vacancy
+                {
+                    Guid = Guid.NewGuid(),
+                    Name = "Четвёртая вакансия",
+                }
+            };
+
+            var result = new Page<Vacancy>
+            {
+                Items = data.Take((int)pageSize).ToList(),
+                CurrentPage = pageIndex,
+                ItemsPerPage = pageSize,
+                TotalItems = data.Count,
+                TotalPages = data.Count / pageSize + ((data.Count % pageSize) > 0 ? 1 : 0)
+            };
+
+            return result;
+        }
+
         public List<Vacancy> SelectFavoriteVacancies(Guid researcherGuid)
         {
             var result = new List<Vacancy>();
