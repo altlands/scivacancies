@@ -1,0 +1,1 @@
+rh.exe --databasetype=postgresql -c "Server=localhost;Database=scivacancies;User Id=postgres;Password=1234" -vf version.txt -env=AAVDEEV
