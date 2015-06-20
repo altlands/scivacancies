@@ -30,34 +30,48 @@
         <h4>Вакансии дня</h4>
         <div class="b-vacancies b-vacancies-day">
 
-            <a asp-controller="vacancies" asp-action="details" asp-route-id="3" class="row-4">
-                <div class="iblock-middle">
-                    <div class="title-vac">Младший научный сотрудник</div>
-                    <div class="sal-vac">30 000 – 40 000 руб.</div>
-                    <p>Московский государственный университет имени М.В.Ломоносова</p>
-                </div>
-            </a>
-            <a asp-controller="vacancies" asp-action="details" asp-route-id="3" class="row-4">
-                <div class="iblock-middle">
-                    <div class="title-vac">Младший научный сотрудник</div>
-                    <div class="sal-vac">30 000 – 40 000 руб.</div>
-                    <p>Московский государственный университет имени М.В.Ломоносова</p>
-                </div>
-            </a>
-            <a asp-controller="vacancies" asp-action="details" asp-route-id="3" class="row-4">
-                <div class="iblock-middle">
-                    <div class="title-vac">Младший научный сотрудник</div>
-                    <div class="sal-vac">30 000 – 40 000 руб.</div>
-                    <p>Московский государственный университет имени М.В.Ломоносова</p>
-                </div>
-            </a>
-            <a asp-controller="vacancies" asp-action="details" asp-route-id="3" class="row-4">
-                <div class="iblock-middle">
-                    <div class="title-vac">Младший научный сотрудник</div>
-                    <div class="sal-vac">30 000 – 40 000 руб.</div>
-                    <p>Московский государственный университет имени М.В.Ломоносова</p>
-                </div>
-            </a>
+            @foreach (var item in Model.VacanciesList.Items)
+            {
+                <text>
+                <a asp-controller="vacancies" asp-action="details" asp-route-id="@item.Guid" class="row-4">
+                    <div class="iblock-middle">
+                        <div class="title-vac">@item.Name</div>
+                        <div class="sal-vac">@item.SalaryFrom – @item.SalaryTo руб.</div>
+                        <p>@item.OrganizationGuid-Московский государственный университет имени М.В.Ломоносова</p>
+                    </div>
+                </a>
+                </text>
+            }
+
+
+            @*<a asp-controller="vacancies" asp-action="details" asp-route-id="3" class="row-4">
+                    <div class="iblock-middle">
+                        <div class="title-vac">Младший научный сотрудник</div>
+                        <div class="sal-vac">30 000 – 40 000 руб.</div>
+                        <p>Московский государственный университет имени М.В.Ломоносова</p>
+                    </div>
+                </a>
+                <a asp-controller="vacancies" asp-action="details" asp-route-id="3" class="row-4">
+                    <div class="iblock-middle">
+                        <div class="title-vac">Младший научный сотрудник</div>
+                        <div class="sal-vac">30 000 – 40 000 руб.</div>
+                        <p>Московский государственный университет имени М.В.Ломоносова</p>
+                    </div>
+                </a>
+                <a asp-controller="vacancies" asp-action="details" asp-route-id="3" class="row-4">
+                    <div class="iblock-middle">
+                        <div class="title-vac">Младший научный сотрудник</div>
+                        <div class="sal-vac">30 000 – 40 000 руб.</div>
+                        <p>Московский государственный университет имени М.В.Ломоносова</p>
+                    </div>
+                </a>
+                <a asp-controller="vacancies" asp-action="details" asp-route-id="3" class="row-4">
+                    <div class="iblock-middle">
+                        <div class="title-vac">Младший научный сотрудник</div>
+                        <div class="sal-vac">30 000 – 40 000 руб.</div>
+                        <p>Московский государственный университет имени М.В.Ломоносова</p>
+                    </div>
+                </a>*@
 
         </div>
         <a asp-controller="vacancies" asp-action="search">
