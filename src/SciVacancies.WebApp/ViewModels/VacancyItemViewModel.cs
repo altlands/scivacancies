@@ -10,7 +10,7 @@ namespace SciVacancies.WebApp.ViewModels
     /// <summary>
     /// объект для отображения в списке
     /// </summary>
-    public class VacanciesItemViewModel: ViewModelBase
+    public class VacancyItemViewModel: ViewModelBase
     {
         /// <summary>
         /// Название вакансии
