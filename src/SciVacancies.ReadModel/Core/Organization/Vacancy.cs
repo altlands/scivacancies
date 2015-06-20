@@ -23,6 +23,7 @@ namespace SciVacancies.ReadModel.Core
         public Guid WinnerGuid { get; set; }
         public Guid PretenderGuid { get; set; }
 
+        public string OrganizationName { get; set; }
         /// <summary>
         /// Должность
         /// </summary>

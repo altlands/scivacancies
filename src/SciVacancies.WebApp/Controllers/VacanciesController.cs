@@ -50,7 +50,7 @@ namespace SciVacancies.WebApp.Controllers
             var errors = ModelState.Values.Where(c => c.Errors.Count > 0).ToList();
             var tempCount = errors.Count;
 
-            if (false /*ModelState.IsValid*/)
+            if (true /*ModelState.IsValid*/)
             {
                 _organizationService.CreatePosition(model.OrganizationGuid, Mapper.Map<PositionDataModel>(model));
                 return RedirectToAction("vacancies", "organizations");
