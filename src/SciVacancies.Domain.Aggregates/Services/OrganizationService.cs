@@ -43,6 +43,7 @@ namespace SciVacancies.Domain.Aggregates.Services
         {
             Organization organization = _repository.GetById<Organization>(organizationGuid);
             Guid positionGuid = organization.CreatePosition(data);
+            _repository.Save(organization, Guid.NewGuid(), null);
 
             return positionGuid;
         }
@@ -50,17 +51,20 @@ namespace SciVacancies.Domain.Aggregates.Services
         {
             Organization organization = _repository.GetById<Organization>(organizationGuid);
             organization.UpdatePosition(positionGuid, data);
+            _repository.Save(organization, Guid.NewGuid(), null);
         }
         public void RemovePosition(Guid organizationGuid, Guid positionGuid)
         {
             Organization organization = _repository.GetById<Organization>(organizationGuid);
             organization.RemovePosition(positionGuid);
+            _repository.Save(organization, Guid.NewGuid(), null);
         }
 
         public Guid PublishVacancy(Guid organizationGuid, Guid positionGuid, VacancyDataModel data)
         {
             Organization organization = _repository.GetById<Organization>(organizationGuid);
             Guid vacancyGuid = organization.PublishVacancy(positionGuid, data);
+            _repository.Save(organization, Guid.NewGuid(), null);
 
             return vacancyGuid;
         }
@@ -68,21 +72,25 @@ namespace SciVacancies.Domain.Aggregates.Services
         {
             Organization organization = _repository.GetById<Organization>(organizationGuid);
             organization.SwitchVacancyToAcceptApplications(vacancyGuid);
+            _repository.Save(organization, Guid.NewGuid(), null);
         }
         public void SwitchVacancyInCommittee(Guid organizationGuid, Guid vacancyGuid)
         {
             Organization organization = _repository.GetById<Organization>(organizationGuid);
             organization.SwitchVacancyInCommittee(vacancyGuid);
+            _repository.Save(organization, Guid.NewGuid(), null);
         }
         public void CloseVacancy(Guid organizationGuid, Guid vacancyGuid, Guid winnerGuid, Guid pretenderGuid)
         {
             Organization organization = _repository.GetById<Organization>(organizationGuid);
             organization.CloseVacancy(vacancyGuid, winnerGuid, pretenderGuid);
+            _repository.Save(organization, Guid.NewGuid(), null);
         }
         public void CancelVacancy(Guid organizationGuid, Guid vacancyGuid, string reason)
         {
             Organization organization = _repository.GetById<Organization>(organizationGuid);
             organization.CancelVacancy(vacancyGuid, reason);
+            _repository.Save(organization, Guid.NewGuid(), null);
         }
     }
 }

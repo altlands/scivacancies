@@ -760,6 +760,9 @@ a.search-icons {
 .create-button,
 .green-btn,
 .blue-btn,
+.success-btn,
+.success-blue-btn,
+.create-btn,
 .white-btn,
 .blue-btn-sm {
     display: inline-block;
@@ -774,6 +777,61 @@ a.search-icons {
     -webkit-box-sizing: border-box;
     padding: 0 13px;
     cursor: pointer;
+}
+
+.success-btn-submit {
+  color: #ffffff;
+  text-decoration: none;
+  height: 40px;
+  line-height: 40px;
+  
+  display: inline-block;
+  font: italic 14px/27px Arial;
+  -webkit-border-radius: 4px;
+  -moz-border-radius: 4px;
+  border-radius: 4px;
+  box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  padding: 0 13px;
+  cursor: pointer;
+}
+
+.success-btn-submit {
+    padding: 0 13px 0 39px;
+    background: #4c854c url(../images/icons/success-icon.png) no-repeat 10px 9px;
+    background: url(../images/icons/success-icon.png) no-repeat 10px 9px, -webkit-gradient(linear, left bottom, left top, color-stop(0, #4c854c), color-stop(1, #b1deb1));
+    background: url(../images/icons/success-icon.png) no-repeat 10px 9px, -ms-linear-gradient(bottom, #4c854c, #b1deb1);
+    background: url(../images/icons/success-icon.png) no-repeat 10px 9px, -moz-linear-gradient(center bottom, #4c854c 0%, #b1deb1 100%);
+    background: url(../images/icons/success-icon.png) no-repeat 10px 9px, -o-linear-gradient(#b1deb1, #4c854c);
+    vertical-align: top; 
+}
+
+.blue-btn-sm-submit {
+  color: #ffffff;
+  text-decoration: none;
+  height: 30px;
+  line-height: 30px;
+  
+  display: inline-block;
+  font: italic 14px/27px Arial;
+  -webkit-border-radius: 4px;
+  -moz-border-radius: 4px;
+  border-radius: 4px;
+  box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  padding: 0 13px;
+  cursor: pointer;
+}
+
+.blue-btn-sm-submit {
+    padding: 0 13px 0 39px;
+    background: #4571ae url(../imagesicons/eye-icon.png) no-repeat 10px 9px;
+    background: url(../images/icons/eye-icon.png) no-repeat 10px 9px, -webkit-gradient(linear, left bottom, left top, color-stop(0, #3a5e91), color-stop(1, #4877b7));
+    background: url(../images/icons/eye-icon.png) no-repeat 10px 9px, -moz-linear-gradient(center bottom, #3a5e91 0%, #4877b7 100%);
+    background: url(../images/icons/eye-icon.png) no-repeat 10px 9px, -ms-linear-gradient(bottom, #3a5e91, #4877b7);
+    background: url(../images/icons/eye-icon.png) no-repeat 10px 9px, -o-linear-gradient(#4877b7, #3a5e91);
 }
 
 .blue-btn-sm {
@@ -799,6 +857,36 @@ a.search-icons {
     background: url(../images/but-arrow-s.png) no-repeat 10px 9px, -ms-linear-gradient(bottom, #4c854c, #b1deb1);
     background: url(../images/but-arrow-s.png) no-repeat 10px 9px, -moz-linear-gradient(center bottom, #4c854c 0%, #b1deb1 100%);
     background: url(../images/but-arrow-s.png) no-repeat 10px 9px, -o-linear-gradient(#b1deb1, #4c854c);
+}
+
+.create-btn {
+    padding: 0 13px 0 39px;
+    background: #4c854c url(../images/icons/create-icon.png) no-repeat 10px 9px;
+    background: url(../images/icons/create-icon.png) no-repeat 10px 9px, -webkit-gradient(linear, left bottom, left top, color-stop(0, #4c854c), color-stop(1, #b1deb1));
+    background: url(../images/icons/create-icon.png) no-repeat 10px 9px, -ms-linear-gradient(bottom, #4c854c, #b1deb1);
+    background: url(../images/icons/create-icon.png) no-repeat 10px 9px, -moz-linear-gradient(center bottom, #4c854c 0%, #b1deb1 100%);
+    background: url(../images/icons/create-icon.png) no-repeat 10px 9px, -o-linear-gradient(#b1deb1, #4c854c);
+    vertical-align: top;
+}
+
+.success-btn {
+    padding: 0 13px 0 39px;
+    background: #4c854c url(../images/icons/success-icon.png) no-repeat 10px 9px;
+    background: url(../images/icons/success-icon.png) no-repeat 10px 9px, -webkit-gradient(linear, left bottom, left top, color-stop(0, #4c854c), color-stop(1, #b1deb1));
+    background: url(../images/icons/success-icon.png) no-repeat 10px 9px, -ms-linear-gradient(bottom, #4c854c, #b1deb1);
+    background: url(../images/icons/success-icon.png) no-repeat 10px 9px, -moz-linear-gradient(center bottom, #4c854c 0%, #b1deb1 100%);
+    background: url(../images/icons/success-icon.png) no-repeat 10px 9px, -o-linear-gradient(#b1deb1, #4c854c);
+    vertical-align: top;
+}
+
+.success-blue-btn {
+    padding: 0 13px 0 39px;
+    background: #4571ae url(../images/icons/success-icon.png) no-repeat 10px 9px;
+    background: url(../images/icons/success-icon.png) no-repeat 10px 9px, -webkit-gradient(linear, left bottom, left top, color-stop(0, #3a5e91), color-stop(1, #4877b7));
+    background: url(../images/icons/success-icon.png) no-repeat 10px 9px, -moz-linear-gradient(center bottom, #3a5e91 0%, #4877b7 100%);
+    background: url(../images/icons/success-icon.png) no-repeat 10px 9px, -ms-linear-gradient(bottom, #3a5e91, #4877b7);
+    background: url(../images/icons/success-icon.png) no-repeat 10px 9px, -o-linear-gradient(#4877b7, #3a5e91);
+    vertical-align: top;
 }
 
 .close-button,
@@ -2551,3 +2639,88 @@ h4 + .b-vacancies {
     width: 100% !important;
 }
 /* /graphic */
+
+.mb30 {
+	margin-bottom: 30px;
+}
+
+.mt-7 {
+	margin-top: -7px;
+}
+
+.pt22 {
+	padding-top: 22px;
+}
+
+.grey-b-top {
+	border-top: 1px solid #d1d1d1;
+}
+
+.pass-recover-form.table-form .right-cell {
+	margin-left: 178px;
+}
+.pass-recover-form.table-form .right-cell.ml209 {
+	margin-left: 209px;
+}
+.pass-recover-form.table-form .left-cell {
+	width: 169px;
+}
+.pass-recover-form.table-form input[type="password"].middle-input {
+	height: 29px;
+	vertical-align: top;
+	margin-right: 10px;
+}
+.pass-recover-form.table-form .pass-recover-description {
+	font-size: 11px;
+	line-height: 13px;
+}
+.pass-recover-form.table-form .pass-recover-notif {
+	font-size: 11px;
+	line-height: 29px;
+}
+.pass-recover-form .b-r-form {
+	margin-left: 209px;
+    margin-top: 22px;
+}
+.green {
+	color: #28843e;
+}
+
+.error {
+	color: #a41b1f;
+}
+
+.n-b, .n-b.text {
+	border: none;
+}
+
+.window-popup.recover-popup {
+	width: 804px;
+	padding: 35px 40px 12px 30px;
+}
+
+.window-popup.recover-popup .title-popup {
+	margin-bottom: 2px;
+}
+
+.window-popup.recover-popup span.close-popup {
+  right: -14px;
+  top: -19px;
+}
+
+.window-popup.recover-popup .pass-recover-form .b-r-form {
+  margin-left: 178px;
+  margin-top: 31px;
+}
+
+.pass-recover-form .b-r-form.ml175 {
+	margin-left: 175px;
+}
+
+.pass-recover-form .b-r-form.mt29 {
+	margin-top: 29px;
+}
+
+.pass-recover-form .green-btn {
+	min-width: 122px;
+}

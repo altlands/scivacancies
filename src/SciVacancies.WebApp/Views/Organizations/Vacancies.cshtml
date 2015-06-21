@@ -1,14 +1,14 @@
 ﻿@using System.Threading.Tasks
 @using SciVacancies.WebApp.Controllers
-@model SciVacancies.WebApp.ViewModels.OrganizationDetailsViewModel
+@model SciVacancies.WebApp.ViewModels.VacanciesInOrganizationIndexViewModel
 
 <div class="crumbs">
     <a href="/">Главная страница</a><span class="separator">/</span>
-    <a asp-controller="organizations" asp-action="account">Московский государственный университет им. М.В. Ломоносова</a><span class="separator">/</span>    
+    <a asp-controller="organizations" asp-action="account">Карточка организации</a><span class="separator">/</span>
     @ViewBag.Title
 </div>
 
-<h3>@Model.Title</h3>
+<h3>Карточка организации</h3>
 
 @Component.Invoke("AccountTabs", typeof(OrganizationsController))
 
@@ -32,62 +32,105 @@
         </tr>
     </thead>
     <tbody>
-        <tr>
-            <td>001</td>
-            <td>ГНС600001</td>
-            <td>Главный<br /> научный сотрудник</td>
-            <td>01-09-14, 16:04</td>
-            <td>01-09-14, 16:04</td>
-            <td><span class="status work">Объявлен</span></td>
-            <td>
-                <a asp-controller="vacancies" asp-action="details" asp-route-id="@Guid.NewGuid()" class="view-td-icon"></a>
-                <a href="#" class="edit-td-icon"></a>
-                <a href="#" class="close-td-icon"></a>
-                <a href="#" class="class-td-icon"></a>
-            </td>
-        </tr>
-        <tr>
-            <td>002</td>
-            <td>ИИС60290004</td>
-            <td>Инженер-исследователь</td>
-            <td>01-09-14, 16:04</td>
-            <td>01-09-14, 16:04</td>
-            <td><span class="status work">В работе</span></td>
-            <td>
-                <a asp-controller="vacancies" asp-action="details" asp-route-id="@Guid.NewGuid()" class="view-td-icon"></a>
-                <a href="#" class="edit-td-icon"></a>
-                <a href="#" class="close-td-icon"></a>
-                <a href="#" class="class-td-icon"></a>
-            </td>
-        </tr>
-        <tr>
-            <td>003</td>
-            <td>РНП58000322</td>
-            <td>Руководитель<br /> научного подразделения</td>
-            <td>01-09-14, 16:04</td>
-            <td>01-09-14, 16:04</td>
-            <td><span class="status work">Прием заявок</span></td>
-            <td>
-                <a asp-controller="vacancies" asp-action="details" asp-route-id="@Guid.NewGuid()" class="view-td-icon"></a>
-                <a href="#" class="edit-td-icon"></a>
-                <a href="#" class="close-td-icon"></a>
-                <a href="#" class="minus-td-icon"></a>
-            </td>
-        </tr>
-        <tr>
-            <td>005</td>
-            <td>СНС6000021</td>
-            <td>Старший<br /> научный сотрудник</td>
-            <td>01-09-14, 16:04</td>
-            <td>01-09-14, 16:04</td>
-            <td><span class="status failed">В работе</span></td>
-            <td>
-                <a asp-controller="vacancies" asp-action="details" asp-route-id="@Guid.NewGuid()" class="view-td-icon"></a>
-                <a href="#" class="edit-td-icon"></a>
-                <a href="#" class="close-td-icon"></a>
-                <a href="#" class="class-td-icon"></a>
-            </td>
-        </tr>
+        @foreach (var item in Model.Positions)
+        {
+            <text>
+
+            <tr>
+                <td>@item.Guid.ToString().Substring(0, 4)...</td>
+                <td>ГНС600001</td>
+                <td>@item.Name</td>
+                <!--TODO: проверить правильность информации-->
+                <td>@item.CreationDate.ToShortDateString() <!--01-09-14, 16:04--></td>
+                <td>@{ item.UpdateDate?.ToShortDateString();} <!--01-09-14, 16:04--></td>
+                <td><span class="status work">@item.Status.GetDescription() <!--Объявлен--></span></td>
+                <td>
+                    <a asp-controller="vacancies" asp-action="details" asp-route-id="@item.Guid" class="view-td-icon"></a>
+                    <a href="#" class="edit-td-icon"></a>
+                    <a href="#" class="close-td-icon"></a>
+                    <a href="#" class="class-td-icon"></a>
+                </td>
+            </tr>
+            </text>
+                    }
+
+        @foreach (var item in Model.Vacancies)
+        {
+            <text>
+
+            <tr>
+                <td>@item.Guid.ToString().Substring(0, 4)...</td>
+                <td>ГНС600001</td>
+                <td>@item.Name</td>
+                <!--TODO: проверить правильность информации-->
+                <td>@item.CreationDate.ToShortDateString() <!--01-09-14, 16:04--></td>
+                <td>@{ item.DateStart.ToShortDateString();} <!--01-09-14, 16:04--></td>
+                <td><span class="status work">@item.Status.GetDescription() <!--Объявлен--></span></td>
+                <td>
+                    <a asp-controller="positions" asp-action="details" asp-route-id="@item.Guid" class="view-td-icon"></a>
+                    <a href="#" class="edit-td-icon"></a>
+                    <a href="#" class="close-td-icon"></a>
+                    <a href="#" class="class-td-icon"></a>
+                </td>
+            </tr>
+            </text>
+                    }
+        @*<tr>
+                <td>001</td>
+                <td>ГНС600001</td>
+                <td>Главный<br /> научный сотрудник</td>
+                <td>01-09-14, 16:04</td>
+                <td>01-09-14, 16:04</td>
+                <td><span class="status work">Объявлен</span></td>
+                <td>
+                    <a asp-controller="vacancies" asp-action="details" asp-route-id="@Guid.NewGuid()" class="view-td-icon"></a>
+                    <a href="#" class="edit-td-icon"></a>
+                    <a href="#" class="close-td-icon"></a>
+                    <a href="#" class="class-td-icon"></a>
+                </td>
+            </tr>
+            <tr>
+                <td>002</td>
+                <td>ИИС60290004</td>
+                <td>Инженер-исследователь</td>
+                <td>01-09-14, 16:04</td>
+                <td>01-09-14, 16:04</td>
+                <td><span class="status work">В работе</span></td>
+                <td>
+                    <a asp-controller="vacancies" asp-action="details" asp-route-id="@Guid.NewGuid()" class="view-td-icon"></a>
+                    <a href="#" class="edit-td-icon"></a>
+                    <a href="#" class="close-td-icon"></a>
+                    <a href="#" class="class-td-icon"></a>
+                </td>
+            </tr>
+            <tr>
+                <td>003</td>
+                <td>РНП58000322</td>
+                <td>Руководитель<br /> научного подразделения</td>
+                <td>01-09-14, 16:04</td>
+                <td>01-09-14, 16:04</td>
+                <td><span class="status work">Прием заявок</span></td>
+                <td>
+                    <a asp-controller="vacancies" asp-action="details" asp-route-id="@Guid.NewGuid()" class="view-td-icon"></a>
+                    <a href="#" class="edit-td-icon"></a>
+                    <a href="#" class="close-td-icon"></a>
+                    <a href="#" class="minus-td-icon"></a>
+                </td>
+            </tr>
+            <tr>
+                <td>005</td>
+                <td>СНС6000021</td>
+                <td>Старший<br /> научный сотрудник</td>
+                <td>01-09-14, 16:04</td>
+                <td>01-09-14, 16:04</td>
+                <td><span class="status failed">В работе</span></td>
+                <td>
+                    <a asp-controller="vacancies" asp-action="details" asp-route-id="@Guid.NewGuid()" class="view-td-icon"></a>
+                    <a href="#" class="edit-td-icon"></a>
+                    <a href="#" class="close-td-icon"></a>
+                    <a href="#" class="class-td-icon"></a>
+                </td>
+            </tr>*@
     </tbody>
 </table>
 <div class="bottom-nav">

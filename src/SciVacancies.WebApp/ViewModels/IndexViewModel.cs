@@ -8,7 +8,7 @@ namespace SciVacancies.WebApp.ViewModels
     /// </summary>
     public class IndexViewModel
     {
-
         public Page<Organization> OrganizationsList{ get; set; }
+        public Page<Vacancy> VacanciesList { get; set; }
     }
 }

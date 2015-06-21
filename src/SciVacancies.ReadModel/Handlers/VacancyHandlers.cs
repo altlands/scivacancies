@@ -23,10 +23,12 @@ namespace SciVacancies.ReadModel.Handlers
 
             Vacancy vacancy = new Vacancy()
             {
+                Guid=msg.VacancyGuid,
+                PositionGuid=msg.PositionGuid,
                 OrganizationGuid = msg.OrganizationGuid,
                 Name = msg.Data.Name,
                 FullName = msg.Data.FullName,
-                FieldOfScience = msg.Data.FieldOfScience,
+                ResearchDirection = msg.Data.ResearchDirection,
                 ResearchTheme = msg.Data.ResearchTheme,
                 Tasks = msg.Data.Tasks,
                 Criteria = msg.Data.Criteria,
@@ -48,7 +50,7 @@ namespace SciVacancies.ReadModel.Handlers
                 ContactPhone = msg.Data.ContactPhone,
                 ContactDetails = msg.Data.ContactDetails,
                 DateStart = msg.Data.DateStart,
-                DateStartResearcher = msg.Data.DateStartResearcher,
+                DateStartAcceptance = msg.Data.DateStartAcceptance,
                 DateFinish = msg.Data.DateFinish
             };
 
@@ -81,6 +83,11 @@ namespace SciVacancies.ReadModel.Handlers
         public VacancyClosedHandler(IDatabase db) : base(db) { }
         public override void Handle(VacancyClosed msg)
         {
+            Position position = _db.SingleById<Position>(msg.PositionGuid);
+            position.Status = PositionStatus.InProcess;
+
+            _db.Update(position);
+
             Vacancy vacancy = _db.SingleById<Vacancy>(msg.VacancyGuid);
             vacancy.Status = VacancyStatus.Closed;
 
@@ -92,6 +99,11 @@ namespace SciVacancies.ReadModel.Handlers
         public VacancyCancelledHandler(IDatabase db) : base(db) { }
         public override void Handle(VacancyCancelled msg)
         {
+            Position position = _db.SingleById<Position>(msg.PositionGuid);
+            position.Status = PositionStatus.InProcess;
+
+            _db.Update(position);
+
             Vacancy vacancy = _db.SingleById<Vacancy>(msg.VacancyGuid);
             vacancy.Status = VacancyStatus.Cancelled;
 

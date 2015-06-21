@@ -1,4 +1,5 @@
-﻿using SciVacancies.ReadModel.Core;
+﻿using SciVacancies.Domain.Enums;
+using SciVacancies.ReadModel.Core;
 
 using System;
 using System.Collections.Generic;
@@ -93,6 +94,56 @@ namespace SciVacancies.ReadModel
 
             return vacancies;
         }
+        public List<Vacancy> SelectVacancies(string title, int count)
+        {
+
+            List<Vacancy> vacancies;
+            if (count != 0)
+            {
+                vacancies = _db.FetchBy<Vacancy>(f => f.Where(w => w.Name.Contains(title))).Take(count).ToList();
+            }
+            else
+            {
+                vacancies = _db.FetchBy<Vacancy>(f => f.Where(w => w.Name.Contains(title)));
+            }
+
+            return vacancies;
+        }
+        public Page<Vacancy> SelectVacancies(string orderBy, long pageSize, long pageIndex, string nameFilterValue = null, string addressFilterValue = null)
+        {
+            //TODO - Complete this method by filter and proper ordering
+            if (pageSize < 1) throw new Exception($"PageSize too small: {pageSize}");
+            if (pageIndex < 1) throw new Exception($"PageIndex too small: {pageIndex}");
+
+            if (string.IsNullOrWhiteSpace(orderBy))
+                orderBy = "Guid_descending";
+
+            Page<Vacancy> vacancies = _db.Page<Vacancy>(pageIndex, pageSize, new Sql("SELECT o.* FROM \"Vacancies\" o ORDER BY o.\"Guid\" DESC"));
+
+            return vacancies;
+        }
+
+        public List<Vacancy> SelectClosedVacancies(Guid organizationGuid)
+        {
+            List<Vacancy> vacancies = _db.FetchBy<Vacancy>(f => f.Where(w => w.OrganizationGuid == organizationGuid&&w.Status==VacancyStatus.Closed));
+
+            return vacancies;
+        }
+        public Page<Vacancy> SelectClosedVacancies(string orderBy, long pageSize, long pageIndex, string nameFilterValue = null, string addressFilterValue = null)
+        {
+            if (pageSize < 1)
+                throw new Exception($"PageSize too small: {pageSize}");
+            if (pageIndex < 1)
+                throw new Exception($"PageIndex too small: {pageIndex}");
+
+            if (string.IsNullOrWhiteSpace(orderBy))
+                orderBy = "Guid_descending";
+
+            Page<Vacancy> vacancies = _db.Page<Vacancy>(pageIndex, pageSize, new Sql("SELECT o.* FROM \"Vacancies\" o ORDER BY o.\"Guid\" DESC"));
+
+            return vacancies;
+        }
+
         public List<Vacancy> SelectFavoriteVacancies(Guid researcherGuid)
         {
             List<Guid> guids = _db.FetchBy<FavoriteVacancy>(f => f.Where(w => w.ResearcherGuid == researcherGuid)).Select(s => s.VacancyGuid).ToList();
@@ -153,7 +204,7 @@ namespace SciVacancies.ReadModel
             if (string.IsNullOrWhiteSpace(orderBy))
                 orderBy = "Guid_descending";
 
-            Page<Organization> organizations = _db.Page<Organization>(pageIndex, pageSize, new Sql("SELECT o.* FROM Organizations o ORDER BY o.Guid DESC"));
+            Page<Organization> organizations = _db.Page<Organization>(pageIndex, pageSize, new Sql("SELECT o.* FROM \"Organizations\" o ORDER BY o.\"Guid\" DESC"));
 
             return organizations;
         }
@@ -183,13 +234,6 @@ namespace SciVacancies.ReadModel
             List<Position> positions = _db.FetchBy<Position>(f => f.Where(w => w.OrganizationGuid == organizationGuid));
 
             return positions;
-        }
-        [Obsolete("Метод будет удалён, использовать SelectVacancyApplicationsByVacancy(Guid vacancyGuid)")]
-        public List<VacancyApplication> SelectApplicationsToVacancy(Guid vacancyGuid)
-        {
-            List<VacancyApplication> vacancyApplication = _db.FetchBy<VacancyApplication>(f => f.Where(w => w.VacancyGuid == vacancyGuid));
-
-            return vacancyApplication;
         }
 
         public List<PositionType> SelectPositionTypes()

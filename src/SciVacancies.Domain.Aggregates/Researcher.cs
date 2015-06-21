@@ -22,10 +22,16 @@ namespace SciVacancies.Domain.Aggregates
 
         public Researcher()
         {
-
+            FavoriteVacancyGuids = new List<Guid>();
+            SearchSubscriptions = new List<SearchSubscription>();
+            VacancyApplications = new List<VacancyApplication>();
         }
         public Researcher(Guid guid, ResearcherDataModel data)
         {
+            FavoriteVacancyGuids = new List<Guid>();
+            SearchSubscriptions = new List<SearchSubscription>();
+            VacancyApplications = new List<VacancyApplication>();
+
             RaiseEvent(new ResearcherCreated()
             {
                 ResearcherGuid = guid,

@@ -16,6 +16,8 @@ namespace SciVacancies.WebApp
 
         public override void Process(TagHelperContext context, TagHelperOutput output)
         {
+            if (Items == null) return;
+
             /*
                 <li>
                     <span class="checkbox">
@@ -23,6 +25,7 @@ namespace SciVacancies.WebApp
                     </span><label>Владивосток (12)</label>
                 </li>
             */
+
             var i = 0;
             foreach (var item in Items)
             {
@@ -36,7 +39,7 @@ namespace SciVacancies.WebApp
                 input.Attributes.Add("id", Property + i);
                 input.Attributes.Add("value", item.Value);
 
-                if (Values.Contains(item.Value))
+                if (Values != null && Values.Contains(item.Value))
                 {
                     input.Attributes.Add("checked", string.Empty);
                     span.AddCssClass("checked");

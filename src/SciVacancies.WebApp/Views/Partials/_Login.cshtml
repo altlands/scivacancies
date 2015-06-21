@@ -4,9 +4,9 @@
 @model AccountLoginViewModel
 @{
     bool isResearcher = false;
-    if (!string.IsNullOrWhiteSpace(Context.Request.Cookies.Get(ConstTerms.CookieKeyForUserRole)))
+    if (!string.IsNullOrWhiteSpace(Context.Request.Cookies.Get(ConstTerms.CookiesKeyForUserRole)))
     {
-        isResearcher = bool.Parse(Context.Request.Cookies.Get(ConstTerms.CookieKeyForUserRole));
+        isResearcher = bool.Parse(Context.Request.Cookies.Get(ConstTerms.CookiesKeyForUserRole));
     }
 }
 
@@ -20,7 +20,7 @@
     </script>
 }
 
-@if (string.IsNullOrWhiteSpace(Context.Request.Cookies.Get(ConstTerms.CookieKeyForUserName)))
+@if (string.IsNullOrWhiteSpace(Context.Request.Cookies.Get(ConstTerms.CookiesKeyForUserName)))
 {
 
     <div class="control control-registration">
@@ -64,7 +64,7 @@
                 </div>
 
                 <div class="form-line">
-                    <input asp-for="Login" class="long-input" placeholder="Логин (e-mail)" />
+                    <input asp-for="Login" value="tempUser1" class="long-input" placeholder="Логин (e-mail)" />
                 </div>
 
                 <div class="form-line">

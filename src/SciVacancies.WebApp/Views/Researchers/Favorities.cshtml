@@ -1,7 +1,6 @@
 ﻿@using System.Threading.Tasks
 @using SciVacancies.WebApp.Controllers
-@using SciVacancies.WebApp.ViewModels
-@model SciVacancies.WebApp.ViewModels.ResearcherDetailsViewModel
+@model SciVacancies.WebApp.ViewModels.VacanciesFavoritiesInResearcherIndexViewModel
 
 <div class="crumbs">
     <a href="/">Главная страница</a><span class="separator">/</span>
@@ -33,24 +32,46 @@
         </tr>
     </thead>
     <tbody>
-        <tr>
-            <td>ГНС600001</td>
-            <td>Главный<br /> научный сотрудник</td>
-            <td>60000 руб.</td>
-            <td>01-09-14, 16:04</td>
-            <td><span class="status executed">Завершён</span></td>
-            <td><span class="status executed">Победитель</span></td>
-            <td>
-                <a asp-controller="vacancies" asp-action="preview" asp-route-id="@Guid.NewGuid()" class="view-td-icon"></a>
-            </td>
-        </tr>
+        <!-- TODO: show data in depend on Vacancy.Status -->
+        @foreach (var item in Model.Vacancies)
+        {
+            <text>
+            <tr>
+                <td>@item.Guid.ToString().Substring(0, 4)...</td>
+                <td>@item.Name</td>
+                <td>@item.SalaryFrom - @item.SalaryTo руб.</td>
+                <td>@item.DateStartAcceptance.ToShortDateString() <!--01-09-14, 16:04--></td>
+
+
+                <td>
+                    <span class="status executed">
+                        @item.Status.GetDescription() <!--Завершён-->
+                    </span>
+                    @*<span class="status work">
+                        Приём заявок
+                    </span>*@
+                </td>
+
+                <td>
+                    <!--<span class="status executed">Победитель<br /><del>Победитель</del> </span>-->
+                    <a asp-controller="applications" asp-action="create" asp-route-vacancyid="@item.Guid" class="send-request-icon">
+                        <span class="italic">Подать заявку</span>
+                    </a>
+                </td>
+
+                <td>
+                    <a asp-controller="vacancies" asp-action="preview" asp-route-id="@item.Guid" class="view-td-icon"></a>
+                </td>
+            </tr>
+            </text>
+        }
         <tr>
             <td>ИИС60290004</td>
             <td>Инженер-исследователь</td>
             <td>60000 руб.</td>
             <td>01-09-14, 16:04</td>
-            <td><span class="status work">Приём заявок</span></td>
-            <td><a asp-controller="applications" asp-action="create" asp-route-vacancyid="@Guid.NewGuid()" asp-route-researcherguid="@Guid.NewGuid()" class="send-request-icon"><span class="italic">Подать заявку</span></a></td>
+            <td><span class="status work">Объявлен</span></td>
+            <td><span class="status work">В работе</span></td>
             <td>
                 <a asp-controller="vacancies" asp-action="preview" asp-route-id="@Guid.NewGuid()" class="view-td-icon"></a>
             </td>
@@ -66,9 +87,10 @@
                 <a asp-controller="vacancies" asp-action="preview" asp-route-id="@Guid.NewGuid()" class="view-td-icon"></a>
             </td>
         </tr>
+        <!--
         <tr>
             <td>СНС6000021</td>
-            <td>Старший<br /> научный сотрудник</td>
+            <td>Старший<br/> научный сотрудник</td>
             <td>60000 руб.</td>
             <td>01-09-14, 16:04</td>
             <td><span class="status executed">Завершён</span></td>
@@ -77,6 +99,7 @@
                 <a asp-controller="vacancies" asp-action="preview" asp-route-id="@Guid.NewGuid()" class="view-td-icon"></a>
             </td>
         </tr>
+        -->
     </tbody>
 </table>
 <div class="bottom-nav">
