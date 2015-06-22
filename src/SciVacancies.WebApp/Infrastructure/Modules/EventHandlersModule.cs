@@ -1,13 +1,7 @@
-﻿using SciVacancies.Domain.Events;
-using SciVacancies.ReadModel.Handlers;
-
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
-using Autofac;
+﻿using Autofac;
 using MediatR;
+using SciVacancies.Domain.Events;
+using SciVacancies.ReadModel.Handlers;
 
 namespace SciVacancies.WebApp.Infrastructure
 {

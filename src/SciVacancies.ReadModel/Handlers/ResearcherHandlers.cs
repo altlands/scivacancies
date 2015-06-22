@@ -20,7 +20,7 @@ namespace SciVacancies.ReadModel.Handlers
             {
                 Guid = msg.ResearcherGuid,
 
-                Login = msg.Data.Login,
+                Login = msg.Data.UserId,
 
                 FirstName = msg.Data.FirstName,
                 SecondName = msg.Data.SecondName,

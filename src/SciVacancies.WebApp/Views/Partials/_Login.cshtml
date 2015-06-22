@@ -1,7 +1,7 @@
 ﻿@using System.Threading.Tasks
 @using SciVacancies.WebApp.Engine
 @using SciVacancies.WebApp.ViewModels
-@model AccountLoginViewModel
+@model SciVacancies.WebApp.ViewModels.AccountLoginViewModel
 @{
     bool isResearcher = false;
     if (!string.IsNullOrWhiteSpace(Context.Request.Cookies.Get(ConstTerms.CookiesKeyForUserRole)))

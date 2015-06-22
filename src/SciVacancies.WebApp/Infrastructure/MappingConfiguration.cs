@@ -1,13 +1,7 @@
-﻿using SciVacancies.Domain.DataModels;
+﻿using AutoMapper;
+using SciVacancies.Domain.DataModels;
 using SciVacancies.Domain.Events;
 using SciVacancies.ReadModel.Core;
-
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
-using AutoMapper;
 using SciVacancies.WebApp.ViewModels;
 
 namespace SciVacancies.WebApp.Infrastructure
@@ -46,6 +40,8 @@ namespace SciVacancies.WebApp.Infrastructure
 
             //create 
             Mapper.CreateMap<VacancyApplicationCreateViewModel, VacancyApplicationDataModel>();
+
+            Mapper.CreateMap<AccountRegisterViewModel, ResearcherDataModel>();
         }
     }
 }

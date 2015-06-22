@@ -1,14 +1,8 @@
-﻿using SciVacancies.ReadModel;
-
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using Autofac;
 using Microsoft.Framework.ConfigurationModel;
-
-using Autofac;
 using Npgsql;
 using NPoco;
+using SciVacancies.ReadModel;
 
 namespace SciVacancies.WebApp.Infrastructure
 {

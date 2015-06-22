@@ -1,21 +1,16 @@
 ﻿using System;
 using System.Data;
-using System.Data.SqlClient;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.Framework.ConfigurationModel;
-
 using Autofac;
 using CommonDomain;
 using CommonDomain.Core;
 using CommonDomain.Persistence;
 using CommonDomain.Persistence.EventStore;
+using MediatR;
+using Microsoft.Framework.ConfigurationModel;
 using NEventStore;
 using NEventStore.Dispatcher;
 using NEventStore.Persistence.Sql;
 using NEventStore.Persistence.Sql.SqlDialects;
-using MediatR;
 using Npgsql;
 
 namespace SciVacancies.WebApp.Infrastructure
