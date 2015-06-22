@@ -18,7 +18,7 @@ namespace SciVacancies.ReadModel.Core
 
         public int PositionTypeId { get; set; }
 
-        public string Fullname { get; set; }
+        public string FullName { get; set; }
         public string Email { get; set; }
         public string ExtraEmail { get; set; }
         public string Phone { get; set; }

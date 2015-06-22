@@ -1,7 +1,7 @@
 ﻿using Autofac;
 using MediatR;
 using SciVacancies.Domain.Events;
-using SciVacancies.ReadModel.Handlers;
+using SciVacancies.ReadModel;
 
 namespace SciVacancies.WebApp.Infrastructure
 {
