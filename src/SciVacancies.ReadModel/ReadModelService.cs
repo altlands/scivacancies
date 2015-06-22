@@ -77,7 +77,7 @@ namespace SciVacancies.ReadModel
                 throw new Exception($"searchSubscriptionGuid is empty: {searchSubscriptionGuid}");
             }
 
-            SearchSubscription searchSubscription = _db.SingleById<SearchSubscription>(searchSubscriptionGuid);
+            SearchSubscription searchSubscription = _db.SingleOrDefaultById<SearchSubscription>(searchSubscriptionGuid);
 
             return searchSubscription;
         }
@@ -89,6 +89,11 @@ namespace SciVacancies.ReadModel
         }
         public List<SearchSubscription> SelectSearchSubscriptions(Guid researcherGuid)
         {
+            if (researcherGuid == Guid.Empty)
+            {
+                throw new Exception($"researcherGuid is empty: {researcherGuid}");
+            }
+
             List<SearchSubscription> searchSubscriptions = _db.FetchBy<SearchSubscription>(f => f.Where(w => w.ResearcherGuid == researcherGuid));
 
             return searchSubscriptions;
@@ -96,12 +101,22 @@ namespace SciVacancies.ReadModel
 
         public Attachment SingleAttachment(Guid attachmentGuid)
         {
-            Attachment attachment = _db.SingleById<Attachment>(attachmentGuid);
+            if (attachmentGuid == Guid.Empty)
+            {
+                throw new Exception($"attachmentGuid is empty: {attachmentGuid}");
+            }
+
+            Attachment attachment = _db.SingleOrDefaultById<Attachment>(attachmentGuid);
 
             return attachment;
         }
         public List<Attachment> SelectAttachments(Guid vacancyApplicationGuid)
         {
+            if (vacancyApplicationGuid == Guid.Empty)
+            {
+                throw new Exception($"vacancyApplicationGuid is empty: {vacancyApplicationGuid}");
+            }
+
             List<Attachment> attachments = _db.FetchBy<Attachment>(f => f.Where(w => w.VacancyApplicationGuid == vacancyApplicationGuid));
 
             return attachments;
@@ -109,12 +124,22 @@ namespace SciVacancies.ReadModel
 
         public Vacancy SingleVacancy(Guid vacancyGuid)
         {
-            Vacancy vacancy = _db.SingleById<Vacancy>(vacancyGuid);
+            if (vacancyGuid == Guid.Empty)
+            {
+                throw new Exception($"vacancyGuid is empty: {vacancyGuid}");
+            }
+
+            Vacancy vacancy = _db.SingleOrDefaultById<Vacancy>(vacancyGuid);
 
             return vacancy;
         }
         public List<Vacancy> SelectVacancies(Guid organizationGuid)
         {
+            if (organizationGuid == Guid.Empty)
+            {
+                throw new Exception($"organizationGuid is empty: {organizationGuid}");
+            }
+
             List<Vacancy> vacancies = _db.FetchBy<Vacancy>(f => f.Where(w => w.OrganizationGuid == organizationGuid));
 
             return vacancies;
@@ -150,6 +175,11 @@ namespace SciVacancies.ReadModel
 
         public List<Vacancy> SelectClosedVacancies(Guid organizationGuid)
         {
+            if (organizationGuid == Guid.Empty)
+            {
+                throw new Exception($"organizationGuid is empty: {organizationGuid}");
+            }
+
             List<Vacancy> vacancies = _db.FetchBy<Vacancy>(f => f.Where(w => w.OrganizationGuid == organizationGuid && w.Status == VacancyStatus.Closed));
 
             return vacancies;
@@ -171,6 +201,11 @@ namespace SciVacancies.ReadModel
 
         public List<Vacancy> SelectFavoriteVacancies(Guid researcherGuid)
         {
+            if (researcherGuid == Guid.Empty)
+            {
+                throw new Exception($"researcherGuid is empty: {researcherGuid}");
+            }
+
             List<Guid> guids = _db.FetchBy<FavoriteVacancy>(f => f.Where(w => w.ResearcherGuid == researcherGuid)).Select(s => s.VacancyGuid).ToList();
             if (guids.Any())
             {
@@ -186,30 +221,55 @@ namespace SciVacancies.ReadModel
 
         public Notification SingleNotification(Guid notificationGuid)
         {
-            Notification notification = _db.SingleById<Notification>(notificationGuid);
+            if (notificationGuid == Guid.Empty)
+            {
+                throw new Exception($"notificationGuid is empty: {notificationGuid}");
+            }
+
+            Notification notification = _db.SingleOrDefaultById<Notification>(notificationGuid);
 
             return notification;
         }
         public List<Notification> SelectNotificationsByResearcher(Guid researcherGuid)
         {
+            if (researcherGuid == Guid.Empty)
+            {
+                throw new Exception($"researcherGuid is empty: {researcherGuid}");
+            }
+
             List<Notification> notifications = _db.FetchBy<Notification>(f => f.Where(w => w.ResearcherGuid == researcherGuid));
 
             return notifications;
         }
         public List<Notification> SelectNotificationsByOrganization(Guid organizationGuid)
         {
+            if (organizationGuid == Guid.Empty)
+            {
+                throw new Exception($"organizationGuid is empty: {organizationGuid}");
+            }
+
             List<Notification> notifications = _db.FetchBy<Notification>(f => f.Where(w => w.OrganizationGuid == organizationGuid));
 
             return notifications;
         }
         public int CountNotificationsByResearcher(Guid researcherGuid)
         {
+            if (researcherGuid == Guid.Empty)
+            {
+                throw new Exception($"researcherGuid is empty: {researcherGuid}");
+            }
+
             int counter = _db.FetchBy<Notification>(f => f.Where(w => w.ResearcherGuid == researcherGuid)).Count();
 
             return counter;
         }
         public int CountNotificationsByOrganization(Guid organizationGuid)
         {
+            if (organizationGuid == Guid.Empty)
+            {
+                throw new Exception($"organizationGuid is empty: {organizationGuid}");
+            }
+
             int counter = _db.FetchBy<Notification>(f => f.Where(w => w.OrganizationGuid == organizationGuid)).Count();
 
             return counter;
@@ -217,7 +277,12 @@ namespace SciVacancies.ReadModel
 
         public Organization SingleOrganization(Guid organizationGuid)
         {
-            Organization organization = _db.SingleById<Organization>(organizationGuid);
+            if (organizationGuid == Guid.Empty)
+            {
+                throw new Exception($"organizationGuid is empty: {organizationGuid}");
+            }
+
+            Organization organization = _db.SingleOrDefaultById<Organization>(organizationGuid);
 
             return organization;
         }
@@ -257,12 +322,22 @@ namespace SciVacancies.ReadModel
 
         public Position SinglePosition(Guid positionGuid)
         {
-            Position position = _db.SingleById<Position>(positionGuid);
+            if (positionGuid == Guid.Empty)
+            {
+                throw new Exception($"positionGuid is empty: {positionGuid}");
+            }
+
+            Position position = _db.SingleOrDefaultById<Position>(positionGuid);
 
             return position;
         }
         public List<Position> SelectPositions(Guid organizationGuid)
         {
+            if (organizationGuid == Guid.Empty)
+            {
+                throw new Exception($"organizationGuid is empty: {organizationGuid}");
+            }
+
             List<Position> positions = _db.FetchBy<Position>(f => f.Where(w => w.OrganizationGuid == organizationGuid));
 
             return positions;
