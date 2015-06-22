@@ -61,7 +61,7 @@ namespace SciVacancies.WebApp.Controllers
 
             var model = new VacancyApplicationsInResearcherIndexViewModel
             {
-                Vacancies = _readModelService.SelectVacancyApplicationsByResearcher(researcherGuid)
+                Applications = _readModelService.SelectVacancyApplicationsByResearcher(researcherGuid)
             };
             return View(model);
         }

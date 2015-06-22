@@ -33,23 +33,26 @@
         </tr>
     </thead>
     <tbody>
-        @foreach (var item in Model.Vacancies)
+        @if (Model.Applications != null)
         {
-            <text>
-            <tr>
-                <td>ГНС600001</td>
-                <td>@item.FullName</td>
-                <td>@item.Rewards руб.</td>
-                <td>@{ item.SentDate?.ToShortDateString();}<!--01-09-14, 16:04--></td>
-                <td><span class="status executed">Завершён</span></td>
-                <td><span class="status executed">@item.Status.GetDescription()</span></td>
-                <td>
-                    <a asp-controller="applications" asp-action="details" asp-route-id="@item.Guid" class="view-td-icon"></a>
-                    <a href="#" class="close-td-icon"></a>
-                </td>
-            </tr>
-            </text>
-                    }
+            foreach (var item in Model.Applications)
+            {
+                <text>
+                    <tr>
+                        <td>ГНС600001</td>
+                        <td>@item.FullName</td>
+                        <td>@item.Rewards руб.</td>
+                        <td>@{ item.SentDate?.ToShortDateString(); }<!--01-09-14, 16:04--></td>
+                        <td><span class="status executed">Завершён</span></td>
+                        <td><span class="status executed">@item.Status.GetDescription()</span></td>
+                        <td>
+                            <a asp-controller="applications" asp-action="details" asp-route-id="@item.Guid" class="view-td-icon"></a>
+                            <a href="#" class="close-td-icon"></a>
+                        </td>
+                    </tr>
+                </text>
+            }
+        }
         <!--
         <tr>
             <td>ГНС600001</td>

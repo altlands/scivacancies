@@ -34,39 +34,42 @@
     </thead>
     <tbody>
         <!-- TODO: show data in depend on Vacancy.Status -->
-        @foreach (var item in Model.Vacancies)
+        @if (Model.Vacancies != null)
         {
-            <text>
-            <tr>
-                <td>@item.Guid.ToString().Substring(0, 4)...</td>
-                <td>@item.Name</td>
-                <td>@item.SalaryFrom - @item.SalaryTo руб.</td>
-                <td>@item.DateStartAcceptance.ToShortDateString() <!--01-09-14, 16:04--></td>
+            foreach (var item in Model.Vacancies)
+            {
+                <text>
+                <tr>
+                    <td>@item.Guid.ToString().Substring(0, 4)...</td>
+                    <td>@item.Name</td>
+                    <td>@item.SalaryFrom - @item.SalaryTo руб.</td>
+                    <td>@item.DateStartAcceptance.ToShortDateString() <!--01-09-14, 16:04--></td>
 
 
-                <td>
-                    <span class="status executed">
-                        @item.Status.GetDescription() <!--Завершён-->
-                    </span>
-                    @*<span class="status work">
-                        Приём заявок
-                    </span>*@
-                </td>
+                    <td>
+                        <span class="status executed">
+                            @item.Status.GetDescription() <!--Завершён-->
+                        </span>
+                        @*<span class="status work">
+                                Приём заявок
+                            </span>*@
+                    </td>
 
-                <td>
-                    <!--<span class="status executed">Победитель<br /><del>Победитель</del> </span>-->
-                    <a asp-controller="applications" asp-action="create" asp-route-vacancyguid="@item.Guid" class="send-request-icon">
-                        <span class="italic">Подать заявку</span>
-                    </a>
-                </td>
+                    <td>
+                        <!--<span class="status executed">Победитель<br /><del>Победитель</del> </span>-->
+                        <a asp-controller="applications" asp-action="create" asp-route-vacancyguid="@item.Guid" class="send-request-icon">
+                            <span class="italic">Подать заявку</span>
+                        </a>
+                    </td>
 
-                <td>
-                    <a asp-controller="vacancies" asp-action="preview" asp-route-id="@item.Guid" class="view-td-icon"></a>
-                </td>
-            </tr>
-            </text>
+                    <td>
+                        <a asp-controller="vacancies" asp-action="preview" asp-route-id="@item.Guid" class="view-td-icon"></a>
+                    </td>
+                </tr>
+                </text>
+            }
         }
-        <tr>
+        <!--<tr>
             <td>ИИС60290004</td>
             <td>Инженер-исследователь</td>
             <td>60000 руб.</td>
@@ -88,7 +91,7 @@
                 <a asp-controller="vacancies" asp-action="preview" asp-route-id="@Guid.NewGuid()" class="view-td-icon"></a>
             </td>
         </tr>
-        <!--
+        
         <tr>
             <td>СНС6000021</td>
             <td>Старший<br/> научный сотрудник</td>

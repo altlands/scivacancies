@@ -1,7 +1,6 @@
 ﻿@using System.Threading.Tasks
 @using NPoco
 @using SciVacancies.ReadModel.Core
-@using SciVacancies.WebApp.ViewModels
 @model SciVacancies.WebApp.ViewModels.VacanciesFilter
 
 @{
@@ -135,7 +134,7 @@
                     <div>
                         <div class="index-number">17.</div>
                         <div class="index-text">
-                            <div class="title">@item.Name</div>
+                            <div class="title"><a asp-controller="vacancies" asp-action="details" asp-route-id="@item.Guid">@item.Name</a></div>
                             <div class="inform">
                                 <p>Дата размещения: @item.DateStart.ToShortDateString()</p>
                                 <p>
