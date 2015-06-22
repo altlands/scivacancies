@@ -53,9 +53,16 @@ namespace SciVacancies.WebApp.Controllers
 
         [SiblingPage]
         [PageTitle("Мои заявки")]
-        public ViewResult Applications()
+        [BindArgumentFromCookies(ConstTerms.CookiesKeyForResearcherGuid, "researcherGuid")]
+        public ViewResult Applications(Guid researcherGuid)
         {
-            var model = new ResearcherDetailsViewModel();
+            if (researcherGuid == Guid.Empty)
+                throw new ArgumentNullException(nameof(researcherGuid));
+
+            var model = new VacancyApplicationsInResearcherIndexViewModel
+            {
+                Vacancies = _readModelService.SelectVacancyApplicationsByResearcher(researcherGuid)
+            };
             return View(model);
         }
 
