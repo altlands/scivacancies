@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNet.Identity.EntityFramework;
 
-namespace SciVacancies.WebApp.Infrastructure
+namespace SciVacancies.WebApp.Infrastructure.Identity
 {
     public class SciVacUserStore: UserStore<SciVacUser>
     {

@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data.Entity;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Data.Entity;
 using Microsoft.AspNet.Identity.EntityFramework;
 
-namespace SciVacancies.WebApp.Infrastructure
+namespace SciVacancies.WebApp.Infrastructure.Identity
 {
     [DbConfigurationType(typeof(MssqlDbConfiguration))]
     public class SciVacUserDbContext : IdentityDbContext<SciVacUser>

@@ -1,19 +1,16 @@
 ﻿using Microsoft.AspNet.Mvc;
 using SciVacancies.ReadModel;
 using SciVacancies.WebApp.Engine;
-using SciVacancies.WebApp.Infrastructure;
 using SciVacancies.WebApp.ViewModels;
 
 namespace SciVacancies.WebApp.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly IReadModelService _readModelService;
-        public IFart Fart {get;set;}
+        private readonly IReadModelService _readModelService;        
 
-        public HomeController(IFart fart, IReadModelService readModelService)
-        {
-            Fart = fart;
+        public HomeController(IReadModelService readModelService)
+        {            
             _readModelService = readModelService;
         }
         

@@ -1,4 +1,5 @@
-﻿@{
+﻿@model SciVacancies.WebApp.ViewModels.AccountRegisterViewModel
+@{
     ViewBag.Title = "Регистрация";
 }
 
@@ -17,12 +18,12 @@
 <a href="#" class="middle-icon icon-download lk-icon"><span>Загрузить данные из системы «Карта науки»</span></a>
 
 <div class="b-form">
-    <form>
+    <form asp-controller="Account" asp-action="Register" method="post" role="form">
         <div class="form-line form-row">
             <label>Фамилия</label>
             <div class="b-r-form">
                 <div class="input">
-                    <input type="text"/>
+                    <input asp-for="Patronymic" type="text" />
                 </div>
             </div>
         </div>
@@ -31,7 +32,7 @@
             <label>Имя</label>
             <div class="b-r-form">
                 <div class="input">
-                    <input type="text"/>
+                    <input asp-for="FirstName" type="text" />
                 </div>
             </div>
         </div>
@@ -40,7 +41,7 @@
             <label>Отчество</label>
             <div class="b-r-form">
                 <div class="input">
-                    <input type="text"/>
+                    <input asp-for="SecondName" type="text" />
                 </div>
             </div>
         </div>
@@ -60,7 +61,7 @@
             <label>Электронная почта</label>
             <div class="b-r-form">
                 <div class="input">
-                    <input type="text"/>
+                    <input asp-for="Email" type="text" />
                 </div>
             </div>
         </div>
@@ -69,7 +70,7 @@
             <label>Контактный телефон</label>
             <div class="b-r-form">
                 <div class="input">
-                    <input type="text"/>
+                    <input asp-for="Phone" type="text" />
                 </div>
             </div>
         </div>

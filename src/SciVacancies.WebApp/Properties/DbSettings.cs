@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
-namespace SciVacancies.WebApp
+﻿namespace SciVacancies.ApplicationInfrastructure
 {
     public class DbSettings
     {

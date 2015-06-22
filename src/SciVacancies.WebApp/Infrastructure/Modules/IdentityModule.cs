@@ -1,13 +1,6 @@
-﻿using SciVacancies.Domain.Aggregates.Interfaces;
-using SciVacancies.Domain.Aggregates.Services;
-
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
-using Autofac;
+﻿using Autofac;
 using Microsoft.AspNet.Identity;
+using SciVacancies.WebApp.Infrastructure.Identity;
 
 namespace SciVacancies.WebApp.Infrastructure
 {

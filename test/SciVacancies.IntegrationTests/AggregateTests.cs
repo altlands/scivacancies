@@ -1,22 +1,17 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Xunit;
-using Microsoft.Framework.ConfigurationModel;
-using NEventStore;
-using NEventStore.Persistence;
-using NEventStore.Persistence.Sql;
-using NEventStore.Persistence.InMemory;
-using SciVacancies.Domain.Aggregates;
-using CommonDomain.Persistence.EventStore;
-using CommonDomain.Persistence;
-using CommonDomain;
-using CommonDomain.Core;
 using System.Data;
 using System.Data.SqlClient;
+using CommonDomain;
+using CommonDomain.Core;
+using CommonDomain.Persistence;
+using CommonDomain.Persistence.EventStore;
+using Microsoft.Framework.ConfigurationModel;
+using NEventStore;
+using NEventStore.Persistence.Sql;
 using NEventStore.Persistence.Sql.SqlDialects;
+using SciVacancies.Domain.Aggregates;
 using SciVacancies.Domain.DataModels;
+using Xunit;
 
 namespace SciVacancies.IntegrationTests
 {

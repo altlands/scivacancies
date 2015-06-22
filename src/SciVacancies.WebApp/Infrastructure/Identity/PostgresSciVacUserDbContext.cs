@@ -1,12 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Data.Entity;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.Framework.OptionsModel;
+using SciVacancies.ApplicationInfrastructure;
 
-namespace SciVacancies.WebApp.Infrastructure
+namespace SciVacancies.WebApp.Infrastructure.Identity
 {
     [DbConfigurationType(typeof(PostgresDbConfiguration))]
     public class PostgresSciVacUserDbContext : SciVacUserDbContext

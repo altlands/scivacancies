@@ -1,11 +1,15 @@
 ﻿using System;
 using System.Linq;
+using System.Security.Claims;
+using MediatR;
 using Microsoft.AspNet.Http;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Mvc;
 using SciVacancies.ReadModel;
+using SciVacancies.WebApp.Commands;
 using SciVacancies.WebApp.Engine;
 using SciVacancies.WebApp.Infrastructure;
+using SciVacancies.WebApp.Infrastructure.Identity;
 using SciVacancies.WebApp.ViewModels;
 
 namespace SciVacancies.WebApp.Controllers
@@ -13,11 +17,13 @@ namespace SciVacancies.WebApp.Controllers
     public class AccountController : Controller
     {
         private readonly IReadModelService _readModelService;
+        private readonly IMediator _mediator;
         private readonly SciVacUserManager _userManager;
 
-        public AccountController(SciVacUserManager userManager, IReadModelService readModelService)
+        public AccountController(SciVacUserManager userManager, IReadModelService readModelService, IMediator mediator)
         {
             _readModelService = readModelService;
+            _mediator = mediator;
             _userManager = userManager;
         }
 
@@ -61,10 +67,13 @@ namespace SciVacancies.WebApp.Controllers
         [HttpPost]
         public IActionResult Register(AccountRegisterViewModel model)
         {
-            DeleteUserCookies();
-            var timeStamp = GetExpiresTime();
-            Context.Response.Cookies.Append(ConstTerms.CookiesKeyForUserName, model.UserName, new CookieOptions { Expires = timeStamp });
-            //Context.Response.Cookies.Append(ConstTerms.CookiesKeyForUserRole, model.IsResearcher.ToString(), new CookieOptions { Expires = timeStamp });
+            var command = new RegisterUserCommand() {Data = model};
+            var user = _mediator.Send(command);
+                       
+            var identity = _userManager.CreateIdentity(user, DefaultAuthenticationTypes.ApplicationCookie);
+            var cp = new ClaimsPrincipal(identity);
+            Context.Response.SignIn(DefaultAuthenticationTypes.ApplicationCookie,cp);
+            
             return RedirectToHome();
         }
 

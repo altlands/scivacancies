@@ -1,36 +1,19 @@
-﻿using SciVacancies.Domain.Events;
-using SciVacancies.WebApp.Infrastructure;
-
-using System;
+﻿using System;
 using System.Collections;
-using System.Collections.Generic;
 using System.Linq;
-using Microsoft.AspNet.Builder;
-using Microsoft.AspNet.Diagnostics;
-using Microsoft.AspNet.Http;
-using Microsoft.AspNet.Identity;
-using Microsoft.AspNet.Authentication;
-using Microsoft.AspNet.Authorization;
-using Microsoft.AspNet.Hosting;
-using Microsoft.Framework.ConfigurationModel;
-using Microsoft.Framework.DependencyInjection;
-using Microsoft.Framework.Logging;
-
-using NEventStore;
-using NEventStore.Dispatcher;
-using NEventStore.Persistence.Sql.SqlDialects;
-
-using CommonDomain;
-using CommonDomain.Core;
-using CommonDomain.Persistence;
-using CommonDomain.Persistence.EventStore;
-
-using MediatR;
 using Autofac;
 using Autofac.Dnx;
 using Autofac.Features.Variance;
-using System.Linq;
-using Microsoft.AspNet.Identity.EntityFramework;
+using Microsoft.AspNet.Builder;
+using Microsoft.AspNet.Diagnostics;
+using Microsoft.AspNet.Hosting;
+using Microsoft.AspNet.Identity;
+using Microsoft.Framework.ConfigurationModel;
+using Microsoft.Framework.DependencyInjection;
+using Microsoft.Framework.Logging;
+using SciVacancies.ApplicationInfrastructure;
+using SciVacancies.WebApp.Commands;
+using SciVacancies.WebApp.Infrastructure;
 
 namespace SciVacancies.WebApp
 {
@@ -39,11 +22,11 @@ namespace SciVacancies.WebApp
         public Startup(IHostingEnvironment env)
         {
             var vars = Environment.GetEnvironmentVariables();
-            var dev_env = vars.Cast<DictionaryEntry>().FirstOrDefault(e => e.Key.Equals("dev_env")).Value;
+            var devEnv = vars.Cast<DictionaryEntry>().FirstOrDefault(e => e.Key.Equals("dev_env")).Value;
             // Setup configuration sources.
             Configuration = new Configuration()
-                .AddJsonFile("config.json")                
-                .AddJsonFile($"config.{dev_env}.json", optional:true)
+                .AddJsonFile("config.json")
+                .AddJsonFile($"config.{devEnv}.json", optional: true)
                 .AddEnvironmentVariables();
         }
 
@@ -70,12 +53,25 @@ namespace SciVacancies.WebApp
             return container.Resolve<IServiceProvider>();
         }
 
+        public void ConfigureContainer(ContainerBuilder builder)
+        {
+            builder.RegisterModule(new EventStoreModule(Configuration));
+            builder.RegisterModule(new EventBusModule());
+            builder.RegisterModule(new EventHandlersModule());
+            builder.RegisterModule(new ReadModelModule(Configuration));
+            builder.RegisterModule(new ServicesModule());
+            builder.RegisterModule(new IdentityModule());
+
+            builder.RegisterSource(new ContravariantRegistrationSource());
+            builder.RegisterAssemblyTypes(typeof(RegisterUserCommand).Assembly).AsImplementedInterfaces();
+        }
+
         // Configure is called after ConfigureServices is called.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerfactory)
         {
             app.UseCookieAuthentication(options =>
             {
-                options.AuthenticationScheme = DefaultAuthenticationTypes.ApplicationCookie;                
+                options.AuthenticationScheme = DefaultAuthenticationTypes.ApplicationCookie;
             });
             //app.UseOpenIdConnectAuthentication();
 
@@ -111,54 +107,7 @@ namespace SciVacancies.WebApp
                 // routes.MapWebApiRoute("DefaultApi", "api/{controller}/{id?}");
             });
 
-            MappingConfiguration.Initialize();
-        }
-
-        public void ConfigureContainer(ContainerBuilder builder)
-        {
-            builder.RegisterModule(new EventStoreModule(Configuration));
-            builder.RegisterModule(new EventBusModule());
-            builder.RegisterModule(new EventHandlersModule());
-            builder.RegisterModule(new ReadModelModule(Configuration));
-            builder.RegisterModule(new ServicesModule());
-            builder.RegisterModule(new IdentityModule());
-
-            //ConfigureMediatr(builder);
-            builder.RegisterType<Fart>().As<IFart>();
-
-
-            //builder.RegisterType<PostgresSciVacUserDbContext>().AsSelf().InstancePerRequest();
-            //builder.RegisterType<SciVacUserStore>().As<IUserStore<SciVacUser>>().InstancePerRequest();
-            //builder.RegisterType<SciVacUserManager>().AsSelf().InstancePerRequest();
-
-            //builder.RegisterType<PostgresSciVacUserDbContext>().AsSelf().InstancePerRequest();
-            //builder.RegisterType<SciVacUserStore>().As<IUserStore<SciVacUser>>();
-            //builder.RegisterType<SciVacUserManager>().AsSelf();
-
-            //builder.RegisterType<SciVacSignInManager>().AsSelf().InstancePerRequest();
-            //builder.Register<IAuthenticationManager>(c => HttpContext.Current.GetOwinContext().Authentication).InstancePerRequest();
-            //builder.Register<IDataProtectionProvider>(c => app.GetDataProtectionProvider()).InstancePerRequest();
-
-
-
-        }
-
-        public void ConfigureMediatr(ContainerBuilder builder)
-        {
-            builder.RegisterSource(new ContravariantRegistrationSource());
-            builder.RegisterAssemblyTypes(typeof(IMediator).Assembly).AsImplementedInterfaces();
-            builder.RegisterAssemblyTypes(typeof(EventBase).Assembly).AsImplementedInterfaces();
-
-            builder.Register<SingleInstanceFactory>(ctx =>
-            {
-                var c = ctx.Resolve<IComponentContext>();
-                return t => c.Resolve(t);
-            });
-            builder.Register<MultiInstanceFactory>(ctx =>
-            {
-                var c = ctx.Resolve<IComponentContext>();
-                return t => (IEnumerable<object>)c.Resolve(typeof(IEnumerable<>).MakeGenericType(t));
-            });
+            MappingConfiguration.Initialize();                      
         }
     }
 }

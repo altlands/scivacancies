@@ -7,7 +7,6 @@ using SciVacancies.ReadModel;
 using SciVacancies.WebApp.Engine;
 using SciVacancies.WebApp.Engine.CustomAttribute;
 using SciVacancies.WebApp.ViewModels;
-using SciVacancies.WebApp.ViewModels.Base;
 
 namespace SciVacancies.WebApp.Controllers
 {

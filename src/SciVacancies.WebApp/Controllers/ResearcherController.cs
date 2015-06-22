@@ -1,13 +1,6 @@
-﻿using SciVacancies.Domain.DataModels;
+﻿using Microsoft.AspNet.Mvc;
 using SciVacancies.Domain.Aggregates.Interfaces;
 using SciVacancies.ReadModel;
-using SciVacancies.ReadModel.Core;
-
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNet.Mvc;
 
 namespace SciVacancies.WebApp.Controllers
 {
