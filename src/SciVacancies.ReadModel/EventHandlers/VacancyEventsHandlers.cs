@@ -23,8 +23,8 @@ namespace SciVacancies.ReadModel.EventHandlers
 
             Vacancy vacancy = new Vacancy()
             {
-                Guid=msg.VacancyGuid,
-                PositionGuid=msg.PositionGuid,
+                Guid = msg.VacancyGuid,
+                PositionGuid = msg.PositionGuid,
                 OrganizationGuid = msg.OrganizationGuid,
                 Name = msg.Data.Name,
                 FullName = msg.Data.FullName,
@@ -55,6 +55,8 @@ namespace SciVacancies.ReadModel.EventHandlers
             };
 
             _db.Insert(vacancy);
+
+            //_elastic.Connect().Index<Vacancy>(vacancy);
         }
     }
     public class VacancyAcceptApplicationsHandler : EventBaseHandler<VacancyAcceptApplications>
@@ -65,6 +67,8 @@ namespace SciVacancies.ReadModel.EventHandlers
             Vacancy vacancy = _db.SingleById<Vacancy>(msg.VacancyGuid);
             vacancy.Status = VacancyStatus.AppliesAcceptance;
             _db.Update(vacancy);
+
+            //_elastic.Connect().Update<Vacancy>(u=>u.Id(vacancy.Guid.ToString()));
         }
     }
     public class VacancyInCommitteeHandler : EventBaseHandler<VacancyInCommittee>
@@ -76,6 +80,8 @@ namespace SciVacancies.ReadModel.EventHandlers
             vacancy.Status = VacancyStatus.InCommittee;
 
             _db.Update(vacancy);
+
+            //_elastic.Connect().Update<Vacancy>(vacancy);
         }
     }
     public class VacancyClosedHandler : EventBaseHandler<VacancyClosed>
@@ -92,6 +98,8 @@ namespace SciVacancies.ReadModel.EventHandlers
             vacancy.Status = VacancyStatus.Closed;
 
             _db.Update(vacancy);
+
+            //_elastic.Connect().Update<Vacancy>(vacancy);
         }
     }
     public class VacancyCancelledHandler : EventBaseHandler<VacancyCancelled>
@@ -108,6 +116,8 @@ namespace SciVacancies.ReadModel.EventHandlers
             vacancy.Status = VacancyStatus.Cancelled;
 
             _db.Update(vacancy);
+
+            //_elastic.Connect().Update<Vacancy>(vacancy);
         }
     }
 
