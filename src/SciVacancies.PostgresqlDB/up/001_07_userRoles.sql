@@ -1,0 +1,4 @@
+﻿INSERT INTO "AspNetRoles" ("Id","Name") VALUES ('6A18F02C-40D2-4964-BAC5-5AFFF2E60C31','researcher');
+INSERT INTO "AspNetRoles" ("Id","Name") VALUES ('4F9BCDC3-555B-48D3-9238-56EADB488756','organization_admin');
+INSERT INTO "AspNetRoles" ("Id","Name") VALUES ('3FF7AC62-E981-4CB5-94C2-7992EBC42E08','administrator');
+INSERT INTO "AspNetRoles" ("Id","Name") VALUES ('20B7CB2E-154F-403E-B211-70E532562A64','root');
