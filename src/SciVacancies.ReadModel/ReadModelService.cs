@@ -20,6 +20,11 @@ namespace SciVacancies.ReadModel
 
         public Researcher SingleResearcher(Guid researcherGuid)
         {
+            if (researcherGuid == Guid.Empty)
+            {
+                throw new Exception($"researcherGuid is empty: {researcherGuid}");
+            }
+
             Researcher researcher = _db.SingleOrDefaultById<Researcher>(researcherGuid);
 
             return researcher;
@@ -33,18 +38,33 @@ namespace SciVacancies.ReadModel
 
         public VacancyApplication SingleVacancyApplication(Guid vacancyApplicationGuid)
         {
-            VacancyApplication vacancyApplication = _db.SingleById<VacancyApplication>(vacancyApplicationGuid);
+            if (vacancyApplicationGuid == Guid.Empty)
+            {
+                throw new Exception($"vacancyApplicationGuid is empty: {vacancyApplicationGuid}");
+            }
+
+            VacancyApplication vacancyApplication = _db.SingleOrDefaultById<VacancyApplication>(vacancyApplicationGuid);
 
             return vacancyApplication;
         }
         public List<VacancyApplication> SelectVacancyApplicationsByResearcher(Guid researcherGuid)
         {
+            if(researcherGuid ==Guid.Empty)
+            {
+                throw new Exception($"researcherGuid is empty: {researcherGuid}");
+            }
+
             List<VacancyApplication> vacancyApplications = _db.FetchBy<VacancyApplication>(f => f.Where(w => w.ResearcherGuid == researcherGuid));
 
             return vacancyApplications;
         }
         public List<VacancyApplication> SelectVacancyApplicationsByVacancy(Guid vacancyGuid)
         {
+            if (vacancyGuid == Guid.Empty)
+            {
+                throw new Exception($"vacancyGuid is empty: {vacancyGuid}");
+            }
+
             List<VacancyApplication> vacancyApplication = _db.FetchBy<VacancyApplication>(f => f.Where(w => w.VacancyGuid == vacancyGuid));
 
             return vacancyApplication;
@@ -52,6 +72,11 @@ namespace SciVacancies.ReadModel
 
         public SearchSubscription SingleSearchSubscription(Guid searchSubscriptionGuid)
         {
+            if (searchSubscriptionGuid == Guid.Empty)
+            {
+                throw new Exception($"searchSubscriptionGuid is empty: {searchSubscriptionGuid}");
+            }
+
             SearchSubscription searchSubscription = _db.SingleById<SearchSubscription>(searchSubscriptionGuid);
 
             return searchSubscription;
@@ -125,7 +150,7 @@ namespace SciVacancies.ReadModel
 
         public List<Vacancy> SelectClosedVacancies(Guid organizationGuid)
         {
-            List<Vacancy> vacancies = _db.FetchBy<Vacancy>(f => f.Where(w => w.OrganizationGuid == organizationGuid&&w.Status==VacancyStatus.Closed));
+            List<Vacancy> vacancies = _db.FetchBy<Vacancy>(f => f.Where(w => w.OrganizationGuid == organizationGuid && w.Status == VacancyStatus.Closed));
 
             return vacancies;
         }
@@ -147,9 +172,16 @@ namespace SciVacancies.ReadModel
         public List<Vacancy> SelectFavoriteVacancies(Guid researcherGuid)
         {
             List<Guid> guids = _db.FetchBy<FavoriteVacancy>(f => f.Where(w => w.ResearcherGuid == researcherGuid)).Select(s => s.VacancyGuid).ToList();
-            List<Vacancy> vacancies = _db.FetchBy<Vacancy>(f => f.Where(w => guids.Contains(w.Guid)));
+            if (guids.Any())
+            {
+                List<Vacancy> vacancies = _db.FetchBy<Vacancy>(f => f.Where(w => guids.Contains(w.Guid)));
 
-            return vacancies;
+                return vacancies;
+            }
+            else
+            {
+                return null;
+            }
         }
 
         public Notification SingleNotification(Guid notificationGuid)
@@ -211,7 +243,7 @@ namespace SciVacancies.ReadModel
         public List<Organization> SelectOrganizations(string title, int count)
         {
             List<Organization> organizations;
-            if(count!=0)
+            if (count != 0)
             {
                 organizations = _db.FetchBy<Organization>(f => f.Where(w => w.Name.Contains(title))).Take(count).ToList();
             }

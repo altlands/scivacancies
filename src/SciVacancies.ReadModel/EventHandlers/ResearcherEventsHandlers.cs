@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 using NPoco;
 
-namespace SciVacancies.ReadModel.Handlers
+namespace SciVacancies.ReadModel.EventHandlers
 {
     public class ResearcherCreatedHandler : EventBaseHandler<ResearcherCreated>
     {

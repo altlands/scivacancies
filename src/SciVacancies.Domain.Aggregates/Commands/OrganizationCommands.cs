@@ -13,7 +13,7 @@ namespace SciVacancies.Domain.Aggregates.Commands
 
         OrganizationDataModel Data { get; set; }
     }
-    public class UpdateOrganization : IRequest
+    public class UpdateOrganization : CommandBase, IRequest
     {
         public UpdateOrganization() : base() { }
 
@@ -21,7 +21,7 @@ namespace SciVacancies.Domain.Aggregates.Commands
 
         public OrganizationDataModel Data { get; set; }
     }
-    public class RemoveOrganization : IRequest
+    public class RemoveOrganization : CommandBase, IRequest
     {
         public Guid OrganizationGuid { get; set; }
     }

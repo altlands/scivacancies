@@ -1,5 +1,7 @@
 ﻿using System;
 
+using MediatR;
+
 namespace SciVacancies.Domain.Aggregates.Commands
 {
     public abstract class CommandBase
@@ -17,7 +19,7 @@ namespace SciVacancies.Domain.Aggregates.Commands
         /// </summary>
         public Guid Id { get { return id; } }
         /// <summary>
-        /// Time of command creation
+        /// TimeStamp of command creation
         /// </summary>
         public DateTime TimeStamp { get { return timeStamp; } }
     }
