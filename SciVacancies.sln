@@ -28,10 +28,6 @@ Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "SciVacancies.ReadModel", "s
 EndProject
 Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "SciVacancies.Domain.Aggregates", "src\SciVacancies.Domain.Aggregates\SciVacancies.Domain.Aggregates.xproj", "{D33BA714-70FE-4EAE-932A-BD702638997A}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "sandbox", "sandbox", "{BCE610AC-56E8-43B1-B79E-981767798D7E}"
-EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "SciVacancies.SandBox", "sandbox\SciVacancies.SandBox\SciVacancies.SandBox.xproj", "{672A407F-D46D-43A5-B6B1-2A325746B288}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -70,10 +66,6 @@ Global
 		{D33BA714-70FE-4EAE-932A-BD702638997A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D33BA714-70FE-4EAE-932A-BD702638997A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D33BA714-70FE-4EAE-932A-BD702638997A}.Release|Any CPU.Build.0 = Release|Any CPU
-		{672A407F-D46D-43A5-B6B1-2A325746B288}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{672A407F-D46D-43A5-B6B1-2A325746B288}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{672A407F-D46D-43A5-B6B1-2A325746B288}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{672A407F-D46D-43A5-B6B1-2A325746B288}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -87,6 +79,5 @@ Global
 		{C8EE0968-4509-4C46-BDAD-7DA001573430} = {A2D0C94C-D094-451F-8212-BF410F421403}
 		{6F9A7A3D-EBBB-44B7-9198-6318CB28BAC0} = {A2D0C94C-D094-451F-8212-BF410F421403}
 		{D33BA714-70FE-4EAE-932A-BD702638997A} = {A2D0C94C-D094-451F-8212-BF410F421403}
-		{672A407F-D46D-43A5-B6B1-2A325746B288} = {BCE610AC-56E8-43B1-B79E-981767798D7E}
 	EndGlobalSection
 EndGlobal
