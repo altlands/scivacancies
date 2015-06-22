@@ -20,7 +20,7 @@ namespace SciVacancies.ReadModel
 
         public Researcher SingleResearcher(Guid researcherGuid)
         {
-            Researcher researcher = _db.SingleById<Researcher>(researcherGuid);
+            Researcher researcher = _db.SingleOrDefaultById<Researcher>(researcherGuid);
 
             return researcher;
         }

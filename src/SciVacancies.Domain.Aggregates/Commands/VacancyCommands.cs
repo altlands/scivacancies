@@ -4,7 +4,7 @@ using System;
 
 using MediatR;
 
-namespace SciVacancies.Domain.Commands
+namespace SciVacancies.Domain.Aggregates.Commands
 {
     public class PublishVacancy : CommandBase, IRequest<Guid>
     {
