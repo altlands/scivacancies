@@ -1,13 +1,16 @@
-﻿using System;
-using AutoMapper;
-using CommonDomain.Persistence;
-using MediatR;
-using Microsoft.AspNet.Identity;
-using Microsoft.AspNet.Identity.EntityFramework;
-using SciVacancies.Domain.Aggregates;
+﻿using SciVacancies.Domain.Aggregates;
 using SciVacancies.Domain.DataModels;
 using SciVacancies.WebApp.Infrastructure.Identity;
 using SciVacancies.WebApp.ViewModels;
+
+using System;
+using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.Identity.EntityFramework;
+
+using AutoMapper;
+using CommonDomain.Persistence;
+using MediatR;
+
 
 namespace SciVacancies.WebApp.Commands
 {

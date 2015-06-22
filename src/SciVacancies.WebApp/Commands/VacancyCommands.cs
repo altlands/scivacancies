@@ -4,34 +4,34 @@ using System;
 
 using MediatR;
 
-namespace SciVacancies.Domain.Aggregates.Commands
+namespace SciVacancies.WebApp.Commands
 {
-    public class PublishVacancy : CommandBase, IRequest<Guid>
+    public class PublishVacancyCommand : CommandBase, IRequest<Guid>
     {
-        public PublishVacancy() : base() { }
+        public PublishVacancyCommand() : base() { }
 
         public Guid OrganizationGuid { get; set; }
         public Guid PositionGuid { get; set; }
 
         public VacancyDataModel Data { get; set; }
     }
-    public class SwitchVacancyToAcceptApplications : CommandBase, IRequest
+    public class SwitchVacancyToAcceptApplicationsCommand : CommandBase, IRequest
     {
-        public SwitchVacancyToAcceptApplications() : base() { }
+        public SwitchVacancyToAcceptApplicationsCommand() : base() { }
 
         public Guid OrganizationGuid { get; set; }
         public Guid VacancyGuid { get; set; }
     }
-    public class SwitchVacancyInCommittee : CommandBase, IRequest
+    public class SwitchVacancyInCommitteeCommand : CommandBase, IRequest
     {
-        public SwitchVacancyInCommittee() : base() { }
+        public SwitchVacancyInCommitteeCommand() : base() { }
 
         public Guid OrganizationGuid { get; set; }
         public Guid VacancyGuid { get; set; }
     }
-    public class CloseVacancy : CommandBase, IRequest
+    public class CloseVacancyCommand : CommandBase, IRequest
     {
-        public CloseVacancy() : base() { }
+        public CloseVacancyCommand() : base() { }
 
         public Guid OrganizationGuid { get; set; }
         public Guid VacancyGuid { get; set; }
@@ -39,9 +39,9 @@ namespace SciVacancies.Domain.Aggregates.Commands
         public Guid WinnerGuid { get; set; }
         public Guid PretenderGuid { get; set; }
     }
-    public class CancelVacancy : CommandBase, IRequest
+    public class CancelVacancyCommand : CommandBase, IRequest
     {
-        public CancelVacancy() : base() { }
+        public CancelVacancyCommand() : base() { }
 
         public Guid OrganizationGuid { get; set; }
         public Guid VacancyGuid { get; set; }
@@ -49,16 +49,16 @@ namespace SciVacancies.Domain.Aggregates.Commands
         public string Reason { get; set; }
     }
 
-    public class AddVacancyToFavorites : CommandBase, IRequest<int>
+    public class AddVacancyToFavoritesCommand : CommandBase, IRequest<int>
     {
-        public AddVacancyToFavorites() : base() { }
+        public AddVacancyToFavoritesCommand() : base() { }
 
         public Guid ResearcherGuid { get; set; }
         public Guid VacancyGuid { get; set; }
     }
-    public class RemoveVacancyFromFavorites : CommandBase, IRequest<int>
+    public class RemoveVacancyFromFavoritesCommand : CommandBase, IRequest<int>
     {
-        public RemoveVacancyFromFavorites() : base() { }
+        public RemoveVacancyFromFavoritesCommand() : base() { }
 
         public Guid ResearcherGuid { get; set; }
         public Guid VacancyGuid { get; set; }

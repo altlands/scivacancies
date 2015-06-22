@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.ComponentModel;
 
 namespace SciVacancies.Domain.Enums
 {
@@ -10,10 +7,17 @@ namespace SciVacancies.Domain.Enums
         /// <summary>
         /// Подписка активна
         /// </summary>
+        [Description("Активна")]
         Active = 0,
         /// <summary>
         /// Подписка отменена
         /// </summary>
-        Cancelled = 1
+        [Description("Не активна")]
+        Cancelled = 1,
+        /// <summary>
+        /// Подписка удалена
+        /// </summary>
+        [Description("Удалена")]
+        Removed = 2
     }
 }

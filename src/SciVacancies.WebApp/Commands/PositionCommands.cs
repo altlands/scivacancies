@@ -4,28 +4,28 @@ using System;
 
 using MediatR;
 
-namespace SciVacancies.Domain.Aggregates.Commands
+namespace SciVacancies.WebApp.Commands
 {
-    public class CreatePosition : CommandBase, IRequest<Guid>
+    public class CreatePositionCommand : CommandBase, IRequest<Guid>
     {
-        public CreatePosition() : base() { }
+        public CreatePositionCommand() : base() { }
 
         public Guid OrganizationGuid { get; set; }
 
         public PositionDataModel Data { get; set; }
     }
-    public class UpdatePosition : CommandBase, IRequest
+    public class UpdatePositionCommand : CommandBase, IRequest
     {
-        public UpdatePosition() : base() { }
+        public UpdatePositionCommand() : base() { }
 
         public Guid OrganizationGuid { get; set; }
         public Guid PositionGuid { get; set; }
 
         public PositionDataModel Data { get; set; }
     }
-    public class RemovePosition : CommandBase, IRequest
+    public class RemovePositionCommand : CommandBase, IRequest
     {
-        public RemovePosition() : base() { }
+        public RemovePositionCommand() : base() { }
 
         public Guid OrganizationGuid { get; set; }
         public Guid PositionGuid { get; set; }

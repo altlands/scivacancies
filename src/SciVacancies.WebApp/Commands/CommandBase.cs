@@ -1,8 +1,6 @@
 ﻿using System;
 
-using MediatR;
-
-namespace SciVacancies.Domain.Aggregates.Commands
+namespace SciVacancies.WebApp.Commands
 {
     public abstract class CommandBase
     {

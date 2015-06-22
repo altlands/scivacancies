@@ -4,36 +4,36 @@ using System;
 
 using MediatR;
 
-namespace SciVacancies.Domain.Aggregates.Commands
+namespace SciVacancies.WebApp.Commands
 {
-    public class CreateVacancyApplicationTemplate : CommandBase, IRequest<Guid>
+    public class CreateVacancyApplicationTemplateCommand : CommandBase, IRequest<Guid>
     {
-        public CreateVacancyApplicationTemplate() : base() { }
+        public CreateVacancyApplicationTemplateCommand() : base() { }
 
         public Guid ResearcherGuid { get; set; }
         public Guid VacancyGuid { get; set; }
 
         public VacancyApplicationDataModel Data { get; set; }
     }
-    public class UpdateVacancyApplicationTemplate : CommandBase, IRequest
+    public class UpdateVacancyApplicationTemplateCommand : CommandBase, IRequest
     {
-        public UpdateVacancyApplicationTemplate() : base() { }
+        public UpdateVacancyApplicationTemplateCommand() : base() { }
 
         public Guid ResearcherGuid { get; set; }
         public Guid VacancyApplicationGuid { get; set; }
 
         public VacancyApplicationDataModel Data { get; set; }
     }
-    public class RemoveVacancyApplicationTemplate : CommandBase, IRequest
+    public class RemoveVacancyApplicationTemplateCommand : CommandBase, IRequest
     {
-        public RemoveVacancyApplicationTemplate() : base() { }
+        public RemoveVacancyApplicationTemplateCommand() : base() { }
 
         public Guid ResearcherGuid { get; set; }
         public Guid VacancyApplicationGuid { get; set; }
     }
-    public class SendVacancyApplication : CommandBase, IRequest
+    public class SendVacancyApplicationCommand : CommandBase, IRequest
     {
-        public SendVacancyApplication() : base() { }
+        public SendVacancyApplicationCommand() : base() { }
 
         public Guid ResearcherGuid { get; set; }
         public Guid VacancyApplicationGuid { get; set; }
