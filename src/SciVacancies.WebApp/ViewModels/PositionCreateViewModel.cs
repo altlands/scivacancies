@@ -63,6 +63,11 @@ namespace SciVacancies.WebApp.ViewModels
         /// <summary>
         /// Должность (Полное наименование)
         /// </summary>
+        public string Name { get; set; }
+
+        /// <summary>
+        /// Должность (Полное наименование)
+        /// </summary>
         public string FullName { get; set; }
 
         /// <summary>

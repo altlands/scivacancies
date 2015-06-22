@@ -18,15 +18,13 @@
     <div class="row">
         <div class="bold row-title">Специализация:</div>
         <div class="table-form">
+
             <div class="table-row form-row">
                 <div class="left-cell">
-                    <label>Должность:</label>
+                    <label>Наименование:</label>
                 </div>
                 <div class="right-cell">
-                    <div class="inline-block w290 sorting">
-                        <select asp-for="PositionTypeGuid"
-                                asp-items="Model.PositionTypes"></select>
-                    </div>
+                    <input asp-for="Name" class="big-input" />
                 </div>
             </div>
 
@@ -36,6 +34,17 @@
                 </div>
                 <div class="right-cell">
                     <textarea asp-for="FullName"></textarea>
+                </div>
+            </div>
+            <div class="table-row form-row">
+                <div class="left-cell">
+                    <label>Должность:</label>
+                </div>
+                <div class="right-cell">
+                    <div class="inline-block w290 sorting">
+                        <select asp-for="PositionTypeGuid"
+                                asp-items="Model.PositionTypes"></select>
+                    </div>
                 </div>
             </div>
 
