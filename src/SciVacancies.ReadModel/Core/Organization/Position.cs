@@ -43,7 +43,6 @@ namespace SciVacancies.ReadModel.Core
         /// Тематика исследований
         /// </summary>
         public string ResearchTheme { get; set; }
-        public int ResearchThemeId { get; set; }
 
         /// <summary>
         /// Задачи
