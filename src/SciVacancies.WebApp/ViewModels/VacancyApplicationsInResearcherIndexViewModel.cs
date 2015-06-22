@@ -10,6 +10,6 @@ namespace SciVacancies.WebApp.ViewModels
         {
             Title = "Личная карточка пользователя";
         }
-        public IEnumerable<VacancyApplication> Vacancies { get; set; }
+        public IEnumerable<VacancyApplication> Applications { get; set; }
     }
 }
