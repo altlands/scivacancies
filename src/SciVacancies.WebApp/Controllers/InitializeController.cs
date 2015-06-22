@@ -1,13 +1,8 @@
-﻿using SciVacancies.Domain.DataModels;
-using SciVacancies.Domain.Aggregates.Interfaces;
-using SciVacancies.ReadModel;
-using SciVacancies.ReadModel.Core;
-
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System;
 using Microsoft.AspNet.Mvc;
+using SciVacancies.Domain.Aggregates.Interfaces;
+using SciVacancies.Domain.DataModels;
+using SciVacancies.ReadModel;
 
 // For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -30,7 +25,7 @@ namespace SciVacancies.WebApp.Controllers
         {
             Guid resGuid = _res.CreateResearcher(new ResearcherDataModel()
             {
-                Login = "Cartman",
+                UserId = "Cartman",
                 FirstName = "Генрих",
                 SecondName = "Пупкин",
                 Patronymic = "Дубощит",

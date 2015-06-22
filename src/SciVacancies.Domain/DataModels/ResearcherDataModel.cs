@@ -9,7 +9,7 @@ namespace SciVacancies.Domain.DataModels
 {
     public class ResearcherDataModel
     {
-        public string Login { get; set; }
+        public string UserId { get; set; }
 
         public string FirstName { get; set; }
         public string SecondName { get; set; }

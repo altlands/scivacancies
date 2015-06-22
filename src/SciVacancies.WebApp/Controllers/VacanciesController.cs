@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using AutoMapper;
 using Microsoft.AspNet.Mvc;
-using Microsoft.Framework.CodeGeneration;
 using SciVacancies.Domain.Aggregates.Interfaces;
 using SciVacancies.Domain.DataModels;
 using SciVacancies.Domain.Enums;

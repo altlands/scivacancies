@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Linq;
-using System.Security.Cryptography;
 using AutoMapper;
 using Microsoft.AspNet.Mvc;
 using SciVacancies.ReadModel;

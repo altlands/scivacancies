@@ -1,6 +1,6 @@
 ﻿using System;
-using Microsoft.AspNet.Mvc;
 using System.ComponentModel;
+using Microsoft.AspNet.Mvc;
 
 namespace SciVacancies.WebApp.Engine.CustomAttribute
 {
