@@ -10,7 +10,8 @@
         "MediatR": "2.0.0-beta-004",
         "SciVacancies.Domain.Events": "1.0.0-*",
         "NPoco": "2.9.103",
-        "SciVacancies.Domain": "1.0.0-*"
+        "SciVacancies.Domain": "1.0.0-*",
+        "NEST": "1.5.1"
     },
 
     "frameworks": {

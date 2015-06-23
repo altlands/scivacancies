@@ -6,6 +6,7 @@ using System.Linq;
 using System.Threading.Tasks;
 
 using NPoco;
+using Nest;
 
 namespace SciVacancies.ReadModel.Core
 {
@@ -20,7 +21,9 @@ namespace SciVacancies.ReadModel.Core
         public Guid PositionGuid { get; set; }
         public Guid PositionTypeGuid { get; set; }
 
+        [ElasticProperty(Index = FieldIndexOption.NotAnalyzed)]
         public Guid WinnerGuid { get; set; }
+        [ElasticProperty(Index = FieldIndexOption.NotAnalyzed)]
         public Guid PretenderGuid { get; set; }
 
         public string OrganizationName { get; set; }
@@ -54,6 +57,7 @@ namespace SciVacancies.ReadModel.Core
         /// Критерии оценки 
         /// </summary>
         [Ignore]
+        [ElasticProperty(Index = FieldIndexOption.NotAnalyzed)]
         public KeyValuePair<int, int> Criteria { get; set; } //<CriteriaId, Amount>
 
         /// <summary>

@@ -11,7 +11,7 @@ namespace SciVacancies.WebApp.Commands
     {
         public CreateOrganizationCommand() : base() { }
 
-        OrganizationDataModel Data { get; set; }
+        public OrganizationDataModel Data { get; set; }
     }
     public class UpdateOrganizationCommand : CommandBase, IRequest
     {
