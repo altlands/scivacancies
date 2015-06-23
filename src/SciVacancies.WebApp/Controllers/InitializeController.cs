@@ -15,15 +15,11 @@ namespace SciVacancies.WebApp.Controllers
 {
     public class InitializeController : Controller
     {
-        private readonly IResearcherService _res;
-        private readonly IOrganizationService _org;
         private readonly IReadModelService _rm;
         private readonly IMediator _mediator;
 
-        public InitializeController(IResearcherService res, IOrganizationService org, IReadModelService rm, IMediator mediator)
+        public InitializeController(IReadModelService rm, IMediator mediator)
         {
-            _res = res;
-            _org = org;
             _rm = rm;
             _mediator = mediator;
         }
@@ -49,86 +45,101 @@ namespace SciVacancies.WebApp.Controllers
             };
             var user = _mediator.Send(command);
 
-            //Guid resGuid = Guid.Parse(user.Id)/*_res.CreateResearcher(new ResearcherDataModel()*/
-            //{
-            //    UserId = "Cartman",
-            //    FirstName = "Генрих",
-            //    SecondName = "Дубощит",
-            //    Patronymic = "Иванович",
-            //    FirstNameEng = "Genrih",
-            //    SecondNameEng = "Pupkin",
-            //    PatronymicEng = "Ivanovich",
-            //    BirthDate = DateTime.Now.AddYears(-50)
-            //});
-            //Claims.FirstOrDefault(c => c.Type == Key);
             Guid resGuid = Guid.Parse(user.Claims.Single(s => s.ClaimType.Equals("researcher_id")).ClaimValue);
 
-            Guid subGuid = _res.CreateSearchSubscription(resGuid, new SearchSubscriptionDataModel()
+            Guid subGuid = _mediator.Send(new CreateSearchSubscriptionCommand
             {
-                Title = "Разведение лазерных акул"
+                ResearcherGuid = resGuid,
+                Data = new SearchSubscriptionDataModel { Title = "Разведение лазерных акул" }
             });
 
-            Guid orgGuid = _org.CreateOrganization(new OrganizationDataModel()
+            Guid orgGuid = _mediator.Send(new CreateOrganizationCommand
             {
-                Name = "Научно Исследотельский Институт Горных массивов",
-                ShortName = "НИИ Горных массивов",
-                OrgFormId = 1,
-                FoivId = 42,
-                ActivityId = 1,
-                HeadFirstName = "Овидий",
-                HeadLastName = "Грек",
-                HeadPatronymic = "Иванович"
+                Data = new OrganizationDataModel
+                {
+                    Name = "Научно Исследотельский Институт Горных массивов",
+                    ShortName = "НИИ Горных массивов",
+                    OrgFormId = 1,
+                    FoivId = 42,
+                    ActivityId = 1,
+                    HeadFirstName = "Овидий",
+                    HeadLastName = "Грек",
+                    HeadPatronymic = "Иванович"
+                }
+            });
+            Guid posGuid1 = _mediator.Send(new CreatePositionCommand
+            {
+                OrganizationGuid = orgGuid,
+                Data = new PositionDataModel
+                {
+                    Name = "Разводчик акул",
+                    FullName = "Младший сотрудник по разведению лазерных акул",
+                    PositionTypeGuid = Guid.Parse("b7280ace-d237-c007-42fe-ec4aed8f52d4"),
+                    ResearchDirection = "Аналитическая химия",
+                    ResearchDirectionId = 3026
+                }
+            });
+            Guid posGuid2 = _mediator.Send(new CreatePositionCommand
+            {
+                OrganizationGuid = orgGuid,
+                Data = new PositionDataModel
+                {
+                    Name = "Настройщик лазеров",
+                    FullName = "Младший сотрудник по настройке лазеров",
+                    PositionTypeGuid = Guid.Parse("b7280ace-d237-c007-42fe-ec4aed8f52d4"),
+                    ResearchDirection = "Прикладная математика",
+                    ResearchDirectionId = 2999
+                }
+            });
+            Guid vacGuid1 = _mediator.Send(new PublishVacancyCommand
+            {
+                OrganizationGuid = orgGuid,
+                PositionGuid = posGuid1,
+                Data = new VacancyDataModel
+                {
+                    Name = "Разводчик акул",
+                    FullName = "Младший сотрудник по разведению лазерных акул",
+                    ResearchDirection = "Аналитическая химия"
+                }
             });
 
-            Guid posGuid1 = _org.CreatePosition(orgGuid, new PositionDataModel()
+            Guid orgGuid1 = _mediator.Send(new CreateOrganizationCommand
             {
-                Name = "Разводчик акул",
-                FullName = "Младший сотрудник по разведению лазерных акул",
-                PositionTypeGuid = Guid.Parse("b7280ace-d237-c007-42fe-ec4aed8f52d4"),
-                ResearchDirection = "Аналитическая химия",
-                ResearchDirectionId = 3026
+                Data = new OrganizationDataModel
+                {
+                    Name = "НИИ добра",
+                    ShortName = "Good Science",
+                    OrgFormId = 2,
+                    FoivId = 42,
+                    ActivityId = 1,
+                    HeadFirstName = "Саруман",
+                    HeadLastName = "Саур",
+                    HeadPatronymic = "Сауронович"
+                }
             });
-            Guid posGuid2 = _org.CreatePosition(orgGuid, new PositionDataModel()
+            Guid posGuid3 = _mediator.Send(new CreatePositionCommand
             {
-                Name = "Настройщик лазеров",
-                FullName = "Младший сотрудник по настройке лазеров",
-                PositionTypeGuid = Guid.Parse("b7280ace-d237-c007-42fe-ec4aed8f52d4"),
-                ResearchDirection = "Прикладная математика",
-                ResearchDirectionId = 2999
-            });
-            Guid vacGuid1 = _org.PublishVacancy(orgGuid, posGuid1, new VacancyDataModel()
-            {
-                Name = "Разводчик акул",
-                FullName = "Младший сотрудник по разведению лазерных акул",
-                ResearchDirection = "Аналитическая химия",
-            });
-
-
-            Guid orgGuid1 = _org.CreateOrganization(new OrganizationDataModel()
-            {
-                Name = "НИИ добра",
-                ShortName = "Good Science",
-                OrgFormId = 2,
-                FoivId = 42,
-                ActivityId = 1,
-                HeadFirstName = "Саруман",
-                HeadLastName = "Саур",
-                HeadPatronymic = "Сауронович"
+                OrganizationGuid = orgGuid,
+                Data = new PositionDataModel
+                {
+                    Name = "Ремонтник всевидящего ока",
+                    FullName = "Младший сотрудник по калибровке фокусного зеркала",
+                    PositionTypeGuid = Guid.Parse("b7280ace-d237-c007-42fe-ec4aed8f52d4"),
+                    ResearchDirection = "Аналитическая химия",
+                    ResearchDirectionId = 3026
+                }
             });
 
-            Guid posGuid3 = _org.CreatePosition(orgGuid1, new PositionDataModel()
+            Guid vacGuid3 = _mediator.Send(new PublishVacancyCommand
             {
-                Name = "Ремонтник всевидящего ока",
-                FullName = "Младший сотрудник по калибровке фокусного зеркала",
-                PositionTypeGuid = Guid.Parse("b7280ace-d237-c007-42fe-ec4aed8f52d4"),
-                ResearchDirection = "Аналитическая химия",
-                ResearchDirectionId = 3026
-            });
-            Guid vacGuid3 = _org.PublishVacancy(orgGuid1, posGuid3, new VacancyDataModel()
-            {
-                Name = "Ремонтник всевидящего ока",
-                FullName = "Младший сотрудник по калибровке фокусного зеркала",
-                ResearchDirection = "Аналитическая химия",
+                OrganizationGuid = orgGuid,
+                PositionGuid = posGuid1,
+                Data = new VacancyDataModel
+                {
+                    Name = "Разводчик акул",
+                    FullName = "Младший сотрудник по разведению лазерных акул",
+                    ResearchDirection = "Аналитическая химия"
+                }
             });
         }
     }

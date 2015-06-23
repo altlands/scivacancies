@@ -11,18 +11,21 @@ using SciVacancies.ReadModel.Core;
 using SciVacancies.WebApp.Engine;
 using SciVacancies.WebApp.Engine.CustomAttribute;
 using SciVacancies.WebApp.ViewModels;
+using SciVacancies.WebApp.Commands;
+
+using MediatR;
 
 namespace SciVacancies.WebApp.Controllers
 {
     [Authorize(Roles = ConstTerms.RequireRoleResearcher)]
     public class ResearchersController : Controller
     {
-        private readonly IResearcherService _researcherService;
+        private readonly IMediator _mediator;
         private readonly IReadModelService _readModelService;
 
-        public ResearchersController(IReadModelService readModelService, IResearcherService researcherService)
+        public ResearchersController(IMediator mediator, IReadModelService readModelService)
         {
-            _researcherService = researcherService;
+            _mediator = mediator;
             _readModelService = readModelService;
         }
 
@@ -110,19 +113,19 @@ namespace SciVacancies.WebApp.Controllers
 
             var model = _readModelService.SingleVacancy(vacancyGuid);
             //если заявка на готовится к открытию или открыта
-            if (model.Status == VacancyStatus.AppliesAcceptance || model.Status == VacancyStatus.Published )
+            if (model.Status == VacancyStatus.AppliesAcceptance || model.Status == VacancyStatus.Published)
             {
                 //если есть GUID Исследователя
-                    List<Vacancy> favoritesVacancies = null;
-                    try
-                    {
-                        favoritesVacancies = _readModelService.SelectFavoriteVacancies(researcherGuid);
-                    }
-                    catch (Exception) { }
-                    //если текущей вакансии нет в списке избранных
-                    if (favoritesVacancies == null
-                        || !favoritesVacancies.Select(c => c.Guid).ToList().Contains(vacancyGuid))
-                        _researcherService.AddVacancyToFavorites(researcherGuid, vacancyGuid);
+                List<Vacancy> favoritesVacancies = null;
+                try
+                {
+                    favoritesVacancies = _readModelService.SelectFavoriteVacancies(researcherGuid);
+                }
+                catch (Exception) { }
+                //если текущей вакансии нет в списке избранных
+                if (favoritesVacancies == null
+                    || !favoritesVacancies.Select(c => c.Guid).ToList().Contains(vacancyGuid))
+                    _mediator.Send(new AddVacancyToFavoritesCommand { ResearcherGuid = researcherGuid, VacancyGuid = vacancyGuid });
             }
 
             return Redirect(Context.Request.Headers["referer"]);

@@ -9,8 +9,6 @@ namespace SciVacancies.WebApp.Infrastructure
     {
         protected override void Load(ContainerBuilder builder)
         {
-            builder.RegisterType<OrganizationService>().As<IOrganizationService>().SingleInstance();
-            builder.RegisterType<ResearcherService>().As<IResearcherService>().SingleInstance();
             builder.RegisterType<ElasticService>().As<IElasticService>().SingleInstance();
         }
     }
