@@ -1,13 +1,11 @@
 ﻿using System;
+using System.Linq;
 using MediatR;
 using Microsoft.AspNet.Mvc;
-using SciVacancies.Domain.Aggregates.Interfaces;
 using SciVacancies.Domain.DataModels;
 using SciVacancies.WebApp.Commands;
-using SciVacancies.WebApp.ViewModels;
-
-using System.Linq;
 using SciVacancies.WebApp.Engine;
+using SciVacancies.WebApp.ViewModels;
 
 // For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -15,17 +13,13 @@ namespace SciVacancies.WebApp.Controllers
 {
     public class InitializeController : Controller
     {
-        private readonly IResearcherService _res;
-        private readonly IOrganizationService _org;
         private readonly IMediator _mediator;
 
-        public InitializeController(IResearcherService res, IOrganizationService org, IMediator mediator)
+        public InitializeController(IMediator mediator)
         {
-            _res = res;
-            _org = org;
             _mediator = mediator;
         }
-        // GET: /<controller>/
+        
         public void Index()
         {
             var createUserResearcherCommand = new RegisterUserResearcherCommand
@@ -47,11 +41,11 @@ namespace SciVacancies.WebApp.Controllers
 
             var resGuid = Guid.Parse(user.Claims.Single(s => s.ClaimType.Equals(ConstTerms.ClaimTypeResearcherId)).ClaimValue);
 
-            var subGuid = _res.CreateSearchSubscription(resGuid, new SearchSubscriptionDataModel
+            var subGuid = _mediator.Send(new CreateSearchSubscriptionCommand
             {
-                Title = "Разведение лазерных акул"
+                ResearcherGuid = resGuid,
+                Data = new SearchSubscriptionDataModel { Title = "Разведение лазерных акул" }
             });
-
 
             var createUserOrganizationCommand = new RegisterUserOrganizationCommand
             {
@@ -72,27 +66,40 @@ namespace SciVacancies.WebApp.Controllers
             var organization = _mediator.Send(createUserOrganizationCommand);
             var orgGuid = Guid.Parse(organization.Claims.Single(s => s.ClaimType.Equals(ConstTerms.ClaimTypeOrganizationId)).ClaimValue);
 
-            var posGuid1 = _org.CreatePosition(orgGuid, new PositionDataModel
+            Guid posGuid1 = _mediator.Send(new CreatePositionCommand
             {
-                Name = "Разводчик акул",
-                FullName = "Младший сотрудник по разведению лазерных акул",
-                PositionTypeGuid = Guid.Parse("b7280ace-d237-c007-42fe-ec4aed8f52d4"),
-                ResearchDirection = "Аналитическая химия",
-                ResearchDirectionId = 3026
+                OrganizationGuid = orgGuid,
+                Data = new PositionDataModel
+                {
+                    Name = "Разводчик акул",
+                    FullName = "Младший сотрудник по разведению лазерных акул",
+                    PositionTypeGuid = Guid.Parse("b7280ace-d237-c007-42fe-ec4aed8f52d4"),
+                    ResearchDirection = "Аналитическая химия",
+                    ResearchDirectionId = 3026
+                }
             });
-            var posGuid2 = _org.CreatePosition(orgGuid, new PositionDataModel
+            Guid posGuid2 = _mediator.Send(new CreatePositionCommand
             {
-                Name = "Настройщик лазеров",
-                FullName = "Младший сотрудник по настройке лазеров",
-                PositionTypeGuid = Guid.Parse("b7280ace-d237-c007-42fe-ec4aed8f52d4"),
-                ResearchDirection = "Прикладная математика",
-                ResearchDirectionId = 2999
+                OrganizationGuid = orgGuid,
+                Data = new PositionDataModel
+                {
+                    Name = "Настройщик лазеров",
+                    FullName = "Младший сотрудник по настройке лазеров",
+                    PositionTypeGuid = Guid.Parse("b7280ace-d237-c007-42fe-ec4aed8f52d4"),
+                    ResearchDirection = "Прикладная математика",
+                    ResearchDirectionId = 2999
+                }
             });
-            var vacGuid1 = _org.PublishVacancy(orgGuid, posGuid1, new VacancyDataModel
+            var vacGuid1 = _mediator.Send(new PublishVacancyCommand
             {
-                Name = "Разводчик акул",
-                FullName = "Младший сотрудник по разведению лазерных акул",
-                ResearchDirection = "Аналитическая химия",
+                OrganizationGuid = orgGuid,
+                PositionGuid = posGuid1,
+                Data = new VacancyDataModel
+                {
+                    Name = "Разводчик акул",
+                    FullName = "Младший сотрудник по разведению лазерных акул",
+                    ResearchDirection = "Аналитическая химия"
+                }
             });
 
             var createUserOrganizationCommand1 = new RegisterUserOrganizationCommand
@@ -114,19 +121,29 @@ namespace SciVacancies.WebApp.Controllers
             var organization1 = _mediator.Send(createUserOrganizationCommand1);
             var orgGuid1 = Guid.Parse(organization1.Claims.Single(s => s.ClaimType.Equals(ConstTerms.ClaimTypeOrganizationId)).ClaimValue);
 
-            var posGuid3 = _org.CreatePosition(orgGuid1, new PositionDataModel
+            var posGuid3 = _mediator.Send(new CreatePositionCommand
             {
-                Name = "Ремонтник всевидящего ока",
-                FullName = "Младший сотрудник по калибровке фокусного зеркала",
-                PositionTypeGuid = Guid.Parse("b7280ace-d237-c007-42fe-ec4aed8f52d4"),
-                ResearchDirection = "Аналитическая химия",
-                ResearchDirectionId = 3026
+                OrganizationGuid = orgGuid1,
+                Data = new PositionDataModel
+                {
+                    Name = "Ремонтник всевидящего ока",
+                    FullName = "Младший сотрудник по калибровке фокусного зеркала",
+                    PositionTypeGuid = Guid.Parse("b7280ace-d237-c007-42fe-ec4aed8f52d4"),
+                    ResearchDirection = "Аналитическая химия",
+                    ResearchDirectionId = 3026
+                }
             });
-            var vacGuid3 = _org.PublishVacancy(orgGuid1, posGuid3, new VacancyDataModel
+
+            Guid vacGuid3 = _mediator.Send(new PublishVacancyCommand
             {
-                Name = "Ремонтник всевидящего ока",
-                FullName = "Младший сотрудник по калибровке фокусного зеркала",
-                ResearchDirection = "Аналитическая химия",
+                OrganizationGuid = orgGuid1,
+                PositionGuid = posGuid3,
+                Data = new VacancyDataModel
+                {
+                    Name = "Разводчик акул",
+                    FullName = "Младший сотрудник по разведению лазерных акул",
+                    ResearchDirection = "Аналитическая химия"
+                }
             });
         }
     }
