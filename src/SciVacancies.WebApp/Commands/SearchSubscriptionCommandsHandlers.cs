@@ -22,7 +22,7 @@ namespace SciVacancies.WebApp.Commands
 
         public Guid Handle(CreateSearchSubscriptionCommand message)
         {
-            if (message.ResearcherGuid == Guid.Empty) throw new Exception($"ResearcherGuid is empty: {message.ResearcherGuid}");
+            if (message.ResearcherGuid == Guid.Empty) throw new ArgumentNullException($"ResearcherGuid is empty: {message.ResearcherGuid}");
 
             var rdm = message.Data;
 
@@ -44,8 +44,8 @@ namespace SciVacancies.WebApp.Commands
 
         protected override void HandleCore(ActivateSearchSubscriptionCommand message)
         {
-            if (message.ResearcherGuid == Guid.Empty) throw new Exception($"ResearcherGuid is empty: {message.ResearcherGuid}");
-            if (message.SearchSubscriptionGuid == Guid.Empty) throw new Exception($"SearchSubscriptionGuid is empty: {message.SearchSubscriptionGuid}");
+            if (message.ResearcherGuid == Guid.Empty) throw new ArgumentNullException($"ResearcherGuid is empty: {message.ResearcherGuid}");
+            if (message.SearchSubscriptionGuid == Guid.Empty) throw new ArgumentNullException($"SearchSubscriptionGuid is empty: {message.SearchSubscriptionGuid}");
 
             Researcher researcher = _repository.GetById<Researcher>(message.ResearcherGuid);
             researcher.ActivateSearchSubscription(message.SearchSubscriptionGuid);
@@ -63,8 +63,8 @@ namespace SciVacancies.WebApp.Commands
 
         protected override void HandleCore(CancelSearchSubscriptionCommand message)
         {
-            if (message.ResearcherGuid == Guid.Empty) throw new Exception($"ResearcherGuid is empty: {message.ResearcherGuid}");
-            if (message.SearchSubscriptionGuid == Guid.Empty) throw new Exception($"SearchSubscriptionGuid is empty: {message.SearchSubscriptionGuid}");
+            if (message.ResearcherGuid == Guid.Empty) throw new ArgumentNullException($"ResearcherGuid is empty: {message.ResearcherGuid}");
+            if (message.SearchSubscriptionGuid == Guid.Empty) throw new ArgumentNullException($"SearchSubscriptionGuid is empty: {message.SearchSubscriptionGuid}");
 
             Researcher researcher = _repository.GetById<Researcher>(message.ResearcherGuid);
             researcher.CancelSearchSubscription(message.SearchSubscriptionGuid);
@@ -82,8 +82,8 @@ namespace SciVacancies.WebApp.Commands
 
         protected override void HandleCore(RemoveSearchSubscriptionCommand message)
         {
-            if (message.ResearcherGuid == Guid.Empty) throw new Exception($"ResearcherGuid is empty: {message.ResearcherGuid}");
-            if (message.SearchSubscriptionGuid == Guid.Empty) throw new Exception($"SearchSubscriptionGuid is empty: {message.SearchSubscriptionGuid}");
+            if (message.ResearcherGuid == Guid.Empty) throw new ArgumentNullException($"ResearcherGuid is empty: {message.ResearcherGuid}");
+            if (message.SearchSubscriptionGuid == Guid.Empty) throw new ArgumentNullException($"SearchSubscriptionGuid is empty: {message.SearchSubscriptionGuid}");
 
             Researcher researcher = _repository.GetById<Researcher>(message.ResearcherGuid);
             researcher.RemoveSearchSubscription(message.SearchSubscriptionGuid);

@@ -17,28 +17,30 @@ namespace SciVacancies.WebApp.Controllers
         private readonly IResearcherService _res;
         private readonly IReadModelService _rm;
         private readonly IMediator _mediator;
+        private readonly IElasticService _elastic;
 
-        public ResearcherController(IResearcherService researcherService, IReadModelService readModelService, IMediator mediator)
+        public ResearcherController(IResearcherService researcherService, IReadModelService readModelService, IMediator mediator,IElasticService elastic)
         {
             _res = researcherService;
             _rm = readModelService;
             _mediator = mediator;
+            _elastic = elastic;
         }
         // GET: /<controller>/
         public void Index()
         {
-
-            var organizaiontGuid = _mediator.Send(new CreateOrganizationCommand()
-            {
-                Data = new OrganizationDataModel()
-                {
-                    Name = "Зонтик"
-                }
-            });
-            _mediator.Send(new RemoveOrganizationCommand()
-            {
-                OrganizationGuid = organizaiontGuid
-            });
+            _elastic.CreateIndex();
+            //var organizaiontGuid = _mediator.Send(new CreateOrganizationCommand()
+            //{
+            //    Data = new OrganizationDataModel()
+            //    {
+            //        Name = "Зонтик"
+            //    }
+            //});
+            //_mediator.Send(new RemoveOrganizationCommand()
+            //{
+            //    OrganizationGuid = organizaiontGuid
+            //});
             //Guid researcherGuid = _res.CreateResearcher(new ResearcherDataModel());
 
             //Researcher researcher = _rm.SingleResearcher(Guid.NewGuid());

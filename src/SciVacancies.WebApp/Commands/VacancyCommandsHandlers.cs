@@ -22,8 +22,8 @@ namespace SciVacancies.WebApp.Commands
 
         public Guid Handle(PublishVacancyCommand message)
         {
-            if (message.OrganizationGuid == Guid.Empty) throw new Exception($"OrganizationGuid is empty: {message.OrganizationGuid}");
-            if (message.PositionGuid == Guid.Empty) throw new Exception($"PositionGuid is empty: {message.PositionGuid}");
+            if (message.OrganizationGuid == Guid.Empty) throw new ArgumentNullException($"OrganizationGuid is empty: {message.OrganizationGuid}");
+            if (message.PositionGuid == Guid.Empty) throw new ArgumentNullException($"PositionGuid is empty: {message.PositionGuid}");
 
             var rdm = message.Data;
 
@@ -45,8 +45,8 @@ namespace SciVacancies.WebApp.Commands
 
         protected override void HandleCore(SwitchVacancyToAcceptApplicationsCommand message)
         {
-            if (message.OrganizationGuid == Guid.Empty) throw new Exception($"OrganizationGuid is empty: {message.OrganizationGuid}");
-            if (message.VacancyGuid == Guid.Empty) throw new Exception($"VacancyGuid is empty: {message.VacancyGuid}");
+            if (message.OrganizationGuid == Guid.Empty) throw new ArgumentNullException($"OrganizationGuid is empty: {message.OrganizationGuid}");
+            if (message.VacancyGuid == Guid.Empty) throw new ArgumentNullException($"VacancyGuid is empty: {message.VacancyGuid}");
 
             Organization organization = _repository.GetById<Organization>(message.OrganizationGuid);
             organization.SwitchVacancyToAcceptApplications(message.VacancyGuid);
@@ -64,8 +64,8 @@ namespace SciVacancies.WebApp.Commands
 
         protected override void HandleCore(SwitchVacancyInCommitteeCommand message)
         {
-            if (message.OrganizationGuid == Guid.Empty) throw new Exception($"OrganizationGuid is empty: {message.OrganizationGuid}");
-            if (message.VacancyGuid == Guid.Empty) throw new Exception($"VacancyGuid is empty: {message.VacancyGuid}");
+            if (message.OrganizationGuid == Guid.Empty) throw new ArgumentNullException($"OrganizationGuid is empty: {message.OrganizationGuid}");
+            if (message.VacancyGuid == Guid.Empty) throw new ArgumentNullException($"VacancyGuid is empty: {message.VacancyGuid}");
 
             Organization organization = _repository.GetById<Organization>(message.OrganizationGuid);
             organization.SwitchVacancyInCommittee(message.VacancyGuid);
@@ -83,8 +83,8 @@ namespace SciVacancies.WebApp.Commands
 
         protected override void HandleCore(CloseVacancyCommand message)
         {
-            if (message.OrganizationGuid == Guid.Empty) throw new Exception($"OrganizationGuid is empty: {message.OrganizationGuid}");
-            if (message.VacancyGuid == Guid.Empty) throw new Exception($"VacancyGuid is empty: {message.VacancyGuid}");
+            if (message.OrganizationGuid == Guid.Empty) throw new ArgumentNullException($"OrganizationGuid is empty: {message.OrganizationGuid}");
+            if (message.VacancyGuid == Guid.Empty) throw new ArgumentNullException($"VacancyGuid is empty: {message.VacancyGuid}");
 
             Organization organization = _repository.GetById<Organization>(message.OrganizationGuid);
             organization.CloseVacancy(message.VacancyGuid, message.WinnerGuid, message.PretenderGuid);
@@ -102,8 +102,8 @@ namespace SciVacancies.WebApp.Commands
 
         protected override void HandleCore(CancelVacancyCommand message)
         {
-            if (message.OrganizationGuid == Guid.Empty) throw new Exception($"OrganizationGuid is empty: {message.OrganizationGuid}");
-            if (message.VacancyGuid == Guid.Empty) throw new Exception($"VacancyGuid is empty: {message.VacancyGuid}");
+            if (message.OrganizationGuid == Guid.Empty) throw new ArgumentNullException($"OrganizationGuid is empty: {message.OrganizationGuid}");
+            if (message.VacancyGuid == Guid.Empty) throw new ArgumentNullException($"VacancyGuid is empty: {message.VacancyGuid}");
 
             Organization organization = _repository.GetById<Organization>(message.OrganizationGuid);
             organization.CancelVacancy(message.VacancyGuid, message.Reason);
@@ -122,8 +122,8 @@ namespace SciVacancies.WebApp.Commands
 
         public int Handle(AddVacancyToFavoritesCommand message)
         {
-            if (message.ResearcherGuid == Guid.Empty) throw new Exception($"ResearcherGuid is empty: {message.ResearcherGuid}");
-            if (message.VacancyGuid == Guid.Empty) throw new Exception($"VacancyGuid is empty: {message.VacancyGuid}");
+            if (message.ResearcherGuid == Guid.Empty) throw new ArgumentNullException($"ResearcherGuid is empty: {message.ResearcherGuid}");
+            if (message.VacancyGuid == Guid.Empty) throw new ArgumentNullException($"VacancyGuid is empty: {message.VacancyGuid}");
 
             Researcher researcher = _repository.GetById<Researcher>(message.ResearcherGuid);
             int favoritesCount = researcher.AddVacancyToFavorites(message.VacancyGuid);
@@ -143,8 +143,8 @@ namespace SciVacancies.WebApp.Commands
 
         public int Handle(RemoveVacancyFromFavoritesCommand message)
         {
-            if (message.ResearcherGuid == Guid.Empty) throw new Exception($"ResearcherGuid is empty: {message.ResearcherGuid}");
-            if (message.VacancyGuid == Guid.Empty) throw new Exception($"VacancyGuid is empty: {message.VacancyGuid}");
+            if (message.ResearcherGuid == Guid.Empty) throw new ArgumentNullException($"ResearcherGuid is empty: {message.ResearcherGuid}");
+            if (message.VacancyGuid == Guid.Empty) throw new ArgumentNullException($"VacancyGuid is empty: {message.VacancyGuid}");
 
             Researcher researcher = _repository.GetById<Researcher>(message.ResearcherGuid);
             int favoritesCount = researcher.RemoveVacancyFromFavorites(message.VacancyGuid);
