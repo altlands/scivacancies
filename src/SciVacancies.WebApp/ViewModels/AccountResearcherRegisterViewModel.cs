@@ -1,11 +1,9 @@
-﻿using System;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace SciVacancies.WebApp.ViewModels
 {
-    public class AccountRegisterViewModel
+    public class AccountResearcherRegisterViewModel
     {
         [Required]
         [DefaultValue(false)]

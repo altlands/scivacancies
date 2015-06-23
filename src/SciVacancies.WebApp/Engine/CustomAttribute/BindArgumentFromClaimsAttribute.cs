@@ -2,6 +2,7 @@
 using System.Linq;
 using System.ComponentModel;
 using Microsoft.AspNet.Mvc;
+using SciVacancies.WebApp.Engine;
 
 namespace SciVacancies.WebApp.Controllers
 {
@@ -34,10 +35,10 @@ namespace SciVacancies.WebApp.Controllers
 
     public class BindResearcherIdFromClaimsAttribute : BindArgumentFromClaimsAttribute
     {
-        public BindResearcherIdFromClaimsAttribute() : base("researcher_id", "researcherGuid", typeof(Guid)) { }
+        public BindResearcherIdFromClaimsAttribute() : base(ConstTerms.ClaimTypeResearcherId, "researcherGuid", typeof(Guid)) { }
     }
     public class BindOrganizationIdFromClaimsAttribute : BindArgumentFromClaimsAttribute
     {
-        public BindOrganizationIdFromClaimsAttribute() : base("organization_id", "organizationGuid", typeof(Guid)) { }
+        public BindOrganizationIdFromClaimsAttribute() : base(ConstTerms.ClaimTypeOrganizationId, "organizationGuid", typeof(Guid)) { }
     }
 }

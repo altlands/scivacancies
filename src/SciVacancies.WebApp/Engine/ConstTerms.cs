@@ -16,5 +16,7 @@
         public const string RequireRoleAdministrator = "administrator";
         public const string RequireRoleRoot = "root";
 
+        public const string ClaimTypeOrganizationId = "organization_id";
+        public const string ClaimTypeResearcherId = "researcher_id";
     }
 }

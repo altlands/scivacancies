@@ -11,19 +11,19 @@ namespace SciVacancies.WebApp.Commands
     {
         public RegisterUserResearcherCommand() : base() { }
 
-        public AccountRegisterViewModel Data { get; set; }
+        public AccountResearcherRegisterViewModel Data { get; set; }
     }
     public class RegisterUserOrganizationCommand : CommandBase, IRequest<SciVacUser>
     {
         public RegisterUserOrganizationCommand() : base() { }
 
-        public AccountRegisterViewModel Data { get; set; }
+        public AccountOrganizationRegisterViewModel Data { get; set; }
     }
     [Obsolete("Will be removed soon")]
     public class RegisterUserCommand : CommandBase, IRequest<SciVacUser>
     {
         public RegisterUserCommand() : base() { }
 
-        public AccountRegisterViewModel Data { get; set; }
+        public AccountResearcherRegisterViewModel Data { get; set; }
     }
 }

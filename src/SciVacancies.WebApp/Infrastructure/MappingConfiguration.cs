@@ -42,8 +42,14 @@ namespace SciVacancies.WebApp.Infrastructure
             //create 
             Mapper.CreateMap<VacancyApplicationCreateViewModel, VacancyApplicationDataModel>();
 
-            Mapper.CreateMap<AccountRegisterViewModel, ResearcherDataModel>()
+
+            /*Account*/
+            
+            //researcher
+            Mapper.CreateMap<AccountResearcherRegisterViewModel, ResearcherDataModel>()
                 .ForMember(dest => dest.BirthDate, src => src.MapFrom(c=>new DateTime(c.BirthYear, 1,1)));
+            //organization
+            Mapper.CreateMap<AccountOrganizationRegisterViewModel, OrganizationDataModel>();
         }
     }
 }
