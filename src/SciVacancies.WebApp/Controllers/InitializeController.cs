@@ -1,8 +1,11 @@
 ﻿using System;
+using MediatR;
 using Microsoft.AspNet.Mvc;
 using SciVacancies.Domain.Aggregates.Interfaces;
 using SciVacancies.Domain.DataModels;
 using SciVacancies.ReadModel;
+using SciVacancies.WebApp.Commands;
+using SciVacancies.WebApp.ViewModels;
 
 // For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -13,26 +16,47 @@ namespace SciVacancies.WebApp.Controllers
         private readonly IResearcherService _res;
         private readonly IOrganizationService _org;
         private readonly IReadModelService _rm;
+        private readonly IMediator _mediator;
 
-        public InitializeController(IResearcherService res,IOrganizationService org,IReadModelService rm)
+        public InitializeController(IResearcherService res,IOrganizationService org,IReadModelService rm, IMediator mediator)
         {
             _res = res;
             _org = org;
             _rm = rm;
+            _mediator = mediator;
         }
         // GET: /<controller>/
         public void Index()
         {
-            Guid resGuid = _res.CreateResearcher(new ResearcherDataModel()
+
+
+            //var command = new RegisterUserCommand
+            //{
+            //    Data = new AccountRegisterViewModel
+            //    {
+            //        Email = "researcher1@mailer.org",
+            //        UserName = "researcher1",
+            //        FirstName = "Генрих",
+            //        SecondName = "Дубощит",
+            //        Patronymic = "Иванович",
+            //        FirstNameEng = "Genrih",
+            //        SecondNameEng = "Pupkin",
+            //        PatronymicEng = "Ivanovich",
+            //        BirthYear= DateTime.Now.AddYears(-50).Year
+            //    }
+            //};
+            //var user = _mediator.Send(command);
+
+            Guid resGuid = /*Guid.Parse(user.Id);*/_res.CreateResearcher(new ResearcherDataModel()
             {
                 UserId = "Cartman",
                 FirstName = "Генрих",
-                SecondName = "Пупкин",
-                Patronymic = "Дубощит",
+                SecondName = "Дубощит",
+                Patronymic = "Иванович",
                 FirstNameEng = "Genrih",
                 SecondNameEng = "Pupkin",
-                PatronymicEng = "Duboit",
-                BirthDate = DateTime.Now
+                PatronymicEng = "Ivanovich",
+                BirthDate = DateTime.Now.AddYears(-50)
             });
 
             Guid subGuid = _res.CreateSearchSubscription(resGuid, new SearchSubscriptionDataModel()
@@ -42,8 +66,8 @@ namespace SciVacancies.WebApp.Controllers
 
             Guid orgGuid = _org.CreateOrganization(new OrganizationDataModel()
             {
-                Name="Корпорация Umbrella",
-                ShortName="Ubmrella",
+                Name="Научно Исследотельский Институт Горных массивов",
+                ShortName="НИИ Горных массивов",
                 OrgFormId=1,
                 FoivId=42,
                 ActivityId=1,
