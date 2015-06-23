@@ -13,19 +13,10 @@ namespace SciVacancies.WebApp.Controllers
 {
     public class InitializeController : Controller
     {
-<<<<<<< HEAD
         private readonly IMediator _mediator;
 
         public InitializeController(IMediator mediator)
         {
-=======
-        private readonly IReadModelService _rm;
-        private readonly IMediator _mediator;
-
-        public InitializeController(IReadModelService rm, IMediator mediator)
-        {
-            _rm = rm;
->>>>>>> master
             _mediator = mediator;
         }
         
@@ -47,34 +38,20 @@ namespace SciVacancies.WebApp.Controllers
                 }
             };
             var user = _mediator.Send(createUserResearcherCommand);
-
-<<<<<<< HEAD
             var resGuid = Guid.Parse(user.Claims.Single(s => s.ClaimType.Equals(ConstTerms.ClaimTypeResearcherId)).ClaimValue);
 
             var subGuid = _mediator.Send(new CreateSearchSubscriptionCommand
-=======
-            Guid resGuid = Guid.Parse(user.Claims.Single(s => s.ClaimType.Equals("researcher_id")).ClaimValue);
-
-            Guid subGuid = _mediator.Send(new CreateSearchSubscriptionCommand
->>>>>>> master
             {
                 ResearcherGuid = resGuid,
                 Data = new SearchSubscriptionDataModel { Title = "Разведение лазерных акул" }
             });
 
-<<<<<<< HEAD
             var createUserOrganizationCommand = new RegisterUserOrganizationCommand
             {
                 Data = new AccountOrganizationRegisterViewModel
                 {
                     Email = "organization1@mailer.org",
                     UserName = "organization1",
-=======
-            Guid orgGuid = _mediator.Send(new CreateOrganizationCommand
-            {
-                Data = new OrganizationDataModel
-                {
->>>>>>> master
                     Name = "Научно Исследотельский Институт Горных массивов",
                     ShortName = "НИИ Горных массивов",
                     OrgFormId = 1,
@@ -84,14 +61,10 @@ namespace SciVacancies.WebApp.Controllers
                     HeadLastName = "Грек",
                     HeadPatronymic = "Иванович"
                 }
-<<<<<<< HEAD
             };
             var organization = _mediator.Send(createUserOrganizationCommand);
             var orgGuid = Guid.Parse(organization.Claims.Single(s => s.ClaimType.Equals(ConstTerms.ClaimTypeOrganizationId)).ClaimValue);
-
-=======
-            });
->>>>>>> master
+            
             Guid posGuid1 = _mediator.Send(new CreatePositionCommand
             {
                 OrganizationGuid = orgGuid,
@@ -116,11 +89,7 @@ namespace SciVacancies.WebApp.Controllers
                     ResearchDirectionId = 2999
                 }
             });
-<<<<<<< HEAD
             var vacGuid1 = _mediator.Send(new PublishVacancyCommand
-=======
-            Guid vacGuid1 = _mediator.Send(new PublishVacancyCommand
->>>>>>> master
             {
                 OrganizationGuid = orgGuid,
                 PositionGuid = posGuid1,
@@ -131,20 +100,13 @@ namespace SciVacancies.WebApp.Controllers
                     ResearchDirection = "Аналитическая химия"
                 }
             });
-
-<<<<<<< HEAD
+            
             var createUserOrganizationCommand1 = new RegisterUserOrganizationCommand
             {
                 Data = new AccountOrganizationRegisterViewModel
                 {
                     Email = "organization2@mailer.org",
                     UserName = "organization2",
-=======
-            Guid orgGuid1 = _mediator.Send(new CreateOrganizationCommand
-            {
-                Data = new OrganizationDataModel
-                {
->>>>>>> master
                     Name = "НИИ добра",
                     ShortName = "Good Science",
                     OrgFormId = 2,
@@ -154,7 +116,6 @@ namespace SciVacancies.WebApp.Controllers
                     HeadLastName = "Саур",
                     HeadPatronymic = "Сауронович"
                 }
-<<<<<<< HEAD
             };
             var organization1 = _mediator.Send(createUserOrganizationCommand1);
             var orgGuid1 = Guid.Parse(organization1.Claims.Single(s => s.ClaimType.Equals(ConstTerms.ClaimTypeOrganizationId)).ClaimValue);
@@ -162,12 +123,6 @@ namespace SciVacancies.WebApp.Controllers
             var posGuid3 = _mediator.Send(new CreatePositionCommand
             {
                 OrganizationGuid = orgGuid1,
-=======
-            });
-            Guid posGuid3 = _mediator.Send(new CreatePositionCommand
-            {
-                OrganizationGuid = orgGuid,
->>>>>>> master
                 Data = new PositionDataModel
                 {
                     Name = "Ремонтник всевидящего ока",
@@ -180,13 +135,8 @@ namespace SciVacancies.WebApp.Controllers
 
             Guid vacGuid3 = _mediator.Send(new PublishVacancyCommand
             {
-<<<<<<< HEAD
                 OrganizationGuid = orgGuid1,
                 PositionGuid = posGuid3,
-=======
-                OrganizationGuid = orgGuid,
-                PositionGuid = posGuid1,
->>>>>>> master
                 Data = new VacancyDataModel
                 {
                     Name = "Разводчик акул",
