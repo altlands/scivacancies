@@ -1,7 +1,6 @@
 ﻿using System;
 using MediatR;
 using Microsoft.AspNet.Mvc;
-using SciVacancies.Domain.Aggregates.Interfaces;
 using SciVacancies.Domain.DataModels;
 using SciVacancies.ReadModel;
 using SciVacancies.WebApp.Commands;

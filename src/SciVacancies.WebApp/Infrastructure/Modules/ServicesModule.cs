@@ -1,6 +1,5 @@
 ﻿using Autofac;
-using SciVacancies.Domain.Aggregates.Interfaces;
-using SciVacancies.Domain.Aggregates.Services;
+
 using SciVacancies.ReadModel;
 
 namespace SciVacancies.WebApp.Infrastructure
