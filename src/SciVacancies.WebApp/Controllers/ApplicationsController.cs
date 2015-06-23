@@ -2,23 +2,25 @@
 using AutoMapper;
 using Microsoft.AspNet.Authorization;
 using Microsoft.AspNet.Mvc;
-using SciVacancies.Domain.Aggregates.Interfaces;
 using SciVacancies.Domain.DataModels;
 using SciVacancies.ReadModel;
 using SciVacancies.WebApp.Engine;
 using SciVacancies.WebApp.ViewModels;
+using SciVacancies.WebApp.Commands;
+
+using MediatR;
 
 namespace SciVacancies.WebApp.Controllers
 {
     [Authorize]
-    public class ApplicationsController: Controller
+    public class ApplicationsController : Controller
     {
-        private readonly IResearcherService _researcherService;
+        private readonly IMediator _mediator;
         private readonly IReadModelService _readModelService;
 
-        public ApplicationsController(IResearcherService researcherService, IReadModelService readModelService)
+        public ApplicationsController(IMediator mediator, IReadModelService readModelService)
         {
-            _researcherService = researcherService;
+            _mediator = mediator;
             _readModelService = readModelService;
         }
 
@@ -27,7 +29,7 @@ namespace SciVacancies.WebApp.Controllers
         [BindResearcherIdFromClaims]
         public ViewResult Create(Guid researcherGuid, Guid vacancyGuid)
         {
-            if(researcherGuid==Guid.Empty)
+            if (researcherGuid == Guid.Empty)
                 throw new ArgumentNullException(nameof(researcherGuid));
             if (vacancyGuid == Guid.Empty)
                 throw new ArgumentNullException(nameof(vacancyGuid));
@@ -43,9 +45,9 @@ namespace SciVacancies.WebApp.Controllers
                 Email = researcher.Email,
                 Phone = researcher.Phone,
                 ResearcherFullName = $"{researcher.SecondName} {researcher.FirstName} {researcher.Patronymic}",
-                ResearchActivity =researcher.ResearchActivity,
+                ResearchActivity = researcher.ResearchActivity,
                 TeachingActivity = researcher.TeachingActivity,
-                OtherActivity =  researcher.OtherActivity,
+                OtherActivity = researcher.OtherActivity,
                 ScienceDegree = researcher.ScienceDegree,
                 AcademicStatus = researcher.AcademicStatus,
                 Rewards = researcher.Rewards
@@ -60,8 +62,13 @@ namespace SciVacancies.WebApp.Controllers
         public ActionResult Create(VacancyApplicationCreateViewModel model)
         {
             var data = Mapper.Map<VacancyApplicationDataModel>(model);
-            var vacancyApplicationGuid = _researcherService.CreateVacancyApplicationTemplate(model.ResearcherGuid, model.VacancyGuid, data);
-            return RedirectToAction("applications", "researchers", new {id = vacancyApplicationGuid });
+            var vacancyApplicationGuid = _mediator.Send(new CreateVacancyApplicationTemplateCommand
+            {
+                ResearcherGuid = model.ResearcherGuid,
+                VacancyGuid = model.VacancyGuid,
+                Data = data
+            });
+            return RedirectToAction("applications", "researchers", new { id = vacancyApplicationGuid });
         }
 
         [Authorize(Roles = ConstTerms.RequireRoleResearcher)]

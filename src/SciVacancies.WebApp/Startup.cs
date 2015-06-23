@@ -63,6 +63,7 @@ namespace SciVacancies.WebApp
             builder.RegisterModule(new IdentityModule());
 
             builder.RegisterSource(new ContravariantRegistrationSource());
+            //TODO - переместить в один из модулей
             builder.RegisterAssemblyTypes(typeof(RegisterUserCommand).Assembly).AsImplementedInterfaces();
         }
 

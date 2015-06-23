@@ -4,13 +4,16 @@ using System.Linq;
 using AutoMapper;
 using Microsoft.AspNet.Authorization;
 using Microsoft.AspNet.Mvc;
-using SciVacancies.Domain.Aggregates.Interfaces;
 using SciVacancies.Domain.DataModels;
 using SciVacancies.Domain.Enums;
 using SciVacancies.ReadModel;
 using SciVacancies.ReadModel.Core;
 using SciVacancies.WebApp.Engine;
 using SciVacancies.WebApp.ViewModels;
+
+using SciVacancies.WebApp.Commands;
+
+using MediatR;
 
 namespace SciVacancies.WebApp.Controllers
 {
@@ -20,12 +23,12 @@ namespace SciVacancies.WebApp.Controllers
     [Authorize]
     public class VacanciesController : Controller
     {
+        private readonly IMediator _mediator;
         private readonly IReadModelService _readModelService;
-        private readonly IOrganizationService _organizationService;
 
-        public VacanciesController(IOrganizationService organizationService, IReadModelService readModelService)
+        public VacanciesController(IMediator mediator, IReadModelService readModelService)
         {
-            _organizationService = organizationService;
+            _mediator = mediator;
             _readModelService = readModelService;
         }
 
@@ -64,7 +67,7 @@ namespace SciVacancies.WebApp.Controllers
             if (model.Status == VacancyStatus.AppliesAcceptance || model.Status == VacancyStatus.Published)
             {
                 //если есть GUID Исследователя
-                if (researcherGuid!=Guid.Empty)
+                if (researcherGuid != Guid.Empty)
                 {
                     List<Vacancy> favoritesVacancies = null;
                     try
@@ -111,11 +114,16 @@ namespace SciVacancies.WebApp.Controllers
             if (ModelState.IsValid)
             {
                 var positionDataModel = Mapper.Map<PositionDataModel>(model);
-                var positionGuid = _organizationService.CreatePosition(model.OrganizationGuid, positionDataModel);
+                var positionGuid = _mediator.Send(new CreatePositionCommand { OrganizationGuid = model.OrganizationGuid, Data = positionDataModel });
 
                 if (model.ToPublish)
                 {
-                    var vacancyGuid = _organizationService.PublishVacancy(model.OrganizationGuid, positionGuid, Mapper.Map<VacancyDataModel>(positionDataModel));
+                    var vacancyGuid = _mediator.Send(new PublishVacancyCommand
+                    {
+                        OrganizationGuid = model.OrganizationGuid,
+                        PositionGuid = positionGuid,
+                        Data = Mapper.Map<VacancyDataModel>(positionDataModel)
+                    });
                 }
 
                 return RedirectToAction("vacancies", "organizations");
