@@ -9,6 +9,9 @@ namespace SciVacancies.Domain.DataModels
 {
     public class ResearcherDataModel
     {
+        /// <summary>
+        /// Идентификатор аккаунта, к которому привязан агрегат
+        /// </summary>
         public string UserId { get; set; }
 
         public string FirstName { get; set; }

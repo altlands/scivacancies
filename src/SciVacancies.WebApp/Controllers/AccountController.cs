@@ -56,7 +56,7 @@ namespace SciVacancies.WebApp.Controllers
                 return View(model);
             }
 
-            var command = new RegisterUserCommand
+            var command = new RegisterUserResearcherCommand
             {
                 Data = model
             };

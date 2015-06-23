@@ -8,6 +8,10 @@ namespace SciVacancies.Domain.DataModels
     public class OrganizationDataModel
     {
         /// <summary>
+        /// Идентификатор аккаунта, к которому привязан агрегат
+        /// </summary>
+        public string UserId { get; set; }
+        /// <summary>
         /// Полное наименование
         /// </summary>
 

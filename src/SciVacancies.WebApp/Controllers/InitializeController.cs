@@ -7,6 +7,8 @@ using SciVacancies.ReadModel;
 using SciVacancies.WebApp.Commands;
 using SciVacancies.WebApp.ViewModels;
 
+using System.Linq;
+
 // For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace SciVacancies.WebApp.Controllers
@@ -18,7 +20,7 @@ namespace SciVacancies.WebApp.Controllers
         private readonly IReadModelService _rm;
         private readonly IMediator _mediator;
 
-        public InitializeController(IResearcherService res,IOrganizationService org,IReadModelService rm, IMediator mediator)
+        public InitializeController(IResearcherService res, IOrganizationService org, IReadModelService rm, IMediator mediator)
         {
             _res = res;
             _org = org;
@@ -30,34 +32,36 @@ namespace SciVacancies.WebApp.Controllers
         {
 
 
-            //var command = new RegisterUserCommand
-            //{
-            //    Data = new AccountRegisterViewModel
-            //    {
-            //        Email = "researcher1@mailer.org",
-            //        UserName = "researcher1",
-            //        FirstName = "Генрих",
-            //        SecondName = "Дубощит",
-            //        Patronymic = "Иванович",
-            //        FirstNameEng = "Genrih",
-            //        SecondNameEng = "Pupkin",
-            //        PatronymicEng = "Ivanovich",
-            //        BirthYear= DateTime.Now.AddYears(-50).Year
-            //    }
-            //};
-            //var user = _mediator.Send(command);
-
-            Guid resGuid = /*Guid.Parse(user.Id);*/_res.CreateResearcher(new ResearcherDataModel()
+            var command = new RegisterUserResearcherCommand
             {
-                UserId = "Cartman",
-                FirstName = "Генрих",
-                SecondName = "Дубощит",
-                Patronymic = "Иванович",
-                FirstNameEng = "Genrih",
-                SecondNameEng = "Pupkin",
-                PatronymicEng = "Ivanovich",
-                BirthDate = DateTime.Now.AddYears(-50)
-            });
+                Data = new AccountRegisterViewModel
+                {
+                    Email = "researcher1@mailer.org",
+                    UserName = "researcher1",
+                    FirstName = "Генрих",
+                    SecondName = "Дубощит",
+                    Patronymic = "Иванович",
+                    FirstNameEng = "Genrih",
+                    SecondNameEng = "Pupkin",
+                    PatronymicEng = "Ivanovich",
+                    BirthYear = DateTime.Now.AddYears(-50).Year
+                }
+            };
+            var user = _mediator.Send(command);
+
+            //Guid resGuid = Guid.Parse(user.Id)/*_res.CreateResearcher(new ResearcherDataModel()*/
+            //{
+            //    UserId = "Cartman",
+            //    FirstName = "Генрих",
+            //    SecondName = "Дубощит",
+            //    Patronymic = "Иванович",
+            //    FirstNameEng = "Genrih",
+            //    SecondNameEng = "Pupkin",
+            //    PatronymicEng = "Ivanovich",
+            //    BirthDate = DateTime.Now.AddYears(-50)
+            //});
+            //Claims.FirstOrDefault(c => c.Type == Key);
+            Guid resGuid = Guid.Parse(user.Claims.Single(s => s.ClaimType.Equals("researcher_id")).ClaimValue);
 
             Guid subGuid = _res.CreateSearchSubscription(resGuid, new SearchSubscriptionDataModel()
             {
@@ -66,23 +70,23 @@ namespace SciVacancies.WebApp.Controllers
 
             Guid orgGuid = _org.CreateOrganization(new OrganizationDataModel()
             {
-                Name="Научно Исследотельский Институт Горных массивов",
-                ShortName="НИИ Горных массивов",
-                OrgFormId=1,
-                FoivId=42,
-                ActivityId=1,
-                HeadFirstName="Овидий",
-                HeadLastName="Грек",
-                HeadPatronymic="Иванович"
+                Name = "Научно Исследотельский Институт Горных массивов",
+                ShortName = "НИИ Горных массивов",
+                OrgFormId = 1,
+                FoivId = 42,
+                ActivityId = 1,
+                HeadFirstName = "Овидий",
+                HeadLastName = "Грек",
+                HeadPatronymic = "Иванович"
             });
 
             Guid posGuid1 = _org.CreatePosition(orgGuid, new PositionDataModel()
             {
-                Name="Разводчик акул",
-                FullName="Младший сотрудник по разведению лазерных акул",
-                PositionTypeGuid=Guid.Parse("b7280ace-d237-c007-42fe-ec4aed8f52d4"),
-                ResearchDirection= "Аналитическая химия",
-                ResearchDirectionId= 3026
+                Name = "Разводчик акул",
+                FullName = "Младший сотрудник по разведению лазерных акул",
+                PositionTypeGuid = Guid.Parse("b7280ace-d237-c007-42fe-ec4aed8f52d4"),
+                ResearchDirection = "Аналитическая химия",
+                ResearchDirectionId = 3026
             });
             Guid posGuid2 = _org.CreatePosition(orgGuid, new PositionDataModel()
             {
