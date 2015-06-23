@@ -1,4 +1,6 @@
-﻿using System;
+﻿using SciVacancies.ReadModel.Core;
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -11,8 +13,10 @@ namespace SciVacancies.ReadModel
     {
         ElasticClient Connect();
         void CreateIndex();
-        void DeleteIndex();
+        void RemoveIndex();
         void RestoreIndexFromReadModel();
-        void Search();
+        void IndexVacancy(Vacancy vacancy);
+        void UpdateVacancy(Vacancy vacancy);
+        ISearchResponse<Vacancy> Search(string query, int pageSize, int pageIndex, List<Guid> regions, List<Guid> foivs, List<Guid> universities, List<int> directions);
     }
 }

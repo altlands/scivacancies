@@ -11,21 +11,23 @@ namespace SciVacancies.ReadModel
 {
     public class ElasticService : IElasticService
     {
-        private string DefaultIndexName = "scivacancies";
+        public string DefaultIndexName = "scivacancies";
         public ElasticClient Connect()
         {
-            var url = new Uri("http://localhost:9200");
+            //var url = new Uri("http://localhost:9200");
+            var url = new Uri("http://altlandev01.cloudapp.net:9200/");
             var config = new ConnectionSettings(url, defaultIndex: DefaultIndexName);
             return new ElasticClient(config);
         }
         public void CreateIndex()
         {
             Connect().CreateIndex(DefaultIndexName, c => c
-             .AddMapping<Vacancy>(am => am
-             .MapFromAttributes()
-             ));
+                                .AddMapping<Vacancy>(am => am
+                                .MapFromAttributes()
+                                )
+                            );
         }
-        public void DeleteIndex()
+        public void RemoveIndex()
         {
             Connect().DeleteIndex(s => s.Index(DefaultIndexName));
         }
@@ -33,9 +35,40 @@ namespace SciVacancies.ReadModel
         {
 
         }
-        public void Search()
+        public void IndexVacancy(Vacancy vacancy)
         {
-
+            Connect().Index(vacancy);
+        }
+        public void UpdateVacancy(Vacancy vacancy)
+        {
+            Connect().Update<Vacancy>(u => u.IdFrom(vacancy).Doc(vacancy));
+        }
+        public ISearchResponse<Vacancy> Search(string query, int pageSize, int pageIndex, List<Guid> regions, List<Guid> foivs, List<Guid> universities, List<int> directions)
+        {
+            //                return Connect().Search<ElasticResource>(s => s.Index(DefaultName).Sort(sd => sd.OnField(of => of.Resource.Code.Suffix("raw")).NestedMax().Descending()).Skip((c.Page - 1) * ResPerPage).Take(ResPerPage).MinScore(MinScore).Query(QueryToggle(c, employeeNumber)));
+            return Connect().Search<Vacancy>(s => s
+                 .Index(DefaultIndexName)
+                 .Skip((pageIndex - 1) * pageSize)
+                 .Take(pageSize)
+                 .Query(qr => qr
+                     .FuzzyLikeThis(flt => flt
+                         .LikeText(query)
+                     )
+                 //.Filtered(ftd => ftd
+                 //    .Query(q => q
+                 //        .FuzzyLikeThis(flt => flt.LikeText(query))
+                 //    )
+                 //    .Filter(f => f
+                 //        .Bool(b=>b
+                 //            //.Must(mst=>mst
+                 //            //    .Terms().
+                 //            //)
+                 //            //&& b.Must(mst=>mst)
+                 //        )                        
+                 //    )
+                 //)
+                 )
+             );
         }
 
         //    Connect().CreateIndex(DefaultName, c => c

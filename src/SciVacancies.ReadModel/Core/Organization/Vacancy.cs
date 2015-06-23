@@ -14,6 +14,9 @@ namespace SciVacancies.ReadModel.Core
     [PrimaryKey("Guid", AutoIncrement = false)]
     public class Vacancy : BaseEntity
     {
+        [Ignore]
+        ///Айдишник для поисковика
+        public Guid Id { get { return this.Guid; } }
         /// <summary>
         /// Идентификатор организации
         /// </summary>
@@ -21,9 +24,7 @@ namespace SciVacancies.ReadModel.Core
         public Guid PositionGuid { get; set; }
         public Guid PositionTypeGuid { get; set; }
 
-        [ElasticProperty(Index = FieldIndexOption.NotAnalyzed)]
         public Guid WinnerGuid { get; set; }
-        [ElasticProperty(Index = FieldIndexOption.NotAnalyzed)]
         public Guid PretenderGuid { get; set; }
 
         public string OrganizationName { get; set; }
@@ -57,7 +58,7 @@ namespace SciVacancies.ReadModel.Core
         /// Критерии оценки 
         /// </summary>
         [Ignore]
-        [ElasticProperty(Index = FieldIndexOption.NotAnalyzed)]
+        [ElasticProperty(OptOut = true)]
         public KeyValuePair<int, int> Criteria { get; set; } //<CriteriaId, Amount>
 
         /// <summary>
