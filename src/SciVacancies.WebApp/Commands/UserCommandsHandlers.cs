@@ -33,7 +33,7 @@ namespace SciVacancies.WebApp.Commands
             {
                 UserName = message.Data.Email
             };
-            
+
 
             var rdm = Mapper.Map<AccountRegisterViewModel, ResearcherDataModel>(message.Data);
             rdm.UserId = user.Id;
@@ -44,8 +44,8 @@ namespace SciVacancies.WebApp.Commands
                 ClaimValue = researcher.Id.ToString(),
                 UserId = user.Id
             });
-                        
-            _repository.Save(researcher, Guid.NewGuid(), null);            
+
+            _repository.Save(researcher, Guid.NewGuid(), null);
             _userManager.Create(user);
             _userManager.AddToRole(user.Id, "researcher");
 

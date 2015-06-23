@@ -9,7 +9,7 @@ using Nest;
 
 namespace SciVacancies.ReadModel
 {
-    public class ElasticService:IElasticService
+    public class ElasticService : IElasticService
     {
         private string DefaultIndexName = "scivacancies";
         public ElasticClient Connect()

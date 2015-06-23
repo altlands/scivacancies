@@ -38,7 +38,7 @@ namespace SciVacancies.WebApp.Commands
 
         protected override void HandleCore(UpdateResearcherCommand message)
         {
-            if (message.ResearcherGuid == Guid.Empty) throw new Exception($"ResearcherGuid is empty: {message.ResearcherGuid}");
+            if (message.ResearcherGuid == Guid.Empty) throw new ArgumentNullException($"ResearcherGuid is empty: {message.ResearcherGuid}");
 
             var rdm = message.Data;
 
@@ -58,7 +58,7 @@ namespace SciVacancies.WebApp.Commands
 
         protected override void HandleCore(RemoveResearcherCommand message)
         {
-            if (message.ResearcherGuid == Guid.Empty) throw new Exception($"ResearcherGuid is empty: {message.ResearcherGuid}");
+            if (message.ResearcherGuid == Guid.Empty) throw new ArgumentNullException($"ResearcherGuid is empty: {message.ResearcherGuid}");
 
             Researcher researcher = _repository.GetById<Researcher>(message.ResearcherGuid);
             researcher.Remove();

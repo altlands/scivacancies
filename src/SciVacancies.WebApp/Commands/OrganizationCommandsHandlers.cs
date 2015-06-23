@@ -38,7 +38,7 @@ namespace SciVacancies.WebApp.Commands
 
         protected override void HandleCore(UpdateOrganizationCommand message)
         {
-            if (message.OrganizationGuid == Guid.Empty) throw new Exception($"OrganizationGuid is empty: {message.OrganizationGuid}");
+            if (message.OrganizationGuid == Guid.Empty) throw new ArgumentNullException($"OrganizationGuid is empty: {message.OrganizationGuid}");
 
             var rdm = message.Data;
 
@@ -58,7 +58,7 @@ namespace SciVacancies.WebApp.Commands
 
         protected override void HandleCore(RemoveOrganizationCommand message)
         {
-            if (message.OrganizationGuid == Guid.Empty) throw new Exception($"OrganizationGuid is empty: {message.OrganizationGuid}");
+            if (message.OrganizationGuid == Guid.Empty) throw new ArgumentNullException($"OrganizationGuid is empty: {message.OrganizationGuid}");
 
             Organization organization = _repository.GetById<Organization>(message.OrganizationGuid);
             organization.Remove();

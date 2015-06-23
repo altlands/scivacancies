@@ -11,7 +11,7 @@ namespace SciVacancies.WebApp.Infrastructure
         {
             builder.RegisterType<OrganizationService>().As<IOrganizationService>().SingleInstance();
             builder.RegisterType<ResearcherService>().As<IResearcherService>().SingleInstance();
-            //builder.RegisterType<ElasticService>().As<IElasticService>().SingleInstance();
+            builder.RegisterType<ElasticService>().As<IElasticService>().SingleInstance();
         }
     }
 }
