@@ -26,28 +26,28 @@ namespace SciVacancies.WebApp.Controllers
         [SiblingPage]
         [PageTitle("Информация")]
         [BindOrganizationIdFromClaims]
-        public ViewResult Account(Guid organizationId)
+        public ViewResult Account(Guid organizationGuid)
         {
-            if (organizationId == Guid.Empty)
-                throw new ArgumentNullException(nameof(organizationId));
+            if (organizationGuid == Guid.Empty)
+                throw new ArgumentNullException(nameof(organizationGuid));
 
-            var model = Mapper.Map<OrganizationDetailsViewModel>(_readModelService.SingleOrganization(organizationId));
+            var model = Mapper.Map<OrganizationDetailsViewModel>(_readModelService.SingleOrganization(organizationGuid));
             return View(model);
         }
 
         [SiblingPage]
         [PageTitle("Вакансии")]
         [BindOrganizationIdFromClaims]
-        public ViewResult Vacancies(Guid organizationId)
+        public ViewResult Vacancies(Guid organizationGuid)
         {
-            if (organizationId == Guid.Empty)
-                throw new ArgumentNullException(nameof(organizationId));
+            if (organizationGuid == Guid.Empty)
+                throw new ArgumentNullException(nameof(organizationGuid));
 
             var model = new VacanciesInOrganizationIndexViewModel
             {
-                OrganizationGuid = organizationId,
-                Positions = _readModelService.SelectPositions(organizationId),
-                Vacancies = _readModelService.SelectVacancies(organizationId)
+                OrganizationGuid = organizationGuid,
+                Positions = _readModelService.SelectPositions(organizationGuid),
+                Vacancies = _readModelService.SelectVacancies(organizationGuid)
             };
 
             return View(model);
