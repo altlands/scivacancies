@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using AutoMapper;
+using Microsoft.AspNet.Authorization;
 using Microsoft.AspNet.Mvc;
 using SciVacancies.Domain.Aggregates.Interfaces;
 using SciVacancies.Domain.DataModels;
@@ -9,7 +10,6 @@ using SciVacancies.Domain.Enums;
 using SciVacancies.ReadModel;
 using SciVacancies.ReadModel.Core;
 using SciVacancies.WebApp.Engine;
-using SciVacancies.WebApp.Engine.CustomAttribute;
 using SciVacancies.WebApp.ViewModels;
 
 namespace SciVacancies.WebApp.Controllers
@@ -17,6 +17,7 @@ namespace SciVacancies.WebApp.Controllers
     /// <summary>
     /// страница с вакансиями (конкурсами)
     /// </summary>
+    [Authorize]
     public class VacanciesController : Controller
     {
         private readonly IReadModelService _readModelService;
@@ -28,8 +29,10 @@ namespace SciVacancies.WebApp.Controllers
             _readModelService = readModelService;
         }
 
+        [AllowAnonymous]
         [PageTitle("Карточка конкурса")]
-        public ViewResult Details(Guid id)
+        [BindResearcherIdFromClaims]
+        public ViewResult Details(Guid id, Guid researcherGuid)
         {
             if (id == Guid.Empty)
                 throw new ArgumentNullException(nameof(id));
@@ -39,21 +42,34 @@ namespace SciVacancies.WebApp.Controllers
             ViewBag.ShowAddFavorite = false;
             ViewBag.VacancyInFavorites = false;
 
-            //если пользователь - Исследователь
-            if (Context.Request.Cookies.ContainsKey(ConstTerms.CookiesKeyForUserRole)
-                && bool.Parse(Context.Request.Cookies.Get(ConstTerms.CookiesKeyForUserRole))
-                //если заявка на готовится к открытию или открыта
-                && (model.Status == VacancyStatus.AppliesAcceptance || model.Status == VacancyStatus.Published)
-                )
+            //если заявка на готовится к открытию или открыта
+            if (model.Status == VacancyStatus.AppliesAcceptance || model.Status == VacancyStatus.Published)
             {
                 //если есть GUID Исследователя
-                if (Context.Request.Cookies.ContainsKey(ConstTerms.CookiesKeyForResearcherGuid))
+                List<Vacancy> favoritesVacancies = null;
+                try
                 {
-                    var userGuid = Guid.Parse(Context.Request.Cookies.Get(ConstTerms.CookiesKeyForResearcherGuid));
+                    favoritesVacancies = _readModelService.SelectFavoriteVacancies(researcherGuid);
+                }
+                catch (Exception) { }
+                //если текущей вакансии нет в списке избранных
+                if (favoritesVacancies == null
+                    || !favoritesVacancies.Select(c => c.Guid).ToList().Contains(id))
+                    ViewBag.ShowAddFavorite = true;
+                else
+                    ViewBag.VacancyInFavorites = true;
+            }
+
+            //если заявка на готовится к открытию или открыта
+            if (model.Status == VacancyStatus.AppliesAcceptance || model.Status == VacancyStatus.Published)
+            {
+                //если есть GUID Исследователя
+                if (researcherGuid!=Guid.Empty)
+                {
                     List<Vacancy> favoritesVacancies = null;
                     try
                     {
-                        favoritesVacancies = _readModelService.SelectFavoriteVacancies(userGuid);
+                        favoritesVacancies = _readModelService.SelectFavoriteVacancies(researcherGuid);
                     }
                     catch (Exception)
                     {
@@ -70,11 +86,13 @@ namespace SciVacancies.WebApp.Controllers
             return View(model);
         }
 
+        [AllowAnonymous]
         [PageTitle("Карточка конкурса")]
         public ViewResult Preview(Guid id) => View();
 
         [PageTitle("Новая вакансия")]
-        [BindArgumentFromCookies(ConstTerms.CookiesKeyForOrganizationGuid, "organizationGuid")]
+        [BindOrganizationIdFromClaims]
+        [Authorize(Roles = ConstTerms.RequireRoleOrganizationAdmin)]
         public ViewResult Create(Guid organizationGuid)
         {
             if (organizationGuid == Guid.Empty)
@@ -87,6 +105,7 @@ namespace SciVacancies.WebApp.Controllers
 
         [PageTitle("Новая вакансия")]
         [HttpPost]
+        [Authorize(Roles = ConstTerms.RequireRoleOrganizationAdmin)]
         public ActionResult Create(PositionCreateViewModel model)
         {
             if (ModelState.IsValid)

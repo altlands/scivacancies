@@ -1,15 +1,16 @@
 ﻿using System;
 using AutoMapper;
+using Microsoft.AspNet.Authorization;
 using Microsoft.AspNet.Mvc;
 using SciVacancies.Domain.Aggregates.Interfaces;
 using SciVacancies.Domain.DataModels;
 using SciVacancies.ReadModel;
 using SciVacancies.WebApp.Engine;
-using SciVacancies.WebApp.Engine.CustomAttribute;
 using SciVacancies.WebApp.ViewModels;
 
 namespace SciVacancies.WebApp.Controllers
 {
+    [Authorize]
     public class ApplicationsController: Controller
     {
         private readonly IResearcherService _researcherService;
@@ -21,8 +22,9 @@ namespace SciVacancies.WebApp.Controllers
             _readModelService = readModelService;
         }
 
+        [Authorize(Roles = ConstTerms.RequireRoleResearcher)]
         [PageTitle("Новая заявка")]
-        [BindArgumentFromCookies(ConstTerms.CookiesKeyForResearcherGuid, "researcherGuid")]
+        [BindResearcherIdFromClaims]
         public ViewResult Create(Guid researcherGuid, Guid vacancyGuid)
         {
             if(researcherGuid==Guid.Empty)
@@ -49,11 +51,11 @@ namespace SciVacancies.WebApp.Controllers
                 Rewards = researcher.Rewards
             };
 
-
             return View(model);
         }
 
 
+        [Authorize(Roles = ConstTerms.RequireRoleResearcher)]
         [HttpPost]
         public ActionResult Create(VacancyApplicationCreateViewModel model)
         {
@@ -62,6 +64,7 @@ namespace SciVacancies.WebApp.Controllers
             return RedirectToAction("applications", "researchers", new {id = vacancyApplicationGuid });
         }
 
+        [Authorize(Roles = ConstTerms.RequireRoleResearcher)]
         [PageTitle("Детали заявки")]
         public ViewResult Details(Guid id)
         {
@@ -69,6 +72,7 @@ namespace SciVacancies.WebApp.Controllers
             return View();
         }
 
+        [Authorize(Roles = ConstTerms.RequireRoleOrganizationAdmin)]
         [PageTitle("Детали заявки")]
         public ViewResult ApplicationInVacancy(Guid id) => View();
     }

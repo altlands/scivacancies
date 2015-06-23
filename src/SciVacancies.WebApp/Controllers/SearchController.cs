@@ -21,7 +21,7 @@ namespace SciVacancies.WebApp
         /// <returns></returns>
         [HttpGet]
         [PageTitle("Результаты поиска")]
-        public ViewResult Index(VacanciesFilter model)
+        public ViewResult Index(VacanciesFilterModel model)
         {
             model.ValidateValues();
 

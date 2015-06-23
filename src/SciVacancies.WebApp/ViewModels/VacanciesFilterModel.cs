@@ -4,7 +4,7 @@ using SciVacancies.WebApp.Engine;
 namespace SciVacancies.WebApp.ViewModels
 {
 
-    public class VacanciesFilter
+    public class VacanciesFilterModel
     {
         public IEnumerable<string> Regions { get; set; }
         public IEnumerable<string> Foivs { get; set; }

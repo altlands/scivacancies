@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using AutoMapper;
+using Microsoft.AspNet.Authorization;
 using Microsoft.AspNet.Mvc;
 using SciVacancies.Domain.Aggregates.Interfaces;
 using SciVacancies.Domain.Enums;
@@ -13,9 +14,10 @@ using SciVacancies.WebApp.ViewModels;
 
 namespace SciVacancies.WebApp.Controllers
 {
+    [Authorize(Roles = ConstTerms.RequireRoleResearcher)]
     public class ResearchersController : Controller
     {
-        private IResearcherService _researcherService;
+        private readonly IResearcherService _researcherService;
         private readonly IReadModelService _readModelService;
 
         public ResearchersController(IReadModelService readModelService, IResearcherService researcherService)
@@ -26,7 +28,7 @@ namespace SciVacancies.WebApp.Controllers
 
         [SiblingPage]
         [PageTitle("Информация")]
-        [BindArgumentFromCookies(ConstTerms.CookiesKeyForResearcherGuid, "researcherGuid")]
+        [BindResearcherIdFromClaims]
         public ViewResult Account(Guid researcherGuid)
         {
             if (researcherGuid == Guid.Empty)
@@ -53,7 +55,7 @@ namespace SciVacancies.WebApp.Controllers
 
         [SiblingPage]
         [PageTitle("Мои заявки")]
-        [BindArgumentFromCookies(ConstTerms.CookiesKeyForResearcherGuid, "researcherGuid")]
+        [BindResearcherIdFromClaims]
         public ViewResult Applications(Guid researcherGuid)
         {
             if (researcherGuid == Guid.Empty)
@@ -68,10 +70,10 @@ namespace SciVacancies.WebApp.Controllers
 
         [SiblingPage]
         [PageTitle("Избранные вакансии")]
-        [BindArgumentFromCookies(ConstTerms.CookiesKeyForResearcherGuid, "researcherGuid")]
+        [BindResearcherIdFromClaims]
         public ActionResult Favorities(Guid researcherGuid)
         {
-            if(researcherGuid==Guid.Empty)
+            if (researcherGuid == Guid.Empty)
                 throw new ArgumentNullException(nameof(researcherGuid));
 
             var model = new VacanciesFavoritiesInResearcherIndexViewModel
@@ -97,7 +99,7 @@ namespace SciVacancies.WebApp.Controllers
             return View(model);
         }
 
-        [BindArgumentFromCookies(ConstTerms.CookiesKeyForResearcherGuid, "researcherGuid")]
+        [BindResearcherIdFromClaims]
         public ActionResult AddToFavorite(Guid researcherGuid, Guid vacancyGuid)
         {
             if (researcherGuid == Guid.Empty)
@@ -107,30 +109,20 @@ namespace SciVacancies.WebApp.Controllers
 
 
             var model = _readModelService.SingleVacancy(vacancyGuid);
-            //если пользователь - Исследователь
-            if (Context.Request.Cookies.ContainsKey(ConstTerms.CookiesKeyForUserRole)
-                && bool.Parse(Context.Request.Cookies.Get(ConstTerms.CookiesKeyForUserRole))
-                //если заявка на готовится к открытию или открыта
-                && (model.Status == VacancyStatus.AppliesAcceptance || model.Status == VacancyStatus.Published)
-                )
+            //если заявка на готовится к открытию или открыта
+            if (model.Status == VacancyStatus.AppliesAcceptance || model.Status == VacancyStatus.Published )
             {
                 //если есть GUID Исследователя
-                if (Context.Request.Cookies.ContainsKey(ConstTerms.CookiesKeyForResearcherGuid))
-                {
-                    var userGuid = Guid.Parse(Context.Request.Cookies.Get(ConstTerms.CookiesKeyForResearcherGuid));
                     List<Vacancy> favoritesVacancies = null;
                     try
                     {
-                        favoritesVacancies = _readModelService.SelectFavoriteVacancies(userGuid);
+                        favoritesVacancies = _readModelService.SelectFavoriteVacancies(researcherGuid);
                     }
-                    catch (Exception)
-                    {
-                    }
+                    catch (Exception) { }
                     //если текущей вакансии нет в списке избранных
                     if (favoritesVacancies == null
                         || !favoritesVacancies.Select(c => c.Guid).ToList().Contains(vacancyGuid))
                         _researcherService.AddVacancyToFavorites(researcherGuid, vacancyGuid);
-                }
             }
 
             return Redirect(Context.Request.Headers["referer"]);

@@ -1,5 +1,6 @@
 ﻿using System;
 using AutoMapper;
+using Microsoft.AspNet.Authorization;
 using Microsoft.AspNet.Mvc;
 using SciVacancies.ReadModel;
 using SciVacancies.WebApp.Engine;
@@ -8,6 +9,7 @@ using SciVacancies.WebApp.ViewModels;
 
 namespace SciVacancies.WebApp.Controllers
 {
+    [Authorize(Roles = ConstTerms.RequireRoleOrganizationAdmin)]
     public class OrganizationsController : Controller
     {
         private readonly IReadModelService _readModelService;
@@ -17,12 +19,13 @@ namespace SciVacancies.WebApp.Controllers
             _readModelService = readModelService;
         }
 
+        [AllowAnonymous]
         [PageTitle("Карточка организации")]
         public ViewResult Card() => View();
 
         [SiblingPage]
         [PageTitle("Информация")]
-        [BindArgumentFromCookies(ConstTerms.CookiesKeyForOrganizationGuid, "organizationId")]
+        [BindOrganizationIdFromClaims]
         public ViewResult Account(Guid organizationId)
         {
             if (organizationId == Guid.Empty)
@@ -34,7 +37,7 @@ namespace SciVacancies.WebApp.Controllers
 
         [SiblingPage]
         [PageTitle("Вакансии")]
-        [BindArgumentFromCookies(ConstTerms.CookiesKeyForOrganizationGuid, "organizationId")]
+        [BindOrganizationIdFromClaims]
         public ViewResult Vacancies(Guid organizationId)
         {
             if (organizationId == Guid.Empty)

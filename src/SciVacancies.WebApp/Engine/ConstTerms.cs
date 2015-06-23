@@ -11,11 +11,10 @@
         public const string OrderByCountDescending = "count_descending";
         public const string OrderByCountAscending =  "count_ascending";
 
-        public const string CookiesKeyForUserName = "UserName";
-        public const string CookiesKeyForUserRole = "UserRole";
-
-        public const string CookiesKeyForResearcherGuid = "ResearcherGuid";
-        public const string CookiesKeyForOrganizationGuid = "OrganizationGuid";
+        public const string RequireRoleOrganizationAdmin = "organization_admin";
+        public const string RequireRoleResearcher = "researcher";
+        public const string RequireRoleAdministrator = "administrator";
+        public const string RequireRoleRoot = "root";
 
     }
 }
