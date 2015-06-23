@@ -58,6 +58,16 @@
         </div>
 
         <div class="form-line mt27 form-row">
+            <label>Логин для входа</label>
+            <div class="b-r-form">
+                <div class="input">
+                    <input asp-for="UserName" type="text" />
+                </div>
+                <span asp-validation-for="UserName"></span>
+            </div>
+        </div>
+
+        <div class="form-line mt27 form-row">
             <label>Электронная почта (логин для входа)</label>
             <div class="b-r-form">
                 <div class="input">
@@ -120,7 +130,7 @@
         <div class="form-line">
             <div class="b-r-form">
                 <div class="agree mtop30">
-                    <span class="checkbox checked">
+                    <span class="checkbox">
                         <input asp-for="Agreement" />
                     </span>
                     <label for="Agreement">Я согласен на обработку моих персональных данных</label>

@@ -35,9 +35,9 @@ namespace SciVacancies.WebApp.Commands
             };
 
 
-            var rdm = Mapper.Map<AccountRegisterViewModel, ResearcherDataModel>(message.Data);
-            rdm.UserId = user.Id;
-            var researcher = new Researcher(Guid.NewGuid(), rdm);
+            var researcherDataModel = Mapper.Map<AccountRegisterViewModel, ResearcherDataModel>(message.Data);
+            researcherDataModel.UserId = user.Id;
+            var researcher = new Researcher(Guid.NewGuid(), researcherDataModel);
             user.Claims.Add(new IdentityUserClaim()
             {
                 ClaimType = "researcher_id",

@@ -16,6 +16,11 @@ namespace SciVacancies.WebApp.ViewModels
         public string FirstName { get; set; }
         public string SecondName { get; set; }
         public string Patronymic { get; set; }
+
+        public string FirstNameEng { get; set; }
+        public string SecondNameEng { get; set; }
+        public string PatronymicEng { get; set; }
+
         public int BirthYear { get; set; }
         //public DateTime BirthDate { get; set; }
 
@@ -25,10 +30,10 @@ namespace SciVacancies.WebApp.ViewModels
         public string Phone { get; set; }
 
         [Required(ErrorMessage = "Требуется ввести пароль")]
-        [PasswordPropertyText]
+        //[PasswordPropertyText]
         public string Password { get; set; }
         [Required(ErrorMessage = "Требуется повторить пароль")]
-        [PasswordPropertyText]
+        //[PasswordPropertyText]
         [Compare("Password", ErrorMessage = "Пароли отличаются")]
         public string ConfirmPassword { get; set; }
 
