@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 
 using MediatR;
+using NPoco;
 
 namespace SciVacancies.WebApp.Queries
 {
@@ -11,13 +12,24 @@ namespace SciVacancies.WebApp.Queries
     {
         public Guid VacancyApplicationGuid { get; set; }
     }
-    public class SelectVacancyApplicationsByResearcherQuery : IRequest<List<VacancyApplication>>
+    public class SelectPagedVacancyApplicationsByResearcherQuery : IRequest<Page<VacancyApplication>>
     {
         public Guid ResearcherGuid { get; set; }
+
+        public long PageSize { get; set; }
+        public long PageIndex { get; set; }
+        public string OrderBy { get; set; }
+
+        //TODO - добавить фильтр сортировки по колонкам
     }
-    public class SelectVacancyApplicationsByVacancyQuery : IRequest<List<VacancyApplication>>
+    public class SelectPagedVacancyApplicationsByVacancyQuery : IRequest<Page<VacancyApplication>>
     {
         public Guid VacancyGuid { get; set; }
-    }
 
+        public long PageSize { get; set; }
+        public long PageIndex { get; set; }
+        public string OrderBy { get; set; }
+
+        //TODO - добавить фильтр сортировки по колонкам
+    }
 }

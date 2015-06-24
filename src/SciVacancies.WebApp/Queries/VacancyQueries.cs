@@ -12,37 +12,51 @@ namespace SciVacancies.WebApp.Queries
     {
         public Guid VacancyGuid { get; set; }
     }
-    public class SelectVacanciesByOrganizationQuery : IRequest<List<Vacancy>>
-    {
-        public Guid OrganizationGuid { get; set; }
-    }
-    public class SelectVacanciesByTitleQuery : IRequest<List<Vacancy>>
-    {
-        public string Title { get; set; }
-        public int Count { get; set; }
-    }
     public class SelectPagedVacanciesQuery : IRequest<Page<Vacancy>>
     {
-        public string OrderBy { get; set; }
         public long PageSize { get; set; }
         public long PageIndex { get; set; }
+        public string OrderBy { get; set; }
+
         public string NameFilterValue { get; set; }
         public string AddressFilterValue { get; set; }
     }
-    public class SelectClosedVacanciesByOrganizationQuery : IRequest<List<Vacancy>>
+    public class SelectPagedVacanciesByOrganizationQuery : IRequest<Page<Vacancy>>
     {
         public Guid OrganizationGuid { get; set; }
-    }
-    public class SelectPagedClosedVacanciesQuery : IRequest<Page<Vacancy>>
-    {
-        public string OrderBy { get; set; }
+
         public long PageSize { get; set; }
         public long PageIndex { get; set; }
-        public string NameFilterValue { get; set; }
-        public string AddressFilterValue { get; set; }
+        public string OrderBy { get; set; }
+
+        //public string NameFilterValue { get; set; }
+        //public string AddressFilterValue { get; set; }
     }
-    public class SelectFavoriteVacanciesByResearcherQuery : IRequest<List<Vacancy>>
+    public class SelectVacanciesForAutocompleteQuery : IRequest<IEnumerable<Vacancy>>
+    {
+        public string Query { get; set; }
+        public int Take { get; set; }
+    }
+    public class SelectPagedClosedVacanciesByOrganizationQuery : IRequest<Page<Vacancy>>
+    {
+        public Guid OrganizationGuid { get; set; }
+
+        public long PageSize { get; set; }
+        public long PageIndex { get; set; }
+        public string OrderBy { get; set; }
+
+        //public string NameFilterValue { get; set; }
+        //public string AddressFilterValue { get; set; }
+    }
+    public class SelectPagedFavoriteVacanciesByResearcherQuery : IRequest<Page<Vacancy>>
     {
         public Guid ResearcherGuid { get; set; }
+
+        public long PageSize { get; set; }
+        public long PageIndex { get; set; }
+        public string OrderBy { get; set; }
+
+        //public string NameFilterValue { get; set; }
+        //public string AddressFilterValue { get; set; }
     }
 }

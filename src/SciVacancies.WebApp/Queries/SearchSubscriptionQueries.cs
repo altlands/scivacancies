@@ -1,9 +1,9 @@
 ﻿using SciVacancies.ReadModel.Core;
 
 using System;
-using System.Collections.Generic;
 
 using MediatR;
+using NPoco;
 
 namespace SciVacancies.WebApp.Queries
 {
@@ -11,12 +11,14 @@ namespace SciVacancies.WebApp.Queries
     {
         public Guid SearchSubscriptionGuid { get; set; }
     }
-    public class SelectAllSearchSubscriptions : IRequest<List<SearchSubscription>>
-    {
-
-    }
-    public class SelectSearchSubscriptionsByResearcher : IRequest<List<SearchSubscription>>
+    public class SelectPagedSearchSubscriptionsQuery : IRequest<Page<SearchSubscription>>
     {
         public Guid ResearcherGuid { get; set; }
+
+        public long PageSize { get; set; }
+        public long PageIndex { get; set; }
+        public string OrderBy { get; set; }
+
+        //TODO - добавить фильтр сортировки по колонкам
     }
 }

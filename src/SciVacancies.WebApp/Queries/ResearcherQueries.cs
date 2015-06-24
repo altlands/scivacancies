@@ -11,9 +11,4 @@ namespace SciVacancies.WebApp.Queries
     {
         public Guid ResearcherGuid { get; set; }
     }
-
-    public class SelectAllResearchersQuery : IRequest<List<Researcher>>
-    {
-
-    }
 }
