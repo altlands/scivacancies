@@ -23,7 +23,10 @@ namespace SciVacancies.ReadModel
         {
             Connect().CreateIndex(DefaultIndexName, c => c
                                 .AddMapping<Vacancy>(am => am
-                                .MapFromAttributes()
+                                    .MapFromAttributes()
+                                )
+                                .AddMapping<Organization>(am => am
+                                    .MapFromAttributes()
                                 )
                             );
         }
@@ -34,6 +37,14 @@ namespace SciVacancies.ReadModel
         public void RestoreIndexFromReadModel()
         {
 
+        }
+        public void IndexOrganization(Organization organization)
+        {
+            Connect().Index(organization);
+        }
+        public void UpdateOrganization(Organization organization)
+        {
+            Connect().Update<Organization>(u => u.IdFrom(organization).Doc(organization));
         }
         public void IndexVacancy(Vacancy vacancy)
         {
