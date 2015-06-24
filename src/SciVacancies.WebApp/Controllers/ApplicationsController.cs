@@ -7,6 +7,7 @@ using SciVacancies.ReadModel;
 using SciVacancies.WebApp.Engine;
 using SciVacancies.WebApp.ViewModels;
 using SciVacancies.WebApp.Commands;
+using SciVacancies.WebApp.Queries;
 
 using MediatR;
 
@@ -34,7 +35,9 @@ namespace SciVacancies.WebApp.Controllers
             if (vacancyGuid == Guid.Empty)
                 throw new ArgumentNullException(nameof(vacancyGuid));
 
+            //var researcher = _mediator.Send(new SingleResearcherQuery { ResearcherGuid = researcherGuid });
             var researcher = _readModelService.SingleResearcher(researcherGuid);
+            //var vacancy = _mediator.Send(new sin)
             var vacancy = _readModelService.SingleVacancy(vacancyGuid);
 
             var model = new VacancyApplicationCreateViewModel
@@ -75,12 +78,15 @@ namespace SciVacancies.WebApp.Controllers
         [PageTitle("Детали заявки")]
         public ViewResult Details(Guid id)
         {
+            //_mediator.Send(new SingleVacancyApplicationQuery { ResearcherGuid = id });
             _readModelService.SingleResearcher(id);
+
             return View();
         }
 
         [Authorize(Roles = ConstTerms.RequireRoleOrganizationAdmin)]
         [PageTitle("Детали заявки")]
         public ViewResult ApplicationInVacancy(Guid id) => View();
+        //_mediator.Send(new SingleVacancyApplicationQuery{});
     }
 }

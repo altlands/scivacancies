@@ -24,7 +24,7 @@ namespace SciVacancies.WebApp
         public ViewResult Index(VacanciesFilterModel model)
         {
             model.ValidateValues();
-
+            var results = new SearchResultsViewModel();
             //result data
             ViewBag.PagedData = _readModelService.SelectVacancies(
                 ConstTerms.OrderByDateAscending /*model.OrderBy*/

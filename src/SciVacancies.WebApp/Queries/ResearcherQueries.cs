@@ -7,13 +7,13 @@ using MediatR;
 
 namespace SciVacancies.WebApp.Queries
 {
-    //public class ResearcherAccountQuery : IRequest<Researcher>
-    //{
-    //    public Guid ResearcherGuid { get; set; }
-    //}
-    
-    //public class SelectAllResearchersQuery : IRequest<List<Researcher>>
-    //{
+    public class SingleResearcherQuery : IRequest<Researcher>
+    {
+        public Guid ResearcherGuid { get; set; }
+    }
 
-    //}
+    public class SelectAllResearchersQuery : IRequest<List<Researcher>>
+    {
+
+    }
 }
