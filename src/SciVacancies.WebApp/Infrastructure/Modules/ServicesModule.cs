@@ -2,6 +2,8 @@
 
 using SciVacancies.ReadModel;
 
+using Nest;
+
 namespace SciVacancies.WebApp.Infrastructure
 {
     public class ServicesModule : Module
@@ -9,6 +11,8 @@ namespace SciVacancies.WebApp.Infrastructure
         protected override void Load(ContainerBuilder builder)
         {
             builder.RegisterType<ElasticService>().As<IElasticService>().SingleInstance();
+            //builder.Register(c => new AggregateFactory()).As<IConstructAggregates>().SingleInstance();
+            builder.Register(c => new ElasticFactory()).As<IElasticClient>().SingleInstance();
         }
     }
 }

@@ -95,33 +95,44 @@ namespace SciVacancies.ReadModel
         /// Список должностей
         /// </summary>
         /// <returns></returns>
+        [Obsolete("Will be changed")]
         List<PositionType> SelectPositionTypes();
         /// <summary>
         /// Список должностей с фильтрацией
         /// </summary>
         /// <param name="query">LIKE '%query%'</param>
         /// <returns></returns>
+        [Obsolete("Will be changed")]
         List<PositionType> SelectPositionTypes(string query);
-
+        [Obsolete("Will be changed")]
         List<Activity> SelectActivities();
+        [Obsolete("Will be changed")]
         List<Activity> SelectActivities(string query);
-
+        [Obsolete("Will be changed")]
         List<Foiv> SelectFoivs();
+        [Obsolete("Will be changed")]
         List<Foiv> SelectFoivs(string query);
+        [Obsolete("Will be changed")]
         List<Foiv> SelectFoivs(int parentId);
-
+        [Obsolete("Will be changed")]
         List<Criteria> SelectCriterias();
+        [Obsolete("Will be changed")]
         List<Criteria> SelectCriterias(string query);
+        [Obsolete("Will be changed")]
         List<Criteria> SelectCriterias(int parentId);
-
+        [Obsolete("Will be changed")]
         List<OrgForm> SelectOrgForms();
+        [Obsolete("Will be changed")]
         List<OrgForm> SelectOrgForms(string query);
-
+        [Obsolete("Will be changed")]
         List<Region> SelectRegions();
+        [Obsolete("Will be changed")]
         List<Region> SelectRegions(string query);
-
+        [Obsolete("Will be changed")]
         List<ResearchDirection> SelectResearchDirections();
+        [Obsolete("Will be changed")]
         List<ResearchDirection> SelectResearchDirections(string query);
+        [Obsolete("Will be changed")]
         List<ResearchDirection> SelectResearchDirections(int parentId);
         #endregion
     }
