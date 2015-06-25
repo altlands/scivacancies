@@ -14,9 +14,9 @@ namespace SciVacancies.ReadModel.EventHandlers
 {
     public class VacancyPublishedHandler : EventBaseHandler<VacancyPublished>
     {
-        private readonly IElasticService _elastic;
+        private readonly IElasticClient _elastic;
 
-        public VacancyPublishedHandler(IDatabase db, IElasticService elastic) : base(db) { _elastic = elastic; }
+        public VacancyPublishedHandler(IDatabase db, IElasticClient elastic) : base(db) { _elastic = elastic; }
         public override void Handle(VacancyPublished msg)
         {
             Position position = _db.SingleById<Position>(msg.PositionGuid);
@@ -30,6 +30,14 @@ namespace SciVacancies.ReadModel.EventHandlers
                 PositionGuid = msg.PositionGuid,
                 OrganizationGuid = msg.OrganizationGuid,
                 Name = msg.Data.Name,
+
+                //TODO - Clean Up
+                PositionTypeGuid = msg.Data.PositionTypeGuid,
+                ResearchDirectionId = msg.Data.ResearchDirectionId,
+                ResearchThemeId = msg.Data.ResearchThemeId,
+                
+
+
                 FullName = msg.Data.FullName,
                 ResearchDirection = msg.Data.ResearchDirection,
                 ResearchTheme = msg.Data.ResearchTheme,
@@ -59,28 +67,28 @@ namespace SciVacancies.ReadModel.EventHandlers
 
             _db.Insert(vacancy);
 
-            _elastic.IndexVacancy(vacancy);
+            _elastic.Index(vacancy);
         }
     }
     public class VacancyAcceptApplicationsHandler : EventBaseHandler<VacancyAcceptApplications>
     {
-        private readonly IElasticService _elastic;
+        private readonly IElasticClient _elastic;
 
-        public VacancyAcceptApplicationsHandler(IDatabase db, IElasticService elastic) : base(db) { _elastic = elastic; }
+        public VacancyAcceptApplicationsHandler(IDatabase db, IElasticClient elastic) : base(db) { _elastic = elastic; }
         public override void Handle(VacancyAcceptApplications msg)
         {
             Vacancy vacancy = _db.SingleById<Vacancy>(msg.VacancyGuid);
             vacancy.Status = VacancyStatus.AppliesAcceptance;
             _db.Update(vacancy);
 
-            _elastic.UpdateVacancy(vacancy);
+            _elastic.Update<Vacancy>(u => u.IdFrom(vacancy).Doc(vacancy));
         }
     }
     public class VacancyInCommitteeHandler : EventBaseHandler<VacancyInCommittee>
     {
-        private readonly IElasticService _elastic;
+        private readonly IElasticClient _elastic;
 
-        public VacancyInCommitteeHandler(IDatabase db, IElasticService elastic) : base(db) { _elastic = elastic; }
+        public VacancyInCommitteeHandler(IDatabase db, IElasticClient elastic) : base(db) { _elastic = elastic; }
         public override void Handle(VacancyInCommittee msg)
         {
             Vacancy vacancy = _db.SingleById<Vacancy>(msg.VacancyGuid);
@@ -88,14 +96,14 @@ namespace SciVacancies.ReadModel.EventHandlers
 
             _db.Update(vacancy);
 
-            _elastic.UpdateVacancy(vacancy);
+            _elastic.Update<Vacancy>(u => u.IdFrom(vacancy).Doc(vacancy));
         }
     }
     public class VacancyClosedHandler : EventBaseHandler<VacancyClosed>
     {
-        private readonly IElasticService _elastic;
+        private readonly IElasticClient _elastic;
 
-        public VacancyClosedHandler(IDatabase db, IElasticService elastic) : base(db) { _elastic = elastic; }
+        public VacancyClosedHandler(IDatabase db, IElasticClient elastic) : base(db) { _elastic = elastic; }
         public override void Handle(VacancyClosed msg)
         {
             Position position = _db.SingleById<Position>(msg.PositionGuid);
@@ -108,14 +116,14 @@ namespace SciVacancies.ReadModel.EventHandlers
 
             _db.Update(vacancy);
 
-            _elastic.UpdateVacancy(vacancy);
+            _elastic.Update<Vacancy>(u => u.IdFrom(vacancy).Doc(vacancy));
         }
     }
     public class VacancyCancelledHandler : EventBaseHandler<VacancyCancelled>
     {
-        private readonly IElasticService _elastic;
+        private readonly IElasticClient _elastic;
 
-        public VacancyCancelledHandler(IDatabase db, IElasticService elastic) : base(db) { _elastic = elastic; }
+        public VacancyCancelledHandler(IDatabase db, IElasticClient elastic) : base(db) { _elastic = elastic; }
         public override void Handle(VacancyCancelled msg)
         {
             Position position = _db.SingleById<Position>(msg.PositionGuid);
@@ -128,7 +136,7 @@ namespace SciVacancies.ReadModel.EventHandlers
 
             _db.Update(vacancy);
 
-            _elastic.UpdateVacancy(vacancy);
+            _elastic.Update<Vacancy>(u => u.IdFrom(vacancy).Doc(vacancy));
         }
     }
 

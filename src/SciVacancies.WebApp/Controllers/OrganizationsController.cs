@@ -6,6 +6,9 @@ using SciVacancies.ReadModel;
 using SciVacancies.WebApp.Engine;
 using SciVacancies.WebApp.Engine.CustomAttribute;
 using SciVacancies.WebApp.ViewModels;
+using SciVacancies.WebApp.Queries;
+
+using MediatR;
 
 namespace SciVacancies.WebApp.Controllers
 {
@@ -13,10 +16,12 @@ namespace SciVacancies.WebApp.Controllers
     public class OrganizationsController : Controller
     {
         private readonly IReadModelService _readModelService;
+        private readonly IMediator _mediator;
 
-        public OrganizationsController(IReadModelService readModelService)
+        public OrganizationsController(IReadModelService readModelService, IMediator mediator)
         {
             _readModelService = readModelService;
+            _mediator = mediator;
         }
 
         [AllowAnonymous]
@@ -55,16 +60,30 @@ namespace SciVacancies.WebApp.Controllers
 
         [PageTitle("Закрытые вакансии")]
         [SiblingPage]
-        public ViewResult Closed()
+        public ViewResult Closed(Guid organizationGuid)
         {
+            var closedVacacies = _mediator.Send(new SelectPagedClosedVacanciesByOrganizationQuery
+            {
+                OrganizationGuid = organizationGuid,
+                PageIndex = 1,
+                PageSize = 10
+            });
+
             var model = new OrganizationDetailsViewModel();
             return View(model);
         }
 
         [SiblingPage]
         [PageTitle("Уведомления")]
-        public ViewResult Notifications()
+        public ViewResult Notifications(Guid organizationGuid)
         {
+            var notifications = _mediator.Send(new SelectPagedNotificationsByOrganizationQuery
+            {
+                OrganizationGuid = organizationGuid,
+                PageIndex = 1,
+                PageSize = 0
+            });
+
             var model = new OrganizationDetailsViewModel();
             return View(model);
         }

@@ -16,8 +16,8 @@ namespace SciVacancies.Domain.Aggregates
         private bool Removed { get; set; }
         public OrganizationDataModel Data { get; set; }
 
-        private List<Position> Positions { get; }
-        private List<Vacancy> Vacancies { get; }
+        private List<Position> Positions { get; set; }
+        private List<Vacancy> Vacancies { get; set; }
 
         public Organization()
         {
@@ -39,28 +39,28 @@ namespace SciVacancies.Domain.Aggregates
         {
             RaiseEvent(new OrganizationUpdated()
             {
-                OrganizationGuid = Id,
+                OrganizationGuid = this.Id,
                 Data = data
             });
         }
         public void Remove()
         {
-            if (!Removed)
+            if (!this.Removed)
             {
                 RaiseEvent(new OrganizationRemoved()
                 {
-                    OrganizationGuid = Id
+                    OrganizationGuid = this.Id
                 });
             }
         }
 
         public Guid CreatePosition(PositionDataModel data)
         {
-            var positionGuid = Guid.NewGuid();
+            Guid positionGuid = Guid.NewGuid();
             RaiseEvent(new PositionCreated()
             {
                 PositionGuid = positionGuid,
-                OrganizationGuid = Id,
+                OrganizationGuid = this.Id,
                 Data = data
             });
 
@@ -68,41 +68,41 @@ namespace SciVacancies.Domain.Aggregates
         }
         public void UpdatePosition(Guid positionGuid, PositionDataModel data)
         {
-            var position = Positions.Find(f => f.PositionGuid == positionGuid);
+            Position position = this.Positions.Find(f => f.PositionGuid == positionGuid);
             if (position != null && position.Status == PositionStatus.InProcess)
             {
                 RaiseEvent(new PositionUpdated()
                 {
                     PositionGuid = position.PositionGuid,
-                    OrganizationGuid = Id,
+                    OrganizationGuid = this.Id,
                     Data = data
                 });
             }
         }
         public void RemovePosition(Guid positionGuid)
         {
-            var position = Positions.Find(f => f.PositionGuid == positionGuid);
+            Position position = this.Positions.Find(f => f.PositionGuid == positionGuid);
             if (position != null && position.Status == PositionStatus.InProcess)
             {
                 RaiseEvent(new PositionRemoved()
                 {
                     PositionGuid = positionGuid,
-                    OrganizationGuid = Id
+                    OrganizationGuid = this.Id
                 });
             }
         }
 
         public Guid PublishVacancy(Guid positionGuid, VacancyDataModel data)
         {
-            var position = Positions.Find(f => f.PositionGuid == positionGuid);
+            Position position = this.Positions.Find(f => f.PositionGuid == positionGuid);
             if (position != null && position.Status == PositionStatus.InProcess)
             {
-                var vacancyGuid = Guid.NewGuid();
+                Guid vacancyGuid = Guid.NewGuid();
                 RaiseEvent(new VacancyPublished()
                 {
                     VacancyGuid = vacancyGuid,
                     PositionGuid = positionGuid,
-                    OrganizationGuid = Id,
+                    OrganizationGuid = this.Id,
                     Data = data
                 });
 
@@ -113,40 +113,40 @@ namespace SciVacancies.Domain.Aggregates
         }
         public void SwitchVacancyToAcceptApplications(Guid vacancyGuid)
         {
-            var vacancy = Vacancies.Find(f => f.VacancyGuid == vacancyGuid);
+            Vacancy vacancy = this.Vacancies.Find(f => f.VacancyGuid == vacancyGuid);
             if (vacancy != null && vacancy.Status == VacancyStatus.Published)
             {
                 RaiseEvent(new VacancyAcceptApplications()
                 {
                     VacancyGuid = vacancyGuid,
                     PositionGuid = vacancy.PositionGuid,
-                    OrganizationGuid = Id
+                    OrganizationGuid = this.Id
                 });
             }
         }
         public void SwitchVacancyInCommittee(Guid vacancyGuid)
         {
-            var vacancy = Vacancies.Find(f => f.VacancyGuid == vacancyGuid);
+            Vacancy vacancy = this.Vacancies.Find(f => f.VacancyGuid == vacancyGuid);
             if (vacancy != null && vacancy.Status == VacancyStatus.AppliesAcceptance)
             {
                 RaiseEvent(new VacancyInCommittee()
                 {
                     VacancyGuid = vacancyGuid,
                     PositionGuid = vacancy.PositionGuid,
-                    OrganizationGuid = Id
+                    OrganizationGuid = this.Id
                 });
             }
         }
         public void CloseVacancy(Guid vacancyGuid, Guid winnerGuid, Guid pretenderGuid)
         {
-            var vacancy = Vacancies.Find(f => f.VacancyGuid == vacancyGuid);
+            Vacancy vacancy = this.Vacancies.Find(f => f.VacancyGuid == vacancyGuid);
             if (vacancy != null && vacancy.Status == VacancyStatus.InCommittee)
             {
                 RaiseEvent(new VacancyClosed()
                 {
                     VacancyGuid = vacancyGuid,
                     PositionGuid = vacancy.PositionGuid,
-                    OrganizationGuid = Id,
+                    OrganizationGuid = this.Id,
                     WinnerGuid = winnerGuid,
                     PretenderGuid = pretenderGuid
                 });
@@ -154,14 +154,14 @@ namespace SciVacancies.Domain.Aggregates
         }
         public void CancelVacancy(Guid vacancyGuid, string reason)
         {
-            var vacancy = Vacancies.Find(f => f.VacancyGuid == vacancyGuid);
+            Vacancy vacancy = this.Vacancies.Find(f => f.VacancyGuid == vacancyGuid);
             if (vacancy != null && (vacancy.Status == VacancyStatus.Published || vacancy.Status == VacancyStatus.AppliesAcceptance))
             {
                 RaiseEvent(new VacancyCancelled()
                 {
                     VacancyGuid = vacancyGuid,
                     PositionGuid = vacancy.PositionGuid,
-                    OrganizationGuid = Id,
+                    OrganizationGuid = this.Id,
                     Reason = reason
                 });
             }
@@ -175,17 +175,17 @@ namespace SciVacancies.Domain.Aggregates
         }
         public void Apply(OrganizationUpdated @event)
         {
-            Data = @event.Data;
+            this.Data = @event.Data;
 
         }
         public void Apply(OrganizationRemoved @event)
         {
-            Removed = true;
+            this.Removed = true;
         }
 
         public void Apply(PositionCreated @event)
         {
-            Positions.Add(new Position()
+            this.Positions.Add(new Position()
             {
                 PositionGuid = @event.PositionGuid,
                 OrganizationGuid = @event.OrganizationGuid,
@@ -195,20 +195,21 @@ namespace SciVacancies.Domain.Aggregates
         }
         public void Apply(PositionUpdated @event)
         {
-            var position = Positions.Find(f => f.PositionGuid == @event.PositionGuid);
+            Position position = this.Positions.Find(f => f.PositionGuid == @event.PositionGuid);
 
             //TODO position.Data
         }
         public void Apply(PositionRemoved @event)
         {
-            Positions.Remove(Positions.Find(f => f.PositionGuid == @event.PositionGuid));
+            this.Positions.Find(f => f.PositionGuid == @event.PositionGuid).Status = PositionStatus.Removed;
+            //this.Positions.Remove(this.Positions.Find(f => f.PositionGuid == @event.PositionGuid));
         }
 
         public void Apply(VacancyPublished @event)
         {
-            Positions.Find(f => f.PositionGuid == @event.PositionGuid).Status = PositionStatus.Published;
+            this.Positions.Find(f => f.PositionGuid == @event.PositionGuid).Status = PositionStatus.Published;
 
-            Vacancies.Add(new Vacancy()
+            this.Vacancies.Add(new Vacancy()
             {
                 VacancyGuid = @event.VacancyGuid,
                 PositionGuid = @event.PositionGuid,
@@ -218,15 +219,15 @@ namespace SciVacancies.Domain.Aggregates
         }
         public void Apply(VacancyAcceptApplications @event)
         {
-            Vacancies.Find(f => f.VacancyGuid == @event.VacancyGuid).Status = VacancyStatus.AppliesAcceptance;
+            this.Vacancies.Find(f => f.VacancyGuid == @event.VacancyGuid).Status = VacancyStatus.AppliesAcceptance;
         }
         public void Apply(VacancyInCommittee @event)
         {
-            Vacancies.Find(f => f.VacancyGuid == @event.VacancyGuid).Status = VacancyStatus.InCommittee;
+            this.Vacancies.Find(f => f.VacancyGuid == @event.VacancyGuid).Status = VacancyStatus.InCommittee;
         }
         public void Apply(VacancyClosed @event)
         {
-            var vacancy = Vacancies.Find(f => f.VacancyGuid == @event.VacancyGuid);
+            Vacancy vacancy = this.Vacancies.Find(f => f.VacancyGuid == @event.VacancyGuid);
 
             vacancy.Data.WinnerGuid = @event.WinnerGuid;
             vacancy.Data.PretenderGuid = @event.PretenderGuid;
@@ -235,7 +236,7 @@ namespace SciVacancies.Domain.Aggregates
         }
         public void Apply(VacancyCancelled @event)
         {
-            Vacancies.Find(f => f.VacancyGuid == @event.VacancyGuid).Status = VacancyStatus.Cancelled;
+            this.Vacancies.Find(f => f.VacancyGuid == @event.VacancyGuid).Status = VacancyStatus.Cancelled;
         }
         #endregion
     }

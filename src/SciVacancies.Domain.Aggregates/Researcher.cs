@@ -286,7 +286,8 @@ namespace SciVacancies.Domain.Aggregates
         }
         public void Apply(VacancyApplicationRemoved @event)
         {
-            this.VacancyApplications.Remove(this.VacancyApplications.Find(f => f.VacancyApplicationGuid == @event.VacancyApplicationGuid));
+            this.VacancyApplications.Find(f => f.VacancyApplicationGuid == @event.VacancyApplicationGuid).Status = VacancyApplicationStatus.Removed;
+            //this.VacancyApplications.Remove(this.VacancyApplications.Find(f => f.VacancyApplicationGuid == @event.VacancyApplicationGuid));
         }
         public void Apply(VacancyApplicationApplied @event)
         {

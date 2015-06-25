@@ -60,14 +60,13 @@ namespace SciVacancies.ReadModel.EventHandlers
             _db.Insert(organization);
 
             _elastic.Index(organization);
-            //_elastic.IndexOrganization(organization);
         }
     }
     public class OrganizationUpdatedHandler : EventBaseHandler<OrganizationUpdated>
     {
-        private readonly IElasticService _elastic;
+        private readonly IElasticClient _elastic;
 
-        public OrganizationUpdatedHandler(IDatabase db, IElasticService elastic) : base(db) { _elastic = elastic; }
+        public OrganizationUpdatedHandler(IDatabase db, IElasticClient elastic) : base(db) { _elastic = elastic; }
         public override void Handle(OrganizationUpdated msg)
         {
             Organization organization = _db.SingleById<Organization>(msg.OrganizationGuid);
@@ -107,16 +106,19 @@ namespace SciVacancies.ReadModel.EventHandlers
 
             _db.Update(organization);
 
-            //_elastic
-            _elastic.UpdateOrganization(organization);
+            _elastic.Update<Organization>(u => u.IdFrom(organization).Doc(organization));
         }
     }
     public class OrganizationRemovedHandler : EventBaseHandler<OrganizationRemoved>
     {
-        public OrganizationRemovedHandler(IDatabase db) : base(db) { }
+        private readonly IElasticClient _elastic;
+
+        public OrganizationRemovedHandler(IDatabase db, IElasticClient elastic) : base(db) { }
         public override void Handle(OrganizationRemoved msg)
         {
             _db.Delete<Organization>(msg.OrganizationGuid);
+
+            _elastic.Delete<Organization>(msg.OrganizationGuid.ToString());
         }
     }
 }
