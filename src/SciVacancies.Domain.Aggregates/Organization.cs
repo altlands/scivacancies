@@ -233,10 +233,14 @@ namespace SciVacancies.Domain.Aggregates
             vacancy.Data.PretenderGuid = @event.PretenderGuid;
 
             vacancy.Status = VacancyStatus.Closed;
+
+            this.Positions.Find(f => f.PositionGuid == @event.PositionGuid).Status = PositionStatus.InProcess;
         }
         public void Apply(VacancyCancelled @event)
         {
             this.Vacancies.Find(f => f.VacancyGuid == @event.VacancyGuid).Status = VacancyStatus.Cancelled;
+
+            this.Positions.Find(f => f.PositionGuid == @event.PositionGuid).Status = PositionStatus.InProcess;
         }
         #endregion
     }
