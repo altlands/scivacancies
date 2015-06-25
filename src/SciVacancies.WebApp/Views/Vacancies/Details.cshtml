@@ -31,7 +31,7 @@
 @if (bool.Parse(ViewData["VacancyInFavorites"].ToString()))
 {
     <text>
-    <span asp-controller="researchers" asp-action="addtofavorite" asp-route-vacancyguid="@Model.Guid" class="success-btn middle-icon" style="pointer-events: none;">В избранном</span>
+    <a asp-controller="researchers" asp-action="favorities" class="success-btn middle-icon">В избранном</a>
     <br />
     <br />
     </text>

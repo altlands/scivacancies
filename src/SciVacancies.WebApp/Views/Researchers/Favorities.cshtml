@@ -47,7 +47,7 @@
 
 
                     <td>
-                        <span class="status executed">
+                        <span class="status @item.Status.GetHtmlClass()">
                             @item.Status.GetDescription() <!--Завершён-->
                         </span>
                         @*<span class="status work">
