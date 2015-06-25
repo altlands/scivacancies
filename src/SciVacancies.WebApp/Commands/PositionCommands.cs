@@ -3,6 +3,7 @@
 using System;
 
 using MediatR;
+using SciVacancies.ReadModel.Core;
 
 namespace SciVacancies.WebApp.Commands
 {

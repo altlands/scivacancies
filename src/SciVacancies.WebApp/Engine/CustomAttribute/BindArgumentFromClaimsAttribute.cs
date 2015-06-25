@@ -39,6 +39,7 @@ namespace SciVacancies.WebApp.Controllers
     }
     public class BindOrganizationIdFromClaimsAttribute : BindArgumentFromClaimsAttribute
     {
+        public BindOrganizationIdFromClaimsAttribute(string argumentName) : base(ConstTerms.ClaimTypeOrganizationId, argumentName, typeof(Guid)) { }
         public BindOrganizationIdFromClaimsAttribute() : base(ConstTerms.ClaimTypeOrganizationId, "organizationGuid", typeof(Guid)) { }
     }
 }

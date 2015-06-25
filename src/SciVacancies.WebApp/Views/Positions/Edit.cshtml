@@ -1,6 +1,6 @@
 ﻿@using System.Threading.Tasks
 @using SciVacancies.WebApp.ViewModels
-@model SciVacancies.WebApp.ViewModels.PositionCreateViewModel
+@model SciVacancies.WebApp.ViewModels.PositionEditViewModel
 
 <div class="crumbs">
     <a href="/">Главная страница</a><span class="separator">/</span>
@@ -12,8 +12,10 @@
 <h3>@ViewBag.Title</h3>
 
 <form class="l-application">
+    <input type="hidden" asp-anti-forgery="true" />
     <input asp-for="ToPublish" />
     <input asp-for="OrganizationGuid" />
+    <input asp-for="Guid" />
 
     <div class="row">
         <div class="bold row-title">Специализация:</div>
@@ -257,16 +259,14 @@
 
     <div class="row">
         <div class="ctr-buttons button-align">
-             <input type="submit" class="success-btn middle-icon icon-ok" onclick="javascript: vacancySaveOptions({ publish: true });" value="Сохранить и опубликовать"/>
-        <input type="submit" class="success-blue-btn middle-icon icon-ok" onclick="javascript: vacancySaveOptions({ saveDraft: true });"value="Сохранить как черновик"/>
-        <a asp-controller="organizations" asp-action="vacancies">
-            <span class="blue-btn middle-icon icon-close">Закрыть</span>
-        </a>
+            <input type="submit" class="success-btn middle-icon icon-ok" onclick="javascript: vacancySaveOptions({ publish: true });" value="Сохранить и опубликовать" />
+            <input type="submit" class="success-blue-btn middle-icon icon-ok" onclick="javascript: vacancySaveOptions({ saveDraft: true });" value="Сохранить как черновик" />
+            <a asp-controller="organizations" asp-action="vacancies">
+                <span class="blue-btn middle-icon icon-close">Закрыть</span>
+            </a>
         </div>
     </div>
 </form>
-
-
 
 <div class="b-bottom-nav">
     <a asp-controller="organizations" asp-action="vacancies" class="small-icon icon-prev">К карточке организации</a>

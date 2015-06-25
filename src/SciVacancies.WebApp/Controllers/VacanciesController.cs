@@ -33,7 +33,7 @@ namespace SciVacancies.WebApp.Controllers
         }
 
         [AllowAnonymous]
-        [PageTitle("Карточка конкурса")]
+        [PageTitle("Подробно о вакансии")]
         [BindResearcherIdFromClaims]
         public ViewResult Details(Guid id, Guid researcherGuid)
         {
@@ -90,47 +90,7 @@ namespace SciVacancies.WebApp.Controllers
         }
 
         [AllowAnonymous]
-        [PageTitle("Карточка конкурса")]
+        [PageTitle("Подробно о вакансии")]
         public ViewResult Preview(Guid id) => View();
-
-        [PageTitle("Новая вакансия")]
-        [BindOrganizationIdFromClaims]
-        [Authorize(Roles = ConstTerms.RequireRoleOrganizationAdmin)]
-        public ViewResult Create(Guid organizationGuid)
-        {
-            if (organizationGuid == Guid.Empty)
-                throw new ArgumentNullException($"{nameof(organizationGuid)}");
-
-            var model = new PositionCreateViewModel(organizationGuid).InitDictionaries(_readModelService);
-            return View(model);
-        }
-
-
-        [PageTitle("Новая вакансия")]
-        [HttpPost]
-        [Authorize(Roles = ConstTerms.RequireRoleOrganizationAdmin)]
-        public ActionResult Create(PositionCreateViewModel model)
-        {
-            if (ModelState.IsValid)
-            {
-                var positionDataModel = Mapper.Map<PositionDataModel>(model);
-                var positionGuid = _mediator.Send(new CreatePositionCommand { OrganizationGuid = model.OrganizationGuid, Data = positionDataModel });
-
-                if (model.ToPublish)
-                {
-                    var vacancyGuid = _mediator.Send(new PublishVacancyCommand
-                    {
-                        OrganizationGuid = model.OrganizationGuid,
-                        PositionGuid = positionGuid,
-                        Data = Mapper.Map<VacancyDataModel>(positionDataModel)
-                    });
-                }
-
-                return RedirectToAction("vacancies", "organizations");
-            }
-            model.InitDictionaries(_readModelService);
-            return View(model);
-
-        }
     }
 }

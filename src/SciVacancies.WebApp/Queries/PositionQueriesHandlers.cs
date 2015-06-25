@@ -2,7 +2,7 @@
 using SciVacancies.ReadModel;
 
 using System;
-
+using System.Threading.Tasks;
 using NPoco;
 using MediatR;
 
