@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace SciVacancies.WebApp.Engine.Pager
+namespace SciVacancies.ReadModel.Pager
 {
 
     public class PagedList<T>: PagedList, IPagedList<T>

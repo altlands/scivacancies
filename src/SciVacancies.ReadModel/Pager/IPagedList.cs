@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
-namespace SciVacancies.WebApp.Engine.Pager
+namespace SciVacancies.ReadModel.Pager
 {
     public interface IPagedList<T> : IPagedList
     {
