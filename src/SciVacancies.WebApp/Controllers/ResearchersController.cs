@@ -2,18 +2,17 @@
 using System.Collections.Generic;
 using System.Linq;
 using AutoMapper;
+using MediatR;
 using Microsoft.AspNet.Authorization;
 using Microsoft.AspNet.Mvc;
 using SciVacancies.Domain.Enums;
 using SciVacancies.ReadModel;
 using SciVacancies.ReadModel.Core;
+using SciVacancies.WebApp.Commands;
 using SciVacancies.WebApp.Engine;
 using SciVacancies.WebApp.Engine.CustomAttribute;
-using SciVacancies.WebApp.ViewModels;
-using SciVacancies.WebApp.Commands;
 using SciVacancies.WebApp.Queries;
-
-using MediatR;
+using SciVacancies.WebApp.ViewModels;
 
 namespace SciVacancies.WebApp.Controllers
 {
@@ -32,12 +31,15 @@ namespace SciVacancies.WebApp.Controllers
         [SiblingPage]
         [PageTitle("Информация")]
         [BindResearcherIdFromClaims]
-        public ViewResult Account(Guid researcherGuid)
+        public IActionResult Account(Guid researcherGuid)
         {
             if (researcherGuid == Guid.Empty)
                 throw new ArgumentNullException(nameof(researcherGuid));
 
-            var model = Mapper.Map<ResearcherDetailsViewModel>(_readModelService.SingleResearcher(researcherGuid));
+            var model = Mapper.Map<ResearcherDetailsViewModel>(_mediator.Send(new SingleResearcherQuery { ResearcherGuid = researcherGuid}));
+
+            if (model == null)
+                return RedirectToAction("logout", "account");
 
             return View(model);
         }

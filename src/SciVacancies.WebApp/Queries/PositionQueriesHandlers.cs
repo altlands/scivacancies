@@ -23,7 +23,7 @@ namespace SciVacancies.WebApp.Queries
             if (message.PositionGuid == Guid.Empty) throw new ArgumentNullException($"PositionGuid is empty: {message.PositionGuid}");
 
             //Position position = _db.SingleOrDefaultById<Position>(message.PositionGuid);
-            Position position = _db.SingleOrDefault<Position>(new Sql("SELECT p.* FROM \"Positions\" p WHERE p.\"Guid\"=" + message.PositionGuid + " AND p.\"Status\"!=" + PositionStatus.Removed));
+            Position position = _db.SingleOrDefault<Position>(new Sql($"SELECT p.* FROM \"Positions\" p WHERE p.\"Guid\"='{message.PositionGuid}' AND p.\"Status\"!={(int)PositionStatus.Removed}"));
 
             return position;
         }
@@ -41,7 +41,7 @@ namespace SciVacancies.WebApp.Queries
         {
             if (message.OrganizationGuid == Guid.Empty) throw new ArgumentNullException($"OrganizationGuid is empty: {message.OrganizationGuid}");
 
-            Page<Position> positions = _db.Page<Position>(message.PageIndex, message.PageSize, new Sql("SELECT p.* FROM \"Positions\" p WHERE p.\"OrganizationGuid\"=" + message.OrganizationGuid + " AND p.\"Status\"!=" + PositionStatus.Removed + " ORDER BY p.\"Guid\" DESC"));
+            Page<Position> positions = _db.Page<Position>(message.PageIndex, message.PageSize, new Sql($"SELECT p.* FROM \"Positions\" p WHERE p.\"OrganizationGuid\"='{message.OrganizationGuid}' AND p.\"Status\"!={(int)PositionStatus.Removed} ORDER BY p.\"Guid\" DESC"));
 
             return positions;
         }

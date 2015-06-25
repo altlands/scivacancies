@@ -162,11 +162,10 @@ namespace SciVacancies.WebApp.Controllers
 
             if (model.Status == PositionStatus.Published)
                 throw new Exception($"Вы не можете удалить вакансию с текущим статусом: {model.Status.GetDescription()}");
-
-            /*var result = */
+            
             _mediator.Send(new RemovePositionCommand { OrganizationGuid = organizationGuid, PositionGuid = id });
 
-            return RedirectToAction("vacancies", "organizations");
+            return View();
         }
 
         //[HttpPost]
@@ -210,9 +209,16 @@ namespace SciVacancies.WebApp.Controllers
             if (model.Status == PositionStatus.Removed)
                 throw new Exception("Вакансия уже удалена");
 
-            var vacancyGuid = _mediator.Send(new PublishVacancyCommand { PositionGuid = id });
+            if (model.Status == PositionStatus.Published)
+                throw new Exception("Вакансия уже опубликована");
 
-            return View();
+            var vacancyGuid = _mediator.Send(new PublishVacancyCommand {
+                PositionGuid = id,
+                OrganizationGuid = model.OrganizationGuid,
+                Data = Mapper.Map<VacancyDataModel>(model)
+            });
+
+            return View(vacancyGuid);
         }
     }
 

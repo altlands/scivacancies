@@ -1,15 +1,13 @@
 ﻿using System;
 using AutoMapper;
+using MediatR;
 using Microsoft.AspNet.Authorization;
 using Microsoft.AspNet.Mvc;
 using SciVacancies.Domain.DataModels;
 using SciVacancies.ReadModel;
+using SciVacancies.WebApp.Commands;
 using SciVacancies.WebApp.Engine;
 using SciVacancies.WebApp.ViewModels;
-using SciVacancies.WebApp.Commands;
-using SciVacancies.WebApp.Queries;
-
-using MediatR;
 
 namespace SciVacancies.WebApp.Controllers
 {

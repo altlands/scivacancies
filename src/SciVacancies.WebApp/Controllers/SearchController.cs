@@ -1,10 +1,8 @@
-﻿using Microsoft.AspNet.Mvc;
+﻿using MediatR;
+using Microsoft.AspNet.Mvc;
 using SciVacancies.ReadModel;
-using SciVacancies.WebApp.Engine;
-using SciVacancies.WebApp.ViewModels;
 using SciVacancies.WebApp.Queries;
-
-using MediatR;
+using SciVacancies.WebApp.ViewModels;
 
 namespace SciVacancies.WebApp
 {

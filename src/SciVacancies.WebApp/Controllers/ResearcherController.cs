@@ -1,15 +1,8 @@
 ﻿using MediatR;
 using Microsoft.AspNet.Mvc;
-using SciVacancies.ReadModel;
-using SciVacancies.ReadModel.Core;
-
-using System;
-
-using SciVacancies.WebApp.Commands;
-using SciVacancies.WebApp.Queries;
-using SciVacancies.Domain.DataModels;
-
 using Nest;
+using SciVacancies.ReadModel.Core;
+using SciVacancies.WebApp.Queries;
 
 namespace SciVacancies.WebApp.Controllers
 {

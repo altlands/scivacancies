@@ -1,14 +1,13 @@
 ﻿using System;
 using AutoMapper;
+using MediatR;
 using Microsoft.AspNet.Authorization;
 using Microsoft.AspNet.Mvc;
 using SciVacancies.ReadModel;
 using SciVacancies.WebApp.Engine;
 using SciVacancies.WebApp.Engine.CustomAttribute;
-using SciVacancies.WebApp.ViewModels;
 using SciVacancies.WebApp.Queries;
-
-using MediatR;
+using SciVacancies.WebApp.ViewModels;
 
 namespace SciVacancies.WebApp.Controllers
 {
@@ -31,12 +30,16 @@ namespace SciVacancies.WebApp.Controllers
         [SiblingPage]
         [PageTitle("Информация")]
         [BindOrganizationIdFromClaims]
-        public ViewResult Account(Guid organizationGuid)
+        public IActionResult Account(Guid organizationGuid)
         {
             if (organizationGuid == Guid.Empty)
                 throw new ArgumentNullException(nameof(organizationGuid));
 
-            var model = Mapper.Map<OrganizationDetailsViewModel>(_readModelService.SingleOrganization(organizationGuid));
+            var model = Mapper.Map<OrganizationDetailsViewModel>(_mediator.Send(new SingleOrganizationQuery {OrganizationGuid = organizationGuid }));
+
+            if (model == null)
+                return RedirectToAction("logout", "account");
+
             return View(model);
         }
 

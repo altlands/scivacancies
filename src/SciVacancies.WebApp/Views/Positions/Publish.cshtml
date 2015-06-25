@@ -1,0 +1,44 @@
+﻿@model Guid
+
+
+<div class="crumbs">
+    <a asp-controller="organizations" asp-action="vacancies">Назад</a><span class="separator">/</span>
+    @ViewBag.Title
+</div>
+
+<h3>@ViewBag.Title</h3>
+
+Вакансия успешно опубликована
+
+<form asp-controller="vacancies" asp-action="unpublish" class="l-application">
+    <h6>Отменить публикацию</h6>
+    <input type="hidden" asp-anti-forgery="true" />
+    <input type="hidden" id="id" name="id" value="@Model" />
+
+    <div class="row">
+        <div class="table-form">
+
+            <div class="table-row form-row">
+                <div class="left-cell">
+                    <label>Причина отмены:</label>
+                </div>
+                <div class="right-cell">
+                    <input type="text" id="Reason" name="Reason" class="big-input" />
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="ctr-buttons button-align">
+            <input type="submit" value="Отменить" onclick="javascript: return confirm('Вы уверены, что хотите отменить публикацию?');" />
+        </div>
+    </div>
+
+</form>
+
+
+<div class="b-bottom-nav">
+    <a asp-controller="organizations" asp-action="vacancies" class="small-icon icon-prev">Назад</a>
+</div>

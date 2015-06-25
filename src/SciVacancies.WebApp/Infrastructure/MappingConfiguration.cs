@@ -32,8 +32,9 @@ namespace SciVacancies.WebApp.Infrastructure
 
             /*Vacancy*/
 
-            //create position
+            //position
             Mapper.CreateMap<PositionDataModel, VacancyDataModel>();
+            Mapper.CreateMap<Position, VacancyDataModel>();
             Mapper.CreateMap<PositionCreateViewModel, PositionDataModel>();
             Mapper.CreateMap<Position, PositionEditViewModel>();
             Mapper.CreateMap<PositionEditViewModel, Position>();

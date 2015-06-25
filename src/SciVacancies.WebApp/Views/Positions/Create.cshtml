@@ -13,82 +13,82 @@
 
 <form class="l-application">
     <input type="hidden" asp-anti-forgery="true" />
-<input asp-for="ToPublish"/>
-<input asp-for="OrganizationGuid"/>
+    <input asp-for="ToPublish" />
+    <input asp-for="OrganizationGuid" />
 
-<div class="row">
-    <div class="bold row-title">Специализация:</div>
-    <div class="table-form">
+    <div class="row">
+        <div class="bold row-title">Специализация:</div>
+        <div class="table-form">
 
-        <div class="table-row form-row">
-            <div class="left-cell">
-                <label>Наименование:</label>
-            </div>
-            <div class="right-cell">
-                <input asp-for="Name" class="big-input"/>
-            </div>
-        </div>
-
-        <div class="table-row form-row">
-            <div class="left-cell">
-                <label>Полное наименование:</label>
-            </div>
-            <div class="right-cell">
-                <textarea asp-for="FullName"></textarea>
-            </div>
-        </div>
-        <div class="table-row form-row">
-            <div class="left-cell">
-                <label>Должность:</label>
-            </div>
-            <div class="right-cell">
-                <div class="inline-block w290 sorting">
-                    <select asp-for="PositionTypeGuid"
-                            asp-items="Model.PositionTypes"></select>
+            <div class="table-row form-row">
+                <div class="left-cell">
+                    <label>Наименование:</label>
+                </div>
+                <div class="right-cell">
+                    <input asp-for="Name" class="big-input" />
                 </div>
             </div>
-        </div>
 
-        <div class="table-row mt35">
-            <div class="left-cell">
-                <label>Отрасль науки:</label>
-            </div>
-            <div class="right-cell">
-                <div class="inline-block w290 sorting">
-                    <select asp-for="ResearchDirectionId"
-                            asp-items="Model.ResearchDirections"></select>
+            <div class="table-row form-row">
+                <div class="left-cell">
+                    <label>Полное наименование:</label>
                 </div>
-                <!--TODO: заменить предыдущий тег на следующий-->
-                @*<a href="#" class="link-add lk-icon italic">Добавить из Государственного рубрикатора научно-технической информации</a>*@
+                <div class="right-cell">
+                    <textarea asp-for="FullName"></textarea>
+                </div>
             </div>
-        </div>
+            <div class="table-row form-row">
+                <div class="left-cell">
+                    <label>Должность:</label>
+                </div>
+                <div class="right-cell">
+                    <div class="inline-block w290 sorting">
+                        <select asp-for="PositionTypeGuid"
+                                asp-items="Model.PositionTypes"></select>
+                    </div>
+                </div>
+            </div>
 
-        <div class="table-row form-row">
-            <div class="left-cell">
-                <label>Тематика исследований:</label>
+            <div class="table-row mt35">
+                <div class="left-cell">
+                    <label>Отрасль науки:</label>
+                </div>
+                <div class="right-cell">
+                    <div class="inline-block w290 sorting">
+                        <select asp-for="ResearchDirectionId"
+                                asp-items="Model.ResearchDirections"></select>
+                    </div>
+                    <!--TODO: заменить предыдущий тег на следующий-->
+                    @*<a href="#" class="link-add lk-icon italic">Добавить из Государственного рубрикатора научно-технической информации</a>*@
+                </div>
             </div>
-            <div class="right-cell">
-                <textarea asp-for="ResearchTheme"></textarea>
+
+            <div class="table-row form-row">
+                <div class="left-cell">
+                    <label>Тематика исследований:</label>
+                </div>
+                <div class="right-cell">
+                    <textarea asp-for="ResearchTheme"></textarea>
+                </div>
             </div>
         </div>
     </div>
-</div>
 
-<div class="row">
-    <!--TODO: return this code-->
-    <div class="bold row-title">Задачи @*и критерии*@:</div>
-    <div class="table-form">
-        <div class="table-row form-row">
-            <div class="left-cell">
-                <label>Задачи:</label>
-            </div>
-            <div class="right-cell">
-                <textarea asp-for="Tasks"></textarea>
-            </div>
-        </div>
-
+    <div class="row">
         <!--TODO: return this code-->
-        @*<div class="table-row form-row">
+        <div class="bold row-title">Задачи @*и критерии*@:</div>
+        <div class="table-form">
+            <div class="table-row form-row">
+                <div class="left-cell">
+                    <label>Задачи:</label>
+                </div>
+                <div class="right-cell">
+                    <textarea asp-for="Tasks"></textarea>
+                </div>
+            </div>
+
+            <!--TODO: return this code-->
+            @*<div class="table-row form-row">
                     <div class="left-cell">
                         <label>Критерии оценки:</label>
                     </div>
@@ -116,155 +116,155 @@
                         <span class="link-add lk-icon italic" onclick="addNewCriteriaItem('CriteriaInputs');" style="cursor: pointer;">Добавить критерий</span>
                     </div>
                 </div>*@
+        </div>
     </div>
-</div>
 
-<div class="row">
-    <div class="bold row-title">Условия:</div>
-    <div class="table-form">
-        <div class="table-row form-row">
-            <div class="left-cell">
-                <label>Зарплата в месяц:</label>
-            </div>
-            <div class="right-cell interval">
-                <span class="italic fs14">от</span>
-                <input type="text" asp-for="SalaryFrom" class="small-input"/>
-                <span class="italic fs14">до</span>
-                <input type="text" asp-for="SalaryTo" class="small-input"/>
-                <div class="inline-block w60 sorting va-top">
-                    <select name="6" id="6" disabled="disabled">
-                        <option value="руб." selected="selected">руб.</option>
-                        <option value="usd.">usd.</option>
-                        <option value="eur.">eur.</option>
-                    </select>
+    <div class="row">
+        <div class="bold row-title">Условия:</div>
+        <div class="table-form">
+            <div class="table-row form-row">
+                <div class="left-cell">
+                    <label>Зарплата в месяц:</label>
+                </div>
+                <div class="right-cell interval">
+                    <span class="italic fs14">от</span>
+                    <input type="text" asp-for="SalaryFrom" class="small-input" />
+                    <span class="italic fs14">до</span>
+                    <input type="text" asp-for="SalaryTo" class="small-input" />
+                    <div class="inline-block w60 sorting va-top">
+                        <select name="6" id="6" disabled="disabled">
+                            <option value="руб." selected="selected">руб.</option>
+                            <option value="usd.">usd.</option>
+                            <option value="eur.">eur.</option>
+                        </select>
+                    </div>
                 </div>
             </div>
-        </div>
 
-        <div class="table-row form-row">
-            <div class="left-cell">
-                <label>Стимулирующие выплаты:</label>
-            </div>
-            <div class="right-cell">
-                <input type="text" asp-for="Bonuses" class="big-input"/>
-            </div>
-        </div>
-
-        <div class="table-row form-row">
-            <div class="left-cell">
-                <label>Трудовой договор:</label>
-            </div>
-            <div class="right-cell">
-                <div class="inline-block w290 sorting">
-                    <select asp-for="ContractTypeValue"
-                            asp-items="Model.ContractTypes"></select>
+            <div class="table-row form-row">
+                <div class="left-cell">
+                    <label>Стимулирующие выплаты:</label>
+                </div>
+                <div class="right-cell">
+                    <input type="text" asp-for="Bonuses" class="big-input" />
                 </div>
             </div>
-        </div>
 
-        <div class="table-row form-row">
-            <div class="left-cell">
-                <label>
-                    Срок трудового договора
-                    <br/>
-                    (для срочного договора):
-                </label>
+            <div class="table-row form-row">
+                <div class="left-cell">
+                    <label>Трудовой договор:</label>
+                </div>
+                <div class="right-cell">
+                    <div class="inline-block w290 sorting">
+                        <select asp-for="ContractTypeValue"
+                                asp-items="Model.ContractTypes"></select>
+                    </div>
+                </div>
             </div>
-            <div class="right-cell interval">
-                <input type="text" asp-for="ContractTime" class="small-input"/>
-            </div>
-        </div>
 
-        <div class="table-row form-row">
-            <div class="left-cell">
+            <div class="table-row form-row">
+                <div class="left-cell">
+                    <label>
+                        Срок трудового договора
+                        <br />
+                        (для срочного договора):
+                    </label>
+                </div>
+                <div class="right-cell interval">
+                    <input type="text" asp-for="ContractTime" class="small-input" />
+                </div>
             </div>
-            <div class="right-cell">
-                <ul class="list-checkboxes">
-                    <li>
-                        <span class="checkbox">
+
+            <div class="table-row form-row">
+                <div class="left-cell">
+                </div>
+                <div class="right-cell">
+                    <ul class="list-checkboxes">
+                        <li>
+                            <span class="checkbox">
                                 <input type="checkbox" asp-for="SocialPackage" id="chk1" />
                             </span><label for="chk1">Социальный пакет</label>
-                    </li>
-                    <li>
-                        <span class="checkbox">
+                        </li>
+                        <li>
+                            <span class="checkbox">
                                 <input type="checkbox" asp-for="Rent" id="chk2" />
                             </span><label for="chk2">Найм жилья</label>
-                    </li>
-                    <li>
-                        <span class="checkbox">
+                        </li>
+                        <li>
+                            <span class="checkbox">
                                 <input type="checkbox" asp-for="OfficeAccomodation" id="chk3" />
                             </span><label for="chk3">Служебное жильё</label>
-                    </li>
-                    <li>
-                        <span class="checkbox">
+                        </li>
+                        <li>
+                            <span class="checkbox">
                                 <input type="checkbox" asp-for="TransportCompensation" id="chk4" />
                             </span><label for="chk4">Компенсация проезда</label>
-                    </li>
-                </ul>
+                        </li>
+                    </ul>
+                </div>
             </div>
-        </div>
 
-        <div class="table-row form-row">
-            <div class="left-cell">
-                <label>Дополнительно:</label>
-            </div>
-            <div class="right-cell">
-                <textarea as-for="details"></textarea>
-            </div>
-        </div>
-    </div>
-</div>
-
-<div class="row">
-    <div class="bold row-title">Лицо для получения дополнительных справок:</div>
-    <div class="table-form">
-        <div class="table-row form-row">
-            <div class="left-cell">
-                <label>Фамилия, имя, отчество:</label>
-            </div>
-            <div class="right-cell">
-                <input asp-for="ContactName" class="big-input"/>
-            </div>
-        </div>
-
-        <div class="table-row form-row">
-            <div class="left-cell">
-                <label>E-mail:</label>
-            </div>
-            <div class="right-cell">
-                <input asp-for="ContactEmail" class="big-input"/>
-            </div>
-        </div>
-
-        <div class="table-row form-row">
-            <div class="left-cell">
-                <label>Телефон:</label>
-            </div>
-            <div class="right-cell">
-                <input asp-for="ContactPhone" class="big-input"/>
-            </div>
-        </div>
-
-        <div class="table-row form-row">
-            <div class="left-cell">
-                <label>Дополнительно:</label>
-            </div>
-            <div class="right-cell">
-                <textarea asp-for="ContactDetails"></textarea>
+            <div class="table-row form-row">
+                <div class="left-cell">
+                    <label>Дополнительно:</label>
+                </div>
+                <div class="right-cell">
+                    <textarea as-for="details"></textarea>
+                </div>
             </div>
         </div>
     </div>
-</div>
 
-<div class="row">
-    <div class="ctr-buttons button-align">
-        <input type="submit" class="success-btn middle-icon icon-ok" onclick="javascript: vacancySaveOptions({ publish: true });" value="Сохранить и опубликовать"/>
-        <input type="submit" class="success-blue-btn middle-icon icon-ok" onclick="javascript: vacancySaveOptions({ saveDraft: true });"value="Сохранить как черновик"/>
-        <a asp-controller="organizations" asp-action="vacancies">
-            <span class="blue-btn middle-icon icon-close">Закрыть</span>
-        </a>
+    <div class="row">
+        <div class="bold row-title">Лицо для получения дополнительных справок:</div>
+        <div class="table-form">
+            <div class="table-row form-row">
+                <div class="left-cell">
+                    <label>Фамилия, имя, отчество:</label>
+                </div>
+                <div class="right-cell">
+                    <input asp-for="ContactName" class="big-input" />
+                </div>
+            </div>
+
+            <div class="table-row form-row">
+                <div class="left-cell">
+                    <label>E-mail:</label>
+                </div>
+                <div class="right-cell">
+                    <input asp-for="ContactEmail" class="big-input" />
+                </div>
+            </div>
+
+            <div class="table-row form-row">
+                <div class="left-cell">
+                    <label>Телефон:</label>
+                </div>
+                <div class="right-cell">
+                    <input asp-for="ContactPhone" class="big-input" />
+                </div>
+            </div>
+
+            <div class="table-row form-row">
+                <div class="left-cell">
+                    <label>Дополнительно:</label>
+                </div>
+                <div class="right-cell">
+                    <textarea asp-for="ContactDetails"></textarea>
+                </div>
+            </div>
+        </div>
     </div>
-</div>
+
+    <div class="row">
+        <div class="ctr-buttons button-align">
+            <input type="submit" class="success-btn middle-icon icon-ok" onclick="javascript: vacancySaveOptions({ publish: true });" value="Сохранить и опубликовать" />
+            <input type="submit" class="success-blue-btn middle-icon icon-ok" onclick="javascript: vacancySaveOptions({ saveDraft: true });" value="Сохранить как черновик" />
+            <a asp-controller="organizations" asp-action="vacancies">
+                <span class="blue-btn middle-icon icon-close">Закрыть</span>
+            </a>
+        </div>
+    </div>
 </form>
 
 

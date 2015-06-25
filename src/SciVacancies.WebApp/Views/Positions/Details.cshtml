@@ -1,18 +1,10 @@
 ﻿@using System.Threading.Tasks
 @model SciVacancies.ReadModel.Core.Position
 
-@{
-    var referer = Context.Request.Headers["referer"];
-}
-@if (!string.IsNullOrWhiteSpace(referer))
-{
-    <text>
-    <div class="crumbs">
-        <a href="@referer.ToLower()">Назад</a><span class="separator">/</span>
-        @ViewBag.Title
-    </div>
-    </text>
-}
+<div class="crumbs">
+    <a asp-controller="organizations" asp-action="vacancies">Назад</a><span class="separator">/</span>
+    @ViewBag.Title
+</div>
 
 <h3>@ViewBag.Title</h3>
 <div class="title-popup">
@@ -99,12 +91,6 @@
     </a>
 </div>
 
-
-@if (!string.IsNullOrWhiteSpace(referer))
-{
-    <text>
-    <div class="b-bottom-nav">
-        <a href="@referer.ToLower()" class="small-icon icon-prev">Назад</a>
-    </div>
-    </text>
-}
+<div class="b-bottom-nav">
+    <a asp-controller="organizations" asp-action="vacancies" class="small-icon icon-prev">Назад</a>
+</div>
