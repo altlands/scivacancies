@@ -158,7 +158,7 @@ namespace SciVacancies.WebApp.Controllers
                 throw new Exception("Вы не можете отменить удаление вакансии других организаций");
 
             if (model.Status == PositionStatus.Removed)
-                throw new Exception($"Вакансия уже удалена");
+                throw new Exception("Вакансия уже удалена");
 
             if (model.Status == PositionStatus.Published)
                 throw new Exception($"Вы не можете удалить вакансию с текущим статусом: {model.Status.GetDescription()}");
@@ -193,7 +193,27 @@ namespace SciVacancies.WebApp.Controllers
         //}
 
 
-        public IActionResult Publish(Guid id) => View();
+        [PageTitle("Вакансия опубликована")]
+        [BindOrganizationIdFromClaims]
+        public IActionResult Publish(Guid id, Guid organizationGuid)
+        {
+            if (id == Guid.Empty)
+                throw new ArgumentNullException(nameof(id));
+            if (organizationGuid == Guid.Empty)
+                throw new ArgumentNullException(nameof(organizationGuid));
+
+            var model = _mediator.Send(new SinglePositionQuery { PositionGuid = id });
+
+            if (model.OrganizationGuid != organizationGuid)
+                throw new Exception("Вы не можете отменить удаление вакансии других организаций");
+
+            if (model.Status == PositionStatus.Removed)
+                throw new Exception("Вакансия уже удалена");
+
+            var vacancyGuid = _mediator.Send(new PublishVacancyCommand { PositionGuid = id });
+
+            return View();
+        }
     }
 
 }
