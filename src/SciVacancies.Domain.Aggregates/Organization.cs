@@ -201,7 +201,8 @@ namespace SciVacancies.Domain.Aggregates
         }
         public void Apply(PositionRemoved @event)
         {
-            this.Positions.Remove(this.Positions.Find(f => f.PositionGuid == @event.PositionGuid));
+            this.Positions.Find(f => f.PositionGuid == @event.PositionGuid).Status = PositionStatus.Removed;
+            //this.Positions.Remove(this.Positions.Find(f => f.PositionGuid == @event.PositionGuid));
         }
 
         public void Apply(VacancyPublished @event)

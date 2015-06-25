@@ -2,16 +2,21 @@
 using SciVacancies.ReadModel;
 using SciVacancies.WebApp.Engine;
 using SciVacancies.WebApp.ViewModels;
+using SciVacancies.WebApp.Queries;
+
+using MediatR;
 
 namespace SciVacancies.WebApp
 {
     public class SearchController: Controller
     {
         private readonly IReadModelService _readModelService;
+        private readonly IMediator _mediator;
 
-        public SearchController(IReadModelService readModelService)
+        public SearchController(IReadModelService readModelService,IMediator mediator)
         {
             _readModelService = readModelService;
+            _mediator = mediator;
         }
 
 
@@ -31,6 +36,10 @@ namespace SciVacancies.WebApp
                 , model.PageSize
                 , model.PageNumber
                 );
+            //ViewBag.PagedData = _mediator.Send(new SearchQuery
+            //{
+            //    Query=
+            //});
 
             //dicitonaries
             ViewBag.FilterSource = new VacanciesFilterSource(_readModelService); //.SelectRegions(Guid.NewGuid());

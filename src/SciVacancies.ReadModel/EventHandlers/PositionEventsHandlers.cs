@@ -101,7 +101,12 @@ namespace SciVacancies.ReadModel.EventHandlers
         public PositionRemovedHandler(IDatabase db) : base(db) { }
         public override void Handle(PositionRemoved msg)
         {
-            _db.Delete<Position>(msg.PositionGuid);
+            Position position = _db.SingleById<Position>(msg.PositionGuid);
+
+            position.Status = PositionStatus.Removed;
+
+            _db.Update(position);
+            //_db.Delete<Position>(msg.PositionGuid);
         }
     }
 }

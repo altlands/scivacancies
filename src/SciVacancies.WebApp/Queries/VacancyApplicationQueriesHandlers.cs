@@ -1,4 +1,5 @@
-﻿using SciVacancies.ReadModel.Core;
+﻿using SciVacancies.Domain.Enums;
+using SciVacancies.ReadModel.Core;
 
 using System;
 
@@ -20,7 +21,8 @@ namespace SciVacancies.WebApp.Queries
         {
             if (message.VacancyApplicationGuid == Guid.Empty) throw new ArgumentNullException($"VacancyApplicationGuid is empty: {message.VacancyApplicationGuid}");
 
-            VacancyApplication vacancyApplication = _db.SingleOrDefaultById<VacancyApplication>(message.VacancyApplicationGuid);
+            //VacancyApplication vacancyApplication = _db.SingleOrDefaultById<VacancyApplication>(message.VacancyApplicationGuid);
+            VacancyApplication vacancyApplication = _db.SingleOrDefault<VacancyApplication>(new Sql("SELECT va.* FROM \"VacancyApplications\" va WHERE va.\"Guid\"=" + message.VacancyApplicationGuid + " AND va.\"Status\"!=" + VacancyApplicationStatus.Removed));
 
             return vacancyApplication;
         }
@@ -38,7 +40,7 @@ namespace SciVacancies.WebApp.Queries
         {
             if (message.ResearcherGuid == Guid.Empty) throw new ArgumentNullException($"ResearcherGuid is empty: {message.ResearcherGuid}");
 
-            Page<VacancyApplication> vacancyApplications = _db.Page<VacancyApplication>(message.PageIndex, message.PageSize, new Sql("SELECT va.* FROM \"VacancyApplications\" va ORDER BY va.\"Guid\" DESC"));
+            Page<VacancyApplication> vacancyApplications = _db.Page<VacancyApplication>(message.PageIndex, message.PageSize, new Sql("SELECT va.* FROM \"VacancyApplications\" va WHERE va.\"Status\"!=" + VacancyApplicationStatus.Removed + " ORDER BY va.\"Guid\" DESC"));
 
             return vacancyApplications;
         }
@@ -56,29 +58,9 @@ namespace SciVacancies.WebApp.Queries
         {
             if (message.VacancyGuid == Guid.Empty) throw new ArgumentNullException($"VacancyGuid is empty: {message.VacancyGuid}");
 
-            Page<VacancyApplication> vacancyApplications = _db.Page<VacancyApplication>(message.PageIndex, message.PageSize, new Sql("SELECT va.* FROM \"VacancyApplications\" va ORDER BY va.\"Guid\" DESC"));
+            Page<VacancyApplication> vacancyApplications = _db.Page<VacancyApplication>(message.PageIndex, message.PageSize, new Sql("SELECT va.* FROM \"VacancyApplications\" va WHERE va.\"Status\"!=" + VacancyApplicationStatus.Removed + " ORDER BY va.\"Guid\" DESC"));
 
             return vacancyApplications;
         }
     }
 }
-
-
-
-
-//public class SelectPagedOrganizationsQueryHandler : IRequestHandler<SelectPagedOrganizationsQuery, Page<Organization>>
-//{
-//    private readonly IDatabase _db;
-
-//    public SelectPagedOrganizationsQueryHandler(IDatabase db)
-//    {
-//        _db = db;
-//    }
-
-//    public Page<Organization> Handle(SelectPagedOrganizationsQuery message)
-//    {
-//        Page<Organization> organizations = _db.Page<Organization>(message.PageIndex, message.PageSize, new Sql("SELECT o.* FROM \"Organizations\" o ORDER BY o.\"Guid\" DESC"));
-
-//        return organizations;
-//    }
-//}

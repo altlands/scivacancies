@@ -1,4 +1,5 @@
-﻿using SciVacancies.ReadModel.Core;
+﻿using SciVacancies.Domain.Enums;
+using SciVacancies.ReadModel.Core;
 
 using System;
 
@@ -20,7 +21,8 @@ namespace SciVacancies.WebApp.Queries
         {
             if (message.SearchSubscriptionGuid == Guid.Empty) throw new ArgumentNullException($"SearchSubscriptionGuid is empty: {message.SearchSubscriptionGuid}");
 
-            SearchSubscription searchSubscription = _db.SingleOrDefaultById<SearchSubscription>(message.SearchSubscriptionGuid);
+            //SearchSubscription searchSubscription = _db.SingleOrDefaultById<SearchSubscription>(message.SearchSubscriptionGuid);
+            SearchSubscription searchSubscription = _db.SingleOrDefault<SearchSubscription>(new Sql("SELECT s.* FROM \"SearchSubscriptions\" s WHERE s.\"Guid\"=" + message.SearchSubscriptionGuid + " AND s.\"Status\"!=" + SearchSubscriptionStatus.Removed));
 
             return searchSubscription;
         }
@@ -40,7 +42,7 @@ namespace SciVacancies.WebApp.Queries
 
             //TODO - фильтрация и сортировка
 
-            Page<SearchSubscription> searchSubscriptions = _db.Page<SearchSubscription>(message.PageIndex, message.PageSize, new Sql("SELECT s.* FROM \"SearchSubscriptions\" s WHERE s.\"ResearcherGuid\"=" + message.ResearcherGuid + " ORDER BY s.\"Guid\" DESC"));
+            Page<SearchSubscription> searchSubscriptions = _db.Page<SearchSubscription>(message.PageIndex, message.PageSize, new Sql("SELECT s.* FROM \"SearchSubscriptions\" s WHERE s.\"ResearcherGuid\"=" + message.ResearcherGuid + " AND s.\"Status\"!=" + SearchSubscriptionStatus.Removed + " ORDER BY s.\"Guid\" DESC"));
 
             return searchSubscriptions;
         }
