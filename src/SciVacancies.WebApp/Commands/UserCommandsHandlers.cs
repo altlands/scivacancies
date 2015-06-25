@@ -74,6 +74,7 @@ namespace SciVacancies.WebApp.Commands
             var organizationDataModel = Mapper.Map<AccountOrganizationRegisterViewModel, OrganizationDataModel>(message.Data);
             organizationDataModel.UserId = user.Id;
 
+            //TODO - что должно первым создаваться? Организация или аккаунт к этой организации? Рассмотреть вариант с тригером по таймауту
             var organizationGuid = _mediator.Send(new CreateOrganizationCommand
             {
                 Data = organizationDataModel

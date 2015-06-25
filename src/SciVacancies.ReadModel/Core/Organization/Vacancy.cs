@@ -149,10 +149,10 @@ namespace SciVacancies.ReadModel.Core
         /// </summary>
         public DateTime DateFinishAcceptance { get; set; }
         /// <summary>
-        /// Дата окончания публикации
+        /// Дата окончания публикации - когда вакансия переведена в статусы : отменена, закрыта
         /// </summary>
         public DateTime DateFinish { get; set; }
-
+        [Obsolete("Дублируется с DateStart")]
         public DateTime CreationDate { get; set; }
     }
 }

@@ -15,6 +15,8 @@ namespace SciVacancies.ReadModel
         void CreateIndex();
         void RemoveIndex();
         void RestoreIndexFromReadModel();
+        void IndexOrganization(Organization organization);
+        void UpdateOrganization(Organization organization);
         void IndexVacancy(Vacancy vacancy);
         void UpdateVacancy(Vacancy vacancy);
         ISearchResponse<Vacancy> Search(string query, int pageSize, int pageIndex, List<Guid> regions, List<Guid> foivs, List<Guid> universities, List<int> directions);
