@@ -102,7 +102,7 @@
 
     @if (User.IsInRole(ConstTerms.RequireRoleOrganizationAdmin)
         && ViewBag.CurrentOrganizationGuid!=null
-        && Guid.Parse(ViewBag.CurrentOrganizationGuid)==Model.OrganizationGuid)
+        && ViewBag.CurrentOrganizationGuid==Model.OrganizationGuid)
     {
         <text>
         <h4 class="mt45 mb12">Поданные заявки</h4>

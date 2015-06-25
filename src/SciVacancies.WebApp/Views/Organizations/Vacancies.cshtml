@@ -34,9 +34,9 @@
         </tr>
     </thead>
     <tbody>
-        @if (Model.Positions != null)
+        @if (Model.PagedPositions != null)
         {
-            foreach (var item in Model.Positions.Where(c=>c.Status == PositionStatus.InProcess))
+            foreach (var item in Model.PagedPositions.Items.Where(c => c.Status == PositionStatus.InProcess))
             {
                 <text>
 
@@ -59,12 +59,12 @@
                     </td>
                 </tr>
                 </text>
-                            }
-                        }
+            }
+        }
 
-        @if (Model.Vacancies != null)
+        @if (Model.PagedVacancies != null)
         {
-            foreach (var item in Model.Vacancies.Where(c=>c.Status == VacancyStatus.Published || c.Status == VacancyStatus.AppliesAcceptance || c.Status == VacancyStatus.InCommittee))
+            foreach (var item in Model.PagedVacancies.Items.Where(c => c.Status == VacancyStatus.Published || c.Status == VacancyStatus.AppliesAcceptance || c.Status == VacancyStatus.InCommittee))
             {
                 <text>
                 <tr>
@@ -77,124 +77,68 @@
                     <td><span class="status @item.Status.GetHtmlClass()">@item.Status.GetDescription()</span></td>
                     <td>
                         <a asp-controller="vacancies" asp-action="details" asp-route-id="@item.Guid" class="view-td-icon" title="Просмотр вакансии"></a>
-                        @if (item.Status == VacancyStatus.Published|| item.Status == VacancyStatus.AppliesAcceptance)
+                        @if (item.Status == VacancyStatus.Published || item.Status == VacancyStatus.AppliesAcceptance)
                         {
                             <a asp-controller="vacancies" asp-action="cancel" asp-route-id="@item.Guid" onclick="javascript: return confirm('Вы уверены что хотите отменить эту вакансию?');" class="close-td-icon" title="Отменить вакансию"></a>
                         }
                         @if (item.Status == VacancyStatus.InCommittee)
                         {
-                            <a asp-controller="vacancies" asp-action="cancel" asp-route-id="@item.Guid"  title="Выбрать победителя">Выбрать победителя</a>
+                            <a asp-controller="vacancies" asp-action="cancel" asp-route-id="@item.Guid" title="Выбрать победителя">Выбрать победителя</a>
                         }
                     </td>
                 </tr>
                 </text>
-                            }
-                        }
-                        @*<tr>
-                                <td>001</td>
-                                <td>ГНС600001</td>
-                                <td>Главный<br /> научный сотрудник</td>
-                                <td>01-09-14, 16:04</td>
-                                <td>01-09-14, 16:04</td>
-                                <td><span class="status work">Объявлен</span></td>
-                                <td>
-                                    <a asp-controller="vacancies" asp-action="details" asp-route-id="@Guid.NewGuid()" class="view-td-icon"></a>
-                                    <a href="#" class="edit-td-icon"></a>
-                                    <a href="#" class="close-td-icon"></a>
-                                    <a href="#" class="class-td-icon"></a>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>002</td>
-                                <td>ИИС60290004</td>
-                                <td>Инженер-исследователь</td>
-                                <td>01-09-14, 16:04</td>
-                                <td>01-09-14, 16:04</td>
-                                <td><span class="status work">В работе</span></td>
-                                <td>
-                                    <a asp-controller="vacancies" asp-action="details" asp-route-id="@Guid.NewGuid()" class="view-td-icon"></a>
-                                    <a href="#" class="edit-td-icon"></a>
-                                    <a href="#" class="close-td-icon"></a>
-                                    <a href="#" class="class-td-icon"></a>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>003</td>
-                                <td>РНП58000322</td>
-                                <td>Руководитель<br /> научного подразделения</td>
-                                <td>01-09-14, 16:04</td>
-                                <td>01-09-14, 16:04</td>
-                                <td><span class="status work">Прием заявок</span></td>
-                                <td>
-                                    <a asp-controller="vacancies" asp-action="details" asp-route-id="@Guid.NewGuid()" class="view-td-icon"></a>
-                                    <a href="#" class="edit-td-icon"></a>
-                                    <a href="#" class="close-td-icon"></a>
-                                    <a href="#" class="minus-td-icon"></a>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>005</td>
-                                <td>СНС6000021</td>
-                                <td>Старший<br /> научный сотрудник</td>
-                                <td>01-09-14, 16:04</td>
-                                <td>01-09-14, 16:04</td>
-                                <td><span class="status failed">В работе</span></td>
-                                <td>
-                                    <a asp-controller="vacancies" asp-action="details" asp-route-id="@Guid.NewGuid()" class="view-td-icon"></a>
-                                    <a href="#" class="edit-td-icon"></a>
-                                    <a href="#" class="close-td-icon"></a>
-                                    <a href="#" class="class-td-icon"></a>
-                                </td>
-                            </tr>*@
-                    </tbody>
-                </table>
-                <div class="bottom-nav">
-                    <div class="bottom-nav-left">
-                        <div class="count-news">
-                            1-4 из 4 записей
-                        </div>
-                        <div class="count-line-page">
-                            <input type="text" value="10"> записей на странице
-                        </div>
-                    </div>
-                    <div class="bottom-nav-right">
-                        <ul>
-                            <li>
-                                <span class="first disable">
-                                    <span>Первая</span>
-                                </span>
-                            </li>
-                            <li>
-                                <span class="prev disable">
-                                    <span>Предыдущая</span>
-                                </span>
-                            </li>
-                            <li>
-                                <div class="count-page">
-                                    <input type="text" value="1"> из 306
-                                </div>
-                            </li>
-                            <li>
-                                <span class="next disable">
-                                    <span>Следующая</span>
-                                </span>
-                            </li>
-                            <li>
-                                <span class="latest disable">
-                                    <span>Последняя</span>
-                                </span>
-                            </li>
-                        </ul>
-                    </div>
+            }
+        }
+    </tbody>
+</table>
+<div class="bottom-nav">
+    <div class="bottom-nav-left">
+        <div class="count-news">
+            1-4 из 4 записей
+        </div>
+        <div class="count-line-page">
+            <input type="text" value="10"> записей на странице
+        </div>
+    </div>
+    <div class="bottom-nav-right">
+        <ul>
+            <li>
+                <span class="first disable">
+                    <span>Первая</span>
+                </span>
+            </li>
+            <li>
+                <span class="prev disable">
+                    <span>Предыдущая</span>
+                </span>
+            </li>
+            <li>
+                <div class="count-page">
+                    <input type="text" value="1"> из 306
                 </div>
+            </li>
+            <li>
+                <span class="next disable">
+                    <span>Следующая</span>
+                </span>
+            </li>
+            <li>
+                <span class="latest disable">
+                    <span>Последняя</span>
+                </span>
+            </li>
+        </ul>
+    </div>
+</div>
 
-                <div class="ctr-buttons mb5 mt-30">
-                    <a asp-controller="positions" asp-action="create">
-                        <span class="green-btn middle-icon">Добавить вакансию</span>
-                    </a>
-                </div>
+<div class="ctr-buttons mb5 mt-30">
+    <a asp-controller="positions" asp-action="create">
+        <span class="green-btn middle-icon">Добавить вакансию</span>
+    </a>
+</div>
 
 
-                <div class="b-bottom-nav">
-                    <a href="/" class="small-icon icon-prev">На главную страницу</a>
-                </div>
+<div class="b-bottom-nav">
+    <a href="/" class="small-icon icon-prev">На главную страницу</a>
+</div>

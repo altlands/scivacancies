@@ -36,7 +36,7 @@ namespace SciVacancies.WebApp.Controllers
             if (id == Guid.Empty)
                 throw new ArgumentNullException(nameof(id));
 
-            var model = _readModelService.SingleVacancy(id);
+            var model = _mediator.Send(new SingleVacancyQuery {VacancyGuid = id});
 
             ViewBag.ShowAddFavorite = false;
             ViewBag.VacancyInFavorites = false;

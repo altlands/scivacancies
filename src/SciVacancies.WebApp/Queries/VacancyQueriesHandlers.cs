@@ -59,7 +59,7 @@ namespace SciVacancies.WebApp.Queries
         {
             if (message.OrganizationGuid == Guid.Empty) throw new ArgumentNullException($"OrganizationGuid is empty: {message.OrganizationGuid}");
 
-            Page<Vacancy> vacancies = _db.Page<Vacancy>(message.PageIndex, message.PageSize, new Sql("SELECT v.* FROM \"Vacancies\" v  WHERE v.\"OrganizationGuid\"=" + message.OrganizationGuid + " ORDER BY v.\"Guid\" DESC"));
+            Page<Vacancy> vacancies = _db.Page<Vacancy>(message.PageIndex, message.PageSize, new Sql($"SELECT v.* FROM \"Vacancies\" v  WHERE v.\"OrganizationGuid\"='{message.OrganizationGuid}' ORDER BY v.\"Guid\" DESC"));
 
             return vacancies;
         }
@@ -124,7 +124,7 @@ namespace SciVacancies.WebApp.Queries
         {
             if (message.OrganizationGuid == Guid.Empty) throw new ArgumentNullException($"OrganizationGuid is empty: {message.OrganizationGuid}");
 
-            Page<Vacancy> vacancies = _db.Page<Vacancy>(message.PageIndex, message.PageSize, new Sql("SELECT v.* FROM \"Vacancies\" v  WHERE v.\"OrganizationGuid\"=" + message.OrganizationGuid + " AND v.\"Status\"=" + VacancyStatus.Closed + " ORDER BY v.\"Guid\" DESC"));
+            Page<Vacancy> vacancies = _db.Page<Vacancy>(message.PageIndex, message.PageSize, new Sql($"SELECT v.* FROM \"Vacancies\" v  WHERE v.\"OrganizationGuid\"='{message.OrganizationGuid}' AND v.\"Status\"={(int)VacancyStatus.Closed } ORDER BY v.\"Guid\" DESC"));
 
             return vacancies;
         }

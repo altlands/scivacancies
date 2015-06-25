@@ -28,7 +28,7 @@ namespace SciVacancies.WebApp.Queries
             return position;
         }
     }
-    public class SelectPagedPositionsQueryHandler : IRequestHandler<SelectPagedPositionsQuery, Page<Position>>
+    public class SelectPagedPositionsQueryHandler : IRequestHandler<SelectPagedPositionsByOrganizationQuery, Page<Position>>
     {
         private readonly IDatabase _db;
 
@@ -37,7 +37,7 @@ namespace SciVacancies.WebApp.Queries
             _db = db;
         }
 
-        public Page<Position> Handle(SelectPagedPositionsQuery message)
+        public Page<Position> Handle(SelectPagedPositionsByOrganizationQuery message)
         {
             if (message.OrganizationGuid == Guid.Empty) throw new ArgumentNullException($"OrganizationGuid is empty: {message.OrganizationGuid}");
 

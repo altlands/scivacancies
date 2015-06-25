@@ -12,7 +12,7 @@ namespace SciVacancies.WebApp.Queries
     {
         public Guid PositionGuid { get; set; }
     }
-    public class SelectPagedPositionsQuery:IRequest<Page<Position>>
+    public class SelectPagedPositionsByOrganizationQuery:IRequest<Page<Position>>
     {
         public Guid OrganizationGuid { get; set; }
 

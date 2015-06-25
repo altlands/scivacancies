@@ -10,8 +10,8 @@
 
 Вакансия успешно опубликована
 
-<form asp-controller="vacancies" asp-action="unpublish" class="l-application">
-    <h6>Отменить публикацию</h6>
+<form asp-controller="vacancies" asp-action="cancel" class="l-application">
+    <h4>Отменить публикацию</h4>
     <input type="hidden" asp-anti-forgery="true" />
     <input type="hidden" id="id" name="id" value="@Model" />
 

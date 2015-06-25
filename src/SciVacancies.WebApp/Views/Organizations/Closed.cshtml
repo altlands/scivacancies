@@ -1,6 +1,7 @@
 ﻿@using System.Threading.Tasks
+@using SciVacancies.Domain.Enums
 @using SciVacancies.WebApp.Controllers
-@model dynamic
+@model SciVacancies.WebApp.ViewModels.VacanciesInOrganizationIndexViewModel
 
 <div class="crumbs">
     <a href="/">Главная страница</a><span class="separator">/</span>
@@ -8,7 +9,7 @@
     @ViewBag.Title
 </div>
 
-<h3>@Model.Title</h3>
+<h3>Карточка организации</h3>
 
 @Component.Invoke("AccountTabs", typeof(OrganizationsController))
 
@@ -30,46 +31,27 @@
         </tr>
     </thead>
     <tbody>
-        <tr>
-            <td>001</td>
-            <td><a asp-controller="vacancies" asp-action="details" asp-route-id="15">ГНС600001</a></td>
-            <td>Главный<br /> научный сотрудник</td>
-            <td>01-09-14, 16:04</td>
-            <td class="view-col">
-                <a asp-controller="vacancies" asp-action="details" asp-route-id="15" class="view-td-icon"></a>
-            </td>
-            <td><a href="#" class="success-request-icon"><span class="italic bold">Победитель</span></a></td>
-        </tr>
-        <tr>
-            <td>001</td>
-            <td><a asp-controller="vacancies" asp-action="details" asp-route-id="15">ГНС600001</a></td>
-            <td>Главный<br /> научный сотрудник</td>
-            <td>01-09-14, 16:04</td>
-            <td class="view-col">
-                <a asp-controller="vacancies" asp-action="details" asp-route-id="15" class="view-td-icon"></a>
-            </td>
-            <td><a href="#" class="success-request-icon"><span class="italic bold">Победитель</span></a></td>
-        </tr>
-        <tr>
-            <td>001</td>
-            <td><a asp-controller="vacancies" asp-action="details" asp-route-id="15">ГНС600001</a></td>
-            <td>Главный<br /> научный сотрудник</td>
-            <td>01-09-14, 16:04</td>
-            <td class="view-col">
-                <a asp-controller="vacancies" asp-action="details" asp-route-id="15" class="view-td-icon"></a>
-            </td>
-            <td><a href="#" class="success-request-icon"><span class="italic bold">Победитель</span></a></td>
-        </tr>
-        <tr>
-            <td>001</td>
-            <td><a asp-controller="vacancies" asp-action="details" asp-route-id="15">ГНС600001</a></td>
-            <td>Главный<br /> научный сотрудник</td>
-            <td>01-09-14, 16:04</td>
-            <td class="view-col">
-                <a asp-controller="vacancies" asp-action="details" asp-route-id="15" class="view-td-icon"></a>
-            </td>
-            <td><a href="#" class="success-request-icon"><span class="italic bold">Победитель</span></a></td>
-        </tr>
+
+        @if (Model.PagedVacancies != null)
+        {
+            foreach (var item in Model.PagedVacancies.Items.Where(c => c.Status == VacancyStatus.Published || c.Status == VacancyStatus.AppliesAcceptance || c.Status == VacancyStatus.InCommittee))
+            {
+                <text>
+                    <tr>
+                        <td>@item.Guid.ToString().Substring(0, 4)...</td>
+                        <td><a asp-controller="vacancies" asp-action="details" asp-route-id="@item.Guid" title="Просмотр вакансии">ГНС600001</a></td>
+                        <td>@item.Name</td>
+                        <td>@{item.DateFinish.ToShortDateString(); } <!--01-09-14, 16:04--></td>
+                        <td class="view-col">
+                            <a asp-controller="vacancies" asp-action="details" asp-route-id="@item.Guid" class="view-td-icon" title="Просмотр вакансии"></a>
+                        </td>
+                        <!--TODO: add Winner view-->
+                        <td><a asp-controller="vacancies" asp-action="winner" asp-route-id="@item.Guid" class="success-request-icon"><span class="italic bold">Победитель</span></a></td>
+                    </tr>
+                </text>
+            }
+        }
+
     </tbody>
 </table>
 <div class="bottom-nav">

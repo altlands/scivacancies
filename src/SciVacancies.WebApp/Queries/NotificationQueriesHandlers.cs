@@ -20,7 +20,7 @@ namespace SciVacancies.WebApp.Queries
         {
             if (message.ResearcherGuid == Guid.Empty) throw new ArgumentNullException($"ResearcherGuid is empty: {message.ResearcherGuid}");
 
-            Page<Notification> notifications = _db.Page<Notification>(message.PageIndex, message.PageSize, new Sql("SELECT n.* FROM \"Notifications\" n WHERE n.\"ResearcherGuid\"=" + message.ResearcherGuid + " ORDER BY n.\"Guid\" DESC"));
+            Page<Notification> notifications = _db.Page<Notification>(message.PageIndex, message.PageSize, new Sql($"SELECT n.* FROM \"Notifications\" n WHERE n.\"ResearcherGuid\"='{message.ResearcherGuid}' ORDER BY n.\"Guid\" DESC"));
 
             return notifications;
         }
@@ -38,7 +38,7 @@ namespace SciVacancies.WebApp.Queries
         {
             if (message.OrganizationGuid == Guid.Empty) throw new ArgumentNullException($"OrganizationGuid is empty: {message.OrganizationGuid}");
 
-            Page<Notification> notifications = _db.Page<Notification>(message.PageIndex, message.PageSize, new Sql("SELECT n.* FROM \"Notifications\" n WHERE n.\"OrganizationGuid\"=" + message.OrganizationGuid + " ORDER BY n.\"Guid\" DESC"));
+            Page<Notification> notifications = _db.Page<Notification>(message.PageIndex, message.PageSize, new Sql($"SELECT n.* FROM \"Notifications\" n WHERE n.\"OrganizationGuid\"='{message.OrganizationGuid}' ORDER BY n.\"Guid\" DESC"));
 
             return notifications;
         }

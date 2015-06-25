@@ -54,8 +54,8 @@ namespace SciVacancies.WebApp.Controllers
             var model = new VacanciesInOrganizationIndexViewModel
             {
                 OrganizationGuid = organizationGuid,
-                Positions = _readModelService.SelectPositions(organizationGuid),
-                Vacancies = _readModelService.SelectVacancies(organizationGuid)
+                PagedPositions = _mediator.Send(new SelectPagedPositionsByOrganizationQuery {OrganizationGuid = organizationGuid, PageSize =500, PageIndex = 1}),
+                PagedVacancies = _mediator.Send(new SelectPagedVacanciesByOrganizationQuery { OrganizationGuid = organizationGuid, PageSize = 500, PageIndex = 1 })
             };
 
             return View(model);
@@ -63,31 +63,35 @@ namespace SciVacancies.WebApp.Controllers
 
         [PageTitle("Закрытые вакансии")]
         [SiblingPage]
+        [BindOrganizationIdFromClaims]
         public ViewResult Closed(Guid organizationGuid)
         {
-            var closedVacacies = _mediator.Send(new SelectPagedClosedVacanciesByOrganizationQuery
+            var model = new VacanciesInOrganizationIndexViewModel
             {
-                OrganizationGuid = organizationGuid,
-                PageIndex = 1,
-                PageSize = 10
-            });
-
-            var model = new OrganizationDetailsViewModel();
+                PagedVacancies= _mediator.Send(new SelectPagedClosedVacanciesByOrganizationQuery
+                {
+                    OrganizationGuid = organizationGuid,
+                    PageIndex = 1,
+                    PageSize = 500
+                })
+            };
             return View(model);
         }
 
         [SiblingPage]
         [PageTitle("Уведомления")]
+        [BindOrganizationIdFromClaims]
         public ViewResult Notifications(Guid organizationGuid)
         {
-            var notifications = _mediator.Send(new SelectPagedNotificationsByOrganizationQuery
+            var model = new NotificationsInOrganizationIndexViewModel
             {
-                OrganizationGuid = organizationGuid,
-                PageIndex = 1,
-                PageSize = 0
-            });
-
-            var model = new OrganizationDetailsViewModel();
+                PagedNotifications = _mediator.Send(new SelectPagedNotificationsByOrganizationQuery
+                {
+                    OrganizationGuid = organizationGuid,
+                    PageIndex = 1,
+                    PageSize = 500
+                })
+            };
             return View(model);
         }
     }
