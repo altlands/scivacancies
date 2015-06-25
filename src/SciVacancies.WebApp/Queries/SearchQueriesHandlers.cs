@@ -7,10 +7,11 @@ using System.Threading.Tasks;
 
 using Nest;
 using MediatR;
+using NPoco;
 
 namespace SciVacancies.WebApp.Queries
 {
-    public class SearchQueryHandler : IRequestHandler<SearchQuery, string>
+    public class SearchQueryHandler : IRequestHandler<SearchQuery, Page<Vacancy>>
     {
         private readonly IElasticClient _elastic;
 
@@ -19,8 +20,9 @@ namespace SciVacancies.WebApp.Queries
             _elastic = elastic;
         }
 
-        public string Handle(SearchQuery message)
+        public Page<Vacancy> Handle(SearchQuery message)
         {
+
             var results = _elastic.Search<Vacancy>(s => s
                                     .Index("scivacancies")
                                     .Skip((int)((message.PageIndex - 1) * message.PageSize))
@@ -29,9 +31,33 @@ namespace SciVacancies.WebApp.Queries
                                         .FuzzyLikeThis(flt => flt
                                             .LikeText(message.Query))
                                     )
+                                    //.Query(qr => qr
+                                    //    .Filtered(fltd => fltd
+                                    //        .Query(q => q
+                                    //            .FuzzyLikeThis(flt => flt
+                                    //                .LikeText(message.Query)
+                                    //            )
+                                    //        )
+                                    //        .Filter(f => f
+                                    //        //TODO - сделать массивы гуидов а не стринг
+                                    //            .Terms("positionTypeGuid", message.PositionsTypes)
+                                    //        && f.Terms("researchDirectionId", message.ResearchDirections)
+                                    //        && f.Terms("regionId", message.Regions)
+                                    //        && f.Terms("foivId", message.Foivs)
+                                    //        )
+                                    //    )
+                                    //)
                                     );
+            var pageVacancies = new Page<Vacancy>()
+            {
+                CurrentPage = message.PageIndex,
+                ItemsPerPage = message.PageSize,
+                TotalItems = results.Total,
+                TotalPages = results.Total / message.PageSize,
+                Items = results.Documents.ToList()
+            };
 
-            return "";
+            return pageVacancies;
         }
     }
 }

@@ -22,6 +22,7 @@ namespace SciVacancies.ReadModel.Core
         /// </summary>
         public Guid OrganizationGuid { get; set; }
         public Guid PositionGuid { get; set; }
+        [ElasticProperty(Index = FieldIndexOption.NotAnalyzed, Type = FieldType.String)]
         public Guid PositionTypeGuid { get; set; }
 
         public Guid WinnerGuid { get; set; }

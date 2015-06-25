@@ -8,6 +8,12 @@ namespace SciVacancies.Domain.DataModels
 {
     public class PositionDataModel
     {
+
+        //TODO - привести в порядок и соответствие модели
+        public string OrganizationName { get; set; }
+        //public string ResearchDirection { get; set; }
+        public int ResearchThemeId { get; set; }
+
         /// <summary>
         /// Guid должности из справочника
         /// </summary>

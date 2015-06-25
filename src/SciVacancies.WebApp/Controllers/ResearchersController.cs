@@ -11,6 +11,7 @@ using SciVacancies.WebApp.Engine;
 using SciVacancies.WebApp.Engine.CustomAttribute;
 using SciVacancies.WebApp.ViewModels;
 using SciVacancies.WebApp.Commands;
+using SciVacancies.WebApp.Queries;
 
 using MediatR;
 
@@ -87,8 +88,15 @@ namespace SciVacancies.WebApp.Controllers
 
         [SiblingPage]
         [PageTitle("Подписки")]
-        public ViewResult Subscriptions()
+        public ViewResult Subscriptions(Guid researcherGuid)
         {
+            var searchSubscriptions = _mediator.Send(new SelectPagedSearchSubscriptionsQuery
+            {
+                ResearcherGuid = researcherGuid,
+                PageIndex = 1,
+                PageSize = 10
+            });
+
             var model = new ResearcherDetailsViewModel();
             return View(model);
         }
@@ -97,6 +105,13 @@ namespace SciVacancies.WebApp.Controllers
         [PageTitle("Уведомления")]
         public ViewResult Notifications()
         {
+            var notifications = _mediator.Send(new SelectPagedNotificationsByResearcherQuery
+            {
+                ResearcherGuid = Guid.NewGuid(),
+                PageIndex = 1,
+                PageSize = 10
+            });
+
             var model = new ResearcherDetailsViewModel();
             return View(model);
         }

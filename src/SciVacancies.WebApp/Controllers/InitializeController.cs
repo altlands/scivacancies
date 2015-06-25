@@ -19,9 +19,12 @@ namespace SciVacancies.WebApp.Controllers
         {
             _mediator = mediator;
         }
-        
+
         public void Index()
         {
+            _mediator.Send(new RemoveSearchIndexCommand());
+            _mediator.Send(new CreateSearchIndexCommand());
+
             var createUserResearcherCommand = new RegisterUserResearcherCommand
             {
                 Data = new AccountResearcherRegisterViewModel
@@ -64,7 +67,7 @@ namespace SciVacancies.WebApp.Controllers
             };
             var organization = _mediator.Send(createUserOrganizationCommand);
             var orgGuid = Guid.Parse(organization.Claims.Single(s => s.ClaimType.Equals(ConstTerms.ClaimTypeOrganizationId)).ClaimValue);
-            
+
             Guid posGuid1 = _mediator.Send(new CreatePositionCommand
             {
                 OrganizationGuid = orgGuid,
@@ -100,7 +103,7 @@ namespace SciVacancies.WebApp.Controllers
                     ResearchDirection = "Аналитическая химия"
                 }
             });
-            
+
             var createUserOrganizationCommand1 = new RegisterUserOrganizationCommand
             {
                 Data = new AccountOrganizationRegisterViewModel

@@ -11,6 +11,13 @@ namespace SciVacancies.Domain.DataModels
         public Guid WinnerGuid { get; set; }
         public Guid PretenderGuid { get; set; }
 
+        //TODO - привести в порядок и соответствие модели
+        public Guid PositionTypeGuid { get; set; }
+        public string OrganizationName { get; set; }
+        //public string ResearchDirection { get; set; }
+        public int ResearchDirectionId { get; set; }
+        public int ResearchThemeId { get; set; }
+
         /// <summary>
         /// Должность
         /// </summary>

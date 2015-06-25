@@ -13,6 +13,9 @@ namespace SciVacancies.ReadModel.Core
     [PrimaryKey("Guid", AutoIncrement = false)]
     public class Position : BaseEntity
     {
+        ////TODO - привести в порядок и соответствие модели
+        //public string OrganizationName { get; set; }
+        //public int ResearchThemeId { get; set; }
         /// <summary>
         /// Идентификатор организации
         /// </summary>

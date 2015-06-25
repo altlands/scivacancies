@@ -22,6 +22,11 @@ namespace SciVacancies.ReadModel.EventHandlers
                 OrganizationGuid = msg.OrganizationGuid,
                 PositionTypeGuid = msg.Data.PositionTypeGuid,
 
+                //TODO - clean up
+                ResearchDirection = msg.Data.ResearchDirection,
+                ResearchDirectionId = msg.Data.ResearchDirectionId,
+                ResearchTheme = msg.Data.ResearchTheme,
+
                 Name = msg.Data.Name,
                 FullName = msg.Data.FullName,
 
@@ -63,6 +68,12 @@ namespace SciVacancies.ReadModel.EventHandlers
             Position position = _db.SingleById<Position>(msg.PositionGuid);
 
             position.PositionTypeGuid = msg.Data.PositionTypeGuid;
+
+            //TODO Clean Up
+            position.ResearchDirection = msg.Data.ResearchDirection;
+            position.ResearchDirectionId = msg.Data.ResearchDirectionId;
+            position.ResearchTheme = msg.Data.ResearchTheme;
+
 
             position.Name = msg.Data.Name;
             position.FullName = msg.Data.FullName;
