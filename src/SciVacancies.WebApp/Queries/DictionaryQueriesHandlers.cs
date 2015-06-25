@@ -7,15 +7,17 @@ using System.Linq;
 
 using MediatR;
 using NPoco;
+using Nest;
 
 namespace SciVacancies.WebApp.Queries
 {
+    //TODO - подтягивание словарей из эластика
     public class SelectAllPositionTypesQueryHandler : IRequestHandler<SelectAllPositionTypesQuery, IEnumerable<PositionType>>
     {
         private readonly IDatabase _db;
-        private readonly IElasticService _elastic;
+        private readonly IElasticClient _elastic;
 
-        public SelectAllPositionTypesQueryHandler(IDatabase db, IElasticService elastic)
+        public SelectAllPositionTypesQueryHandler(IDatabase db, IElasticClient elastic)
         {
             _db = db;
             _elastic = elastic;
@@ -31,9 +33,9 @@ namespace SciVacancies.WebApp.Queries
     public class SelectPositionTypesForAutocompleteQueryHandler : IRequestHandler<SelectPositionTypesForAutocompleteQuery, IEnumerable<PositionType>>
     {
         private readonly IDatabase _db;
-        private readonly IElasticService _elastic;
+        private readonly IElasticClient _elastic;
 
-        public SelectPositionTypesForAutocompleteQueryHandler(IDatabase db, IElasticService elastic)
+        public SelectPositionTypesForAutocompleteQueryHandler(IDatabase db, IElasticClient elastic)
         {
             _db = db;
             _elastic = elastic;
@@ -59,9 +61,9 @@ namespace SciVacancies.WebApp.Queries
     public class SelectAllActivitiesQueryHandler : IRequestHandler<SelectAllActivitiesQuery, IEnumerable<Activity>>
     {
         private readonly IDatabase _db;
-        private readonly IElasticService _elastic;
+        private readonly IElasticClient _elastic;
 
-        public SelectAllActivitiesQueryHandler(IDatabase db, IElasticService elastic)
+        public SelectAllActivitiesQueryHandler(IDatabase db, IElasticClient elastic)
         {
             _db = db;
             _elastic = elastic;
@@ -77,9 +79,9 @@ namespace SciVacancies.WebApp.Queries
     public class SelectActivitiesForAutocompleteQueryHandler : IRequestHandler<SelectActivitiesForAutocompleteQuery, IEnumerable<Activity>>
     {
         private readonly IDatabase _db;
-        private readonly IElasticService _elastic;
+        private readonly IElasticClient _elastic;
 
-        public SelectActivitiesForAutocompleteQueryHandler(IDatabase db, IElasticService elastic)
+        public SelectActivitiesForAutocompleteQueryHandler(IDatabase db, IElasticClient elastic)
         {
             _db = db;
             _elastic = elastic;
@@ -105,9 +107,9 @@ namespace SciVacancies.WebApp.Queries
     public class SelectAllFoivsQueryHandler : IRequestHandler<SelectAllFoivsQuery, IEnumerable<Foiv>>
     {
         private readonly IDatabase _db;
-        private readonly IElasticService _elastic;
+        private readonly IElasticClient _elastic;
 
-        public SelectAllFoivsQueryHandler(IDatabase db, IElasticService elastic)
+        public SelectAllFoivsQueryHandler(IDatabase db, IElasticClient elastic)
         {
             _db = db;
             _elastic = elastic;
@@ -123,9 +125,9 @@ namespace SciVacancies.WebApp.Queries
     public class SelectFoivsForAutocompleteQueryHandler : IRequestHandler<SelectFoivsForAutocompleteQuery, IEnumerable<Foiv>>
     {
         private readonly IDatabase _db;
-        private readonly IElasticService _elastic;
+        private readonly IElasticClient _elastic;
 
-        public SelectFoivsForAutocompleteQueryHandler(IDatabase db, IElasticService elastic)
+        public SelectFoivsForAutocompleteQueryHandler(IDatabase db, IElasticClient elastic)
         {
             _db = db;
             _elastic = elastic;
@@ -151,9 +153,9 @@ namespace SciVacancies.WebApp.Queries
     public class SelectFoivsByParentIdQueryHandler : IRequestHandler<SelectFoivsByParentIdQuery, IEnumerable<Foiv>>
     {
         private readonly IDatabase _db;
-        private readonly IElasticService _elastic;
+        private readonly IElasticClient _elastic;
 
-        public SelectFoivsByParentIdQueryHandler(IDatabase db, IElasticService elastic)
+        public SelectFoivsByParentIdQueryHandler(IDatabase db, IElasticClient elastic)
         {
             _db = db;
             _elastic = elastic;
@@ -171,9 +173,9 @@ namespace SciVacancies.WebApp.Queries
     public class SelectAllCriteriasQueryHandler : IRequestHandler<SelectAllCriteriasQuery, IEnumerable<Criteria>>
     {
         private readonly IDatabase _db;
-        private readonly IElasticService _elastic;
+        private readonly IElasticClient _elastic;
 
-        public SelectAllCriteriasQueryHandler(IDatabase db, IElasticService elastic)
+        public SelectAllCriteriasQueryHandler(IDatabase db, IElasticClient elastic)
         {
             _db = db;
             _elastic = elastic;
@@ -189,9 +191,9 @@ namespace SciVacancies.WebApp.Queries
     public class SelectCriteriasForAutocompleteQueryHandler : IRequestHandler<SelectCriteriasForAutocompleteQuery, IEnumerable<Criteria>>
     {
         private readonly IDatabase _db;
-        private readonly IElasticService _elastic;
+        private readonly IElasticClient _elastic;
 
-        public SelectCriteriasForAutocompleteQueryHandler(IDatabase db, IElasticService elastic)
+        public SelectCriteriasForAutocompleteQueryHandler(IDatabase db, IElasticClient elastic)
         {
             _db = db;
             _elastic = elastic;
@@ -217,9 +219,9 @@ namespace SciVacancies.WebApp.Queries
     public class SelectCriteriasByParentIdQueryHandler : IRequestHandler<SelectCriteriasByParentIdQuery, IEnumerable<Criteria>>
     {
         private readonly IDatabase _db;
-        private readonly IElasticService _elastic;
+        private readonly IElasticClient _elastic;
 
-        public SelectCriteriasByParentIdQueryHandler(IDatabase db, IElasticService elastic)
+        public SelectCriteriasByParentIdQueryHandler(IDatabase db, IElasticClient elastic)
         {
             _db = db;
             _elastic = elastic;
@@ -237,9 +239,9 @@ namespace SciVacancies.WebApp.Queries
     public class SelectAllOrgFormsQueryHandler : IRequestHandler<SelectAllOrgFormsQuery, IEnumerable<OrgForm>>
     {
         private readonly IDatabase _db;
-        private readonly IElasticService _elastic;
+        private readonly IElasticClient _elastic;
 
-        public SelectAllOrgFormsQueryHandler(IDatabase db, IElasticService elastic)
+        public SelectAllOrgFormsQueryHandler(IDatabase db, IElasticClient elastic)
         {
             _db = db;
             _elastic = elastic;
@@ -255,9 +257,9 @@ namespace SciVacancies.WebApp.Queries
     public class SelectOrgFormsForAutocompleteQueryHandler : IRequestHandler<SelectOrgFormsForAutocompleteQuery, IEnumerable<OrgForm>>
     {
         private readonly IDatabase _db;
-        private readonly IElasticService _elastic;
+        private readonly IElasticClient _elastic;
 
-        public SelectOrgFormsForAutocompleteQueryHandler(IDatabase db, IElasticService elastic)
+        public SelectOrgFormsForAutocompleteQueryHandler(IDatabase db, IElasticClient elastic)
         {
             _db = db;
             _elastic = elastic;
@@ -283,9 +285,9 @@ namespace SciVacancies.WebApp.Queries
     public class SelectAllRegionsQueryHandler : IRequestHandler<SelectAllRegionsQuery, IEnumerable<Region>>
     {
         private readonly IDatabase _db;
-        private readonly IElasticService _elastic;
+        private readonly IElasticClient _elastic;
 
-        public SelectAllRegionsQueryHandler(IDatabase db, IElasticService elastic)
+        public SelectAllRegionsQueryHandler(IDatabase db, IElasticClient elastic)
         {
             _db = db;
             _elastic = elastic;
@@ -301,9 +303,9 @@ namespace SciVacancies.WebApp.Queries
     public class SelectRegionsForAutocompleteQueryHandler : IRequestHandler<SelectRegionsForAutocompleteQuery, IEnumerable<Region>>
     {
         private readonly IDatabase _db;
-        private readonly IElasticService _elastic;
+        private readonly IElasticClient _elastic;
 
-        public SelectRegionsForAutocompleteQueryHandler(IDatabase db, IElasticService elastic)
+        public SelectRegionsForAutocompleteQueryHandler(IDatabase db, IElasticClient elastic)
         {
             _db = db;
             _elastic = elastic;
@@ -329,9 +331,9 @@ namespace SciVacancies.WebApp.Queries
     public class SelectAllResearchDirectionsQueryHandler : IRequestHandler<SelectAllResearchDirectionsQuery, IEnumerable<ResearchDirection>>
     {
         private readonly IDatabase _db;
-        private readonly IElasticService _elastic;
+        private readonly IElasticClient _elastic;
 
-        public SelectAllResearchDirectionsQueryHandler(IDatabase db, IElasticService elastic)
+        public SelectAllResearchDirectionsQueryHandler(IDatabase db, IElasticClient elastic)
         {
             _db = db;
             _elastic = elastic;
@@ -347,9 +349,9 @@ namespace SciVacancies.WebApp.Queries
     public class SelectResearchDirectionsForAutocompleteQueryHandler : IRequestHandler<SelectResearchDirectionsForAutocompleteQuery, IEnumerable<ResearchDirection>>
     {
         private readonly IDatabase _db;
-        private readonly IElasticService _elastic;
+        private readonly IElasticClient _elastic;
 
-        public SelectResearchDirectionsForAutocompleteQueryHandler(IDatabase db, IElasticService elastic)
+        public SelectResearchDirectionsForAutocompleteQueryHandler(IDatabase db, IElasticClient elastic)
         {
             _db = db;
             _elastic = elastic;
@@ -375,9 +377,9 @@ namespace SciVacancies.WebApp.Queries
     public class SelectResearchDirectionsByParentIdQueryHandler : IRequestHandler<SelectResearchDirectionsByParentIdQuery, IEnumerable<ResearchDirection>>
     {
         private readonly IDatabase _db;
-        private readonly IElasticService _elastic;
+        private readonly IElasticClient _elastic;
 
-        public SelectResearchDirectionsByParentIdQueryHandler(IDatabase db, IElasticService elastic)
+        public SelectResearchDirectionsByParentIdQueryHandler(IDatabase db, IElasticClient elastic)
         {
             _db = db;
             _elastic = elastic;

@@ -12,32 +12,41 @@ namespace SciVacancies.WebApp.Commands
 {
     public class CreateSearchIndexCommandHandler : RequestHandler<CreateSearchIndexCommand>
     {
-        private readonly IElasticService _elastic;
-        public CreateSearchIndexCommandHandler(IElasticService elastic)
+        private readonly IElasticClient _elastic;
+        public CreateSearchIndexCommandHandler(IElasticClient elastic)
         {
             _elastic = elastic;
         }
         protected override void HandleCore(CreateSearchIndexCommand message)
         {
-            _elastic.CreateIndex();
+            //TODO - имя индекса в конфиг
+            _elastic.CreateIndex("scivacancies", c => c
+                                .AddMapping<Vacancy>(am => am
+                                    .MapFromAttributes()
+                                )
+                                .AddMapping<Organization>(am => am
+                                    .MapFromAttributes()
+                                )
+                            );
         }
     }
     public class RemoveSearchIndexCommandHandler : RequestHandler<RemoveSearchIndexCommand>
     {
-        private readonly IElasticService _elastic;
-        public RemoveSearchIndexCommandHandler(IElasticService elastic)
+        private readonly IElasticClient _elastic;
+        public RemoveSearchIndexCommandHandler(IElasticClient elastic)
         {
             _elastic = elastic;
         }
         protected override void HandleCore(RemoveSearchIndexCommand message)
         {
-            _elastic.RemoveIndex();
+            //TODO - имя индекса в конфиг
+            _elastic.DeleteIndex(s => s.Index("scivacancies"));
         }
     }
     public class RestoreSearchIndexFromReadModelCommandHandler : RequestHandler<RestoreSearchIndexFromReadModelCommand>
     {
-        private readonly IElasticService _elastic;
-        public RestoreSearchIndexFromReadModelCommandHandler(IElasticService elastic)
+        private readonly IElasticClient _elastic;
+        public RestoreSearchIndexFromReadModelCommandHandler(IElasticClient elastic)
         {
             _elastic = elastic;
         }
@@ -46,29 +55,4 @@ namespace SciVacancies.WebApp.Commands
             //TODO придумать)
         }
     }
-    public class PutVacancyToSearchIndexCommandHandler : RequestHandler<PutVacancyToSearchIndexCommand>
-    {
-        private readonly IElasticService _elastic;
-        public PutVacancyToSearchIndexCommandHandler(IElasticService elastic)
-        {
-            _elastic = elastic;
-        }
-        protected override void HandleCore(PutVacancyToSearchIndexCommand message)
-        {
-            _elastic.Connect().Index(message.Data);
-        }
-    }
-    public class UpdateVacancyInSearchIndexCommandHandler : RequestHandler<UpdateVacancyInSearchIndexCommand>
-    {
-        private readonly IElasticService _elastic;
-        public UpdateVacancyInSearchIndexCommandHandler(IElasticService elastic)
-        {
-            _elastic = elastic;
-        }
-        protected override void HandleCore(UpdateVacancyInSearchIndexCommand message)
-        {
-            _elastic.Connect().Update<Vacancy>(u => u.IdFrom(message.Data).Doc(message.Data));
-        }
-    }
-
 }

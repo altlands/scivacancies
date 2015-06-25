@@ -21,12 +21,4 @@ namespace SciVacancies.WebApp.Commands
     {
 
     }
-    public class PutVacancyToSearchIndexCommand : CommandBase, IRequest
-    {
-        public Vacancy Data { get; set; }
-    }
-    public class UpdateVacancyInSearchIndexCommand : CommandBase, IRequest
-    {
-        public Vacancy Data { get; set; }
-    }
 }

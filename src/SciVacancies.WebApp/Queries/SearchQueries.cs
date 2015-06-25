@@ -7,7 +7,14 @@ using MediatR;
 
 namespace SciVacancies.WebApp.Queries
 {
-    //public class SearchQuery:IRequest<>
-    //{
-    //}
+    public class SearchQuery : IRequest<string>
+    {
+        public string Query { get; set; }
+
+        public long PageSize { get; set; }
+        public long PageIndex { get; set; }
+        public string OrderBy { get; set; }
+
+
+    }
 }

@@ -7,6 +7,7 @@ using System.Linq;
 
 using NPoco;
 using MediatR;
+using Nest;
 
 namespace SciVacancies.WebApp.Queries
 {
@@ -31,9 +32,9 @@ namespace SciVacancies.WebApp.Queries
     public class SelectOrganizationsForAutocompleteQueryHandler : IRequestHandler<SelectOrganizationsForAutocompleteQuery, IEnumerable<Organization>>
     {
         private readonly IDatabase _db;
-        private readonly IElasticService _elastic;
+        private readonly IElasticClient _elastic;
 
-        public SelectOrganizationsForAutocompleteQueryHandler(IDatabase db, IElasticService elastic)
+        public SelectOrganizationsForAutocompleteQueryHandler(IDatabase db, IElasticClient elastic)
         {
             _db = db;
             _elastic = elastic;
@@ -48,7 +49,7 @@ namespace SciVacancies.WebApp.Queries
             if (message.Take != 0)
             {
                 organizations = _db.FetchBy<Organization>(f => f.Where(w => w.Name.Contains(message.Query))).Take(message.Take);
-                //organizations = _elastic.Connect().Search<Organization>(s => s
+                //organizations = _elastic.Search<Organization>(s => s
                 //                                                    .Index("scivacancies")
                 //                                                    .Take(message.Take)
                 //                                                    .Query(q => q
@@ -62,7 +63,7 @@ namespace SciVacancies.WebApp.Queries
             else
             {
                 organizations = _db.FetchBy<Organization>(f => f.Where(w => w.Name.Contains(message.Query)));
-                //organizations = _elastic.Connect().Search<Organization>(s => s
+                //organizations = _elastic.Search<Organization>(s => s
                 //                                                    .Index("scivacancies")
                 //                                                    .Query(q => q
                 //                                                        .Match(m => m
