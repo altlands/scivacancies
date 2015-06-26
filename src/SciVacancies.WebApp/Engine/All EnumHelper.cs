@@ -53,5 +53,24 @@ namespace SciVacancies.WebApp
                     return null;
             }
         }
+
+        public static string GetHtmlClass(this VacancyApplicationStatus value)
+        {
+            switch (value)
+            {
+                case VacancyApplicationStatus.Cancelled:
+                case VacancyApplicationStatus.Removed:
+                    return "failed";
+                case VacancyApplicationStatus.InProcess:
+                case VacancyApplicationStatus.Applied:
+                case VacancyApplicationStatus.Lost:
+                    return "work"; 
+                case VacancyApplicationStatus.Won:
+                case VacancyApplicationStatus.Pretended:
+                    return "executed";
+                default:
+                    return null;
+            }
+        }
     }
 }

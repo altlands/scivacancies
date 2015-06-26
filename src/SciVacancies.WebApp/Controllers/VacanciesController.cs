@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity.Core;
 using System.Linq;
+using AutoMapper;
 using MediatR;
 using Microsoft.AspNet.Authorization;
 using Microsoft.AspNet.Mvc;
@@ -9,6 +11,7 @@ using SciVacancies.ReadModel;
 using SciVacancies.ReadModel.Core;
 using SciVacancies.WebApp.Commands;
 using SciVacancies.WebApp.Queries;
+using SciVacancies.WebApp.ViewModels;
 
 namespace SciVacancies.WebApp.Controllers
 {
@@ -36,7 +39,12 @@ namespace SciVacancies.WebApp.Controllers
             if (id == Guid.Empty)
                 throw new ArgumentNullException(nameof(id));
 
-            var model = _mediator.Send(new SingleVacancyQuery {VacancyGuid = id});
+            var preModel = _mediator.Send(new SingleVacancyQuery { VacancyGuid = id });
+
+            var model = Mapper.Map<VacancyDetailsViewModel>(preModel);
+
+            if (model == null)
+                throw new ObjectNotFoundException($"Не найдена вакансия с Guid: {id}");
 
             ViewBag.ShowAddFavorite = false;
             ViewBag.VacancyInFavorites = false;
@@ -47,6 +55,7 @@ namespace SciVacancies.WebApp.Controllers
             if ((model.Status == VacancyStatus.AppliesAcceptance || model.Status == VacancyStatus.Published)
                 && researcherGuid != Guid.Empty)
             {
+                //TODO: устранить причину возникновения ошибки в подобных местах
                 //если есть GUID Исследователя
                 List<Vacancy> favoritesVacancies = null;
                 try
@@ -61,6 +70,15 @@ namespace SciVacancies.WebApp.Controllers
                 else
                     ViewBag.VacancyInFavorites = true;
             }
+
+            if (model.Status != VacancyStatus.Published) //Если статус Опубликовано - пройден
+                model.Applications = _mediator.Send(new SelectPagedVacancyApplicationsByVacancyQuery
+                {
+                    PageIndex = 1,
+                    PageSize = 3000,
+                    VacancyGuid = id,
+                    OrderBy = "Guid"
+                });
 
             return View(model);
         }

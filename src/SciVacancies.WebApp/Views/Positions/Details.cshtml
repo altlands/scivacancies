@@ -1,4 +1,5 @@
 ﻿@using System.Threading.Tasks
+@using SciVacancies.WebApp
 @model SciVacancies.ReadModel.Core.Position
 
 <div class="crumbs">
@@ -14,82 +15,82 @@
 <div class="content-popup">
     <div class="title-cat-inform">Специализация:</div>
     <ul class="list-information">
-        <li class="odd">
-            <span>Должность:</span>Младший научный сотрудник
-        </li>
         <li class="even">
-            <span>Полное наименование:</span><span class="status executed">Младший научный сотрудник отраслевой лаборатории ядерных исследований</span>
+            <span>Статус:</span>@Model.Status.GetDescription()
         </li>
         <li class="odd">
-            <span>Отрасль науки:</span>Естественные науки - Физика и астрономия - Ядерная физика
+            <span>Должность:</span>@Model.Name
         </li>
         <li class="even">
-            <span>Тематика исследований:</span>Ядерная физика и технологии
+            <span>Полное наименование:</span>@Model.FullName
+        </li>
+        <li class="odd">
+            <span>Отрасль науки:</span>@Model.ResearchDirection
+        </li>
+        <li class="even">
+            <span>Тематика исследований:</span>@Model.ResearchTheme
         </li>
     </ul>
 
     <div class="title-cat-inform">Задачи и критерии:</div>
     <ul class="list-information">
         <li class="odd">
-            <span>Задачи:</span>Основные задачи - описание
+            <span>Задачи:</span>@Model.Tasks
         </li>
         <li class="even">
-            <span>Критерии оценки:</span>Добавленные критерии
+            <!-- TODO: показать критерии оценки -->
+            <del><span>Критерии оценки:</span>@Model.Criteria </del>(в разработке)
         </li>
     </ul>
 
     <div class="title-cat-inform">Условия:</div>
     <ul class="list-information">
         <li class="odd">
-            <span>Заработная плата:</span>65 000 рублей/месяц
+            <span>Заработная плата:</span>@Model.SalaryFrom - @Model.SalaryTo рублей/месяц
         </li>
         <li class="even">
-            <span>Стимулирующие выплаты:</span>предусмотрены
+            <span>Стимулирующие выплаты:</span>@Model.Bonuses
         </li>
         <li class="odd">
-            <span>Трудовой договор:</span>Бессрочный
+            <span>Трудовой договор:</span>@Model.ContractType.GetDescription()
         </li>
         <li class="even">
-            <span>Социальный пакет:</span>Да
+            <span>Социальный пакет:</span>@(Model.SocialPackage ? "Да" : "Нет")
         </li>
         <li class="odd">
-            <span>Найм жилья:</span>Да
+            <span>Найм жилья:</span>@(Model.Rent ? "Да" : "Нет")
         </li>
         <li class="even">
-            <span>Компенсация проезда:</span>Да
+            <span>Компенсация проезда:</span>@(Model.TransportCompensation ? "Да" : "Нет")
         </li>
     </ul>
 
     <div class="title-cat-inform">Лицо для получения дополнительных справок:</div>
     <ul class="list-information">
         <li class="odd">
-            <span>Фамилия, имя, отчество:</span>Пушкин Дадон Гвидонович
+            <span>Фамилия, имя, отчество:</span>@Model.ContactName
         </li>
         <li class="even">
-            <span>E-mail:</span>dadon@yandex.ru
+            <span>E-mail:</span>@Model.ContactEmail
         </li>
         <li class="even">
-            <span>Телефон:</span>+7 (903) 123-4567
+            <span>Телефон:</span>@Model.ContactPhone
         </li>
     </ul>
-    
+
 </div>
 
 
 <br />
 <br />
-<br/>
-<br/>
 
-<div class="ctr-buttons mb5 mt-30">
-    <a asp-controller="positions" asp-action="edit" asp-route-id="@Model.Guid">
-        <span class="green-btn middle-icon">Изменить вакансию</span>
-    </a>
+<a asp-controller="positions" asp-action="edit" asp-route-id="@Model.Guid" class="btn btn-success btn-lg">
+    Изменить
+</a>
 
-    <a asp-controller="positions" asp-action="delete" asp-route-id="@Model.Guid" onclick="javascript: return confirm('Вы уверены что хотите удалить эту вакансию?');">
-        <span class="white-btn middle-icon">Удалить вакансию</span>
-    </a>
-</div>
+<a asp-controller="positions" asp-action="delete" asp-route-id="@Model.Guid" onclick="javascript: return confirm('Вы уверены что хотите удалить эту вакансию?');" class="btn btn-danger btn-lg pull-right">
+    Удалить вакансию
+</a>
 
 <div class="b-bottom-nav">
     <a asp-controller="organizations" asp-action="vacancies" class="small-icon icon-prev">Назад</a>

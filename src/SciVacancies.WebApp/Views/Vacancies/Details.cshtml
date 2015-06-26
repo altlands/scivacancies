@@ -1,6 +1,7 @@
 ﻿@using System.Threading.Tasks
+@using SciVacancies.WebApp
 @using SciVacancies.WebApp.Engine
-@model SciVacancies.ReadModel.Core.Vacancy
+@model SciVacancies.WebApp.ViewModels.VacancyDetailsViewModel
 
 @{
     var referer = Context.Request.Headers["referer"];
@@ -40,69 +41,72 @@
 <div class="content-popup">
     <div class="title-cat-inform">Специализация:</div>
     <ul class="list-information">
-        <li class="odd">
-            <span>Должность:</span>Младший научный сотрудник
-        </li>
         <li class="even">
-            <span>Полное наименование:</span><span class="status executed">Младший научный сотрудник отраслевой лаборатории ядерных исследований</span>
+            <span>Статус:</span>@Model.Status.GetDescription()
         </li>
         <li class="odd">
-            <span>Отрасль науки:</span>Естественные науки - Физика и астрономия - Ядерная физика
+            <span>Должность:</span>@Model.Name
         </li>
         <li class="even">
-            <span>Тематика исследований:</span>Ядерная физика и технологии
+            <span>Полное наименование:</span>@Model.FullName
+        </li>
+        <li class="odd">
+            <span>Отрасль науки:</span>@Model.ResearchDirection
+        </li>
+        <li class="even">
+            <span>Тематика исследований:</span>@Model.ResearchTheme
         </li>
     </ul>
 
     <div class="title-cat-inform">Задачи и критерии:</div>
     <ul class="list-information">
         <li class="odd">
-            <span>Задачи:</span>Основные задачи - описание
+            <span>Задачи:</span>@Model.Tasks
         </li>
         <li class="even">
-            <span>Критерии оценки:</span>Добавленные критерии
+            <!-- TODO: показать критерии оценки -->
+            <del><span>Критерии оценки:</span>@Model.Criteria </del>(в разработке)
         </li>
     </ul>
 
     <div class="title-cat-inform">Условия:</div>
     <ul class="list-information">
         <li class="odd">
-            <span>Заработная плата:</span>65 000 рублей/месяц
+            <span>Заработная плата:</span>@Model.SalaryFrom - @Model.SalaryTo рублей/месяц
         </li>
         <li class="even">
-            <span>Стимулирующие выплаты:</span>предусмотрены
+            <span>Стимулирующие выплаты:</span>@Model.Bonuses
         </li>
         <li class="odd">
-            <span>Трудовой договор:</span>Бессрочный
+            <span>Трудовой договор:</span>@Model.ContractType.GetDescription()
         </li>
         <li class="even">
-            <span>Социальный пакет:</span>Да
+            <span>Социальный пакет:</span>@(Model.SocialPackage ? "Да" : "Нет")
         </li>
         <li class="odd">
-            <span>Найм жилья:</span>Да
+            <span>Найм жилья:</span>@(Model.Rent ? "Да" : "Нет")
         </li>
         <li class="even">
-            <span>Компенсация проезда:</span>Да
+            <span>Компенсация проезда:</span>@(Model.TransportCompensation ? "Да" : "Нет")
         </li>
     </ul>
 
     <div class="title-cat-inform">Лицо для получения дополнительных справок:</div>
     <ul class="list-information">
         <li class="odd">
-            <span>Фамилия, имя, отчество:</span>Пушкин Дадон Гвидонович
+            <span>Фамилия, имя, отчество:</span>@Model.ContactName
         </li>
         <li class="even">
-            <span>E-mail:</span>dadon@yandex.ru
+            <span>E-mail:</span>@Model.ContactEmail
         </li>
         <li class="even">
-            <span>Телефон:</span>+7 (903) 123-4567
+            <span>Телефон:</span>@Model.ContactPhone
         </li>
     </ul>
 
-
     @if (User.IsInRole(ConstTerms.RequireRoleOrganizationAdmin)
-        && ViewBag.CurrentOrganizationGuid!=null
-        && ViewBag.CurrentOrganizationGuid==Model.OrganizationGuid)
+                                                                && ViewBag.CurrentOrganizationGuid != null
+                                                                && ViewBag.CurrentOrganizationGuid == Model.OrganizationGuid)
     {
         <text>
         <h4 class="mt45 mb12">Поданные заявки</h4>
@@ -134,74 +138,96 @@
                 </tr>
             </thead>
             <tbody>
-                <tr>
-                    <td>001</td>
-                    <td>01-09-14, 16:04</td>
-                    <td>Глаголев<br />Виктор Александрович</td>
-                    <td class="align-center pl0"></td>
-                    <td>
-                        <a asp-controller="applications" asp-action="applicationinvacancy" asp-route-id="@Guid.NewGuid()" class="view-td-icon"></a>
-                        <a href="#" class="close-td-icon"></a>
-                        <a href="#" class="print-td-icon"></a>
-                    </td>
-                </tr>
-                <tr>
-                    <td>002</td>
-                    <td>01-09-14, 16:04</td>
-                    <td>Лермонторидзе<br /> Мцири Вахтангович</td>
-                    <td class="align-center pl0">
-                        <div class="td-gr-bg">1</div>
-                    </td>
-                    <td>
-                        <a asp-controller="applications" asp-action="applicationinvacancy" asp-route-id="@Guid.NewGuid()" class="view-td-icon"></a>
-                        <a href="#" class="close-td-icon"></a>
-                        <a href="#" class="print-td-icon"></a>
-                    </td>
-                </tr>
-                <tr>
-                    <td>003</td>
-                    <td>01-09-14, 16:04</td>
-                    <td>Кочергин-Никитский<br /> Константин Вениаминович</td>
-                    <td class="align-center pl0"></td>
-                    <td>
-                        <a asp-controller="applications" asp-action="applicationinvacancy" asp-route-id="@Guid.NewGuid()" class="view-td-icon"></a>
-                        <a href="#" class="close-td-icon"></a>
-                        <a href="#" class="print-td-icon"></a>
-                    </td>
-                </tr>
-                <tr>
-                    <td>004</td>
-                    <td>01-09-14, 16:04</td>
-                    <td>Беляев<br /> Евгений Петрович</td>
-                    <td class="align-center pl0">
-                        <div class="td-gr-bg">2</div>
-                    </td>
-                    <td>
-                        <a asp-controller="applications" asp-action="applicationinvacancy" asp-route-id="@Guid.NewGuid()" class="view-td-icon"></a>
-                        <a href="#" class="close-td-icon"></a>
-                        <a href="#" class="print-td-icon"></a>
-                    </td>
-                </tr>
-                <tr>
-                    <td>005</td>
-                    <td>01-09-14, 16:04</td>
-                    <td>Каримбаева<br /> Жасмин Алибабаевна</td>
-                    <td class="align-center pl0"></td>
-                    <td>
-                        <a asp-controller="applications" asp-action="applicationinvacancy" asp-route-id="@Guid.NewGuid()" class="view-td-icon"></a>
-                        <a href="#" class="close-td-icon"></a>
-                        <a href="#" class="print-td-icon"></a>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
 
-        <div class="ctr-buttons">
-            <span class="blue-btn middle-icon icon-print-button" rel="tooltip" title="">Распечатать все заявки</span>
-        </div>
+                @if (Model.Applications != null)
+                {
+                    foreach (var item in Model.Applications.Items)
+                    {
+                        <text>
 
-        </text>
-    }
+                        <tr>
+                            <td>@Model.Applications.Items.IndexOf(item)</td>
+                            <td>@{ item.SentDate?.ToShortDateString(); }<!--01-09-14, 16:04--></td>
+                            <!--TODO: Vacancy -> Applications -> Researcher -> FIO : отобразить полное имя Заявителя-->
+                            <td>@*@item.ResearcherGuid.LastName<br />@item.ResearcherGuid.FirstName @item.ResearcherGuid.Patronimic*@ <del style="color: red">не реализовано</del></td>
+                            <td class="align-center pl0"></td>
+                            <td>
+                                <!--TODO: Vacancy -> Applications -> View : просмотреть заявку-->
+                                <a asp-controller="applications" asp-action="applicationinvacancy" asp-route-id="@Guid.NewGuid()" class="view-td-icon"></a>
+                                <!--TODO: Vacancy -> Applications -> Print: распечатать заявку-->
+                                <a asp-controller="applications" asp-action="print" asp-route-id="@Guid.NewGuid()" href="#" class="print-td-icon"></a>
+                            </td>
+                        </tr>
+                        </text>
+                        }
+                    }
+
+                    @*<tr>
+                            <td>001</td>
+                            <td>01-09-14, 16:04</td>
+                            <td>Глаголев<br />Виктор Александрович</td>
+                            <td class="align-center pl0"></td>
+                            <td>
+                                <a asp-controller="applications" asp-action="applicationinvacancy" asp-route-id="@Guid.NewGuid()" class="view-td-icon"></a>
+                                <a href="#" class="print-td-icon"></a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>002</td>
+                            <td>01-09-14, 16:04</td>
+                            <td>Лермонторидзе<br /> Мцири Вахтангович</td>
+                            <td class="align-center pl0">
+                                <div class="td-gr-bg">1</div>
+                            </td>
+                            <td>
+                                <a asp-controller="applications" asp-action="applicationinvacancy" asp-route-id="@Guid.NewGuid()" class="view-td-icon"></a>
+                                <a href="#" class="print-td-icon"></a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>003</td>
+                            <td>01-09-14, 16:04</td>
+                            <td>Кочергин-Никитский<br /> Константин Вениаминович</td>
+                            <td class="align-center pl0"></td>
+                            <td>
+                                <a asp-controller="applications" asp-action="applicationinvacancy" asp-route-id="@Guid.NewGuid()" class="view-td-icon"></a>
+                                <a href="#" class="print-td-icon"></a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>004</td>
+                            <td>01-09-14, 16:04</td>
+                            <td>Беляев<br /> Евгений Петрович</td>
+                            <td class="align-center pl0">
+                                <div class="td-gr-bg">2</div>
+                            </td>
+                            <td>
+                                <a asp-controller="applications" asp-action="applicationinvacancy" asp-route-id="@Guid.NewGuid()" class="view-td-icon"></a>
+                                <a href="#" class="print-td-icon"></a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>005</td>
+                            <td>01-09-14, 16:04</td>
+                            <td>Каримбаева<br /> Жасмин Алибабаевна</td>
+                            <td class="align-center pl0"></td>
+                            <td>
+                                <a asp-controller="applications" asp-action="applicationinvacancy" asp-route-id="@Guid.NewGuid()" class="view-td-icon"></a>
+                                <a href="#" class="print-td-icon"></a>
+                            </td>
+                        </tr>*@
+                </tbody>
+            </table>
+
+            @if (Model.Applications != null && Model.Applications.Items.Any())
+            {
+                <div class="ctr-buttons">
+                    <span class="blue-btn middle-icon icon-print-button" rel="tooltip" title="">Распечатать все заявки</span>
+                </div>
+            }
+
+            </text>
+        }
 
 </div>
 

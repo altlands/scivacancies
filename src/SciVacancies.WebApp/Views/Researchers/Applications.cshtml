@@ -43,11 +43,13 @@
                         <td>@item.FullName</td>
                         <td>@item.Rewards руб.</td>
                         <td>@{ item.SentDate?.ToShortDateString(); }<!--01-09-14, 16:04--></td>
-                        <td><span class="status executed">Завершён</span></td>
-                        <td><span class="status executed">@item.Status.GetDescription()</span></td>
+                        <!--TODO: VacancyApplication -> Vacancy -> Status: заявки не знают ничгео о статусе вакансии -->
+                        <td><span class="status @*@item.VacancyStatus.GetHtmlClass()*@">@*@item.VacancyStatus.GetDescription()*@ <del style="color: red;">не реализовано</del></span></td>
+                        <td><span class="status @item.Status.GetHtmlClass()">@item.Status.GetDescription()</span></td>
                         <td>
                             <a asp-controller="applications" asp-action="details" asp-route-id="@item.Guid" class="view-td-icon"></a>
-                            <a href="#" class="close-td-icon"></a>
+                            <!--TODO: VacancyApplication -> Cancel -> Statuses :  в каких статусах допустимо отменять поданные заявки-->
+                            <a asp-controller="applications" asp-action="cancel" asp-route-id="@item.Guid" class="close-td-icon" onclick="javascipr: return confirm('Вы уверены, что хотите отменить подачу заявки?');"></a>
                         </td>
                     </tr>
                 </text>

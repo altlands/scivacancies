@@ -129,7 +129,7 @@
                 </div>
                 <div class="right-cell interval">
                     <span class="italic fs14">от</span>
-                    <input type="text" asp-for="SalaryFrom" class="small-input" />
+                    <input type="text" asp-for="SalaryFrom" class="small-input"/>
                     <span class="italic fs14">до</span>
                     <input type="text" asp-for="SalaryTo" class="small-input" />
                     <div class="inline-block w60 sorting va-top">
@@ -182,24 +182,24 @@
                 <div class="right-cell">
                     <ul class="list-checkboxes">
                         <li>
-                            <span class="checkbox">
-                                <input type="checkbox" asp-for="SocialPackage" id="chk1" />
-                            </span><label for="chk1">Социальный пакет</label>
+                            <span class="checkbox @(Model.SocialPackage ? "checked" : "")">
+                                <input asp-for="SocialPackage"/>
+                            </span><label asp-for="SocialPackage">Социальный пакет</label>
                         </li>
                         <li>
-                            <span class="checkbox">
-                                <input type="checkbox" asp-for="Rent" id="chk2" />
-                            </span><label for="chk2">Найм жилья</label>
+                            <span class="checkbox @(Model.Rent ? "checked" : "")">
+                                <input asp-for="Rent"/>
+                            </span><label asp-for="Rent">Найм жилья</label>
                         </li>
                         <li>
-                            <span class="checkbox">
-                                <input type="checkbox" asp-for="OfficeAccomodation" id="chk3" />
-                            </span><label for="chk3">Служебное жильё</label>
+                            <span class="checkbox @(Model.OfficeAccomodation ? "checked" : "")">
+                                <input asp-for="OfficeAccomodation"/>
+                            </span><label asp-for="OfficeAccomodation">Служебное жильё</label>
                         </li>
                         <li>
-                            <span class="checkbox">
-                                <input type="checkbox" asp-for="TransportCompensation" id="chk4" />
-                            </span><label for="chk4">Компенсация проезда</label>
+                            <span class="checkbox @(Model.TransportCompensation ? "checked" : "")">
+                                <input asp-for="TransportCompensation"/>
+                            </span><label asp-for="TransportCompensation">Компенсация проезда</label>
                         </li>
                     </ul>
                 </div>

@@ -27,7 +27,7 @@
             <th><div class="inline-block"><img src="/images/icons/arrow-bottom-tab.png" class="va-middle" /></div><div class="inline-block ml6 va-middle">Должность</div></th>
             <th><div class="inline-block"><img src="/images/icons/tab-head.png" class="va-middle" /></div><div class="inline-block ml6 va-middle">Заработная<br /> плата</div></th>
             <th><div class="inline-block"><img src="/images/icons/tab-head.png" class="va-middle" /></div><div class="inline-block ml6 va-middle">Дата<br /> закрытия</div></th>
-            <th><div class="inline-block"><img src="/images/icons/tab-head.png" class="va-middle" /></div><div class="inline-block ml6 va-middle">Статус<br />конкурса</div></th>
+            <th><div class="inline-block"><img src="/images/icons/tab-head.png" class="va-middle" /></div><div class="inline-block ml6 va-middle">Статус<br />вакансии</div></th>
             <th><div class="inline-block"><img src="/images/icons/tab-head.png" class="va-middle" /></div><div class="inline-block ml6 va-middle">Статус<br />заявки</div></th>
             <th><div class="pl21 va-middle">Действия</div></th>
         </tr>
@@ -44,24 +44,18 @@
                     <td>@item.Name</td>
                     <td>@item.SalaryFrom - @item.SalaryTo руб.</td>
                     <td>@item.DateStartAcceptance.ToShortDateString() <!--01-09-14, 16:04--></td>
-
-
                     <td>
                         <span class="status @item.Status.GetHtmlClass()">
-                            @item.Status.GetDescription() <!--Завершён-->
+                            @item.Status.GetDescription()
                         </span>
-                        @*<span class="status work">
-                                Приём заявок
-                            </span>*@
                     </td>
-
                     <td>
+                        <!-- TODO: Researcher -> FavoriteVacancies -> Status : отображать статус и действия в зависимости от статуса -->
                         <!--<span class="status executed">Победитель<br /><del>Победитель</del> </span>-->
                         <a asp-controller="applications" asp-action="create" asp-route-vacancyguid="@item.Guid" class="send-request-icon">
                             <span class="italic">Подать заявку</span>
                         </a>
                     </td>
-
                     <td>
                         <a asp-controller="vacancies" asp-action="details" asp-route-id="@item.Guid" class="view-td-icon"></a>
                     </td>

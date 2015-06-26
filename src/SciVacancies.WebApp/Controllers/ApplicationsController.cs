@@ -4,9 +4,11 @@ using MediatR;
 using Microsoft.AspNet.Authorization;
 using Microsoft.AspNet.Mvc;
 using SciVacancies.Domain.DataModels;
+using SciVacancies.Domain.Enums;
 using SciVacancies.ReadModel;
 using SciVacancies.WebApp.Commands;
 using SciVacancies.WebApp.Engine;
+using SciVacancies.WebApp.Queries;
 using SciVacancies.WebApp.ViewModels;
 
 namespace SciVacancies.WebApp.Controllers
@@ -84,7 +86,39 @@ namespace SciVacancies.WebApp.Controllers
 
         [Authorize(Roles = ConstTerms.RequireRoleOrganizationAdmin)]
         [PageTitle("Детали заявки")]
-        public ViewResult ApplicationInVacancy(Guid id) => View();
-        //_mediator.Send(new SingleVacancyApplicationQuery{});
+        public ViewResult ApplicationInVacancy(Guid id)
+        {
+            //TODO: VacancyApplication -> Details: реализовать метод просмотра отправленной заявки в вакансии
+            throw new NotImplementedException();
+            //_mediator.Send(new SingleVacancyApplicationQuery{});
+            return View();
+        }
+
+
+        [Authorize(Roles = ConstTerms.RequireRoleOrganizationAdmin)]
+        [BindResearcherIdFromClaims]
+        public IActionResult Cancel(Guid id, Guid researcherGuid)
+        {
+            if (id == Guid.Empty)
+                throw new ArgumentNullException(nameof(id));
+            if (researcherGuid == Guid.Empty)
+                throw new ArgumentNullException(nameof(researcherGuid));
+
+            var vacancyApplication = _mediator.Send(new SingleVacancyApplicationQuery {VacancyApplicationGuid = id});
+
+            if (vacancyApplication.ResearcherGuid != researcherGuid)
+                throw new Exception("Заявку может отменить только Заявитель, подавший её");
+
+            //TODO: VacancyApplication -> Cancel -> Statuses :  в каких статусах допустимо отменять поданные заявки
+            if(vacancyApplication.Status!= VacancyApplicationStatus.InProcess
+                && vacancyApplication.Status != VacancyApplicationStatus.Applied)
+                throw new Exception($"Вы не можете отменить подачу заявки со статусом: {vacancyApplication.Status.GetDescription()}");
+
+            //TODO: VacancyApplication -> Cancel -> Command :  Какая комманда отменяет поданные заявки
+            //_mediator.Send();
+            throw new NotImplementedException();
+
+            return View();
+        }
     }
 }

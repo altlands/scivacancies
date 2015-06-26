@@ -39,6 +39,9 @@ namespace SciVacancies.WebApp.Infrastructure
             Mapper.CreateMap<Position, PositionEditViewModel>();
             Mapper.CreateMap<PositionEditViewModel, Position>();
 
+            //vacancy
+            Mapper.CreateMap<Vacancy, VacancyDetailsViewModel>();
+
             /*VacancyApplication*/
 
             //create 
