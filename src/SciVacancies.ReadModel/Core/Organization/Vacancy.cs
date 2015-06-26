@@ -2,8 +2,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 using NPoco;
 using Nest;
@@ -14,13 +12,17 @@ namespace SciVacancies.ReadModel.Core
     [PrimaryKey("Guid", AutoIncrement = false)]
     public class Vacancy : BaseEntity
     {
+        /// <summary>
+        /// Айдишник для поисковика
+        /// </summary>
         [Ignore]
-        ///Айдишник для поисковика
         public Guid Id { get { return this.Guid; } }
+
         /// <summary>
         /// Идентификатор организации
         /// </summary>
         public Guid OrganizationGuid { get; set; }
+
         public Guid PositionGuid { get; set; }
         [ElasticProperty(Index = FieldIndexOption.NotAnalyzed, Type = FieldType.String)]
         public Guid PositionTypeGuid { get; set; }
