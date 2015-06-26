@@ -4,6 +4,11 @@
     {
         public const string OrderByDateDescending = "date_descending";
         public const string OrderByDateAscending = "date_ascending";
+        public const string OrderByDateStartDescending = "DateStart_descending";
+        public const string OrderByDateStartAscending = "DateStart_ascending";
+        public const string OrderByCreationDateDescending = "CreationDate";
+        public const string OrderByCreationDateAscending = "CreationDate_ascending";
+
         public const string OrderByVacancyCountDescending = "vacancycount_descending";
         public const string OrderByVacancyCountAscending = "vacancycount_ascending";
         public const string OrderByNameDescending = "name_descending";

@@ -3,7 +3,6 @@ using AutoMapper;
 using MediatR;
 using Microsoft.AspNet.Authorization;
 using Microsoft.AspNet.Mvc;
-using SciVacancies.ReadModel;
 using SciVacancies.WebApp.Engine;
 using SciVacancies.WebApp.Engine.CustomAttribute;
 using SciVacancies.WebApp.Queries;
@@ -14,12 +13,10 @@ namespace SciVacancies.WebApp.Controllers
     [Authorize(Roles = ConstTerms.RequireRoleOrganizationAdmin)]
     public class OrganizationsController : Controller
     {
-        private readonly IReadModelService _readModelService;
         private readonly IMediator _mediator;
 
-        public OrganizationsController(IReadModelService readModelService, IMediator mediator)
+        public OrganizationsController(IMediator mediator)
         {
-            _readModelService = readModelService;
             _mediator = mediator;
         }
 

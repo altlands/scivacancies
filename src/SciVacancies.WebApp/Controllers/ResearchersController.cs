@@ -1,12 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using AutoMapper;
 using MediatR;
 using Microsoft.AspNet.Authorization;
 using Microsoft.AspNet.Mvc;
+using NPoco;
 using SciVacancies.Domain.Enums;
-using SciVacancies.ReadModel;
 using SciVacancies.ReadModel.Core;
 using SciVacancies.WebApp.Commands;
 using SciVacancies.WebApp.Engine;
@@ -20,12 +19,10 @@ namespace SciVacancies.WebApp.Controllers
     public class ResearchersController : Controller
     {
         private readonly IMediator _mediator;
-        private readonly IReadModelService _readModelService;
 
-        public ResearchersController(IMediator mediator, IReadModelService readModelService)
+        public ResearchersController(IMediator mediator)
         {
             _mediator = mediator;
-            _readModelService = readModelService;
         }
 
         [SiblingPage]
@@ -68,7 +65,7 @@ namespace SciVacancies.WebApp.Controllers
 
             var model = new VacancyApplicationsInResearcherIndexViewModel
             {
-                Applications = _readModelService.SelectVacancyApplicationsByResearcher(researcherGuid)
+                Applications = _mediator.Send(new SelectPagedVacancyApplicationsByResearcherQuery {PageSize = 500, PageIndex = 1, OrderBy = ConstTerms.OrderByCreationDateDescending ,ResearcherGuid = researcherGuid })
             };
             return View(model);
         }
@@ -83,23 +80,25 @@ namespace SciVacancies.WebApp.Controllers
 
             var model = new VacanciesFavoritiesInResearcherIndexViewModel
             {
-                Vacancies = _readModelService.SelectFavoriteVacancies(researcherGuid)
+                Vacancies = _mediator.Send(new SelectPagedFavoriteVacanciesByResearcherQuery {PageSize = 500, PageIndex = 1, OrderBy = ConstTerms.OrderByCreationDateDescending, ResearcherGuid = researcherGuid })
             };
             return View(model);
         }
 
         [SiblingPage]
         [PageTitle("Подписки")]
+        [BindResearcherIdFromClaims]
         public ViewResult Subscriptions(Guid researcherGuid)
         {
-            var searchSubscriptions = _mediator.Send(new SelectPagedSearchSubscriptionsQuery
+            var model = new NotificationsInResearcherIndexViewModel
             {
-                ResearcherGuid = researcherGuid,
-                PageIndex = 1,
-                PageSize = 10
-            });
-
-            var model = new ResearcherDetailsViewModel();
+                PagedNotifications = _mediator.Send(new SelectPagedNotificationsByResearcherQuery
+                {
+                    ResearcherGuid = researcherGuid,
+                    PageIndex = 1,
+                    PageSize = 10
+                })
+            };
             return View(model);
         }
 
@@ -127,20 +126,21 @@ namespace SciVacancies.WebApp.Controllers
                 throw new ArgumentNullException(nameof(vacancyGuid));
 
 
-            var model = _readModelService.SingleVacancy(vacancyGuid);
+            var model = _mediator.Send(new SingleVacancyQuery {VacancyGuid = vacancyGuid });
             //если заявка на готовится к открытию или открыта
             if (model.Status == VacancyStatus.AppliesAcceptance || model.Status == VacancyStatus.Published)
             {
                 //если есть GUID Исследователя
-                List<Vacancy> favoritesVacancies = null;
+                Page<Vacancy> favoritesVacancies = null;
                 try
                 {
-                    favoritesVacancies = _readModelService.SelectFavoriteVacancies(researcherGuid);
+                    favoritesVacancies = _mediator.Send(new SelectPagedFavoriteVacanciesByResearcherQuery {PageSize = 500, PageIndex = 1,ResearcherGuid = researcherGuid , OrderBy = ConstTerms.OrderByDateAscending});
                 }
                 catch (Exception) { }
                 //если текущей вакансии нет в списке избранных
                 if (favoritesVacancies == null
-                    || !favoritesVacancies.Select(c => c.Guid).ToList().Contains(vacancyGuid))
+                    || favoritesVacancies.TotalItems == 0
+                    || !favoritesVacancies.Items.Select(c => c.Guid).ToList().Contains(vacancyGuid))
                     _mediator.Send(new AddVacancyToFavoritesCommand { ResearcherGuid = researcherGuid, VacancyGuid = vacancyGuid });
             }
 

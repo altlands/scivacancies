@@ -1,5 +1,5 @@
 ﻿@using System.Threading.Tasks
-@model dynamic
+@model SciVacancies.WebApp.ViewModels.ApplicationDetailsViewModel
 
 <div class="crumbs">
     <a href="/">Главная страница</a><span class="separator">/</span>
@@ -10,7 +10,7 @@
 
 <h3>Личная карточка пользователя</h3>
 
-<h4>@ViewBag.Title: заявка на ID МНС6000567 №001 от 01-09-14 </h4>
+<h4>@ViewBag.Title: заявка на ID МНС6000567 №001 от @Model.<!--01-09-14--> </h4>
 
 
 <div class="content-slide">

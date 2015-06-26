@@ -9,7 +9,7 @@
     @ViewBag.Title
 </div>
 
-<h3>@Model.Title</h3>
+<h3>Личная карточка пользователя</h3>
 
 @Component.Invoke("AccountTabs", typeof(ResearchersController))
 
@@ -35,14 +35,14 @@
     <tbody>
         @if (Model.Applications != null)
         {
-            foreach (var item in Model.Applications)
+            foreach (var item in Model.Applications.Items)
             {
                 <text>
                     <tr>
                         <td>ГНС600001</td>
                         <td>@item.FullName</td>
                         <td>@item.Rewards руб.</td>
-                        <td>@{ item.SentDate?.ToShortDateString(); }<!--01-09-14, 16:04--></td>
+                        <td>@{ item.SentDate?.ToLocalVacancyString(); }</td>
                         <!--TODO: VacancyApplication -> Vacancy -> Status: заявки не знают ничгео о статусе вакансии -->
                         <td><span class="status @*@item.VacancyStatus.GetHtmlClass()*@">@*@item.VacancyStatus.GetDescription()*@ <del style="color: red;">не реализовано</del></span></td>
                         <td><span class="status @item.Status.GetHtmlClass()">@item.Status.GetDescription()</span></td>

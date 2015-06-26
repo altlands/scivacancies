@@ -6,10 +6,11 @@ using AutoMapper;
 using MediatR;
 using Microsoft.AspNet.Authorization;
 using Microsoft.AspNet.Mvc;
+using NPoco;
 using SciVacancies.Domain.Enums;
-using SciVacancies.ReadModel;
 using SciVacancies.ReadModel.Core;
 using SciVacancies.WebApp.Commands;
+using SciVacancies.WebApp.Engine;
 using SciVacancies.WebApp.Queries;
 using SciVacancies.WebApp.ViewModels;
 
@@ -22,12 +23,10 @@ namespace SciVacancies.WebApp.Controllers
     public class VacanciesController : Controller
     {
         private readonly IMediator _mediator;
-        private readonly IReadModelService _readModelService;
 
-        public VacanciesController(IMediator mediator, IReadModelService readModelService)
+        public VacanciesController(IMediator mediator)
         {
             _mediator = mediator;
-            _readModelService = readModelService;
         }
 
         [AllowAnonymous]
@@ -57,15 +56,16 @@ namespace SciVacancies.WebApp.Controllers
             {
                 //TODO: устранить причину возникновения ошибки в подобных местах
                 //если есть GUID Исследователя
-                List<Vacancy> favoritesVacancies = null;
+                Page<Vacancy> favoritesVacancies = null;
                 try
                 {
-                    favoritesVacancies = _readModelService.SelectFavoriteVacancies(researcherGuid);
+                    favoritesVacancies = _mediator.Send(new SelectPagedFavoriteVacanciesByResearcherQuery { PageSize = 500, PageIndex = 1, ResearcherGuid = researcherGuid, OrderBy = ConstTerms.OrderByDateAscending });
                 }
                 catch (Exception) { }
                 //если текущей вакансии нет в списке избранных
                 if (favoritesVacancies == null
-                    || !favoritesVacancies.Select(c => c.Guid).ToList().Contains(id))
+                    || favoritesVacancies.TotalItems == 0
+                    || !favoritesVacancies.Items.Select(c => c.Guid).ToList().Contains(id))
                     ViewBag.ShowAddFavorite = true;
                 else
                     ViewBag.VacancyInFavorites = true;
@@ -86,6 +86,29 @@ namespace SciVacancies.WebApp.Controllers
         [AllowAnonymous]
         [PageTitle("Подробно о вакансии")]
         public ViewResult Preview(Guid id) => View();
+
+        [PageTitle("Отменить вакансию")]
+        [BindOrganizationIdFromClaims]
+        [Authorize(Roles = ConstTerms.RequireRoleOrganizationAdmin)]
+        public IActionResult Cancel(Guid id, Guid organizationGuid)
+        {
+            if (id == Guid.Empty)
+                throw new ArgumentNullException(nameof(id));
+            if (organizationGuid == Guid.Empty)
+                throw new ArgumentNullException(nameof(organizationGuid));
+            
+            var preModel = _mediator.Send(new SingleVacancyQuery { VacancyGuid = id });
+
+            if (preModel.OrganizationGuid != organizationGuid)
+                throw new Exception("Вы не можете отменить вакансии других организаций");
+
+            if (preModel.Status != VacancyStatus.Published && preModel.Status != VacancyStatus.AppliesAcceptance)
+                throw new Exception($"Вы не можете отменить вакансию со статусом: {preModel.Status.GetDescription()}");
+
+            var model = Mapper.Map<VacancyDetailsViewModel>(preModel);
+
+            return View(model);
+        }
 
         [HttpPost]
         [PageTitle("Вакансия отменена")]
