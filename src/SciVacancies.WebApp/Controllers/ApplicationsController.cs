@@ -137,7 +137,7 @@ namespace SciVacancies.WebApp.Controllers
                 throw new Exception($"Вы не можете отменить подачу заявки со статусом: {vacancyApplication.Status.GetDescription()}");
 
             //TODO: VacancyApplication -> Cancel -> Command :  Какая комманда отменяет поданные заявки
-            //_mediator.Send();
+            //_mediator.Send(  /* Query does not exists */);
             throw new NotImplementedException();
 
             return View();

@@ -21,10 +21,8 @@ namespace SciVacancies.WebApp.Controllers
         {
             var model = new IndexViewModel
             {
-                //TODO: MainPage -> Organizations: сортировать по убыванию количества вакансий в организации
                 OrganizationsList =_mediator.Send(new SelectPagedOrganizationsQuery {PageSize = 4, PageIndex = 1, OrderBy =ConstTerms.OrderByVacancyCountDescending}),
-                //TODO: MainPage -> Vacancies: сортировать по убыванию даты публикации
-                VacanciesList = _mediator.Send(new SelectPagedVacanciesQuery {PageSize = 4, PageIndex = 1, OrderBy = ConstTerms.OrderByDateStartDescending})
+                VacanciesList = _mediator.Send(new SelectPagedVacanciesQuery {PageSize = 4, PageIndex = 1, OrderBy = ConstTerms.OrderByDateStartDescending, PublishedOnly = true})
             };
 
             return View(model);

@@ -2,18 +2,18 @@
 {
     public class ConstTerms
     {
-        public const string OrderByDateDescending = "date_descending";
+        public const string OrderByDateDescending = "date";
         public const string OrderByDateAscending = "date_ascending";
-        public const string OrderByDateStartDescending = "DateStart_descending";
+        public const string OrderByDateStartDescending = "DateStart";
         public const string OrderByDateStartAscending = "DateStart_ascending";
         public const string OrderByCreationDateDescending = "CreationDate";
         public const string OrderByCreationDateAscending = "CreationDate_ascending";
 
-        public const string OrderByVacancyCountDescending = "vacancycount_descending";
-        public const string OrderByVacancyCountAscending = "vacancycount_ascending";
-        public const string OrderByNameDescending = "name_descending";
+        public const string OrderByVacancyCountDescending = "PublishedVacancies";
+        public const string OrderByVacancyCountAscending = "PublishedVacancies_ascending";
+        public const string OrderByNameDescending = "name";
         public const string OrderByNameAscending =  "name_ascending";
-        public const string OrderByCountDescending = "count_descending";
+        public const string OrderByCountDescending = "count";
         public const string OrderByCountAscending =  "count_ascending";
 
         public const string RequireRoleOrganizationAdmin = "organization_admin";

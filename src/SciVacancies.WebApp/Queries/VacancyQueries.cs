@@ -18,6 +18,11 @@ namespace SciVacancies.WebApp.Queries
         public long PageIndex { get; set; }
         public string OrderBy { get; set; }
 
+        /// <summary>
+        /// Получить вакансии доступные для поиска
+        /// </summary>
+        public bool PublishedOnly { get; set; }
+
         public string NameFilterValue { get; set; }
         public string AddressFilterValue { get; set; }
     }

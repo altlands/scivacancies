@@ -58,7 +58,7 @@
 <div class="bottom-nav">
     <div class="bottom-nav-left">
         <div class="count-news">
-            1-4 из @Model.PagedNotifications?.TotalItems записей
+            1-4 из @(Model.PagedNotifications?.TotalItems) записей
         </div>
         <div class="count-line-page">
             <input type="text" value="10"> записей на странице
@@ -78,7 +78,7 @@
             </li>
             <li>
                 <div class="count-page">
-                    <input type="text" value="1"> из @Model.PagedNotifications?.TotalPages
+                    <input type="text" value="1"> из @(Model.PagedNotifications?.TotalPages)
                 </div>
             </li>
             <li>

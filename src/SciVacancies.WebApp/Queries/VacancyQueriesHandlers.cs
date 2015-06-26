@@ -41,7 +41,14 @@ namespace SciVacancies.WebApp.Queries
 
         public Page<Vacancy> Handle(SelectPagedVacanciesQuery message)
         {
-            Page<Vacancy> vacancies = _db.Page<Vacancy>(message.PageIndex, message.PageSize, new Sql("SELECT v.* FROM \"Vacancies\" v ORDER BY v.\"Guid\" DESC"));
+
+            Page<Vacancy> vacancies =
+                message.PublishedOnly
+                ?
+                _db.Page<Vacancy>(message.PageIndex, message.PageSize, new Sql($"SELECT v.* FROM \"Vacancies\" v WHERE v.\"Status\"={(int)VacancyStatus.Published} OR v.\"Status\"={(int)VacancyStatus.AppliesAcceptance} ORDER BY v.\"DateStart\" DESC"))
+                :
+                _db.Page<Vacancy>(message.PageIndex, message.PageSize, new Sql($"SELECT v.* FROM \"Vacancies\" v WHERE ORDER BY v.\"DateStart\" DESC"))
+                ;
 
             return vacancies;
         }
@@ -142,20 +149,15 @@ namespace SciVacancies.WebApp.Queries
         {
             if (message.ResearcherGuid == Guid.Empty) throw new ArgumentNullException($"ResearcherGuid is empty: {message.ResearcherGuid}");
 
-            IEnumerable<Guid> favoriteVacanciesGuids = _db.FetchBy<FavoriteVacancy>(f => f.Where(w => w.ResearcherGuid == message.ResearcherGuid)).Select(s => s.VacancyGuid);
+            IList<Guid> favoriteVacanciesGuids = _db.FetchBy<FavoriteVacancy>(f => f.Where(w => w.ResearcherGuid == message.ResearcherGuid)).Select(s => s.VacancyGuid).ToList();
 
             if (favoriteVacanciesGuids.Any())
             {
-                var sql = new SqlBuilder().AddTemplate("SELECT v.* FROM \"Vacancies\" v WHERE v.\"Guid\" IN @favoriteVacanciesGuids", favoriteVacanciesGuids);
-
-                Page<Vacancy> vacancies = _db.Page<Vacancy>(message.PageIndex, message.PageSize, sql);
-
+                var sql = new SqlBuilder().AddTemplate("SELECT v.* FROM \"Vacancies\" v WHERE v.\"Guid\" IN (@items)", new { items = favoriteVacanciesGuids });
+                var vacancies = _db.Page<Vacancy>(message.PageIndex, message.PageSize, sql);
                 return vacancies;
             }
-            else
-            {
-                return null;
-            }
+            return null;
         }
     }
 }

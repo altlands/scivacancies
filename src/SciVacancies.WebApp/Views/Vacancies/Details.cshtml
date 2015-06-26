@@ -147,7 +147,7 @@
 
                         <tr>
                             <td>@Model.Applications.Items.IndexOf(item)</td>
-                            <td>@{ item.SentDate?.ToLocalVacancyString(); }</td>
+                            <td>@(item.SentDate?.ToLocalVacancyString())</td>
                             <!--TODO: Vacancy -> Applications -> Researcher -> FIO : отобразить полное имя Заявителя-->
                             <td>@*@item.ResearcherGuid.LastName<br />@item.ResearcherGuid.FirstName @item.ResearcherGuid.Patronimic*@ <del style="color: red">не реализовано</del></td>
                             <td class="align-center pl0"></td>

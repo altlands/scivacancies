@@ -54,14 +54,8 @@ namespace SciVacancies.WebApp.Controllers
             if ((model.Status == VacancyStatus.AppliesAcceptance || model.Status == VacancyStatus.Published)
                 && researcherGuid != Guid.Empty)
             {
-                //TODO: устранить причину возникновения ошибки в подобных местах
                 //если есть GUID Исследователя
-                Page<Vacancy> favoritesVacancies = null;
-                try
-                {
-                    favoritesVacancies = _mediator.Send(new SelectPagedFavoriteVacanciesByResearcherQuery { PageSize = 500, PageIndex = 1, ResearcherGuid = researcherGuid, OrderBy = ConstTerms.OrderByDateAscending });
-                }
-                catch (Exception) { }
+                var favoritesVacancies = _mediator.Send(new SelectPagedFavoriteVacanciesByResearcherQuery { PageSize = 500, PageIndex = 1, ResearcherGuid = researcherGuid, OrderBy = ConstTerms.OrderByDateAscending });
                 //если текущей вакансии нет в списке избранных
                 if (favoritesVacancies == null
                     || favoritesVacancies.TotalItems == 0
