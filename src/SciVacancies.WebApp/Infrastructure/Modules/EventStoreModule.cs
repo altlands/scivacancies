@@ -52,6 +52,7 @@ namespace SciVacancies.WebApp.Infrastructure
                 {
                     foreach (var e in commit.Events)
                     {
+                        //TODO : Log all failed meesages to special queue so they can be resend later
                         mediator.Publish(e.Body as dynamic);
                     }
                 }))
