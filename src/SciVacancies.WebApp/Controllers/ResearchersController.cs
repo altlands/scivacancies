@@ -1,38 +1,42 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using AutoMapper;
+using MediatR;
+using Microsoft.AspNet.Authorization;
 using Microsoft.AspNet.Mvc;
-using SciVacancies.Domain.Aggregates.Interfaces;
+using NPoco;
 using SciVacancies.Domain.Enums;
-using SciVacancies.ReadModel;
 using SciVacancies.ReadModel.Core;
+using SciVacancies.WebApp.Commands;
 using SciVacancies.WebApp.Engine;
 using SciVacancies.WebApp.Engine.CustomAttribute;
+using SciVacancies.WebApp.Queries;
 using SciVacancies.WebApp.ViewModels;
 
 namespace SciVacancies.WebApp.Controllers
 {
+    [Authorize(Roles = ConstTerms.RequireRoleResearcher)]
     public class ResearchersController : Controller
     {
-        private IResearcherService _researcherService;
-        private readonly IReadModelService _readModelService;
+        private readonly IMediator _mediator;
 
-        public ResearchersController(IReadModelService readModelService, IResearcherService researcherService)
+        public ResearchersController(IMediator mediator)
         {
-            _researcherService = researcherService;
-            _readModelService = readModelService;
+            _mediator = mediator;
         }
 
         [SiblingPage]
         [PageTitle("Информация")]
-        [BindArgumentFromCookies(ConstTerms.CookiesKeyForResearcherGuid, "researcherGuid")]
-        public ViewResult Account(Guid researcherGuid)
+        [BindResearcherIdFromClaims]
+        public IActionResult Account(Guid researcherGuid)
         {
             if (researcherGuid == Guid.Empty)
                 throw new ArgumentNullException(nameof(researcherGuid));
 
-            var model = Mapper.Map<ResearcherDetailsViewModel>(_readModelService.SingleResearcher(researcherGuid));
+            var model = Mapper.Map<ResearcherDetailsViewModel>(_mediator.Send(new SingleResearcherQuery { ResearcherGuid = researcherGuid}));
+
+            if (model == null)
+                return RedirectToAction("logout", "account");
 
             return View(model);
         }
@@ -53,7 +57,7 @@ namespace SciVacancies.WebApp.Controllers
 
         [SiblingPage]
         [PageTitle("Мои заявки")]
-        [BindArgumentFromCookies(ConstTerms.CookiesKeyForResearcherGuid, "researcherGuid")]
+        [BindResearcherIdFromClaims]
         public ViewResult Applications(Guid researcherGuid)
         {
             if (researcherGuid == Guid.Empty)
@@ -61,31 +65,40 @@ namespace SciVacancies.WebApp.Controllers
 
             var model = new VacancyApplicationsInResearcherIndexViewModel
             {
-                Applications = _readModelService.SelectVacancyApplicationsByResearcher(researcherGuid)
+                Applications = _mediator.Send(new SelectPagedVacancyApplicationsByResearcherQuery {PageSize = 500, PageIndex = 1, OrderBy = ConstTerms.OrderByCreationDateDescending ,ResearcherGuid = researcherGuid })
             };
             return View(model);
         }
 
         [SiblingPage]
         [PageTitle("Избранные вакансии")]
-        [BindArgumentFromCookies(ConstTerms.CookiesKeyForResearcherGuid, "researcherGuid")]
+        [BindResearcherIdFromClaims]
         public ActionResult Favorities(Guid researcherGuid)
         {
-            if(researcherGuid==Guid.Empty)
+            if (researcherGuid == Guid.Empty)
                 throw new ArgumentNullException(nameof(researcherGuid));
 
             var model = new VacanciesFavoritiesInResearcherIndexViewModel
             {
-                Vacancies = _readModelService.SelectFavoriteVacancies(researcherGuid)
+                Vacancies = _mediator.Send(new SelectPagedFavoriteVacanciesByResearcherQuery {PageSize = 500, PageIndex = 1, OrderBy = ConstTerms.OrderByCreationDateDescending, ResearcherGuid = researcherGuid })
             };
             return View(model);
         }
 
         [SiblingPage]
         [PageTitle("Подписки")]
-        public ViewResult Subscriptions()
+        [BindResearcherIdFromClaims]
+        public ViewResult Subscriptions(Guid researcherGuid)
         {
-            var model = new ResearcherDetailsViewModel();
+            var model = new NotificationsInResearcherIndexViewModel
+            {
+                PagedNotifications = _mediator.Send(new SelectPagedNotificationsByResearcherQuery
+                {
+                    ResearcherGuid = researcherGuid,
+                    PageIndex = 1,
+                    PageSize = 10
+                })
+            };
             return View(model);
         }
 
@@ -93,11 +106,18 @@ namespace SciVacancies.WebApp.Controllers
         [PageTitle("Уведомления")]
         public ViewResult Notifications()
         {
+            var notifications = _mediator.Send(new SelectPagedNotificationsByResearcherQuery
+            {
+                ResearcherGuid = Guid.NewGuid(),
+                PageIndex = 1,
+                PageSize = 10
+            });
+
             var model = new ResearcherDetailsViewModel();
             return View(model);
         }
 
-        [BindArgumentFromCookies(ConstTerms.CookiesKeyForResearcherGuid, "researcherGuid")]
+        [BindResearcherIdFromClaims]
         public ActionResult AddToFavorite(Guid researcherGuid, Guid vacancyGuid)
         {
             if (researcherGuid == Guid.Empty)
@@ -106,31 +126,17 @@ namespace SciVacancies.WebApp.Controllers
                 throw new ArgumentNullException(nameof(vacancyGuid));
 
 
-            var model = _readModelService.SingleVacancy(vacancyGuid);
-            //если пользователь - Исследователь
-            if (Context.Request.Cookies.ContainsKey(ConstTerms.CookiesKeyForUserRole)
-                && bool.Parse(Context.Request.Cookies.Get(ConstTerms.CookiesKeyForUserRole))
-                //если заявка на готовится к открытию или открыта
-                && (model.Status == VacancyStatus.AppliesAcceptance || model.Status == VacancyStatus.Published)
-                )
+            var model = _mediator.Send(new SingleVacancyQuery {VacancyGuid = vacancyGuid });
+            //если заявка на готовится к открытию или открыта
+            if (model.Status == VacancyStatus.AppliesAcceptance || model.Status == VacancyStatus.Published)
             {
                 //если есть GUID Исследователя
-                if (Context.Request.Cookies.ContainsKey(ConstTerms.CookiesKeyForResearcherGuid))
-                {
-                    var userGuid = Guid.Parse(Context.Request.Cookies.Get(ConstTerms.CookiesKeyForResearcherGuid));
-                    List<Vacancy> favoritesVacancies = null;
-                    try
-                    {
-                        favoritesVacancies = _readModelService.SelectFavoriteVacancies(userGuid);
-                    }
-                    catch (Exception)
-                    {
-                    }
-                    //если текущей вакансии нет в списке избранных
-                    if (favoritesVacancies == null
-                        || !favoritesVacancies.Select(c => c.Guid).ToList().Contains(vacancyGuid))
-                        _researcherService.AddVacancyToFavorites(researcherGuid, vacancyGuid);
-                }
+                var favoritesVacancies = _mediator.Send(new SelectPagedFavoriteVacanciesByResearcherQuery {PageSize = 500, PageIndex = 1,ResearcherGuid = researcherGuid , OrderBy = ConstTerms.OrderByDateAscending});
+                //если текущей вакансии нет в списке избранных
+                if (favoritesVacancies == null
+                    || favoritesVacancies.TotalItems == 0
+                    || !favoritesVacancies.Items.Select(c => c.Guid).ToList().Contains(vacancyGuid))
+                    _mediator.Send(new AddVacancyToFavoritesCommand { ResearcherGuid = researcherGuid, VacancyGuid = vacancyGuid });
             }
 
             return Redirect(Context.Request.Headers["referer"]);

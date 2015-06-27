@@ -1,7 +1,8 @@
 ﻿@using System.Threading.Tasks
 @using NPoco
 @using SciVacancies.ReadModel.Core
-@model SciVacancies.WebApp.ViewModels.VacanciesFilter
+@using SciVacancies.WebApp
+@model SciVacancies.WebApp.ViewModels.VacanciesFilterModel
 
 @{
     var pagedData = (Page<Vacancy>)ViewBag.PagedData;
@@ -136,7 +137,7 @@
                         <div class="index-text">
                             <div class="title"><a asp-controller="vacancies" asp-action="details" asp-route-id="@item.Guid">@item.Name</a></div>
                             <div class="inform">
-                                <p>Дата размещения: @item.DateStart.ToShortDateString()</p>
+                                <p>Дата размещения: @item.DateStart.ToLocalVacancyString()</p>
                                 <p>
                                     Регион: <span>@item.CityName</span>
                                 </p>

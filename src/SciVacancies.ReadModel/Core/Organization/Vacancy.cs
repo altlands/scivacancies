@@ -2,8 +2,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 using NPoco;
 using Nest;
@@ -15,15 +13,21 @@ namespace SciVacancies.ReadModel.Core
     public class Vacancy : BaseEntity
     {
         /// <summary>
+        /// Айдишник для поисковика
+        /// </summary>
+        [Ignore]
+        public Guid Id { get { return this.Guid; } }
+
+        /// <summary>
         /// Идентификатор организации
         /// </summary>
         public Guid OrganizationGuid { get; set; }
+
         public Guid PositionGuid { get; set; }
+        [ElasticProperty(Index = FieldIndexOption.NotAnalyzed, Type = FieldType.String)]
         public Guid PositionTypeGuid { get; set; }
 
-        [ElasticProperty(Index = FieldIndexOption.NotAnalyzed)]
         public Guid WinnerGuid { get; set; }
-        [ElasticProperty(Index = FieldIndexOption.NotAnalyzed)]
         public Guid PretenderGuid { get; set; }
 
         public string OrganizationName { get; set; }
@@ -57,7 +61,7 @@ namespace SciVacancies.ReadModel.Core
         /// Критерии оценки 
         /// </summary>
         [Ignore]
-        [ElasticProperty(Index = FieldIndexOption.NotAnalyzed)]
+        [ElasticProperty(OptOut = true)]
         public KeyValuePair<int, int> Criteria { get; set; } //<CriteriaId, Amount>
 
         /// <summary>
@@ -148,10 +152,10 @@ namespace SciVacancies.ReadModel.Core
         /// </summary>
         public DateTime DateFinishAcceptance { get; set; }
         /// <summary>
-        /// Дата окончания публикации
+        /// Дата окончания публикации - когда вакансия переведена в статусы : отменена, закрыта
         /// </summary>
         public DateTime DateFinish { get; set; }
-
+        [Obsolete("Дублируется с DateStart")]
         public DateTime CreationDate { get; set; }
     }
 }

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 
 using NPoco;
+using Nest;
 
 namespace SciVacancies.ReadModel.Core
 {
@@ -11,7 +12,9 @@ namespace SciVacancies.ReadModel.Core
     [PrimaryKey("Guid", AutoIncrement = false)]
     public class Organization : BaseEntity
     {
-
+        [Ignore]
+        ///Айдишник для поисковика
+        public Guid Id { get { return this.Guid; } }
         /// <summary>
         /// Полное наименование
         /// </summary>
@@ -94,6 +97,7 @@ namespace SciVacancies.ReadModel.Core
         /// Отрасли науки
         /// </summary>
         [Ignore]
+        [ElasticProperty(OptOut = true)]
         public List<int> ResearchDirections { get; set; }
 
         /// <summary>

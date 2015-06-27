@@ -1,6 +1,7 @@
 ﻿@using System.Threading.Tasks
+@using SciVacancies.WebApp
 @using SciVacancies.WebApp.Controllers
-@model SciVacancies.WebApp.ViewModels.ResearcherDetailsViewModel
+@model SciVacancies.WebApp.ViewModels.NotificationsInResearcherIndexViewModel
 
 <div class="crumbs">
     <a href="/">Главная страница</a><span class="separator">/</span>
@@ -8,7 +9,7 @@
     @ViewBag.Title
 </div>
 
-<h3>@Model.Title</h3>
+<h3>Личная карточка пользователя</h3>
 
 @Component.Invoke("AccountTabs", typeof(ResearchersController))
 
@@ -30,6 +31,27 @@
         </tr>
     </thead>
     <tbody>
+
+        @if (Model.PagedNotifications != null)
+        {
+            foreach (var item in Model.PagedNotifications.Items)
+            {
+                <text>
+                <tr>
+                    <td>@item.Guid.ToString().Substring(0, 4)</td>
+                    <td>@item.Title</td>
+                    <td>@item.CreationdDate.ToLocalVacancyString()</td>
+                    <td><a href="#" class="mail-td-icon"></a></td>
+                    <td>
+                        <a href="#" class="view-td-icon"></a>
+                        <a href="#" class="edit-td-icon"></a>
+                        <a href="#" class="close-td-icon"></a>
+                    </td>
+                </tr>
+                </text>
+            }
+        }
+
         <tr>
             <td>001</td>
             <td>Исследователь</td>

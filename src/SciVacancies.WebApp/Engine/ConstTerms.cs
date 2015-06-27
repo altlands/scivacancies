@@ -2,20 +2,26 @@
 {
     public class ConstTerms
     {
-        public const string OrderByDateDescending = "date_descending";
+        public const string OrderByDateDescending = "date";
         public const string OrderByDateAscending = "date_ascending";
-        public const string OrderByVacancyCountDescending = "vacancycount_descending";
-        public const string OrderByVacancyCountAscending = "vacancycount_ascending";
-        public const string OrderByNameDescending = "name_descending";
+        public const string OrderByDateStartDescending = "DateStart";
+        public const string OrderByDateStartAscending = "DateStart_ascending";
+        public const string OrderByCreationDateDescending = "CreationDate";
+        public const string OrderByCreationDateAscending = "CreationDate_ascending";
+
+        public const string OrderByVacancyCountDescending = "PublishedVacancies";
+        public const string OrderByVacancyCountAscending = "PublishedVacancies_ascending";
+        public const string OrderByNameDescending = "name";
         public const string OrderByNameAscending =  "name_ascending";
-        public const string OrderByCountDescending = "count_descending";
+        public const string OrderByCountDescending = "count";
         public const string OrderByCountAscending =  "count_ascending";
 
-        public const string CookiesKeyForUserName = "UserName";
-        public const string CookiesKeyForUserRole = "UserRole";
+        public const string RequireRoleOrganizationAdmin = "organization_admin";
+        public const string RequireRoleResearcher = "researcher";
+        public const string RequireRoleAdministrator = "administrator";
+        public const string RequireRoleRoot = "root";
 
-        public const string CookiesKeyForResearcherGuid = "ResearcherGuid";
-        public const string CookiesKeyForOrganizationGuid = "OrganizationGuid";
-
+        public const string ClaimTypeOrganizationId = "organization_id";
+        public const string ClaimTypeResearcherId = "researcher_id";
     }
 }

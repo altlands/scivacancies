@@ -1,17 +1,19 @@
-﻿using Microsoft.AspNet.Mvc;
+﻿using MediatR;
+using Microsoft.AspNet.Mvc;
 using SciVacancies.ReadModel;
 using SciVacancies.WebApp.Engine;
+using SciVacancies.WebApp.Queries;
 using SciVacancies.WebApp.ViewModels;
 
 namespace SciVacancies.WebApp.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly IReadModelService _readModelService;        
+        private readonly IMediator _mediator;
 
-        public HomeController(IReadModelService readModelService)
-        {            
-            _readModelService = readModelService;
+        public HomeController(IMediator mediator)
+        {
+            _mediator = mediator;
         }
         
         [PageTitle("Главная страница")]
@@ -19,10 +21,9 @@ namespace SciVacancies.WebApp.Controllers
         {
             var model = new IndexViewModel
             {
-                OrganizationsList = _readModelService.SelectOrganizations(ConstTerms.OrderByCountDescending, 4, 1),
-                VacanciesList = _readModelService.SelectVacancies(ConstTerms.OrderByDateDescending, 4, 1)
+                OrganizationsList =_mediator.Send(new SelectPagedOrganizationsQuery {PageSize = 4, PageIndex = 1, OrderBy =ConstTerms.OrderByVacancyCountDescending}),
+                VacanciesList = _mediator.Send(new SelectPagedVacanciesQuery {PageSize = 4, PageIndex = 1, OrderBy = ConstTerms.OrderByDateStartDescending, PublishedOnly = true})
             };
-
 
             return View(model);
         }

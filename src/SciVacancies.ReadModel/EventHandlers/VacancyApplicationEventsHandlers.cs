@@ -45,7 +45,12 @@ namespace SciVacancies.ReadModel.EventHandlers
         public VacancyApplicationRemovedHandler(IDatabase db) : base(db) { }
         public override void Handle(VacancyApplicationRemoved msg)
         {
-            _db.Delete<VacancyApplication>(msg.VacancyApplicationGuid);
+            VacancyApplication vacancyApplication = _db.SingleById<VacancyApplication>(msg.VacancyApplicationGuid);
+
+            vacancyApplication.Status = VacancyApplicationStatus.Removed;
+
+            _db.Update(vacancyApplication);
+            //_db.Delete<VacancyApplication>(msg.VacancyApplicationGuid);
         }
     }
     public class VacancyApplicationAppliedHandler : EventBaseHandler<VacancyApplicationApplied>

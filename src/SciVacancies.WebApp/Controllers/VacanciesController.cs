@@ -1,15 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity.Core;
 using System.Linq;
 using AutoMapper;
+using MediatR;
+using Microsoft.AspNet.Authorization;
 using Microsoft.AspNet.Mvc;
-using SciVacancies.Domain.Aggregates.Interfaces;
-using SciVacancies.Domain.DataModels;
+using NPoco;
 using SciVacancies.Domain.Enums;
-using SciVacancies.ReadModel;
 using SciVacancies.ReadModel.Core;
+using SciVacancies.WebApp.Commands;
 using SciVacancies.WebApp.Engine;
-using SciVacancies.WebApp.Engine.CustomAttribute;
+using SciVacancies.WebApp.Queries;
 using SciVacancies.WebApp.ViewModels;
 
 namespace SciVacancies.WebApp.Controllers
@@ -17,93 +19,114 @@ namespace SciVacancies.WebApp.Controllers
     /// <summary>
     /// страница с вакансиями (конкурсами)
     /// </summary>
+    [Authorize]
     public class VacanciesController : Controller
     {
-        private readonly IReadModelService _readModelService;
-        private readonly IOrganizationService _organizationService;
+        private readonly IMediator _mediator;
 
-        public VacanciesController(IOrganizationService organizationService, IReadModelService readModelService)
+        public VacanciesController(IMediator mediator)
         {
-            _organizationService = organizationService;
-            _readModelService = readModelService;
+            _mediator = mediator;
         }
 
-        [PageTitle("Карточка конкурса")]
-        public ViewResult Details(Guid id)
+        [AllowAnonymous]
+        [PageTitle("Подробно о вакансии")]
+        [BindResearcherIdFromClaims]
+        [BindOrganizationIdFromClaims]
+        public ViewResult Details(Guid id, Guid researcherGuid, Guid organizationGuid)
         {
             if (id == Guid.Empty)
                 throw new ArgumentNullException(nameof(id));
 
-            var model = _readModelService.SingleVacancy(id);
+            var preModel = _mediator.Send(new SingleVacancyQuery { VacancyGuid = id });
+
+            var model = Mapper.Map<VacancyDetailsViewModel>(preModel);
+
+            if (model == null)
+                throw new ObjectNotFoundException($"Не найдена вакансия с Guid: {id}");
 
             ViewBag.ShowAddFavorite = false;
             ViewBag.VacancyInFavorites = false;
+            if (organizationGuid != Guid.Empty)
+                ViewBag.CurrentOrganizationGuid = organizationGuid;
 
-            //если пользователь - Исследователь
-            if (Context.Request.Cookies.ContainsKey(ConstTerms.CookiesKeyForUserRole)
-                && bool.Parse(Context.Request.Cookies.Get(ConstTerms.CookiesKeyForUserRole))
-                //если заявка на готовится к открытию или открыта
-                && (model.Status == VacancyStatus.AppliesAcceptance || model.Status == VacancyStatus.Published)
-                )
+            //если заявка на готовится к открытию или открыта
+            if ((model.Status == VacancyStatus.AppliesAcceptance || model.Status == VacancyStatus.Published)
+                && researcherGuid != Guid.Empty)
             {
                 //если есть GUID Исследователя
-                if (Context.Request.Cookies.ContainsKey(ConstTerms.CookiesKeyForResearcherGuid))
-                {
-                    var userGuid = Guid.Parse(Context.Request.Cookies.Get(ConstTerms.CookiesKeyForResearcherGuid));
-                    List<Vacancy> favoritesVacancies = null;
-                    try
-                    {
-                        favoritesVacancies = _readModelService.SelectFavoriteVacancies(userGuid);
-                    }
-                    catch (Exception)
-                    {
-                    }
-                    //если текущей вакансии нет в списке избранных
-                    if (favoritesVacancies == null
-                        || !favoritesVacancies.Select(c => c.Guid).ToList().Contains(id))
-                        ViewBag.ShowAddFavorite = true;
-                    else
-                        ViewBag.VacancyInFavorites = true;
-                }
+                var favoritesVacancies = _mediator.Send(new SelectPagedFavoriteVacanciesByResearcherQuery { PageSize = 500, PageIndex = 1, ResearcherGuid = researcherGuid, OrderBy = ConstTerms.OrderByDateAscending });
+                //если текущей вакансии нет в списке избранных
+                if (favoritesVacancies == null
+                    || favoritesVacancies.TotalItems == 0
+                    || !favoritesVacancies.Items.Select(c => c.Guid).ToList().Contains(id))
+                    ViewBag.ShowAddFavorite = true;
+                else
+                    ViewBag.VacancyInFavorites = true;
             }
+
+            if (model.Status != VacancyStatus.Published) //Если статус Опубликовано - пройден
+                model.Applications = _mediator.Send(new SelectPagedVacancyApplicationsByVacancyQuery
+                {
+                    PageIndex = 1,
+                    PageSize = 3000,
+                    VacancyGuid = id,
+                    OrderBy = "Guid"
+                });
 
             return View(model);
         }
 
-        [PageTitle("Карточка конкурса")]
+        [AllowAnonymous]
+        [PageTitle("Подробно о вакансии")]
         public ViewResult Preview(Guid id) => View();
 
-        [PageTitle("Новая вакансия")]
-        [BindArgumentFromCookies(ConstTerms.CookiesKeyForOrganizationGuid, "organizationGuid")]
-        public ViewResult Create(Guid organizationGuid)
+        [PageTitle("Отменить вакансию")]
+        [BindOrganizationIdFromClaims]
+        [Authorize(Roles = ConstTerms.RequireRoleOrganizationAdmin)]
+        public IActionResult Cancel(Guid id, Guid organizationGuid)
         {
+            if (id == Guid.Empty)
+                throw new ArgumentNullException(nameof(id));
             if (organizationGuid == Guid.Empty)
-                throw new ArgumentNullException($"{nameof(organizationGuid)}");
+                throw new ArgumentNullException(nameof(organizationGuid));
+            
+            var preModel = _mediator.Send(new SingleVacancyQuery { VacancyGuid = id });
 
-            var model = new PositionCreateViewModel(organizationGuid).InitDictionaries(_readModelService);
+            if (preModel.OrganizationGuid != organizationGuid)
+                throw new Exception("Вы не можете отменить вакансии других организаций");
+
+            if (preModel.Status != VacancyStatus.Published && preModel.Status != VacancyStatus.AppliesAcceptance)
+                throw new Exception($"Вы не можете отменить вакансию со статусом: {preModel.Status.GetDescription()}");
+
+            var model = Mapper.Map<VacancyDetailsViewModel>(preModel);
+
             return View(model);
         }
 
-
-        [PageTitle("Новая вакансия")]
         [HttpPost]
-        public ActionResult Create(PositionCreateViewModel model)
+        [PageTitle("Вакансия отменена")]
+        [ValidateAntiForgeryToken]
+        [BindOrganizationIdFromClaims]
+        public IActionResult Cancel(Guid id, Guid organizationGuid, string reason)
         {
-            if (ModelState.IsValid)
-            {
-                var positionDataModel = Mapper.Map<PositionDataModel>(model);
-                var positionGuid = _organizationService.CreatePosition(model.OrganizationGuid, positionDataModel);
+            if (id == Guid.Empty)
+                throw new ArgumentNullException(nameof(id));
+            if (organizationGuid == Guid.Empty)
+                throw new ArgumentNullException(nameof(organizationGuid));
 
-                if (model.ToPublish)
-                {
-                    var vacancyGuid = _organizationService.PublishVacancy(model.OrganizationGuid, positionGuid, Mapper.Map<VacancyDataModel>(positionDataModel));
-                }
+            var model = _mediator.Send(new SingleVacancyQuery { VacancyGuid = id });
 
-                return RedirectToAction("vacancies", "organizations");
-            }
-            model.InitDictionaries(_readModelService);
-            return View(model);
+            if (model.OrganizationGuid != organizationGuid)
+                throw new Exception("Вы не можете отменить вакансии других организаций");
 
+            if (model.Status != VacancyStatus.Published && model.Status != VacancyStatus.AppliesAcceptance)
+                throw new Exception($"Вы не можете отменить вакансию со статусом: {model.Status.GetDescription()}");
+
+            _mediator.Send(new CancelVacancyCommand { VacancyGuid = id, OrganizationGuid = organizationGuid, Reason = reason });
+
+            return RedirectToAction("vacancies", "organizations");
         }
+
     }
 }

@@ -1,15 +1,16 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using MediatR;
 using Microsoft.AspNet.Mvc.Rendering;
 using SciVacancies.Domain.Enums;
-using SciVacancies.ReadModel;
 using SciVacancies.WebApp.Engine;
+using SciVacancies.WebApp.Queries;
 
 namespace SciVacancies.WebApp.ViewModels
 {
     public class VacanciesFilterSource
     {
-        public VacanciesFilterSource(IReadModelService readModelService)
+        public VacanciesFilterSource(IMediator mediator)
         {
             Periods = new List<SelectListItem>
             {
@@ -39,18 +40,18 @@ namespace SciVacancies.WebApp.ViewModels
                 ,VacancyStatus.Closed
             }.Select(c => new SelectListItem { Value = ((int)c).ToString(), Text = c.GetDescription() });
 
-            if (readModelService != null)
+            if (mediator != null)
             {
                 Regions =
-                    readModelService.SelectRegions()
+                    mediator.Send(new SelectAllRegionsQuery())
                         .Select(c => new SelectListItem { Value = c.Id.ToString(), Text = c.Title });
 
                 Foivs =
-                    readModelService.SelectFoivs()
+                    mediator.Send(new SelectAllFoivsQuery())
                         .Select(c => new SelectListItem { Value = c.Id.ToString(), Text = c.Title });
 
                 ResearchDirections =
-                    readModelService.SelectResearchDirections()
+                    mediator.Send(new SelectAllResearchDirectionsQuery())
                         .Select(c => new SelectListItem { Value = c.Id.ToString(), Text = c.Title });
 
                 //Positions =
@@ -58,7 +59,7 @@ namespace SciVacancies.WebApp.ViewModels
                 //        .Select(c => new SelectListItem { Value = c.Id.ToString(), Text = c.Title }); ;
 
                 Organizations =
-                    readModelService.SelectOrganizations("name_descending", 50, 1).Items
+                    mediator.Send(new SelectOrganizationsForAutocompleteQuery {Query = "*", Take = 500})
                         .Select(c => new SelectListItem { Value = c.Guid.ToString(), Text = c.Name });
             }
         }

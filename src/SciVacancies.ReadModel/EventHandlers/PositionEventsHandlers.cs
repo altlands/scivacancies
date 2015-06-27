@@ -22,6 +22,11 @@ namespace SciVacancies.ReadModel.EventHandlers
                 OrganizationGuid = msg.OrganizationGuid,
                 PositionTypeGuid = msg.Data.PositionTypeGuid,
 
+                //TODO - clean up
+                ResearchDirection = msg.Data.ResearchDirection,
+                ResearchDirectionId = msg.Data.ResearchDirectionId,
+                ResearchTheme = msg.Data.ResearchTheme,
+
                 Name = msg.Data.Name,
                 FullName = msg.Data.FullName,
 
@@ -64,6 +69,12 @@ namespace SciVacancies.ReadModel.EventHandlers
 
             position.PositionTypeGuid = msg.Data.PositionTypeGuid;
 
+            //TODO Clean Up
+            position.ResearchDirection = msg.Data.ResearchDirection;
+            position.ResearchDirectionId = msg.Data.ResearchDirectionId;
+            position.ResearchTheme = msg.Data.ResearchTheme;
+
+
             position.Name = msg.Data.Name;
             position.FullName = msg.Data.FullName;
 
@@ -101,7 +112,12 @@ namespace SciVacancies.ReadModel.EventHandlers
         public PositionRemovedHandler(IDatabase db) : base(db) { }
         public override void Handle(PositionRemoved msg)
         {
-            _db.Delete<Position>(msg.PositionGuid);
+            Position position = _db.SingleById<Position>(msg.PositionGuid);
+
+            position.Status = PositionStatus.Removed;
+
+            _db.Update(position);
+            //_db.Delete<Position>(msg.PositionGuid);
         }
     }
 }

@@ -1,48 +1,26 @@
-﻿using Microsoft.AspNet.Mvc;
-using SciVacancies.Domain.Aggregates.Interfaces;
-using SciVacancies.ReadModel;
-
-using System;
-
-using SciVacancies.WebApp.Commands;
-using SciVacancies.Domain.DataModels;
-
-using MediatR;
+﻿using MediatR;
+using Microsoft.AspNet.Mvc;
+using Nest;
+using SciVacancies.ReadModel.Core;
+using SciVacancies.WebApp.Queries;
 
 namespace SciVacancies.WebApp.Controllers
 {
     public class ResearcherController : Controller
     {
-        private readonly IResearcherService _res;
-        private readonly IReadModelService _rm;
+        private readonly IElasticClient _elastic;
         private readonly IMediator _mediator;
 
-        public ResearcherController(IResearcherService researcherService, IReadModelService readModelService, IMediator mediator)
+        public ResearcherController(IElasticClient elastic, IMediator mediator)
         {
-            _res = researcherService;
-            _rm = readModelService;
+            _elastic = elastic;
             _mediator = mediator;
         }
         // GET: /<controller>/
         public void Index()
         {
-
-            var organizaiontGuid = _mediator.Send(new CreateOrganizationCommand()
-            {
-                Data = new OrganizationDataModel()
-                {
-                    Name = "Зонтик"
-                }
-            });
-            _mediator.Send(new RemoveOrganizationCommand()
-            {
-                OrganizationGuid = organizaiontGuid
-            });
-            //Guid researcherGuid = _res.CreateResearcher(new ResearcherDataModel());
-
-            //Researcher researcher = _rm.SingleResearcher(Guid.NewGuid());
-
-            //return View();
+            var pagedOrganizations = _mediator.Send(new SelectPagedOrganizationsQuery { PageIndex = 1, PageSize = 10 });
+            var sd = _elastic.Search<Vacancy>(s => s.Index("scivacancies"));
         }
     }
 }

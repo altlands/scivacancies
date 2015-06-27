@@ -9,7 +9,7 @@
     @ViewBag.Title
 </div>
 
-<h3>@Model.Title</h3>
+<h3>Личная карточка пользователя</h3>
 
 @Component.Invoke("AccountTabs", typeof(ResearchersController))
 
@@ -27,7 +27,7 @@
             <th><div class="inline-block"><img src="/images/icons/arrow-bottom-tab.png" class="va-middle" /></div><div class="inline-block ml6 va-middle">Должность</div></th>
             <th><div class="inline-block"><img src="/images/icons/tab-head.png" class="va-middle" /></div><div class="inline-block ml6 va-middle">Заработная<br /> плата</div></th>
             <th><div class="inline-block"><img src="/images/icons/tab-head.png" class="va-middle" /></div><div class="inline-block ml6 va-middle">Дата<br /> закрытия</div></th>
-            <th><div class="inline-block"><img src="/images/icons/tab-head.png" class="va-middle" /></div><div class="inline-block ml6 va-middle">Статус<br />конкурса</div></th>
+            <th><div class="inline-block"><img src="/images/icons/tab-head.png" class="va-middle" /></div><div class="inline-block ml6 va-middle">Статус<br />вакансии</div></th>
             <th><div class="inline-block"><img src="/images/icons/tab-head.png" class="va-middle" /></div><div class="inline-block ml6 va-middle">Статус<br />заявки</div></th>
             <th><div class="pl21 va-middle">Действия</div></th>
         </tr>
@@ -36,32 +36,26 @@
         <!-- TODO: show data in depend on Vacancy.Status -->
         @if (Model.Vacancies != null)
         {
-            foreach (var item in Model.Vacancies)
+            foreach (var item in Model.Vacancies.Items)
             {
                 <text>
                 <tr>
                     <td>@item.Guid.ToString().Substring(0, 4)...</td>
                     <td>@item.Name</td>
                     <td>@item.SalaryFrom - @item.SalaryTo руб.</td>
-                    <td>@item.DateStartAcceptance.ToShortDateString() <!--01-09-14, 16:04--></td>
-
-
+                    <td>@item.DateStartAcceptance.ToLocalVacancyString()</td>
                     <td>
-                        <span class="status executed">
-                            @item.Status.GetDescription() <!--Завершён-->
+                        <span class="status @item.Status.GetHtmlClass()">
+                            @item.Status.GetDescription()
                         </span>
-                        @*<span class="status work">
-                                Приём заявок
-                            </span>*@
                     </td>
-
                     <td>
+                        <!-- TODO: Researcher -> FavoriteVacancies -> Status : отображать статус и действия в зависимости от статуса -->
                         <!--<span class="status executed">Победитель<br /><del>Победитель</del> </span>-->
                         <a asp-controller="applications" asp-action="create" asp-route-vacancyguid="@item.Guid" class="send-request-icon">
                             <span class="italic">Подать заявку</span>
                         </a>
                     </td>
-
                     <td>
                         <a asp-controller="vacancies" asp-action="preview" asp-route-id="@item.Guid" class="view-td-icon"></a>
                     </td>
@@ -69,41 +63,6 @@
                 </text>
             }
         }
-        <!--<tr>
-            <td>ИИС60290004</td>
-            <td>Инженер-исследователь</td>
-            <td>60000 руб.</td>
-            <td>01-09-14, 16:04</td>
-            <td><span class="status work">Объявлен</span></td>
-            <td><span class="status work">В работе</span></td>
-            <td>
-                <a asp-controller="vacancies" asp-action="preview" asp-route-id="@Guid.NewGuid()" class="view-td-icon"></a>
-            </td>
-        </tr>
-        <tr>
-            <td>РНП58000322</td>
-            <td>Руководитель<br /> научного подразделения</td>
-            <td>60000 руб.</td>
-            <td>01-09-14, 16:04</td>
-            <td><span class="status work">Объявлен</span></td>
-            <td><span class="status work">В работе</span></td>
-            <td>
-                <a asp-controller="vacancies" asp-action="preview" asp-route-id="@Guid.NewGuid()" class="view-td-icon"></a>
-            </td>
-        </tr>
-        
-        <tr>
-            <td>СНС6000021</td>
-            <td>Старший<br/> научный сотрудник</td>
-            <td>60000 руб.</td>
-            <td>01-09-14, 16:04</td>
-            <td><span class="status executed">Завершён</span></td>
-            <td><a href="#" class="success-request-icon"><span class="italic">Победитель</span></a></td>
-            <td>
-                <a asp-controller="vacancies" asp-action="preview" asp-route-id="@Guid.NewGuid()" class="view-td-icon"></a>
-            </td>
-        </tr>
-        -->
     </tbody>
 </table>
 <div class="bottom-nav">

@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+﻿using System;
+using AutoMapper;
 using SciVacancies.Domain.DataModels;
 using SciVacancies.Domain.Events;
 using SciVacancies.ReadModel.Core;
@@ -31,17 +32,30 @@ namespace SciVacancies.WebApp.Infrastructure
 
             /*Vacancy*/
 
-            //create position
-            Mapper.CreateMap<PositionCreateViewModel, PositionDataModel>();
+            //position
             Mapper.CreateMap<PositionDataModel, VacancyDataModel>();
-            
-            
+            Mapper.CreateMap<Position, VacancyDataModel>();
+            Mapper.CreateMap<PositionCreateViewModel, PositionDataModel>();
+            Mapper.CreateMap<Position, PositionEditViewModel>();
+            Mapper.CreateMap<PositionEditViewModel, Position>();
+
+            //vacancy
+            Mapper.CreateMap<Vacancy, VacancyDetailsViewModel>();
+
             /*VacancyApplication*/
 
             //create 
             Mapper.CreateMap<VacancyApplicationCreateViewModel, VacancyApplicationDataModel>();
+            Mapper.CreateMap<VacancyApplication, ApplicationDetailsViewModel>();
 
-            Mapper.CreateMap<AccountRegisterViewModel, ResearcherDataModel>();
+
+            /*Account*/
+
+            //researcher
+            Mapper.CreateMap<AccountResearcherRegisterViewModel, ResearcherDataModel>()
+                .ForMember(dest => dest.BirthDate, src => src.MapFrom(c=>new DateTime(c.BirthYear, 1,1)));
+            //organization
+            Mapper.CreateMap<AccountOrganizationRegisterViewModel, OrganizationDataModel>();
         }
     }
 }

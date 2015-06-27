@@ -1,0 +1,97 @@
+﻿@using System.Threading.Tasks
+@using SciVacancies.WebApp
+@model SciVacancies.ReadModel.Core.Position
+
+<div class="crumbs">
+    <a asp-controller="organizations" asp-action="vacancies">Назад</a><span class="separator">/</span>
+    @ViewBag.Title
+</div>
+
+<h3>@ViewBag.Title</h3>
+<div class="title-popup">
+    <h4>Вакансия ID @Model.Guid</h4>
+</div>
+
+<div class="content-popup">
+    <div class="title-cat-inform">Специализация:</div>
+    <ul class="list-information">
+        <li class="even">
+            <span>Статус:</span>@Model.Status.GetDescription()
+        </li>
+        <li class="odd">
+            <span>Должность:</span>@Model.Name
+        </li>
+        <li class="even">
+            <span>Полное наименование:</span>@Model.FullName
+        </li>
+        <li class="odd">
+            <span>Отрасль науки:</span>@Model.ResearchDirection
+        </li>
+        <li class="even">
+            <span>Тематика исследований:</span>@Model.ResearchTheme
+        </li>
+    </ul>
+
+    <div class="title-cat-inform">Задачи и критерии:</div>
+    <ul class="list-information">
+        <li class="odd">
+            <span>Задачи:</span>@Model.Tasks
+        </li>
+        <li class="even">
+            <!-- TODO: показать критерии оценки -->
+            <del><span>Критерии оценки:</span>@Model.Criteria </del>(в разработке)
+        </li>
+    </ul>
+
+    <div class="title-cat-inform">Условия:</div>
+    <ul class="list-information">
+        <li class="odd">
+            <span>Заработная плата:</span>@Model.SalaryFrom - @Model.SalaryTo рублей/месяц
+        </li>
+        <li class="even">
+            <span>Стимулирующие выплаты:</span>@Model.Bonuses
+        </li>
+        <li class="odd">
+            <span>Трудовой договор:</span>@Model.ContractType.GetDescription()
+        </li>
+        <li class="even">
+            <span>Социальный пакет:</span>@(Model.SocialPackage ? "Да" : "Нет")
+        </li>
+        <li class="odd">
+            <span>Найм жилья:</span>@(Model.Rent ? "Да" : "Нет")
+        </li>
+        <li class="even">
+            <span>Компенсация проезда:</span>@(Model.TransportCompensation ? "Да" : "Нет")
+        </li>
+    </ul>
+
+    <div class="title-cat-inform">Лицо для получения дополнительных справок:</div>
+    <ul class="list-information">
+        <li class="odd">
+            <span>Фамилия, имя, отчество:</span>@Model.ContactName
+        </li>
+        <li class="even">
+            <span>E-mail:</span>@Model.ContactEmail
+        </li>
+        <li class="even">
+            <span>Телефон:</span>@Model.ContactPhone
+        </li>
+    </ul>
+
+</div>
+
+
+<br />
+<br />
+
+<a asp-controller="positions" asp-action="edit" asp-route-id="@Model.Guid" class="btn btn-success btn-lg">
+    Изменить
+</a>
+
+<a asp-controller="positions" asp-action="delete" asp-route-id="@Model.Guid" onclick="javascript: return confirm('Вы уверены что хотите удалить эту вакансию?');" class="btn btn-danger btn-lg pull-right">
+    Удалить вакансию
+</a>
+
+<div class="b-bottom-nav">
+    <a asp-controller="organizations" asp-action="vacancies" class="small-icon icon-prev">Назад</a>
+</div>

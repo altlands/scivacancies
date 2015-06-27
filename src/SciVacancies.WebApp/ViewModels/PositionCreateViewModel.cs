@@ -2,10 +2,11 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using MediatR;
 using Microsoft.AspNet.Mvc;
 using Microsoft.AspNet.Mvc.Rendering;
 using SciVacancies.Domain.Enums;
-using SciVacancies.ReadModel;
+using SciVacancies.WebApp.Queries;
 using SciVacancies.WebApp.ViewModels.Base;
 
 namespace SciVacancies.WebApp.ViewModels
@@ -36,22 +37,21 @@ namespace SciVacancies.WebApp.ViewModels
         /// <summary>
         /// Инициализация справочников для формы
         /// </summary>
-        /// <param name="readModelService"></param>
         /// <returns></returns>
-        public PositionCreateViewModel InitDictionaries(IReadModelService readModelService)
+        public void InitDictionaries(IMediator mediator)
         {
-            if (readModelService == null)
-                throw new ArgumentNullException(nameof(readModelService));
+            if (mediator == null)
+                throw new ArgumentNullException(nameof(mediator));
             if (OrganizationGuid == Guid.Empty)
                 throw new NullReferenceException($"Property {nameof(OrganizationGuid)} has Empty value");
 
-            PositionTypes = readModelService.SelectPositionTypes().Select(c => new SelectListItem { Text = c.Title, Value = c.Guid.ToString() });
-            ResearchDirections = readModelService.SelectResearchDirections().Select(c => new SelectListItem { Text = c.Title, Value = c.Id.ToString() });
+
+
+            PositionTypes = mediator.Send(new SelectAllPositionTypesQuery()).Select(c => new SelectListItem { Text = c.Title, Value = c.Guid.ToString() });
+            ResearchDirections = mediator.Send(new SelectAllResearchDirectionsQuery()).Select(c => new SelectListItem { Text = c.Title, Value = c.Id.ToString() });
 
             ContractTypes = new List<ContractType>{ ContractType.Permanent, ContractType.FixedTerm}
                 .Select(c => new SelectListItem { Value = ((int)c).ToString(), Text = c.GetDescription() });
-
-            return this;
         }
 
         /// <summary>

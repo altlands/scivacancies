@@ -1,14 +1,6 @@
 ﻿@using System.Threading.Tasks
 @using SciVacancies.WebApp.Engine
-@using SciVacancies.WebApp.ViewModels
 @model SciVacancies.WebApp.ViewModels.AccountLoginViewModel
-@{
-    bool isResearcher = false;
-    if (!string.IsNullOrWhiteSpace(Context.Request.Cookies.Get(ConstTerms.CookiesKeyForUserRole)))
-    {
-        isResearcher = bool.Parse(Context.Request.Cookies.Get(ConstTerms.CookiesKeyForUserRole));
-    }
-}
 
 @section scripts
 {
@@ -20,7 +12,7 @@
     </script>
 }
 
-@if (string.IsNullOrWhiteSpace(Context.Request.Cookies.Get(ConstTerms.CookiesKeyForUserName)))
+@if (!User.Identity.IsAuthenticated)
 {
 
     <div class="control control-registration">
@@ -82,7 +74,7 @@
 else
 {
     <div class="control">
-        <a asp-controller="@(isResearcher ? "researchers" : "organizations")" asp-action="account" class="cab-head">
+        <a asp-controller="@(User.IsInRole(ConstTerms.RequireRoleResearcher) ? "researchers" : "organizations")" asp-action="account" class="cab-head">
             <span class="lk-head-icon" id="lk" rel="tooltip"></span>
             <span class="underline white italic">Личный кабинет</span>
         </a>

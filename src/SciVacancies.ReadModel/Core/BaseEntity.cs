@@ -4,12 +4,13 @@ using System.Linq;
 using System.Threading.Tasks;
 
 using Nest;
+using NPoco;
 
 namespace SciVacancies.ReadModel.Core
 {
     public class BaseEntity
     {
-        [ElasticProperty(Name = "Id")]
+        [ElasticProperty(OptOut = true)]
         public Guid Guid { get; set; }
     }
 }

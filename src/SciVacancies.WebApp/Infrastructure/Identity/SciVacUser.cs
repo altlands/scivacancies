@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNet.Identity.EntityFramework;
+using System;
 
 namespace SciVacancies.WebApp.Infrastructure.Identity
 {

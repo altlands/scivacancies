@@ -19,7 +19,7 @@ namespace SciVacancies.WebApp.Commands
 
         public Guid Handle(CreatePositionCommand message)
         {
-            if (message.OrganizationGuid == Guid.Empty) throw new Exception($"OrganizationGuid is empty: {message.OrganizationGuid}");
+            if (message.OrganizationGuid == Guid.Empty) throw new ArgumentNullException($"OrganizationGuid is empty: {message.OrganizationGuid}");
 
             var rdm = message.Data;
 
@@ -41,8 +41,8 @@ namespace SciVacancies.WebApp.Commands
 
         protected override void HandleCore(UpdatePositionCommand message)
         {
-            if (message.OrganizationGuid == Guid.Empty) throw new Exception($"OrganizationGuid is empty: {message.OrganizationGuid}");
-            if (message.PositionGuid == Guid.Empty) throw new Exception($"PositionGuid is empty: {message.PositionGuid}");
+            if (message.OrganizationGuid == Guid.Empty) throw new ArgumentNullException($"OrganizationGuid is empty: {message.OrganizationGuid}");
+            if (message.PositionGuid == Guid.Empty) throw new ArgumentNullException($"PositionGuid is empty: {message.PositionGuid}");
 
             var rdm = message.Data;
 
@@ -62,6 +62,9 @@ namespace SciVacancies.WebApp.Commands
 
         protected override void HandleCore(RemovePositionCommand message)
         {
+            if (message.OrganizationGuid == Guid.Empty) throw new ArgumentNullException($"OrganizationGuid is empty: {message.OrganizationGuid}");
+            if (message.PositionGuid == Guid.Empty) throw new ArgumentNullException($"PositionGuid is empty: {message.PositionGuid}");
+
             Organization organization = _repository.GetById<Organization>(message.OrganizationGuid);
             organization.RemovePosition(message.PositionGuid);
             _repository.Save(organization, Guid.NewGuid(), null);

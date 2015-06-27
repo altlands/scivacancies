@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+﻿using NPoco;
 using SciVacancies.ReadModel.Core;
 using SciVacancies.WebApp.ViewModels.Base;
 
@@ -10,6 +10,6 @@ namespace SciVacancies.WebApp.ViewModels
         {
             Title = "Личная карточка пользователя";
         }
-        public IEnumerable<Vacancy> Vacancies { get; set; }
+        public Page<Vacancy> Vacancies { get; set; }
     }
 }

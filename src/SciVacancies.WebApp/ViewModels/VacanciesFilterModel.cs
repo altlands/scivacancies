@@ -4,11 +4,12 @@ using SciVacancies.WebApp.Engine;
 namespace SciVacancies.WebApp.ViewModels
 {
 
-    public class VacanciesFilter
+    public class VacanciesFilterModel
     {
         public IEnumerable<string> Regions { get; set; }
         public IEnumerable<string> Foivs { get; set; }
         public IEnumerable<string> ResearchDirections { get; set; }
+        //TODO - переименовать в PositionTypes
         public IEnumerable<string> Positions { get; set; }
         public IEnumerable<string> Organizations { get; set; }
         public IEnumerable<string> Salaries { get; set; }

@@ -1,50 +1,58 @@
 ﻿using System;
 using AutoMapper;
+using MediatR;
+using Microsoft.AspNet.Authorization;
 using Microsoft.AspNet.Mvc;
-using SciVacancies.ReadModel;
 using SciVacancies.WebApp.Engine;
 using SciVacancies.WebApp.Engine.CustomAttribute;
+using SciVacancies.WebApp.Queries;
 using SciVacancies.WebApp.ViewModels;
 
 namespace SciVacancies.WebApp.Controllers
 {
+    [Authorize(Roles = ConstTerms.RequireRoleOrganizationAdmin)]
     public class OrganizationsController : Controller
     {
-        private readonly IReadModelService _readModelService;
+        private readonly IMediator _mediator;
 
-        public OrganizationsController(IReadModelService readModelService)
+        public OrganizationsController(IMediator mediator)
         {
-            _readModelService = readModelService;
+            _mediator = mediator;
         }
 
+        [AllowAnonymous]
         [PageTitle("Карточка организации")]
         public ViewResult Card() => View();
 
         [SiblingPage]
         [PageTitle("Информация")]
-        [BindArgumentFromCookies(ConstTerms.CookiesKeyForOrganizationGuid, "organizationId")]
-        public ViewResult Account(Guid organizationId)
+        [BindOrganizationIdFromClaims]
+        public IActionResult Account(Guid organizationGuid)
         {
-            if (organizationId == Guid.Empty)
-                throw new ArgumentNullException(nameof(organizationId));
+            if (organizationGuid == Guid.Empty)
+                throw new ArgumentNullException(nameof(organizationGuid));
 
-            var model = Mapper.Map<OrganizationDetailsViewModel>(_readModelService.SingleOrganization(organizationId));
+            var model = Mapper.Map<OrganizationDetailsViewModel>(_mediator.Send(new SingleOrganizationQuery {OrganizationGuid = organizationGuid }));
+
+            if (model == null)
+                return RedirectToAction("logout", "account");
+
             return View(model);
         }
 
         [SiblingPage]
         [PageTitle("Вакансии")]
-        [BindArgumentFromCookies(ConstTerms.CookiesKeyForOrganizationGuid, "organizationId")]
-        public ViewResult Vacancies(Guid organizationId)
+        [BindOrganizationIdFromClaims]
+        public ViewResult Vacancies(Guid organizationGuid)
         {
-            if (organizationId == Guid.Empty)
-                throw new ArgumentNullException(nameof(organizationId));
+            if (organizationGuid == Guid.Empty)
+                throw new ArgumentNullException(nameof(organizationGuid));
 
             var model = new VacanciesInOrganizationIndexViewModel
             {
-                OrganizationGuid = organizationId,
-                Positions = _readModelService.SelectPositions(organizationId),
-                Vacancies = _readModelService.SelectVacancies(organizationId)
+                OrganizationGuid = organizationGuid,
+                PagedPositions = _mediator.Send(new SelectPagedPositionsByOrganizationQuery {OrganizationGuid = organizationGuid, PageSize =500, PageIndex = 1}),
+                PagedVacancies = _mediator.Send(new SelectPagedVacanciesByOrganizationQuery { OrganizationGuid = organizationGuid, PageSize = 500, PageIndex = 1 })
             };
 
             return View(model);
@@ -52,17 +60,35 @@ namespace SciVacancies.WebApp.Controllers
 
         [PageTitle("Закрытые вакансии")]
         [SiblingPage]
-        public ViewResult Closed()
+        [BindOrganizationIdFromClaims]
+        public ViewResult Closed(Guid organizationGuid)
         {
-            var model = new OrganizationDetailsViewModel();
+            var model = new VacanciesInOrganizationIndexViewModel
+            {
+                PagedVacancies= _mediator.Send(new SelectPagedClosedVacanciesByOrganizationQuery
+                {
+                    OrganizationGuid = organizationGuid,
+                    PageIndex = 1,
+                    PageSize = 500
+                })
+            };
             return View(model);
         }
 
         [SiblingPage]
         [PageTitle("Уведомления")]
-        public ViewResult Notifications()
+        [BindOrganizationIdFromClaims]
+        public ViewResult Notifications(Guid organizationGuid)
         {
-            var model = new OrganizationDetailsViewModel();
+            var model = new NotificationsInOrganizationIndexViewModel
+            {
+                PagedNotifications = _mediator.Send(new SelectPagedNotificationsByOrganizationQuery
+                {
+                    OrganizationGuid = organizationGuid,
+                    PageIndex = 1,
+                    PageSize = 500
+                })
+            };
             return View(model);
         }
     }

@@ -33,6 +33,11 @@ namespace SciVacancies.Domain.Enums
         /// Заявка "проиграла" конкурс
         /// </summary>
         [Description("Проигравший")]
-        Lost = 5
+        Lost = 5,
+        /// <summary>
+        /// Заявка со статусом "в работе" была удалена соискателем
+        /// </summary>
+        [Description("Удалена")]
+        Removed = 6
     }
 }

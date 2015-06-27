@@ -1,8 +1,11 @@
 ﻿using System;
+using System.Linq;
+using MediatR;
 using Microsoft.AspNet.Mvc;
-using SciVacancies.Domain.Aggregates.Interfaces;
 using SciVacancies.Domain.DataModels;
-using SciVacancies.ReadModel;
+using SciVacancies.WebApp.Commands;
+using SciVacancies.WebApp.Engine;
+using SciVacancies.WebApp.ViewModels;
 
 // For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -10,97 +13,139 @@ namespace SciVacancies.WebApp.Controllers
 {
     public class InitializeController : Controller
     {
-        private readonly IResearcherService _res;
-        private readonly IOrganizationService _org;
-        private readonly IReadModelService _rm;
+        private readonly IMediator _mediator;
 
-        public InitializeController(IResearcherService res,IOrganizationService org,IReadModelService rm)
+        public InitializeController(IMediator mediator)
         {
-            _res = res;
-            _org = org;
-            _rm = rm;
+            _mediator = mediator;
         }
-        // GET: /<controller>/
+
         public void Index()
         {
-            Guid resGuid = _res.CreateResearcher(new ResearcherDataModel()
+            _mediator.Send(new RemoveSearchIndexCommand());
+            _mediator.Send(new CreateSearchIndexCommand());
+
+            var createUserResearcherCommand = new RegisterUserResearcherCommand
             {
-                UserId = "Cartman",
-                FirstName = "Генрих",
-                SecondName = "Пупкин",
-                Patronymic = "Дубощит",
-                FirstNameEng = "Genrih",
-                SecondNameEng = "Pupkin",
-                PatronymicEng = "Duboit",
-                BirthDate = DateTime.Now
+                Data = new AccountResearcherRegisterViewModel
+                {
+                    Email = "researcher1@mailer.org",
+                    UserName = "researcher1",
+                    FirstName = "Генрих",
+                    SecondName = "Дубощит",
+                    Patronymic = "Иванович",
+                    FirstNameEng = "Genrih",
+                    SecondNameEng = "Pupkin",
+                    PatronymicEng = "Ivanovich",
+                    BirthYear = DateTime.Now.AddYears(-50).Year
+                }
+            };
+            var user = _mediator.Send(createUserResearcherCommand);
+            var resGuid = Guid.Parse(user.Claims.Single(s => s.ClaimType.Equals(ConstTerms.ClaimTypeResearcherId)).ClaimValue);
+
+            var subGuid = _mediator.Send(new CreateSearchSubscriptionCommand
+            {
+                ResearcherGuid = resGuid,
+                Data = new SearchSubscriptionDataModel { Title = "Разведение лазерных акул" }
             });
 
-            Guid subGuid = _res.CreateSearchSubscription(resGuid, new SearchSubscriptionDataModel()
+            var createUserOrganizationCommand = new RegisterUserOrganizationCommand
             {
-                Title = "Разведение лазерных акул"
+                Data = new AccountOrganizationRegisterViewModel
+                {
+                    Email = "organization1@mailer.org",
+                    UserName = "organization1",
+                    Name = "Научно Исследотельский Институт Горных массивов",
+                    ShortName = "НИИ Горных массивов",
+                    OrgFormId = 1,
+                    FoivId = 42,
+                    ActivityId = 1,
+                    HeadFirstName = "Овидий",
+                    HeadLastName = "Грек",
+                    HeadPatronymic = "Иванович"
+                }
+            };
+            var organization = _mediator.Send(createUserOrganizationCommand);
+            var orgGuid = Guid.Parse(organization.Claims.Single(s => s.ClaimType.Equals(ConstTerms.ClaimTypeOrganizationId)).ClaimValue);
+
+            Guid posGuid1 = _mediator.Send(new CreatePositionCommand
+            {
+                OrganizationGuid = orgGuid,
+                Data = new PositionDataModel
+                {
+                    Name = "Разводчик акул",
+                    FullName = "Младший сотрудник по разведению лазерных акул",
+                    PositionTypeGuid = Guid.Parse("b7280ace-d237-c007-42fe-ec4aed8f52d4"),
+                    ResearchDirection = "Аналитическая химия",
+                    ResearchDirectionId = 3026
+                }
+            });
+            Guid posGuid2 = _mediator.Send(new CreatePositionCommand
+            {
+                OrganizationGuid = orgGuid,
+                Data = new PositionDataModel
+                {
+                    Name = "Настройщик лазеров",
+                    FullName = "Младший сотрудник по настройке лазеров",
+                    PositionTypeGuid = Guid.Parse("b7280ace-d237-c007-42fe-ec4aed8f52d4"),
+                    ResearchDirection = "Прикладная математика",
+                    ResearchDirectionId = 2999
+                }
+            });
+            var vacGuid1 = _mediator.Send(new PublishVacancyCommand
+            {
+                OrganizationGuid = orgGuid,
+                PositionGuid = posGuid1,
+                Data = new VacancyDataModel
+                {
+                    Name = "Разводчик акул",
+                    FullName = "Младший сотрудник по разведению лазерных акул",
+                    ResearchDirection = "Аналитическая химия"
+                }
             });
 
-            Guid orgGuid = _org.CreateOrganization(new OrganizationDataModel()
+            var createUserOrganizationCommand1 = new RegisterUserOrganizationCommand
             {
-                Name="Корпорация Umbrella",
-                ShortName="Ubmrella",
-                OrgFormId=1,
-                FoivId=42,
-                ActivityId=1,
-                HeadFirstName="Овидий",
-                HeadLastName="Грек",
-                HeadPatronymic="Иванович"
+                Data = new AccountOrganizationRegisterViewModel
+                {
+                    Email = "organization2@mailer.org",
+                    UserName = "organization2",
+                    Name = "НИИ добра",
+                    ShortName = "Good Science",
+                    OrgFormId = 2,
+                    FoivId = 42,
+                    ActivityId = 1,
+                    HeadFirstName = "Саруман",
+                    HeadLastName = "Саур",
+                    HeadPatronymic = "Сауронович"
+                }
+            };
+            var organization1 = _mediator.Send(createUserOrganizationCommand1);
+            var orgGuid1 = Guid.Parse(organization1.Claims.Single(s => s.ClaimType.Equals(ConstTerms.ClaimTypeOrganizationId)).ClaimValue);
+
+            var posGuid3 = _mediator.Send(new CreatePositionCommand
+            {
+                OrganizationGuid = orgGuid1,
+                Data = new PositionDataModel
+                {
+                    Name = "Ремонтник всевидящего ока",
+                    FullName = "Младший сотрудник по калибровке фокусного зеркала",
+                    PositionTypeGuid = Guid.Parse("b7280ace-d237-c007-42fe-ec4aed8f52d4"),
+                    ResearchDirection = "Аналитическая химия",
+                    ResearchDirectionId = 3026
+                }
             });
 
-            Guid posGuid1 = _org.CreatePosition(orgGuid, new PositionDataModel()
+            Guid vacGuid3 = _mediator.Send(new PublishVacancyCommand
             {
-                Name="Разводчик акул",
-                FullName="Младший сотрудник по разведению лазерных акул",
-                PositionTypeGuid=Guid.Parse("b7280ace-d237-c007-42fe-ec4aed8f52d4"),
-                ResearchDirection= "Аналитическая химия",
-                ResearchDirectionId= 3026
-            });
-            Guid posGuid2 = _org.CreatePosition(orgGuid, new PositionDataModel()
-            {
-                Name = "Настройщик лазеров",
-                FullName = "Младший сотрудник по настройке лазеров",
-                PositionTypeGuid = Guid.Parse("b7280ace-d237-c007-42fe-ec4aed8f52d4"),
-                ResearchDirection = "Прикладная математика",
-                ResearchDirectionId = 2999
-            });
-            Guid vacGuid1 = _org.PublishVacancy(orgGuid, posGuid1, new VacancyDataModel()
-            {
-                Name = "Разводчик акул",
-                FullName = "Младший сотрудник по разведению лазерных акул",
-                ResearchDirection = "Аналитическая химия",
-            });
-
-
-            Guid orgGuid1 = _org.CreateOrganization(new OrganizationDataModel()
-            {
-                Name = "НИИ добра",
-                ShortName = "Good Science",
-                OrgFormId = 2,
-                FoivId = 42,
-                ActivityId = 1,
-                HeadFirstName = "Саруман",
-                HeadLastName = "Саур",
-                HeadPatronymic = "Сауронович"
-            });
-
-            Guid posGuid3 = _org.CreatePosition(orgGuid1, new PositionDataModel()
-            {
-                Name = "Ремонтник всевидящего ока",
-                FullName = "Младший сотрудник по калибровке фокусного зеркала",
-                PositionTypeGuid = Guid.Parse("b7280ace-d237-c007-42fe-ec4aed8f52d4"),
-                ResearchDirection = "Аналитическая химия",
-                ResearchDirectionId = 3026
-            });
-            Guid vacGuid3 = _org.PublishVacancy(orgGuid1, posGuid3, new VacancyDataModel()
-            {
-                Name = "Ремонтник всевидящего ока",
-                FullName = "Младший сотрудник по калибровке фокусного зеркала",
-                ResearchDirection = "Аналитическая химия",
+                OrganizationGuid = orgGuid1,
+                PositionGuid = posGuid3,
+                Data = new VacancyDataModel
+                {
+                    Name = "Разводчик акул",
+                    FullName = "Младший сотрудник по разведению лазерных акул",
+                    ResearchDirection = "Аналитическая химия"
+                }
             });
         }
     }
