@@ -1,16 +1,10 @@
-﻿using SciVacancies.Domain.DataModels;
-
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System;
+using SciVacancies.Domain.DataModels;
 
 namespace SciVacancies.Domain.Events
 {
     public class SearchSubscriptionEventBase : EventBase
     {
-        public SearchSubscriptionEventBase() : base() { }
-
         public Guid SearchSubscriptionGuid { get; set; }
         public Guid ResearcherGuid { get; set; }
     }
@@ -19,8 +13,6 @@ namespace SciVacancies.Domain.Events
     /// </summary>
     public class SearchSubscriptionCreated : SearchSubscriptionEventBase
     {
-        public SearchSubscriptionCreated() : base() { }
-
         public SearchSubscriptionDataModel Data { get; set; }
     }
     /// <summary>
@@ -28,20 +20,17 @@ namespace SciVacancies.Domain.Events
     /// </summary>
     public class SearchSubscriptionActivated : SearchSubscriptionEventBase
     {
-        public SearchSubscriptionActivated() : base() { }
     }
     /// <summary>
     /// Подписка отменена, есть возможность активировать повторно
     /// </summary>
     public class SearchSubscriptionCanceled : SearchSubscriptionEventBase
     {
-        public SearchSubscriptionCanceled() : base() { }
     }
     /// <summary>
     /// Подписка удалена, более недоступна
     /// </summary>
     public class SearchSubscriptionRemoved : SearchSubscriptionEventBase
     {
-        public SearchSubscriptionRemoved() : base() { }
     }
 }
