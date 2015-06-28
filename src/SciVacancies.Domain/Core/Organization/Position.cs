@@ -14,7 +14,7 @@ namespace SciVacancies.Domain.Core
         public Guid OrganizationGuid { get; set; }
 
         public PositionDataModel Data { get; set; }
-
+        [Obsolete("Field will be moved to DataModel")]
         public PositionStatus Status { get; set; }
     }
 }

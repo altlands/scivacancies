@@ -118,7 +118,7 @@ namespace SciVacancies.ReadModel.EventHandlers
         public void Handle(OrganizationRemoved msg)
         {
             //TODO: Should we remove all the related entities? Vacancies, etc
-            //TODO: SHould we delete or mark as "Deleted"?
+            //TODO: SHould we delete or mark as "Deleted"? - Нужно сделать по два метода на каждую сущность: удалить с каскадом, пометить как "удалено".
             _db.Delete<Organization>(msg.OrganizationGuid);           
         }
     }

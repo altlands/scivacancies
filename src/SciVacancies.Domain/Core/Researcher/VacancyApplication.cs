@@ -18,7 +18,7 @@ namespace SciVacancies.Domain.Core
         //public List<Publication> Publications { get; set; }
         //public List<AttachedFile> AttachedFiles { get; set; }
         //public string CoveringLetter { get; set; }
-
+        [Obsolete("Field will be moved to DataModel")]
         public VacancyApplicationStatus Status { get; set; }
     }
 }

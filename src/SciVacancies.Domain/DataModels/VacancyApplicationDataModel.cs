@@ -1,7 +1,6 @@
-﻿using System;
+﻿using SciVacancies.Domain.Enums;
+using SciVacancies.Domain.Core;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace SciVacancies.Domain.DataModels
 {
@@ -27,5 +26,10 @@ namespace SciVacancies.Domain.DataModels
         public string Rewards { get; set; }
         public string Memberships { get; set; }
         public string Conferences { get; set; }
+
+        public List<Education> Educations { get; set; }
+        public List<Publication> Publications { get; set; }
+
+        public VacancyApplicationStatus Status { get; set; }
     }
 }

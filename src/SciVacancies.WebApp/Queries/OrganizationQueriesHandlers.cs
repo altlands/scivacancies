@@ -89,6 +89,7 @@ namespace SciVacancies.WebApp.Queries
         public Page<Organization> Handle(SelectPagedOrganizationsQuery message)
         {
             Page<Organization> organizations = _db.Page<Organization>(message.PageIndex, message.PageSize, new Sql("SELECT o.* FROM \"Organizations\" o ORDER BY o.\"PublishedVacancies\" DESC"));
+            //Page<Organization> organizations = _db.Page<Organization>(message.PageIndex, message.PageSize, new Sql("SELECT o.* FROM \"Organizations\" o ORDER BY o.\"Guid\" DESC"));
 
             return organizations;
         }

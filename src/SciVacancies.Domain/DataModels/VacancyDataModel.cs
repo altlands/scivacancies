@@ -17,6 +17,14 @@ namespace SciVacancies.Domain.DataModels
         //public string ResearchDirection { get; set; }
         public int ResearchDirectionId { get; set; }
         public int ResearchThemeId { get; set; }
+        /// <summary>
+        /// Тип занятости
+        /// </summary>
+        public EmploymentType EmploymentType { get; set; }
+        /// <summary>
+        /// График работы
+        /// </summary>
+        public OperatingScheduleType OperatingScheduleType { get; set; }
 
         /// <summary>
         /// Должность
@@ -131,6 +139,8 @@ namespace SciVacancies.Domain.DataModels
         /// Дата окончания публикации
         /// </summary>
         public DateTime DateFinish { get; set; }
+
+        public VacancyStatus Status { get; set; }
 
     }
 }

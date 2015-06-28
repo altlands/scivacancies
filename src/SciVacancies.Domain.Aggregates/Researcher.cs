@@ -192,6 +192,19 @@ namespace SciVacancies.Domain.Aggregates
                 });
             }
         }
+        public void CancelVacancyApplication(Guid vacancyApplicationGuid)
+        {
+            VacancyApplication vacancyApplication = this.VacancyApplications.Find(f => f.VacancyApplicationGuid == vacancyApplicationGuid);
+            if (vacancyApplication != null && vacancyApplication.Status == VacancyApplicationStatus.Applied)
+            {
+                RaiseEvent(new VacancyApplicationCancelled()
+                {
+                    VacancyApplicationGuid = vacancyApplicationGuid,
+                    VacancyGuid = vacancyApplication.VacancyGuid,
+                    ResearcherGuid = this.Id
+                });
+            }
+        }
 
         #region Apply-Handlers
         public void Apply(ResearcherCreated @event)
@@ -292,6 +305,10 @@ namespace SciVacancies.Domain.Aggregates
         public void Apply(VacancyApplicationApplied @event)
         {
             this.VacancyApplications.Find(f => f.VacancyApplicationGuid == @event.VacancyApplicationGuid).Status = VacancyApplicationStatus.Applied;
+        }
+        public void Apply(VacancyApplicationCancelled @event)
+        {
+            this.VacancyApplications.Find(f => f.VacancyApplicationGuid == @event.VacancyApplicationGuid).Status = VacancyApplicationStatus.Cancelled;
         }
         #endregion
     }

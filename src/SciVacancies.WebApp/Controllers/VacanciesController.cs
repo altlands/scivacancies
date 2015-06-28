@@ -8,7 +8,6 @@ using Microsoft.AspNet.Authorization;
 using Microsoft.AspNet.Mvc;
 using NPoco;
 using SciVacancies.Domain.Enums;
-using SciVacancies.ReadModel.Core;
 using SciVacancies.WebApp.Commands;
 using SciVacancies.WebApp.Engine;
 using SciVacancies.WebApp.Queries;
@@ -79,7 +78,25 @@ namespace SciVacancies.WebApp.Controllers
 
         [AllowAnonymous]
         [PageTitle("Подробно о вакансии")]
-        public ViewResult Preview(Guid id) => View();
+        public ViewResult Preview(Guid id)
+        {
+            if (id == Guid.Empty)
+                throw new ArgumentNullException(nameof(id));
+
+            var preModel = _mediator.Send(new SingleVacancyQuery { VacancyGuid = id });
+
+            var model = Mapper.Map<VacancyDetailsViewModel>(preModel);
+
+            if (model == null)
+                throw new ObjectNotFoundException($"Не найдена вакансия с идентификатором: {id}");
+
+            model.Winner= 
+                Mapper.Map<ResearcherDetailsViewModel>(_mediator.Send(new SingleResearcherQuery { ResearcherGuid = preModel.WinnerGuid }));
+            model.Pretender = 
+                Mapper.Map<ResearcherDetailsViewModel>(_mediator.Send(new SingleResearcherQuery { ResearcherGuid = preModel.PretenderGuid}));
+
+            return View(model);
+        }
 
         [PageTitle("Отменить вакансию")]
         [BindOrganizationIdFromClaims]

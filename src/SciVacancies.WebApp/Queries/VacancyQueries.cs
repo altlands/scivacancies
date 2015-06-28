@@ -64,4 +64,15 @@ namespace SciVacancies.WebApp.Queries
         //public string NameFilterValue { get; set; }
         //public string AddressFilterValue { get; set; }
     }
+    public class SelectPagedVacanciesByGuidsQuery : IRequest<Page<Vacancy>>
+    {
+        public IEnumerable<Guid> VacanciesGuids { get; set; }
+
+        public long PageSize { get; set; }
+        public long PageIndex { get; set; }
+        public string OrderBy { get; set; }
+
+        //public string NameFilterValue { get; set; }
+        //public string AddressFilterValue { get; set; }
+    }
 }

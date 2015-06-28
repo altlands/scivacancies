@@ -160,4 +160,24 @@ namespace SciVacancies.WebApp.Queries
             return null;
         }
     }
+    public class SelectPagedVacanciesByGuidsQueryHandler : IRequestHandler<SelectPagedVacanciesByGuidsQuery, Page<Vacancy>>
+    {
+        private readonly IDatabase _db;
+
+        public SelectPagedVacanciesByGuidsQueryHandler(IDatabase db)
+        {
+            _db = db;
+        }
+
+        public Page<Vacancy> Handle(SelectPagedVacanciesByGuidsQuery message)
+        {
+            if (!message.VacanciesGuids.Any()) throw new ArgumentNullException($"VacanciesGuids doesn't contain any guid: {message.VacanciesGuids}");
+
+            var sql = new SqlBuilder().AddTemplate("SELECT v.* FROM \"Vacancies\" v WHERE v.\"Guid\" IN (@items)", new { items = message.VacanciesGuids });
+            var vacancies = _db.Page<Vacancy>(message.PageIndex, message.PageSize, sql);
+            return vacancies;
+
+            return null;
+        }
+    }
 }

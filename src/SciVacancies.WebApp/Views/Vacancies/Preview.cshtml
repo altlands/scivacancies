@@ -1,4 +1,8 @@
-﻿@model dynamic
+﻿@using System.Threading.Tasks
+@using SciVacancies.Domain.Enums
+@using SciVacancies.WebApp
+@using SciVacancies.WebApp.ViewModels
+@model VacancyDetailsViewModel
 
 @{
     var referer = Context.Request.Headers["referer"];
@@ -14,37 +18,45 @@
 }
 
 <h3>@ViewBag.Title</h3>
-
 <div class="title-cat-inform">Конкурсная информация:</div>
 <ul class="list-information">
     <li class="odd">
-        <span>ID конкурса:</span>СНС890056
+        <span>Номер ваканасии:</span>@Model.Guid.ToString().Substring(0, 4)
     </li>
     <li class="even">
-        <span>Статус:</span><span class="status executed">Конкурс завершен</span>
-        <span class="dashed-link float-right">Протокол решения конкурсной комиссии</span>
+        <span>Статус:</span><span class="status @Model.Status.GetHtmlClass()">@Model.Status.GetDescription()</span>
+
+        @if (Model.Status == VacancyStatus.Closed)
+        {
+            <del><span class="dashed-link float-right">Протокол решения конкурсной комиссии</span></del>
+            <span style="color: red;">в разработке</span>
+        }
+
     </li>
-    <li class="odd">
-        <span>Первое место (победитель):</span>Петров Сергей Иванович
-    </li>
-    <li class="even">
-        <span>Второе место:</span>Голованов Иван Константинович
-    </li>
+    @if (Model.Status == VacancyStatus.Closed)
+    {
+        <li class="odd">
+            <span>Первое место (победитель):</span>@Model.Winner.FullName
+        </li>
+        <li class="even">
+            <span>Второе место:</span>@Model.Pretender.FullName
+        </li>
+    }
 </ul>
 
 <div class="title-cat-inform">Дополнительная информация:</div>
 <ul class="list-information">
     <li class="odd">
-        <span>Научное направление:</span>Материаловедение – оценка и испытания
+        <span>Научное направление:</span>@Model.ResearchDirection
     </li>
     <li class="even">
-        <span>Профессия (должность):</span>Конструктор-технолог
+        <span>Профессия (должность):</span>@Model.FullName
     </li>
     <li class="odd">
-        <span>Режим работы:</span>Пролный рабочий день; 5/2
+        <span>Режим работы:</span> @*Пролный рабочий день; 5/2*@
     </li>
     <li class="even">
-        <span>Тип занятости:</span>Постоянная работа
+        <span>Тип занятости:</span> @*Постоянная работа*@
     </li>
 </ul>
 

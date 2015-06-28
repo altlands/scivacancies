@@ -1,0 +1,25 @@
+﻿@{
+    var referer = Context.Request.Headers["referer"];
+}
+@if (!string.IsNullOrWhiteSpace(referer))
+{
+    <text>
+    <div class="crumbs">
+        <a href="@referer.ToLower()">Назад</a><span class="separator">/</span>
+        @ViewBag.Title
+    </div>
+    </text>
+}
+
+<h3>@ViewBag.Title</h3>
+
+Заявка отменена
+
+@if (!string.IsNullOrWhiteSpace(referer))
+{
+    <text>
+    <div class="b-bottom-nav">
+        <a href="@referer.ToLower()" class="small-icon icon-prev">Назад</a>
+    </div>
+    </text>
+}
