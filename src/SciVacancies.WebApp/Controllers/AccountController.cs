@@ -23,7 +23,7 @@ namespace SciVacancies.WebApp.Controllers
         [HttpPost]
         public ActionResult Login(AccountLoginViewModel model)
         {
-            var user = model.IsResearcher ? _userManager.FindByName("researcher1@mailer.org") : _userManager.FindByName("organization1@mailer.org");
+            var user = model.IsResearcher ? _userManager.FindByName("researcher1") : _userManager.FindByName("organization1");
             var identity = _userManager.CreateIdentity(user, DefaultAuthenticationTypes.ApplicationCookie);
             var cp = new ClaimsPrincipal(identity);
             Context.Response.SignIn(DefaultAuthenticationTypes.ApplicationCookie, cp);
