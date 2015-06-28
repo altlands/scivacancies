@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Data.Entity.Core;
 using AutoMapper;
 using MediatR;
 using Microsoft.AspNet.Authorization;
@@ -22,7 +23,27 @@ namespace SciVacancies.WebApp.Controllers
 
         [AllowAnonymous]
         [PageTitle("Карточка организации")]
-        public ViewResult Card() => View();
+        public ViewResult Card(Guid id)
+        {
+            if (id == Guid.Empty)
+                throw new ArgumentNullException(nameof(id));
+
+            var preModel = _mediator.Send(new SingleOrganizationQuery {OrganizationGuid = id});
+
+            if(preModel == null)
+                throw new ObjectNotFoundException($"Не найдена организация по идентификатору: {id}");
+
+            var model = Mapper.Map<OrganizationDetailsViewModel>(preModel);
+
+            model.VacanciesInOrganization = new VacanciesInOrganizationIndexViewModel
+            {
+                OrganizationGuid = id,
+                PagedPositions = _mediator.Send(new SelectPagedPositionsByOrganizationQuery { OrganizationGuid = id, PageSize = 500, PageIndex = 1 }),
+                PagedVacancies = _mediator.Send(new SelectPagedVacanciesByOrganizationQuery { OrganizationGuid = id, PageSize = 500, PageIndex = 1 })
+            };
+
+            return View(model);
+        }
 
         [SiblingPage]
         [PageTitle("Информация")]

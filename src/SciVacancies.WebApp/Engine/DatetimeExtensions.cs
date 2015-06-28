@@ -9,7 +9,7 @@ namespace SciVacancies.WebApp
     {
         public static string ToLocalVacancyString(this DateTime source)
         {
-            return $"{source.Day}-{source.Month}-{source.Year}, {source.Minute}:{source.Minute}";
+            return $"{source.Day.ToString("00")}-{source.Month.ToString("00")}-{source.Year.ToString("0000")}, {source.Minute.ToString("00")}:{source.Minute.ToString("00")}";
         }
     }
 }

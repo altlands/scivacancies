@@ -116,10 +116,10 @@ namespace SciVacancies.WebApp.Controllers
             return View(model);
         }
 
-
-        [Authorize(Roles = ConstTerms.RequireRoleOrganizationAdmin)]
+        [PageTitle("Удаление шаблона заявки")]
+        [Authorize(Roles = ConstTerms.RequireRoleResearcher)]
         [BindResearcherIdFromClaims]
-        public IActionResult Cancel(Guid id, Guid researcherGuid)
+        public IActionResult Delete(Guid id, Guid researcherGuid)
         {
             if (id == Guid.Empty)
                 throw new ArgumentNullException(nameof(id));
@@ -129,13 +129,29 @@ namespace SciVacancies.WebApp.Controllers
             var vacancyApplication = _mediator.Send(new SingleVacancyApplicationQuery { VacancyApplicationGuid = id });
 
             if (vacancyApplication.ResearcherGuid != researcherGuid)
-                throw new Exception("Заявку может отменить только Заявитель, подавший её");
+                throw new Exception("Можно удалять только свои шаблоны заявок");
 
-            //TODO: VacancyApplication -> Cancel -> Statuses :  в каких статусах допустимо отменять поданные заявки
-            if (vacancyApplication.Status != VacancyApplicationStatus.Applied) throw new Exception($"Отменить заявку можно только в статусе 'подана'.");
-                //throw new Exception($"Вы не можете отменить подачу заявки со статусом: {vacancyApplication.Status.GetDescription()}");
+            if (vacancyApplication.Status != VacancyApplicationStatus.InProcess)
+                throw new Exception($"Отменить заявку можно только в статусе: {VacancyApplicationStatus.InProcess.GetDescription()}.");
 
-            _mediator.Send(new CancelVacancyApplicationCommand { ResearcherGuid = researcherGuid, VacancyApplicationGuid = id });
+            _mediator.Send(new RemoveVacancyApplicationTemplateCommand { ResearcherGuid = researcherGuid, VacancyApplicationGuid = id });
+
+            return View();
+        }
+
+        [PageTitle("Отмена заявки")]
+        [Authorize(Roles = ConstTerms.RequireRoleAdministrator)]
+        public IActionResult Cancel(Guid id)
+        {
+            if (id == Guid.Empty)
+                throw new ArgumentNullException(nameof(id));
+
+            var vacancyApplication = _mediator.Send(new SingleVacancyApplicationQuery { VacancyApplicationGuid = id });
+
+            if (vacancyApplication.Status != VacancyApplicationStatus.Applied)
+                throw new Exception($"Отменить заявку можно только в статусе: {VacancyApplicationStatus.Applied.GetDescription()}.");
+
+            _mediator.Send(new CancelVacancyApplicationCommand { ResearcherGuid = vacancyApplication.ResearcherGuid, VacancyApplicationGuid = id });
 
             return View();
         }

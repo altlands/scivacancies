@@ -104,5 +104,6 @@ namespace SciVacancies.WebApp.ViewModels
         public DateTime CreationDate { get; set; }
         public DateTime? UpdateDate { get; set; }
 
+        public VacanciesInOrganizationIndexViewModel VacanciesInOrganization { get; set; }
     }
 }
