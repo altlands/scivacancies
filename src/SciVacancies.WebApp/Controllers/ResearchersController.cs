@@ -4,6 +4,7 @@ using AutoMapper;
 using MediatR;
 using Microsoft.AspNet.Authorization;
 using Microsoft.AspNet.Mvc;
+using NPoco;
 using SciVacancies.Domain.Enums;
 using SciVacancies.WebApp.Commands;
 using SciVacancies.WebApp.Engine;
@@ -63,8 +64,17 @@ namespace SciVacancies.WebApp.Controllers
 
             var model = new VacancyApplicationsInResearcherIndexViewModel
             {
-                Applications = _mediator.Send(new SelectPagedVacancyApplicationsByResearcherQuery { PageSize = 500, PageIndex = 1, OrderBy = ConstTerms.OrderByCreationDateDescending, ResearcherGuid = researcherGuid })
+                Applications = Mapper
+                    .Map<Page<ApplicationDetailsViewModel>>( _mediator.Send(new SelectPagedVacancyApplicationsByResearcherQuery { PageSize = 500, PageIndex = 1, OrderBy = ConstTerms.OrderByCreationDateDescending, ResearcherGuid = researcherGuid }) )
             };
+            var innerObjects = _mediator.Send(new SelectPagedVacanciesByGuidsQuery
+            {
+                VacanciesGuids = model.Applications.Items.Select(c => c.VacancyGuid).Distinct(),
+                PageSize = 500,
+                PageIndex = 1,
+                OrderBy = ConstTerms.OrderByDateDescending
+            });
+            model.Applications.Items.ForEach(c=>c.Vacancy = Mapper.Map<VacancyDetailsViewModel>(innerObjects.Items.Single(d => d.Guid == c.Guid)));
             return View(model);
         }
 
