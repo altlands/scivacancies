@@ -15,6 +15,15 @@ namespace SciVacancies.Domain.DataModels
         public int ResearchThemeId { get; set; }
 
         /// <summary>
+        /// Тип занятости
+        /// </summary>
+        public EmploymentType EmploymentType { get; set; }
+        /// <summary>
+        /// График работы
+        /// </summary>
+        public OperatingScheduleType OperatingScheduleType { get; set; }
+
+        /// <summary>
         /// Guid должности из справочника
         /// </summary>
         public Guid PositionTypeGuid { get; set; }

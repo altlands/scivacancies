@@ -13,7 +13,7 @@ namespace SciVacancies.Domain.Core
         public Guid SearchSubscriptionGuid { get; set; }
 
         public SearchSubscriptionDataModel Data { get; set; }
-
+        [Obsolete("Field will be moved to DataModel")]
         public SearchSubscriptionStatus Status { get; set; }
     }
 }

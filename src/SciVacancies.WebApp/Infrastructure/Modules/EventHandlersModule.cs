@@ -11,6 +11,9 @@ namespace SciVacancies.WebApp.Infrastructure
         protected override void Load(ContainerBuilder builder)
         {
             builder.RegisterAssemblyTypes(typeof(EventBaseHandler<>).Assembly).AsClosedTypesOf(typeof(INotificationHandler<>)).SingleInstance();
+            //TODO
+            //builder.RegisterAssemblyTypes(typeof(INotificationHandler<>).Assembly).AsClosedTypesOf(typeof(INotificationHandler<>)).SingleInstance();
+
             builder.RegisterAssemblyTypes(typeof(EventBase).Assembly).SingleInstance();
 
             builder.RegisterAssemblyTypes(typeof(CommandBase).Assembly).AsClosedTypesOf(typeof(IRequest<>)).SingleInstance();

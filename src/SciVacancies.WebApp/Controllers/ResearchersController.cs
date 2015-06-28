@@ -90,6 +90,7 @@ namespace SciVacancies.WebApp.Controllers
         [BindResearcherIdFromClaims]
         public ViewResult Subscriptions(Guid researcherGuid)
         {
+            //TODO
             var model = new NotificationsInResearcherIndexViewModel
             {
                 PagedNotifications = _mediator.Send(new SelectPagedNotificationsByResearcherQuery
@@ -101,11 +102,15 @@ namespace SciVacancies.WebApp.Controllers
             };
             return View(model);
         }
+        //TODO - Удаление подписки
+        //TODO - Активация подписки
+        //TODO - Отмена подписки
 
         [SiblingPage]
         [PageTitle("Уведомления")]
         public ViewResult Notifications()
         {
+            //TODO
             var notifications = _mediator.Send(new SelectPagedNotificationsByResearcherQuery
             {
                 ResearcherGuid = Guid.NewGuid(),
@@ -116,6 +121,8 @@ namespace SciVacancies.WebApp.Controllers
             var model = new ResearcherDetailsViewModel();
             return View(model);
         }
+        //TODO - Уведомление прочитано
+        //TODO - Удалить уведомление
 
         [BindResearcherIdFromClaims]
         public ActionResult AddToFavorite(Guid researcherGuid, Guid vacancyGuid)

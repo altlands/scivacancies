@@ -19,6 +19,15 @@ namespace SciVacancies.ReadModel.Core
         public Guid Id { get { return this.Guid; } }
 
         /// <summary>
+        /// Тип занятости
+        /// </summary>
+        public EmploymentType EmploymentType { get; set; }
+        /// <summary>
+        /// График работы
+        /// </summary>
+        public OperatingScheduleType OperatingScheduleType { get; set; }
+
+        /// <summary>
         /// Идентификатор организации
         /// </summary>
         public Guid OrganizationGuid { get; set; }
