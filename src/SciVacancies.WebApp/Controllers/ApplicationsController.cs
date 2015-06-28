@@ -34,7 +34,7 @@ namespace SciVacancies.WebApp.Controllers
                 throw new ArgumentNullException(nameof(vacancyGuid));
 
             var researcher = _mediator.Send(new SingleResearcherQuery { ResearcherGuid = researcherGuid });
-            var vacancy = _mediator.Send(new SingleVacancyQuery {VacancyGuid = vacancyGuid});
+            var vacancy = _mediator.Send(new SingleVacancyQuery { VacancyGuid = vacancyGuid });
 
             var model = new VacancyApplicationCreateViewModel
             {
@@ -75,15 +75,15 @@ namespace SciVacancies.WebApp.Controllers
         [BindResearcherIdFromClaims]
         public ViewResult Details(Guid id, Guid researcherGuid)
         {
-            if(id==Guid.Empty)
+            if (id == Guid.Empty)
                 throw new ArgumentNullException(nameof(id));
-            
+
             var preModel = _mediator.Send(new SingleVacancyApplicationQuery { VacancyApplicationGuid = id });
 
-            if(preModel==null)
+            if (preModel == null)
                 throw new ObjectNotFoundException($"Не найденая Заявка c идентификатором: {id}");
 
-            if (researcherGuid!=Guid.Empty
+            if (researcherGuid != Guid.Empty
                 && User.IsInRole(ConstTerms.RequireRoleResearcher)
                 && preModel.ResearcherGuid != researcherGuid)
                 throw new Exception("Вы не можете просматривать Заявки других соискателей.");
@@ -126,19 +126,16 @@ namespace SciVacancies.WebApp.Controllers
             if (researcherGuid == Guid.Empty)
                 throw new ArgumentNullException(nameof(researcherGuid));
 
-            var vacancyApplication = _mediator.Send(new SingleVacancyApplicationQuery {VacancyApplicationGuid = id});
+            var vacancyApplication = _mediator.Send(new SingleVacancyApplicationQuery { VacancyApplicationGuid = id });
 
             if (vacancyApplication.ResearcherGuid != researcherGuid)
                 throw new Exception("Заявку может отменить только Заявитель, подавший её");
 
             //TODO: VacancyApplication -> Cancel -> Statuses :  в каких статусах допустимо отменять поданные заявки
-            if(vacancyApplication.Status!= VacancyApplicationStatus.InProcess
-                && vacancyApplication.Status != VacancyApplicationStatus.Applied)
-                throw new Exception($"Вы не можете отменить подачу заявки со статусом: {vacancyApplication.Status.GetDescription()}");
+            if (vacancyApplication.Status != VacancyApplicationStatus.Applied) throw new Exception($"Отменить заявку можно только в статусе 'подана'.");
+                //throw new Exception($"Вы не можете отменить подачу заявки со статусом: {vacancyApplication.Status.GetDescription()}");
 
-            //TODO: VacancyApplication -> Cancel -> Command :  Какая комманда отменяет поданные заявки
-            //_mediator.Send(  /* Query does not exists */);
-            throw new NotImplementedException();
+            _mediator.Send(new CancelVacancyApplicationCommand { ResearcherGuid = researcherGuid, VacancyApplicationGuid = id });
 
             return View();
         }

@@ -30,4 +30,9 @@ namespace SciVacancies.WebApp.Commands
         public Guid ResearcherGuid { get; set; }
         public Guid VacancyApplicationGuid { get; set; }
     }
+    public class CancelVacancyApplicationCommand : CommandBase, IRequest
+    {
+        public Guid ResearcherGuid { get; set; }
+        public Guid VacancyApplicationGuid { get; set; }
+    }
 }
