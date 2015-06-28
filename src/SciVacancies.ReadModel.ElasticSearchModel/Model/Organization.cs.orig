@@ -1,5 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+
 using NPoco;
 
 namespace SciVacancies.ReadModel.Core
@@ -8,15 +11,11 @@ namespace SciVacancies.ReadModel.Core
     [PrimaryKey("Guid", AutoIncrement = false)]
     public class Organization : BaseEntity
     {
-        /// <summary>
-        /// Айдишник для поисковика
-        /// </summary>
-        [Ignore]        
-        public Guid Id { get { return this.Guid; } }
-                
+
         /// <summary>
         /// Полное наименование
         /// </summary>
+
         public string Name { get; set; }
 
         /// <summary>
@@ -34,6 +33,10 @@ namespace SciVacancies.ReadModel.Core
         /// </summary>
         public string ShortNameEng { get; set; }
 
+<<<<<<< HEAD
+        public DateTime CreationdDate { get; set; }
+        public DateTime? UpdateDate { get; set; }
+=======
         /// <summary>
         /// Населенный пункт
         /// </summary>
@@ -69,7 +72,6 @@ namespace SciVacancies.ReadModel.Core
         /// </summary>
         public string OrgForm { get; set; }
         public int OrgFormId { get; set; }
-        public Guid OrgFormGuid { get; set; }
 
         /// <summary>
         /// Количество опубликованных вакансий на данный момент
@@ -81,7 +83,6 @@ namespace SciVacancies.ReadModel.Core
         /// </summary>
         public string Foiv { get; set; }
         public int FoivId { get; set; }
-        public Guid FoivGuid { get; set; }
 
 
         /// <summary>
@@ -89,12 +90,10 @@ namespace SciVacancies.ReadModel.Core
         /// </summary>
         public string Activity { get; set; }
         public int ActivityId { get; set; }
-        public Guid ActivityGuid { get; set; }
 
         /// <summary>
         /// Отрасли науки
         /// </summary>
-        [Ignore]        
         public List<int> ResearchDirections { get; set; }
 
         /// <summary>
@@ -103,8 +102,6 @@ namespace SciVacancies.ReadModel.Core
         public string HeadFirstName { get; set; }
         public string HeadLastName { get; set; }
         public string HeadPatronymic { get; set; } //HeadMiddleName
-
-        public DateTime CreationDate { get; set; }
-        public DateTime? UpdateDate { get; set; }
+>>>>>>> vlad
     }
 }

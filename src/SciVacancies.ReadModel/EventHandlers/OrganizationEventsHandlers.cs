@@ -1,23 +1,20 @@
-﻿using SciVacancies.Domain.Enums;
+﻿using MediatR;
+using NPoco;
 using SciVacancies.Domain.Events;
 using SciVacancies.ReadModel.Core;
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
-using NPoco;
-using Nest;
-
 namespace SciVacancies.ReadModel.EventHandlers
 {
-    public class OrganizationCreatedHandler : EventBaseHandler<OrganizationCreated>
+    public class OrganizationCreatedHandler : INotificationHandler<OrganizationCreated>
     {
-        private readonly IElasticClient _elastic;
+        private readonly IDatabase _db;        
 
-        public OrganizationCreatedHandler(IDatabase db, IElasticClient elastic) : base(db) { _elastic = elastic; }
-        public override void Handle(OrganizationCreated msg)
+        public OrganizationCreatedHandler(IDatabase db)
+        {
+            _db = db;            
+        }
+
+        public void Handle(OrganizationCreated msg)
         {
             Organization organization = new Organization()
             {
@@ -57,17 +54,19 @@ namespace SciVacancies.ReadModel.EventHandlers
                 HeadPatronymic = msg.Data.HeadPatronymic
             };
 
-            _db.Insert(organization);
-
-            _elastic.Index(organization);
+            _db.Insert(organization);            
         }
     }
-    public class OrganizationUpdatedHandler : EventBaseHandler<OrganizationUpdated>
+    public class OrganizationUpdatedHandler : INotificationHandler<OrganizationUpdated>
     {
-        private readonly IElasticClient _elastic;
+        private readonly IDatabase _db;        
 
-        public OrganizationUpdatedHandler(IDatabase db, IElasticClient elastic) : base(db) { _elastic = elastic; }
-        public override void Handle(OrganizationUpdated msg)
+        public OrganizationUpdatedHandler(IDatabase db)
+        {
+            _db = db;
+        }
+
+        public void Handle(OrganizationUpdated msg)
         {
             Organization organization = _db.SingleById<Organization>(msg.OrganizationGuid);
 
@@ -105,20 +104,22 @@ namespace SciVacancies.ReadModel.EventHandlers
             organization.HeadPatronymic = msg.Data.HeadPatronymic;
 
             _db.Update(organization);
-
-            _elastic.Update<Organization>(u => u.IdFrom(organization).Doc(organization));
         }
     }
-    public class OrganizationRemovedHandler : EventBaseHandler<OrganizationRemoved>
+    public class OrganizationRemovedHandler : INotificationHandler<OrganizationRemoved>
     {
-        private readonly IElasticClient _elastic;
+        private readonly IDatabase _db;        
 
-        public OrganizationRemovedHandler(IDatabase db, IElasticClient elastic) : base(db) { }
-        public override void Handle(OrganizationRemoved msg)
+        public OrganizationRemovedHandler(IDatabase db)
         {
-            _db.Delete<Organization>(msg.OrganizationGuid);
+            _db = db;
+        }
 
-            _elastic.Delete<Organization>(msg.OrganizationGuid.ToString());
+        public void Handle(OrganizationRemoved msg)
+        {
+            //TODO: Should we remove all the related entities? Vacancies, etc
+            //TODO: SHould we delete or mark as "Deleted"?
+            _db.Delete<Organization>(msg.OrganizationGuid);           
         }
     }
 }

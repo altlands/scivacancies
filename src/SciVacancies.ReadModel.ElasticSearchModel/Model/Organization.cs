@@ -1,18 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
-using NPoco;
 
-namespace SciVacancies.ReadModel.Core
+namespace SciVacancies.ReadModel.ElasticSearchModel.Model
 {
-    [TableName("Organizations")]
-    [PrimaryKey("Guid", AutoIncrement = false)]
-    public class Organization : BaseEntity
+    public class Organization
     {
         /// <summary>
         /// Айдишник для поисковика
-        /// </summary>
-        [Ignore]        
-        public Guid Id { get { return this.Guid; } }
+        /// </summary>            
+        public Guid Id { get; set; }
                 
         /// <summary>
         /// Полное наименование
@@ -91,11 +86,6 @@ namespace SciVacancies.ReadModel.Core
         public int ActivityId { get; set; }
         public Guid ActivityGuid { get; set; }
 
-        /// <summary>
-        /// Отрасли науки
-        /// </summary>
-        [Ignore]        
-        public List<int> ResearchDirections { get; set; }
 
         /// <summary>
         /// Руководитель

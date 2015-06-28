@@ -1,10 +1,7 @@
-﻿using SciVacancies.Domain.Aggregates;
-
-using System;
-
-using AutoMapper;
+﻿using System;
 using CommonDomain.Persistence;
 using MediatR;
+using SciVacancies.Domain.Aggregates;
 
 namespace SciVacancies.WebApp.Commands
 {
