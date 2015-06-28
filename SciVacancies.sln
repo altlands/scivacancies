@@ -34,6 +34,10 @@ Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "SciVacancies.SandBox", "san
 EndProject
 Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "SciVacancies.ReadModel.ElasticSearchModel", "src\SciVacancies.ReadModel.ElasticSearchModel\SciVacancies.ReadModel.ElasticSearchModel.xproj", "{A96E33FA-A942-43FF-ACB2-C9D0A65946E9}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "build", "build", "{16D82DC3-E48B-4981-B9F6-FE5CE3D60EA9}"
+EndProject
+Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "buildtools", "build\buildtools\buildtools.xproj", "{B365E3A7-3C1E-459E-B2B5-3901A574995E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -80,6 +84,10 @@ Global
 		{A96E33FA-A942-43FF-ACB2-C9D0A65946E9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A96E33FA-A942-43FF-ACB2-C9D0A65946E9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A96E33FA-A942-43FF-ACB2-C9D0A65946E9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B365E3A7-3C1E-459E-B2B5-3901A574995E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B365E3A7-3C1E-459E-B2B5-3901A574995E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B365E3A7-3C1E-459E-B2B5-3901A574995E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B365E3A7-3C1E-459E-B2B5-3901A574995E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -95,5 +103,6 @@ Global
 		{D33BA714-70FE-4EAE-932A-BD702638997A} = {A2D0C94C-D094-451F-8212-BF410F421403}
 		{672A407F-D46D-43A5-B6B1-2A325746B288} = {25A2FE1E-37FD-4C5F-B53B-A715D0A1EB70}
 		{A96E33FA-A942-43FF-ACB2-C9D0A65946E9} = {A2D0C94C-D094-451F-8212-BF410F421403}
+		{B365E3A7-3C1E-459E-B2B5-3901A574995E} = {16D82DC3-E48B-4981-B9F6-FE5CE3D60EA9}
 	EndGlobalSection
 EndGlobal
