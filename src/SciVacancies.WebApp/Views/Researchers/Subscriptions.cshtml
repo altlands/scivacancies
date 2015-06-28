@@ -16,8 +16,8 @@
 <h4>@ViewBag.Title</h4>
 
 <div class="table-control">
-    <a href="#" class="close-table"><span class="italic">Очистить фильтры</span></a>
-    <a href="#" class="reload-table"><span class="italic">Обновить список</span></a>
+    <!-- <a href="#" class="close-table"><span class="italic">Очистить фильтры</span></a> -->
+    <a href="@Context.Request.Path.Value" class="reload-table"><span class="italic">Обновить список</span></a>
 </div>
 
 <table class="table request-table">
@@ -99,7 +99,7 @@
     </tbody>
 </table>
 <div class="bottom-nav">
-    <div class="bottom-nav-left">
+ @*   <div class="bottom-nav-left">
         <div class="count-news">
             1-4 из 4 записей
         </div>
@@ -135,7 +135,7 @@
                 </span>
             </li>
         </ul>
-    </div>
+    </div>*@
 </div>
 
 

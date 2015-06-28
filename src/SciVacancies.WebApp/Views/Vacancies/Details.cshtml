@@ -18,7 +18,7 @@
 
 <h3>@ViewBag.Title</h3>
 <div class="title-popup">
-    <h4>Вакансия ID МНС6000567</h4>
+    <h4>Вакансия ID @Model.Guid.ToString().Substring(0,4)</h4>
 </div>
 
 @if (bool.Parse(ViewData["ShowAddFavorite"].ToString()))
@@ -33,6 +33,7 @@
 {
     <text>
     <a asp-controller="researchers" asp-action="favorities" class="success-btn middle-icon">В избранном</a>
+<a asp-controller="researchers" asp-action="removefavorite" onclick="javascript: return confirm('Вы уверены, что хотите удалить эту вакансию из избранного?');" asp-route-vacancyguid="@Model.Guid"> Убрать из избранных</a>
     <br />
     <br />
     </text>

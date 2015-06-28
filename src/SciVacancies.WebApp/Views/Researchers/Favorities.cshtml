@@ -1,4 +1,5 @@
 ﻿@using System.Threading.Tasks
+@using SciVacancies.Domain.Enums
 @using SciVacancies.WebApp
 @using SciVacancies.WebApp.Controllers
 @model SciVacancies.WebApp.ViewModels.VacanciesFavoritiesInResearcherIndexViewModel
@@ -16,8 +17,8 @@
 <h4>@ViewBag.Title</h4>
 
 <div class="table-control">
-    <a href="#" class="close-table"><span class="italic">Очистить фильтры</span></a>
-    <a href="#" class="reload-table"><span class="italic">Обновить список</span></a>
+    @*<a href="#" class="close-table"><span class="italic">Очистить фильтры</span></a>*@
+    <a href="@Context.Request.Path.Value" class="reload-table"><span class="italic">Обновить список</span></a>
 </div>
 
 <table class="table request-table">
@@ -33,7 +34,6 @@
         </tr>
     </thead>
     <tbody>
-        <!-- TODO: show data in depend on Vacancy.Status -->
         @if (Model.Vacancies != null)
         {
             foreach (var item in Model.Vacancies.Items)
@@ -50,14 +50,26 @@
                         </span>
                     </td>
                     <td>
-                        <!-- TODO: Researcher -> FavoriteVacancies -> Status : отображать статус и действия в зависимости от статуса -->
-                        <!--<span class="status executed">Победитель<br /><del>Победитель</del> </span>-->
-                        <a asp-controller="applications" asp-action="create" asp-route-vacancyguid="@item.Guid" class="send-request-icon">
-                            <span class="italic">Подать заявку</span>
-                        </a>
+                        @switch (item.Status)
+                        {
+                            case VacancyStatus.AppliesAcceptance:
+                                <text>
+                                <a asp-controller="applications" asp-action="create" asp-route-vacancyguid="@item.Guid" class="send-request-icon">
+                                    <span class="italic">Подать заявку</span>
+                                </a>
+                                </text>
+                                break;
+                            case VacancyStatus.Closed:
+                                <text>
+                                <a asp-controller="vacancies" asp-action="preview" asp-route-vacancyguid="@item.Guid" class="success-request-icon"><span class="italic">Победитель</span></a>
+                                </text>
+                                break;
+                        }
+
                     </td>
                     <td>
-                        <a asp-controller="vacancies" asp-action="preview" asp-route-id="@item.Guid" class="view-td-icon"></a>
+                        <a asp-controller="vacancies" asp-action="preview" asp-route-id="@item.Guid" class="view-td-icon" title="Просмотр вакансии"></a>
+                        <a asp-controller="researchers" asp-action="removefavorite" onclick="javascript: return confirm('Вы уверены, что хотите удалить эту вакансию из избранного?');" asp-route-vacancyguid="@item.Guid" class="close-td-icon" title="Убрать из избранных"></a>
                     </td>
                 </tr>
                 </text>
@@ -66,7 +78,7 @@
     </tbody>
 </table>
 <div class="bottom-nav">
-    <div class="bottom-nav-left">
+  @*  <div class="bottom-nav-left">
         <div class="count-news">
             1-4 из 4 записей
         </div>
@@ -102,7 +114,7 @@
                 </span>
             </li>
         </ul>
-    </div>
+    </div>*@
 </div>
 
 
