@@ -100,9 +100,33 @@ namespace SciVacancies.WebApp.Controllers
             };
             return View(model);
         }
-        //TODO - Удаление подписки
-        //TODO - Активация подписки
-        //TODO - Отмена подписки
+        //TODO
+        [HttpDelete]
+        [BindResearcherIdFromClaims]
+        public ActionResult DeleteSubscription(Guid researcherGuid, Guid subscriptionGuid)
+        {
+            _mediator.Send(new RemoveSearchSubscriptionCommand { ResearcherGuid = researcherGuid, SearchSubscriptionGuid = subscriptionGuid });
+
+            return RedirectToAction("subscriptions", "researchers", new { id = researcherGuid });
+        }
+        //TODO
+        [HttpPost]
+        [BindResearcherIdFromClaims]
+        public ActionResult ActivateSubscription(Guid researcherGuid, Guid subscriptionGuid)
+        {
+            _mediator.Send(new ActivateSearchSubscriptionCommand { ResearcherGuid = researcherGuid, SearchSubscriptionGuid = subscriptionGuid });
+
+            return RedirectToAction("subscriptions", "researchers", new { id = researcherGuid });
+        }
+        //TODO
+        [HttpPost]
+        [BindResearcherIdFromClaims]
+        public ActionResult CancelSubscription(Guid researcherGuid, Guid subscriptionGuid)
+        {
+            _mediator.Send(new CancelSearchSubscriptionCommand { ResearcherGuid = researcherGuid, SearchSubscriptionGuid = subscriptionGuid });
+
+            return RedirectToAction("subscriptions", "researchers", new { id = researcherGuid });
+        }
 
         [SiblingPage]
         [PageTitle("Уведомления")]
@@ -119,8 +143,24 @@ namespace SciVacancies.WebApp.Controllers
             var model = new ResearcherDetailsViewModel();
             return View(model);
         }
-        //TODO - Уведомление прочитано
+        //TODO - Перевести уведомление в статус "прочитано" - при клике на конверт показывается попап с полным текстом и вызывается этот метод
+        [HttpPost]
+        [BindResearcherIdFromClaims]
+        public ActionResult MarkNotificationRead(Guid notificationGuid)
+        {
+            _mediator.Send(new SwitchNotificationToReadCommand { NotificationGuid = notificationGuid });
+
+            return RedirectToAction("notifications", "researchers");
+        }
         //TODO - Удалить уведомление
+        [HttpDelete]
+        [BindResearcherIdFromClaims]
+        public ActionResult DeleteNotification(Guid notificationGuid)
+        {
+            _mediator.Send(new RemoveNotificationCommand { NotificationGuid = notificationGuid });
+
+            return RedirectToAction("notifications", "researchers");
+        }
 
         [BindResearcherIdFromClaims]
         public ActionResult AddToFavorite(Guid researcherGuid, Guid vacancyGuid)
