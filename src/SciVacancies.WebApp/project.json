@@ -38,7 +38,8 @@
         "SciVacancies.Domain.Aggregates": "1.0.0-*",
         "SciVacancies.Domain.Events": "1.0.0-*",
         "SciVacancies.ReadModel": "1.0.0-*",
-        "NEST": "1.5.1"
+        "NEST": "1.5.1",
+        "SciVacancies.ReadModel.ElasticSearchModel": "1.0.0-*"
     },
 
     "commands": {

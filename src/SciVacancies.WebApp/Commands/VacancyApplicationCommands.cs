@@ -35,4 +35,12 @@ namespace SciVacancies.WebApp.Commands
         public Guid ResearcherGuid { get; set; }
         public Guid VacancyApplicationGuid { get; set; }
     }
+    //public class MakeVacancyApplicationWinnerCommand : CommandBase, IRequest
+    //{
+
+    //}
+    //public class MakeVacancyApplicationPretenderCommand : CommandBase, IRequest
+    //{
+
+    //}
 }

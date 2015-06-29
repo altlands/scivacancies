@@ -8,13 +8,19 @@ using System.Linq;
 using System.Threading.Tasks;
 
 using NPoco;
+using MediatR;
 
 namespace SciVacancies.ReadModel.EventHandlers
 {
-    public class PositionCreatedHandler : EventBaseHandler<PositionCreated>
+    public class PositionCreatedHandler : INotificationHandler<PositionCreated>
     {
-        public PositionCreatedHandler(IDatabase db) : base(db) { }
-        public override void Handle(PositionCreated msg)
+        private readonly IDatabase _db;
+
+        public PositionCreatedHandler(IDatabase db)
+        {
+            _db = db;
+        }
+        public void Handle(PositionCreated msg)
         {
             Position position = new Position()
             {
@@ -60,10 +66,15 @@ namespace SciVacancies.ReadModel.EventHandlers
             _db.Insert(position);
         }
     }
-    public class PositionUpdatedHandler : EventBaseHandler<PositionUpdated>
+    public class PositionUpdatedHandler : INotificationHandler<PositionUpdated>
     {
-        public PositionUpdatedHandler(IDatabase db) : base(db) { }
-        public override void Handle(PositionUpdated msg)
+        private readonly IDatabase _db;
+
+        public PositionUpdatedHandler(IDatabase db)
+        {
+            _db = db;
+        }
+        public void Handle(PositionUpdated msg)
         {
             Position position = _db.SingleById<Position>(msg.PositionGuid);
 
@@ -107,15 +118,21 @@ namespace SciVacancies.ReadModel.EventHandlers
             _db.Update(position);
         }
     }
-    public class PositionRemovedHandler : EventBaseHandler<PositionRemoved>
+    public class PositionRemovedHandler : INotificationHandler<PositionRemoved>
     {
-        public PositionRemovedHandler(IDatabase db) : base(db) { }
-        public override void Handle(PositionRemoved msg)
+        private readonly IDatabase _db;
+
+        public PositionRemovedHandler(IDatabase db)
+        {
+            _db = db;
+        }
+        public void Handle(PositionRemoved msg)
         {
             Position position = _db.SingleById<Position>(msg.PositionGuid);
 
             position.Status = PositionStatus.Removed;
 
+            //TODO - удалять или помечать удалённой?
             _db.Update(position);
             //_db.Delete<Position>(msg.PositionGuid);
         }

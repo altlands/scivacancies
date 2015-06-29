@@ -8,13 +8,19 @@ using System.Linq;
 using System.Threading.Tasks;
 
 using NPoco;
+using MediatR;
 
 namespace SciVacancies.ReadModel.EventHandlers
 {
-    public class ResearcherCreatedHandler : EventBaseHandler<ResearcherCreated>
+    public class ResearcherCreatedHandler : INotificationHandler<ResearcherCreated>
     {
-        public ResearcherCreatedHandler(IDatabase db) : base(db) { }
-        public override void Handle(ResearcherCreated msg)
+        private readonly IDatabase _db;
+
+        public ResearcherCreatedHandler(IDatabase db)
+        {
+            _db = db;
+        }
+        public void Handle(ResearcherCreated msg)
         {
             Researcher researcher = new Researcher()
             {
@@ -58,10 +64,15 @@ namespace SciVacancies.ReadModel.EventHandlers
             _db.Insert(researcher);
         }
     }
-    public class ResearcherUpdateHandler : EventBaseHandler<ResearcherUpdated>
+    public class ResearcherUpdateHandler : INotificationHandler<ResearcherUpdated>
     {
-        public ResearcherUpdateHandler(IDatabase db) : base(db) { }
-        public override void Handle(ResearcherUpdated msg)
+        private readonly IDatabase _db;
+
+        public ResearcherUpdateHandler(IDatabase db)
+        {
+            _db = db;
+        }
+        public void Handle(ResearcherUpdated msg)
         {
             Researcher researcher = _db.SingleById<Researcher>(msg.ResearcherGuid);
 
@@ -96,14 +107,18 @@ namespace SciVacancies.ReadModel.EventHandlers
             researcher.UpdateDate = msg.TimeStamp;
 
             _db.Update(researcher);
-
-
         }
     }
-    public class ResearcherRemovedHandler : EventBaseHandler<ResearcherRemoved>
+    //TODO - Удалять совсем или помечать удалённым
+    public class ResearcherRemovedHandler : INotificationHandler<ResearcherRemoved>
     {
-        public ResearcherRemovedHandler(IDatabase db) : base(db) { }
-        public override void Handle(ResearcherRemoved msg)
+        private readonly IDatabase _db;
+
+        public ResearcherRemovedHandler(IDatabase db)
+        {
+            _db = db;
+        }
+        public void Handle(ResearcherRemoved msg)
         {
             _db.Delete<Researcher>(msg.ResearcherGuid);
         }
