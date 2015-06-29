@@ -166,6 +166,38 @@ namespace SciVacancies.Domain.Aggregates
                 });
             }
         }
+        public void SetVacancyWinner(Guid vacancyGuid, Guid researcherGuid, Guid vacancyApplicationGuid, string reason)
+        {
+            Vacancy vacancy = this.Vacancies.Find(f => f.VacancyGuid == vacancyGuid);
+            if (vacancy != null && vacancy.Status == VacancyStatus.InCommittee && vacancy.Data.WinnerGuid == Guid.Empty)
+            {
+                RaiseEvent(new VacancyWinnerSet
+                {
+                    VacancyGuid = vacancyGuid,
+                    PositionGuid = vacancy.PositionGuid,
+                    OrganizationGuid = this.Id,
+                    ReasearcherGuid = researcherGuid,
+                    VacancyApplicationGuid = vacancyApplicationGuid,
+                    Reason = reason
+                });
+            }
+        }
+        public void SetVacancyPretender(Guid vacancyGuid, Guid researcherGuid, Guid vacancyApplicationGuid, string reason)
+        {
+            Vacancy vacancy = this.Vacancies.Find(f => f.VacancyGuid == vacancyGuid);
+            if (vacancy != null && vacancy.Status == VacancyStatus.InCommittee && vacancy.Data.PretenderGuid == Guid.Empty)
+            {
+                RaiseEvent(new VacancyPretenderSet
+                {
+                    VacancyGuid = vacancyGuid,
+                    PositionGuid = vacancy.PositionGuid,
+                    OrganizationGuid = this.Id,
+                    ReasearcherGuid = researcherGuid,
+                    VacancyApplicationGuid = vacancyApplicationGuid,
+                    Reason = reason
+                });
+            }
+        }
 
         #region Apply-Handlers
         public void Apply(OrganizationCreated @event)
@@ -241,6 +273,14 @@ namespace SciVacancies.Domain.Aggregates
             this.Vacancies.Find(f => f.VacancyGuid == @event.VacancyGuid).Status = VacancyStatus.Cancelled;
 
             this.Positions.Find(f => f.PositionGuid == @event.PositionGuid).Status = PositionStatus.InProcess;
+        }
+        public void Apply(VacancyWinnerSet @event)
+        {
+            this.Vacancies.Find(f => f.VacancyGuid == @event.VacancyGuid).Data.WinnerGuid = @event.ReasearcherGuid;
+        }
+        public void Apply(VacancyPretenderSet @event)
+        {
+            this.Vacancies.Find(f => f.VacancyGuid == @event.VacancyGuid).Data.PretenderGuid = @event.ReasearcherGuid;
         }
         #endregion
     }

@@ -2,6 +2,8 @@
 using Nest;
 using SciVacancies.Domain.Events;
 using SciVacancies.ReadModel.ElasticSearchModel.Model;
+using SciVacancies.Domain.DataModels;
+using AutoMapper;
 
 namespace SciVacancies.ReadModel.ElasticSearchModel.EventHandlers
 {
@@ -16,6 +18,8 @@ namespace SciVacancies.ReadModel.ElasticSearchModel.EventHandlers
 
         public void Handle(OrganizationCreated notification)
         {
+            //Organization organization = Mapper.Map<Organization>(notification.Data);
+            //organization.Id = notification.OrganizationGuid;
             Organization organization = new Organization()
             {
                 Id = notification.OrganizationGuid,
@@ -66,6 +70,8 @@ namespace SciVacancies.ReadModel.ElasticSearchModel.EventHandlers
 
         public void Handle(OrganizationUpdated notification)
         {
+            //Organization organization = Mapper.Map<Organization>(notification.Data);
+            //organization.Id = notification.OrganizationGuid;
             //TODO - Можем ли мы апдейтить так? Часть полей null
             Organization organization = new Organization()
             {

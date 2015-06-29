@@ -205,6 +205,32 @@ namespace SciVacancies.Domain.Aggregates
                 });
             }
         }
+        public void MakeVacancyApplicationWinner(Guid vacancyApplicationGuid, string reason)
+        {
+            VacancyApplication vacancyApplication = this.VacancyApplications.Find(f => f.VacancyApplicationGuid == vacancyApplicationGuid);
+            if (vacancyApplication != null && vacancyApplication.Status == VacancyApplicationStatus.Applied)
+            {
+                RaiseEvent(new VacancyApplicationWon
+                {
+                    VacancyApplicationGuid = vacancyApplicationGuid,
+                    VacancyGuid = vacancyApplication.VacancyGuid,
+                    ResearcherGuid = this.Id
+                });
+            }
+        }
+        public void MakeVacancyApplicationPretender(Guid vacancyApplicationGuid, string reason)
+        {
+            VacancyApplication vacancyApplication = this.VacancyApplications.Find(f => f.VacancyApplicationGuid == vacancyApplicationGuid);
+            if (vacancyApplication != null && vacancyApplication.Status == VacancyApplicationStatus.Applied)
+            {
+                RaiseEvent(new VacancyApplicationPretended
+                {
+                    VacancyApplicationGuid = vacancyApplicationGuid,
+                    VacancyGuid = vacancyApplication.VacancyGuid,
+                    ResearcherGuid = this.Id
+                });
+            }
+        }
 
         #region Apply-Handlers
         public void Apply(ResearcherCreated @event)
@@ -309,6 +335,14 @@ namespace SciVacancies.Domain.Aggregates
         public void Apply(VacancyApplicationCancelled @event)
         {
             this.VacancyApplications.Find(f => f.VacancyApplicationGuid == @event.VacancyApplicationGuid).Status = VacancyApplicationStatus.Cancelled;
+        }
+        public void Apply(VacancyApplicationWon @event)
+        {
+            this.VacancyApplications.Find(f => f.VacancyApplicationGuid == @event.VacancyApplicationGuid).Status = VacancyApplicationStatus.Won;
+        }
+        public void Apply(VacancyApplicationPretended @event)
+        {
+            this.VacancyApplications.Find(f => f.VacancyApplicationGuid == @event.VacancyApplicationGuid).Status = VacancyApplicationStatus.Pretended;
         }
         #endregion
     }

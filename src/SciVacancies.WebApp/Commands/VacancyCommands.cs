@@ -38,6 +38,27 @@ namespace SciVacancies.WebApp.Commands
 
         public string Reason { get; set; }
     }
+    public class SetVacancyWinnerCommand : CommandBase, IRequest
+    {
+        public Guid OrganizationGuid { get; set; }
+        public Guid VacancyGuid { get; set; }
+
+        public Guid ResearcherGuid { get; set; }
+        public Guid VacancyApplicationGuid { get; set; }
+
+        public string Reason { get; set; }
+    }
+    public class SetVacancyPretenderCommand : CommandBase, IRequest
+    {
+        public Guid OrganizationGuid { get; set; }
+        public Guid VacancyGuid { get; set; }
+
+        public Guid ResearcherGuid { get; set; }
+        public Guid VacancyApplicationGuid { get; set; }
+
+        public string Reason { get; set; }
+    }
+
 
     public class AddVacancyToFavoritesCommand : CommandBase, IRequest<int>
     {

@@ -8,16 +8,19 @@ using System.Linq;
 using System.Threading.Tasks;
 
 using NPoco;
-using Nest;
+using MediatR;
 
 namespace SciVacancies.ReadModel.EventHandlers
 {
-    public class VacancyPublishedHandler : EventBaseHandler<VacancyPublished>
+    public class VacancyPublishedHandler : INotificationHandler<VacancyPublished>
     {
-        private readonly IElasticClient _elastic;
+        private readonly IDatabase _db;
 
-        public VacancyPublishedHandler(IDatabase db, IElasticClient elastic) : base(db) { _elastic = elastic; }
-        public override void Handle(VacancyPublished msg)
+        public VacancyPublishedHandler(IDatabase db)
+        {
+            _db = db;
+        }
+        public void Handle(VacancyPublished msg)
         {
             Position position = _db.SingleById<Position>(msg.PositionGuid);
             position.Status = PositionStatus.Published;
@@ -35,7 +38,7 @@ namespace SciVacancies.ReadModel.EventHandlers
                 PositionTypeGuid = msg.Data.PositionTypeGuid,
                 ResearchDirectionId = msg.Data.ResearchDirectionId,
                 ResearchThemeId = msg.Data.ResearchThemeId,
-                
+
 
 
                 FullName = msg.Data.FullName,
@@ -66,45 +69,49 @@ namespace SciVacancies.ReadModel.EventHandlers
             };
 
             _db.Insert(vacancy);
-
-            _elastic.Index(vacancy);
         }
     }
-    public class VacancyAcceptApplicationsHandler : EventBaseHandler<VacancyAcceptApplications>
+    public class VacancyAcceptApplicationsHandler : INotificationHandler<VacancyAcceptApplications>
     {
-        private readonly IElasticClient _elastic;
+        private readonly IDatabase _db;
 
-        public VacancyAcceptApplicationsHandler(IDatabase db, IElasticClient elastic) : base(db) { _elastic = elastic; }
-        public override void Handle(VacancyAcceptApplications msg)
+        public VacancyAcceptApplicationsHandler(IDatabase db)
+        {
+            _db = db;
+        }
+        public void Handle(VacancyAcceptApplications msg)
         {
             Vacancy vacancy = _db.SingleById<Vacancy>(msg.VacancyGuid);
             vacancy.Status = VacancyStatus.AppliesAcceptance;
-            _db.Update(vacancy);
 
-            _elastic.Update<Vacancy>(u => u.IdFrom(vacancy).Doc(vacancy));
+            _db.Update(vacancy);
         }
     }
-    public class VacancyInCommitteeHandler : EventBaseHandler<VacancyInCommittee>
+    public class VacancyInCommitteeHandler : INotificationHandler<VacancyInCommittee>
     {
-        private readonly IElasticClient _elastic;
+        private readonly IDatabase _db;
 
-        public VacancyInCommitteeHandler(IDatabase db, IElasticClient elastic) : base(db) { _elastic = elastic; }
-        public override void Handle(VacancyInCommittee msg)
+        public VacancyInCommitteeHandler(IDatabase db)
+        {
+            _db = db;
+        }
+        public void Handle(VacancyInCommittee msg)
         {
             Vacancy vacancy = _db.SingleById<Vacancy>(msg.VacancyGuid);
             vacancy.Status = VacancyStatus.InCommittee;
 
             _db.Update(vacancy);
-
-            _elastic.Update<Vacancy>(u => u.IdFrom(vacancy).Doc(vacancy));
         }
     }
-    public class VacancyClosedHandler : EventBaseHandler<VacancyClosed>
+    public class VacancyClosedHandler : INotificationHandler<VacancyClosed>
     {
-        private readonly IElasticClient _elastic;
+        private readonly IDatabase _db;
 
-        public VacancyClosedHandler(IDatabase db, IElasticClient elastic) : base(db) { _elastic = elastic; }
-        public override void Handle(VacancyClosed msg)
+        public VacancyClosedHandler(IDatabase db)
+        {
+            _db = db;
+        }
+        public void Handle(VacancyClosed msg)
         {
             Position position = _db.SingleById<Position>(msg.PositionGuid);
             position.Status = PositionStatus.InProcess;
@@ -115,16 +122,17 @@ namespace SciVacancies.ReadModel.EventHandlers
             vacancy.Status = VacancyStatus.Closed;
 
             _db.Update(vacancy);
-
-            _elastic.Update<Vacancy>(u => u.IdFrom(vacancy).Doc(vacancy));
         }
     }
-    public class VacancyCancelledHandler : EventBaseHandler<VacancyCancelled>
+    public class VacancyCancelledHandler : INotificationHandler<VacancyCancelled>
     {
-        private readonly IElasticClient _elastic;
+        private readonly IDatabase _db;
 
-        public VacancyCancelledHandler(IDatabase db, IElasticClient elastic) : base(db) { _elastic = elastic; }
-        public override void Handle(VacancyCancelled msg)
+        public VacancyCancelledHandler(IDatabase db)
+        {
+            _db = db;
+        }
+        public void Handle(VacancyCancelled msg)
         {
             Position position = _db.SingleById<Position>(msg.PositionGuid);
             position.Status = PositionStatus.InProcess;
@@ -135,15 +143,18 @@ namespace SciVacancies.ReadModel.EventHandlers
             vacancy.Status = VacancyStatus.Cancelled;
 
             _db.Update(vacancy);
-
-            _elastic.Update<Vacancy>(u => u.IdFrom(vacancy).Doc(vacancy));
         }
     }
 
-    public class VacancyAddedToFavoritesHandler : EventBaseHandler<VacancyAddedToFavorites>
+    public class VacancyAddedToFavoritesHandler : INotificationHandler<VacancyAddedToFavorites>
     {
-        public VacancyAddedToFavoritesHandler(IDatabase db) : base(db) { }
-        public override void Handle(VacancyAddedToFavorites msg)
+        private readonly IDatabase _db;
+
+        public VacancyAddedToFavoritesHandler(IDatabase db)
+        {
+            _db = db;
+        }
+        public void Handle(VacancyAddedToFavorites msg)
         {
             Vacancy vacancy = _db.SingleById<Vacancy>(msg.VacancyGuid);
             vacancy.FollowersCounter++;
@@ -159,10 +170,15 @@ namespace SciVacancies.ReadModel.EventHandlers
             _db.Insert(favoriteVacancy);
         }
     }
-    public class VacancyRemovedFromFavoritesHandler : EventBaseHandler<VacancyRemovedFromFavorites>
+    public class VacancyRemovedFromFavoritesHandler : INotificationHandler<VacancyRemovedFromFavorites>
     {
-        public VacancyRemovedFromFavoritesHandler(IDatabase db) : base(db) { }
-        public override void Handle(VacancyRemovedFromFavorites msg)
+        private readonly IDatabase _db;
+
+        public VacancyRemovedFromFavoritesHandler(IDatabase db)
+        {
+            _db = db;
+        }
+        public void Handle(VacancyRemovedFromFavorites msg)
         {
             Vacancy vacancy = _db.SingleById<Vacancy>(msg.VacancyGuid);
             vacancy.FollowersCounter--;

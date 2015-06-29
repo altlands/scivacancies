@@ -19,11 +19,9 @@ namespace SciVacancies.WebApp.Controllers
     {
         private readonly IMediator _mediator;
 
-        public ResearchersController(IMediator mediator)
-        {
-            _mediator = mediator;
-        }
+        public ResearchersController(IMediator mediator) { _mediator = mediator; }
 
+        [ResponseCache(NoStore = true)]
         [SiblingPage]
         [PageTitle("Информация")]
         [BindResearcherIdFromClaims]
@@ -40,6 +38,7 @@ namespace SciVacancies.WebApp.Controllers
             return View(model);
         }
 
+        [ResponseCache(NoStore = true)]
         [PageTitle("Изменить данные")]
         public ViewResult Edit(Guid id)
         {
@@ -62,19 +61,32 @@ namespace SciVacancies.WebApp.Controllers
             if (researcherGuid == Guid.Empty)
                 throw new ArgumentNullException(nameof(researcherGuid));
 
-            var model = new VacancyApplicationsInResearcherIndexViewModel
+            var source =
+                _mediator.Send(new SelectPagedVacancyApplicationsByResearcherQuery
+                {
+                    PageSize = 500,
+                    PageIndex = 1,
+                    OrderBy = ConstTerms.OrderByCreationDateDescending,
+                    ResearcherGuid = researcherGuid
+                });
+
+            var model = new VacancyApplicationsInResearcherIndexViewModel();
+            if (source.TotalItems > 0)
             {
-                Applications = Mapper
-                    .Map<Page<ApplicationDetailsViewModel>>( _mediator.Send(new SelectPagedVacancyApplicationsByResearcherQuery { PageSize = 500, PageIndex = 1, OrderBy = ConstTerms.OrderByCreationDateDescending, ResearcherGuid = researcherGuid }) )
-            };
-            var innerObjects = _mediator.Send(new SelectPagedVacanciesByGuidsQuery
-            {
-                VacanciesGuids = model.Applications.Items.Select(c => c.VacancyGuid).Distinct(),
-                PageSize = 500,
-                PageIndex = 1,
-                OrderBy = ConstTerms.OrderByDateDescending
-            });
-            model.Applications.Items.ForEach(c=>c.Vacancy = Mapper.Map<VacancyDetailsViewModel>(innerObjects.Items.Single(d => d.Guid == c.Guid)));
+                model.Applications = Mapper.Map<Page<ApplicationDetailsViewModel>>(source);
+                var innerObjects = _mediator.Send(new SelectPagedVacanciesByGuidsQuery
+                {
+                    VacanciesGuids = model.Applications.Items.Select(c => c.VacancyGuid).Distinct(),
+                    PageSize = 500,
+                    PageIndex = 1,
+                    OrderBy = ConstTerms.OrderByDateDescending
+                });
+                model.Applications.Items.ForEach(
+                    c =>
+                        c.Vacancy =
+                            Mapper.Map<VacancyDetailsViewModel>(innerObjects.Items.Single(d => d.Guid == c.Guid)));
+            }
+
             return View(model);
         }
 
@@ -170,7 +182,7 @@ namespace SciVacancies.WebApp.Controllers
 
             _mediator.Send(new RemoveVacancyFromFavoritesCommand { ResearcherGuid = researcherGuid, VacancyGuid = vacancyGuid });
 
-            return View();
+            return Redirect(Context.Request.Headers["referer"]);
         }
 
 

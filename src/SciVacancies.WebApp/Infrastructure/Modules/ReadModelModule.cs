@@ -19,9 +19,10 @@ namespace SciVacancies.WebApp.Infrastructure
         {
             builder.Register(c => new Database(Config.Get("Data:ReadModelDb"), NpgsqlFactory.Instance))
             .As<IDatabase>()
-                .AsSelf()
-                .InstancePerRequest()
-                .InstancePerLifetimeScope();
+            .SingleInstance();
+                //.AsSelf()
+                //.InstancePerRequest()
+                //.InstancePerLifetimeScope();
                 //.OnActivating(d => d.Instance.BeginTransaction())
                 //.OnRelease(d => d.CompleteTransaction());
         }

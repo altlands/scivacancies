@@ -7,11 +7,11 @@ namespace SciVacancies.ReadModel.EventHandlers
 {
     public class OrganizationCreatedHandler : INotificationHandler<OrganizationCreated>
     {
-        private readonly IDatabase _db;        
+        private readonly IDatabase _db;
 
         public OrganizationCreatedHandler(IDatabase db)
         {
-            _db = db;            
+            _db = db;
         }
 
         public void Handle(OrganizationCreated msg)
@@ -54,7 +54,7 @@ namespace SciVacancies.ReadModel.EventHandlers
                 HeadPatronymic = msg.Data.HeadPatronymic
             };
 
-            _db.Insert(organization);            
+            _db.Insert(organization);
         }
     }
     public class OrganizationUpdatedHandler : INotificationHandler<OrganizationUpdated>

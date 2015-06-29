@@ -8,13 +8,19 @@ using System.Linq;
 using System.Threading.Tasks;
 
 using NPoco;
+using MediatR;
 
 namespace SciVacancies.ReadModel.EventHandlers
 {
-    public class VacancyApplicationCreatedHandler : EventBaseHandler<VacancyApplicationCreated>
+    public class VacancyApplicationCreatedHandler : INotificationHandler<VacancyApplicationCreated>
     {
-        public VacancyApplicationCreatedHandler(IDatabase db) : base(db) { }
-        public override void Handle(VacancyApplicationCreated msg)
+        private readonly IDatabase _db;
+
+        public VacancyApplicationCreatedHandler(IDatabase db)
+        {
+            _db = db;
+        }
+        public void Handle(VacancyApplicationCreated msg)
         {
             VacancyApplication vacancyApplication = new VacancyApplication()
             {
@@ -28,10 +34,15 @@ namespace SciVacancies.ReadModel.EventHandlers
             _db.Insert(vacancyApplication);
         }
     }
-    public class VacancyApplicationUpdatedHandler : EventBaseHandler<VacancyApplicationUpdated>
+    public class VacancyApplicationUpdatedHandler : INotificationHandler<VacancyApplicationUpdated>
     {
-        public VacancyApplicationUpdatedHandler(IDatabase db) : base(db) { }
-        public override void Handle(VacancyApplicationUpdated msg)
+        private readonly IDatabase _db;
+
+        public VacancyApplicationUpdatedHandler(IDatabase db)
+        {
+            _db = db;
+        }
+        public void Handle(VacancyApplicationUpdated msg)
         {
             VacancyApplication vacancyApplication = _db.SingleById<VacancyApplication>(msg.VacancyApplicationGuid);
             //TODO
@@ -40,10 +51,15 @@ namespace SciVacancies.ReadModel.EventHandlers
             _db.Update(vacancyApplication);
         }
     }
-    public class VacancyApplicationRemovedHandler : EventBaseHandler<VacancyApplicationRemoved>
+    public class VacancyApplicationRemovedHandler : INotificationHandler<VacancyApplicationRemoved>
     {
-        public VacancyApplicationRemovedHandler(IDatabase db) : base(db) { }
-        public override void Handle(VacancyApplicationRemoved msg)
+        private readonly IDatabase _db;
+
+        public VacancyApplicationRemovedHandler(IDatabase db)
+        {
+            _db = db;
+        }
+        public void Handle(VacancyApplicationRemoved msg)
         {
             VacancyApplication vacancyApplication = _db.SingleById<VacancyApplication>(msg.VacancyApplicationGuid);
 
@@ -53,10 +69,15 @@ namespace SciVacancies.ReadModel.EventHandlers
             //_db.Delete<VacancyApplication>(msg.VacancyApplicationGuid);
         }
     }
-    public class VacancyApplicationAppliedHandler : EventBaseHandler<VacancyApplicationApplied>
+    public class VacancyApplicationAppliedHandler : INotificationHandler<VacancyApplicationApplied>
     {
-        public VacancyApplicationAppliedHandler(IDatabase db) : base(db) { }
-        public override void Handle(VacancyApplicationApplied msg)
+        private readonly IDatabase _db;
+
+        public VacancyApplicationAppliedHandler(IDatabase db)
+        {
+            _db = db;
+        }
+        public void Handle(VacancyApplicationApplied msg)
         {
             VacancyApplication vacancyApplication = _db.SingleById<VacancyApplication>(msg.VacancyApplicationGuid);
             vacancyApplication.Status = VacancyApplicationStatus.Applied;
@@ -78,10 +99,15 @@ namespace SciVacancies.ReadModel.EventHandlers
             _db.Insert(notification);
         }
     }
-    public class VacancyApplicationCancelledHandler : EventBaseHandler<VacancyApplicationCancelled>
+    public class VacancyApplicationCancelledHandler : INotificationHandler<VacancyApplicationCancelled>
     {
-        public VacancyApplicationCancelledHandler(IDatabase db) : base(db) { }
-        public override void Handle(VacancyApplicationCancelled msg)
+        private readonly IDatabase _db;
+
+        public VacancyApplicationCancelledHandler(IDatabase db)
+        {
+            _db = db;
+        }
+        public void Handle(VacancyApplicationCancelled msg)
         {
             VacancyApplication vacancyApplication = _db.SingleById<VacancyApplication>(msg.VacancyApplicationGuid);
             vacancyApplication.Status = VacancyApplicationStatus.Cancelled;
@@ -101,10 +127,15 @@ namespace SciVacancies.ReadModel.EventHandlers
             _db.Insert(notification);
         }
     }
-    public class VacancyApplicationWonHandler : EventBaseHandler<VacancyApplicationWon>
+    public class VacancyApplicationWonHandler : INotificationHandler<VacancyApplicationWon>
     {
-        public VacancyApplicationWonHandler(IDatabase db) : base(db) { }
-        public override void Handle(VacancyApplicationWon msg)
+        private readonly IDatabase _db;
+
+        public VacancyApplicationWonHandler(IDatabase db)
+        {
+            _db = db;
+        }
+        public void Handle(VacancyApplicationWon msg)
         {
             VacancyApplication vacancyApplication = _db.SingleById<VacancyApplication>(msg.VacancyApplicationGuid);
             vacancyApplication.Status = VacancyApplicationStatus.Won;
@@ -124,10 +155,15 @@ namespace SciVacancies.ReadModel.EventHandlers
             _db.Insert(notification);
         }
     }
-    public class VacancyApplicationPretendedHandler : EventBaseHandler<VacancyApplicationPretended>
+    public class VacancyApplicationPretendedHandler : INotificationHandler<VacancyApplicationPretended>
     {
-        public VacancyApplicationPretendedHandler(IDatabase db) : base(db) { }
-        public override void Handle(VacancyApplicationPretended msg)
+        private readonly IDatabase _db;
+
+        public VacancyApplicationPretendedHandler(IDatabase db)
+        {
+            _db = db;
+        }
+        public void Handle(VacancyApplicationPretended msg)
         {
             VacancyApplication vacancyApplication = _db.SingleById<VacancyApplication>(msg.VacancyApplicationGuid);
             vacancyApplication.Status = VacancyApplicationStatus.Pretended;
@@ -147,10 +183,15 @@ namespace SciVacancies.ReadModel.EventHandlers
             _db.Insert(notification);
         }
     }
-    public class VacancyApplicationLostHandler : EventBaseHandler<VacancyApplicationLost>
+    public class VacancyApplicationLostHandler : INotificationHandler<VacancyApplicationLost>
     {
-        public VacancyApplicationLostHandler(IDatabase db) : base(db) { }
-        public override void Handle(VacancyApplicationLost msg)
+        private readonly IDatabase _db;
+
+        public VacancyApplicationLostHandler(IDatabase db)
+        {
+            _db = db;
+        }
+        public void Handle(VacancyApplicationLost msg)
         {
             VacancyApplication vacancyApplication = _db.SingleById<VacancyApplication>(msg.VacancyApplicationGuid);
             vacancyApplication.Status = VacancyApplicationStatus.Lost;

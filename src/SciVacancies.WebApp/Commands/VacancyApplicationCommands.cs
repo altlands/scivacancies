@@ -35,4 +35,26 @@ namespace SciVacancies.WebApp.Commands
         public Guid ResearcherGuid { get; set; }
         public Guid VacancyApplicationGuid { get; set; }
     }
+    ////TODO - нужен тут:?
+    //public class MakeVacancyApplicationWinnerCommand : CommandBase, IRequest
+    //{
+    //    public Guid OrganizationGuid { get; set; }
+    //    public Guid VacancyGuid { get; set; }
+
+    //    public Guid ResearcherGuid { get; set; }
+    //    public Guid VacancyApplicationGuid { get; set; }
+
+    //    public string Reason { get; set; }
+    //}
+    ////TODO - нужен тут:?
+    //public class MakeVacancyApplicationPretenderCommand : CommandBase, IRequest
+    //{
+    //    public Guid OrganizationGuid { get; set; }
+    //    public Guid VacancyGuid { get; set; }
+
+    //    public Guid ResearcherGuid { get; set; }
+    //    public Guid VacancyApplicationGuid { get; set; }
+
+    //    public string Reason { get; set; }
+    //}
 }

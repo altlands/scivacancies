@@ -46,12 +46,14 @@ namespace SciVacancies.Domain.Events
     /// </summary>
     public class VacancyApplicationWon : VacancyApplicationEventBase
     {
+        public string Reason { get; set; }
     }
     /// <summary>
     /// Заявка заняла второе место
     /// </summary>
     public class VacancyApplicationPretended : VacancyApplicationEventBase
     {
+        public string Reason { get; set; }
     }
     /// <summary>
     /// Заявка проиграла вакансию (конкурс). Событие для всех заявок, не занявших 1-ое или 2-ое места.

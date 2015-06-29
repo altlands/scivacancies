@@ -1,5 +1,6 @@
 ﻿using System;
 using AutoMapper;
+using NPoco;
 using SciVacancies.Domain.DataModels;
 using SciVacancies.Domain.Events;
 using SciVacancies.ReadModel.Core;
@@ -19,6 +20,8 @@ namespace SciVacancies.WebApp.Infrastructure
             Mapper.CreateMap<Organization, OrganizationDataModel>();
             //информация об организации
             Mapper.CreateMap<Organization, OrganizationDetailsViewModel>();
+            //индексация организации в поисковике
+            Mapper.CreateMap<SciVacancies.ReadModel.ElasticSearchModel.Model.Organization, OrganizationDataModel>();
 
             /*Researcher*/
 
@@ -41,12 +44,14 @@ namespace SciVacancies.WebApp.Infrastructure
 
             //vacancy
             Mapper.CreateMap<Vacancy, VacancyDetailsViewModel>();
-
+            //индексация только что созданной вакансии в поисковике
+            Mapper.CreateMap<SciVacancies.ReadModel.ElasticSearchModel.Model.Vacancy, VacancyPublished>();
             /*VacancyApplication*/
 
             //create 
             Mapper.CreateMap<VacancyApplicationCreateViewModel, VacancyApplicationDataModel>();
             Mapper.CreateMap<VacancyApplication, ApplicationDetailsViewModel>();
+            Mapper.CreateMap<Page<VacancyApplication>, Page<ApplicationDetailsViewModel>>();
 
 
             /*Account*/

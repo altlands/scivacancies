@@ -234,7 +234,7 @@ namespace SciVacancies.WebApp.Controllers
                 OrganizationGuid = organizationGuid,
                 VacancyGuid = id
             });
-
+            //TODO: Vaqcancies -> SetWinners : добавить Представление
             return View();
         }
 

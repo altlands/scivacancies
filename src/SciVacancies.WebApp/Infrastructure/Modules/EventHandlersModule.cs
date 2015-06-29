@@ -2,6 +2,7 @@
 using MediatR;
 using SciVacancies.Domain.Events;
 using SciVacancies.ReadModel.EventHandlers;
+using SciVacancies.ReadModel.ElasticSearchModel.EventHandlers;
 using SciVacancies.WebApp.Commands;
 
 namespace SciVacancies.WebApp.Infrastructure
@@ -10,9 +11,8 @@ namespace SciVacancies.WebApp.Infrastructure
     {
         protected override void Load(ContainerBuilder builder)
         {
-            builder.RegisterAssemblyTypes(typeof(EventBaseHandler<>).Assembly).AsClosedTypesOf(typeof(INotificationHandler<>)).SingleInstance();
-            //TODO
-            //builder.RegisterAssemblyTypes(typeof(INotificationHandler<>).Assembly).AsClosedTypesOf(typeof(INotificationHandler<>)).SingleInstance();
+            builder.RegisterAssemblyTypes(typeof(SciVacancies.ReadModel.EventHandlers.OrganizationCreatedHandler).Assembly).AsClosedTypesOf(typeof(INotificationHandler<>)).SingleInstance();
+            builder.RegisterAssemblyTypes(typeof(SciVacancies.ReadModel.ElasticSearchModel.EventHandlers.OrganizationCreatedHandler).Assembly).AsClosedTypesOf(typeof(INotificationHandler<>)).SingleInstance();
 
             builder.RegisterAssemblyTypes(typeof(EventBase).Assembly).SingleInstance();
 

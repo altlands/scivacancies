@@ -1,4 +1,4 @@
-﻿using SciVacancies.ReadModel.Core;
+﻿using SciVacancies.ReadModel.ElasticSearchModel.Model;
 
 using System;
 using System.Collections.Generic;

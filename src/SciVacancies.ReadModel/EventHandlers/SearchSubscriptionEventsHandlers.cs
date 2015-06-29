@@ -8,42 +8,58 @@ using System.Linq;
 using System.Threading.Tasks;
 
 using NPoco;
+using MediatR;
 
 namespace SciVacancies.ReadModel.EventHandlers
 {
-    public class SearchSubscriptionCreatedHandler : EventBaseHandler<SearchSubscriptionCreated>
+    public class SearchSubscriptionCreatedHandler : INotificationHandler<SearchSubscriptionCreated>
     {
-        public SearchSubscriptionCreatedHandler(IDatabase db) : base(db) { }
-        public override void Handle(SearchSubscriptionCreated msg)
+        private readonly IDatabase _db;
+
+        public SearchSubscriptionCreatedHandler(IDatabase db)
+        {
+            _db = db;
+        }
+        public void Handle(SearchSubscriptionCreated msg)
         {
             SearchSubscription searchSubscription = new SearchSubscription()
             {
-                Guid=msg.SearchSubscriptionGuid,
-                ResearcherGuid=msg.ResearcherGuid,
-                CreationDate=msg.TimeStamp,
+                Guid = msg.SearchSubscriptionGuid,
+                ResearcherGuid = msg.ResearcherGuid,
+                CreationDate = msg.TimeStamp,
                 Status = SearchSubscriptionStatus.Active
             };
 
             _db.Insert(searchSubscription);
         }
     }
-    public class SearchSubscriptionActivatedHandler : EventBaseHandler<SearchSubscriptionActivated>
+    public class SearchSubscriptionActivatedHandler : INotificationHandler<SearchSubscriptionActivated>
     {
-        public SearchSubscriptionActivatedHandler(IDatabase db) : base(db) { }
-        public override void Handle(SearchSubscriptionActivated msg)
+        private readonly IDatabase _db;
+
+        public SearchSubscriptionActivatedHandler(IDatabase db)
+        {
+            _db = db;
+        }
+        public void Handle(SearchSubscriptionActivated msg)
         {
             SearchSubscription searchSubscription = _db.SingleById<SearchSubscription>(msg.SearchSubscriptionGuid);
-            
+
             searchSubscription.UpdateDate = msg.TimeStamp;
             searchSubscription.Status = SearchSubscriptionStatus.Active;
 
             _db.Update(searchSubscription);
         }
     }
-    public class SearchSubscriptionCanceledHandler : EventBaseHandler<SearchSubscriptionCanceled>
+    public class SearchSubscriptionCanceledHandler : INotificationHandler<SearchSubscriptionCanceled>
     {
-        public SearchSubscriptionCanceledHandler(IDatabase db) : base(db) { }
-        public override void Handle(SearchSubscriptionCanceled msg)
+        private readonly IDatabase _db;
+
+        public SearchSubscriptionCanceledHandler(IDatabase db)
+        {
+            _db = db;
+        }
+        public void Handle(SearchSubscriptionCanceled msg)
         {
             SearchSubscription searchSubscription = _db.SingleById<SearchSubscription>(msg.SearchSubscriptionGuid);
 
@@ -53,10 +69,15 @@ namespace SciVacancies.ReadModel.EventHandlers
             _db.Update(searchSubscription);
         }
     }
-    public class SearchSubscriptionRemovedHandler : EventBaseHandler<SearchSubscriptionRemoved>
+    public class SearchSubscriptionRemovedHandler : INotificationHandler<SearchSubscriptionRemoved>
     {
-        public SearchSubscriptionRemovedHandler(IDatabase db) : base(db) { }
-        public override void Handle(SearchSubscriptionRemoved msg)
+        private readonly IDatabase _db;
+
+        public SearchSubscriptionRemovedHandler(IDatabase db)
+        {
+            _db = db;
+        }
+        public void Handle(SearchSubscriptionRemoved msg)
         {
             _db.Delete<SearchSubscription>(msg.SearchSubscriptionGuid);
         }

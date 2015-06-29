@@ -1,4 +1,4 @@
-﻿using SciVacancies.ReadModel.Core;
+﻿using SciVacancies.ReadModel.ElasticSearchModel.Model;
 
 using System;
 using System.Collections.Generic;
@@ -61,31 +61,3 @@ namespace SciVacancies.WebApp.Queries
         }
     }
 }
-
-//public ISearchResponse<Vacancy> Search(string query, int pageSize, int pageIndex, List<Guid> regions, List<Guid> foivs, List<Guid> universities, List<int> directions)
-//{
-//    //                return Connect().Search<ElasticResource>(s => s.Index(DefaultName).Sort(sd => sd.OnField(of => of.Resource.Code.Suffix("raw")).NestedMax().Descending()).Skip((c.Page - 1) * ResPerPage).Take(ResPerPage).MinScore(MinScore).Query(QueryToggle(c, employeeNumber)));
-//    return Connect().Search<Vacancy>(s => s
-//         .Index(DefaultIndexName)
-//         .Skip((pageIndex - 1) * pageSize)
-//         .Take(pageSize)
-//         .Query(qr => qr
-//             .FuzzyLikeThis(flt => flt
-//                 .LikeText(query)
-//             )
-//         //.Filtered(ftd => ftd
-//         //    .Query(q => q
-//         //        .FuzzyLikeThis(flt => flt.LikeText(query))
-//         //    )
-//         //    .Filter(f => f
-//         //        .Bool(b=>b
-//         //            //.Must(mst=>mst
-//         //            //    .Terms().
-//         //            //)
-//         //            //&& b.Must(mst=>mst)
-//         //        )                        
-//         //    )
-//         //)
-//         )
-//     );
-//}

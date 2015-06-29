@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
-using Nest;
+﻿using Nest;
 using MediatR;
-using SciVacancies.ReadModel.Core;
-using SciVacancies.ReadModel;
+using SciVacancies.ReadModel.ElasticSearchModel.Model;
 
 namespace SciVacancies.WebApp.Commands
 {
