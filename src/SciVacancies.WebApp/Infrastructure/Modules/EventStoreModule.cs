@@ -34,7 +34,7 @@ namespace SciVacancies.WebApp.Infrastructure
             //builder.Register(c => GetStubEventStore()).As<IStoreEvents>().SingleInstance();
             builder.Register(c => GetEventStore(c.Resolve<IMediator>())).As<IStoreEvents>().SingleInstance();
             //builder.Register(c => GetEventStoreWithoutDispatchers()).As<IStoreEvents>().SingleInstance();
-
+            //builder.Register(c => new EventStoreRepository(c.Resolve<IStoreEvents>(), c.Resolve<IConstructAggregates>(), c.Resolve<IDetectConflicts>())).As<IRepository>();
             builder.Register(c => new EventStoreRepository(c.Resolve<IStoreEvents>(), c.Resolve<IConstructAggregates>(), c.Resolve<IDetectConflicts>())).As<IRepository>().SingleInstance();
         }
         private IStoreEvents GetEventStore(IMediator mediator)
