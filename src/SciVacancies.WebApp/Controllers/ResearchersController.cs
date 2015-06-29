@@ -71,6 +71,7 @@ namespace SciVacancies.WebApp.Controllers
                 });
 
             var model = new VacancyApplicationsInResearcherIndexViewModel();
+
             if (source.TotalItems > 0)
             {
                 model.Applications = Mapper.Map<Page<VacancyApplicationDetailsViewModel>>(source);
@@ -83,8 +84,7 @@ namespace SciVacancies.WebApp.Controllers
                 });
                 model.Applications.Items.ForEach(
                     c =>
-                        c.Vacancy =
-                            Mapper.Map<VacancyDetailsViewModel>(innerObjects.Items.Single(d => d.Guid == c.Guid)));
+                        c.Vacancy = Mapper.Map<VacancyDetailsViewModel>(innerObjects.Items.Single(d => d.Guid == c.VacancyGuid)));
             }
 
             return View(model);
