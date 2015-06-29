@@ -1,6 +1,5 @@
 ﻿using MediatR;
 using Microsoft.AspNet.Mvc;
-using SciVacancies.ReadModel;
 using SciVacancies.WebApp.Engine;
 using SciVacancies.WebApp.Queries;
 using SciVacancies.WebApp.ViewModels;
@@ -15,7 +14,8 @@ namespace SciVacancies.WebApp.Controllers
         {
             _mediator = mediator;
         }
-        
+
+        [ResponseCache(NoStore = true)]
         [PageTitle("Главная страница")]
         public IActionResult Index()
         {

@@ -43,11 +43,7 @@ namespace SciVacancies.WebApp.Controllers
             var user = _mediator.Send(createUserResearcherCommand);
             var resGuid = Guid.Parse(user.Claims.Single(s => s.ClaimType.Equals(ConstTerms.ClaimTypeResearcherId)).ClaimValue);
 
-            var subGuid = _mediator.Send(new CreateSearchSubscriptionCommand
-            {
-                ResearcherGuid = resGuid,
-                Data = new SearchSubscriptionDataModel { Title = "Разведение лазерных акул" }
-            });
+
 
             var createUserOrganizationCommand = new RegisterUserOrganizationCommand
             {
@@ -67,6 +63,37 @@ namespace SciVacancies.WebApp.Controllers
             };
             var organization = _mediator.Send(createUserOrganizationCommand);
             var orgGuid = Guid.Parse(organization.Claims.Single(s => s.ClaimType.Equals(ConstTerms.ClaimTypeOrganizationId)).ClaimValue);
+
+
+
+
+            var createUserOrganizationCommand1 = new RegisterUserOrganizationCommand
+            {
+                Data = new AccountOrganizationRegisterViewModel
+                {
+                    Email = "organization2@mailer.org",
+                    UserName = "organization2",
+                    Name = "НИИ добра",
+                    ShortName = "Good Science",
+                    OrgFormId = 2,
+                    FoivId = 42,
+                    ActivityId = 1,
+                    HeadFirstName = "Саруман",
+                    HeadLastName = "Саур",
+                    HeadPatronymic = "Сауронович"
+                }
+            };
+            var organization1 = _mediator.Send(createUserOrganizationCommand1);
+            var orgGuid1 = Guid.Parse(organization1.Claims.Single(s => s.ClaimType.Equals(ConstTerms.ClaimTypeOrganizationId)).ClaimValue);
+
+
+
+            var subGuid = _mediator.Send(new CreateSearchSubscriptionCommand
+            {
+                ResearcherGuid = resGuid,
+                Data = new SearchSubscriptionDataModel { Title = "Разведение лазерных акул" }
+            });
+
 
             Guid posGuid1 = _mediator.Send(new CreatePositionCommand
             {
@@ -103,25 +130,6 @@ namespace SciVacancies.WebApp.Controllers
                     ResearchDirection = "Аналитическая химия"
                 }
             });
-
-            var createUserOrganizationCommand1 = new RegisterUserOrganizationCommand
-            {
-                Data = new AccountOrganizationRegisterViewModel
-                {
-                    Email = "organization2@mailer.org",
-                    UserName = "organization2",
-                    Name = "НИИ добра",
-                    ShortName = "Good Science",
-                    OrgFormId = 2,
-                    FoivId = 42,
-                    ActivityId = 1,
-                    HeadFirstName = "Саруман",
-                    HeadLastName = "Саур",
-                    HeadPatronymic = "Сауронович"
-                }
-            };
-            var organization1 = _mediator.Send(createUserOrganizationCommand1);
-            var orgGuid1 = Guid.Parse(organization1.Claims.Single(s => s.ClaimType.Equals(ConstTerms.ClaimTypeOrganizationId)).ClaimValue);
 
             var posGuid3 = _mediator.Send(new CreatePositionCommand
             {
