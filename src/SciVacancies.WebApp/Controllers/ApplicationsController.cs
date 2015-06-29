@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Data.Entity.Core;
+using System.Linq;
 using AutoMapper;
 using MediatR;
 using Microsoft.AspNet.Authorization;
@@ -58,9 +59,32 @@ namespace SciVacancies.WebApp.Controllers
 
         [Authorize(Roles = ConstTerms.RequireRoleResearcher)]
         [HttpPost]
-        public ActionResult Create(VacancyApplicationCreateViewModel model)
+        [BindResearcherIdFromClaims]
+        public ActionResult Create(VacancyApplicationCreateViewModel model, Guid researcherGuid)
         {
+            if (model.VacancyGuid == Guid.Empty)
+                throw new ArgumentNullException(nameof(model.VacancyGuid),"Не указан идентификатор Вакансии");
+            
+            var vacancyData = _mediator.Send(new SingleVacancyQuery {VacancyGuid= model.VacancyGuid});
+
+            if (vacancyData.Status!=VacancyStatus.AppliesAcceptance)
+                throw new  Exception($"Вы не можете подать Заявку на Вакансию в статусе: {vacancyData.Status.GetDescription()}");
+
+            var appliedVacancyApplications =
+                _mediator.Send(new SelectPagedVacancyApplicationsByVacancyQuery
+                {
+                    PageSize = 1000,
+                    VacancyGuid = model.VacancyGuid,
+                    PageIndex = 1,
+                    OrderBy = ConstTerms.OrderByDateAscending
+                });
+
+            if(appliedVacancyApplications.Items.Count>0
+                && appliedVacancyApplications.Items.Where(c=>c.Status == VacancyApplicationStatus.Applied).Select(c=>c.ResearcherGuid).Distinct().ToList().Any(c=>c == researcherGuid) )
+                throw new Exception("Вы не можете подать повторную Заявку на Вакансию ");
+
             var data = Mapper.Map<VacancyApplicationDataModel>(model);
+
             var vacancyApplicationGuid = _mediator.Send(new CreateVacancyApplicationTemplateCommand
             {
                 ResearcherGuid = model.ResearcherGuid,

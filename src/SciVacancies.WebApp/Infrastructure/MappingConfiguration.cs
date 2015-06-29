@@ -1,5 +1,6 @@
 ﻿using System;
 using AutoMapper;
+using NPoco;
 using SciVacancies.Domain.DataModels;
 using SciVacancies.Domain.Events;
 using SciVacancies.ReadModel.Core;
@@ -47,6 +48,7 @@ namespace SciVacancies.WebApp.Infrastructure
             //create 
             Mapper.CreateMap<VacancyApplicationCreateViewModel, VacancyApplicationDataModel>();
             Mapper.CreateMap<VacancyApplication, ApplicationDetailsViewModel>();
+            Mapper.CreateMap<Page<VacancyApplication>, Page<ApplicationDetailsViewModel>>();
 
 
             /*Account*/
