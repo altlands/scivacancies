@@ -30,11 +30,11 @@ namespace SciVacancies.WebApp
             {
                 case VacancyStatus.Cancelled:
                     return "failed";
-                case VacancyStatus.Closed:
                 case VacancyStatus.Published:
                 case VacancyStatus.InCommittee:
-                    return "executed";
                 case VacancyStatus.AppliesAcceptance:
+                    return "executed";
+                case VacancyStatus.Closed:
                     return "work";
                 default: return null;
             }

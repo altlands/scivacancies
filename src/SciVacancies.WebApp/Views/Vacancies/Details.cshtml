@@ -1,4 +1,5 @@
 ﻿@using System.Threading.Tasks
+@using SciVacancies.Domain.Enums
 @using SciVacancies.WebApp
 @using SciVacancies.WebApp.Engine
 @model SciVacancies.WebApp.ViewModels.VacancyDetailsViewModel
@@ -18,8 +19,18 @@
 
 <h3>@ViewBag.Title</h3>
 <div class="title-popup">
-    <h4>Вакансия ID @Model.Guid.ToString().Substring(0,4)</h4>
+    <h4>Вакансия ID @Model.Guid.ToString().Substring(0, 4)</h4>
 </div>
+
+@if (Model.Status == VacancyStatus.AppliesAcceptance)
+{
+    <text>
+    <a asp-controller="applications" asp-action="create" asp-route-vacancyguid="@Model.Guid" class="green-btn middle-icon">Подать заявку</a>
+
+    <br />
+    <br />
+    </text>
+}
 
 @if (bool.Parse(ViewData["ShowAddFavorite"].ToString()))
 {
@@ -33,7 +44,8 @@
 {
     <text>
     <a asp-controller="researchers" asp-action="favorities" class="success-btn middle-icon">В избранном</a>
-<a asp-controller="researchers" asp-action="removefavorite" onclick="javascript: return confirm('Вы уверены, что хотите удалить эту вакансию из избранного?');" asp-route-vacancyguid="@Model.Guid"> Убрать из избранных</a>
+    &nbsp;
+    <a asp-controller="researchers" asp-action="removefavorite" onclick="javascript: return confirm('Вы уверены, что хотите удалить эту вакансию из избранного?');" asp-route-vacancyguid="@Model.Guid"> Убрать из избранных</a>
     <br />
     <br />
     </text>
@@ -105,9 +117,7 @@
         </li>
     </ul>
 
-    @if (User.IsInRole(ConstTerms.RequireRoleOrganizationAdmin)
-                                                                && ViewBag.CurrentOrganizationGuid != null
-                                                                && ViewBag.CurrentOrganizationGuid == Model.OrganizationGuid)
+    @if (User.IsInRole(ConstTerms.RequireRoleOrganizationAdmin) && ViewBag.CurrentOrganizationGuid != null && ViewBag.CurrentOrganizationGuid == Model.OrganizationGuid)
     {
         <text>
         <h4 class="mt45 mb12">Поданные заявки</h4>
@@ -160,21 +170,21 @@
                             </td>
                         </tr>
                         </text>
-                        }
                     }
+                }
 
-                </tbody>
-            </table>
+            </tbody>
+        </table>
 
-            @if (Model.Applications != null && Model.Applications.Items.Any())
-            {
-                <div class="ctr-buttons">
-                    <span class="blue-btn middle-icon icon-print-button" rel="tooltip" title="">Распечатать все заявки</span>
-                </div>
-            }
-
-            </text>
+        @if (Model.Applications != null && Model.Applications.Items.Any())
+        {
+            <div class="ctr-buttons">
+                <span class="blue-btn middle-icon icon-print-button" rel="tooltip" title="">Распечатать все заявки</span>
+            </div>
         }
+
+        </text>
+    }
 
 </div>
 
@@ -188,378 +198,378 @@
 }
 
 
-@*<div class="slider-popup">
-    <ul class="bxslider">
-        <li>
-            <div class="caption-slide">Заявка на ID МНС6000567 №001 от 01-09-14 </div>
-            <div class="content-slide">
-                <div class="profile">
-                    <div class="photo inline-block">
-                        <img width="140" height="180" src="/images/user-photo.jpg" />
-                    </div>
-                    <div class="info info-view inline-block">
-                        <h4>Глаголев Виктор Александрович</h4>
-                        <span class="int-name">Glagolev Victor Alexandrovitch</span>
-                        <span class="block bold">Год рождения: 1931</span>
-                        <span class="block"><span class="bold">Индивидуальный номер ученого:</span> 00005444</span>
-                        <span class="block">
-                            <span class="bold">Научные интересы (Государственный рубрикатор научно-технической информации):</span>
-                            <span>Автоматизация и автоматизированные системы в области науковедения; Библиотечное дело, библиотековедение; Информационная деятельность в области науковедения...</span>
-                        </span>
-                        <span class="small-icon icon-sm-eye"><span>Показать все (23)</span></span>
-                    </div>
-                </div>
-                <div class="list-info">
-                    <div class="list-item">
-                        <div class="bold">Образование</div>
-                        <ul class="table-emulation">
-                            <li>
-                                <span class="w85 italic inline-block">Город</span> <span class="italic grey">Челябинск</span>
-                            </li>
-                            <li>
-                                <span class="w85 italic inline-block">ВУЗ</span> <span class="italic grey">ЧГАКИ</span>
-                            </li>
-                            <li>
-                                <span class="w85 italic inline-block">Факультет</span> <span class="italic grey">Информационных ресурсов и технологий</span>
-                            </li>
-                            <li>
-                                <span class="w85 italic inline-block">Год окончания</span> <span class="italic grey">2000</span>
-                            </li>
-                        </ul>
-                    </div>
-                    <div class="list-item">
-                        <div class="bold">Публикации</div>
-                        <ol>
-                            <li>Научная публикация поколения 2.0: перспектива или реальность?</li>
-                            <li>Электронно-библиотечная система: перевод понятия на «библиотечный» английский</li>
-                        </ol>
-                        <span class="small-icon icon-sm-eye"><span>Показать все (5)</span></span>
-                    </div>
-                    <div class="list-item">
-                        <div class="bold">Приложенные файлы</div>
-                        <ol>
-                            <li>
-                                Доклад по автоматизированным системам в области науковедения.doc<br />
-                                <span class="small-icon icon-sm-download"><span>Скачать</span></span>
-                            </li>
-                            <li>
-                                Резюме на английском языке.pdf<br />
-                                <span class="small-icon icon-sm-download"><span>Скачать</span></span>
-                            </li>
-                        </ol>
-                    </div>
-                </div>
-                <div class="b-solution">
-                    <div class="table-form">
-                        <div class="table-row">
-                            <div class="left-cell">
-                                <label>Решение по заявке:</label>
+    @*<div class="slider-popup">
+            <ul class="bxslider">
+                <li>
+                    <div class="caption-slide">Заявка на ID МНС6000567 №001 от 01-09-14 </div>
+                    <div class="content-slide">
+                        <div class="profile">
+                            <div class="photo inline-block">
+                                <img width="140" height="180" src="/images/user-photo.jpg" />
                             </div>
-                            <div class="right-cell">
-                                <ul class="radio-list">
+                            <div class="info info-view inline-block">
+                                <h4>Глаголев Виктор Александрович</h4>
+                                <span class="int-name">Glagolev Victor Alexandrovitch</span>
+                                <span class="block bold">Год рождения: 1931</span>
+                                <span class="block"><span class="bold">Индивидуальный номер ученого:</span> 00005444</span>
+                                <span class="block">
+                                    <span class="bold">Научные интересы (Государственный рубрикатор научно-технической информации):</span>
+                                    <span>Автоматизация и автоматизированные системы в области науковедения; Библиотечное дело, библиотековедение; Информационная деятельность в области науковедения...</span>
+                                </span>
+                                <span class="small-icon icon-sm-eye"><span>Показать все (23)</span></span>
+                            </div>
+                        </div>
+                        <div class="list-info">
+                            <div class="list-item">
+                                <div class="bold">Образование</div>
+                                <ul class="table-emulation">
                                     <li>
-                                        <span class="radio">
-                                            <input type="radio" name="r3" id="rb1">
-                                        </span><label for="rb1">Первое место</label>
+                                        <span class="w85 italic inline-block">Город</span> <span class="italic grey">Челябинск</span>
                                     </li>
                                     <li>
-                                        <span class="radio">
-                                            <input type="radio" name="r3" id="rb2">
-                                        </span><label for="rb2">Второе место</label>
+                                        <span class="w85 italic inline-block">ВУЗ</span> <span class="italic grey">ЧГАКИ</span>
+                                    </li>
+                                    <li>
+                                        <span class="w85 italic inline-block">Факультет</span> <span class="italic grey">Информационных ресурсов и технологий</span>
+                                    </li>
+                                    <li>
+                                        <span class="w85 italic inline-block">Год окончания</span> <span class="italic grey">2000</span>
                                     </li>
                                 </ul>
                             </div>
-                        </div>
-
-                        <div class="table-row form-row mt18">
-                            <div class="left-cell">
-                                <label>Обоснование:</label>
+                            <div class="list-item">
+                                <div class="bold">Публикации</div>
+                                <ol>
+                                    <li>Научная публикация поколения 2.0: перспектива или реальность?</li>
+                                    <li>Электронно-библиотечная система: перевод понятия на «библиотечный» английский</li>
+                                </ol>
+                                <span class="small-icon icon-sm-eye"><span>Показать все (5)</span></span>
                             </div>
-                            <div class="right-cell">
-                                <textarea></textarea>
-                            </div>
-                        </div>
-
-                        <div class="table-row form-row mt14">
-                            <div class="left-cell">
-                                <label>Приложенные файлы:</label>
-                            </div>
-                            <div class="right-cell">
-                                <ul class="content-list">
+                            <div class="list-item">
+                                <div class="bold">Приложенные файлы</div>
+                                <ol>
                                     <li>
-                                        Протокол №6000567.pdf
-                                        <div class="buttons">
-                                            <span class="big-link-remove"></span>
-                                        </div>
-                                    </li>
-                                </ul>
-                                <span class="small-icon link-add">Приложить файл</span>
-                            </div>
-                        </div>
-                        <div class="table-row mt37">
-                            <div class="ctr-buttons button-align">
-                                <span class="green-btn middle-icon icon-ok">Выбрать победителем</span>
-                            </div>
-                        </div>
-                        <div class="table-row mt49">
-                            <div class="ctr-buttons button-align">
-                                <span class="blue-btn middle-icon icon-arr-left">Вернуться в личный кабинет</span><span class="blue-btn middle-icon icon-arr-right">Вернуться к вакансии</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="align-center">Перейти к решению по заявке<span class="solutions op"></span></div>
-                <div class="align-center mt33" style="display:none;"><span class="solutions cl"></span>Свернуть</div>
-            </div>
-        </li>
-
-        <li>
-            <div class="caption-slide">Заявка1 на ID МНС6000567 №001 от 01-09-14 </div>
-            <div class="content-slide">
-                <div class="profile">
-                    <div class="photo inline-block">
-                        <img width="140" height="180" src="/images/user-photo.jpg" />
-                    </div>
-                    <div class="info info-view inline-block">
-                        <h4>Глаголев Виктор Александрович</h4>
-                        <span class="int-name">Glagolev Victor Alexandrovitch</span>
-                        <span class="block bold">Год рождения: 1931</span>
-                        <span class="block"><span class="bold">Индивидуальный номер ученого:</span> 00005444</span>
-                        <span class="block">
-                            <span class="bold">Научные интересы (Государственный рубрикатор научно-технической информации):</span>
-                            <span>Автоматизация и автоматизированные системы в области науковедения; Библиотечное дело, библиотековедение; Информационная деятельность в области науковедения...</span>
-                        </span>
-                        <span class="small-icon icon-sm-eye"><span>Показать все (23)</span></span>
-                    </div>
-                </div>
-                <div class="list-info">
-                    <div class="list-item">
-                        <div class="bold">Образование</div>
-                        <ul class="table-emulation">
-                            <li>
-                                <span class="w85 italic inline-block">Город</span> <span class="italic grey">Челябинск</span>
-                            </li>
-                            <li>
-                                <span class="w85 italic inline-block">ВУЗ</span> <span class="italic grey">ЧГАКИ</span>
-                            </li>
-                            <li>
-                                <span class="w85 italic inline-block">Факультет</span> <span class="italic grey">Информационных ресурсов и технологий</span>
-                            </li>
-                            <li>
-                                <span class="w85 italic inline-block">Год окончания</span> <span class="italic grey">2000</span>
-                            </li>
-                        </ul>
-                    </div>
-                    <div class="list-item">
-                        <div class="bold">Публикации</div>
-                        <ol>
-                            <li>Научная публикация поколения 2.0: перспектива или реальность?</li>
-                            <li>Электронно-библиотечная система: перевод понятия на «библиотечный» английский</li>
-                        </ol>
-                        <span class="small-icon icon-sm-eye"><span>Показать все (5)</span></span>
-                    </div>
-                    <div class="list-item">
-                        <div class="bold">Приложенные файлы</div>
-                        <ol>
-                            <li>
-                                Доклад по автоматизированным системам в области науковедения.doc<br />
-                                <span class="small-icon icon-sm-download"><span>Скачать</span></span>
-                            </li>
-                            <li>
-                                Резюме на английском языке.pdf<br />
-                                <span class="small-icon icon-sm-download"><span>Скачать</span></span>
-                            </li>
-                        </ol>
-                    </div>
-                </div>
-                <div class="b-solution">
-                    <div class="table-form">
-                        <div class="table-row">
-                            <div class="left-cell">
-                                <label>Решение по заявке:</label>
-                            </div>
-                            <div class="right-cell">
-                                <ul class="radio-list">
-                                    <li>
-                                        <span class="radio">
-                                            <input type="radio" name="r3" id="rb1">
-                                        </span><label for="rb1">Первое место</label>
+                                        Доклад по автоматизированным системам в области науковедения.doc<br />
+                                        <span class="small-icon icon-sm-download"><span>Скачать</span></span>
                                     </li>
                                     <li>
-                                        <span class="radio">
-                                            <input type="radio" name="r3" id="rb2">
-                                        </span><label for="rb2">Второе место</label>
+                                        Резюме на английском языке.pdf<br />
+                                        <span class="small-icon icon-sm-download"><span>Скачать</span></span>
                                     </li>
-                                </ul>
+                                </ol>
                             </div>
                         </div>
+                        <div class="b-solution">
+                            <div class="table-form">
+                                <div class="table-row">
+                                    <div class="left-cell">
+                                        <label>Решение по заявке:</label>
+                                    </div>
+                                    <div class="right-cell">
+                                        <ul class="radio-list">
+                                            <li>
+                                                <span class="radio">
+                                                    <input type="radio" name="r3" id="rb1">
+                                                </span><label for="rb1">Первое место</label>
+                                            </li>
+                                            <li>
+                                                <span class="radio">
+                                                    <input type="radio" name="r3" id="rb2">
+                                                </span><label for="rb2">Второе место</label>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
 
-                        <div class="table-row form-row mt18">
-                            <div class="left-cell">
-                                <label>Обоснование:</label>
-                            </div>
-                            <div class="right-cell">
-                                <textarea></textarea>
+                                <div class="table-row form-row mt18">
+                                    <div class="left-cell">
+                                        <label>Обоснование:</label>
+                                    </div>
+                                    <div class="right-cell">
+                                        <textarea></textarea>
+                                    </div>
+                                </div>
+
+                                <div class="table-row form-row mt14">
+                                    <div class="left-cell">
+                                        <label>Приложенные файлы:</label>
+                                    </div>
+                                    <div class="right-cell">
+                                        <ul class="content-list">
+                                            <li>
+                                                Протокол №6000567.pdf
+                                                <div class="buttons">
+                                                    <span class="big-link-remove"></span>
+                                                </div>
+                                            </li>
+                                        </ul>
+                                        <span class="small-icon link-add">Приложить файл</span>
+                                    </div>
+                                </div>
+                                <div class="table-row mt37">
+                                    <div class="ctr-buttons button-align">
+                                        <span class="green-btn middle-icon icon-ok">Выбрать победителем</span>
+                                    </div>
+                                </div>
+                                <div class="table-row mt49">
+                                    <div class="ctr-buttons button-align">
+                                        <span class="blue-btn middle-icon icon-arr-left">Вернуться в личный кабинет</span><span class="blue-btn middle-icon icon-arr-right">Вернуться к вакансии</span>
+                                    </div>
+                                </div>
                             </div>
                         </div>
+                        <div class="align-center">Перейти к решению по заявке<span class="solutions op"></span></div>
+                        <div class="align-center mt33" style="display:none;"><span class="solutions cl"></span>Свернуть</div>
+                    </div>
+                </li>
 
-                        <div class="table-row form-row mt14">
-                            <div class="left-cell">
-                                <label>Приложенные файлы:</label>
+                <li>
+                    <div class="caption-slide">Заявка1 на ID МНС6000567 №001 от 01-09-14 </div>
+                    <div class="content-slide">
+                        <div class="profile">
+                            <div class="photo inline-block">
+                                <img width="140" height="180" src="/images/user-photo.jpg" />
                             </div>
-                            <div class="right-cell">
-                                <ul class="content-list">
+                            <div class="info info-view inline-block">
+                                <h4>Глаголев Виктор Александрович</h4>
+                                <span class="int-name">Glagolev Victor Alexandrovitch</span>
+                                <span class="block bold">Год рождения: 1931</span>
+                                <span class="block"><span class="bold">Индивидуальный номер ученого:</span> 00005444</span>
+                                <span class="block">
+                                    <span class="bold">Научные интересы (Государственный рубрикатор научно-технической информации):</span>
+                                    <span>Автоматизация и автоматизированные системы в области науковедения; Библиотечное дело, библиотековедение; Информационная деятельность в области науковедения...</span>
+                                </span>
+                                <span class="small-icon icon-sm-eye"><span>Показать все (23)</span></span>
+                            </div>
+                        </div>
+                        <div class="list-info">
+                            <div class="list-item">
+                                <div class="bold">Образование</div>
+                                <ul class="table-emulation">
                                     <li>
-                                        Протокол №6000567.pdf
-                                        <div class="buttons">
-                                            <span class="big-link-remove"></span>
-                                        </div>
-                                    </li>
-                                </ul>
-                                <span class="small-icon link-add">Приложить файл</span>
-                            </div>
-                        </div>
-                        <div class="table-row mt37">
-                            <div class="ctr-buttons button-align">
-                                <span class="green-btn middle-icon icon-ok">Выбрать победителем</span>
-                            </div>
-                        </div>
-                        <div class="table-row mt49">
-                            <div class="ctr-buttons button-align">
-                                <span class="blue-btn middle-icon icon-arr-left">Вернуться в личный кабинет</span><span class="blue-btn middle-icon icon-arr-right">Вернуться к вакансии</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="align-center">Перейти к решению по заявке<span class="solutions op"></span></div>
-                <div class="align-center mt33" style="display:none;"><span class="solutions cl"></span>Свернуть</div>
-            </div>
-        </li>
-
-        <li>
-            <div class="caption-slide">Заявка2 на ID МНС6000567 №001 от 01-09-14 </div>
-            <div class="content-slide">
-                <div class="profile">
-                    <div class="photo inline-block">
-                        <img width="140" height="180" src="/images/user-photo.jpg"/>
-                    </div>
-                    <div class="info info-view inline-block">
-                        <h4>Глаголев Виктор Александрович</h4>
-                        <span class="int-name">Glagolev Victor Alexandrovitch</span>
-                        <span class="block bold">Год рождения: 1931</span>
-                        <span class="block"><span class="bold">Индивидуальный номер ученого:</span> 00005444</span>
-                        <span class="block">
-                            <span class="bold">Научные интересы (Государственный рубрикатор научно-технической информации):</span>
-                            <span>Автоматизация и автоматизированные системы в области науковедения; Библиотечное дело, библиотековедение; Информационная деятельность в области науковедения...</span>
-                        </span>
-                        <span class="small-icon icon-sm-eye"><span>Показать все (23)</span></span>
-                    </div>
-                </div>
-                <div class="list-info">
-                    <div class="list-item">
-                        <div class="bold">Образование</div>
-                        <ul class="table-emulation">
-                            <li>
-                                <span class="w85 italic inline-block">Город</span> <span class="italic grey">Челябинск</span>
-                            </li>
-                            <li>
-                                <span class="w85 italic inline-block">ВУЗ</span> <span class="italic grey">ЧГАКИ</span>
-                            </li>
-                            <li>
-                                <span class="w85 italic inline-block">Факультет</span> <span class="italic grey">Информационных ресурсов и технологий</span>
-                            </li>
-                            <li>
-                                <span class="w85 italic inline-block">Год окончания</span> <span class="italic grey">2000</span>
-                            </li>
-                        </ul>
-                    </div>
-                    <div class="list-item">
-                        <div class="bold">Публикации</div>
-                        <ol>
-                            <li>Научная публикация поколения 2.0: перспектива или реальность?</li>
-                            <li>Электронно-библиотечная система: перевод понятия на «библиотечный» английский</li>
-                        </ol>
-                        <span class="small-icon icon-sm-eye"><span>Показать все (5)</span></span>
-                    </div>
-                    <div class="list-item">
-                        <div class="bold">Приложенные файлы</div>
-                        <ol>
-                            <li>
-                                Доклад по автоматизированным системам в области науковедения.doc<br/>
-                                <span class="small-icon icon-sm-download"><span>Скачать</span></span>
-                            </li>
-                            <li>
-                                Резюме на английском языке.pdf<br/>
-                                <span class="small-icon icon-sm-download"><span>Скачать</span></span>
-                            </li>
-                        </ol>
-                    </div>
-                </div>
-                <div class="b-solution">
-                    <div class="table-form">
-                        <div class="table-row">
-                            <div class="left-cell">
-                                <label>Решение по заявке:</label>
-                            </div>
-                            <div class="right-cell">
-                                <ul class="radio-list">
-                                    <li>
-                                        <span class="radio">
-                                            <input type="radio" name="r3" id="rb1">
-                                        </span><label for="rb1">Первое место</label>
+                                        <span class="w85 italic inline-block">Город</span> <span class="italic grey">Челябинск</span>
                                     </li>
                                     <li>
-                                        <span class="radio">
-                                            <input type="radio" name="r3" id="rb2">
-                                        </span><label for="rb2">Второе место</label>
+                                        <span class="w85 italic inline-block">ВУЗ</span> <span class="italic grey">ЧГАКИ</span>
+                                    </li>
+                                    <li>
+                                        <span class="w85 italic inline-block">Факультет</span> <span class="italic grey">Информационных ресурсов и технологий</span>
+                                    </li>
+                                    <li>
+                                        <span class="w85 italic inline-block">Год окончания</span> <span class="italic grey">2000</span>
                                     </li>
                                 </ul>
                             </div>
-                        </div>
-
-                        <div class="table-row form-row mt18">
-                            <div class="left-cell">
-                                <label>Обоснование:</label>
+                            <div class="list-item">
+                                <div class="bold">Публикации</div>
+                                <ol>
+                                    <li>Научная публикация поколения 2.0: перспектива или реальность?</li>
+                                    <li>Электронно-библиотечная система: перевод понятия на «библиотечный» английский</li>
+                                </ol>
+                                <span class="small-icon icon-sm-eye"><span>Показать все (5)</span></span>
                             </div>
-                            <div class="right-cell">
-                                <textarea></textarea>
-                            </div>
-                        </div>
-
-                        <div class="table-row form-row mt14">
-                            <div class="left-cell">
-                                <label>Приложенные файлы:</label>
-                            </div>
-                            <div class="right-cell">
-                                <ul class="content-list">
+                            <div class="list-item">
+                                <div class="bold">Приложенные файлы</div>
+                                <ol>
                                     <li>
-                                        Протокол №6000567.pdf
-                                        <div class="buttons">
-                                            <span class="big-link-remove"></span>
-                                        </div>
+                                        Доклад по автоматизированным системам в области науковедения.doc<br />
+                                        <span class="small-icon icon-sm-download"><span>Скачать</span></span>
+                                    </li>
+                                    <li>
+                                        Резюме на английском языке.pdf<br />
+                                        <span class="small-icon icon-sm-download"><span>Скачать</span></span>
+                                    </li>
+                                </ol>
+                            </div>
+                        </div>
+                        <div class="b-solution">
+                            <div class="table-form">
+                                <div class="table-row">
+                                    <div class="left-cell">
+                                        <label>Решение по заявке:</label>
+                                    </div>
+                                    <div class="right-cell">
+                                        <ul class="radio-list">
+                                            <li>
+                                                <span class="radio">
+                                                    <input type="radio" name="r3" id="rb1">
+                                                </span><label for="rb1">Первое место</label>
+                                            </li>
+                                            <li>
+                                                <span class="radio">
+                                                    <input type="radio" name="r3" id="rb2">
+                                                </span><label for="rb2">Второе место</label>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+
+                                <div class="table-row form-row mt18">
+                                    <div class="left-cell">
+                                        <label>Обоснование:</label>
+                                    </div>
+                                    <div class="right-cell">
+                                        <textarea></textarea>
+                                    </div>
+                                </div>
+
+                                <div class="table-row form-row mt14">
+                                    <div class="left-cell">
+                                        <label>Приложенные файлы:</label>
+                                    </div>
+                                    <div class="right-cell">
+                                        <ul class="content-list">
+                                            <li>
+                                                Протокол №6000567.pdf
+                                                <div class="buttons">
+                                                    <span class="big-link-remove"></span>
+                                                </div>
+                                            </li>
+                                        </ul>
+                                        <span class="small-icon link-add">Приложить файл</span>
+                                    </div>
+                                </div>
+                                <div class="table-row mt37">
+                                    <div class="ctr-buttons button-align">
+                                        <span class="green-btn middle-icon icon-ok">Выбрать победителем</span>
+                                    </div>
+                                </div>
+                                <div class="table-row mt49">
+                                    <div class="ctr-buttons button-align">
+                                        <span class="blue-btn middle-icon icon-arr-left">Вернуться в личный кабинет</span><span class="blue-btn middle-icon icon-arr-right">Вернуться к вакансии</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="align-center">Перейти к решению по заявке<span class="solutions op"></span></div>
+                        <div class="align-center mt33" style="display:none;"><span class="solutions cl"></span>Свернуть</div>
+                    </div>
+                </li>
+
+                <li>
+                    <div class="caption-slide">Заявка2 на ID МНС6000567 №001 от 01-09-14 </div>
+                    <div class="content-slide">
+                        <div class="profile">
+                            <div class="photo inline-block">
+                                <img width="140" height="180" src="/images/user-photo.jpg"/>
+                            </div>
+                            <div class="info info-view inline-block">
+                                <h4>Глаголев Виктор Александрович</h4>
+                                <span class="int-name">Glagolev Victor Alexandrovitch</span>
+                                <span class="block bold">Год рождения: 1931</span>
+                                <span class="block"><span class="bold">Индивидуальный номер ученого:</span> 00005444</span>
+                                <span class="block">
+                                    <span class="bold">Научные интересы (Государственный рубрикатор научно-технической информации):</span>
+                                    <span>Автоматизация и автоматизированные системы в области науковедения; Библиотечное дело, библиотековедение; Информационная деятельность в области науковедения...</span>
+                                </span>
+                                <span class="small-icon icon-sm-eye"><span>Показать все (23)</span></span>
+                            </div>
+                        </div>
+                        <div class="list-info">
+                            <div class="list-item">
+                                <div class="bold">Образование</div>
+                                <ul class="table-emulation">
+                                    <li>
+                                        <span class="w85 italic inline-block">Город</span> <span class="italic grey">Челябинск</span>
+                                    </li>
+                                    <li>
+                                        <span class="w85 italic inline-block">ВУЗ</span> <span class="italic grey">ЧГАКИ</span>
+                                    </li>
+                                    <li>
+                                        <span class="w85 italic inline-block">Факультет</span> <span class="italic grey">Информационных ресурсов и технологий</span>
+                                    </li>
+                                    <li>
+                                        <span class="w85 italic inline-block">Год окончания</span> <span class="italic grey">2000</span>
                                     </li>
                                 </ul>
-                                <span class="small-icon link-add">Приложить файл</span>
+                            </div>
+                            <div class="list-item">
+                                <div class="bold">Публикации</div>
+                                <ol>
+                                    <li>Научная публикация поколения 2.0: перспектива или реальность?</li>
+                                    <li>Электронно-библиотечная система: перевод понятия на «библиотечный» английский</li>
+                                </ol>
+                                <span class="small-icon icon-sm-eye"><span>Показать все (5)</span></span>
+                            </div>
+                            <div class="list-item">
+                                <div class="bold">Приложенные файлы</div>
+                                <ol>
+                                    <li>
+                                        Доклад по автоматизированным системам в области науковедения.doc<br/>
+                                        <span class="small-icon icon-sm-download"><span>Скачать</span></span>
+                                    </li>
+                                    <li>
+                                        Резюме на английском языке.pdf<br/>
+                                        <span class="small-icon icon-sm-download"><span>Скачать</span></span>
+                                    </li>
+                                </ol>
                             </div>
                         </div>
-                        <div class="table-row mt37">
-                            <div class="ctr-buttons button-align">
-                                <span class="green-btn middle-icon icon-ok">Выбрать победителем</span>
+                        <div class="b-solution">
+                            <div class="table-form">
+                                <div class="table-row">
+                                    <div class="left-cell">
+                                        <label>Решение по заявке:</label>
+                                    </div>
+                                    <div class="right-cell">
+                                        <ul class="radio-list">
+                                            <li>
+                                                <span class="radio">
+                                                    <input type="radio" name="r3" id="rb1">
+                                                </span><label for="rb1">Первое место</label>
+                                            </li>
+                                            <li>
+                                                <span class="radio">
+                                                    <input type="radio" name="r3" id="rb2">
+                                                </span><label for="rb2">Второе место</label>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+
+                                <div class="table-row form-row mt18">
+                                    <div class="left-cell">
+                                        <label>Обоснование:</label>
+                                    </div>
+                                    <div class="right-cell">
+                                        <textarea></textarea>
+                                    </div>
+                                </div>
+
+                                <div class="table-row form-row mt14">
+                                    <div class="left-cell">
+                                        <label>Приложенные файлы:</label>
+                                    </div>
+                                    <div class="right-cell">
+                                        <ul class="content-list">
+                                            <li>
+                                                Протокол №6000567.pdf
+                                                <div class="buttons">
+                                                    <span class="big-link-remove"></span>
+                                                </div>
+                                            </li>
+                                        </ul>
+                                        <span class="small-icon link-add">Приложить файл</span>
+                                    </div>
+                                </div>
+                                <div class="table-row mt37">
+                                    <div class="ctr-buttons button-align">
+                                        <span class="green-btn middle-icon icon-ok">Выбрать победителем</span>
+                                    </div>
+                                </div>
+                                <div class="table-row mt49">
+                                    <div class="ctr-buttons button-align">
+                                        <span class="blue-btn middle-icon icon-arr-left">Вернуться в личный кабинет</span>
+                                        <span class="blue-btn middle-icon icon-arr-right">Вернуться к вакансии</span>
+                                    </div>
+                                </div>
                             </div>
                         </div>
-                        <div class="table-row mt49">
-                            <div class="ctr-buttons button-align">
-                                <span class="blue-btn middle-icon icon-arr-left">Вернуться в личный кабинет</span>
-                                <span class="blue-btn middle-icon icon-arr-right">Вернуться к вакансии</span>
-                            </div>
+                        <div class="align-center">Перейти к решению по заявке<span class="solutions op"></span></div>
+                        <div class="align-center mt33" style="display: none;"><span class="solutions cl"></span>Свернуть
                         </div>
                     </div>
-                </div>
-                <div class="align-center">Перейти к решению по заявке<span class="solutions op"></span></div>
-                <div class="align-center mt33" style="display: none;"><span class="solutions cl"></span>Свернуть
-                </div>
-            </div>
-        </li>
-    </ul>
+                </li>
+            </ul>
 
-</div>*@
+        </div>*@
