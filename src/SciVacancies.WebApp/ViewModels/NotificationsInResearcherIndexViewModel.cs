@@ -6,7 +6,7 @@ namespace SciVacancies.WebApp.ViewModels
 {
     public class NotificationsInResearcherIndexViewModel
     {
-        public Page<Notification> PagedNotifications { get; set; }
+        public Page<Notification> PagedItems { get; set; }
 
     }
 }

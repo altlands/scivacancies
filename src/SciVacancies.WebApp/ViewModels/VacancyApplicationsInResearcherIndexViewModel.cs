@@ -9,6 +9,6 @@ namespace SciVacancies.WebApp.ViewModels
         {
             Title = "Личная карточка пользователя";
         }
-        public Page<ApplicationDetailsViewModel> Applications { get; set; }
+        public Page<VacancyApplicationDetailsViewModel> Applications { get; set; }
     }
 }

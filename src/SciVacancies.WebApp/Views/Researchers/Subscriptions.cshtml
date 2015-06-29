@@ -1,7 +1,7 @@
 ﻿@using System.Threading.Tasks
 @using SciVacancies.WebApp
 @using SciVacancies.WebApp.Controllers
-@model SciVacancies.WebApp.ViewModels.NotificationsInResearcherIndexViewModel
+@model SciVacancies.WebApp.ViewModels.SearchSubscriptionsInResearcherIndexViewModel
 
 <div class="crumbs">
     <a href="/">Главная страница</a><span class="separator">/</span>
@@ -32,9 +32,9 @@
     </thead>
     <tbody>
 
-        @if (Model.PagedNotifications != null)
+        @if (Model.PagedItems!= null)
         {
-            foreach (var item in Model.PagedNotifications.Items)
+            foreach (var item in Model.PagedItems.Items)
             {
                 <text>
                 <tr>

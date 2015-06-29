@@ -112,7 +112,7 @@ namespace SciVacancies.WebApp.Controllers
                 && preModel.ResearcherGuid != researcherGuid)
                 throw new Exception("Вы не можете просматривать Заявки других соискателей.");
 
-            var model = Mapper.Map<ApplicationDetailsViewModel>(preModel);
+            var model = Mapper.Map<VacancyApplicationDetailsViewModel>(preModel);
 
             return View(model);
         }
@@ -135,7 +135,7 @@ namespace SciVacancies.WebApp.Controllers
                 if (_mediator.Send(new SingleVacancyQuery { VacancyGuid = preModel.VacancyGuid }).OrganizationGuid != organizationGuid)
                     throw new Exception("Вы не можете просматривать Заявки, поданные на вакансии других организаций.");
 
-            var model = Mapper.Map<ApplicationDetailsViewModel>(preModel);
+            var model = Mapper.Map<VacancyApplicationDetailsViewModel>(preModel);
 
             return View(model);
         }

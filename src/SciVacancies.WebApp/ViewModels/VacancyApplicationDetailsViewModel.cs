@@ -4,7 +4,7 @@ using SciVacancies.WebApp.ViewModels.Base;
 
 namespace SciVacancies.WebApp.ViewModels
 {
-    public class ApplicationDetailsViewModel: PageViewModelBase
+    public class VacancyApplicationDetailsViewModel: PageViewModelBase
     {
 
         public Guid ResearcherGuid { get; set; }
