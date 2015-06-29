@@ -44,6 +44,26 @@ namespace SciVacancies.Domain.Events
         public string Reason { get; set; }
     }
     /// <summary>
+    /// Для вакансии выбран победитель (первое место)
+    /// </summary>
+    public class VacancyWinnerSet : VacancyEventBase
+    {
+        public Guid ReasearcherGuid { get; set; }
+        public Guid VacancyApplicationGuid { get; set; }
+
+        public string Reason { get; set; }
+    }
+    /// <summary>
+    /// Для вакансии выбран претендент (второе место)
+    /// </summary>
+    public class VacancyPretenderSet : VacancyEventBase
+    {
+        public Guid ReasearcherGuid { get; set; }
+        public Guid VacancyApplicationGuid { get; set; }
+
+        public string Reason { get; set; }
+    }
+    /// <summary>
     /// Вакансия добавлена соискателем в избранное
     /// </summary>
     public class VacancyAddedToFavorites : VacancyEventBase

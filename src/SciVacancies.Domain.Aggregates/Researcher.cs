@@ -205,7 +205,7 @@ namespace SciVacancies.Domain.Aggregates
                 });
             }
         }
-        public void MakeVacancyApplicationWinner(Guid vacancyApplicationGuid)
+        public void MakeVacancyApplicationWinner(Guid vacancyApplicationGuid, string reason)
         {
             VacancyApplication vacancyApplication = this.VacancyApplications.Find(f => f.VacancyApplicationGuid == vacancyApplicationGuid);
             if (vacancyApplication != null && vacancyApplication.Status == VacancyApplicationStatus.Applied)
@@ -218,7 +218,7 @@ namespace SciVacancies.Domain.Aggregates
                 });
             }
         }
-        public void MakeVacancyApplicationPretender(Guid vacancyApplicationGuid)
+        public void MakeVacancyApplicationPretender(Guid vacancyApplicationGuid, string reason)
         {
             VacancyApplication vacancyApplication = this.VacancyApplications.Find(f => f.VacancyApplicationGuid == vacancyApplicationGuid);
             if (vacancyApplication != null && vacancyApplication.Status == VacancyApplicationStatus.Applied)

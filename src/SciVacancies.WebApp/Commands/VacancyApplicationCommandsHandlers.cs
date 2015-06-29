@@ -112,52 +112,52 @@ namespace SciVacancies.WebApp.Commands
             _repository.Save(researcher, Guid.NewGuid(), null);
         }
     }
-    //TODO - нужен тут:?
-    public class MakeVacancyApplicationWinnerCommandHandler : RequestHandler<MakeVacancyApplicationWinnerCommand>
-    {
-        private readonly IRepository _repository;
+    ////TODO - нужен тут:?
+    //public class MakeVacancyApplicationWinnerCommandHandler : RequestHandler<MakeVacancyApplicationWinnerCommand>
+    //{
+    //    private readonly IRepository _repository;
 
-        public MakeVacancyApplicationWinnerCommandHandler(IRepository repository)
-        {
-            _repository = repository;
-        }
+    //    public MakeVacancyApplicationWinnerCommandHandler(IRepository repository)
+    //    {
+    //        _repository = repository;
+    //    }
 
-        protected override void HandleCore(MakeVacancyApplicationWinnerCommand message)
-        {
-            if (message.OrganizationGuid == Guid.Empty) throw new ArgumentNullException($"OrganizationGuid is empty: {message.OrganizationGuid}");
-            if (message.VacancyGuid == Guid.Empty) throw new ArgumentNullException($"VacancyGuid is empty: {message.VacancyGuid}");
+    //    protected override void HandleCore(MakeVacancyApplicationWinnerCommand message)
+    //    {
+    //        if (message.OrganizationGuid == Guid.Empty) throw new ArgumentNullException($"OrganizationGuid is empty: {message.OrganizationGuid}");
+    //        if (message.VacancyGuid == Guid.Empty) throw new ArgumentNullException($"VacancyGuid is empty: {message.VacancyGuid}");
 
-            if (message.ResearcherGuid == Guid.Empty) throw new ArgumentNullException($"ResearcherGuid is empty: {message.ResearcherGuid}");
-            if (message.VacancyApplicationGuid == Guid.Empty) throw new ArgumentNullException($"VacancyApplicationGuid is empty: {message.VacancyApplicationGuid}");
+    //        if (message.ResearcherGuid == Guid.Empty) throw new ArgumentNullException($"ResearcherGuid is empty: {message.ResearcherGuid}");
+    //        if (message.VacancyApplicationGuid == Guid.Empty) throw new ArgumentNullException($"VacancyApplicationGuid is empty: {message.VacancyApplicationGuid}");
 
             
 
-            Researcher researcher = _repository.GetById<Researcher>(message.ResearcherGuid);
-            //researcher.
-            //_repository.Save(researcher, Guid.NewGuid(), null);
-        }
-    }
-    //TODO - нужен тут:?
-    public class MakeVacancyApplicationPretenderCommandHandler : RequestHandler<MakeVacancyApplicationPretenderCommand>
-    {
-        private readonly IRepository _repository;
+    //        Researcher researcher = _repository.GetById<Researcher>(message.ResearcherGuid);
+    //        researcher.MakeVacancyApplicationWinner(message.VacancyApplicationGuid)
+    //        //_repository.Save(researcher, Guid.NewGuid(), null);
+    //    }
+    //}
+    ////TODO - нужен тут:?
+    //public class MakeVacancyApplicationPretenderCommandHandler : RequestHandler<MakeVacancyApplicationPretenderCommand>
+    //{
+    //    private readonly IRepository _repository;
 
-        public MakeVacancyApplicationPretenderCommandHandler(IRepository repository)
-        {
-            _repository = repository;
-        }
+    //    public MakeVacancyApplicationPretenderCommandHandler(IRepository repository)
+    //    {
+    //        _repository = repository;
+    //    }
 
-        protected override void HandleCore(MakeVacancyApplicationPretenderCommand message)
-        {
-            if (message.OrganizationGuid == Guid.Empty) throw new ArgumentNullException($"OrganizationGuid is empty: {message.OrganizationGuid}");
-            if (message.VacancyGuid == Guid.Empty) throw new ArgumentNullException($"VacancyGuid is empty: {message.VacancyGuid}");
+    //    protected override void HandleCore(MakeVacancyApplicationPretenderCommand message)
+    //    {
+    //        if (message.OrganizationGuid == Guid.Empty) throw new ArgumentNullException($"OrganizationGuid is empty: {message.OrganizationGuid}");
+    //        if (message.VacancyGuid == Guid.Empty) throw new ArgumentNullException($"VacancyGuid is empty: {message.VacancyGuid}");
 
-            if (message.ResearcherGuid == Guid.Empty) throw new ArgumentNullException($"ResearcherGuid is empty: {message.ResearcherGuid}");
-            if (message.VacancyApplicationGuid == Guid.Empty) throw new ArgumentNullException($"VacancyApplicationGuid is empty: {message.VacancyApplicationGuid}");
+    //        if (message.ResearcherGuid == Guid.Empty) throw new ArgumentNullException($"ResearcherGuid is empty: {message.ResearcherGuid}");
+    //        if (message.VacancyApplicationGuid == Guid.Empty) throw new ArgumentNullException($"VacancyApplicationGuid is empty: {message.VacancyApplicationGuid}");
 
-            //Researcher researcher = _repository.GetById<Researcher>(message.ResearcherGuid);
-            //researcher.CancelVacancyApplication(message.VacancyApplicationGuid);
-            //_repository.Save(researcher, Guid.NewGuid(), null);
-        }
-    }
+    //        //Researcher researcher = _repository.GetById<Researcher>(message.ResearcherGuid);
+    //        //researcher.CancelVacancyApplication(message.VacancyApplicationGuid);
+    //        //_repository.Save(researcher, Guid.NewGuid(), null);
+    //    }
+    //}
 }

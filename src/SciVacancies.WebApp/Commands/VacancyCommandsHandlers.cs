@@ -121,12 +121,19 @@ namespace SciVacancies.WebApp.Commands
 
         protected override void HandleCore(SetVacancyWinnerCommand message)
         {
-            //if (message.OrganizationGuid == Guid.Empty) throw new ArgumentNullException($"OrganizationGuid is empty: {message.OrganizationGuid}");
-            //if (message.VacancyGuid == Guid.Empty) throw new ArgumentNullException($"VacancyGuid is empty: {message.VacancyGuid}");
+            if (message.OrganizationGuid == Guid.Empty) throw new ArgumentNullException($"OrganizationGuid is empty: {message.OrganizationGuid}");
+            if (message.VacancyGuid == Guid.Empty) throw new ArgumentNullException($"VacancyGuid is empty: {message.VacancyGuid}");
 
-            //Organization organization = _repository.GetById<Organization>(message.OrganizationGuid);
-            //organization.CancelVacancy(message.VacancyGuid, message.Reason);
-            //_repository.Save(organization, Guid.NewGuid(), null);
+            if (message.ResearcherGuid == Guid.Empty) throw new ArgumentNullException($"ResearcherGuid is empty: {message.ResearcherGuid}");
+            if (message.VacancyApplicationGuid == Guid.Empty) throw new ArgumentNullException($"VacancyApplicationGuid is empty: {message.VacancyApplicationGuid}");
+
+            Organization organization = _repository.GetById<Organization>(message.OrganizationGuid);
+            organization.SetVacancyWinner(message.VacancyGuid, message.ResearcherGuid, message.VacancyApplicationGuid, message.Reason);
+            _repository.Save(organization, Guid.NewGuid(), null);
+
+            Researcher researcher = _repository.GetById<Researcher>(message.ResearcherGuid);
+            researcher.MakeVacancyApplicationWinner(message.VacancyApplicationGuid, message.Reason);
+            _repository.Save(researcher, Guid.NewGuid(), null);
         }
     }
     public class SetVacancyPretenderCommandHandler : RequestHandler<SetVacancyPretenderCommand>
@@ -140,12 +147,19 @@ namespace SciVacancies.WebApp.Commands
 
         protected override void HandleCore(SetVacancyPretenderCommand message)
         {
-            //if (message.OrganizationGuid == Guid.Empty) throw new ArgumentNullException($"OrganizationGuid is empty: {message.OrganizationGuid}");
-            //if (message.VacancyGuid == Guid.Empty) throw new ArgumentNullException($"VacancyGuid is empty: {message.VacancyGuid}");
+            if (message.OrganizationGuid == Guid.Empty) throw new ArgumentNullException($"OrganizationGuid is empty: {message.OrganizationGuid}");
+            if (message.VacancyGuid == Guid.Empty) throw new ArgumentNullException($"VacancyGuid is empty: {message.VacancyGuid}");
 
-            //Organization organization = _repository.GetById<Organization>(message.OrganizationGuid);
-            //organization.CancelVacancy(message.VacancyGuid, message.Reason);
-            //_repository.Save(organization, Guid.NewGuid(), null);
+            if (message.ResearcherGuid == Guid.Empty) throw new ArgumentNullException($"ResearcherGuid is empty: {message.ResearcherGuid}");
+            if (message.VacancyApplicationGuid == Guid.Empty) throw new ArgumentNullException($"VacancyApplicationGuid is empty: {message.VacancyApplicationGuid}");
+
+            Organization organization = _repository.GetById<Organization>(message.OrganizationGuid);
+            organization.SetVacancyPretender(message.VacancyGuid, message.ResearcherGuid, message.VacancyApplicationGuid, message.Reason);
+            _repository.Save(organization, Guid.NewGuid(), null);
+
+            Researcher researcher = _repository.GetById<Researcher>(message.ResearcherGuid);
+            researcher.MakeVacancyApplicationPretender(message.VacancyApplicationGuid, message.Reason);
+            _repository.Save(researcher, Guid.NewGuid(), null);
         }
     }
 

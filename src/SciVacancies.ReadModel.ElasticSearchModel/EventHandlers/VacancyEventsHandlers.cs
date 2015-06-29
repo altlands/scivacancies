@@ -16,11 +16,6 @@ namespace SciVacancies.ReadModel.ElasticSearchModel.EventHandlers
         }
         public void Handle(VacancyPublished msg)
         {
-            //Position position = _db.SingleById<Position>(msg.PositionGuid);
-            //position.Status = PositionStatus.Published;
-
-            //_db.Update(position);
-
             Vacancy vacancy = new Vacancy()
             {
                 Id = msg.VacancyGuid,

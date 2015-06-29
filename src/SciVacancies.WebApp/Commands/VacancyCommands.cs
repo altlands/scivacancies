@@ -45,6 +45,8 @@ namespace SciVacancies.WebApp.Commands
 
         public Guid ResearcherGuid { get; set; }
         public Guid VacancyApplicationGuid { get; set; }
+
+        public string Reason { get; set; }
     }
     public class SetVacancyPretenderCommand : CommandBase, IRequest
     {
@@ -53,6 +55,8 @@ namespace SciVacancies.WebApp.Commands
 
         public Guid ResearcherGuid { get; set; }
         public Guid VacancyApplicationGuid { get; set; }
+
+        public string Reason { get; set; }
     }
 
 
