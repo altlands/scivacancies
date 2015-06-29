@@ -21,7 +21,7 @@
             </div>
             <div class="info inline-block">
                 <h4>@Model.FullName</h4>
-                <span>Год рождения: 1985</span>
+                <span>Год рождения: @Model.BirthDate.Year.ToString("0000")</span>
             </div>
         </div>
     </div>
@@ -34,18 +34,18 @@
     </div>
     <div class="row">
         <span class="bold">Образование</span>
-        <ul class="table-emulation">
+        <ul class="table-emulation" style="color: lightgray;">
             <li>
-                <span class="w85 italic inline-block">Город</span> <span class="italic grey">Челябинск</span>
+                <span class="w85 italic inline-block">Город</span> <span class="italic grey" style="color: lightgray;">Челябинск</span>
             </li>
             <li>
-                <span class="w85 italic inline-block">ВУЗ</span> <span class="italic grey">ЧГАКИ</span>
+                <span class="w85 italic inline-block">ВУЗ</span> <span class="italic grey" style="color: lightgray;">ЧГАКИ</span>
             </li>
             <li>
-                <span class="w85 italic inline-block">Факультет</span> <span class="italic grey">Информационных ресурсов и технологий</span>
+                <span class="w85 italic inline-block">Факультет</span> <span class="italic grey" style="color: lightgray;">Информационных ресурсов и технологий</span>
             </li>
             <li>
-                <span class="w85 italic inline-block">Год окончания</span> <span class="italic grey">2000</span>
+                <span class="w85 italic inline-block">Год окончания</span> <span class="italic grey" style="color: lightgray;">2000</span>
             </li>
         </ul>
     </div>

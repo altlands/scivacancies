@@ -48,5 +48,6 @@ namespace SciVacancies.WebApp.ViewModels
         public DateTime? UpdateDate { get; set; }
 
         public string FullName => $"{SecondName} {FirstName} {Patronymic}";
+        public string FullNameEng => $"{FirstNameEng} {PatronymicEng} {SecondNameEng}";
     }
 }

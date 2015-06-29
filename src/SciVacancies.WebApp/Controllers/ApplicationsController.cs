@@ -121,7 +121,7 @@ namespace SciVacancies.WebApp.Controllers
                 throw new Exception("Вы не можете просматривать Заявки других соискателей.");
 
             var model = Mapper.Map<VacancyApplicationDetailsViewModel>(preModel);
-
+            model.Researcher = Mapper.Map<ResearcherDetailsViewModel>(_mediator.Send(new SingleResearcherQuery { ResearcherGuid = researcherGuid }));
             return View(model);
         }
 
