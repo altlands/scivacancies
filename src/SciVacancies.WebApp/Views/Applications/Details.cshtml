@@ -1,5 +1,6 @@
 ﻿@using System.Threading.Tasks
-@model SciVacancies.WebApp.ViewModels.ApplicationDetailsViewModel
+@using SciVacancies.WebApp
+@model SciVacancies.WebApp.ViewModels.VacancyApplicationDetailsViewModel
 
 <div class="crumbs">
     <a href="/">Главная страница</a><span class="separator">/</span>
@@ -10,7 +11,7 @@
 
 <h3>Личная карточка пользователя</h3>
 
-<h4>@ViewBag.Title: заявка на ID МНС6000567 №001 от @Model.<!--01-09-14--> </h4>
+<h4>@ViewBag.Title: заявка на ID МНС6000567 №001 от @Model.CreationDate.ToLocalVacancyDateString()</h4>
 
 
 <div class="content-slide">
@@ -19,9 +20,9 @@
             <img width="140" height="180" src="/images/user-photo.jpg" />
         </div>
         <div class="info info-view inline-block">
-            <h4>Глаголев Виктор Александрович</h4>
-            <span class="int-name">Glagolev Victor Alexandrovitch</span>
-            <span class="block bold">Год рождения: 1931</span>
+            <h4>@Model.Researcher.FullName</h4>
+            <span class="int-name">@Model.Researcher.FirstNameEng</span>
+            <span class="block bold">Год рождения: @Model.Researcher.BirthDate.Year.ToString("0000")</span>
             <span class="block"><span class="bold">Индивидуальный номер ученого:</span> 00005444</span>
             <span class="block">
                 <span class="bold">Научные интересы (Государственный рубрикатор научно-технической информации):</span>
@@ -33,18 +34,18 @@
     <div class="list-info">
         <div class="list-item">
             <div class="bold">Образование</div>
-            <ul class="table-emulation">
+            <ul class="table-emulation" style="color: lightgray;">
                 <li>
-                    <span class="w85 italic inline-block">Город</span> <span class="italic grey">Челябинск</span>
+                    <span class="w85 italic inline-block">Город</span> <span class="italic grey" style="color: lightgray;">Челябинск</span>
                 </li>
                 <li>
-                    <span class="w85 italic inline-block">ВУЗ</span> <span class="italic grey">ЧГАКИ</span>
+                    <span class="w85 italic inline-block">ВУЗ</span> <span class="italic grey" style="color: lightgray;">ЧГАКИ</span>
                 </li>
                 <li>
-                    <span class="w85 italic inline-block">Факультет</span> <span class="italic grey">Информационных ресурсов и технологий</span>
+                    <span class="w85 italic inline-block">Факультет</span> <span class="italic grey" style="color: lightgray;">Информационных ресурсов и технологий</span>
                 </li>
                 <li>
-                    <span class="w85 italic inline-block">Год окончания</span> <span class="italic grey">2000</span>
+                    <span class="w85 italic inline-block">Год окончания</span> <span class="italic grey" style="color: lightgray;">2000</span>
                 </li>
             </ul>
         </div>

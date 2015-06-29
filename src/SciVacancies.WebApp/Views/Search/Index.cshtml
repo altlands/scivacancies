@@ -5,7 +5,7 @@
 @model SciVacancies.WebApp.ViewModels.VacanciesFilterModel
 
 @{
-    var pagedData = (Page<Vacancy>)ViewBag.PagedData;
+    var pagedData = (Page<SciVacancies.ReadModel.ElasticSearchModel.Model.Vacancy>)ViewBag.PagedData;
 }
 
 <div class="crumbs">
@@ -135,7 +135,7 @@
                     <div>
                         <div class="index-number">17.</div>
                         <div class="index-text">
-                            <div class="title"><a asp-controller="vacancies" asp-action="details" asp-route-id="@item.Guid">@item.Name</a></div>
+                            <div class="title"><a asp-controller="vacancies" asp-action="details" asp-route-id="@item.Id">@item.Name</a></div>
                             <div class="inform">
                                 <p>Дата размещения: @item.DateStart.ToLocalVacancyString()</p>
                                 <p>

@@ -11,8 +11,8 @@ namespace SciVacancies.WebApp.Infrastructure
     {
         protected override void Load(ContainerBuilder builder)
         {
-            builder.RegisterAssemblyTypes(typeof(SciVacancies.ReadModel.EventHandlers.OrganizationCreatedHandler).Assembly).AsClosedTypesOf(typeof(INotificationHandler<>)).SingleInstance();
-            builder.RegisterAssemblyTypes(typeof(SciVacancies.ReadModel.ElasticSearchModel.EventHandlers.OrganizationCreatedHandler).Assembly).AsClosedTypesOf(typeof(INotificationHandler<>)).SingleInstance();
+            builder.RegisterAssemblyTypes(typeof(SciVacancies.ReadModel.EventHandlers.VacancyApplicationCreatedHandler).Assembly).AsClosedTypesOf(typeof(INotificationHandler<>)).AsImplementedInterfaces();
+            builder.RegisterAssemblyTypes(typeof(SciVacancies.ReadModel.ElasticSearchModel.EventHandlers.OrganizationCreatedHandler).Assembly).AsClosedTypesOf(typeof(INotificationHandler<>)).AsImplementedInterfaces();
 
             builder.RegisterAssemblyTypes(typeof(EventBase).Assembly).SingleInstance();
 

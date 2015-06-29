@@ -87,16 +87,16 @@ namespace SciVacancies.ReadModel.EventHandlers
 
             Vacancy vacancy = _db.SingleById<Vacancy>(msg.VacancyGuid);
 
-            Notification notification = new Notification()
-            {
-                Guid = Guid.NewGuid(),
-                OrganizationGuid = vacancy.OrganizationGuid,
-                CreationdDate = msg.TimeStamp,
-                Status = NotificationStatus.Created,
-                Title = "На ваш конкурс" + msg.VacancyGuid + " подана новая заявка "
-            };
+            //Notification notification = new Notification()
+            //{
+            //    Guid = Guid.NewGuid(),
+            //    OrganizationGuid = vacancy.OrganizationGuid,
+            //    CreationdDate = msg.TimeStamp,
+            //    Status = NotificationStatus.Created,
+            //    Title = "На ваш конкурс" + msg.VacancyGuid + " подана новая заявка "
+            //};
 
-            _db.Insert(notification);
+            //_db.Insert(notification);
         }
     }
     public class VacancyApplicationCancelledHandler : INotificationHandler<VacancyApplicationCancelled>
@@ -115,16 +115,16 @@ namespace SciVacancies.ReadModel.EventHandlers
 
             _db.Update(vacancyApplication);
 
-            Notification notification = new Notification()
-            {
-                Guid = Guid.NewGuid(),
-                ResearcherGuid = msg.ResearcherGuid,
-                CreationdDate = msg.TimeStamp,
-                Status = NotificationStatus.Created,
-                Title = "Ваша заявка" + msg.VacancyApplicationGuid + " отклонена"
-            };
+            //Notification notification = new Notification()
+            //{
+            //    Guid = Guid.NewGuid(),
+            //    ResearcherGuid = msg.ResearcherGuid,
+            //    CreationdDate = msg.TimeStamp,
+            //    Status = NotificationStatus.Created,
+            //    Title = "Ваша заявка" + msg.VacancyApplicationGuid + " отклонена"
+            //};
 
-            _db.Insert(notification);
+            //_db.Insert(notification);
         }
     }
     public class VacancyApplicationWonHandler : INotificationHandler<VacancyApplicationWon>
@@ -143,16 +143,16 @@ namespace SciVacancies.ReadModel.EventHandlers
 
             _db.Update(vacancyApplication);
 
-            Notification notification = new Notification()
-            {
-                Guid = Guid.NewGuid(),
-                ResearcherGuid = msg.ResearcherGuid,
-                CreationdDate = msg.TimeStamp,
-                Status = NotificationStatus.Created,
-                Title = "Ваша заявка" + msg.VacancyApplicationGuid + " выйграла конкурс"
-            };
+            //Notification notification = new Notification()
+            //{
+            //    Guid = Guid.NewGuid(),
+            //    ResearcherGuid = msg.ResearcherGuid,
+            //    CreationdDate = msg.TimeStamp,
+            //    Status = NotificationStatus.Created,
+            //    Title = "Ваша заявка" + msg.VacancyApplicationGuid + " выйграла конкурс"
+            //};
 
-            _db.Insert(notification);
+            //_db.Insert(notification);
         }
     }
     public class VacancyApplicationPretendedHandler : INotificationHandler<VacancyApplicationPretended>
@@ -171,16 +171,16 @@ namespace SciVacancies.ReadModel.EventHandlers
 
             _db.Update(vacancyApplication);
 
-            Notification notification = new Notification()
-            {
-                Guid = Guid.NewGuid(),
-                ResearcherGuid = msg.ResearcherGuid,
-                CreationdDate = msg.TimeStamp,
-                Status = NotificationStatus.Created,
-                Title = "Ваша заявка" + msg.VacancyApplicationGuid + " получила второе место в конкурсе"
-            };
+            //Notification notification = new Notification()
+            //{
+            //    Guid = Guid.NewGuid(),
+            //    ResearcherGuid = msg.ResearcherGuid,
+            //    CreationdDate = msg.TimeStamp,
+            //    Status = NotificationStatus.Created,
+            //    Title = "Ваша заявка" + msg.VacancyApplicationGuid + " получила второе место в конкурсе"
+            //};
 
-            _db.Insert(notification);
+            //_db.Insert(notification);
         }
     }
     public class VacancyApplicationLostHandler : INotificationHandler<VacancyApplicationLost>
@@ -199,16 +199,16 @@ namespace SciVacancies.ReadModel.EventHandlers
 
             _db.Update(vacancyApplication);
 
-            Notification notification = new Notification()
-            {
-                Guid = Guid.NewGuid(),
-                ResearcherGuid = msg.ResearcherGuid,
-                CreationdDate = msg.TimeStamp,
-                Status = NotificationStatus.Created,
-                Title = "Ваша заявка" + msg.VacancyApplicationGuid + " проиграла конкурс"
-            };
+            //Notification notification = new Notification()
+            //{
+            //    Guid = Guid.NewGuid(),
+            //    ResearcherGuid = msg.ResearcherGuid,
+            //    CreationdDate = msg.TimeStamp,
+            //    Status = NotificationStatus.Created,
+            //    Title = "Ваша заявка" + msg.VacancyApplicationGuid + " проиграла конкурс"
+            //};
 
-            _db.Insert(notification);
+            //_db.Insert(notification);
         }
     }
 }

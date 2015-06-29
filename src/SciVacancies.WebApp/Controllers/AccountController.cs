@@ -20,6 +20,7 @@ namespace SciVacancies.WebApp.Controllers
             _userManager = userManager;
         }
 
+        [ResponseCache(NoStore = true)]
         [HttpPost]
         public ActionResult Login(AccountLoginViewModel model)
         {
@@ -78,12 +79,14 @@ namespace SciVacancies.WebApp.Controllers
             return View();
         }
 
+        [ResponseCache(NoStore = true)]
         public ActionResult Logout()
         {
             Context.Response.SignOut(DefaultAuthenticationTypes.ApplicationCookie);
             return RedirectToHome();
         }
 
+        [ResponseCache(NoStore = true)]
         private RedirectToActionResult RedirectToHome()
         {
             return RedirectToAction("index", "home");

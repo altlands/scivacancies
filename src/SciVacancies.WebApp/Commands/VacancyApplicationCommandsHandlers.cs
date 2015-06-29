@@ -130,7 +130,7 @@ namespace SciVacancies.WebApp.Commands
     //        if (message.ResearcherGuid == Guid.Empty) throw new ArgumentNullException($"ResearcherGuid is empty: {message.ResearcherGuid}");
     //        if (message.VacancyApplicationGuid == Guid.Empty) throw new ArgumentNullException($"VacancyApplicationGuid is empty: {message.VacancyApplicationGuid}");
 
-            
+
 
     //        Researcher researcher = _repository.GetById<Researcher>(message.ResearcherGuid);
     //        researcher.MakeVacancyApplicationWinner(message.VacancyApplicationGuid)

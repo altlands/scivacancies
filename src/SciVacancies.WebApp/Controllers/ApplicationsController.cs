@@ -63,12 +63,12 @@ namespace SciVacancies.WebApp.Controllers
         public ActionResult Create(VacancyApplicationCreateViewModel model, Guid researcherGuid)
         {
             if (model.VacancyGuid == Guid.Empty)
-                throw new ArgumentNullException(nameof(model.VacancyGuid),"Не указан идентификатор Вакансии");
-            
-            var vacancyData = _mediator.Send(new SingleVacancyQuery {VacancyGuid= model.VacancyGuid});
+                throw new ArgumentNullException(nameof(model.VacancyGuid), "Не указан идентификатор Вакансии");
 
-            if (vacancyData.Status!=VacancyStatus.AppliesAcceptance)
-                throw new  Exception($"Вы не можете подать Заявку на Вакансию в статусе: {vacancyData.Status.GetDescription()}");
+            var vacancyData = _mediator.Send(new SingleVacancyQuery { VacancyGuid = model.VacancyGuid });
+
+            if (vacancyData.Status != VacancyStatus.AppliesAcceptance)
+                throw new Exception($"Вы не можете подать Заявку на Вакансию в статусе: {vacancyData.Status.GetDescription()}");
 
             var appliedVacancyApplications =
                 _mediator.Send(new SelectPagedVacancyApplicationsByVacancyQuery
@@ -79,8 +79,8 @@ namespace SciVacancies.WebApp.Controllers
                     OrderBy = ConstTerms.OrderByDateAscending
                 });
 
-            if(appliedVacancyApplications.Items.Count>0
-                && appliedVacancyApplications.Items.Where(c=>c.Status == VacancyApplicationStatus.Applied).Select(c=>c.ResearcherGuid).Distinct().ToList().Any(c=>c == researcherGuid) )
+            if (appliedVacancyApplications.Items.Count > 0
+                && appliedVacancyApplications.Items.Where(c => c.Status == VacancyApplicationStatus.Applied).Select(c => c.ResearcherGuid).Distinct().ToList().Any(c => c == researcherGuid))
                 throw new Exception("Вы не можете подать повторную Заявку на Вакансию ");
 
             var data = Mapper.Map<VacancyApplicationDataModel>(model);
@@ -91,6 +91,14 @@ namespace SciVacancies.WebApp.Controllers
                 VacancyGuid = model.VacancyGuid,
                 Data = data
             });
+
+            //TODO: Application -> Publish : стоит ли делать отдельную команду Сохранить_И_Опубликовать
+            _mediator.Send(new ApplyVacancyApplicationCommand
+            {
+                ResearcherGuid = researcherGuid,
+                VacancyApplicationGuid = vacancyApplicationGuid
+            });
+
             return RedirectToAction("applications", "researchers", new { id = vacancyApplicationGuid });
         }
 
@@ -112,8 +120,8 @@ namespace SciVacancies.WebApp.Controllers
                 && preModel.ResearcherGuid != researcherGuid)
                 throw new Exception("Вы не можете просматривать Заявки других соискателей.");
 
-            var model = Mapper.Map<ApplicationDetailsViewModel>(preModel);
-
+            var model = Mapper.Map<VacancyApplicationDetailsViewModel>(preModel);
+            model.Researcher = Mapper.Map<ResearcherDetailsViewModel>(_mediator.Send(new SingleResearcherQuery { ResearcherGuid = researcherGuid }));
             return View(model);
         }
 
@@ -135,7 +143,7 @@ namespace SciVacancies.WebApp.Controllers
                 if (_mediator.Send(new SingleVacancyQuery { VacancyGuid = preModel.VacancyGuid }).OrganizationGuid != organizationGuid)
                     throw new Exception("Вы не можете просматривать Заявки, поданные на вакансии других организаций.");
 
-            var model = Mapper.Map<ApplicationDetailsViewModel>(preModel);
+            var model = Mapper.Map<VacancyApplicationDetailsViewModel>(preModel);
 
             return View(model);
         }

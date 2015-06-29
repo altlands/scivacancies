@@ -198,6 +198,18 @@ namespace SciVacancies.WebApp.Controllers
             if (preModel.Status != VacancyStatus.AppliesAcceptance)
                 throw new Exception($"Вы не можете Вакансию на рассмотрение комиссии со статусом: {preModel.Status.GetDescription()}");
 
+            //TODO: Vacancy -> InCommitte : нужно ли проверять минимальное (какое) количество заявок, поданных на вакансию
+            var vacancyApplications = _mediator.Send(new SelectPagedVacancyApplicationsByVacancyQuery
+            {
+                VacancyGuid = preModel.Guid,
+                PageSize = 1000,
+                PageIndex = 1,
+                OrderBy = ConstTerms.OrderByDateDescending
+            });
+            if (vacancyApplications.TotalItems == 0
+                || vacancyApplications.Items.Count(c=>c.Status == VacancyApplicationStatus.Applied) <2)
+                throw new Exception("Подано недостаточно вакансий для перевода Вакансии на рассмотрение комиссии");
+
             _mediator.Send(new SwitchVacancyInCommitteeCommand
             {
                 OrganizationGuid = organizationGuid,
@@ -234,7 +246,7 @@ namespace SciVacancies.WebApp.Controllers
                 OrganizationGuid = organizationGuid,
                 VacancyGuid = id
             });
-            //TODO: Vaqcancies -> SetWinners : добавить Представление
+            //TODO: Vacancies -> SetWinners : добавить Представление
             return View();
         }
 

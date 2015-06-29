@@ -4,12 +4,13 @@ using SciVacancies.WebApp.ViewModels.Base;
 
 namespace SciVacancies.WebApp.ViewModels
 {
-    public class ApplicationDetailsViewModel: PageViewModelBase
+    public class VacancyApplicationDetailsViewModel: PageViewModelBase
     {
 
-        public Guid ResearcherGuid { get; set; }
         public Guid VacancyGuid { get; set; }
         public VacancyDetailsViewModel Vacancy { get; set; }
+        public Guid ResearcherGuid { get; set; }
+        public ResearcherDetailsViewModel Researcher { get; set; }
 
         public int PositionTypeId { get; set; }
 

@@ -50,8 +50,8 @@ namespace SciVacancies.WebApp.Infrastructure
 
             //create 
             Mapper.CreateMap<VacancyApplicationCreateViewModel, VacancyApplicationDataModel>();
-            Mapper.CreateMap<VacancyApplication, ApplicationDetailsViewModel>();
-            Mapper.CreateMap<Page<VacancyApplication>, Page<ApplicationDetailsViewModel>>();
+            Mapper.CreateMap<VacancyApplication, VacancyApplicationDetailsViewModel>();
+            Mapper.CreateMap<Page<VacancyApplication>, Page<VacancyApplicationDetailsViewModel>>();
 
 
             /*Account*/

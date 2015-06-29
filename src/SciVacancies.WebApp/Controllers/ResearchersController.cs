@@ -71,9 +71,10 @@ namespace SciVacancies.WebApp.Controllers
                 });
 
             var model = new VacancyApplicationsInResearcherIndexViewModel();
+
             if (source.TotalItems > 0)
             {
-                model.Applications = Mapper.Map<Page<ApplicationDetailsViewModel>>(source);
+                model.Applications = Mapper.Map<Page<VacancyApplicationDetailsViewModel>>(source);
                 var innerObjects = _mediator.Send(new SelectPagedVacanciesByGuidsQuery
                 {
                     VacanciesGuids = model.Applications.Items.Select(c => c.VacancyGuid).Distinct(),
@@ -83,8 +84,7 @@ namespace SciVacancies.WebApp.Controllers
                 });
                 model.Applications.Items.ForEach(
                     c =>
-                        c.Vacancy =
-                            Mapper.Map<VacancyDetailsViewModel>(innerObjects.Items.Single(d => d.Guid == c.Guid)));
+                        c.Vacancy = Mapper.Map<VacancyDetailsViewModel>(innerObjects.Items.Single(d => d.Guid == c.VacancyGuid)));
             }
 
             return View(model);
@@ -110,9 +110,9 @@ namespace SciVacancies.WebApp.Controllers
         [BindResearcherIdFromClaims]
         public ViewResult Subscriptions(Guid researcherGuid)
         {
-            var model = new NotificationsInResearcherIndexViewModel
+            var model = new SearchSubscriptionsInResearcherIndexViewModel
             {
-                PagedNotifications = _mediator.Send(new SelectPagedNotificationsByResearcherQuery
+                PagedItems = _mediator.Send(new SelectPagedSearchSubscriptionsQuery
                 {
                     ResearcherGuid = researcherGuid,
                     PageIndex = 1,
@@ -125,18 +125,18 @@ namespace SciVacancies.WebApp.Controllers
 
         [SiblingPage]
         [PageTitle("Уведомления")]
-        public ViewResult Notifications()
+        [BindResearcherIdFromClaims]
+        public ViewResult Notifications(Guid researcherGuid)
         {
-            //TODO: Researcher -> Notifications : показать данные из БД
-            var notifications = _mediator.Send(new SelectPagedNotificationsByResearcherQuery
+            var model = new NotificationsInResearcherIndexViewModel
             {
-                ResearcherGuid = Guid.NewGuid(),
-                PageIndex = 1,
-                PageSize = 10
-            });
-
-            //var model = new ResearcherDetailsViewModel();
-            var model = new NotificationsInResearcherIndexViewModel();
+                PagedItems = _mediator.Send(new SelectPagedNotificationsByResearcherQuery
+                {
+                    ResearcherGuid = researcherGuid,
+                    PageIndex = 1,
+                    PageSize = 10
+                })
+            };
             return View(model);
         }
 

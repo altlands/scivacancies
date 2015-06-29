@@ -3,7 +3,7 @@
     "SiteTitle": "Портал вакансий"
   },
   "Data": {
-        "ReadModelDb": "Server=localhost;Database=ZZZ;User Id=postgres;Password=postgres",
-        "EventStoreDb": "Server=localhost;Database=ZZZ;User Id=postgres;Password=postgres"        
+        "ReadModelDb": "Server=localhost;Database=scivacancies;User Id=postgres;Password=postgres",
+        "EventStoreDb": "Server=localhost;Database=scivacancies;User Id=postgres;Password=postgres"        
   }
 }
