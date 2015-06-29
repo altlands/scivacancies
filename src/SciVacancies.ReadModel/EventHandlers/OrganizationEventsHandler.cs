@@ -5,11 +5,14 @@ using SciVacancies.ReadModel.Core;
 
 namespace SciVacancies.ReadModel.EventHandlers
 {
-    public class OrganizationCreatedHandler : INotificationHandler<OrganizationCreated>
+    public class OrganizationEventsHandler : 
+        INotificationHandler<OrganizationCreated>,
+        INotificationHandler<OrganizationUpdated>,
+        INotificationHandler<OrganizationRemoved>
     {
         private readonly IDatabase _db;
 
-        public OrganizationCreatedHandler(IDatabase db)
+        public OrganizationEventsHandler(IDatabase db)
         {
             _db = db;
         }
@@ -56,16 +59,6 @@ namespace SciVacancies.ReadModel.EventHandlers
 
             _db.Insert(organization);
         }
-    }
-    public class OrganizationUpdatedHandler : INotificationHandler<OrganizationUpdated>
-    {
-        private readonly IDatabase _db;        
-
-        public OrganizationUpdatedHandler(IDatabase db)
-        {
-            _db = db;
-        }
-
         public void Handle(OrganizationUpdated msg)
         {
             Organization organization = _db.SingleById<Organization>(msg.OrganizationGuid);
@@ -105,21 +98,11 @@ namespace SciVacancies.ReadModel.EventHandlers
 
             _db.Update(organization);
         }
-    }
-    public class OrganizationRemovedHandler : INotificationHandler<OrganizationRemoved>
-    {
-        private readonly IDatabase _db;        
-
-        public OrganizationRemovedHandler(IDatabase db)
-        {
-            _db = db;
-        }
-
         public void Handle(OrganizationRemoved msg)
         {
             //TODO: Should we remove all the related entities? Vacancies, etc
             //TODO: SHould we delete or mark as "Deleted"? - Нужно сделать по два метода на каждую сущность: удалить с каскадом, пометить как "удалено".
-            _db.Delete<Organization>(msg.OrganizationGuid);           
+            _db.Delete<Organization>(msg.OrganizationGuid);
         }
-    }
+    }    
 }

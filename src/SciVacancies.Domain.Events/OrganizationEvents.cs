@@ -7,6 +7,7 @@ namespace SciVacancies.Domain.Events
     {
         public Guid OrganizationGuid { get; set; }
     }
+
     /// <summary>
     /// Организация создана. Данные слиты с внешнего ресурса.
     /// </summary>
@@ -14,6 +15,7 @@ namespace SciVacancies.Domain.Events
     {
         public OrganizationDataModel Data { get; set; }
     }
+
     /// <summary>
     /// Профиль организации обновлён
     /// </summary>
@@ -21,6 +23,7 @@ namespace SciVacancies.Domain.Events
     {
         public OrganizationDataModel Data { get; set; }
     }
+
     /// <summary>
     /// Организация удалена.
     /// </summary>

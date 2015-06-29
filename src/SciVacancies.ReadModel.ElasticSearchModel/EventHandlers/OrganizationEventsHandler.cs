@@ -2,16 +2,18 @@
 using Nest;
 using SciVacancies.Domain.Events;
 using SciVacancies.ReadModel.ElasticSearchModel.Model;
-using SciVacancies.Domain.DataModels;
-using AutoMapper;
 
 namespace SciVacancies.ReadModel.ElasticSearchModel.EventHandlers
 {
-    public class OrganizationCreatedHandler : INotificationHandler<OrganizationCreated>
+    public class OrganizationEventsHandler : 
+        INotificationHandler<OrganizationCreated>,
+        INotificationHandler<OrganizationUpdated>,
+        INotificationHandler<OrganizationRemoved>
+
     {
         private readonly IElasticClient _elasticClient;
 
-        public OrganizationCreatedHandler(IElasticClient elasticClient)
+        public OrganizationEventsHandler(IElasticClient elasticClient)
         {
             _elasticClient = elasticClient;
         }
@@ -58,15 +60,6 @@ namespace SciVacancies.ReadModel.ElasticSearchModel.EventHandlers
 
             _elasticClient.Index(organization);
         }
-    }
-    public class OrganizationUpdatedHandler : INotificationHandler<OrganizationUpdated>
-    {
-        private readonly IElasticClient _elasticClient;
-
-        public OrganizationUpdatedHandler(IElasticClient elasticClient)
-        {
-            _elasticClient = elasticClient;
-        }
 
         public void Handle(OrganizationUpdated notification)
         {
@@ -110,15 +103,6 @@ namespace SciVacancies.ReadModel.ElasticSearchModel.EventHandlers
             };
 
             _elasticClient.Update<Organization>(u => u.IdFrom(organization).Doc(organization));
-        }
-    }
-    public class OrganizationRemovedHandler : INotificationHandler<OrganizationRemoved>
-    {
-        private readonly IElasticClient _elasticClient;
-
-        public OrganizationRemovedHandler(IElasticClient elasticClient)
-        {
-            _elasticClient = elasticClient;
         }
 
         public void Handle(OrganizationRemoved notification)

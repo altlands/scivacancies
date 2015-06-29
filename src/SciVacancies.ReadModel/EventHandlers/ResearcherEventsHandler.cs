@@ -1,22 +1,18 @@
-﻿using SciVacancies.Domain.Enums;
+﻿using MediatR;
+using NPoco;
 using SciVacancies.Domain.Events;
 using SciVacancies.ReadModel.Core;
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
-using NPoco;
-using MediatR;
-
 namespace SciVacancies.ReadModel.EventHandlers
 {
-    public class ResearcherCreatedHandler : INotificationHandler<ResearcherCreated>
+    public class ResearcherEventsHandler :
+        INotificationHandler<ResearcherCreated>,
+        INotificationHandler<ResearcherUpdated>,
+        INotificationHandler<ResearcherRemoved>
     {
         private readonly IDatabase _db;
 
-        public ResearcherCreatedHandler(IDatabase db)
+        public ResearcherEventsHandler(IDatabase db)
         {
             _db = db;
         }
@@ -63,15 +59,6 @@ namespace SciVacancies.ReadModel.EventHandlers
 
             _db.Insert(researcher);
         }
-    }
-    public class ResearcherUpdateHandler : INotificationHandler<ResearcherUpdated>
-    {
-        private readonly IDatabase _db;
-
-        public ResearcherUpdateHandler(IDatabase db)
-        {
-            _db = db;
-        }
         public void Handle(ResearcherUpdated msg)
         {
             Researcher researcher = _db.SingleById<Researcher>(msg.ResearcherGuid);
@@ -108,18 +95,9 @@ namespace SciVacancies.ReadModel.EventHandlers
 
             _db.Update(researcher);
         }
-    }
-    //TODO - Удалять совсем или помечать удалённым
-    public class ResearcherRemovedHandler : INotificationHandler<ResearcherRemoved>
-    {
-        private readonly IDatabase _db;
-
-        public ResearcherRemovedHandler(IDatabase db)
-        {
-            _db = db;
-        }
         public void Handle(ResearcherRemoved msg)
         {
+            //TODO - Удалять совсем или помечать удалённым
             _db.Delete<Researcher>(msg.ResearcherGuid);
         }
     }

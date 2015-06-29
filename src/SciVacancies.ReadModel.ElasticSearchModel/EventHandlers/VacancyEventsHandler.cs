@@ -6,11 +6,16 @@ using SciVacancies.ReadModel.ElasticSearchModel.Model;
 
 namespace SciVacancies.ReadModel.ElasticSearchModel.EventHandlers
 {
-    public class VacancyPublishedHandler : INotificationHandler<VacancyPublished>
+    public class VacancyEventsHandler : 
+        INotificationHandler<VacancyPublished>,
+        INotificationHandler<VacancyAcceptApplications>,
+        INotificationHandler<VacancyInCommittee>,
+        INotificationHandler<VacancyClosed>,
+        INotificationHandler<VacancyCancelled>
     {
         private readonly IElasticClient _elasticClient;
 
-        public VacancyPublishedHandler(IElasticClient elasticClient)
+        public VacancyEventsHandler(IElasticClient elasticClient)
         {
             _elasticClient = elasticClient;
         }
@@ -59,15 +64,7 @@ namespace SciVacancies.ReadModel.ElasticSearchModel.EventHandlers
 
             _elasticClient.Index(vacancy);
         }
-    }
-    public class VacancyAcceptApplicationsHandler : INotificationHandler<VacancyAcceptApplications>
-    {
-        private readonly IElasticClient _elasticClient;
 
-        public VacancyAcceptApplicationsHandler(IElasticClient elasticClient)
-        {
-            _elasticClient = elasticClient;
-        }
         public void Handle(VacancyAcceptApplications msg)
         {
             Vacancy vacancy = _elasticClient.Get<Vacancy>(msg.VacancyGuid.ToString()).Source;
@@ -75,15 +72,7 @@ namespace SciVacancies.ReadModel.ElasticSearchModel.EventHandlers
 
             _elasticClient.Update<Vacancy>(u => u.IdFrom(vacancy).Doc(vacancy));
         }
-    }
-    public class VacancyInCommitteeHandler : INotificationHandler<VacancyInCommittee>
-    {
-        private readonly IElasticClient _elasticClient;
 
-        public VacancyInCommitteeHandler(IElasticClient elasticClient)
-        {
-            _elasticClient = elasticClient;
-        }
         public void Handle(VacancyInCommittee msg)
         {
             Vacancy vacancy = _elasticClient.Get<Vacancy>(msg.VacancyGuid.ToString()).Source;
@@ -91,15 +80,7 @@ namespace SciVacancies.ReadModel.ElasticSearchModel.EventHandlers
 
             _elasticClient.Update<Vacancy>(u => u.IdFrom(vacancy).Doc(vacancy));
         }
-    }
-    public class VacancyClosedHandler : INotificationHandler<VacancyClosed>
-    {
-        private readonly IElasticClient _elasticClient;
 
-        public VacancyClosedHandler(IElasticClient elasticClient)
-        {
-            _elasticClient = elasticClient;
-        }
         public void Handle(VacancyClosed msg)
         {
             Vacancy vacancy = _elasticClient.Get<Vacancy>(msg.VacancyGuid.ToString()).Source;
@@ -107,15 +88,7 @@ namespace SciVacancies.ReadModel.ElasticSearchModel.EventHandlers
 
             _elasticClient.Update<Vacancy>(u => u.IdFrom(vacancy).Doc(vacancy));
         }
-    }
-    public class VacancyCancelledHandler : INotificationHandler<VacancyCancelled>
-    {
-        private readonly IElasticClient _elasticClient;
 
-        public VacancyCancelledHandler(IElasticClient elasticClient)
-        {
-            _elasticClient = elasticClient;
-        }
         public void Handle(VacancyCancelled msg)
         {
             Vacancy vacancy = _elasticClient.Get<Vacancy>(msg.VacancyGuid.ToString()).Source;

@@ -1,22 +1,24 @@
-﻿using SciVacancies.Domain.Enums;
+﻿using System.Linq;
+using MediatR;
+using NPoco;
+using SciVacancies.Domain.Enums;
 using SciVacancies.Domain.Events;
 using SciVacancies.ReadModel.Core;
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
-using NPoco;
-using MediatR;
-
 namespace SciVacancies.ReadModel.EventHandlers
 {
-    public class VacancyPublishedHandler : INotificationHandler<VacancyPublished>
+    public class VacancyEventsHandler : 
+        INotificationHandler<VacancyPublished>, 
+        INotificationHandler<VacancyAcceptApplications>,
+        INotificationHandler<VacancyInCommittee>,
+        INotificationHandler<VacancyClosed>,
+        INotificationHandler<VacancyCancelled>,
+        INotificationHandler<VacancyAddedToFavorites>,
+        INotificationHandler<VacancyRemovedFromFavorites>
     {
         private readonly IDatabase _db;
 
-        public VacancyPublishedHandler(IDatabase db)
+        public VacancyEventsHandler(IDatabase db)
         {
             _db = db;
         }
@@ -70,15 +72,7 @@ namespace SciVacancies.ReadModel.EventHandlers
 
             _db.Insert(vacancy);
         }
-    }
-    public class VacancyAcceptApplicationsHandler : INotificationHandler<VacancyAcceptApplications>
-    {
-        private readonly IDatabase _db;
 
-        public VacancyAcceptApplicationsHandler(IDatabase db)
-        {
-            _db = db;
-        }
         public void Handle(VacancyAcceptApplications msg)
         {
             Vacancy vacancy = _db.SingleById<Vacancy>(msg.VacancyGuid);
@@ -86,15 +80,7 @@ namespace SciVacancies.ReadModel.EventHandlers
 
             _db.Update(vacancy);
         }
-    }
-    public class VacancyInCommitteeHandler : INotificationHandler<VacancyInCommittee>
-    {
-        private readonly IDatabase _db;
 
-        public VacancyInCommitteeHandler(IDatabase db)
-        {
-            _db = db;
-        }
         public void Handle(VacancyInCommittee msg)
         {
             Vacancy vacancy = _db.SingleById<Vacancy>(msg.VacancyGuid);
@@ -102,15 +88,7 @@ namespace SciVacancies.ReadModel.EventHandlers
 
             _db.Update(vacancy);
         }
-    }
-    public class VacancyClosedHandler : INotificationHandler<VacancyClosed>
-    {
-        private readonly IDatabase _db;
 
-        public VacancyClosedHandler(IDatabase db)
-        {
-            _db = db;
-        }
         public void Handle(VacancyClosed msg)
         {
             Position position = _db.SingleById<Position>(msg.PositionGuid);
@@ -123,15 +101,7 @@ namespace SciVacancies.ReadModel.EventHandlers
 
             _db.Update(vacancy);
         }
-    }
-    public class VacancyCancelledHandler : INotificationHandler<VacancyCancelled>
-    {
-        private readonly IDatabase _db;
 
-        public VacancyCancelledHandler(IDatabase db)
-        {
-            _db = db;
-        }
         public void Handle(VacancyCancelled msg)
         {
             Position position = _db.SingleById<Position>(msg.PositionGuid);
@@ -144,16 +114,7 @@ namespace SciVacancies.ReadModel.EventHandlers
 
             _db.Update(vacancy);
         }
-    }
 
-    public class VacancyAddedToFavoritesHandler : INotificationHandler<VacancyAddedToFavorites>
-    {
-        private readonly IDatabase _db;
-
-        public VacancyAddedToFavoritesHandler(IDatabase db)
-        {
-            _db = db;
-        }
         public void Handle(VacancyAddedToFavorites msg)
         {
             Vacancy vacancy = _db.SingleById<Vacancy>(msg.VacancyGuid);
@@ -169,15 +130,7 @@ namespace SciVacancies.ReadModel.EventHandlers
 
             _db.Insert(favoriteVacancy);
         }
-    }
-    public class VacancyRemovedFromFavoritesHandler : INotificationHandler<VacancyRemovedFromFavorites>
-    {
-        private readonly IDatabase _db;
 
-        public VacancyRemovedFromFavoritesHandler(IDatabase db)
-        {
-            _db = db;
-        }
         public void Handle(VacancyRemovedFromFavorites msg)
         {
             Vacancy vacancy = _db.SingleById<Vacancy>(msg.VacancyGuid);

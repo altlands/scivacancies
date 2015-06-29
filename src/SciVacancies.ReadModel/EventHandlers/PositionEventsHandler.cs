@@ -1,22 +1,19 @@
-﻿using SciVacancies.Domain.Enums;
+﻿using MediatR;
+using NPoco;
+using SciVacancies.Domain.Enums;
 using SciVacancies.Domain.Events;
 using SciVacancies.ReadModel.Core;
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
-using NPoco;
-using MediatR;
-
 namespace SciVacancies.ReadModel.EventHandlers
 {
-    public class PositionCreatedHandler : INotificationHandler<PositionCreated>
+    public class PositionEventsHandler : 
+        INotificationHandler<PositionCreated>,
+        INotificationHandler<PositionUpdated>,
+        INotificationHandler<PositionRemoved>
     {
         private readonly IDatabase _db;
 
-        public PositionCreatedHandler(IDatabase db)
+        public PositionEventsHandler(IDatabase db)
         {
             _db = db;
         }
@@ -65,15 +62,6 @@ namespace SciVacancies.ReadModel.EventHandlers
 
             _db.Insert(position);
         }
-    }
-    public class PositionUpdatedHandler : INotificationHandler<PositionUpdated>
-    {
-        private readonly IDatabase _db;
-
-        public PositionUpdatedHandler(IDatabase db)
-        {
-            _db = db;
-        }
         public void Handle(PositionUpdated msg)
         {
             Position position = _db.SingleById<Position>(msg.PositionGuid);
@@ -116,15 +104,6 @@ namespace SciVacancies.ReadModel.EventHandlers
             position.UpdateDate = msg.TimeStamp;
 
             _db.Update(position);
-        }
-    }
-    public class PositionRemovedHandler : INotificationHandler<PositionRemoved>
-    {
-        private readonly IDatabase _db;
-
-        public PositionRemovedHandler(IDatabase db)
-        {
-            _db = db;
         }
         public void Handle(PositionRemoved msg)
         {
