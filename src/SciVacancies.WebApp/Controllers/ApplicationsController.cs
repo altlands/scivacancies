@@ -91,6 +91,14 @@ namespace SciVacancies.WebApp.Controllers
                 VacancyGuid = model.VacancyGuid,
                 Data = data
             });
+
+            //TODO: Application -> Publish : стоит ли делать отдельную команду Сохранить_И_Опубликовать
+            _mediator.Send(new ApplyVacancyApplicationCommand
+            {
+                ResearcherGuid = researcherGuid,
+                VacancyApplicationGuid = vacancyApplicationGuid
+            });
+
             return RedirectToAction("applications", "researchers", new { id = vacancyApplicationGuid });
         }
 
