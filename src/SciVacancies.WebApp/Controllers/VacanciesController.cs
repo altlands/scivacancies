@@ -145,5 +145,98 @@ namespace SciVacancies.WebApp.Controllers
             return RedirectToAction("vacancies", "organizations");
         }
 
+        [PageTitle("Начать приём заявок")]
+        [BindOrganizationIdFromClaims]
+        [Authorize(Roles = ConstTerms.RequireRoleOrganizationAdmin)]
+        public IActionResult StartAcceptApplications(Guid id, Guid organizationGuid)
+        {
+            if (id == Guid.Empty)
+                throw new ArgumentNullException(nameof(id));
+
+            if (organizationGuid == Guid.Empty)
+                throw new ArgumentNullException(nameof(organizationGuid));
+
+            var preModel = _mediator.Send(new SingleVacancyQuery { VacancyGuid = id });
+
+            if (preModel == null)
+                throw new ObjectNotFoundException($"Не найдена вакансия с идентификатором: {id}");
+
+            if (preModel.OrganizationGuid != organizationGuid)
+                throw new Exception("Вы не можете менять Вакансии других организаций");
+
+            if (preModel.Status != VacancyStatus.Published)
+                throw new Exception($"Вы не можете начать включить режим приём Заявок для Вакансии со статусом: {preModel.Status.GetDescription()}");
+
+            _mediator.Send(new SwitchVacancyToAcceptApplicationsCommand
+            {
+                OrganizationGuid = organizationGuid,
+                VacancyGuid = id
+            });
+
+            return View();
+        }
+
+        [PageTitle("На рассмотрении")]
+        [BindOrganizationIdFromClaims]
+        [Authorize(Roles = ConstTerms.RequireRoleOrganizationAdmin)]
+        public IActionResult StartInCommittee(Guid id, Guid organizationGuid)
+        {
+            if (id == Guid.Empty)
+                throw new ArgumentNullException(nameof(id));
+
+            if (organizationGuid == Guid.Empty)
+                throw new ArgumentNullException(nameof(organizationGuid));
+
+            var preModel = _mediator.Send(new SingleVacancyQuery { VacancyGuid = id });
+
+            if (preModel == null)
+                throw new ObjectNotFoundException($"Не найдена вакансия с идентификатором: {id}");
+
+            if (preModel.OrganizationGuid != organizationGuid)
+                throw new Exception("Вы не можете менять Вакансии других организаций");
+
+            if (preModel.Status != VacancyStatus.AppliesAcceptance)
+                throw new Exception($"Вы не можете Вакансию на рассмотрение комиссии со статусом: {preModel.Status.GetDescription()}");
+
+            _mediator.Send(new SwitchVacancyInCommitteeCommand
+            {
+                OrganizationGuid = organizationGuid,
+                VacancyGuid = id
+            });
+
+            return View();
+        }
+
+        [PageTitle("Выбор победителя")]
+        [BindOrganizationIdFromClaims]
+        [Authorize(Roles = ConstTerms.RequireRoleOrganizationAdmin)]
+        public IActionResult SetWinners(Guid id, Guid organizationGuid)
+        {
+            if (id == Guid.Empty)
+                throw new ArgumentNullException(nameof(id));
+
+            if (organizationGuid == Guid.Empty)
+                throw new ArgumentNullException(nameof(organizationGuid));
+
+            var preModel = _mediator.Send(new SingleVacancyQuery { VacancyGuid = id });
+
+            if (preModel == null)
+                throw new ObjectNotFoundException($"Не найдена вакансия с идентификатором: {id}");
+
+            if (preModel.OrganizationGuid != organizationGuid)
+                throw new Exception("Вы не можете менять Вакансии других организаций");
+
+            if (preModel.Status != VacancyStatus.InCommittee)
+                throw new Exception($"Вы не можете выбрать победителя по Заявке со статусом: {preModel.Status.GetDescription()}");
+
+            _mediator.Send(new SwitchVacancyToAcceptApplicationsCommand
+            {
+                OrganizationGuid = organizationGuid,
+                VacancyGuid = id
+            });
+
+            return View();
+        }
+
     }
 }

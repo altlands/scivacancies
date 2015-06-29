@@ -81,6 +81,14 @@
                         {
                             <a asp-controller="vacancies" asp-action="cancel" asp-route-id="@item.Guid" class="close-td-icon" title="Отменить вакансию"></a>
                         }
+                        @if (item.Status == VacancyStatus.Published)
+                        {
+                            <a asp-controller="vacancies" asp-action="startacceptapplications" asp-route-id="@item.Guid" title="Включить приём заявок">вкл приём заявок</a>
+                        }
+                        @if (item.Status == VacancyStatus.AppliesAcceptance)
+                        {
+                            <a asp-controller="vacancies" asp-action="startincommittee" asp-route-id="@item.Guid" title="Перевести на рассмотрение">на рассмотрение</a>
+                        }
                         @if (item.Status == VacancyStatus.InCommittee)
                         {
                             <a asp-controller="vacancies" asp-action="setwinners" asp-route-id="@item.Guid" title="Выбрать победителя">Выбрать победителя</a>

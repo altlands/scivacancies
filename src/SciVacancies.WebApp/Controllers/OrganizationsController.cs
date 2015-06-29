@@ -4,6 +4,7 @@ using AutoMapper;
 using MediatR;
 using Microsoft.AspNet.Authorization;
 using Microsoft.AspNet.Mvc;
+using SciVacancies.WebApp.Commands;
 using SciVacancies.WebApp.Engine;
 using SciVacancies.WebApp.Engine.CustomAttribute;
 using SciVacancies.WebApp.Queries;
@@ -28,9 +29,9 @@ namespace SciVacancies.WebApp.Controllers
             if (id == Guid.Empty)
                 throw new ArgumentNullException(nameof(id));
 
-            var preModel = _mediator.Send(new SingleOrganizationQuery {OrganizationGuid = id});
+            var preModel = _mediator.Send(new SingleOrganizationQuery { OrganizationGuid = id });
 
-            if(preModel == null)
+            if (preModel == null)
                 throw new ObjectNotFoundException($"Не найдена организация по идентификатору: {id}");
 
             var model = Mapper.Map<OrganizationDetailsViewModel>(preModel);
@@ -53,7 +54,7 @@ namespace SciVacancies.WebApp.Controllers
             if (organizationGuid == Guid.Empty)
                 throw new ArgumentNullException(nameof(organizationGuid));
 
-            var model = Mapper.Map<OrganizationDetailsViewModel>(_mediator.Send(new SingleOrganizationQuery {OrganizationGuid = organizationGuid }));
+            var model = Mapper.Map<OrganizationDetailsViewModel>(_mediator.Send(new SingleOrganizationQuery { OrganizationGuid = organizationGuid }));
 
             if (model == null)
                 return RedirectToAction("logout", "account");
@@ -72,7 +73,7 @@ namespace SciVacancies.WebApp.Controllers
             var model = new VacanciesInOrganizationIndexViewModel
             {
                 OrganizationGuid = organizationGuid,
-                PagedPositions = _mediator.Send(new SelectPagedPositionsByOrganizationQuery {OrganizationGuid = organizationGuid, PageSize =500, PageIndex = 1}),
+                PagedPositions = _mediator.Send(new SelectPagedPositionsByOrganizationQuery { OrganizationGuid = organizationGuid, PageSize = 500, PageIndex = 1 }),
                 PagedVacancies = _mediator.Send(new SelectPagedVacanciesByOrganizationQuery { OrganizationGuid = organizationGuid, PageSize = 500, PageIndex = 1 })
             };
 
@@ -84,9 +85,12 @@ namespace SciVacancies.WebApp.Controllers
         [BindOrganizationIdFromClaims]
         public ViewResult Closed(Guid organizationGuid)
         {
+            if (organizationGuid == Guid.Empty)
+                throw new ArgumentNullException(nameof(organizationGuid));
+
             var model = new VacanciesInOrganizationIndexViewModel
             {
-                PagedVacancies= _mediator.Send(new SelectPagedClosedVacanciesByOrganizationQuery
+                PagedVacancies = _mediator.Send(new SelectPagedClosedVacanciesByOrganizationQuery
                 {
                     OrganizationGuid = organizationGuid,
                     PageIndex = 1,
@@ -101,6 +105,10 @@ namespace SciVacancies.WebApp.Controllers
         [BindOrganizationIdFromClaims]
         public ViewResult Notifications(Guid organizationGuid)
         {
+            if (organizationGuid == Guid.Empty)
+                throw new ArgumentNullException(nameof(organizationGuid));
+
+
             var model = new NotificationsInOrganizationIndexViewModel
             {
                 PagedNotifications = _mediator.Send(new SelectPagedNotificationsByOrganizationQuery
@@ -112,5 +120,7 @@ namespace SciVacancies.WebApp.Controllers
             };
             return View(model);
         }
+
+
     }
 }

@@ -27,7 +27,7 @@ namespace SciVacancies.WebApp.Commands
 
             var user = new SciVacUser
             {
-                UserName = message.Data.Email
+                UserName = message.Data.UserName
             };
 
             var researcherDataModel = Mapper.Map<AccountResearcherRegisterViewModel, ResearcherDataModel>(message.Data);
@@ -68,7 +68,7 @@ namespace SciVacancies.WebApp.Commands
 
             var user = new SciVacUser
             {
-                UserName = message.Data.Email
+                UserName = message.Data.UserName
             };
 
             var organizationDataModel = Mapper.Map<AccountOrganizationRegisterViewModel, OrganizationDataModel>(message.Data);

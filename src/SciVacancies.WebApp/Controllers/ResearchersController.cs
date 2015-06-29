@@ -4,6 +4,7 @@ using AutoMapper;
 using MediatR;
 using Microsoft.AspNet.Authorization;
 using Microsoft.AspNet.Mvc;
+using NPoco;
 using SciVacancies.Domain.Enums;
 using SciVacancies.WebApp.Commands;
 using SciVacancies.WebApp.Engine;
@@ -63,8 +64,17 @@ namespace SciVacancies.WebApp.Controllers
 
             var model = new VacancyApplicationsInResearcherIndexViewModel
             {
-                Applications = _mediator.Send(new SelectPagedVacancyApplicationsByResearcherQuery { PageSize = 500, PageIndex = 1, OrderBy = ConstTerms.OrderByCreationDateDescending, ResearcherGuid = researcherGuid })
+                Applications = Mapper
+                    .Map<Page<ApplicationDetailsViewModel>>( _mediator.Send(new SelectPagedVacancyApplicationsByResearcherQuery { PageSize = 500, PageIndex = 1, OrderBy = ConstTerms.OrderByCreationDateDescending, ResearcherGuid = researcherGuid }) )
             };
+            var innerObjects = _mediator.Send(new SelectPagedVacanciesByGuidsQuery
+            {
+                VacanciesGuids = model.Applications.Items.Select(c => c.VacancyGuid).Distinct(),
+                PageSize = 500,
+                PageIndex = 1,
+                OrderBy = ConstTerms.OrderByDateDescending
+            });
+            model.Applications.Items.ForEach(c=>c.Vacancy = Mapper.Map<VacancyDetailsViewModel>(innerObjects.Items.Single(d => d.Guid == c.Guid)));
             return View(model);
         }
 
@@ -88,7 +98,6 @@ namespace SciVacancies.WebApp.Controllers
         [BindResearcherIdFromClaims]
         public ViewResult Subscriptions(Guid researcherGuid)
         {
-            //TODO
             var model = new NotificationsInResearcherIndexViewModel
             {
                 PagedNotifications = _mediator.Send(new SelectPagedNotificationsByResearcherQuery
@@ -100,39 +109,13 @@ namespace SciVacancies.WebApp.Controllers
             };
             return View(model);
         }
-        //TODO
-        [HttpDelete]
-        [BindResearcherIdFromClaims]
-        public ActionResult DeleteSubscription(Guid researcherGuid, Guid subscriptionGuid)
-        {
-            _mediator.Send(new RemoveSearchSubscriptionCommand { ResearcherGuid = researcherGuid, SearchSubscriptionGuid = subscriptionGuid });
 
-            return RedirectToAction("subscriptions", "researchers", new { id = researcherGuid });
-        }
-        //TODO
-        [HttpPost]
-        [BindResearcherIdFromClaims]
-        public ActionResult ActivateSubscription(Guid researcherGuid, Guid subscriptionGuid)
-        {
-            _mediator.Send(new ActivateSearchSubscriptionCommand { ResearcherGuid = researcherGuid, SearchSubscriptionGuid = subscriptionGuid });
-
-            return RedirectToAction("subscriptions", "researchers", new { id = researcherGuid });
-        }
-        //TODO
-        [HttpPost]
-        [BindResearcherIdFromClaims]
-        public ActionResult CancelSubscription(Guid researcherGuid, Guid subscriptionGuid)
-        {
-            _mediator.Send(new CancelSearchSubscriptionCommand { ResearcherGuid = researcherGuid, SearchSubscriptionGuid = subscriptionGuid });
-
-            return RedirectToAction("subscriptions", "researchers", new { id = researcherGuid });
-        }
 
         [SiblingPage]
         [PageTitle("Уведомления")]
         public ViewResult Notifications()
         {
-            //TODO
+            //TODO: Researcher -> Notifications : показать данные из БД
             var notifications = _mediator.Send(new SelectPagedNotificationsByResearcherQuery
             {
                 ResearcherGuid = Guid.NewGuid(),
@@ -140,26 +123,9 @@ namespace SciVacancies.WebApp.Controllers
                 PageSize = 10
             });
 
-            var model = new ResearcherDetailsViewModel();
+            //var model = new ResearcherDetailsViewModel();
+            var model = new NotificationsInResearcherIndexViewModel();
             return View(model);
-        }
-        //TODO - Перевести уведомление в статус "прочитано" - при клике на конверт показывается попап с полным текстом и вызывается этот метод
-        [HttpPost]
-        [BindResearcherIdFromClaims]
-        public ActionResult MarkNotificationRead(Guid notificationGuid)
-        {
-            _mediator.Send(new SwitchNotificationToReadCommand { NotificationGuid = notificationGuid });
-
-            return RedirectToAction("notifications", "researchers");
-        }
-        //TODO - Удалить уведомление
-        [HttpDelete]
-        [BindResearcherIdFromClaims]
-        public ActionResult DeleteNotification(Guid notificationGuid)
-        {
-            _mediator.Send(new RemoveNotificationCommand { NotificationGuid = notificationGuid });
-
-            return RedirectToAction("notifications", "researchers");
         }
 
         [BindResearcherIdFromClaims]
