@@ -110,6 +110,44 @@ namespace SciVacancies.WebApp.Commands
             _repository.Save(organization, Guid.NewGuid(), null);
         }
     }
+    public class SetVacancyWinnerCommandHandler : RequestHandler<SetVacancyWinnerCommand>
+    {
+        private readonly IRepository _repository;
+
+        public SetVacancyWinnerCommandHandler(IRepository repository)
+        {
+            _repository = repository;
+        }
+
+        protected override void HandleCore(SetVacancyWinnerCommand message)
+        {
+            //if (message.OrganizationGuid == Guid.Empty) throw new ArgumentNullException($"OrganizationGuid is empty: {message.OrganizationGuid}");
+            //if (message.VacancyGuid == Guid.Empty) throw new ArgumentNullException($"VacancyGuid is empty: {message.VacancyGuid}");
+
+            //Organization organization = _repository.GetById<Organization>(message.OrganizationGuid);
+            //organization.CancelVacancy(message.VacancyGuid, message.Reason);
+            //_repository.Save(organization, Guid.NewGuid(), null);
+        }
+    }
+    public class SetVacancyPretenderCommandHandler : RequestHandler<SetVacancyPretenderCommand>
+    {
+        private readonly IRepository _repository;
+
+        public SetVacancyPretenderCommandHandler(IRepository repository)
+        {
+            _repository = repository;
+        }
+
+        protected override void HandleCore(SetVacancyPretenderCommand message)
+        {
+            //if (message.OrganizationGuid == Guid.Empty) throw new ArgumentNullException($"OrganizationGuid is empty: {message.OrganizationGuid}");
+            //if (message.VacancyGuid == Guid.Empty) throw new ArgumentNullException($"VacancyGuid is empty: {message.VacancyGuid}");
+
+            //Organization organization = _repository.GetById<Organization>(message.OrganizationGuid);
+            //organization.CancelVacancy(message.VacancyGuid, message.Reason);
+            //_repository.Save(organization, Guid.NewGuid(), null);
+        }
+    }
 
     public class AddVacancyToFavoritesCommandHandler : IRequestHandler<AddVacancyToFavoritesCommand, int>
     {
