@@ -19,11 +19,9 @@ namespace SciVacancies.WebApp.Controllers
     {
         private readonly IMediator _mediator;
 
-        public ResearchersController(IMediator mediator)
-        {
-            _mediator = mediator;
-        }
+        public ResearchersController(IMediator mediator) { _mediator = mediator; }
 
+        [ResponseCache(NoStore = true)]
         [SiblingPage]
         [PageTitle("Информация")]
         [BindResearcherIdFromClaims]
@@ -40,6 +38,7 @@ namespace SciVacancies.WebApp.Controllers
             return View(model);
         }
 
+        [ResponseCache(NoStore = true)]
         [PageTitle("Изменить данные")]
         public ViewResult Edit(Guid id)
         {
@@ -71,14 +70,10 @@ namespace SciVacancies.WebApp.Controllers
                     ResearcherGuid = researcherGuid
                 });
 
-            var model = new VacancyApplicationsInResearcherIndexViewModel
+            var model = new VacancyApplicationsInResearcherIndexViewModel();
+            if (source.TotalItems > 0)
             {
-                Applications = Mapper
-                    .Map<Page<ApplicationDetailsViewModel>>(source)
-            };
-
-            if (model.Applications.TotalItems > 0)
-            {
+                model.Applications = Mapper.Map<Page<ApplicationDetailsViewModel>>(source);
                 var innerObjects = _mediator.Send(new SelectPagedVacanciesByGuidsQuery
                 {
                     VacanciesGuids = model.Applications.Items.Select(c => c.VacancyGuid).Distinct(),
