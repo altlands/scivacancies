@@ -166,6 +166,7 @@ namespace SciVacancies.Domain.Aggregates
                 });
             }
         }
+        //public void SetVacancyWinner()
 
         #region Apply-Handlers
         public void Apply(OrganizationCreated @event)
