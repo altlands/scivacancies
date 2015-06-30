@@ -1,9 +1,15 @@
-﻿using Autofac;
+﻿using System;
+using System.Linq;
+using System.Reflection;
+using Autofac;
+using Autofac.Core;
+using FluentValidation;
 using MediatR;
 using SciVacancies.Domain.Events;
 using SciVacancies.ReadModel.EventHandlers;
-using SciVacancies.ReadModel.ElasticSearchModel.EventHandlers;
 using SciVacancies.WebApp.Commands;
+using Module = Autofac.Module;
+using OrganizationEventsHandler = SciVacancies.ReadModel.ElasticSearchModel.EventHandlers.OrganizationEventsHandler;
 
 namespace SciVacancies.WebApp.Infrastructure
 {
@@ -11,13 +17,53 @@ namespace SciVacancies.WebApp.Infrastructure
     {
         protected override void Load(ContainerBuilder builder)
         {
-            builder.RegisterAssemblyTypes(typeof(SciVacancies.ReadModel.EventHandlers.VacancyApplicationEventsHandler).Assembly).AsClosedTypesOf(typeof(INotificationHandler<>)).AsImplementedInterfaces();
-            builder.RegisterAssemblyTypes(typeof(SciVacancies.ReadModel.ElasticSearchModel.EventHandlers.OrganizationEventsHandler).Assembly).AsClosedTypesOf(typeof(INotificationHandler<>)).AsImplementedInterfaces();
+            //builder.RegisterAssemblyTypes(typeof(VacancyApplicationEventsHandler).Assembly).AsClosedTypesOf(typeof(INotificationHandler<>)).AsImplementedInterfaces();
+            //builder.RegisterAssemblyTypes(typeof(OrganizationEventsHandler).Assembly).AsClosedTypesOf(typeof(INotificationHandler<>)).AsImplementedInterfaces();
 
             builder.RegisterAssemblyTypes(typeof(EventBase).Assembly).SingleInstance();
-
             builder.RegisterAssemblyTypes(typeof(CommandBase).Assembly).AsClosedTypesOf(typeof(IRequest<>)).SingleInstance();
-            builder.RegisterAssemblyTypes(typeof(CreateOrganizationCommandHandler).Assembly).AsClosedTypesOf(typeof(IRequestHandler<,>)).SingleInstance();
+
+            builder.RegisterAssemblyTypes(new Assembly[]
+            {
+                Assembly.Load("SciVacancies.ReadModel"),
+                Assembly.Load("SciVacancies.ReadModel.ElasticSearchModel")
+            })
+                .AsClosedTypesOf(typeof(INotificationHandler<>))
+                .AsImplementedInterfaces();
+
+
+            builder.RegisterAssemblyTypes(new Assembly[]
+            {
+                Assembly.Load("SciVacancies.WebApp")
+            })
+                .AsClosedTypesOf(typeof(IValidator<>))
+                .AsImplementedInterfaces();
+
+            builder.RegisterAssemblyTypes()
+                .Where(t => !t.Name.StartsWith("ValidatorHandler"))
+                .AsClosedTypesOf(typeof(IRequestHandler<,>))
+                .AsImplementedInterfaces();
+            //.Keyed("implementation", typeof(IRequestHandler<,>));
+
+
+            builder.RegisterAssemblyTypes(new Assembly[]
+            {
+                Assembly.Load("SciVacancies.WebApp")
+            })
+              .As(t => t.GetInterfaces()
+                    .Where(i => i.IsClosedTypeOf(typeof(IRequestHandler<,>)))
+                    .Select(i => new KeyedService("handler-implementor", i))
+                    .Cast<Service>())
+              .SingleInstance();
+
+           // builder.RegisterType<CreatePositionCommandHandler>().Named<IRequestHandler<CreatePositionCommand, Guid>>("implementation");
+
+            builder.RegisterGenericDecorator(
+                typeof(ValidatorHandler<,>),
+                typeof(IRequestHandler<,>),
+                fromKey: "handler-implementor");
+
+            //builder.RegisterAssemblyTypes(typeof(CreateOrganizationCommandHandler).Assembly).AsClosedTypesOf(typeof(IRequestHandler<,>)).SingleInstance();
         }
     }
 }
