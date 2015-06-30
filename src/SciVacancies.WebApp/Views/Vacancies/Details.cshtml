@@ -164,9 +164,9 @@
                             <td class="align-center pl0"></td>
                             <td>
                                 <!--TODO: Vacancy -> Applications -> View : просмотреть заявку-->
-                                <a asp-controller="applications" asp-action="applicationinvacancy" asp-route-id="@Guid.NewGuid()" class="view-td-icon"></a>
+                                <a asp-controller="applications" asp-action="applicationinvacancy" asp-route-id="@item.Guid" class="view-td-icon"></a>
                                 <!--TODO: Vacancy -> Applications -> Print: распечатать заявку-->
-                                <a asp-controller="applications" asp-action="print" asp-route-id="@Guid.NewGuid()" href="#" class="print-td-icon"></a>
+                                <a asp-controller="applications" asp-action="print" asp-route-id="@item.Guid" class="print-td-icon"></a>
                             </td>
                         </tr>
                         </text>
