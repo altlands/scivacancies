@@ -16,31 +16,54 @@ namespace SciVacancies.ReadModel.ElasticSearchModel.Model
         /// </summary>
         public Guid OrganizationGuid { get; set; }
 
+        /// <summary>
+        /// Идентификатор позиции, на которую создана вакансия
+        /// </summary>
         public Guid PositionGuid { get; set; }
 
-        [ElasticProperty(Index = FieldIndexOption.NotAnalyzed, Type = FieldType.String)]
-        public Guid PositionTypeGuid { get; set; }
-
-        public Guid WinnerGuid { get; set; }
-        public Guid PretenderGuid { get; set; }
-
-        public string OrganizationName { get; set; }
         /// <summary>
-        /// Должность
+        /// Тип позиции
+        /// </summary>
+        public string PositionType { get; set; }
+
+        /// <summary>
+        /// Идентификатор типа позиции (например "младший научный сотрудник")
+        /// </summary>
+        public int PositionTypeId { get; set; }
+
+        //[Obsolete("Will be removed")]
+        //[ElasticProperty(Index = FieldIndexOption.NotAnalyzed, Type = FieldType.String)]
+        //public Guid PositionTypeGuid { get; set; }
+
+        //public Guid WinnerGuid { get; set; }
+        //public Guid PretenderGuid { get; set; }
+
+        /// <summary>
+        /// Полное имя организации, опубликовавшей вакансию
+        /// </summary>
+        public string OrganizationName { get; set; }
+
+        /// <summary>
+        /// Наименование должности
         /// </summary>
         public string Name { get; set; }
 
-        /// <summary>
-        /// Должность (Полное наименование)
-        /// </summary>
-        public string FullName { get; set; }
+        ///// <summary>
+        ///// Должность (Полное наименование)
+        ///// </summary>
+        //public string FullName { get; set; }
 
 
         /// <summary>
         /// Отрасль науки
         /// </summary>
         public string ResearchDirection { get; set; }
+
+        /// <summary>
+        /// Идентификатор отрасли науки
+        /// </summary>
         public int ResearchDirectionId { get; set; }
+
         /// <summary>
         /// Тематика исследований
         /// </summary>

@@ -114,6 +114,21 @@ namespace SciVacancies.ReadModel.EventHandlers
 
             _db.Update(vacancy);
         }
+        public void Handle(VacancyWinnerSet msg)
+        {
+            Vacancy vacancy = _db.SingleById<Vacancy>(msg.VacancyGuid);
+            vacancy.WinnerGuid = msg.ReasearcherGuid;
+            vacancy.Status = VacancyStatus.Cancelled;
+
+            _db.Update(vacancy);
+        }
+        public void Handle(VacancyPretenderSet msg)
+        {
+            Vacancy vacancy = _db.SingleById<Vacancy>(msg.VacancyGuid);
+            vacancy.PretenderGuid = msg.ReasearcherGuid;
+
+            _db.Update(vacancy);
+        }
 
         public void Handle(VacancyAddedToFavorites msg)
         {

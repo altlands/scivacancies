@@ -11,6 +11,7 @@ namespace SciVacancies.Domain.Core
     public class Position
     {
         public Guid PositionGuid { get; set; }
+        [Obsolete("Field will be removed")]
         public Guid OrganizationGuid { get; set; }
 
         public PositionDataModel Data { get; set; }
