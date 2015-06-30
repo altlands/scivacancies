@@ -28,18 +28,20 @@ namespace SciVacancies.ReadModel.ElasticSearchModel.EventHandlers
                 OrganizationGuid = msg.OrganizationGuid,
                 Name = msg.Data.Name,
 
-                //TODO - Clean Up
-                //PositionTypeGuid = msg.Data.PositionTypeGuid,
                 ResearchDirectionId = msg.Data.ResearchDirectionId,
                 ResearchThemeId = msg.Data.ResearchThemeId,
 
+                OrganizationName=msg.Data.OrganizationName,
 
+                FullName=msg.Data.FullName,
 
-                //FullName = msg.Data.FullName,
+                Status=msg.Data.Status,
+
+               //Foiv=msg.Data.fo
+
                 ResearchDirection = msg.Data.ResearchDirection,
                 ResearchTheme = msg.Data.ResearchTheme,
                 Tasks = msg.Data.Tasks,
-                //Criteria = msg.Data.Criteria,
                 SalaryFrom = msg.Data.SalaryFrom,
                 SalaryTo = msg.Data.SalaryTo,
                 Bonuses = msg.Data.Bonuses,
@@ -49,8 +51,10 @@ namespace SciVacancies.ReadModel.ElasticSearchModel.EventHandlers
                 Rent = msg.Data.Rent,
                 OfficeAccomodation = msg.Data.OfficeAccomodation,
                 TransportCompensation = msg.Data.TransportCompensation,
+
                 Region = msg.Data.Region,
                 RegionId = msg.Data.RegionId,
+
                 CityName = msg.Data.CityName,
                 Details = msg.Data.Details,
                 ContactName = msg.Data.ContactName,

@@ -44,15 +44,17 @@ namespace SciVacancies.ReadModel.ElasticSearchModel.Model
         public string OrganizationName { get; set; }
 
         /// <summary>
-        /// Наименование должности
+        /// Должность
         /// </summary>
         public string Name { get; set; }
 
-        ///// <summary>
-        ///// Должность (Полное наименование)
-        ///// </summary>
-        //public string FullName { get; set; }
+        /// <summary>
+        /// Должность (Полное наименование)
+        /// </summary>
+        public string FullName { get; set; }
 
+        public string Foiv { get; set; }
+        public int FoivId { get; set; }
 
         /// <summary>
         /// Отрасль науки
@@ -68,25 +70,31 @@ namespace SciVacancies.ReadModel.ElasticSearchModel.Model
         /// Тематика исследований
         /// </summary>
         public string ResearchTheme { get; set; }
+
+        /// <summary>
+        /// Идентификатои тематики исследований
+        /// </summary>
         public int ResearchThemeId { get; set; }
+
         /// <summary>
         /// Задачи
         /// </summary>
         public string Tasks { get; set; }
 
-
         /// <summary>
-        /// Зарплата в месяц
+        /// Зарплата в месяц от
         /// </summary>
         public int SalaryFrom { get; set; }
+
+        /// <summary>
+        /// Зарплата в месяц до
+        /// </summary>
         public int SalaryTo { get; set; }
-        //public Currency SalaryCurrency { get; set; }
 
         /// <summary>
         /// Стимулирующие выплаты
         /// </summary>
         public string Bonuses { get; set; }
-
 
         /// <summary>
         /// Тип трудового договора
@@ -122,6 +130,10 @@ namespace SciVacancies.ReadModel.ElasticSearchModel.Model
         /// Регион
         /// </summary>
         public string Region { get; set; }
+
+        /// <summary>
+        /// Идентификатор региона
+        /// </summary>
         public int RegionId { get; set; }
 
         /// <summary>
@@ -133,7 +145,6 @@ namespace SciVacancies.ReadModel.ElasticSearchModel.Model
         /// Дополнительно
         /// </summary>
         public string Details { get; set; }
-
 
         /// <summary>
         /// Лицо для получения дополнительных справок
