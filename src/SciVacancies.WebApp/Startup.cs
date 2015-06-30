@@ -45,6 +45,7 @@ namespace SciVacancies.WebApp
             services.AddMvc();
 
             var builder = new ContainerBuilder();
+            builder.RegisterSource(new ContravariantRegistrationSource());
 
             ConfigureContainer(builder);
 
@@ -55,16 +56,14 @@ namespace SciVacancies.WebApp
 
         public void ConfigureContainer(ContainerBuilder builder)
         {
+            builder.RegisterSource(new ContravariantRegistrationSource());
+
             builder.RegisterModule(new EventStoreModule(Configuration));
             builder.RegisterModule(new EventBusModule());
             builder.RegisterModule(new EventHandlersModule());
             builder.RegisterModule(new ReadModelModule(Configuration));
             builder.RegisterModule(new ServicesModule());
             builder.RegisterModule(new IdentityModule());
-
-            builder.RegisterSource(new ContravariantRegistrationSource());
-            //TODO - переместить в один из модулей
-            builder.RegisterAssemblyTypes(typeof(RegisterUserCommand).Assembly).AsImplementedInterfaces();
         }
 
         // Configure is called after ConfigureServices is called.
