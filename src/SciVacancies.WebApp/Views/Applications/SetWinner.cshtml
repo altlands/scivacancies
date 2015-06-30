@@ -1,0 +1,82 @@
+﻿@using System.Threading.Tasks
+@using SciVacancies.WebApp.ViewModels
+@model VacancyApplicationSetWinnerViewModel
+
+<h3>Выбор победителем </h3>
+
+<div>
+    заявки: <a asp-controller="applications" asp-action="details" asp-route-id="@Model.ResearcherGuid">@Model.Researcher.FullName</a>
+</div>
+<div>
+    для вакансии: <a asp-controller="vacancies" asp-action="details" asp-route-id="@Model.VacancyGuid">@Model.Vacancy.FullName</a>
+</div>
+
+
+<form class="table-form" asp-controller="applications" asp-action="setwinner">
+
+    <input type="hidden" asp-anti-forgery="true"/>
+    <input type="hidden" asp-for="Guid" />
+    <input type="hidden" asp-for="VacancyGuid" />
+    <input type="hidden" asp-for="ResearcherGuid"/>
+    
+    <div class="table-row">
+        <div class="left-cell">
+            <label>Решение по заявке:</label>
+        </div>
+        <div class="right-cell">
+            <ul class="radio-list">
+                <li>
+                    <span class="radio @(Model.IsWinner? "checked" : string.Empty)">
+                        <input asp-for="IsWinner" id="winner1" value="true"/>
+                    </span><label for="winner1">Первое место</label>
+                </li>
+                <li>
+                    <span class="radio @(!Model.IsWinner? "checked" : string.Empty)">
+                        <input asp-for="IsWinner" id="winner2" value="false" />
+                    </span><label for="winner2">Второе место</label>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="table-row form-row mt18">
+        <div class="left-cell">
+            <label>Обоснование:</label>
+        </div>
+        <div class="right-cell">
+            <textarea asp-for="Reason"></textarea>
+        </div>
+    </div>
+
+    <div class="table-row form-row mt14">
+        <div class="left-cell">
+            <label>Приложенные файлы:</label>
+        </div>
+        <div class="right-cell">
+            <ul class="content-list">
+                <li>
+                    Протокол №6000567.pdf
+                    <div class="buttons">
+                        <span class="big-link-remove"></span>
+                    </div>
+                </li>
+            </ul>
+            <span class="small-icon link-add">Приложить файл</span>
+        </div>
+    </div>
+
+    <br/>
+
+    <div class="ctr-buttons button-align">
+        <input type="submit" class="green-btn middle-icon" value="Подвтердить"/>
+    </div>
+
+    <br/>
+    <br/>
+    <br/>
+
+    <div class="ctr-buttons">
+        <a asp-controller="vacancies" asp-action="details" asp-route-id="@Model.VacancyGuid" class="blue-btn middle-icon icon-arr-left">Вернуться к вакансии</a>
+        <a asp-controller="applications" asp-action="applicationinvacancy" asp-route-id="@Model.Guid" class="blue-btn middle-icon icon-arr-left">Вернуться к заявке</a>
+    </div>
+</form>

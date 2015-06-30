@@ -89,9 +89,9 @@
                         {
                             <a asp-controller="vacancies" asp-action="startincommittee" asp-route-id="@item.Guid" title="Перевести на рассмотрение">на рассмотрение</a>
                         }
-                        @if (item.Status == VacancyStatus.InCommittee)
+                        @if (item.Status == VacancyStatus.InCommittee && item.WinnerGuid!=Guid.Empty && item.PositionGuid!= Guid.Empty)
                         {
-                            <a asp-controller="vacancies" asp-action="setwinners" asp-route-id="@item.Guid" title="Выбрать победителя">Выбрать победителя</a>
+                            <a asp-controller="vacancies" asp-action="setwinners" asp-route-id="@item.Guid" title="Выбрать победителя">Закрыть вакансию</a>
                         }
                     </td>
                 </tr>

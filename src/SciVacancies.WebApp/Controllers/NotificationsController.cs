@@ -24,9 +24,7 @@ namespace SciVacancies.WebApp.Controllers
         public ActionResult DeleteNotification(Guid notificationGuid)
         {
             //TODO: Notifications -> DeleteNotification : реализовать
-
             _mediator.Send(new RemoveNotificationCommand { NotificationGuid = notificationGuid });
-
             return RedirectToAction("notifications", "researchers");
         }
 

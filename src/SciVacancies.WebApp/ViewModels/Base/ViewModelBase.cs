@@ -7,5 +7,6 @@ namespace SciVacancies.WebApp.ViewModels.Base
     {
         [HiddenInput]
         public Guid Guid { get; set; }
+
     }
 }

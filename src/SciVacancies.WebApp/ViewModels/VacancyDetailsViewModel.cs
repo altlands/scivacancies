@@ -154,7 +154,7 @@ namespace SciVacancies.WebApp.ViewModels
         /// <summary>
         /// Заявки на конкурс
         /// </summary>
-        public Page<VacancyApplication> Applications { get; set; }
+        public Page<VacancyApplicationDetailsViewModel> Applications { get; set; }
 
         public ResearcherDetailsViewModel Winner { get; set; }
         public ResearcherDetailsViewModel Pretender { get; set; }
