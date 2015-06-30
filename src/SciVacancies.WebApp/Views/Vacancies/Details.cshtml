@@ -22,7 +22,7 @@
     <h4>Вакансия ID @Model.Guid.ToString().Substring(0, 4)</h4>
 </div>
 
-@if (Model.Status == VacancyStatus.AppliesAcceptance)
+@if (Model.Status == VacancyStatus.AppliesAcceptance && User.IsInRole(ConstTerms.RequireRoleResearcher))
 {
     <text>
     <a asp-controller="applications" asp-action="create" asp-route-vacancyguid="@Model.Guid" class="green-btn middle-icon">Подать заявку</a>
@@ -159,14 +159,25 @@
                         <tr>
                             <td>@Model.Applications.Items.IndexOf(item)</td>
                             <td>@(item.SentDate?.ToLocalVacancyString())</td>
-                            <!--TODO: Vacancy -> Applications -> Researcher -> FIO : отобразить полное имя Заявителя-->
-                            <td>@*@item.ResearcherGuid.LastName<br />@item.ResearcherGuid.FirstName @item.ResearcherGuid.Patronimic*@ <del style="color: red">не реализовано</del></td>
-                            <td class="align-center pl0"></td>
+                            <td>@item.Researcher.SecondName<br />@item.Researcher.FullName @item.Researcher.Patronymic</td>
+                            <td class="align-center pl0">
+                                @if (Model.WinnerGuid == item.Guid)
+                                {
+                                    <text>
+                                    Победитель
+                                    </text>
+                                }
+                                @if (Model.PretenderGuid == item.Guid)
+                                {
+                                    <text>
+                                    Второе место
+                                    </text>
+                                }
+                            </td>
                             <td>
-                                <!--TODO: Vacancy -> Applications -> View : просмотреть заявку-->
-                                <a asp-controller="applications" asp-action="applicationinvacancy" asp-route-id="@item.Guid" class="view-td-icon"></a>
+                                <a asp-controller="applications" asp-action="applicationinvacancy" asp-route-id="@item.Guid" class="view-td-icon" title="Просмотр заявки"></a>
                                 <!--TODO: Vacancy -> Applications -> Print: распечатать заявку-->
-                                <a asp-controller="applications" asp-action="print" asp-route-id="@item.Guid" class="print-td-icon"></a>
+                                <a asp-controller="applications" asp-action="print" asp-route-id="@item.Guid" class="print-td-icon" title="Распечатать Заявку"></a>
                             </td>
                         </tr>
                         </text>

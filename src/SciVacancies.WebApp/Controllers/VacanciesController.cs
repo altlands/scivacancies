@@ -65,13 +65,21 @@ namespace SciVacancies.WebApp.Controllers
             }
 
             if (model.Status != VacancyStatus.Published) //Если статус Опубликовано - пройден
-                model.Applications = _mediator.Send(new SelectPagedVacancyApplicationsByVacancyQuery
+            {
+                var source = _mediator.Send(new SelectPagedVacancyApplicationsByVacancyQuery
                 {
                     PageIndex = 1,
                     PageSize = 3000,
                     VacancyGuid = id,
                     OrderBy = "Guid"
                 });
+                model.Applications = Mapper.Map<Page<VacancyApplicationDetailsViewModel>>(source);
+                //TODO: оптимизировать запрос и его обработку
+                if (model.Applications.Items.Count > 0)
+                    model.Applications.Items.ForEach(c =>
+                    c.Researcher = Mapper.Map<ResearcherDetailsViewModel>(_mediator.Send(new SingleResearcherQuery { ResearcherGuid = c.ResearcherGuid }))
+                    );
+            }
 
             return View(model);
         }
@@ -90,10 +98,10 @@ namespace SciVacancies.WebApp.Controllers
             if (model == null)
                 throw new ObjectNotFoundException($"Не найдена вакансия с идентификатором: {id}");
 
-            model.Winner= 
+            model.Winner =
                 Mapper.Map<ResearcherDetailsViewModel>(_mediator.Send(new SingleResearcherQuery { ResearcherGuid = preModel.WinnerGuid }));
-            model.Pretender = 
-                Mapper.Map<ResearcherDetailsViewModel>(_mediator.Send(new SingleResearcherQuery { ResearcherGuid = preModel.PretenderGuid}));
+            model.Pretender =
+                Mapper.Map<ResearcherDetailsViewModel>(_mediator.Send(new SingleResearcherQuery { ResearcherGuid = preModel.PretenderGuid }));
 
             return View(model);
         }
@@ -107,7 +115,7 @@ namespace SciVacancies.WebApp.Controllers
                 throw new ArgumentNullException(nameof(id));
             if (organizationGuid == Guid.Empty)
                 throw new ArgumentNullException(nameof(organizationGuid));
-            
+
             var preModel = _mediator.Send(new SingleVacancyQuery { VacancyGuid = id });
 
             if (preModel.OrganizationGuid != organizationGuid)
@@ -199,7 +207,6 @@ namespace SciVacancies.WebApp.Controllers
                 throw new Exception($"Вы не можете Вакансию на рассмотрение комиссии со статусом: {preModel.Status.GetDescription()}");
 
             //TODO: оптимизировать запрос и его обработку
-            //TODO: Vacancy -> InCommitte : нужно ли проверять минимальное (какое) количество заявок, поданных на вакансию
             var vacancyApplications = _mediator.Send(new SelectPagedVacancyApplicationsByVacancyQuery
             {
                 VacancyGuid = preModel.Guid,
@@ -207,8 +214,10 @@ namespace SciVacancies.WebApp.Controllers
                 PageIndex = 1,
                 OrderBy = ConstTerms.OrderByDateDescending
             });
+
+            //TODO: Vacancy -> InCommitte : нужно ли проверять минимальное (какое) количество заявок, поданных на вакансию
             if (vacancyApplications.TotalItems == 0
-                || vacancyApplications.Items.Count(c=>c.Status == VacancyApplicationStatus.Applied) <2)
+                || vacancyApplications.Items.Count(c => c.Status == VacancyApplicationStatus.Applied) < 1)
                 throw new Exception("Подано недостаточно вакансий для перевода Вакансии на рассмотрение комиссии");
 
             _mediator.Send(new SwitchVacancyInCommitteeCommand
