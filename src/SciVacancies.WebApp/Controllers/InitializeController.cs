@@ -127,7 +127,8 @@ namespace SciVacancies.WebApp.Controllers
                 {
                     Name = "Разводчик акул",
                     FullName = "Младший сотрудник по разведению лазерных акул",
-                    ResearchDirection = "Аналитическая химия"
+                    ResearchDirection = "Аналитическая химия",
+                    OrganizationName = "Научно Исследотельский Институт Горных массивов"
                 }
             });
 
@@ -154,7 +155,8 @@ namespace SciVacancies.WebApp.Controllers
                     FullName = "Младший сотрудник по калибровке фокусного зеркала",
                     PositionTypeGuid = Guid.Parse("b7280ace-d237-c007-42fe-ec4aed8f52d4"),
                     ResearchDirection = "Аналитическая химия",
-                    ResearchDirectionId = 3026
+                    ResearchDirectionId = 3026,
+                    OrganizationName = "НИИ добра"
                 }
             });
         }

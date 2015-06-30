@@ -43,7 +43,7 @@ namespace SciVacancies.ReadModel.EventHandlers
                 ResearchDirectionId = msg.Data.ResearchDirectionId,
                 ResearchThemeId = msg.Data.ResearchThemeId,
 
-
+                OrganizationName = msg.Data.OrganizationName,
 
                 FullName = msg.Data.FullName,
                 ResearchDirection = msg.Data.ResearchDirection,
