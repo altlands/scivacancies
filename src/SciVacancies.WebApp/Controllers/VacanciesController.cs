@@ -53,7 +53,7 @@ namespace SciVacancies.WebApp.Controllers
             if ((model.Status == VacancyStatus.AppliesAcceptance || model.Status == VacancyStatus.Published)
                 && researcherGuid != Guid.Empty)
             {
-                //если есть GUID Исследователя
+                //TODO: оптимизировать запрос и его обработку
                 var favoritesVacancies = _mediator.Send(new SelectPagedFavoriteVacanciesByResearcherQuery { PageSize = 500, PageIndex = 1, ResearcherGuid = researcherGuid, OrderBy = ConstTerms.OrderByDateAscending });
                 //если текущей вакансии нет в списке избранных
                 if (favoritesVacancies == null
@@ -198,6 +198,7 @@ namespace SciVacancies.WebApp.Controllers
             if (preModel.Status != VacancyStatus.AppliesAcceptance)
                 throw new Exception($"Вы не можете Вакансию на рассмотрение комиссии со статусом: {preModel.Status.GetDescription()}");
 
+            //TODO: оптимизировать запрос и его обработку
             //TODO: Vacancy -> InCommitte : нужно ли проверять минимальное (какое) количество заявок, поданных на вакансию
             var vacancyApplications = _mediator.Send(new SelectPagedVacancyApplicationsByVacancyQuery
             {

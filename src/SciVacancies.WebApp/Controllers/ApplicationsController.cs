@@ -70,6 +70,7 @@ namespace SciVacancies.WebApp.Controllers
             if (vacancyData.Status != VacancyStatus.AppliesAcceptance)
                 throw new Exception($"Вы не можете подать Заявку на Вакансию в статусе: {vacancyData.Status.GetDescription()}");
 
+            //TODO: оптимизировать запрос и его обработку
             var appliedVacancyApplications =
                 _mediator.Send(new SelectPagedVacancyApplicationsByVacancyQuery
                 {
