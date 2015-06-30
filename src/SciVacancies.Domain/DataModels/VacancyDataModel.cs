@@ -14,8 +14,7 @@ namespace SciVacancies.Domain.DataModels
         //TODO - привести в порядок и соответствие модели
         public Guid PositionTypeGuid { get; set; }
         public string OrganizationName { get; set; }
-        //public string ResearchDirection { get; set; }
-        public int ResearchDirectionId { get; set; }
+
         public int ResearchThemeId { get; set; }
         /// <summary>
         /// Тип занятости
@@ -37,10 +36,7 @@ namespace SciVacancies.Domain.DataModels
         public string FullName { get; set; }
 
 
-        /// <summary>
-        /// Отрасль науки
-        /// </summary>
-        public string ResearchDirection { get; set; }
+
 
         /// <summary>
         /// Тематика исследований
@@ -100,11 +96,7 @@ namespace SciVacancies.Domain.DataModels
         /// </summary>
         public bool TransportCompensation { get; set; }
 
-        /// <summary>
-        /// Регион
-        /// </summary>
-        public string Region { get; set; }
-        public int RegionId { get; set; }
+
 
         /// <summary>
         /// Населенный пункт 
@@ -142,5 +134,27 @@ namespace SciVacancies.Domain.DataModels
 
         public VacancyStatus Status { get; set; }
 
+        #region Dictionaries
+
+        /// <summary>
+        /// Регион
+        /// </summary>
+        public string Region { get; set; }
+
+        /// <summary>
+        /// Идентфикатор региона
+        /// </summary>
+        public int RegionId { get; set; }
+
+        /// <summary>
+        /// Отрасль науки
+        /// </summary>
+        public string ResearchDirection { get; set; }
+        
+        /// <summary>
+        /// Идентификатор отрасли науки
+        /// </summary>
+        public int ResearchDirectionId { get; set; }
+        #endregion
     }
 }

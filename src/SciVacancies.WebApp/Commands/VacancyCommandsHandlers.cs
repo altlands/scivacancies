@@ -86,9 +86,24 @@ namespace SciVacancies.WebApp.Commands
             if (message.OrganizationGuid == Guid.Empty) throw new ArgumentNullException($"OrganizationGuid is empty: {message.OrganizationGuid}");
             if (message.VacancyGuid == Guid.Empty) throw new ArgumentNullException($"VacancyGuid is empty: {message.VacancyGuid}");
 
+            //if (message.WinnerGuid == Guid.Empty) throw new ArgumentNullException($"WinnerGuid is empty: {message.WinnerGuid}");
+            //if (message.WinnerVacancyApplicationGuid == Guid.Empty) throw new ArgumentNullException($"WinnerVacancyApplicationGuid is empty: {message.WinnerVacancyApplicationGuid}");
+
+            //if (message.PretenderGuid == Guid.Empty) throw new ArgumentNullException($"PretenderGuid is empty: {message.PretenderGuid}");
+            //if (message.PretenderVacancyApplicationGuid == Guid.Empty) throw new ArgumentNullException($"PretenderVacancyApplicationGuid is empty: {message.PretenderVacancyApplicationGuid}");
+
             Organization organization = _repository.GetById<Organization>(message.OrganizationGuid);
             organization.CloseVacancy(message.VacancyGuid, message.WinnerGuid, message.PretenderGuid);
             _repository.Save(organization, Guid.NewGuid(), null);
+
+
+            //Researcher winner = _repository.GetById<Researcher>(message.WinnerGuid);
+            //winner.MakeVacancyApplicationWinner(message.WinnerVacancyApplicationGuid, message.Reason);
+            //_repository.Save(winner, Guid.NewGuid(), null);
+
+            //Researcher pretender = _repository.GetById<Researcher>(message.PretenderGuid);
+            //pretender.MakeVacancyApplicationPretender(message.VacancyApplicationGuid, message.Reason);
+            //_repository.Save(pretender, Guid.NewGuid(), null);
         }
     }
     public class CancelVacancyCommandHandler : RequestHandler<CancelVacancyCommand>

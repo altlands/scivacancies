@@ -49,11 +49,14 @@ namespace SciVacancies.WebApp.Controllers
 
                 if (model.ToPublish)
                 {
+                    var vacancyDataModel = Mapper.Map<VacancyDataModel>(positionDataModel);
+                    vacancyDataModel.OrganizationName = _mediator.Send(new SingleOrganizationQuery { OrganizationGuid = model.OrganizationGuid }).Name;
+
                     var vacancyGuid = _mediator.Send(new PublishVacancyCommand
                     {
                         OrganizationGuid = model.OrganizationGuid,
                         PositionGuid = positionGuid,
-                        Data = Mapper.Map<VacancyDataModel>(positionDataModel)
+                        Data = vacancyDataModel
                     });
                 }
 
@@ -129,11 +132,14 @@ namespace SciVacancies.WebApp.Controllers
 
                 if (model.ToPublish)
                 {
+                    var vacancyDataModel = Mapper.Map<VacancyDataModel>(positionDataModel);
+                    vacancyDataModel.OrganizationName = _mediator.Send(new SingleOrganizationQuery { OrganizationGuid = model.OrganizationGuid }).Name;
+
                     var vacancyGuid = _mediator.Send(new PublishVacancyCommand
                     {
                         OrganizationGuid = model.OrganizationGuid,
                         PositionGuid = model.Guid,
-                        Data = Mapper.Map<VacancyDataModel>(positionDataModel)
+                        Data = vacancyDataModel
                     });
                 }
 
@@ -162,7 +168,7 @@ namespace SciVacancies.WebApp.Controllers
 
             if (model.Status == PositionStatus.Published)
                 throw new Exception($"Вы не можете удалить вакансию с текущим статусом: {model.Status.GetDescription()}");
-            
+
             _mediator.Send(new RemovePositionCommand { OrganizationGuid = organizationGuid, PositionGuid = id });
 
             return View();
@@ -212,10 +218,14 @@ namespace SciVacancies.WebApp.Controllers
             if (model.Status == PositionStatus.Published)
                 throw new Exception("Вакансия уже опубликована");
 
-            var vacancyGuid = _mediator.Send(new PublishVacancyCommand {
+            var vacancyDataModel = Mapper.Map<VacancyDataModel>(model);
+            vacancyDataModel.OrganizationName = _mediator.Send(new SingleOrganizationQuery { OrganizationGuid = organizationGuid }).Name;
+
+            var vacancyGuid = _mediator.Send(new PublishVacancyCommand
+            {
                 PositionGuid = id,
                 OrganizationGuid = model.OrganizationGuid,
-                Data = Mapper.Map<VacancyDataModel>(model)
+                Data = vacancyDataModel
             });
 
             return View(vacancyGuid);
