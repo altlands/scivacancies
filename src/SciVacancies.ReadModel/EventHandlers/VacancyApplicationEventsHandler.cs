@@ -1,5 +1,6 @@
 ﻿using MediatR;
 using NPoco;
+using System;
 using SciVacancies.Domain.Enums;
 using SciVacancies.Domain.Events;
 using SciVacancies.ReadModel.Core;
@@ -64,16 +65,16 @@ namespace SciVacancies.ReadModel.EventHandlers
 
             Vacancy vacancy = _db.SingleById<Vacancy>(msg.VacancyGuid);
 
-            //Notification notification = new Notification()
-            //{
-            //    Guid = Guid.NewGuid(),
-            //    OrganizationGuid = vacancy.OrganizationGuid,
-            //    CreationdDate = msg.TimeStamp,
-            //    Status = NotificationStatus.Created,
-            //    Title = "На ваш конкурс" + msg.VacancyGuid + " подана новая заявка "
-            //};
+            Notification notification = new Notification()
+            {
+                Guid = Guid.NewGuid(),
+                OrganizationGuid = vacancy.OrganizationGuid,
+                CreationDate = msg.TimeStamp,
+                Status = NotificationStatus.Created,
+                Title = "На ваш конкурс" + msg.VacancyGuid + " подана новая заявка "
+            };
 
-            //_db.Insert(notification);
+            _db.Insert(notification);
         }
 
         public void Handle(VacancyApplicationCancelled msg)
@@ -84,16 +85,16 @@ namespace SciVacancies.ReadModel.EventHandlers
 
             _db.Update(vacancyApplication);
 
-            //Notification notification = new Notification()
-            //{
-            //    Guid = Guid.NewGuid(),
-            //    ResearcherGuid = msg.ResearcherGuid,
-            //    CreationdDate = msg.TimeStamp,
-            //    Status = NotificationStatus.Created,
-            //    Title = "Ваша заявка" + msg.VacancyApplicationGuid + " отклонена"
-            //};
+            Notification notification = new Notification()
+            {
+                Guid = Guid.NewGuid(),
+                ResearcherGuid = msg.ResearcherGuid,
+                CreationDate = msg.TimeStamp,
+                Status = NotificationStatus.Created,
+                Title = "Ваша заявка" + msg.VacancyApplicationGuid + " отклонена"
+            };
 
-            //_db.Insert(notification);
+            _db.Insert(notification);
         }
 
         public void Handle(VacancyApplicationWon msg)
@@ -104,16 +105,16 @@ namespace SciVacancies.ReadModel.EventHandlers
 
             _db.Update(vacancyApplication);
 
-            //Notification notification = new Notification()
-            //{
-            //    Guid = Guid.NewGuid(),
-            //    ResearcherGuid = msg.ResearcherGuid,
-            //    CreationdDate = msg.TimeStamp,
-            //    Status = NotificationStatus.Created,
-            //    Title = "Ваша заявка" + msg.VacancyApplicationGuid + " выйграла конкурс"
-            //};
+            Notification notification = new Notification()
+            {
+                Guid = Guid.NewGuid(),
+                ResearcherGuid = msg.ResearcherGuid,
+                CreationDate = msg.TimeStamp,
+                Status = NotificationStatus.Created,
+                Title = "Ваша заявка" + msg.VacancyApplicationGuid + " выйграла конкурс"
+            };
 
-            //_db.Insert(notification);
+            _db.Insert(notification);
         }
 
         public void Handle(VacancyApplicationPretended msg)
@@ -124,16 +125,16 @@ namespace SciVacancies.ReadModel.EventHandlers
 
             _db.Update(vacancyApplication);
 
-            //Notification notification = new Notification()
-            //{
-            //    Guid = Guid.NewGuid(),
-            //    ResearcherGuid = msg.ResearcherGuid,
-            //    CreationdDate = msg.TimeStamp,
-            //    Status = NotificationStatus.Created,
-            //    Title = "Ваша заявка" + msg.VacancyApplicationGuid + " получила второе место в конкурсе"
-            //};
+            Notification notification = new Notification()
+            {
+                Guid = Guid.NewGuid(),
+                ResearcherGuid = msg.ResearcherGuid,
+                CreationDate = msg.TimeStamp,
+                Status = NotificationStatus.Created,
+                Title = "Ваша заявка" + msg.VacancyApplicationGuid + " получила второе место в конкурсе. Ожидайте чуда."
+            };
 
-            //_db.Insert(notification);
+            _db.Insert(notification);
         }
 
         public void Handle(VacancyApplicationLost msg)
@@ -144,16 +145,16 @@ namespace SciVacancies.ReadModel.EventHandlers
 
             _db.Update(vacancyApplication);
 
-            //Notification notification = new Notification()
-            //{
-            //    Guid = Guid.NewGuid(),
-            //    ResearcherGuid = msg.ResearcherGuid,
-            //    CreationdDate = msg.TimeStamp,
-            //    Status = NotificationStatus.Created,
-            //    Title = "Ваша заявка" + msg.VacancyApplicationGuid + " проиграла конкурс"
-            //};
+            Notification notification = new Notification()
+            {
+                Guid = Guid.NewGuid(),
+                ResearcherGuid = msg.ResearcherGuid,
+                CreationDate = msg.TimeStamp,
+                Status = NotificationStatus.Created,
+                Title = "Ваша заявка" + msg.VacancyApplicationGuid + " проиграла конкурс"
+            };
 
-            //_db.Insert(notification);
+            _db.Insert(notification);
         }
     }
 }

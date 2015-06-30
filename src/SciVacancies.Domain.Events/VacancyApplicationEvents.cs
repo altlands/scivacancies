@@ -9,6 +9,7 @@ namespace SciVacancies.Domain.Events
         public Guid VacancyGuid { get; set; }
         public Guid ResearcherGuid { get; set; }
     }
+
     /// <summary>
     /// Создан шаблон заявки, заявка не отправлена
     /// </summary>
@@ -16,6 +17,7 @@ namespace SciVacancies.Domain.Events
     {
         public VacancyApplicationDataModel Data { get; set; }
     }
+
     /// <summary>
     /// Шаблон заявки обновлён, заявка не отправлена
     /// </summary>
@@ -23,24 +25,28 @@ namespace SciVacancies.Domain.Events
     {
         public VacancyApplicationDataModel Data { get; set; }
     }
+
     /// <summary>
     /// Шаблон заявки удалён
     /// </summary>
     public class VacancyApplicationRemoved : VacancyApplicationEventBase
     {
     }
+
     /// <summary>
     /// Работа с шаблоном завершена. Заявка отправлена
     /// </summary>
     public class VacancyApplicationApplied : VacancyApplicationEventBase
     {
     }
+
     /// <summary>
     /// Заявка отклонена из-за отмены вакансии(конкурса)
     /// </summary>
     public class VacancyApplicationCancelled : VacancyApplicationEventBase
     {
     }
+
     /// <summary>
     /// Заявка выйграла вакансию(конкурс)
     /// </summary>
@@ -48,6 +54,7 @@ namespace SciVacancies.Domain.Events
     {
         public string Reason { get; set; }
     }
+
     /// <summary>
     /// Заявка заняла второе место
     /// </summary>
@@ -55,6 +62,7 @@ namespace SciVacancies.Domain.Events
     {
         public string Reason { get; set; }
     }
+
     /// <summary>
     /// Заявка проиграла вакансию (конкурс). Событие для всех заявок, не занявших 1-ое или 2-ое места.
     /// </summary>

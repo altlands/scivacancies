@@ -38,9 +38,9 @@
                 {
                 <tr>
                     <td class="bold">@item.Guid.ToString().Substring(0, 4)</td>
-                    <td class="bold">@item.CreationdDate</td>
-                    <td class="bold">@item.Title</td>
-                    <td><a href="#" class="success-request-icon"><span class="italic bold">Вы победили в конкурсе</span></a></td>
+                    <td class="bold">@item.CreationDate</td>
+                    <td class="bold">Организация @item.OrganizationGuid</td>
+                    <td><a href="#" class="success-request-icon"><span class="italic bold">@item.Title</span></a></td>
                     <td>
                         <a href="#" class="view-td-icon"></a>
                         @*<a href="#" class="edit-td-icon"></a>*@

@@ -29,13 +29,13 @@ namespace SciVacancies.ReadModel.ElasticSearchModel.EventHandlers
                 Name = msg.Data.Name,
 
                 //TODO - Clean Up
-                PositionTypeGuid = msg.Data.PositionTypeGuid,
+                //PositionTypeGuid = msg.Data.PositionTypeGuid,
                 ResearchDirectionId = msg.Data.ResearchDirectionId,
                 ResearchThemeId = msg.Data.ResearchThemeId,
 
 
 
-                FullName = msg.Data.FullName,
+                //FullName = msg.Data.FullName,
                 ResearchDirection = msg.Data.ResearchDirection,
                 ResearchTheme = msg.Data.ResearchTheme,
                 Tasks = msg.Data.Tasks,

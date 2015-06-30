@@ -1,20 +1,14 @@
 ﻿@using System.Threading.Tasks
+@using SciVacancies.Domain.Enums
+@using SciVacancies.WebApp
 @model SciVacancies.WebApp.ViewModels.VacancyApplicationDetailsViewModel
 
-@{
-    var referer = Context.Request.Headers["referer"];
-}
-@if (!string.IsNullOrWhiteSpace(referer))
-{
-    <text>
-    <div class="crumbs">
-        <a href="@referer.ToLower()">Назад</a><span class="separator">/</span>
-        @ViewBag.Title
-    </div>
-    </text>
-}
-<h3>@ViewBag.Title: заявка на ID МНС6000567 №001 от 01-09-14 </h3>
+<div class="crumbs">
+    <a asp-controller="vacancies" asp-action="details" asp-route-id="@Model.VacancyGuid">К вакансии</a><span class="separator">/</span>
+    @ViewBag.Title
+</div>
 
+<h3>@ViewBag.Title: заявка на ID МНС6000567 №001 от @(Model.SentDate?.ToLocalVacancyDateString()) </h3>
 
 <div class="content-slide">
     <div class="profile">
@@ -74,71 +68,21 @@
         </div>
     </div>
 
-    <div class="b-solution">
-        <div class="table-form">
-            <div class="table-row">
-                <div class="left-cell">
-                    <label>Решение по заявке:</label>
-                </div>
-                <div class="right-cell">
-                    <ul class="radio-list">
-                        <li>
-                            <span class="radio">
-                                <input type="radio" name="r3" id="rb1">
-                            </span><label for="rb1">Первое место</label>
-                        </li>
-                        <li>
-                            <span class="radio">
-                                <input type="radio" name="r3" id="rb2">
-                            </span><label for="rb2">Второе место</label>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-
-            <div class="table-row form-row mt18">
-                <div class="left-cell">
-                    <label>Обоснование:</label>
-                </div>
-                <div class="right-cell">
-                    <textarea></textarea>
-                </div>
-            </div>
-
-            <div class="table-row form-row mt14">
-                <div class="left-cell">
-                    <label>Приложенные файлы:</label>
-                </div>
-                <div class="right-cell">
-                    <ul class="content-list">
-                        <li>
-                            Протокол №6000567.pdf
-                            <div class="buttons">
-                                <span class="big-link-remove"></span>
-                            </div>
-                        </li>
-                    </ul>
-                    <span class="small-icon link-add">Приложить файл</span>
-                </div>
-            </div>
-            <div class="table-row mt37">
-                <div class="ctr-buttons button-align">
-                    <span class="green-btn middle-icon icon-ok">Выбрать победителем</span>
-                </div>
-            </div>
-            <div class="table-row mt49">
-                <div class="ctr-buttons button-align">
-                    <span class="blue-btn middle-icon icon-arr-left">Вернуться в личный кабинет</span><span class="blue-btn middle-icon icon-arr-right">Вернуться к вакансии</span>
-                </div>
-            </div>
+    @if (Model.Status == VacancyApplicationStatus.Applied && Model.Vacancy.Status == VacancyStatus.InCommittee)
+    {
+        <text>
+        <br />
+        <div class="ctr-buttons">
+            <a asp-controller="applications" asp-action="setwinner" asp-route-id="@Model.Guid" class="green-btn middle-icon">Выбрать победителем</a>
         </div>
+        </text>
+    }
+
+    <br />
+
+    <div class="ctr-buttons">
+        <a asp-controller="organizations" asp-action="vacancies" class="blue-btn middle-icon icon-arr-left">Вернуться в личный кабинет</a>
+        <a asp-controller="vacancies" asp-action="details" asp-route-id="@Model.VacancyGuid" class="blue-btn middle-icon icon-arr-left">Вернуться к вакансии</a>
     </div>
-    <div class="align-center">Перейти к решению по заявке<span class="solutions op"></span></div>
-    <div class="align-center mt33" style="display:none;"><span class="solutions cl"></span>Свернуть</div>
 
-</div>
-
-
-<div class="b-bottom-nav">
-    <a asp-controller="researchers" asp-action="applications" class="small-icon icon-prev">Назад</a>
 </div>

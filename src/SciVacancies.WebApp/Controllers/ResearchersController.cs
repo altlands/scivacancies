@@ -153,6 +153,7 @@ namespace SciVacancies.WebApp.Controllers
             //если заявка на готовится к открытию или открыта
             if (model.Status == VacancyStatus.AppliesAcceptance || model.Status == VacancyStatus.Published)
             {
+                //TODO: оптимизировать запрос и его обработку
                 //если есть GUID Исследователя
                 var favoritesVacancies = _mediator.Send(new SelectPagedFavoriteVacanciesByResearcherQuery { PageSize = 500, PageIndex = 1, ResearcherGuid = researcherGuid, OrderBy = ConstTerms.OrderByDateAscending });
                 //если текущей вакансии нет в списке избранных
@@ -174,6 +175,7 @@ namespace SciVacancies.WebApp.Controllers
             if (vacancyGuid == Guid.Empty)
                 throw new ArgumentNullException(nameof(vacancyGuid));
 
+            //TODO: оптимизировать запрос и его обработку
             var favoritesVacancies = _mediator.Send(new SelectPagedFavoriteVacanciesByResearcherQuery { PageSize = 500, PageIndex = 1, ResearcherGuid = researcherGuid, OrderBy = ConstTerms.OrderByDateAscending });
             if (favoritesVacancies == null)
                 throw new Exception("У вас нет избранных вакансий");

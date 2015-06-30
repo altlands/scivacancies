@@ -9,6 +9,7 @@ namespace SciVacancies.Domain.Events
         public Guid PositionGuid { get; set; }
         public Guid OrganizationGuid { get; set; }
     }
+
     /// <summary>
     /// Вакансия опубликована, но приём заявок временно закрыт
     /// </summary>
@@ -16,18 +17,21 @@ namespace SciVacancies.Domain.Events
     {
         public VacancyDataModel Data { get; set; }
     }
+
     /// <summary>
     /// Вакансия в статусе "приём заявок"
     /// </summary>
     public class VacancyAcceptApplications : VacancyEventBase
     {
     }
+
     /// <summary>
     /// Вакансия в статусе "заявки на рассмотрении комиссии"
     /// </summary>
     public class VacancyInCommittee : VacancyEventBase
     {
     }
+
     /// <summary>
     /// Вакансия закрыта, объявление победителей
     /// </summary>
@@ -36,6 +40,7 @@ namespace SciVacancies.Domain.Events
         public Guid WinnerGuid { get; set; }
         public Guid PretenderGuid { get; set; }
     }
+
     /// <summary>
     /// Вакансия отменена организацией
     /// </summary>
@@ -43,6 +48,7 @@ namespace SciVacancies.Domain.Events
     {
         public string Reason { get; set; }
     }
+
     /// <summary>
     /// Для вакансии выбран победитель (первое место)
     /// </summary>
@@ -53,6 +59,7 @@ namespace SciVacancies.Domain.Events
 
         public string Reason { get; set; }
     }
+
     /// <summary>
     /// Для вакансии выбран претендент (второе место)
     /// </summary>
@@ -63,6 +70,7 @@ namespace SciVacancies.Domain.Events
 
         public string Reason { get; set; }
     }
+
     /// <summary>
     /// Вакансия добавлена соискателем в избранное
     /// </summary>
@@ -70,6 +78,7 @@ namespace SciVacancies.Domain.Events
     {
         public Guid ResearcherGuid { get; set; }
     }
+
     /// <summary>
     /// Вакансия удалена соискателем из избранного
     /// </summary>

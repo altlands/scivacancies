@@ -8,7 +8,7 @@ namespace SciVacancies.ReadModel.ElasticSearchModel.Model
         /// Айдишник для поисковика
         /// </summary>            
         public Guid Id { get; set; }
-                
+
         /// <summary>
         /// Полное наименование
         /// </summary>
@@ -63,8 +63,11 @@ namespace SciVacancies.ReadModel.ElasticSearchModel.Model
         /// Организационно-правовая форма организации
         /// </summary>
         public string OrgForm { get; set; }
+
+        /// <summary>
+        /// Идентификатор организационно-правовой формы организации
+        /// </summary>
         public int OrgFormId { get; set; }
-        public Guid OrgFormGuid { get; set; }
 
         /// <summary>
         /// Количество опубликованных вакансий на данный момент
@@ -75,26 +78,45 @@ namespace SciVacancies.ReadModel.ElasticSearchModel.Model
         /// ФОИВ
         /// </summary>
         public string Foiv { get; set; }
-        public int FoivId { get; set; }
-        public Guid FoivGuid { get; set; }
 
+        /// <summary>
+        /// Идентификатор ФОИВ
+        /// </summary>
+        public int FoivId { get; set; }
 
         /// <summary>
         /// Основной вид деятельности
         /// </summary>
         public string Activity { get; set; }
-        public int ActivityId { get; set; }
-        public Guid ActivityGuid { get; set; }
-
 
         /// <summary>
-        /// Руководитель
+        /// Идентификатор основого вида деятельности
+        /// </summary>
+        public int ActivityId { get; set; }
+
+        /// <summary>
+        /// Имя руководителя
         /// </summary>
         public string HeadFirstName { get; set; }
-        public string HeadLastName { get; set; }
-        public string HeadPatronymic { get; set; } //HeadMiddleName
 
+        /// <summary>
+        /// Фамилия руководителя
+        /// </summary>
+        public string HeadLastName { get; set; }
+
+        /// <summary>
+        /// Отчество руководителя
+        /// </summary>
+        public string HeadPatronymic { get; set; }
+
+        /// <summary>
+        /// Дата регистрация организации на сайте
+        /// </summary>
         public DateTime CreationDate { get; set; }
+
+        /// <summary>
+        /// Дата последнего изменения профиля организации
+        /// </summary>
         public DateTime? UpdateDate { get; set; }
     }
 }

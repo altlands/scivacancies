@@ -8,16 +8,25 @@ namespace SciVacancies.Domain.Events
         public Guid ResearcherGuid { get; set; }
     }
 
+    /// <summary>
+    /// Профиль исследователя создан
+    /// </summary>
     public class ResearcherCreated : ResearcherEventBase
     {
         public ResearcherDataModel Data { get; set; }
     }
 
+    /// <summary>
+    /// Профиль исследователя обновлён
+    /// </summary>
     public class ResearcherUpdated : ResearcherEventBase
     {
         public ResearcherDataModel Data { get; set; }
     }
 
+    /// <summary>
+    /// Профиль исследователя удалён (удаление доступно только администратору)
+    /// </summary>
     public class ResearcherRemoved : ResearcherEventBase
     {
     }
