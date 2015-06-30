@@ -208,21 +208,12 @@ namespace SciVacancies.WebApp.Controllers
 
             if (ModelState.IsValid)
             {
+                if (model.IsWinner)
+                    _mediator.Send(new SetVacancyWinnerCommand { VacancyGuid = model.VacancyGuid, ResearcherGuid = model.ResearcherGuid, OrganizationGuid = organizationGuid, VacancyApplicationGuid = model.Guid, Reason = model.Reason });
+                else
+                    _mediator.Send(new SetVacancyPretenderCommand { VacancyGuid = model.VacancyGuid, ResearcherGuid = model.ResearcherGuid, OrganizationGuid = organizationGuid, VacancyApplicationGuid = model.Guid, Reason = model.Reason });
 
-                try
-                {
-                    if (model.IsWinner)
-                        _mediator.Send(new SetVacancyWinnerCommand { VacancyGuid = model.VacancyGuid, ResearcherGuid = model.ResearcherGuid, OrganizationGuid = organizationGuid, VacancyApplicationGuid = model.Guid, Reason = model.Reason });
-                    else
-                        _mediator.Send(new SetVacancyPretenderCommand { VacancyGuid = model.VacancyGuid, ResearcherGuid = model.ResearcherGuid, OrganizationGuid = organizationGuid, VacancyApplicationGuid = model.Guid, Reason = model.Reason });
-                }
-                catch (Exception e)
-                {
-
-                    throw e;
-                }
-
-                return RedirectToAction("details", "vacancies", new {id = model.VacancyGuid});
+                return RedirectToAction("details", "vacancies", new { id = model.VacancyGuid });
             }
             //TODO - а эта часть для чего?
             model = Mapper.Map<VacancyApplicationSetWinnerViewModel>(vacancyApplicaiton);
@@ -231,8 +222,6 @@ namespace SciVacancies.WebApp.Controllers
 
             return View(model);
         }
-
-
 
         [PageTitle("Удаление шаблона заявки")]
         [Authorize(Roles = ConstTerms.RequireRoleResearcher)]
