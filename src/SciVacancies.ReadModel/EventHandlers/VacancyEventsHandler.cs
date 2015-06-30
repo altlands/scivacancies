@@ -7,12 +7,14 @@ using SciVacancies.ReadModel.Core;
 
 namespace SciVacancies.ReadModel.EventHandlers
 {
-    public class VacancyEventsHandler : 
-        INotificationHandler<VacancyPublished>, 
+    public class VacancyEventsHandler :
+        INotificationHandler<VacancyPublished>,
         INotificationHandler<VacancyAcceptApplications>,
         INotificationHandler<VacancyInCommittee>,
         INotificationHandler<VacancyClosed>,
         INotificationHandler<VacancyCancelled>,
+        INotificationHandler<VacancyWinnerSet>,
+        INotificationHandler<VacancyPretenderSet>,
         INotificationHandler<VacancyAddedToFavorites>,
         INotificationHandler<VacancyRemovedFromFavorites>
     {
@@ -118,7 +120,6 @@ namespace SciVacancies.ReadModel.EventHandlers
         {
             Vacancy vacancy = _db.SingleById<Vacancy>(msg.VacancyGuid);
             vacancy.WinnerGuid = msg.ReasearcherGuid;
-            vacancy.Status = VacancyStatus.Cancelled;
 
             _db.Update(vacancy);
         }

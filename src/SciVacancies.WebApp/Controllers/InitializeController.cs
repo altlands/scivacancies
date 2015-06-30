@@ -150,9 +150,11 @@ namespace SciVacancies.WebApp.Controllers
                 PositionGuid = posGuid3,
                 Data = new VacancyDataModel
                 {
-                    Name = "Разводчик акул",
-                    FullName = "Младший сотрудник по разведению лазерных акул",
-                    ResearchDirection = "Аналитическая химия"
+                    Name = "Ремонтник всевидящего ока",
+                    FullName = "Младший сотрудник по калибровке фокусного зеркала",
+                    PositionTypeGuid = Guid.Parse("b7280ace-d237-c007-42fe-ec4aed8f52d4"),
+                    ResearchDirection = "Аналитическая химия",
+                    ResearchDirectionId = 3026
                 }
             });
         }

@@ -29,7 +29,5 @@ namespace SciVacancies.Domain.Enums
         /// </summary>
         [Description("Отменена")]
         Cancelled = 4
-        //[Description()]
-        //Denied=5
     }
 }

@@ -222,8 +222,9 @@ namespace SciVacancies.WebApp.Controllers
                     throw e;
                 }
 
-                return RedirectToAction("details", "applications", new {id = model.Guid});
+                return RedirectToAction("details", "vacancies", new {id = model.VacancyGuid});
             }
+            //TODO - а эта часть для чего?
             model = Mapper.Map<VacancyApplicationSetWinnerViewModel>(vacancyApplicaiton);
             model.Vacancy = Mapper.Map<VacancyDetailsViewModel>(vacancy);
             model.Researcher = Mapper.Map<ResearcherDetailsViewModel>(_mediator.Send(new SingleResearcherQuery { ResearcherGuid = vacancyApplicaiton.ResearcherGuid }));

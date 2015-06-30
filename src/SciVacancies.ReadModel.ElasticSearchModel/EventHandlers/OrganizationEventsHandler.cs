@@ -41,17 +41,17 @@ namespace SciVacancies.ReadModel.ElasticSearchModel.EventHandlers
 
                 OrgForm = notification.Data.OrgForm,
                 OrgFormId = notification.Data.OrgFormId,
-                OrgFormGuid = notification.Data.OrgFormGuid,
+                //OrgFormGuid = notification.Data.OrgFormGuid,
 
                 PublishedVacancies = notification.Data.PublishedVacancies,
 
                 Foiv = notification.Data.Foiv,
                 FoivId = notification.Data.FoivId,
-                FoivGuid = notification.Data.FoivGuid,
+                //FoivGuid = notification.Data.FoivGuid,
 
                 Activity = notification.Data.Activity,
                 ActivityId = notification.Data.ActivityId,
-                ActivityGuid = notification.Data.ActivityGuid,
+                //ActivityGuid = notification.Data.ActivityGuid,
 
                 HeadFirstName = notification.Data.HeadFirstName,
                 HeadLastName = notification.Data.HeadLastName,
@@ -85,17 +85,17 @@ namespace SciVacancies.ReadModel.ElasticSearchModel.EventHandlers
 
                 OrgForm = notification.Data.OrgForm,
                 OrgFormId = notification.Data.OrgFormId,
-                OrgFormGuid = notification.Data.OrgFormGuid,
+                //OrgFormGuid = notification.Data.OrgFormGuid,
 
                 PublishedVacancies = notification.Data.PublishedVacancies,
 
                 Foiv = notification.Data.Foiv,
                 FoivId = notification.Data.FoivId,
-                FoivGuid = notification.Data.FoivGuid,
+                //FoivGuid = notification.Data.FoivGuid,
 
                 Activity = notification.Data.Activity,
                 ActivityId = notification.Data.ActivityId,
-                ActivityGuid = notification.Data.ActivityGuid,
+                //ActivityGuid = notification.Data.ActivityGuid,
 
                 HeadFirstName = notification.Data.HeadFirstName,
                 HeadLastName = notification.Data.HeadLastName,
