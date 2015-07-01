@@ -3,7 +3,9 @@
 @model SciVacancies.ReadModel.Core.Position
 
 <div class="crumbs">
-    <a asp-controller="organizations" asp-action="vacancies">Назад</a><span class="separator">/</span>
+    <a href="/">Главная</a><span class="separator">/</span>
+    <a asp-controller="organizations" asp-action="account">Карточка организации</a><span class="separator">/</span>
+    <a asp-controller="organizations" asp-action="vacancies">Вакансии</a><span class="separator">/</span>
     @ViewBag.Title
 </div>
 
@@ -93,5 +95,7 @@
 </a>
 
 <div class="b-bottom-nav">
-    <a asp-controller="organizations" asp-action="vacancies" class="small-icon icon-prev">Назад</a>
+    <a href="/" class="small-icon icon-prev">Главная</a>
+    <a asp-controller="organizations" asp-action="account" class="small-icon icon-prev">Карточка организации</a>
+    <a asp-controller="organizations" asp-action="vacancies" class="small-icon icon-prev">Вакансии</a>
 </div>

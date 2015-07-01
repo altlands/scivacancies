@@ -15,5 +15,6 @@ namespace SciVacancies.WebApp.ViewModels
         public Page<Vacancy> PagedVacancies { get; set; }
         public Page<Position> PagedPositions { get; set; }
 
+        public string Name { get; set; }
     }
 }

@@ -5,8 +5,8 @@
 @model SciVacancies.WebApp.ViewModels.VacancyApplicationsInResearcherIndexViewModel
 
 <div class="crumbs">
-    <a href="/">Главная страница</a><span class="separator">/</span>
-    <a asp-controller="researchers" asp-action="create">Личная карточка</a><span class="separator">/</span>
+    <a href="/">Главная</a><span class="separator">/</span>
+    <a asp-controller="researchers" asp-action="account">Личная карточка</a><span class="separator">/</span>
     @ViewBag.Title
 </div>
 
@@ -48,10 +48,10 @@
                         <td><span class="status @item.Status.GetHtmlClass()">@item.Status.GetDescription()</span></td>
                         <td>
                             <a asp-controller="applications" asp-action="details" asp-route-id="@item.Guid" class="view-td-icon"></a>
-                            @if (item.Status == VacancyApplicationStatus.InProcess)
+                            @if (item.Status == VacancyApplicationStatus.Applied)
                             {
                                 <text>
-                                    <a asp-controller="applications" asp-action="delete" asp-route-id="@item.Guid" class="close-td-icon" onclick="javascipr: return confirm('Вы уверены, что хотите отменить подачу заявки?');"></a>
+                                    <a asp-controller="applications" asp-action="delete" asp-route-id="@item.Guid" class="close-td-icon"></a>
                                 </text>
                             }
                         </td>
@@ -59,56 +59,6 @@
                 </text>
             }
         }
-        <!--
-        <tr>
-            <td>ГНС600001</td>
-            <td>Главный<br/> научный сотрудник</td>
-            <td>60000 руб.</td>
-            <td>01-09-14, 16:04</td>
-            <td><span class="status executed">Завершён</span></td>
-            <td><span class="status executed">Победитель</span></td>
-            <td>
-                <a asp-controller="applications" asp-action="details" asp-route-id="@Guid.NewGuid()" class="view-td-icon"></a>
-                <a href="#" class="close-td-icon"></a>
-            </td>
-        </tr>
-        <tr>
-            <td>ИИС60290004</td>
-            <td>Инженер-исследователь</td>
-            <td>60000 руб.</td>
-            <td>01-09-14, 16:04</td>
-            <td><span class="status work">Приём заявок</span></td>
-            <td><span class="status work">Подана</span></td>
-            <td>
-                <a asp-controller="applications" asp-action="details" asp-route-id="@Guid.NewGuid()" class="view-td-icon"></a>
-                <a href="#" class="close-td-icon"></a>
-            </td>
-        </tr>
-        <tr>
-            <td>РНП58000322</td>
-            <td>Руководитель<br/> научного подразделения</td>
-            <td>60000 руб.</td>
-            <td>01-09-14, 16:04</td>
-            <td><span class="status work">Объявлен</span></td>
-            <td><span class="status work">В работе</span></td>
-            <td>
-                <a asp-controller="applications" asp-action="details" asp-route-id="@Guid.NewGuid()" class="view-td-icon"></a>
-                <a href="#" class="close-td-icon"></a>
-            </td>
-        </tr>
-        <tr>
-            <td>СНС6000021</td>
-            <td>Старший<br/> научный сотрудник</td>
-            <td>60000 руб.</td>
-            <td>01-09-14, 16:04</td>
-            <td><span class="status executed">Завершён</span></td>
-            <td><span class="status failed">Не прошла</span></td>
-            <td>
-                <a asp-controller="applications" asp-action="details" asp-route-id="@Guid.NewGuid()" class="view-td-icon"></a>
-                <a href="#" class="close-td-icon"></a>
-            </td>
-        </tr>
-        -->
     </tbody>
 </table>
 <div class="bottom-nav">
@@ -152,5 +102,6 @@
 </div>
 
 <div class="b-bottom-nav">
-    <a asp-controller="researchers" asp-action="account" class="small-icon icon-prev">К личной карточке</a>
+    <a htef="/" class="small-icon icon-prev">Главная</a>
+    <a asp-controller="researchers" asp-action="account" class="small-icon icon-prev">Личная карточка</a>
 </div>

@@ -9,7 +9,7 @@
 }
 
 <div class="crumbs">
-    <a href="/">Главная страница</a><span class="separator">/</span>@ViewBag.Title
+    <a href="/">Главная</a><span class="separator">/</span>@ViewBag.Title
 </div>
 
 <form method="GET">
@@ -135,7 +135,7 @@
                     <div>
                         <div class="index-number">17.</div>
                         <div class="index-text">
-                            <div class="title"><a asp-controller="vacancies" asp-action="details" asp-route-id="@item.Id">@item.Name</a></div>
+                            <div class="title"><a asp-controller="vacancies" asp-action="card" asp-route-id="@item.Id" target="_blank">@item.Name</a></div>
                             <div class="inform">
                                 <p>Дата размещения: @item.DateStart.ToLocalVacancyString()</p>
                                 <p>
@@ -143,7 +143,7 @@
                                 </p>
                                 <p>Заработная плата: @item.SalaryFrom – @item.SalaryTo руб.</p>
                                 <p>
-                                    Организация: <a asp-controller="organizations" asp-action="details" asp-route-id="@item.OrganizationGuid">@item.OrganizationName</a>
+                                    Организация: <a asp-controller="organizations" asp-action="card" asp-route-id="@item.OrganizationGuid" target="_blank">@item.OrganizationName</a>
                                 </p>
                                 <p>
                                     Научные направления: <span>@item.ResearchDirection</span>
@@ -284,5 +284,5 @@
 
 
 <div class="b-bottom-nav">
-    <a href="/" class="small-icon icon-prev">На главную страницу</a>
+    <a href="/" class="small-icon icon-prev">Главная страницу</a>
 </div>

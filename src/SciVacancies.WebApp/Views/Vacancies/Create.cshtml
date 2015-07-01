@@ -1,9 +1,9 @@
 ﻿@using System.Threading.Tasks
 @using SciVacancies.WebApp.ViewModels
-@model SciVacancies.WebApp.ViewModels.PositionCreateViewModel
+@model PositionCreateViewModel
 
 <div class="crumbs">
-    <a href="/">Главная страница</a><span class="separator">/</span>
+    <a href="/">Главная</a><span class="separator">/</span>
     <a asp-controller="organizations" asp-action="account">Карточка организации</a><span class="separator">/</span>
     <a asp-controller="organizations" asp-action="vacancies">Вакансии</a><span class="separator">/</span>
     @ViewBag.Title
@@ -269,6 +269,9 @@
 
 
 
+
 <div class="b-bottom-nav">
-    <a asp-controller="organizations" asp-action="vacancies" class="small-icon icon-prev">К карточке организации</a>
+    <a href="/" class="small-icon icon-prev">Главная</a>
+    <a asp-controller="organizations" asp-action="account" class="small-icon icon-prev">Карточка организации</a>
+    <a asp-controller="organizations" asp-action="vacancies" class="small-icon icon-prev">Вакансии</a>
 </div>

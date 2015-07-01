@@ -1,12 +1,31 @@
-﻿<div class="crumbs">
-    <a asp-controller="researchers" asp-action="applications">Назад</a><span class="separator">/</span>
+﻿@using System.Threading.Tasks
+@model SciVacancies.WebApp.ViewModels.VacancyApplicationDetailsViewModel
+
+<div class="crumbs">
+    <a href="/">Главная</a><span class="separator">/</span>
+    <a asp-controller="researchers" asp-action="account">Личная карточка</a><span class="separator">/</span>
+    <a asp-controller="researchers" asp-action="applications">Мои заявки</a><span class="separator">/</span>
+    <a asp-controller="application" asp-action="details" asp-route-id="@Model.Guid">@Model.FullName</a><span class="separator">/</span>
     @ViewBag.Title
 </div>
 
 <h3>@ViewBag.Title</h3>
 
-Шаблон заявки удалён
+<h4>Вы действительно хотите отозвать свою Заявку?</h4>
+
+<form asp-controller="applications" asp-action="deletepost" class="l-application">
+    <input type="hidden" asp-anti-forgery="true" />
+    <input type="hidden" id="id" name="id" value="@Model.Guid" />
+    <div class="row">
+        <div class="ctr-buttons button-align">
+            <input type="submit" class="blue-btn" value="Подтвердить" />
+        </div>
+    </div>
+</form>
 
 <div class="b-bottom-nav">
-    <a asp-controller="researchers" asp-action="applications" class="small-icon icon-prev">Назад</a>
+    <a href="/" class="small-icon icon-prev">Главная</a>
+    <a asp-controller="researchers" asp-action="account" class="small-icon icon-prev">Личная карточка</a>
+    <a asp-controller="researchers" asp-action="applications" class="small-icon icon-prev">Мои заявки</a>
+    <a asp-controller="application" asp-action="details" asp-route-id="@Model.Guid" class="small-icon icon-prev">@Model.FullName</a>
 </div>

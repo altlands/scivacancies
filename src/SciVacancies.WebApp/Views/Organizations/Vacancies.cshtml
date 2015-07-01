@@ -5,8 +5,8 @@
 @model SciVacancies.WebApp.ViewModels.VacanciesInOrganizationIndexViewModel
 
 <div class="crumbs">
-    <a href="/">Главная страница</a><span class="separator">/</span>
-    <a asp-controller="organizations" asp-action="account">Карточка организации</a><span class="separator">/</span>
+    <a href="/">Главная</a><span class="separator">/</span>
+    <a asp-controller="organizations" asp-action="account">@Model.Name</a><span class="separator">/</span>
     @ViewBag.Title
 </div>
 
@@ -91,7 +91,7 @@
                         }
                         @if (item.Status == VacancyStatus.InCommittee && item.WinnerGuid!=Guid.Empty && item.PositionGuid!= Guid.Empty)
                         {
-                            <a asp-controller="vacancies" asp-action="setwinners" asp-route-id="@item.Guid" title="Выбрать победителя">Закрыть вакансию</a>
+                            <a asp-controller="vacancies" asp-action="close" asp-route-id="@item.Guid" title="Выбрать победителя">Закрыть вакансию</a>
                         }
                     </td>
                 </tr>
@@ -141,12 +141,13 @@
     </div>
 
 <div class="ctr-buttons mb5 mt-30">
-    <a asp-controller="positions" asp-action="create">
+    <a asp-controller="vacancies" asp-action="create">
         <span class="green-btn middle-icon">Добавить вакансию</span>
     </a>
 </div>
 
 
 <div class="b-bottom-nav">
-    <a href="/" class="small-icon icon-prev">На главную страницу</a>
+    <a href="/" class="small-icon icon-prev">Главная</a>
+    <a asp-controller="organizations" asp-action="account" class="small-icon icon-prev">@Model.Name</a>
 </div>

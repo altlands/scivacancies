@@ -3,9 +3,10 @@
 @model SciVacancies.WebApp.ViewModels.PositionEditViewModel
 
 <div class="crumbs">
-    <a href="/">Главная страница</a><span class="separator">/</span>
-    <a asp-controller="organizations" asp-action="account">Московский государственный университет им. М.В. Ломоносова</a><span class="separator">/</span>
+    <a href="/">Главная</a><span class="separator">/</span>
+    <a asp-controller="organizations" asp-action="account">Карточка организации</a><span class="separator">/</span>
     <a asp-controller="organizations" asp-action="vacancies">Вакансии</a><span class="separator">/</span>
+    <a asp-controller="positions" asp-action="details" asp-route-id="@Model.Guid">@Model.Name</a><span class="separator">/</span>
     @ViewBag.Title
 </div>
 
@@ -261,7 +262,7 @@
         <div class="ctr-buttons button-align">
             <input type="submit" class="success-btn middle-icon icon-ok" onclick="javascript: vacancySaveOptions({ publish: true });" value="Сохранить и опубликовать" />
             <input type="submit" class="success-blue-btn middle-icon icon-ok" onclick="javascript: vacancySaveOptions({ saveDraft: true });" value="Сохранить как черновик" />
-            <a asp-controller="organizations" asp-action="vacancies">
+            <a asp-controller="positions" asp-action="details" asp-route-id="@Model.Guid">
                 <span class="blue-btn middle-icon icon-close">Закрыть</span>
             </a>
         </div>
@@ -269,5 +270,8 @@
 </form>
 
 <div class="b-bottom-nav">
-    <a asp-controller="organizations" asp-action="vacancies" class="small-icon icon-prev">К карточке организации</a>
+    <a href="/" class="small-icon icon-prev">Главная</a>
+    <a asp-controller="organizations" asp-action="account" class="small-icon icon-prev">Карточка организации</a>
+    <a asp-controller="organizations" asp-action="vacancies" class="small-icon icon-prev">Вакансии</a>
+    <a asp-controller="positions" asp-action="details" asp-route-id="@Model.Guid" class="small-icon icon-prev">@Model.Name</a>
 </div>

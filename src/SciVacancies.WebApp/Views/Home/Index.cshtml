@@ -35,7 +35,7 @@
             @foreach (var item in Model.VacanciesList.Items)
             {
                 <text>
-                <a asp-controller="vacancies" asp-action="details" asp-route-id="@item.Guid" class="row-4">
+                <a asp-controller="vacancies" asp-action="card" asp-route-id="@item.Guid" class="row-4">
                     <div class="iblock-middle">
                         <div class="title-vac">@item.Name</div>
                         <div class="sal-vac">@item.SalaryFrom – @item.SalaryTo руб.</div>

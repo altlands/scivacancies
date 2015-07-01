@@ -3,10 +3,8 @@
 @model SciVacancies.WebApp.ViewModels.ResearcherEditViewModel
 
 <div class="crumbs">
-    <a href="/">Главная страница</a>
-    <span class="separator">/</span>
-    <a asp-controller="researchers" asp-action="account">Личная карточка пользователя</a>
-    <span class="separator">/</span>
+    <a href="/">Главная</a><span class="separator">/</span>
+    <a asp-controller="researchers" asp-action="account">Личная карточка</a><span class="separator">/</span>
     @ViewBag.Title
 </div>
 
@@ -298,7 +296,7 @@
     </div>
     <div class="row">
         <div class="ctr-buttons button-align mt12 mb5">
-            <input type="submit" asp-controller="researchers" asp-action="account" class="save-button" value="Сохранить изменения"/>
+            <input type="submit" class="save-button" value="Сохранить изменения"/>
             <a asp-controller="researchers" asp-action="account" class="close-button">Закрыть</a>
         </div>
     </div>
@@ -307,5 +305,6 @@
 
 
 <div class="b-bottom-nav">
-    <a asp-controller="researchers" asp-action="account" class="small-icon icon-prev">К личной карточке</a>
+    <a href="/">Главная</a>
+    <a asp-controller="researchers" asp-action="account" class="small-icon icon-prev">Личная карточка</a>
 </div>

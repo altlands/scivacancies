@@ -22,51 +22,6 @@ namespace SciVacancies.WebApp.Controllers
             _mediator = mediator;
         }
 
-        [PageTitle("Новая вакансия")]
-        [BindOrganizationIdFromClaims]
-        [Authorize(Roles = ConstTerms.RequireRoleOrganizationAdmin)]
-        public ViewResult Create(Guid organizationGuid)
-        {
-            if (organizationGuid == Guid.Empty)
-                throw new ArgumentNullException($"{nameof(organizationGuid)}");
-
-            var model = new PositionCreateViewModel(organizationGuid);
-            model.InitDictionaries(_mediator);
-            return View(model);
-        }
-
-
-        [PageTitle("Новая вакансия")]
-        [HttpPost]
-        [Authorize(Roles = ConstTerms.RequireRoleOrganizationAdmin)]
-        [ValidateAntiForgeryToken]
-        public ActionResult Create(PositionCreateViewModel model)
-        {
-            if (ModelState.IsValid)
-            {
-                var positionDataModel = Mapper.Map<PositionDataModel>(model);
-                var positionGuid = _mediator.Send(new CreatePositionCommand { OrganizationGuid = model.OrganizationGuid, Data = positionDataModel });
-
-                if (model.ToPublish)
-                {
-                    var vacancyDataModel = Mapper.Map<VacancyDataModel>(positionDataModel);
-                    vacancyDataModel.OrganizationName = _mediator.Send(new SingleOrganizationQuery { OrganizationGuid = model.OrganizationGuid }).Name;
-
-                    var vacancyGuid = _mediator.Send(new PublishVacancyCommand
-                    {
-                        OrganizationGuid = model.OrganizationGuid,
-                        PositionGuid = positionGuid,
-                        Data = vacancyDataModel
-                    });
-                }
-
-                return RedirectToAction("vacancies", "organizations");
-            }
-            model.InitDictionaries(_mediator);
-            return View(model);
-
-        }
-
         [PageTitle("Подробно о вакансии")]
         [BindOrganizationIdFromClaims]
         public IActionResult Details(Guid id, Guid organizationGuid)
@@ -110,6 +65,7 @@ namespace SciVacancies.WebApp.Controllers
             return View(model);
         }
 
+        [PageTitle("Изменить вакансию")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         [BindOrganizationIdFromClaims("claimedUserGuid")]
@@ -130,20 +86,19 @@ namespace SciVacancies.WebApp.Controllers
 
                 var positionGuid = _mediator.Send(new UpdatePositionCommand { PositionGuid = model.Guid, OrganizationGuid = model.OrganizationGuid, Data = positionDataModel });
 
-                if (model.ToPublish)
+                if (!model.ToPublish)
+                    return RedirectToAction("details", "positions", new {id = positionGuid});
+
+                var vacancyDataModel = Mapper.Map<VacancyDataModel>(positionDataModel);
+                vacancyDataModel.OrganizationName = _mediator.Send(new SingleOrganizationQuery { OrganizationGuid = model.OrganizationGuid }).Name;
+
+                var vacancyGuid = _mediator.Send(new PublishVacancyCommand
                 {
-                    var vacancyDataModel = Mapper.Map<VacancyDataModel>(positionDataModel);
-                    vacancyDataModel.OrganizationName = _mediator.Send(new SingleOrganizationQuery { OrganizationGuid = model.OrganizationGuid }).Name;
-
-                    var vacancyGuid = _mediator.Send(new PublishVacancyCommand
-                    {
-                        OrganizationGuid = model.OrganizationGuid,
-                        PositionGuid = model.Guid,
-                        Data = vacancyDataModel
-                    });
-                }
-
-                return RedirectToAction("vacancies", "organizations");
+                    OrganizationGuid = model.OrganizationGuid,
+                    PositionGuid = model.Guid,
+                    Data = vacancyDataModel
+                });
+                return RedirectToAction("details", "vacancies", new { id = vacancyGuid });
             }
             model.InitDictionaries(_mediator);
             return View(model);
@@ -174,31 +129,6 @@ namespace SciVacancies.WebApp.Controllers
             return View();
         }
 
-        //[HttpPost]
-        //[BindOrganizationIdFromClaims]
-        //[ValidateAntiForgeryToken]
-        //public IActionResult UnDelete(Guid id, Guid organizationGuid)
-        //{
-        //    if (id == Guid.Empty)
-        //        throw new ArgumentNullException(nameof(id));
-        //    if (organizationGuid == Guid.Empty)
-        //        throw new ArgumentNullException(nameof(organizationGuid));
-
-        //    var model = _mediator.Send(new SinglePositionQuery { PositionGuid = id });
-
-        //    if (model.OrganizationGuid != organizationGuid)
-        //        throw new Exception("Вы не можете удалять вакансии других организаций");
-
-        //    if (model.Status != PositionStatus.Removed)
-        //        throw new Exception("Вы не можете восстановить не удаленную вакансию");
-
-        //    var result = _mediator.Send(new RemovePositionCommand { OrganizationGuid = organizationGuid, PositionGuid = id });
-
-        //    return RedirectToAction("vacancies", "organizations");
-        //}
-
-
-        [PageTitle("Вакансия опубликована")]
         [BindOrganizationIdFromClaims]
         public IActionResult Publish(Guid id, Guid organizationGuid)
         {
@@ -228,7 +158,7 @@ namespace SciVacancies.WebApp.Controllers
                 Data = vacancyDataModel
             });
 
-            return View(vacancyGuid);
+            return RedirectToAction("vacancies", "organizations");
         }
     }
 

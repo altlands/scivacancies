@@ -3,7 +3,7 @@
     var years = Enumerable.Range(DateTime.Now.Year-150, 150+1).OrderByDescending(c=>c).Select(c=> new SelectListItem {Text = c.ToString(), Value = c.ToString()});
 }
 <div class="crumbs">
-    <a href="/">Главная страница</a><span class="separator">/</span>Регистрация
+    <a href="/">Главная</a><span class="separator">/</span>Регистрация
 </div>
 
 <h4>@ViewBag.Title</h4>
@@ -144,5 +144,5 @@
 </div>
 
 <div class="b-bottom-nav">
-    <a href="/" class="small-icon icon-prev">На главную страницу</a>
+    <a href="/" class="small-icon icon-prev">Главная страницу</a>
 </div>

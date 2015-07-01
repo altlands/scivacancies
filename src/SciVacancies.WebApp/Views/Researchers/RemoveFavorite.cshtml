@@ -1,0 +1,32 @@
+﻿@using System.Threading.Tasks
+@model SciVacancies.WebApp.ViewModels.VacancyDetailsViewModel
+
+<div class="crumbs">
+    <a href="/">Главная</a><span class="separator">/</span>
+    <a asp-controller="organizations" asp-action="card" asp-route-id="@Model.OrganizationGuid">@Model.OrganizationName</a><span class="separator">/</span>
+    <a asp-controller="vacancies" asp-action="card" asp-route-id="@Model.Guid">@Model.Name</a><span class="separator">/</span>
+    @ViewBag.Title
+</div>
+
+<h3>@ViewBag.Title</h3>
+
+<h4>Вы действительно хотите убрать Вакансию из Избранных?</h4>
+
+<form asp-controller="researchers" asp-action="removefavoritepost" class="l-application">
+    <input type="hidden" asp-anti-forgery="true" />
+    <input type="hidden" id="vacancyguid" name="vacancyguid" value="@Model.Guid" />
+
+    <div class="row">
+        <div class="ctr-buttons button-align">
+            <input type="submit" class="blue-btn" value="Подтвердить" />
+        </div>
+    </div>
+
+</form>
+
+
+<div class="b-bottom-nav">
+    <a href="/" class="small-icon icon-prev">Главная</a>
+    <a asp-controller="organizations" asp-action="card" asp-route-id="@Model.OrganizationGuid" class="small-icon icon-prev">@Model.OrganizationName</a>
+    <a asp-controller="vacancies" asp-action="card" asp-route-id="@Model.Guid" class="small-icon icon-prev">@Model.Name</a>
+</div>

@@ -1,0 +1,62 @@
+﻿@using System.Threading.Tasks
+@using SciVacancies.Domain.Enums
+@using SciVacancies.WebApp.Engine
+@model SciVacancies.WebApp.ViewModels.VacancyDetailsViewModel
+
+<div class="crumbs">
+    <a href="/">Главная</a><span class="separator">/</span>
+    <a asp-controller="organizations" asp-action="card" asp-route-id="@Model.OrganizationGuid">@Model.OrganizationName</a><span class="separator">/</span>
+    @ViewBag.Title
+</div>
+
+<h3>@ViewBag.Title</h3>
+<div class="title-popup">
+    <h4>Вакансия ID @Model.Guid.ToString().Substring(0, 4)</h4>
+</div>
+
+@if (User.IsInRole(ConstTerms.RequireRoleOrganizationAdmin))
+{
+    <text>
+    <a asp-controller="vacancies" asp-action="details" asp-route-id="@Model.Guid" class="green-btn middle-icon" target="_blank">Подробнее</a>
+    <br />
+    <br />
+    </text>
+}
+
+@if (User.IsInRole(ConstTerms.RequireRoleResearcher))
+{
+
+    if (Model.Status == VacancyStatus.AppliesAcceptance)
+    {
+        <text>
+        <a asp-controller="applications" asp-action="create" asp-route-vacancyguid="@Model.Guid" class="green-btn middle-icon" target="_blank">Подать заявку</a>
+        <br />
+        <br />
+        </text>
+    }
+    if (bool.Parse(ViewData["VacancyInFavorites"].ToString()))
+    {
+        <text>
+            <a asp-controller="researchers" asp-action="favorities" class="success-btn middle-icon" target="_blank">В избранном</a>
+            &nbsp;
+            <a asp-controller="researchers" asp-action="removefavorite" asp-route-vacancyguid="@Model.Guid"> Убрать из избранных</a>
+            <br/>
+            <br/>
+        </text>
+    }
+    else
+    {
+        <text>
+            <a asp-controller="researchers" asp-action="addtofavorite" asp-route-vacancyguid="@Model.Guid" class="success-btn middle-icon">Добавить в избранное</a>
+            <br/>
+            <br/>
+        </text>
+    }
+}
+
+@Component.Invoke("VacancyInfo", Model)
+
+<div class="b-bottom-nav">
+    <a href="/" class="small-icon icon-prev">Главная</a>
+    <a asp-controller="organizations" asp-action="card" asp-route-id="@Model.OrganizationGuid" class="small-icon icon-prev">@Model.OrganizationName</a>
+</div>

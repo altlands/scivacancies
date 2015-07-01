@@ -6,7 +6,7 @@
 
 
 <div class="crumbs">
-    <a href="/">Главная страница</a><span class="separator">/</span>
+    <a href="/">Главная</a><span class="separator">/</span>
     @ViewBag.Title
 </div>
 
@@ -58,24 +58,45 @@
 
     <table class="table request-table">
         <thead>
-            <tr>
-                <th><div class="inline-block"><img src="/images/icons/arrow-bottom-tab.png" class="va-middle"></div><div class="inline-block ml6 va-middle">№</div></th>
-                <th><div class="inline-block"><img src="/images/icons/tab-head.png" class="va-middle"></div><div class="inline-block ml6 va-middle">ID конкурса</div></th>
-                <th><div class="pl21 va-middle">Вакансия</div></th>
-                <th><div class="inline-block"><img src="/images/icons/tab-head.png" class="va-middle"></div><div class="inline-block ml6 va-middle">Дата<br /> создания</div></th>
-                <th><div class="inline-block"><img src="/images/icons/tab-head.png" class="va-middle"></div><div class="inline-block ml6 va-middle">Дата<br /> публикации</div></th>
-                <th><div class="inline-block"><img src="/images/icons/tab-head.png" class="va-middle"></div><div class="inline-block ml6 va-middle">Статус<br /> конкурса</div></th>
-                <th class="view-col"><div class="pl21 va-middle"><span>Просмотр</span></div></th>
-                <th><div class="pl21 va-middle">Победитель</div></th>
-            </tr>
+        <tr>
+            <th>
+                <div class="inline-block"><img src="/images/icons/arrow-bottom-tab.png" class="va-middle">
+                </div>
+                <div class="inline-block ml6 va-middle">№</div></th>
+            <th>
+                <div class="inline-block"><img src="/images/icons/tab-head.png" class="va-middle">
+                </div>
+                <div class="inline-block ml6 va-middle">ID конкурса</div></th>
+            <th>
+                <div class="pl21 va-middle">Вакансия</div></th>
+            <th>
+                <div class="inline-block"><img src="/images/icons/tab-head.png" class="va-middle">
+                </div>
+                <div class="inline-block ml6 va-middle">Дата<br/> создания
+                </div></th>
+            <th>
+                <div class="inline-block"><img src="/images/icons/tab-head.png" class="va-middle">
+                </div>
+                <div class="inline-block ml6 va-middle">Дата<br/> публикации
+                </div></th>
+            <th>
+                <div class="inline-block"><img src="/images/icons/tab-head.png" class="va-middle">
+                </div>
+                <div class="inline-block ml6 va-middle">Статус<br/> конкурса
+                </div></th>
+            <th class="view-col">
+                <div class="pl21 va-middle"><span>Просмотр</span></div></th>
+            <th>
+                <div class="pl21 va-middle">Победитель</div></th>
+        </tr>
         </thead>
         <tbody>
 
-            @if (Model.VacanciesInOrganization.PagedVacancies != null)
+        @if (Model.VacanciesInOrganization.PagedVacancies != null)
+        {
+            foreach (var item in Model.VacanciesInOrganization.PagedVacancies.Items.Where(c => c.Status == VacancyStatus.Published || c.Status == VacancyStatus.AppliesAcceptance || c.Status == VacancyStatus.InCommittee))
             {
-                foreach (var item in Model.VacanciesInOrganization.PagedVacancies.Items.Where(c => c.Status == VacancyStatus.Published || c.Status == VacancyStatus.AppliesAcceptance || c.Status == VacancyStatus.InCommittee))
-                {
-                    <text>
+                <text>
                     <tr>
                         <td>@item.Guid.ToString().Substring(0, 4)...</td>
                         <td>ГНС600001</td>
@@ -84,13 +105,13 @@
                         <td>@{item.DateStart.ToLocalVacancyString(); }</td>
                         <td><span class="status @item.Status.GetHtmlClass()">@item.Status.GetDescription()</span></td>
                         <td>
-                            <a asp-controller="vacancies" asp-action="details" asp-route-id="@item.Guid" class="view-td-icon" title="Просмотр вакансии"></a>
+                            <a asp-controller="vacancies" asp-action="card" asp-route-id="@item.Guid" class="view-td-icon" title="Просмотр вакансии"></a>
                         </td>
                         <td class="ta-left"></td>
                     </tr>
-                    </text>
-                                }
-                            }
+                </text>
+            }
+        }
         </tbody>
     </table>
     <div class="bottom-nav">
@@ -132,4 +153,9 @@
                 </ul>
             </div>*@
     </div>
+</div>
+
+
+<div class="b-bottom-nav">
+    <a href="/" class="small-icon icon-prev">Главная</a>
 </div>
