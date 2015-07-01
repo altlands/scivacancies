@@ -3,6 +3,7 @@ using SciVacancies.Domain.DataModels;
 
 namespace SciVacancies.Domain.Events
 {
+    [Obsolete("Position will be removed")]
     public class PositionEventBase : EventBase
     {
         public Guid PositionGuid { get; set; }

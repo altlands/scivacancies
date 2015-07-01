@@ -10,7 +10,7 @@ namespace SciVacancies.Domain.Events
     }
 
     /// <summary>
-    /// Подписка создана и активна.
+    /// Подписка создана и активна
     /// </summary>
     public class SearchSubscriptionCreated : SearchSubscriptionEventBase
     {

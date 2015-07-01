@@ -11,15 +11,16 @@ namespace SciVacancies.Domain.Enums
         Active = 0,
 
         /// <summary>
-        /// Исследователь заблокирован (блокировка\разблокировка доступна только администратору)
-        /// </summary>
-        [Description("Заблокирован")]
-        Banned = 1,
-
-        /// <summary>
         /// Исследователь удалён
         /// </summary>
         [Description("Удалён")]
-        Removed = 2
+        Removed = 1,
+
+        /// <summary>
+        /// Исследователь заблокирован (блокировка\разблокировка доступна только администратору)
+        /// //TODO - нужно ли это?
+        /// </summary>
+        [Description("Заблокирован")]
+        Banned = 2
     }
 }
