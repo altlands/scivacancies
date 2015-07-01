@@ -2,8 +2,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace SciVacancies.Domain.DataModels
 {
@@ -15,12 +13,16 @@ namespace SciVacancies.Domain.DataModels
         public string UserId { get; set; }
 
         public string FirstName { get; set; }
-        public string SecondName { get; set; }
-        public string Patronymic { get; set; }
-
         public string FirstNameEng { get; set; }
+
+        public string SecondName { get; set; }
         public string SecondNameEng { get; set; }
+
+        public string Patronymic { get; set; }
         public string PatronymicEng { get; set; }
+
+        public string FullName { get { return SecondName + " " + FirstName + " " + Patronymic; } }
+        public string FullNameEng { get { return SecondNameEng + " " + FirstNameEng + " " + PatronymicEng; } }
 
         public string PreviousSecondName { get; set; }
 

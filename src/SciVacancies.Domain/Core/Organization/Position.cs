@@ -1,21 +1,26 @@
-﻿using SciVacancies.Domain.Enums;
-using SciVacancies.Domain.DataModels;
+﻿using SciVacancies.Domain.DataModels;
+using SciVacancies.Domain.Enums;
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace SciVacancies.Domain.Core
 {
+    [Obsolete("Will be removed")]
     public class Position
     {
+        /// <summary>
+        /// Guid позиции
+        /// </summary>
         public Guid PositionGuid { get; set; }
-        [Obsolete("Field will be removed")]
-        public Guid OrganizationGuid { get; set; }
 
+        /// <summary>
+        /// Вся информация о позиции
+        /// </summary>
         public PositionDataModel Data { get; set; }
-        [Obsolete("Field will be moved to DataModel")]
+
+        /// <summary>
+        /// Статус позиции
+        /// </summary>
         public PositionStatus Status { get; set; }
     }
 }

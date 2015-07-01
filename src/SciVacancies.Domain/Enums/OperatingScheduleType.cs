@@ -9,21 +9,25 @@ namespace SciVacancies.Domain.Enums
         /// </summary>
         [Description("Полный день")]
         FullTime = 0,
+
         /// <summary>
         /// Сменный график
         /// </summary>
         [Description("Сменный график")]
         Replacement = 1,
+
         /// <summary>
         /// Гибкий график
         /// </summary>
         [Description("Гибкий график")]
         Flexible = 2,
+
         /// <summary>
         /// Удалённая работа
         /// </summary>
         [Description("Удалённая работа")]
         Remote = 3,
+
         /// <summary>
         /// Вахтовый метод
         /// </summary>

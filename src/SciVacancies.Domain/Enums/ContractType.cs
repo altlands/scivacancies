@@ -9,6 +9,7 @@ namespace SciVacancies.Domain.Enums
         /// </summary>
         [Description("Бессрочный")]
         Permanent = 0,
+
         /// <summary>
         /// Фиксированный срок
         /// </summary>

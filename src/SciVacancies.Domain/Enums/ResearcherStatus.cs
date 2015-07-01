@@ -7,14 +7,19 @@ namespace SciVacancies.Domain.Enums
         /// <summary>
         /// Исследователь создан/активен
         /// </summary>
+        [Description("Активен")]
         Active = 0,
+
         /// <summary>
         /// Исследователь заблокирован (блокировка\разблокировка доступна только администратору)
         /// </summary>
+        [Description("Заблокирован")]
         Banned = 1,
+
         /// <summary>
         /// Исследователь удалён
         /// </summary>
+        [Description("Удалён")]
         Removed = 2
     }
 }

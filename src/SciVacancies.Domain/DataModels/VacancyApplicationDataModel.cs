@@ -1,15 +1,14 @@
-﻿using SciVacancies.Domain.Enums;
-using SciVacancies.Domain.Core;
+﻿using SciVacancies.Domain.Core;
 using System.Collections.Generic;
 
 namespace SciVacancies.Domain.DataModels
 {
     public class VacancyApplicationDataModel
     {
-        public string VacancyCode { get; set; }
-        public string PositionName { get; set; }
-
-        public string ResearcherFullName { get; set; }
+        /// <summary>
+        /// Полное имя исследователя
+        /// </summary>
+        public string FullName { get; set; }
 
         public string Email { get; set; }
         public string ExtraEmail { get; set; }
@@ -29,7 +28,5 @@ namespace SciVacancies.Domain.DataModels
 
         public List<Education> Educations { get; set; }
         public List<Publication> Publications { get; set; }
-
-        public VacancyApplicationStatus Status { get; set; }
     }
 }

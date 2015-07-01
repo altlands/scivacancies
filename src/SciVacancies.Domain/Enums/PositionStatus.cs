@@ -1,7 +1,9 @@
 ﻿using System.ComponentModel;
+using System;
 
 namespace SciVacancies.Domain.Enums
 {
+    [Obsolete("Will be removed")]
     public enum PositionStatus
     {
         /// <summary>
@@ -9,11 +11,13 @@ namespace SciVacancies.Domain.Enums
         /// </summary>
         [Description("В работе")]
         InProcess = 0,
+
         /// <summary>
         /// По данной позиции опубликована вакансия, работа с позицией не возможна до закрытия или отмены вакансии
         /// </summary>
         [Description("Опубликована")]
         Published = 1,
+
         /// <summary>
         /// Позиция удалена и недоступна для организации (нужно создать новую)
         /// </summary>

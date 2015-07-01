@@ -9,11 +9,13 @@ namespace SciVacancies.Domain.Enums
         /// </summary>
         [Description("Не прочитано")]
         Created = 0,
+
         /// <summary>
         /// Прочитано
         /// </summary>
         [Description("Прочитано")]
         Read = 1,
+
         /// <summary>
         /// Удалено
         /// </summary>

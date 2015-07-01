@@ -1,24 +1,30 @@
-﻿using SciVacancies.Domain.Enums;
-using SciVacancies.Domain.DataModels;
+﻿using SciVacancies.Domain.DataModels;
+using SciVacancies.Domain.Enums;
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace SciVacancies.Domain.Core
 {
     public class VacancyApplication
     {
+        /// <summary>
+        /// Guid заявки
+        /// </summary>
         public Guid VacancyApplicationGuid { get; set; }
+
+        /// <summary>
+        /// Guid вакансии, на которую подаётся заявка
+        /// </summary>
         public Guid VacancyGuid { get; set; }
 
+        /// <summary>
+        /// Вся информация о заявке
+        /// </summary>
         public VacancyApplicationDataModel Data { get; set; }
 
-        //public List<Publication> Publications { get; set; }
-        //public List<AttachedFile> AttachedFiles { get; set; }
-        //public string CoveringLetter { get; set; }
-        [Obsolete("Field will be moved to DataModel")]
+        /// <summary>
+        /// Статус заявки
+        /// </summary>
         public VacancyApplicationStatus Status { get; set; }
     }
 }
