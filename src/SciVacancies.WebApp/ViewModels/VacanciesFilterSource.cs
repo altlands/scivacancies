@@ -26,13 +26,6 @@ namespace SciVacancies.WebApp.ViewModels
                 ,new SelectListItem {Value =ConstTerms.OrderByDateAscending , Text ="Сначала первые" }
             };
 
-            Salaries = new List<SelectListItem>
-            {
-                new SelectListItem {Value = "1", Text = "До 30 000 руб."}
-                ,new SelectListItem {Value ="2" , Text ="30 000 – 60 000 руб." }
-                ,new SelectListItem {Value ="3" , Text ="От 60 000 руб. и выше" }
-            };
-
             VacancyStates = new List<VacancyStatus>
             {
                 VacancyStatus.Published
@@ -72,10 +65,7 @@ namespace SciVacancies.WebApp.ViewModels
         public IEnumerable<SelectListItem> ResearchDirections;
         public IEnumerable<SelectListItem> Positions;
         public IEnumerable<SelectListItem> Organizations;
-        public IEnumerable<SelectListItem> Salaries;
         public IEnumerable<SelectListItem> VacancyStates;
-
         public List<int> PageSize;
-
     }
 }

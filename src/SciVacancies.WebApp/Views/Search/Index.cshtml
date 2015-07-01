@@ -1,6 +1,5 @@
 ﻿@using System.Threading.Tasks
 @using NPoco
-@using SciVacancies.ReadModel.Core
 @using SciVacancies.WebApp
 @model SciVacancies.WebApp.ViewModels.VacanciesFilterModel
 
@@ -75,11 +74,12 @@
 
                 <div class="cat-filter">
                     <div class="title">Заработная плата</div>
-                    <ul class="list-checkboxes">
-                        <checkboxing items="ViewBag.FilterSource.Salaries"
-                                     values="Model.Salaries"
-                                     property="Salaries"></checkboxing>
-                    </ul>
+                    <div>
+                        От <input type="text" asp-for="SalaryMin" class="small-input"/>
+                    </div>
+                    <div>
+                        До <input type="text" asp-for="SalaryMax" class="small-input"/>
+                    </div>
                 </div>
 
                 <div class="cat-filter">
