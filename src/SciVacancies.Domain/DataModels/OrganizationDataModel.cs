@@ -4,16 +4,6 @@ namespace SciVacancies.Domain.DataModels
 {
     public class OrganizationDataModel
     {
-        /// <summary>
-        /// Идентификатор аккаунта, к которому привязан агрегат (guid)
-        /// </summary>
-        public string UserId { get; set; }
-
-        /// <summary>
-        /// Количество опубликованных вакансий на данный момент
-        /// </summary>
-        public int PublishedVacancies { get; set; }
-
         #region General
 
         /// <summary>
