@@ -199,6 +199,9 @@ namespace SciVacancies.WebApp.Controllers
             if (vacancy.OrganizationGuid != organizationGuid)
                 throw new Exception("Вы не можете изменять Заявки, поданные на вакансии других организаций.");
 
+            if (vacancy.WinnerGuid !=Guid.Empty && vacancy.PretenderGuid!=Guid.Empty)
+                throw new Exception("Для данной Вакансии уже выбраны Победитель и Претендент.");
+
             if (vacancy.Status != VacancyStatus.InCommittee)
                 throw new Exception(
                     $"Вы не можете выбирать победителя для Заявки со статусом: {vacancy.Status.GetDescription()}");
