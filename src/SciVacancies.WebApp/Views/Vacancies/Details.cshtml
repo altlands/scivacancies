@@ -55,8 +55,8 @@
 
             @if (Model.Applications != null)
             {
-                foreach (var item in Model.Applications.Items)
-                {
+                foreach (var item in Model.Applications.Items.Where(c => c.Status != VacancyApplicationStatus.Removed && c.Status != VacancyApplicationStatus.Cancelled && c.Status != VacancyApplicationStatus.InProcess))
+    {
                     <text>
                     <tr>
                         <td>@Model.Applications.Items.IndexOf(item)</td>
@@ -83,10 +83,7 @@
                             }
                         </td>
                         <td>
-                            @if (item.Status == VacancyApplicationStatus.Applied)
-                            {
-                                <a asp-controller="applications" asp-action="preview" asp-route-id="@item.Guid" class="view-td-icon" title="Просмотр заявки"></a>
-                            }
+                            <a asp-controller="applications" asp-action="preview" asp-route-id="@item.Guid" class="view-td-icon" title="Просмотр заявки"></a>
                             <!--TODO: Vacancy -> Applications -> Print: распечатать заявку-->
                             <a asp-controller="applications" asp-action="print" asp-route-id="@item.Guid" class="print-td-icon" title="Распечатать Заявку"></a>
                         </td>
@@ -99,19 +96,28 @@
     </table>
 
 </div>
+@if (Model.Applications != null && Model.Applications.Items.Any())
+{
+    <span class="blue-btn middle-icon icon-print-button" style="margin-right: 15px;" rel="tooltip" title="Распечатать все заявки">Распечатать все заявки</span>
+}
 
+<br />
 <br />
 <br />
 
 <div class="ctr-buttons">
-    @if (Model.Applications != null && Model.Applications.Items.Any())
+    @if (true)
     {
-        <span class="blue-btn middle-icon icon-print-button" rel="tooltip" title="">Распечатать все заявки</span>
+        <a asp-controller="vacancies" asp-action="close" asp-route-id="@Model.Guid" class="btn btn-success btn-lg pull-left">
+            Завершить конкурс
+        </a>
     }
     <a asp-controller="vacancies" asp-action="cancel" asp-route-id="@Model.Guid" class="btn btn-danger btn-lg pull-right">
         Отменить вакансию
     </a>
 </div>
+
+<br />
 
 <div class="b-bottom-nav">
     <a href="/" class="small-icon icon-prev">Главная</a>

@@ -58,7 +58,7 @@ namespace SciVacancies.WebApp.Queries
         {
             if (message.VacancyGuid == Guid.Empty) throw new ArgumentNullException($"VacancyGuid is empty: {message.VacancyGuid}");
 
-            Page<VacancyApplication> vacancyApplications = _db.Page<VacancyApplication>(message.PageIndex, message.PageSize, new Sql("SELECT va.* FROM \"VacancyApplications\" va WHERE va.\"Status\"!=" + (int)VacancyApplicationStatus.Removed + " ORDER BY va.\"Guid\" DESC"));
+            Page<VacancyApplication> vacancyApplications = _db.Page<VacancyApplication>(message.PageIndex, message.PageSize, new Sql("SELECT va.* FROM \"VacancyApplications\" va WHERE va.\"Status\"!=" + (int)VacancyApplicationStatus.Removed + " AND va.\"VacancyGuid\"='" + message.VacancyGuid + "' ORDER BY va.\"Guid\" DESC"));
 
             return vacancyApplications;
         }

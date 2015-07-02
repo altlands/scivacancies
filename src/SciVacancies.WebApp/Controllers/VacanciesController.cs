@@ -8,6 +8,7 @@ using Microsoft.AspNet.Mvc;
 using NPoco;
 using SciVacancies.Domain.DataModels;
 using SciVacancies.Domain.Enums;
+using SciVacancies.ReadModel.Core;
 using SciVacancies.WebApp.Commands;
 using SciVacancies.WebApp.Engine;
 using SciVacancies.WebApp.Queries;
@@ -146,7 +147,6 @@ namespace SciVacancies.WebApp.Controllers
         [AllowAnonymous]
         [PageTitle("Карточка вакансии")]
         [BindResearcherIdFromClaims]
-        [BindOrganizationIdFromClaims]
         public ViewResult Card(Guid id, Guid researcherGuid)
         {
             if (id == Guid.Empty)
@@ -282,7 +282,7 @@ namespace SciVacancies.WebApp.Controllers
 
             //TODO: Vacancy -> InCommitte : нужно ли проверять минимальное (какое) количество заявок, поданных на вакансию
             if (vacancyApplications.TotalItems == 0
-                || vacancyApplications.Items.Count(c => c.Status == VacancyApplicationStatus.Applied) < 1)
+                || vacancyApplications.Items.Count(c => c.Status == VacancyApplicationStatus.Applied) < 2)
                 throw new Exception("Подано недостаточно Заявок для перевода Вакансии на рассмотрение комиссии");
 
             _mediator.Send(new SwitchVacancyInCommitteeCommand
@@ -294,9 +294,7 @@ namespace SciVacancies.WebApp.Controllers
             return RedirectToAction("vacancies", "organizations");
         }
 
-        [BindOrganizationIdFromClaims]
-        [Authorize(Roles = ConstTerms.RequireRoleOrganizationAdmin)]
-        public IActionResult Close(Guid id, Guid organizationGuid)
+        private Vacancy VacancyClosePrevalidation(Guid id, Guid organizationGuid)
         {
             if (id == Guid.Empty)
                 throw new ArgumentNullException(nameof(id));
@@ -312,14 +310,44 @@ namespace SciVacancies.WebApp.Controllers
             if (preModel.OrganizationGuid != organizationGuid)
                 throw new Exception("Вы не можете менять Вакансии других организаций");
 
+            if (preModel.WinnerGuid!= Guid.Empty)
+                throw new Exception("Вы не можете закрыть Вакансию: не выбран победитель");
+
+            if (preModel.PretenderGuid!= Guid.Empty)
+                throw new Exception("Вы не можете закрыть Вакансию: не выбран претендент");
+
             if (preModel.Status != VacancyStatus.InCommittee)
-                throw new Exception($"Вы не можете выбрать победителя по Заявке со статусом: {preModel.Status.GetDescription()}");
+                throw new Exception($"Вы не можете выбрать победителя по Вакансии со статусом: {preModel.Status.GetDescription()}");
+
+            return preModel;
+        }
+
+        [PageTitle("Закрыть вакансию")]
+        [BindOrganizationIdFromClaims]
+        [Authorize(Roles = ConstTerms.RequireRoleOrganizationAdmin)]
+        public IActionResult Close(Guid id, Guid organizationGuid)
+        {
+            var model = Mapper.Map<VacancyDetailsViewModel>(VacancyClosePrevalidation(id, organizationGuid));
+            model.Winner = Mapper.Map<ResearcherDetailsViewModel>(_mediator.Send(new SingleResearcherQuery { ResearcherGuid = model.WinnerGuid }));
+            model.Pretender = Mapper.Map<ResearcherDetailsViewModel>(_mediator.Send(new SingleResearcherQuery { ResearcherGuid = model.PretenderGuid }));
+            return View(model);
+        }
+
+        [PageTitle("Закрыть вакансию")]
+        [ValidateAntiForgeryToken]
+        [HttpPost]
+        [BindOrganizationIdFromClaims]
+        [Authorize(Roles = ConstTerms.RequireRoleOrganizationAdmin)]
+        public IActionResult ClosePost(Guid id, Guid organizationGuid)
+        {
+            VacancyClosePrevalidation(id, organizationGuid);
 
             _mediator.Send(new CloseVacancyCommand
             {
                 OrganizationGuid = organizationGuid,
                 VacancyGuid = id
             });
+
             return RedirectToAction("vacancies", "organizations");
         }
 

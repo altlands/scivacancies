@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using Nest;
 using NPoco;
 using SciVacancies.Domain.Enums;
-using SciVacancies.ReadModel.Core;
 using SciVacancies.WebApp.ViewModels.Base;
 
 namespace SciVacancies.WebApp.ViewModels

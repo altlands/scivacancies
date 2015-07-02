@@ -75,12 +75,25 @@
 
     @if (Model.Status == VacancyApplicationStatus.Applied && Model.Vacancy.Status == VacancyStatus.InCommittee)
     {
-        <text>
-        <br />
-        <div class="ctr-buttons">
-            <a asp-controller="applications" asp-action="setwinner" asp-route-id="@Model.Guid" class="green-btn middle-icon">Выбрать победителем</a>
-        </div>
-        </text>
+        if (Model.Vacancy.WinnerGuid != Model.ResearcherGuid)
+        {
+            <text>
+            <br />
+            <div class="ctr-buttons">
+                <a asp-controller="applications" asp-action="setwinner" asp-route-id="@Model.Guid" class="green-btn middle-icon">Выбрать победителем</a>
+            </div>
+            </text>
+        }
+
+        else if (Model.Vacancy.PretenderGuid != Model.ResearcherGuid)
+        {
+            <text>
+            <br />
+            <div class="ctr-buttons">
+                <a asp-controller="applications" asp-action="setwinner" asp-route-id="@Model.Guid" class="green-btn middle-icon">Выбрать претендентом</a>
+            </div>
+            </text>
+        }
     }
 
 </div>
@@ -89,5 +102,5 @@
     <a href="/" class="small-icon icon-prev">Главная</a>
     <a asp-controller="organizations" asp-action="account" class="small-icon icon-prev">@Model.Vacancy.OrganizationName</a>
     <a asp-controller="organizations" asp-action="vacancies" class="small-icon icon-prev">Вакансии</a>
-    <a asp-controller="vacancies" asp-action="details"  asp-route-id="@Model.VacancyGuid"class="small-icon icon-prev">@Model.Vacancy.Name</a>
+    <a asp-controller="vacancies" asp-action="details" asp-route-id="@Model.VacancyGuid" class="small-icon icon-prev">@Model.Vacancy.Name</a>
 </div>

@@ -179,6 +179,32 @@ namespace SciVacancies.WebApp.Controllers
             return View(model);
         }
 
+
+        private VacancyApplication SetWinnerPreValidation(Guid vacancyApplicationGuid, Guid organizationGuid, out Vacancy vacancy)
+        {
+            var vacancyApplicaiton = _mediator.Send(new SingleVacancyApplicationQuery {VacancyApplicationGuid = vacancyApplicationGuid});
+
+            if (vacancyApplicaiton == null)
+                throw new ObjectNotFoundException($"Не найденая Заявка c идентификатором: {vacancyApplicationGuid}");
+
+            if (vacancyApplicaiton.Status != VacancyApplicationStatus.Applied)
+                throw new Exception(
+                    $"Вы не можете выбрать в качестве одного из победителей Заявку со статусом: {vacancyApplicaiton.Status.GetDescription()}");
+
+            vacancy = _mediator.Send(new SingleVacancyQuery {VacancyGuid = vacancyApplicaiton.VacancyGuid});
+
+            if (vacancy == null)
+                throw new ObjectNotFoundException($"Не найденая Вакансия c идентификатором: {vacancyApplicaiton.VacancyGuid}");
+
+            if (vacancy.OrganizationGuid != organizationGuid)
+                throw new Exception("Вы не можете изменять Заявки, поданные на вакансии других организаций.");
+
+            if (vacancy.Status != VacancyStatus.InCommittee)
+                throw new Exception(
+                    $"Вы не можете выбирать победителя для Заявки со статусом: {vacancy.Status.GetDescription()}");
+            return vacancyApplicaiton;
+        }
+
         [PageTitle("Выбор победителя")]
         [BindOrganizationIdFromClaims]
         [Authorize(Roles = ConstTerms.RequireRoleOrganizationAdmin)]
@@ -189,24 +215,14 @@ namespace SciVacancies.WebApp.Controllers
             if (organizationGuid == Guid.Empty)
                 throw new ArgumentNullException(nameof(organizationGuid));
 
-            var vacancyApplicaiton = _mediator.Send(new SingleVacancyApplicationQuery { VacancyApplicationGuid = id });
-
-            if (vacancyApplicaiton == null)
-                throw new ObjectNotFoundException($"Не найденая Заявка c идентификатором: {id}");
-
-            if (vacancyApplicaiton.Status != VacancyApplicationStatus.Applied)
-                throw new Exception($"Вы не можете выбрать в качестве одного из победителей Заявку со статусом: {vacancyApplicaiton.Status.GetDescription()}");
-
-            var vacancy = _mediator.Send(new SingleVacancyQuery { VacancyGuid = vacancyApplicaiton.VacancyGuid });
-            if (vacancy.OrganizationGuid != organizationGuid)
-                throw new Exception("Вы не можете изменять Заявки, поданные на вакансии других организаций.");
-
-            if (vacancy.Status != VacancyStatus.InCommittee)
-                throw new Exception($"Вы не можете выбирать победителя для Заявки со статусом: {vacancy.Status.GetDescription()}");
+            Vacancy vacancy;
+            var vacancyApplicaiton = SetWinnerPreValidation(id, organizationGuid, out vacancy);
 
             var model = Mapper.Map<VacancyApplicationSetWinnerViewModel>(vacancyApplicaiton);
             model.Vacancy = Mapper.Map<VacancyDetailsViewModel>(vacancy);
             model.Researcher = Mapper.Map<ResearcherDetailsViewModel>(_mediator.Send(new SingleResearcherQuery { ResearcherGuid = vacancyApplicaiton.ResearcherGuid }));
+
+
 
             return View(model);
         }
@@ -221,17 +237,8 @@ namespace SciVacancies.WebApp.Controllers
             if (organizationGuid == Guid.Empty)
                 throw new ArgumentNullException(nameof(organizationGuid));
 
-            var vacancyApplicaiton = _mediator.Send(new SingleVacancyApplicationQuery { VacancyApplicationGuid = model.Guid });
-            var vacancy = _mediator.Send(new SingleVacancyQuery { VacancyGuid = vacancyApplicaiton.VacancyGuid });
-
-            if (vacancyApplicaiton.Status != VacancyApplicationStatus.Applied)
-                throw new Exception($"Вы не можете выбрать в качестве одного из победителей Заявку со статусом: {vacancyApplicaiton.Status.GetDescription()}");
-
-            if (vacancy.OrganizationGuid != organizationGuid)
-                throw new Exception("Вы не можете изменять Заявки, поданные на вакансии других организаций.");
-
-            if (vacancy.Status != VacancyStatus.InCommittee)
-                throw new Exception($"Вы не можете выбирать победителя для Заявки со статусом: {vacancy.Status.GetDescription()}");
+            Vacancy vacancy;
+            var vacancyApplicaiton = SetWinnerPreValidation(model.Guid, organizationGuid, out vacancy);
 
             if (ModelState.IsValid)
             {
@@ -242,7 +249,7 @@ namespace SciVacancies.WebApp.Controllers
 
                 return RedirectToAction("preview", "applications", new { id = model.Guid });
             }
-            //TODO - а эта часть для чего?
+
             model = Mapper.Map<VacancyApplicationSetWinnerViewModel>(vacancyApplicaiton);
             model.Vacancy = Mapper.Map<VacancyDetailsViewModel>(vacancy);
             model.Researcher = Mapper.Map<ResearcherDetailsViewModel>(_mediator.Send(new SingleResearcherQuery { ResearcherGuid = vacancyApplicaiton.ResearcherGuid }));
