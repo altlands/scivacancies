@@ -3,8 +3,8 @@
 @model SciVacancies.WebApp.ViewModels.VacancyApplicationDetailsViewModel
 
 <div class="crumbs">
-    <a href="/">Главная страница</a><span class="separator">/</span>
-    <a asp-controller="researchers" asp-action="account">Личная карточка пользователя</a><span class="separator">/</span>
+    <a href="/">Главная</a><span class="separator">/</span>
+    <a asp-controller="researchers" asp-action="account">Личная карточка</a><span class="separator">/</span>
     <a asp-controller="researchers" asp-action="applications">Мои заявки</a><span class="separator">/</span>
     @ViewBag.Title
 </div>
@@ -77,5 +77,7 @@
 
 
 <div class="b-bottom-nav">
-    <a asp-controller="researchers" asp-action="applications" class="small-icon icon-prev">К моим заявкам</a>
+    <a href="/" class="small-icon icon-prev">Главная</a>
+    <a asp-controller="researchers" asp-action="account" class="small-icon icon-prev">Личная карточка</a>
+    <a asp-controller="researchers" asp-action="applications" class="small-icon icon-prev">Мои заявки</a>
 </div>

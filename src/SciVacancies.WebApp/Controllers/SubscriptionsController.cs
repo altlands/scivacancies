@@ -11,7 +11,7 @@ namespace SciVacancies.WebApp.Controllers
         public SubscriptionsController(IMediator mediator){_mediator = mediator;}
 
         [BindResearcherIdFromClaims]
-        public ActionResult DeleteSubscription(Guid researcherGuid, Guid subscriptionGuid)
+        public ActionResult Delete(Guid researcherGuid, Guid subscriptionGuid)
         {
             //TODO: Subscriptions -> DeleteSubscription : реализовать
             _mediator.Send(new RemoveSearchSubscriptionCommand { ResearcherGuid = researcherGuid, SearchSubscriptionGuid = subscriptionGuid });
@@ -19,7 +19,7 @@ namespace SciVacancies.WebApp.Controllers
         }
 
         [BindResearcherIdFromClaims]
-        public ActionResult ActivateSubscription(Guid researcherGuid, Guid subscriptionGuid)
+        public ActionResult Activate(Guid researcherGuid, Guid subscriptionGuid)
         {
             //TODO: Subscriptions -> ActivateSubscription : реализовать
             _mediator.Send(new ActivateSearchSubscriptionCommand { ResearcherGuid = researcherGuid, SearchSubscriptionGuid = subscriptionGuid });
@@ -28,7 +28,7 @@ namespace SciVacancies.WebApp.Controllers
         }
 
         [BindResearcherIdFromClaims]
-        public ActionResult CancelSubscription(Guid researcherGuid, Guid subscriptionGuid)
+        public ActionResult Cancel(Guid researcherGuid, Guid subscriptionGuid)
         {
             //TODO: Subscriptions -> CancelSubscription : реализовать
             _mediator.Send(new CancelSearchSubscriptionCommand { ResearcherGuid = researcherGuid, SearchSubscriptionGuid = subscriptionGuid });

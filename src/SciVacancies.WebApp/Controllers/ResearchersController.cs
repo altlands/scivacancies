@@ -167,7 +167,7 @@ namespace SciVacancies.WebApp.Controllers
         }
 
         [BindResearcherIdFromClaims]
-        [PageTitle("Управление избранными вакансиями")]
+        [PageTitle("Избранная вакансия")]
         public IActionResult RemoveFavorite(Guid vacancyGuid, Guid researcherGuid)
         {
             if (researcherGuid == Guid.Empty)
@@ -182,9 +182,38 @@ namespace SciVacancies.WebApp.Controllers
             if (favoritesVacancies.Items.All(c => c.Guid != vacancyGuid))
                 throw new Exception($"У вас нет избранной вакансии с идентификатором {vacancyGuid}");
 
-            _mediator.Send(new RemoveVacancyFromFavoritesCommand { ResearcherGuid = researcherGuid, VacancyGuid = vacancyGuid });
+            var preModel = _mediator.Send(new SingleVacancyQuery { VacancyGuid = vacancyGuid });
+            var model = Mapper.Map<VacancyDetailsViewModel>(preModel);
+            return View(model);
+        }
 
-            return Redirect(Context.Request.Headers["referer"]);
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [BindResearcherIdFromClaims]
+        [PageTitle("Избранная вакансия")]
+        public IActionResult RemoveFavoritePost(Guid vacancyGuid, Guid researcherGuid)
+        {
+            if (researcherGuid == Guid.Empty)
+                throw new ArgumentNullException(nameof(researcherGuid));
+            if (vacancyGuid == Guid.Empty)
+                throw new ArgumentNullException(nameof(vacancyGuid));
+
+            //TODO: оптимизировать запрос и его обработку
+            var favoritesVacancies = _mediator.Send(new SelectPagedFavoriteVacanciesByResearcherQuery { PageSize = 500, PageIndex = 1, ResearcherGuid = researcherGuid, OrderBy = ConstTerms.OrderByDateAscending });
+            if (favoritesVacancies == null)
+                throw new Exception("У вас нет избранных вакансий");
+            if (favoritesVacancies.Items.All(c => c.Guid != vacancyGuid))
+                throw new Exception($"У вас нет избранной вакансии с идентификатором {vacancyGuid}");
+
+            if (!ModelState.IsValid)
+            {
+                var preModel = _mediator.Send(new SingleVacancyQuery { VacancyGuid = vacancyGuid });
+                var model = Mapper.Map<VacancyDetailsViewModel>(preModel);
+                return View("removefavorite", model);
+            }
+
+            _mediator.Send(new RemoveVacancyFromFavoritesCommand { ResearcherGuid = researcherGuid, VacancyGuid = vacancyGuid });
+            return RedirectToAction("card", "vacancies", new { id = vacancyGuid });
         }
 
 

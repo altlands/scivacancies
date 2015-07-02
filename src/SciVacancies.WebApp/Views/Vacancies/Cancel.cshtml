@@ -1,29 +1,13 @@
 ﻿@using System.Threading.Tasks
-@using SciVacancies.WebApp
 @model SciVacancies.WebApp.ViewModels.VacancyDetailsViewModel
 
-@{
-    var referer = Context.Request.Headers["referer"];
-}
-@if (!string.IsNullOrWhiteSpace(referer))
-{
-    <text>
-    <div class="crumbs">
-        <a href="@referer.ToLower()">Назад</a><span class="separator">/</span>
-        @ViewBag.Title
-    </div>
-    </text>
-}
-else
-{
-    <text>
-    <div class="crumbs">
-        <a href="/">Главная</a><span class="separator">/</span>
-        <a asp-controller="organizations" asp-action="vacancies">Карточка организации</a><span class="separator">/</span>
-        @ViewBag.Title
-    </div>
-    </text>
-}
+<div class="crumbs">
+    <a href="/">Главная</a><span class="separator">/</span>
+    <a asp-controller="organizations" asp-action="account">@Model.OrganizationName</a><span class="separator">/</span>
+    <a asp-controller="organizations" asp-action="vacancies">Вакансии</a><span class="separator">/</span>
+    <a asp-controller="vacancies" asp-action="details" asp-route-id="@Model.Guid">@Model.Name</a><span class="separator">/</span>
+    @ViewBag.Title
+</div>
 
 <h3>Отменить вакансию</h3>
 
@@ -61,90 +45,11 @@ else
     <h4>Описание Вакансии:</h4>
 </div>
 
+@Component.Invoke("VacancyInfo", Model)
 
-<div class="content-popup">
-    <div class="title-cat-inform">Специализация:</div>
-    <ul class="list-information">
-        <li class="even">
-            <span>Статус:</span>@Model.Status.GetDescription()
-        </li>
-        <li class="odd">
-            <span>Должность:</span>@Model.Name
-        </li>
-        <li class="even">
-            <span>Полное наименование:</span>@Model.FullName
-        </li>
-        <li class="odd">
-            <span>Отрасль науки:</span>@Model.ResearchDirection
-        </li>
-        <li class="even">
-            <span>Тематика исследований:</span>@Model.ResearchTheme
-        </li>
-    </ul>
-
-    <div class="title-cat-inform">Задачи и критерии:</div>
-    <ul class="list-information">
-        <li class="odd">
-            <span>Задачи:</span>@Model.Tasks
-        </li>
-        <li class="even">
-            <!-- TODO: показать критерии оценки -->
-            <del><span>Критерии оценки:</span>@Model.Criteria </del>(в разработке)
-        </li>
-    </ul>
-
-    <div class="title-cat-inform">Условия:</div>
-    <ul class="list-information">
-        <li class="odd">
-            <span>Заработная плата:</span>@Model.SalaryFrom - @Model.SalaryTo рублей/месяц
-        </li>
-        <li class="even">
-            <span>Стимулирующие выплаты:</span>@Model.Bonuses
-        </li>
-        <li class="odd">
-            <span>Трудовой договор:</span>@Model.ContractType.GetDescription()
-        </li>
-        <li class="even">
-            <span>Социальный пакет:</span>@(Model.SocialPackage ? "Да" : "Нет")
-        </li>
-        <li class="odd">
-            <span>Найм жилья:</span>@(Model.Rent ? "Да" : "Нет")
-        </li>
-        <li class="even">
-            <span>Компенсация проезда:</span>@(Model.TransportCompensation ? "Да" : "Нет")
-        </li>
-    </ul>
-
-    <div class="title-cat-inform">Лицо для получения дополнительных справок:</div>
-    <ul class="list-information">
-        <li class="odd">
-            <span>Фамилия, имя, отчество:</span>@Model.ContactName
-        </li>
-        <li class="even">
-            <span>E-mail:</span>@Model.ContactEmail
-        </li>
-        <li class="even">
-            <span>Телефон:</span>@Model.ContactPhone
-        </li>
-    </ul>
+<div class="b-bottom-nav">
+    <a href="/" class="small-icon icon-prev">Главная</a>
+    <a asp-controller="organizations" asp-action="account" class="small-icon icon-prev">@Model.OrganizationName</a>
+    <a asp-controller="organizations" asp-action="vacancies" class="small-icon icon-prev">Вакансии</a>
+    <a asp-controller="vacancies" asp-action="details" asp-route-id="@Model.Guid" class="small-icon icon-prev">@Model.Name</a>
 </div>
-
-@if (!string.IsNullOrWhiteSpace(referer))
-{
-    <text>
-    <div class="b-bottom-nav">
-        <a href="@referer.ToLower()" class="small-icon icon-prev">Назад</a>
-    </div>
-    </text>
-}
-
-else
-{
-    <text>
-    <div class="crumbs">
-        <a href="/">Главная</a><span class="separator">/</span>
-        <a asp-controller="organizations" asp-action="vacancies">Карточка организации</a><span class="separator">/</span>
-        @ViewBag.Title
-    </div>
-    </text>
-}

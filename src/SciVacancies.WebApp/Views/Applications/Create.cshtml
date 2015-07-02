@@ -2,9 +2,9 @@
 @model SciVacancies.WebApp.ViewModels.VacancyApplicationCreateViewModel
 
 <div class="crumbs">
-    <a href="/">Главная страница</a><span class="separator">/</span>
+    <a href="/">Главная</a><span class="separator">/</span>
     <a asp-controller="researchers" asp-action="account">Личная карточка</a><span class="separator">/</span>
-    <a asp-controller="researchers" asp-action="favorities">Мои заявки</a><span class="separator">/</span>
+    <a asp-controller="researchers" asp-action="applications">Мои заявки</a><span class="separator">/</span>
     @ViewBag.Title
 </div>
 
@@ -244,7 +244,7 @@
         <div class="row">
             <div class="ctr-buttons button-align mt26 mb5">
                 <input type="submit" class="create-btn middle-icon" value="Создать заявку" />
-                <a asp-controller="researchers" asp-action="applications">
+                <a asp-controller="vacancies" asp-action="card" asp-route-id="@Model.VacancyGuid">
                     <span class="blue-btn middle-icon icon-close">
                         Закрыть
                     </span>
@@ -256,5 +256,7 @@
 </form>
 
 <div class="b-bottom-nav">
+    <a href="/" class="small-icon icon-prev">Главная</a>
+    <a asp-controller="researchers" asp-action="account" class="small-icon icon-prev">Личная карточка</a>
     <a asp-controller="researchers" asp-action="applications" class="small-icon icon-prev">Мои заявки</a>
 </div>

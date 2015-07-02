@@ -16,7 +16,7 @@ namespace SciVacancies.WebApp.Controllers
         }
 
         [ResponseCache(NoStore = true)]
-        [PageTitle("Главная страница")]
+        [PageTitle("Главная")]
         public IActionResult Index()
         {
             var model = new IndexViewModel

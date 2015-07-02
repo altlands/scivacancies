@@ -5,8 +5,8 @@
 @model SciVacancies.WebApp.ViewModels.VacanciesInOrganizationIndexViewModel
 
 <div class="crumbs">
-    <a href="/">Главная страница</a><span class="separator">/</span>
-    <a asp-controller="organizations" asp-action="account">Карточка организации</a><span class="separator">/</span>
+    <a href="/">Главная</a><span class="separator">/</span>
+    <a asp-controller="organizations" asp-action="account">@Model.Name</a><span class="separator">/</span>
     @ViewBag.Title
 </div>
 
@@ -17,6 +17,7 @@
 <h4>@ViewBag.Title</h4>
 
 <div class="table-control">
+    <!-- <a href="#" class="close-table"><span class="italic">Очистить фильтры</span></a> -->
     <a href="@Context.Request.Path.Value" class="reload-table"><span class="italic">Обновить список</span></a>
 </div>
 
@@ -46,7 +47,7 @@
                         <td class="view-col">
                             <a asp-controller="vacancies" asp-action="details" asp-route-id="@item.Guid" class="view-td-icon" title="Просмотр вакансии"></a>
                         </td>
-                        <td><a asp-controller="vacancies" asp-action="preview" asp-route-id="@item.Guid" class="success-request-icon"><span class="italic bold">Победитель</span></a></td>
+                        <td><a asp-controller="applications" asp-action="preview" asp-route-id="@item.Guid" class="success-request-icon"><span class="italic bold">Победитель</span></a></td>
                     </tr>
                 </text>
             }
@@ -92,4 +93,9 @@
             </li>
         </ul>
     </div>*@
+</div>
+
+<div class="b-bottom-nav">
+    <a href="/" class="small-icon icon-prev">Главная</a>
+    <a asp-controller="organizations" asp-action="account" class="small-icon icon-prev">@Model.Name</a>
 </div>

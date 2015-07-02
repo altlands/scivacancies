@@ -5,7 +5,7 @@
 @model SciVacancies.WebApp.ViewModels.VacanciesFavoritiesInResearcherIndexViewModel
 
 <div class="crumbs">
-    <a href="/">Главная страница</a><span class="separator">/</span>
+    <a href="/">Главная</a><span class="separator">/</span>
     <a asp-controller="researchers" asp-action="account">Личная карточка</a><span class="separator">/</span>
     @ViewBag.Title
 </div>
@@ -61,15 +61,15 @@
                                 break;
                             case VacancyStatus.Closed:
                                 <text>
-                                <a asp-controller="vacancies" asp-action="preview" asp-route-vacancyguid="@item.Guid" class="success-request-icon"><span class="italic">Победитель</span></a>
+                                <a asp-controller="vacancies" asp-action="card" asp-route-id="@item.Guid" target="_blank" class="success-request-icon"><span class="italic">Победитель</span></a>
                                 </text>
                                 break;
                         }
 
                     </td>
                     <td>
-                        <a asp-controller="vacancies" asp-action="preview" asp-route-id="@item.Guid" class="view-td-icon" title="Просмотр вакансии"></a>
-                        <a asp-controller="researchers" asp-action="removefavorite" onclick="javascript: return confirm('Вы уверены, что хотите удалить эту вакансию из избранного?');" asp-route-vacancyguid="@item.Guid" class="close-td-icon" title="Убрать из избранных"></a>
+                        <a asp-controller="vacancies" asp-action="card" asp-route-id="@item.Guid" target="_blank" class="view-td-icon" title="Просмотр вакансии"></a>
+                        <a asp-controller="researchers" asp-action="removefavorite" asp-route-vacancyguid="@item.Guid" target="_blank" class="close-td-icon" title="Убрать из избранных"></a>
                     </td>
                 </tr>
                 </text>
@@ -117,7 +117,7 @@
     </div>*@
 </div>
 
-
 <div class="b-bottom-nav">
-    <a asp-controller="researchers" asp-action="account" class="small-icon icon-prev">К личной карточке</a>
+    <a htef="/" class="small-icon icon-prev">Главная</a>
+    <a asp-controller="researchers" asp-action="account" class="small-icon icon-prev">Личная карточка</a>
 </div>

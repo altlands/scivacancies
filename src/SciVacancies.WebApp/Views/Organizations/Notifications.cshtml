@@ -4,8 +4,8 @@
 @model SciVacancies.WebApp.ViewModels.NotificationsInOrganizationIndexViewModel
 
 <div class="crumbs">
-    <a href="/">Главная страница</a><span class="separator">/</span>
-    <a asp-controller="organizations" asp-action="account">Карточка организации</a><span class="separator">/</span>
+    <a href="/">Главная</a><span class="separator">/</span>
+    <a asp-controller="organizations" asp-action="account">@Model.Name</a><span class="separator">/</span>
     @ViewBag.Title
 </div>
 
@@ -96,5 +96,6 @@
 </div>
 
 <div class="b-bottom-nav">
-    <a href="/" class="small-icon icon-prev">На главную страницу</a>
+    <a href="/" class="small-icon icon-prev">Главная</a>
+    <a asp-controller="organizations" asp-action="account" class="small-icon icon-prev">@Model.Name</a>
 </div>

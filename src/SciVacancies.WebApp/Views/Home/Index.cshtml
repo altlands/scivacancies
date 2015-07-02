@@ -1,4 +1,5 @@
 ﻿@using System.Threading.Tasks
+@using SciVacancies.WebApp
 @model SciVacancies.WebApp.ViewModels.IndexViewModel
 <div class="crumbs">
     @ViewBag.Title
@@ -34,11 +35,14 @@
             @foreach (var item in Model.VacanciesList.Items)
             {
                 <text>
-                <a asp-controller="vacancies" asp-action="details" asp-route-id="@item.Guid" class="row-4">
+                <a asp-controller="vacancies" asp-action="card" asp-route-id="@item.Guid" class="row-4">
                     <div class="iblock-middle">
                         <div class="title-vac">@item.Name</div>
                         <div class="sal-vac">@item.SalaryFrom – @item.SalaryTo руб.</div>
                         <p>@item.OrganizationName</p>
+                        <p>
+                            (статус вакансии: @item.Status.GetDescription().ToLower())
+                        </p>
                     </div>
                 </a>
                 </text>
