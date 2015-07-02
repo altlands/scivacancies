@@ -8,6 +8,7 @@ using Microsoft.AspNet.Mvc;
 using NPoco;
 using SciVacancies.Domain.DataModels;
 using SciVacancies.Domain.Enums;
+using SciVacancies.ReadModel.Core;
 using SciVacancies.WebApp.Commands;
 using SciVacancies.WebApp.Engine;
 using SciVacancies.WebApp.Queries;
@@ -55,7 +56,7 @@ namespace SciVacancies.WebApp.Controllers
                 var positionGuid = _mediator.Send(new CreatePositionCommand { OrganizationGuid = model.OrganizationGuid, Data = positionDataModel });
 
                 if (!model.ToPublish)
-                    return RedirectToAction("details", "positions", new {id = positionGuid});
+                    return RedirectToAction("details", "positions", new { id = positionGuid });
 
                 var vacancyDataModel = Mapper.Map<VacancyDataModel>(positionDataModel);
                 vacancyDataModel.OrganizationName = _mediator.Send(new SingleOrganizationQuery { OrganizationGuid = model.OrganizationGuid }).Name;
@@ -100,7 +101,23 @@ namespace SciVacancies.WebApp.Controllers
         [BindOrganizationIdFromClaims]
         public ViewResult Details(Guid id, Guid organizationGuid)
         {
-            var model = GetVacancyDetailsViewModel(id, Guid.Empty, organizationGuid);
+            if (id == Guid.Empty)
+                throw new ArgumentNullException(nameof(id));
+            if (organizationGuid == Guid.Empty)
+                throw new ArgumentNullException(nameof(organizationGuid));
+
+            var preModel = _mediator.Send(new SingleVacancyQuery { VacancyGuid = id });
+
+            var model = Mapper.Map<VacancyDetailsViewModel>(preModel);
+
+            if (model == null)
+                throw new ObjectNotFoundException($"Не найдена вакансия с Guid: {id}");
+
+            ViewBag.VacancyInFavorites = false;
+
+            if (organizationGuid != model.OrganizationGuid)
+                throw new Exception("Вы не можете просматривать детальную информацию о Вакансиях других организаций");
+
 
             //если есть Заявки, загрузить информацию о заявителях
             if (model.Status != VacancyStatus.AppliesAcceptance && model.Status != VacancyStatus.InCommittee && model.Status != VacancyStatus.Closed)
@@ -130,14 +147,7 @@ namespace SciVacancies.WebApp.Controllers
         [AllowAnonymous]
         [PageTitle("Карточка вакансии")]
         [BindResearcherIdFromClaims]
-        [BindOrganizationIdFromClaims]
-        public ViewResult Card(Guid id, Guid researcherGuid, Guid organizationGuid)
-        {
-            var model = GetVacancyDetailsViewModel(id, researcherGuid, organizationGuid);
-            return View(model);
-        }
-
-        private VacancyDetailsViewModel GetVacancyDetailsViewModel(Guid id, Guid researcherGuid, Guid organizationGuid)
+        public ViewResult Card(Guid id, Guid researcherGuid)
         {
             if (id == Guid.Empty)
                 throw new ArgumentNullException(nameof(id));
@@ -151,9 +161,6 @@ namespace SciVacancies.WebApp.Controllers
 
             ViewBag.VacancyInFavorites = false;
 
-            if (organizationGuid != Guid.Empty)
-                ViewBag.CurrentOrganizationGuid = organizationGuid;
-
             //если Вакансия Опубликована или Принимает Заявки
             if ((model.Status == VacancyStatus.AppliesAcceptance || model.Status == VacancyStatus.Published)
                 && researcherGuid != Guid.Empty)
@@ -164,8 +171,7 @@ namespace SciVacancies.WebApp.Controllers
                 //если текущая вакансия есть в списке избранных
                 ViewBag.VacancyInFavorites = favoritesVacancies != null && favoritesVacancies.TotalItems != 0 && favoritesVacancies.Items.Select(c => c.Guid).ToList().Contains(id);
             }
-
-            return model;
+            return View(model);
         }
 
         [PageTitle("Отменить вакансию")]
@@ -276,7 +282,7 @@ namespace SciVacancies.WebApp.Controllers
 
             //TODO: Vacancy -> InCommitte : нужно ли проверять минимальное (какое) количество заявок, поданных на вакансию
             if (vacancyApplications.TotalItems == 0
-                || vacancyApplications.Items.Count(c => c.Status == VacancyApplicationStatus.Applied) < 1)
+                || vacancyApplications.Items.Count(c => c.Status == VacancyApplicationStatus.Applied) < 2)
                 throw new Exception("Подано недостаточно Заявок для перевода Вакансии на рассмотрение комиссии");
 
             _mediator.Send(new SwitchVacancyInCommitteeCommand
@@ -288,9 +294,7 @@ namespace SciVacancies.WebApp.Controllers
             return RedirectToAction("vacancies", "organizations");
         }
 
-        [BindOrganizationIdFromClaims]
-        [Authorize(Roles = ConstTerms.RequireRoleOrganizationAdmin)]
-        public IActionResult Close(Guid id, Guid organizationGuid)
+        private Vacancy VacancyClosePrevalidation(Guid id, Guid organizationGuid)
         {
             if (id == Guid.Empty)
                 throw new ArgumentNullException(nameof(id));
@@ -306,14 +310,44 @@ namespace SciVacancies.WebApp.Controllers
             if (preModel.OrganizationGuid != organizationGuid)
                 throw new Exception("Вы не можете менять Вакансии других организаций");
 
+            if (preModel.WinnerGuid!= Guid.Empty)
+                throw new Exception("Вы не можете закрыть Вакансию: не выбран победитель");
+
+            if (preModel.PretenderGuid!= Guid.Empty)
+                throw new Exception("Вы не можете закрыть Вакансию: не выбран претендент");
+
             if (preModel.Status != VacancyStatus.InCommittee)
-                throw new Exception($"Вы не можете выбрать победителя по Заявке со статусом: {preModel.Status.GetDescription()}");
+                throw new Exception($"Вы не можете выбрать победителя по Вакансии со статусом: {preModel.Status.GetDescription()}");
+
+            return preModel;
+        }
+
+        [PageTitle("Закрыть вакансию")]
+        [BindOrganizationIdFromClaims]
+        [Authorize(Roles = ConstTerms.RequireRoleOrganizationAdmin)]
+        public IActionResult Close(Guid id, Guid organizationGuid)
+        {
+            var model = Mapper.Map<VacancyDetailsViewModel>(VacancyClosePrevalidation(id, organizationGuid));
+            model.Winner = Mapper.Map<ResearcherDetailsViewModel>(_mediator.Send(new SingleResearcherQuery { ResearcherGuid = model.WinnerGuid }));
+            model.Pretender = Mapper.Map<ResearcherDetailsViewModel>(_mediator.Send(new SingleResearcherQuery { ResearcherGuid = model.PretenderGuid }));
+            return View(model);
+        }
+
+        [PageTitle("Закрыть вакансию")]
+        [ValidateAntiForgeryToken]
+        [HttpPost]
+        [BindOrganizationIdFromClaims]
+        [Authorize(Roles = ConstTerms.RequireRoleOrganizationAdmin)]
+        public IActionResult ClosePost(Guid id, Guid organizationGuid)
+        {
+            VacancyClosePrevalidation(id, organizationGuid);
 
             _mediator.Send(new CloseVacancyCommand
             {
                 OrganizationGuid = organizationGuid,
                 VacancyGuid = id
             });
+
             return RedirectToAction("vacancies", "organizations");
         }
 

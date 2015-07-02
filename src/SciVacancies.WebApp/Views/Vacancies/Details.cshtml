@@ -1,6 +1,6 @@
 ﻿@using System.Threading.Tasks
+@using SciVacancies.Domain.Enums
 @using SciVacancies.WebApp
-@using SciVacancies.WebApp.Engine
 @model SciVacancies.WebApp.ViewModels.VacancyDetailsViewModel
 
 <div class="crumbs">
@@ -20,94 +20,104 @@
 
     @Component.Invoke("VacancyInfo", Model)
 
-    @if (User.IsInRole(ConstTerms.RequireRoleOrganizationAdmin) && ViewBag.CurrentOrganizationGuid != null && ViewBag.CurrentOrganizationGuid == Model.OrganizationGuid)
+    <h4 class="mt45 mb12">Поданные заявки</h4>
+
+    <table class="table request-table">
+        <thead>
+            <tr>
+                <th>
+                    <div class="inline-block">
+                        <img src="/images/icons/arrow-bottom-tab.png" class="va-middle" />
+                    </div>
+                    <div class="inline-block ml6 va-middle">№</div>
+                </th>
+                <th>
+                    <div class="inline-block">
+                        <img src="/images/icons/tab-head.png" class="va-middle" />
+                    </div>
+                    <div class="inline-block ml6 va-middle">Дата подачи заявки</div>
+                </th>
+                <th>
+                    <div class="pl21 va-middle lh30">Фамилия, имя, отчество</div>
+                </th>
+                <th>
+                    <div class="pl21 va-middle">Победители</div>
+                </th>
+                <th>
+                    <div class="pl21 va-middle">Статус</div>
+                </th>
+                <th>
+                    <div class="pl21 va-middle">Действия</div>
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+
+            @if (Model.Applications != null)
+            {
+                foreach (var item in Model.Applications.Items.Where(c => c.Status != VacancyApplicationStatus.Removed && c.Status != VacancyApplicationStatus.Cancelled && c.Status != VacancyApplicationStatus.InProcess))
     {
-        <text>
-        <h4 class="mt45 mb12">Поданные заявки</h4>
-
-        <table class="table request-table">
-            <thead>
-                <tr>
-                    <th>
-                        <div class="inline-block">
-                            <img src="/images/icons/arrow-bottom-tab.png" class="va-middle" />
-                        </div>
-                        <div class="inline-block ml6 va-middle">№</div>
-                    </th>
-                    <th>
-                        <div class="inline-block">
-                            <img src="/images/icons/tab-head.png" class="va-middle" />
-                        </div>
-                        <div class="inline-block ml6 va-middle">Дата подачи заявки</div>
-                    </th>
-                    <th>
-                        <div class="pl21 va-middle lh30">Фамилия, имя, отчество</div>
-                    </th>
-                    <th>
-                        <div class="pl21 va-middle">Победители</div>
-                    </th>
-                    <th>
-                        <div class="pl21 va-middle">Действия</div>
-                    </th>
-                </tr>
-            </thead>
-            <tbody>
-
-                @if (Model.Applications != null)
-                {
-                    foreach (var item in Model.Applications.Items)
-                    {
-                        <text>
-
-                        <tr>
-                            <td>@Model.Applications.Items.IndexOf(item)</td>
-                            <td>@(item.SentDate?.ToLocalVacancyString())</td>
-                            <td>@item.Researcher.SecondName<br />@item.Researcher.FullName @item.Researcher.Patronymic</td>
-                            <td class="align-center pl0">
-                                @if (Model.WinnerGuid == item.Guid)
-                                {
-                                    <text>
-                                    Победитель
-                                    </text>
-                                }
-                                @if (Model.PretenderGuid == item.Guid)
-                                {
-                                    <text>
-                                    Второе место
-                                    </text>
-                                }
-                            </td>
-                            <td>
-                                <a asp-controller="applications" asp-action="preview" asp-route-id="@item.Guid" class="view-td-icon" title="Просмотр заявки"></a>
-                                <!--TODO: Vacancy -> Applications -> Print: распечатать заявку-->
-                                @*<a asp-controller="applications" asp-action="print" asp-route-id="@item.Guid" class="print-td-icon" title="Распечатать Заявку"></a>*@
-                            </td>
-                        </tr>
-                        </text>
-                    }
+                    <text>
+                    <tr>
+                        <td>@Model.Applications.Items.IndexOf(item)</td>
+                        <td>@(item.SentDate?.ToLocalVacancyString())</td>
+                        <td>@item.Researcher.SecondName<br />@item.Researcher.FullName @item.Researcher.Patronymic</td>
+                        <td class="align-center pl0">
+                            @if (Model.WinnerGuid == item.Guid)
+                            {
+                                <text>
+                                Победитель
+                                </text>
+                            }
+                            @if (Model.PretenderGuid == item.Guid)
+                            {
+                                <text>
+                                Второе место
+                                </text>
+                            }
+                        </td>
+                        <td>
+                            @if (item.Status != VacancyApplicationStatus.Applied)
+                            {
+                                @item.Status.GetDescription()
+                            }
+                        </td>
+                        <td>
+                            <a asp-controller="applications" asp-action="preview" asp-route-id="@item.Guid" class="view-td-icon" title="Просмотр заявки"></a>
+                            <!--TODO: Vacancy -> Applications -> Print: распечатать заявку-->
+                            <a asp-controller="applications" asp-action="print" asp-route-id="@item.Guid" class="print-td-icon" title="Распечатать Заявку"></a>
+                        </td>
+                    </tr>
+                    </text>
                 }
+            }
 
-            </tbody>
-        </table>
+        </tbody>
+    </table>
 
-        @if (Model.Applications != null && Model.Applications.Items.Any())
-        {
-            <div class="ctr-buttons">
-                <span class="blue-btn middle-icon icon-print-button" rel="tooltip" title="">Распечатать все заявки</span>
-            </div>
-        }
+</div>
+@if (Model.Applications != null && Model.Applications.Items.Any())
+{
+    <span class="blue-btn middle-icon icon-print-button" style="margin-right: 15px;" rel="tooltip" title="Распечатать все заявки">Распечатать все заявки</span>
+}
 
-        </text>
+<br />
+<br />
+<br />
+
+<div class="ctr-buttons">
+    @if (true)
+    {
+        <a asp-controller="vacancies" asp-action="close" asp-route-id="@Model.Guid" class="btn btn-success btn-lg pull-left">
+            Завершить конкурс
+        </a>
     }
-
+    <a asp-controller="vacancies" asp-action="cancel" asp-route-id="@Model.Guid" class="btn btn-danger btn-lg pull-right">
+        Отменить вакансию
+    </a>
 </div>
 
 <br />
-<br />
-
-<a asp-controller="vacancies" asp-action="cancel" asp-route-id="@Model.Guid" class="btn btn-danger btn-lg pull-right">
-    Отменить вакансию
-</a>
 
 <div class="b-bottom-nav">
     <a href="/" class="small-icon icon-prev">Главная</a>

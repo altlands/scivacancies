@@ -1,6 +1,12 @@
 ﻿@using System.Threading.Tasks
 @using SciVacancies.WebApp.ViewModels
 @model VacancyApplicationSetWinnerViewModel
+@{
+    if (Model.Vacancy.WinnerGuid != Guid.Empty || Model.Vacancy.PretenderGuid != Guid.Empty)
+    {
+        Model.IsWinner = Model.Vacancy.PretenderGuid != Guid.Empty;
+    }
+}
 
 <div class="crumbs">
     <a href="/">Главная</a><span class="separator">/</span>
@@ -35,16 +41,23 @@
             </div>
             <div class="right-cell">
                 <ul class="radio-list">
-                    <li>
-                        <span class="radio @(Model.IsWinner ? "checked" : string.Empty)">
-                            <input asp-for="IsWinner" id="winner1" value="true" />
-                        </span><label for="winner1">Первое место</label>
-                    </li>
-                    <li>
-                        <span class="radio @(!Model.IsWinner ? "checked" : string.Empty)">
-                            <input asp-for="IsWinner" id="winner2" value="false" />
-                        </span><label for="winner2">Второе место</label>
-                    </li>
+                    @if (Model.Vacancy.WinnerGuid == Guid.Empty)
+                    {
+                        <li>
+                            <span class="radio @(Model.IsWinner ? "checked" : string.Empty)">
+                                <input asp-for="IsWinner" id="winner1" value="true" />
+                            </span><label for="winner1">Первое место</label>
+                        </li>
+                    }
+                    @if (Model.Vacancy.PretenderGuid == Guid.Empty)
+                    {
+                        <li>
+                            <span class="radio @(!Model.IsWinner ? "checked" : string.Empty)">
+                                <input asp-for="IsWinner" id="winner2" value="false" />
+                            </span><label for="winner2">Второе место</label>
+                        </li>
+                    }
+
                 </ul>
             </div>
         </div>

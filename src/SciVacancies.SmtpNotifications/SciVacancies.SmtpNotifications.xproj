@@ -7,8 +7,8 @@
 
   <Import Project="$(VSToolsPath)\DNX\Microsoft.DNX.Props" Condition="'$(VSToolsPath)' != ''" />
   <PropertyGroup Label="Globals">
-    <ProjectGuid>7a2f565f-922e-4300-9027-613004cca7d0</ProjectGuid>
-    <RootNamespace>SciVacancies.Domain.Queries</RootNamespace>
+    <ProjectGuid>1e0f6640-4331-401b-b991-ec852f59d89f</ProjectGuid>
+    <RootNamespace>SciVacancies.SmtpNotifications</RootNamespace>
     <BaseIntermediateOutputPath Condition="'$(BaseIntermediateOutputPath)'=='' ">..\..\artifacts\obj\$(MSBuildProjectName)</BaseIntermediateOutputPath>
     <OutputPath Condition="'$(OutputPath)'=='' ">..\..\artifacts\bin\$(MSBuildProjectName)\</OutputPath>
   </PropertyGroup>
