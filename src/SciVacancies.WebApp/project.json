@@ -40,7 +40,9 @@
         "SciVacancies.ReadModel": "1.0.0-*",
         "NEST": "1.5.1",
         "SciVacancies.ReadModel.ElasticSearchModel": "1.0.0-*",
-        "FluentValidation": "5.6.2"
+        "FluentValidation": "5.6.2",
+        "Thinktecture.IdentityModel": "3.6.1",
+        "Thinktecture.IdentityModel.Client": "4.0.1"
     },
 
     "commands": {
