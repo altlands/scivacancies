@@ -4,6 +4,8 @@ using AutoMapper;
 using MediatR;
 using Microsoft.AspNet.Authorization;
 using Microsoft.AspNet.Mvc;
+using SciVacancies.ReadModel.Core;
+using SciVacancies.ReadModel.Pager;
 using SciVacancies.WebApp.Engine;
 using SciVacancies.WebApp.Engine.CustomAttribute;
 using SciVacancies.WebApp.Queries;
@@ -23,7 +25,7 @@ namespace SciVacancies.WebApp.Controllers
 
         [AllowAnonymous]
         [PageTitle("Карточка организации")]
-        public ViewResult Card(Guid id)
+        public ViewResult Card(Guid id, int pageSize = 10, int currentPage = 1)
         {
             if (id == Guid.Empty)
                 throw new ArgumentNullException(nameof(id));
@@ -38,8 +40,7 @@ namespace SciVacancies.WebApp.Controllers
             model.VacanciesInOrganization = new VacanciesInOrganizationIndexViewModel
             {
                 OrganizationGuid = id,
-                PagedPositions = _mediator.Send(new SelectPagedPositionsByOrganizationQuery { OrganizationGuid = id, PageSize = 500, PageIndex = 1 }),
-                PagedVacancies = _mediator.Send(new SelectPagedVacanciesByOrganizationQuery { OrganizationGuid = id, PageSize = 500, PageIndex = 1 })
+                PagedVacancies = _mediator.Send(new SelectPagedVacanciesByOrganizationQuery { OrganizationGuid = id, PageSize = pageSize, PageIndex = currentPage }).MapToPagedList()
             };
 
             return View(model);
@@ -61,10 +62,12 @@ namespace SciVacancies.WebApp.Controllers
             return View(model);
         }
 
+        [HttpGet]
+        [HttpPost]
         [SiblingPage]
         [PageTitle("Вакансии")]
         [BindOrganizationIdFromClaims]
-        public ViewResult Vacancies(Guid organizationGuid)
+        public ViewResult Vacancies(Guid organizationGuid, int pageSize = 10, int currentPage = 1)
         {
             if (organizationGuid == Guid.Empty)
                 throw new ArgumentNullException(nameof(organizationGuid));
@@ -74,8 +77,9 @@ namespace SciVacancies.WebApp.Controllers
             var model = new VacanciesInOrganizationIndexViewModel
             {
                 OrganizationGuid = organizationGuid,
-                PagedPositions = _mediator.Send(new SelectPagedPositionsByOrganizationQuery { OrganizationGuid = organizationGuid, PageSize = 500, PageIndex = 1 }),
-                PagedVacancies = _mediator.Send(new SelectPagedVacanciesByOrganizationQuery { OrganizationGuid = organizationGuid, PageSize = 500, PageIndex = 1 }),
+                //TODO: ntemnikov: нужно отказаться от Positions чтобы UI-Pager работало только с одной сузностью на странице
+                PagedPositions = _mediator.Send(new SelectPagedPositionsByOrganizationQuery { OrganizationGuid = organizationGuid, PageSize = pageSize, PageIndex = currentPage }).MapToPagedList(),
+                PagedVacancies = _mediator.Send(new SelectPagedVacanciesByOrganizationQuery { OrganizationGuid = organizationGuid, PageSize = pageSize, PageIndex = currentPage }).MapToPagedList(),
                 Name = preModel.Name
             };
 
@@ -85,7 +89,7 @@ namespace SciVacancies.WebApp.Controllers
         [PageTitle("Закрытые вакансии")]
         [SiblingPage]
         [BindOrganizationIdFromClaims]
-        public ViewResult Closed(Guid organizationGuid)
+        public ViewResult Closed(Guid organizationGuid, int pageSize = 10, int currentPage = 1)
         {
             if (organizationGuid == Guid.Empty)
                 throw new ArgumentNullException(nameof(organizationGuid));
@@ -94,12 +98,7 @@ namespace SciVacancies.WebApp.Controllers
 
             var model = new VacanciesInOrganizationIndexViewModel
             {
-                PagedVacancies = _mediator.Send(new SelectPagedClosedVacanciesByOrganizationQuery
-                {
-                    OrganizationGuid = organizationGuid,
-                    PageIndex = 1,
-                    PageSize = 500
-                }),
+                PagedVacancies = _mediator.Send(new SelectPagedVacanciesByOrganizationQuery { OrganizationGuid = organizationGuid, PageSize = pageSize, PageIndex = currentPage }).MapToPagedList(),
                 Name = preModel.Name
             };
             return View(model);
@@ -108,7 +107,7 @@ namespace SciVacancies.WebApp.Controllers
         [SiblingPage]
         [PageTitle("Уведомления")]
         [BindOrganizationIdFromClaims]
-        public ViewResult Notifications(Guid organizationGuid)
+        public ViewResult Notifications(Guid organizationGuid, int pageSize = 10, int currentPage = 1)
         {
             if (organizationGuid == Guid.Empty)
                 throw new ArgumentNullException(nameof(organizationGuid));
@@ -120,9 +119,9 @@ namespace SciVacancies.WebApp.Controllers
                 PagedNotifications = _mediator.Send(new SelectPagedNotificationsByOrganizationQuery
                 {
                     OrganizationGuid = organizationGuid,
-                    PageIndex = 1,
-                    PageSize = 500
-                }),
+                    PageSize = pageSize,
+                    PageIndex = currentPage
+                }).MapToPagedList(),
                 Name = preModel.Name
             };
             return View(model);

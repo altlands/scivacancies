@@ -1,12 +1,11 @@
-﻿using System;
-using NPoco;
-using SciVacancies.ReadModel.Core;
+﻿using SciVacancies.ReadModel.Core;
+using SciVacancies.ReadModel.Pager;
 
 namespace SciVacancies.WebApp.ViewModels
 {
     public class NotificationsInResearcherIndexViewModel
     {
-        public Page<Notification> PagedItems { get; set; }
+        public PagedList<Notification> PagedItems { get; set; }
 
     }
 }

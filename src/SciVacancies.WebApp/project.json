@@ -27,7 +27,6 @@
         "Microsoft.Framework.DependencyInjection": "1.0.0-beta4",
         "Microsoft.Framework.Logging": "1.0.0-beta4",
         "Microsoft.Framework.Logging.Console": "1.0.0-beta4",
-        "PagedList.Mvc": "4.5.0",
         "Autofac": "4.0.0-alpha2",
         "AutoMapper": "3.3.1",
         "Microsoft.Framework.ConfigurationModel": "1.0.0-beta4",

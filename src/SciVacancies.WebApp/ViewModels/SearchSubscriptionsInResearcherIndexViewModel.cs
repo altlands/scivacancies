@@ -1,10 +1,10 @@
-﻿using NPoco;
-using SciVacancies.ReadModel.Core;
+﻿using SciVacancies.ReadModel.Core;
+using SciVacancies.ReadModel.Pager;
 
 namespace SciVacancies.WebApp.ViewModels
 {
     public class SearchSubscriptionsInResearcherIndexViewModel
     {
-        public Page<SearchSubscription> PagedItems { get; set; }
+        public PagedList<SearchSubscription> PagedItems { get; set; }
     }
 }

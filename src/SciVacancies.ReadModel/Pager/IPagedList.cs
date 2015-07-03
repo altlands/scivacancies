@@ -4,7 +4,7 @@ namespace SciVacancies.ReadModel.Pager
 {
     public interface IPagedList<T> : IPagedList
     {
-        IList<T> Items { get; set; }
+        List<T> Items { get; set; }
     }
 
     public interface IPagedList

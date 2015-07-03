@@ -6,6 +6,7 @@ using Microsoft.AspNet.Authorization;
 using Microsoft.AspNet.Mvc;
 using NPoco;
 using SciVacancies.Domain.Enums;
+using SciVacancies.ReadModel.Core;
 using SciVacancies.WebApp.Commands;
 using SciVacancies.WebApp.Engine;
 using SciVacancies.WebApp.Engine.CustomAttribute;
@@ -56,7 +57,7 @@ namespace SciVacancies.WebApp.Controllers
         [SiblingPage]
         [PageTitle("Мои заявки")]
         [BindResearcherIdFromClaims]
-        public ViewResult Applications(Guid researcherGuid)
+        public ViewResult Applications(Guid researcherGuid, int pageSize = 10, int currentPage = 1)
         {
             if (researcherGuid == Guid.Empty)
                 throw new ArgumentNullException(nameof(researcherGuid));
@@ -64,8 +65,8 @@ namespace SciVacancies.WebApp.Controllers
             var source =
                 _mediator.Send(new SelectPagedVacancyApplicationsByResearcherQuery
                 {
-                    PageSize = 500,
-                    PageIndex = 1,
+                    PageSize = pageSize,
+                    PageIndex = currentPage,
                     OrderBy = ConstTerms.OrderByCreationDateDescending,
                     ResearcherGuid = researcherGuid
                 });
@@ -74,11 +75,12 @@ namespace SciVacancies.WebApp.Controllers
 
             if (source.TotalItems > 0)
             {
-                model.Applications = Mapper.Map<Page<VacancyApplicationDetailsViewModel>>(source);
+                model.Applications = source.MapToPagedList<VacancyApplication, VacancyApplicationDetailsViewModel>();
+
                 var innerObjects = _mediator.Send(new SelectPagedVacanciesByGuidsQuery
                 {
                     VacanciesGuids = model.Applications.Items.Select(c => c.VacancyGuid).Distinct(),
-                    PageSize = 500,
+                    PageSize = 1000,
                     PageIndex = 1,
                     OrderBy = ConstTerms.OrderByDateDescending
                 });
@@ -93,14 +95,14 @@ namespace SciVacancies.WebApp.Controllers
         [SiblingPage]
         [PageTitle("Избранные вакансии")]
         [BindResearcherIdFromClaims]
-        public ActionResult Favorities(Guid researcherGuid)
+        public ActionResult Favorities(Guid researcherGuid, int pageSize = 10, int currentPage = 1)
         {
             if (researcherGuid == Guid.Empty)
                 throw new ArgumentNullException(nameof(researcherGuid));
 
             var model = new VacanciesFavoritiesInResearcherIndexViewModel
             {
-                Vacancies = _mediator.Send(new SelectPagedFavoriteVacanciesByResearcherQuery { PageSize = 500, PageIndex = 1, OrderBy = ConstTerms.OrderByCreationDateDescending, ResearcherGuid = researcherGuid })
+                Vacancies = _mediator.Send(new SelectPagedFavoriteVacanciesByResearcherQuery { PageSize = pageSize, PageIndex = currentPage, OrderBy = ConstTerms.OrderByCreationDateDescending, ResearcherGuid = researcherGuid }).MapToPagedList()
             };
             return View(model);
         }
@@ -108,16 +110,16 @@ namespace SciVacancies.WebApp.Controllers
         [SiblingPage]
         [PageTitle("Подписки")]
         [BindResearcherIdFromClaims]
-        public ViewResult Subscriptions(Guid researcherGuid)
+        public ViewResult Subscriptions(Guid researcherGuid, int pageSize = 10, int currentPage = 1)
         {
             var model = new SearchSubscriptionsInResearcherIndexViewModel
             {
                 PagedItems = _mediator.Send(new SelectPagedSearchSubscriptionsQuery
                 {
                     ResearcherGuid = researcherGuid,
-                    PageIndex = 1,
-                    PageSize = 10
-                })
+                    PageSize = pageSize,
+                    PageIndex = currentPage
+                }).MapToPagedList()
             };
             return View(model);
         }
@@ -126,16 +128,16 @@ namespace SciVacancies.WebApp.Controllers
         [SiblingPage]
         [PageTitle("Уведомления")]
         [BindResearcherIdFromClaims]
-        public ViewResult Notifications(Guid researcherGuid)
+        public ViewResult Notifications(Guid researcherGuid, int pageSize = 10, int currentPage = 1)
         {
             var model = new NotificationsInResearcherIndexViewModel
             {
                 PagedItems = _mediator.Send(new SelectPagedNotificationsByResearcherQuery
                 {
                     ResearcherGuid = researcherGuid,
-                    PageIndex = 1,
-                    PageSize = 10
-                })
+                    PageSize = pageSize,
+                    PageIndex = currentPage
+                }).MapToPagedList()
             };
             return View(model);
         }
@@ -155,7 +157,7 @@ namespace SciVacancies.WebApp.Controllers
             {
                 //TODO: оптимизировать запрос и его обработку
                 //если есть GUID Исследователя
-                var favoritesVacancies = _mediator.Send(new SelectPagedFavoriteVacanciesByResearcherQuery { PageSize = 500, PageIndex = 1, ResearcherGuid = researcherGuid, OrderBy = ConstTerms.OrderByDateAscending });
+                var favoritesVacancies = _mediator.Send(new SelectPagedFavoriteVacanciesByResearcherQuery { PageSize = 1000, PageIndex = 1, ResearcherGuid = researcherGuid, OrderBy = ConstTerms.OrderByDateAscending });
                 //если текущей вакансии нет в списке избранных
                 if (favoritesVacancies == null
                     || favoritesVacancies.TotalItems == 0
@@ -176,7 +178,7 @@ namespace SciVacancies.WebApp.Controllers
                 throw new ArgumentNullException(nameof(vacancyGuid));
 
             //TODO: оптимизировать запрос и его обработку
-            var favoritesVacancies = _mediator.Send(new SelectPagedFavoriteVacanciesByResearcherQuery { PageSize = 500, PageIndex = 1, ResearcherGuid = researcherGuid, OrderBy = ConstTerms.OrderByDateAscending });
+            var favoritesVacancies = _mediator.Send(new SelectPagedFavoriteVacanciesByResearcherQuery { PageSize = 1000, PageIndex = 1, ResearcherGuid = researcherGuid, OrderBy = ConstTerms.OrderByDateAscending });
             if (favoritesVacancies == null)
                 throw new Exception("У вас нет избранных вакансий");
             if (favoritesVacancies.Items.All(c => c.Guid != vacancyGuid))
@@ -199,7 +201,7 @@ namespace SciVacancies.WebApp.Controllers
                 throw new ArgumentNullException(nameof(vacancyGuid));
 
             //TODO: оптимизировать запрос и его обработку
-            var favoritesVacancies = _mediator.Send(new SelectPagedFavoriteVacanciesByResearcherQuery { PageSize = 500, PageIndex = 1, ResearcherGuid = researcherGuid, OrderBy = ConstTerms.OrderByDateAscending });
+            var favoritesVacancies = _mediator.Send(new SelectPagedFavoriteVacanciesByResearcherQuery { PageSize = 100, PageIndex = 1, ResearcherGuid = researcherGuid, OrderBy = ConstTerms.OrderByDateAscending });
             if (favoritesVacancies == null)
                 throw new Exception("У вас нет избранных вакансий");
             if (favoritesVacancies.Items.All(c => c.Guid != vacancyGuid))

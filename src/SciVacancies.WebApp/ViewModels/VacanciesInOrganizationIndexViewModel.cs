@@ -1,7 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using NPoco;
 using SciVacancies.ReadModel.Core;
+using SciVacancies.ReadModel.Pager;
 
 namespace SciVacancies.WebApp.ViewModels
 {
@@ -9,11 +8,8 @@ namespace SciVacancies.WebApp.ViewModels
 
         public Guid OrganizationGuid { get; set; }
 
-        public IEnumerable<Vacancy> Vacancies { get; set; }
-        public IEnumerable<Position> Positions { get; set; }
-
-        public Page<Vacancy> PagedVacancies { get; set; }
-        public Page<Position> PagedPositions { get; set; }
+        public PagedList<Vacancy> PagedVacancies { get; set; }
+        public PagedList<Position> PagedPositions { get; set; }
 
         public string Name { get; set; }
     }

@@ -1,14 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
-using NPoco;
 using SciVacancies.ReadModel.Core;
+using SciVacancies.ReadModel.Pager;
 
 namespace SciVacancies.WebApp.ViewModels
 {
     public class NotificationsInOrganizationIndexViewModel
     {
-        public Guid OrganizationGuid { get; set; }
-        public Page<Notification> PagedNotifications { get; set; }
+     public Guid OrganizationGuid { get; set; }
+        public PagedList<Notification> PagedNotifications { get; set; }
         public string Name { get; set; }
 
     }

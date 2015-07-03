@@ -12,6 +12,15 @@ namespace SciVacancies.WebApp.Infrastructure
     {
         public static void Initialize()
         {
+            /*pagers*/
+            Mapper.CreateMap<Organization, Organization>().IncludePagedResultMapping();
+            Mapper.CreateMap<Researcher, Researcher>().IncludePagedResultMapping();
+            Mapper.CreateMap<Position, Position>().IncludePagedResultMapping();
+            Mapper.CreateMap<Vacancy, Vacancy>().IncludePagedResultMapping();
+            Mapper.CreateMap<ReadModel.ElasticSearchModel.Model.Vacancy, ReadModel.ElasticSearchModel.Model.Vacancy>().IncludePagedResultMapping();
+            Mapper.CreateMap<Notification, Notification>().IncludePagedResultMapping();
+            Mapper.CreateMap<SearchSubscription, SearchSubscription>().IncludePagedResultMapping();
+
             /*Organization*/
 
             //Создание организации
@@ -21,7 +30,7 @@ namespace SciVacancies.WebApp.Infrastructure
             //информация об организации
             Mapper.CreateMap<Organization, OrganizationDetailsViewModel>();
             //индексация организации в поисковике
-            Mapper.CreateMap<SciVacancies.ReadModel.ElasticSearchModel.Model.Organization, OrganizationDataModel>();
+            Mapper.CreateMap<ReadModel.ElasticSearchModel.Model.Organization, OrganizationDataModel>();
 
             /*Researcher*/
 
@@ -45,12 +54,12 @@ namespace SciVacancies.WebApp.Infrastructure
             //vacancy
             Mapper.CreateMap<Vacancy, VacancyDetailsViewModel>();
             //индексация только что созданной вакансии в поисковике
-            Mapper.CreateMap<SciVacancies.ReadModel.ElasticSearchModel.Model.Vacancy, VacancyPublished>();
+            Mapper.CreateMap<ReadModel.ElasticSearchModel.Model.Vacancy, VacancyPublished>();
             /*VacancyApplication*/
 
             //create 
             Mapper.CreateMap<VacancyApplicationCreateViewModel, VacancyApplicationDataModel>();
-            Mapper.CreateMap<VacancyApplication, VacancyApplicationDetailsViewModel>();
+            Mapper.CreateMap<VacancyApplication, VacancyApplicationDetailsViewModel>().IncludePagedResultMapping();
             Mapper.CreateMap<Page<VacancyApplication>, Page<VacancyApplicationDetailsViewModel>>();
             Mapper.CreateMap<VacancyApplication, VacancyApplicationSetWinnerViewModel>();
 
@@ -59,7 +68,7 @@ namespace SciVacancies.WebApp.Infrastructure
 
             //researcher
             Mapper.CreateMap<AccountResearcherRegisterViewModel, ResearcherDataModel>()
-                .ForMember(dest => dest.BirthDate, src => src.MapFrom(c=>new DateTime(c.BirthYear, 1,1)));
+                .ForMember(dest => dest.BirthDate, src => src.MapFrom(c => new DateTime(c.BirthYear, 1, 1)));
             //organization
             Mapper.CreateMap<AccountOrganizationRegisterViewModel, OrganizationDataModel>();
         }

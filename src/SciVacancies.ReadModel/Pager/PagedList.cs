@@ -5,7 +5,7 @@ namespace SciVacancies.ReadModel.Pager
 
     public class PagedList<T>: PagedList, IPagedList<T>
     {
-        public IList<T> Items { get; set; }
+        public List<T> Items { get; set; }
     }
 
     public class PagedList: IPagedList
@@ -14,5 +14,7 @@ namespace SciVacancies.ReadModel.Pager
         public int TotalPages { get; set; }
         public int CurrentPage { get; set; }
         public int PageSize { get; set; }
+        public int FirstRowIndexOnPage { get; set; }
+        public int LastRowIndexOnPage { get; set; }
     }
 }

@@ -1,5 +1,5 @@
-﻿using NPoco;
-using SciVacancies.ReadModel.Core;
+﻿using SciVacancies.ReadModel.Core;
+using SciVacancies.ReadModel.Pager;
 
 namespace SciVacancies.WebApp.ViewModels
 {
@@ -8,7 +8,7 @@ namespace SciVacancies.WebApp.ViewModels
     /// </summary>
     public class IndexViewModel
     {
-        public Page<Organization> OrganizationsList{ get; set; }
-        public Page<Vacancy> VacanciesList { get; set; }
+        public PagedList<Organization> OrganizationsList{ get; set; }
+        public PagedList<Vacancy> VacanciesList { get; set; }
     }
 }

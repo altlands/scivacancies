@@ -1,4 +1,6 @@
 ﻿using System.Collections.Generic;
+using SciVacancies.ReadModel.ElasticSearchModel.Model;
+using SciVacancies.ReadModel.Pager;
 using SciVacancies.WebApp.Engine;
 
 namespace SciVacancies.WebApp.ViewModels
@@ -15,8 +17,8 @@ namespace SciVacancies.WebApp.ViewModels
         public IEnumerable<string> VacancyStates { get; set; }
 
         public int Period { get; set; }
-        public int PageSize { get; set; }
-        public int PageNumber { get; set; }
+        public int PageSize { get; set; } = 10;
+        public int CurrentPage { get; set; } = 1;
 
         public int SalaryMin { get; set; }
         public int SalaryMax { get; set; }
@@ -43,10 +45,6 @@ namespace SciVacancies.WebApp.ViewModels
             }
         }
 
-        public void ValidateValues()
-        {
-            if (PageSize < 1) PageSize = 10;
-            if (PageNumber < 1) PageNumber = 1;
-        }
+        public PagedList<Vacancy> Items { get; set; }
     }
 }

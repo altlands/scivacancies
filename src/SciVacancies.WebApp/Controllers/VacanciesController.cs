@@ -99,7 +99,7 @@ namespace SciVacancies.WebApp.Controllers
         [Authorize(Roles = ConstTerms.RequireRoleOrganizationAdmin)]
         [PageTitle("Подробно о вакансии")]
         [BindOrganizationIdFromClaims]
-        public ViewResult Details(Guid id, Guid organizationGuid)
+        public ViewResult Details(Guid id, Guid organizationGuid, int pageSize = 10, int currentPage = 1)
         {
             if (id == Guid.Empty)
                 throw new ArgumentNullException(nameof(id));
@@ -124,14 +124,13 @@ namespace SciVacancies.WebApp.Controllers
                 return View(model);
 
             model.Applications =
-                Mapper.Map<Page<VacancyApplicationDetailsViewModel>>(
-                    _mediator.Send(new SelectPagedVacancyApplicationsByVacancyQuery
-                    {
-                        PageIndex = 1,
-                        PageSize = 3000,
-                        VacancyGuid = id,
-                        OrderBy = "Guid"
-                    }));
+                 _mediator.Send(new SelectPagedVacancyApplicationsByVacancyQuery
+                 {
+                     PageSize = pageSize,
+                     PageIndex = currentPage,
+                     VacancyGuid = id,
+                     OrderBy = "Guid"
+                 }).MapToPagedList<VacancyApplication, VacancyApplicationDetailsViewModel>();
 
             if (model.Applications.Items.Count > 0)
                 //TODO: оптимизировать запрос и его обработку
@@ -166,7 +165,7 @@ namespace SciVacancies.WebApp.Controllers
                 && researcherGuid != Guid.Empty)
             {
                 //TODO: оптимизировать запрос и его обработку
-                var favoritesVacancies = _mediator.Send(new SelectPagedFavoriteVacanciesByResearcherQuery { PageSize = 500, PageIndex = 1, ResearcherGuid = researcherGuid, OrderBy = ConstTerms.OrderByDateAscending });
+                var favoritesVacancies = _mediator.Send(new SelectPagedFavoriteVacanciesByResearcherQuery { PageSize = 1000, PageIndex = 1, ResearcherGuid = researcherGuid, OrderBy = ConstTerms.OrderByDateAscending });
 
                 //если текущая вакансия есть в списке избранных
                 ViewBag.VacancyInFavorites = favoritesVacancies != null && favoritesVacancies.TotalItems != 0 && favoritesVacancies.Items.Select(c => c.Guid).ToList().Contains(id);
@@ -189,7 +188,7 @@ namespace SciVacancies.WebApp.Controllers
             if (preModel.OrganizationGuid != organizationGuid)
                 throw new Exception("Вы не можете отменить вакансии других организаций");
 
-            if (preModel.Status != VacancyStatus.Published && preModel.Status != VacancyStatus.AppliesAcceptance)
+            if (preModel.Status != VacancyStatus.Published && preModel.Status != VacancyStatus.AppliesAcceptance && preModel.Status != VacancyStatus.InCommittee)
                 throw new Exception($"Вы не можете отменить вакансию со статусом: {preModel.Status.GetDescription()}");
 
             var model = Mapper.Map<VacancyDetailsViewModel>(preModel);
@@ -212,7 +211,7 @@ namespace SciVacancies.WebApp.Controllers
             if (model.OrganizationGuid != organizationGuid)
                 throw new Exception("Вы не можете отменить вакансии других организаций");
 
-            if (model.Status != VacancyStatus.Published && model.Status != VacancyStatus.AppliesAcceptance)
+            if (model.Status != VacancyStatus.Published && model.Status != VacancyStatus.AppliesAcceptance && model.Status != VacancyStatus.InCommittee)
                 throw new Exception($"Вы не можете отменить вакансию со статусом: {model.Status.GetDescription()}");
 
             _mediator.Send(new CancelVacancyCommand { VacancyGuid = id, OrganizationGuid = organizationGuid, Reason = reason });

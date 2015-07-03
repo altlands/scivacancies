@@ -1,5 +1,5 @@
-﻿using NPoco;
-using SciVacancies.ReadModel.Core;
+﻿using SciVacancies.ReadModel.Core;
+using SciVacancies.ReadModel.Pager;
 using SciVacancies.WebApp.ViewModels.Base;
 
 namespace SciVacancies.WebApp.ViewModels
@@ -10,6 +10,6 @@ namespace SciVacancies.WebApp.ViewModels
         {
             Title = "Личная карточка пользователя";
         }
-        public Page<Vacancy> Vacancies { get; set; }
+        public PagedList<Vacancy> Vacancies { get; set; }
     }
 }

@@ -1,11 +1,6 @@
 ﻿@using System.Threading.Tasks
-@using NPoco
 @using SciVacancies.WebApp
 @model SciVacancies.WebApp.ViewModels.VacanciesFilterModel
-
-@{
-    var pagedData = (Page<SciVacancies.ReadModel.ElasticSearchModel.Model.Vacancy>)ViewBag.PagedData;
-}
 
 <div class="crumbs">
     <a href="/">Главная</a><span class="separator">/</span>@ViewBag.Title
@@ -28,6 +23,8 @@
                         <checkboxing items="ViewBag.FilterSource.Regions"
                                      values="Model.Regions"
                                      property="Regions"></checkboxing>
+
+
                     </ul>
                     <span class="small-icon icon-sm-eye"><span>Показать ещё 10 ( из 453 )</span></span>
                 </div>
@@ -96,24 +93,24 @@
         <div class="b-search-result">
             <h4>@ViewBag.Title</h4>
             <div class="italic">
-                @Html.Raw(!string.IsNullOrWhiteSpace(Model.Search) ? string.Format("По запросу «{1}» с учетом фильтрации найдено {0} записей.", pagedData.TotalItems, Model.Search) : "&nbsp;")
+                @Html.Raw(!string.IsNullOrWhiteSpace(Model.Search) ? string.Format("По запросу «{1}» с учетом фильтрации найдено {0} записей.", Model.Items.TotalItems, Model.Search) : "&nbsp;")
             </div>
 
-            <div class="ctr-buttons" style="margin-top:20px;">
+            <div class="ctr-buttons" style="margin-top: 20px;">
                 <a class="success-btn-submit open-popup" id="subscribe" rel="tooltip">Подписаться</a>
-                <div id="subscribe-popover" style="display:none;">
+                <div id="subscribe-popover" style="display: none;">
                     Задав поисковый запрос и выбрав необходимые критерии поиска в фильтре результатов, вы можете подписаться на данную конфигурацию запроса. Это позволит в дальнейшем оперативно отслеживать необходимую информацию с учётом выбранных предпочтений. Ваши подписки отображаются в Личном Кабинете в соответствующей вкладке
                 </div>
             </div>
 
             <!--div class="ctr-buttons" style="margin-top:20px;">
-                <span class="blue-btn middle-icon icon-close" rel="tooltip" title="">Отменить подписку</span>
+            <span class="blue-btn middle-icon icon-close" rel="tooltip" title="">Отменить подписку</span>
             </div-->
             <!--div class="ctr-buttons" style="margin-top:20px;">
-                <span class="white-btn middle-icon icon-lgr-ok" id="subscribed" rel="tooltip">Подписка оформлена</span>
-                <div id="subscribed-popover" style="display:none;text-align:center;">
-                    Поздравляем!<br />Теперь вы подписаны на запрос по теме «исследователь»
-                </div>
+            <span class="white-btn middle-icon icon-lgr-ok" id="subscribed" rel="tooltip">Подписка оформлена</span>
+            <div id="subscribed-popover" style="display:none;text-align:center;">
+                Поздравляем!<br/>Теперь вы подписаны на запрос по теме «исследователь»
+            </div>
             </div-->
 
             <div class="sorting">
@@ -125,130 +122,52 @@
                     <select asp-for="OrderBy"
                             asp-items="ViewBag.FilterSource.OrderBys"></select>
                 </div>
-                <input type="submit" class="blue-btn-sm small-icon icon-sm-eye-wh" value="Показать" />
+                <input type="submit" class="blue-btn-sm small-icon icon-sm-eye-wh" value="Показать"/>
             </div>
 
             <div class="list-results">
 
-                @foreach (var item in pagedData.Items)
-            {
-                    <div>
-                        <div class="index-number">17.</div>
-                        <div class="index-text">
-                            <div class="title"><a asp-controller="vacancies" asp-action="card" asp-route-id="@item.Id" target="_blank">@item.Name</a></div>
-                            <div class="inform">
-                                <p>Дата размещения: @item.DateStart.ToLocalVacancyString()</p>
-                                <p>
-                                    Регион: <span>@item.CityName</span>
-                                </p>
-                                <p>Заработная плата: @item.SalaryFrom – @item.SalaryTo руб.</p>
-                                <p>
-                                    Организация: <a asp-controller="organizations" asp-action="card" asp-route-id="@item.OrganizationGuid" target="_blank">@item.OrganizationName</a>
-                                </p>
-                                <p>
-                                    Научные направления: <span>@item.ResearchDirection</span>
-                                </p>
+                @if(Model.Items.Items!=null)
+                {
+                    foreach (var item in Model.Items.Items)
+                    {
+                        <div>
+                            <div class="index-number">17.</div>
+                            <div class="index-text">
+                                <div class="title"><a asp-controller="vacancies" asp-action="card" asp-route-id="@item.Id" target="_blank">@item.Name</a>
+                                </div>
+                                <div class="inform">
+                                    <p>Дата размещения: @item.DateStart.ToLocalVacancyString()</p>
+                                    <p>
+                                        Регион: <span>@item.CityName</span>
+                                    </p>
+                                    <p>Заработная плата: @item.SalaryFrom – @item.SalaryTo руб.</p>
+                                    <p>
+                                        Организация: <a asp-controller="organizations" asp-action="card" asp-route-id="@item.OrganizationGuid" target="_blank">@item.OrganizationName</a>
+                                    </p>
+                                    <p>
+                                        Научные направления: <span>@item.ResearchDirection</span>
+                                    </p>
+                                </div>
                             </div>
                         </div>
-                    </div>
+                    }
                 }
-
             </div>
         </div>
     </div>
 
-    <div class="bottom-nav" style="margin: 80px 0 20px 0;">
-        <div class="bottom-nav-left">
-            <div class="count-news" style="margin: 0 20px 0 0;">
-                171-180 из @pagedData.TotalItems вакансий
-            </div>
-            <div class="count-line-page">
-                <input asp-for="PageSize" type="text" /> записей на странице
-            </div>
-        </div>
-        <div class="bottom-nav-right">
-            <ul>
-                <li>
-                    @if (pagedData.CurrentPage == 1)
-                    {
-                        <text>
-                        <span class="first disable">
-                            <span>Первая</span>
-                        </span>
-                        </text>
-                    }
-                    else
-                    {
-                        <text>
-                        <span class="first">
-                            <a href="#">Первая</a>
-                        </span>
-                        </text>
-                    }
-                </li>
-                <li>
-                    @if (pagedData.CurrentPage == 1)
-                    {
-                        <text>
-                        <span class="prev disable">
-                            <span>Предыдущая</span>
-                        </span>
-                        </text>
-                    }
-                    else
-                    {
-                        <text>
-                        <span class="prev">
-                            <a href="#">Предыдущая</a>
-                        </span>
-                        </text>
-                    }
-                </li>
-                <li>
-                    <div class="count-page">
-                        <input asp-for="PageNumber" type="text" /> из @pagedData.TotalPages
-                    </div>
-                </li>
-                <li>
-                    @if (pagedData.CurrentPage == pagedData.TotalPages)
-                    {
-                        <text>
-                        <span class="next disable">
-                            <span>Следующая</span>
-                        </span>
-                        </text>
-                    }
-                    else
-                    {
-                        <text>
-                        <span class="next">
-                            <a href="#">Следующая</a>
-                        </span>
-                        </text>
-                    }
-                </li>
-                <li>
-                    @if (pagedData.CurrentPage == pagedData.TotalPages)
-                    {
-                        <text>
-                        <span class="latest disable">
-                            <span>Последняя</span>
-                        </span>
-                        </text>
-                    }
-                    else
-                    {
-                        <text>
-                        <span class="latest">
-                            <a href="#">Последняя</a>
-                        </span>
-                        </text>
-                    }
-                </li>
-            </ul>
-        </div>
-    </div>
 </form>
+
+
+<div style="margin: 80px 0 20px 0;">
+    <div pagedlist="Model.Items"
+         request="Context.Request">
+    </div>
+</div>
+
+
+
 
 
 @*<div class="window-popup middle" style="display:none;">

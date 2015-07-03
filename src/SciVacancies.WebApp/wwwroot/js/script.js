@@ -122,6 +122,27 @@ $(document).ready(function(){
 
 	findRemovableCreateriaItem($('.has-removable-items').find('li'));
 	recountCriteriaItem();
+
+    /*
+        this code need for navigate by new pager or filter values
+     */
+    // changeaction
+	$('input[changeaction=true]').keypress(function (e) {
+	    if (e.which == 13) {
+	        var input = this;
+	        var form = $(input).parents('form')[0];
+	        var uri = updateQueryStringParameter($(form).attr('action'), e.currentTarget.name, e.currentTarget.value);
+	        console.log(uri);
+	        window.location = uri;
+	    }
+	});
+    $('input[changeaction=true]').parents('form').submit(function(e) {
+        e.preventDefault();
+    });
+    /*
+    end of the code
+    */
+
 });
 
 
@@ -161,5 +182,16 @@ function recountCriteriaItem() {
     var inputs = $('#CriteriaInputs').find('li:visible').find('input');
     for (var i = 1; i <= inputs.length; i++) {
         $(inputs[i-1]).attr('id', 'Criteria[' + i + ']');
+    }
+}
+
+function updateQueryStringParameter(uri, key, value) {
+    var re = new RegExp("([?&])" + key + "=.*?(&|$)", "i");
+    var separator = uri.indexOf('?') !== -1 ? "&" : "?";
+    if (uri.match(re)) {
+        return uri.replace(re, '$1' + key + "=" + value + '$2');
+    }
+    else {
+        return uri + separator + key + "=" + value;
     }
 }

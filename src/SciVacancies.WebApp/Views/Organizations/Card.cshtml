@@ -114,45 +114,11 @@
         }
         </tbody>
     </table>
-    <div class="bottom-nav">
-        @*<div class="bottom-nav-left">
-                <div class="count-news">
-                    1-4 из 4 записей
-                </div>
-                <div class="count-line-page">
-                    <input type="text" value="10"> записей на странице
-                </div>
-            </div>
-            <div class="bottom-nav-right">
-                <ul>
-                    <li>
-                        <span class="first disable">
-                            <span>Первая</span>
-                        </span>
-                    </li>
-                    <li>
-                        <span class="prev disable">
-                            <span>Предыдущая</span>
-                        </span>
-                    </li>
-                    <li>
-                        <div class="count-page">
-                            <input type="text" value="1"> из 306
-                        </div>
-                    </li>
-                    <li>
-                        <span class="next disable">
-                            <span>Следующая</span>
-                        </span>
-                    </li>
-                    <li>
-                        <span class="latest disable">
-                            <span>Последняя</span>
-                        </span>
-                    </li>
-                </ul>
-            </div>*@
+
+    <div pagedlist="Model.VacanciesInOrganization.PagedVacancies"
+         request="Context.Request">
     </div>
+
 </div>
 
 

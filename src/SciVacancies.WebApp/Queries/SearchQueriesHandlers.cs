@@ -25,7 +25,7 @@ namespace SciVacancies.WebApp.Queries
 
             var results = _elastic.Search<Vacancy>(s => s
                                     .Index("scivacancies")
-                                    .Skip((int)((message.PageIndex - 1) * message.PageSize))
+                                    .Skip((int)((message.CurrentPage - 1) * message.PageSize))
                                     .Take((int)message.PageSize)
                                     .Query(qr => qr
                                         .FuzzyLikeThis(flt => flt
@@ -50,7 +50,7 @@ namespace SciVacancies.WebApp.Queries
                                     );
             var pageVacancies = new Page<Vacancy>()
             {
-                CurrentPage = message.PageIndex,
+                CurrentPage = message.CurrentPage,
                 ItemsPerPage = message.PageSize,
                 TotalItems = results.Total,
                 TotalPages = results.Total / message.PageSize,

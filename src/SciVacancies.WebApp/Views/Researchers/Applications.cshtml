@@ -23,82 +23,70 @@
 
 <table class="table request-table">
     <thead>
-        <tr>
-            <th><div class="inline-block"><img src="/images/icons/tab-head.png" class="va-middle" /></div><div class="inline-block ml6 va-middle">ID конкурса</div></th>
-            <th><div class="inline-block"><img src="/images/icons/arrow-bottom-tab.png" class="va-middle" /></div><div class="inline-block ml6 va-middle">Должность</div></th>
-            <th><div class="inline-block"><img src="/images/icons/tab-head.png" class="va-middle" /></div><div class="inline-block ml6 va-middle">Заработная<br /> плата</div></th>
-            <th><div class="inline-block"><img src="/images/icons/tab-head.png" class="va-middle" /></div><div class="inline-block ml6 va-middle">Дата<br /> отправки</div></th>
-            <th><div class="inline-block"><img src="/images/icons/tab-head.png" class="va-middle" /></div><div class="inline-block ml6 va-middle">Статус<br />конкурса</div></th>
-            <th><div class="inline-block"><img src="/images/icons/tab-head.png" class="va-middle" /></div><div class="inline-block ml6 va-middle">Статус<br />заявки</div></th>
-            <th><div class="pl21 va-middle">Действия</div></th>
-        </tr>
+    <tr>
+        <th>
+            <div class="inline-block"><img src="/images/icons/tab-head.png" class="va-middle"/>
+            </div>
+            <div class="inline-block ml6 va-middle">ID конкурса</div></th>
+        <th>
+            <div class="inline-block"><img src="/images/icons/arrow-bottom-tab.png" class="va-middle"/>
+            </div>
+            <div class="inline-block ml6 va-middle">Должность</div></th>
+        <th>
+            <div class="inline-block"><img src="/images/icons/tab-head.png" class="va-middle"/>
+            </div>
+            <div class="inline-block ml6 va-middle">Заработная<br/> плата
+            </div></th>
+        <th>
+            <div class="inline-block"><img src="/images/icons/tab-head.png" class="va-middle"/>
+            </div>
+            <div class="inline-block ml6 va-middle">Дата<br/> отправки
+            </div></th>
+        <th>
+            <div class="inline-block"><img src="/images/icons/tab-head.png" class="va-middle"/>
+            </div>
+            <div class="inline-block ml6 va-middle">Статус<br/>конкурса
+            </div></th>
+        <th>
+            <div class="inline-block"><img src="/images/icons/tab-head.png" class="va-middle"/>
+            </div>
+            <div class="inline-block ml6 va-middle">Статус<br/>заявки
+            </div></th>
+        <th>
+            <div class="pl21 va-middle">Действия</div></th>
+    </tr>
     </thead>
     <tbody>
-        @if (Model.Applications != null)
+    @if (Model.Applications != null)
+    {
+        foreach (var item in Model.Applications.Items)
         {
-            foreach (var item in Model.Applications.Items)
-            {
-                <text>
-                    <tr>
-                        <td>ГНС600001</td>
-                        <td>@item.FullName</td>
-                        <td>@item.Rewards руб.</td>
-                        <td>@(item.SentDate?.ToLocalVacancyString())</td>
-                        <td><span class="status @item.Vacancy.Status.GetHtmlClass()">@item.Vacancy.Status.GetDescription()</span></td>
-                        <td><span class="status @item.Status.GetHtmlClass()">@item.Status.GetDescription()</span></td>
-                        <td>
-                            <a asp-controller="applications" asp-action="details" asp-route-id="@item.Guid" class="view-td-icon"></a>
-                            @if (item.Status == VacancyApplicationStatus.Applied)
-                            {
-                                <text>
-                                    <a asp-controller="applications" asp-action="delete" asp-route-id="@item.Guid" class="close-td-icon"></a>
-                                </text>
-                            }
-                        </td>
-                    </tr>
-                </text>
-            }
+            <text>
+                <tr>
+                    <td>ГНС600001</td>
+                    <td>@item.FullName</td>
+                    <td>@item.Rewards руб.</td>
+                    <td>@(item.SentDate?.ToLocalVacancyString())</td>
+                    <td><span class="status @item.Vacancy.Status.GetHtmlClass()">@item.Vacancy.Status.GetDescription()</span></td>
+                    <td><span class="status @item.Status.GetHtmlClass()">@item.Status.GetDescription()</span></td>
+                    <td>
+                        <a asp-controller="applications" asp-action="details" asp-route-id="@item.Guid" class="view-td-icon"></a>
+                        @if (item.Status == VacancyApplicationStatus.Applied)
+                        {
+                            <text>
+                                <a asp-controller="applications" asp-action="delete" asp-route-id="@item.Guid" class="close-td-icon"></a>
+                            </text>
+                        }
+                    </td>
+                </tr>
+            </text>
         }
+    }
     </tbody>
 </table>
-<div class="bottom-nav">
-  @*  <div class="bottom-nav-left">
-        <div class="count-news">
-            1-4 из 4 записей
-        </div>
-        <div class="count-line-page">
-            <input type="text" value="10"> записей на странице
-        </div>
-    </div>
-    <div class="bottom-nav-right">
-        <ul>
-            <li>
-                <span class="first disable">
-                    <span>Первая</span>
-                </span>
-            </li>
-            <li>
-                <span class="prev disable">
-                    <span>Предыдущая</span>
-                </span>
-            </li>
-            <li>
-                <div class="count-page">
-                    <input type="text" value="1"> из 306
-                </div>
-            </li>
-            <li>
-                <span class="next disable">
-                    <span>Следующая</span>
-                </span>
-            </li>
-            <li>
-                <span class="latest disable">
-                    <span>Последняя</span>
-                </span>
-            </li>
-        </ul>
-    </div>*@
+
+<div pagedlist="Model.Applications"
+     request="Context.Request">
 </div>
 
 <div class="b-bottom-nav">

@@ -24,13 +24,48 @@
 <table class="table request-table">
     <thead>
         <tr>
-            <th><div class="inline-block"><img src="/images/icons/arrow-bottom-tab.png" class="va-middle" /></div><div class="inline-block ml6 va-middle">№</div></th>
-            <th><div class="inline-block"><img src="/images/icons/tab-head.png" class="va-middle" /></div><div class="inline-block ml6 va-middle">ID конкурса</div></th>
-            <th><div class="pl21 va-middle">Вакансия</div></th>
-            <th><div class="inline-block"><img src="/images/icons/tab-head.png" class="va-middle" /></div><div class="inline-block ml6 va-middle">Дата<br /> создания</div></th>
-            <th><div class="inline-block"><img src="/images/icons/tab-head.png" class="va-middle" /></div><div class="inline-block ml6 va-middle">Дата<br />публикации</div></th>
-            <th><div class="inline-block"><img src="/images/icons/tab-head.png" class="va-middle" /></div><div class="inline-block ml6 va-middle">Статус<br />вакансии</div></th>
-            <th><div class="pl21 va-middle">Действия</div></th>
+            <th>
+                <div class="inline-block">
+                    <img src="/images/icons/arrow-bottom-tab.png" class="va-middle" />
+                </div>
+                <div class="inline-block ml6 va-middle">№</div>
+            </th>
+            <th>
+                <div class="inline-block">
+                    <img src="/images/icons/tab-head.png" class="va-middle" />
+                </div>
+                <div class="inline-block ml6 va-middle">ID конкурса</div>
+            </th>
+            <th>
+                <div class="pl21 va-middle">Вакансия</div>
+            </th>
+            <th>
+                <div class="inline-block">
+                    <img src="/images/icons/tab-head.png" class="va-middle" />
+                </div>
+                <div class="inline-block ml6 va-middle">
+                    Дата<br /> создания
+                </div>
+            </th>
+            <th>
+                <div class="inline-block">
+                    <img src="/images/icons/tab-head.png" class="va-middle" />
+                </div>
+                <div class="inline-block ml6 va-middle">
+                    Дата<br />публикации
+                </div>
+            </th>
+            <th>
+                <div class="inline-block">
+                    <img src="/images/icons/tab-head.png" class="va-middle" />
+                </div>
+                <div class="inline-block ml6 va-middle">
+                    Статус<br />вакансии
+                </div>
+            </th>
+            <th>
+                <div class="pl21 va-middle">Действия</div>
+            </th>
         </tr>
     </thead>
     <tbody>
@@ -64,7 +99,7 @@
 
         @if (Model.PagedVacancies != null)
         {
-            foreach (var item in Model.PagedVacancies.Items.Where(c => c.Status == VacancyStatus.Published || c.Status == VacancyStatus.AppliesAcceptance || c.Status == VacancyStatus.InCommittee))
+            foreach (var item in Model.PagedVacancies.Items)
             {
                 <text>
                 <tr>
@@ -89,56 +124,21 @@
                         {
                             <a asp-controller="vacancies" asp-action="startincommittee" asp-route-id="@item.Guid" title="Перевести на рассмотрение">на рассмотрение</a>
                         }
-                        @if (item.Status == VacancyStatus.InCommittee && item.WinnerGuid!=Guid.Empty && item.PositionGuid!= Guid.Empty)
+                        @if (item.Status == VacancyStatus.InCommittee && item.WinnerGuid != Guid.Empty && item.PositionGuid != Guid.Empty)
                         {
                             <a asp-controller="vacancies" asp-action="close" asp-route-id="@item.Guid" title="Выбрать победителя">Закрыть вакансию</a>
                         }
                     </td>
                 </tr>
                 </text>
-            }
-        }
+                            }
+                        }
     </tbody>
 </table>
-<div class="bottom-nav">
-   @* <div class="bottom-nav-left">
-        <div class="count-news">
-            1-4 из 4 записей
-        </div>
-        <div class="count-line-page">
-            <input type="text" value="10"> записей на странице
-        </div>
-    </div>
-    <div class="bottom-nav-right">
-        <ul>
-            <li>
-                <span class="first disable">
-                    <span>Первая</span>
-                </span>
-            </li>
-            <li>
-                <span class="prev disable">
-                    <span>Предыдущая</span>
-                </span>
-            </li>
-            <li>
-                <div class="count-page">
-                    <input type="text" value="1"> из 306
-                </div>
-            </li>
-            <li>
-                <span class="next disable">
-                    <span>Следующая</span>
-                </span>
-            </li>
-            <li>
-                <span class="latest disable">
-                    <span>Последняя</span>
-                </span>
-            </li>
-        </ul>
-    </div>*@
-    </div>
+
+<div pagedlist="Model.PagedVacancies"
+     request="Context.Request">
+</div>
 
 <div class="ctr-buttons mb5 mt-30">
     <a asp-controller="vacancies" asp-action="create">

@@ -15,7 +15,7 @@ namespace SciVacancies.WebApp.Queries
         public string Query { get; set; }
 
         public long PageSize { get; set; }
-        public long PageIndex { get; set; }
+        public long CurrentPage { get; set; }
         public string OrderBy { get; set; }
         //TODO - сделать массивы соответствующих типов
         public IEnumerable<string> Regions { get; set; }

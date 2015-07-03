@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Nest;
 using NPoco;
 using SciVacancies.Domain.Enums;
+using SciVacancies.ReadModel.Pager;
 using SciVacancies.WebApp.ViewModels.Base;
 
 namespace SciVacancies.WebApp.ViewModels
@@ -153,7 +154,7 @@ namespace SciVacancies.WebApp.ViewModels
         /// <summary>
         /// Заявки на конкурс
         /// </summary>
-        public Page<VacancyApplicationDetailsViewModel> Applications { get; set; }
+        public PagedList<VacancyApplicationDetailsViewModel> Applications { get; set; }
 
         public ResearcherDetailsViewModel Winner { get; set; }
         public ResearcherDetailsViewModel Pretender { get; set; }

@@ -23,19 +23,17 @@ namespace SciVacancies.WebApp.Controllers
         [PageTitle("Результаты поиска")]
         public ViewResult Index(VacanciesFilterModel model)
         {
-            model.ValidateValues();
-
-            ViewBag.PagedData = _mediator.Send(new SearchQuery
+            model.Items= _mediator.Send(new SearchQuery
             {
                 Query = model.Search,
-                PageIndex = model.PageNumber,
                 PageSize = model.PageSize,
+                CurrentPage = model.CurrentPage,
 
                 PositionsTypes = model.Positions,
                 Regions = model.Regions,
                 Foivs = model.Foivs,
                 ResearchDirections = model.ResearchDirections
-            });
+            }).MapToPagedList();
 
             //dicitonaries
             ViewBag.FilterSource = new VacanciesFilterSource(_mediator);
