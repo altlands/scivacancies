@@ -53,7 +53,7 @@ namespace SciVacancies.WebApp.Queries
                 CurrentPage = message.CurrentPage,
                 ItemsPerPage = message.PageSize,
                 TotalItems = results.Total,
-                TotalPages = results.Total / message.PageSize,
+                TotalPages = (results.Total / message.PageSize) + (results.Total % message.PageSize > 0 ? 1 : 0),
                 Items = results.Documents.ToList()
             };
 

@@ -129,7 +129,7 @@ namespace SciVacancies.WebApp
                             {
                                 var a = new TagBuilder("a");
                                 a.AddCssClass("first");
-                                SetPageNumberInQuery(PagedList.CurrentPage - 1);
+                                SetPageNumberInQuery(PagedList.CurrentPage <= PagedList.TotalPages ? PagedList.CurrentPage - 1 : PagedList.TotalPages);
                                 a.Attributes.Add("href", GetNewUri());
                                 a.InnerHtml = new TagBuilder("span") { InnerHtml = "Предыдущая" }.ToString();
                                 li2.InnerHtml = a.ToString();
@@ -196,7 +196,7 @@ namespace SciVacancies.WebApp
                             {
                                 var a = new TagBuilder("a");
                                 a.AddCssClass("next");
-                                SetPageNumberInQuery(PagedList.CurrentPage+1);
+                                SetPageNumberInQuery(PagedList.CurrentPage < 1 ? 1 : PagedList.CurrentPage + 1);
                                 a.Attributes.Add("href", GetNewUri());
                                 a.InnerHtml = new TagBuilder("span") { InnerHtml = "Следующая" }.ToString();
                                 li4.InnerHtml = a.ToString();

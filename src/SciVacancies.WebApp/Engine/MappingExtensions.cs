@@ -18,7 +18,7 @@ namespace SciVacancies.WebApp
                 .ForMember(dest => dest.TotalItems, m => m.MapFrom(src => src.TotalItems))
                 .ForMember(dest => dest.TotalPages, m => m.MapFrom(src => src.TotalPages))
                 .ForMember(dest => dest.FirstRowIndexOnPage, m => m.MapFrom(src => src.Items != null && src.Items.Count > 0 ?  (src.ItemsPerPage * (src.CurrentPage - 1)) + 1 : 0))
-                .ForMember(dest => dest.LastRowIndexOnPage, m => m.MapFrom(src => src.Items != null && src.Items.Count > 0 ? (src.ItemsPerPage * (src.CurrentPage - 1)) + src.ItemsPerPage : 0 ))
+                .ForMember(dest => dest.LastRowIndexOnPage, m => m.MapFrom(src => src.Items != null && src.Items.Count > 0 ? (src.ItemsPerPage * (src.CurrentPage - 1)) + src.Items.Count : 0 ))
                 .ForMember(dest => dest.Items, m => m.MapFrom(src => Mapper.Map<List<TDest>>(src.Items)))
                 ;
 
