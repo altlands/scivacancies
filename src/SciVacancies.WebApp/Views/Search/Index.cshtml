@@ -96,18 +96,19 @@
                 @Html.Raw(!string.IsNullOrWhiteSpace(Model.Search) ? string.Format("По запросу «{1}» с учетом фильтрации найдено {0} записей.", Model.Items.TotalItems, Model.Search) : "&nbsp;")
             </div>
 
-            <div class="ctr-buttons" style="margin-top: 20px;">
-                <a class="success-btn-submit open-popup" id="subscribe" rel="tooltip">Подписаться</a>
+            <!--<div class="ctr-buttons" style="margin-top: 20px;">
+                <a asp-controller="subscriptions" asp-action="add" asp-route-id="@Guid.NewGuid()" class="success-btn-submit open-popup" id="subscribe" rel="tooltip">Подписаться</a>
+
                 <div id="subscribe-popover" style="display: none;">
                     Задав поисковый запрос и выбрав необходимые критерии поиска в фильтре результатов, вы можете подписаться на данную конфигурацию запроса. Это позволит в дальнейшем оперативно отслеживать необходимую информацию с учётом выбранных предпочтений. Ваши подписки отображаются в Личном Кабинете в соответствующей вкладке
                 </div>
-            </div>
+            </div> -->
 
             <!--div class="ctr-buttons" style="margin-top:20px;">
-            <span class="blue-btn middle-icon icon-close" rel="tooltip" title="">Отменить подписку</span>
+            <a  asp-controller="subscriptions" asp-action="delete" asp-route-id="@Guid.NewGuid()" class="blue-btn middle-icon icon-close" rel="tooltip" title="">Отменить подписку</a>
             </div-->
             <!--div class="ctr-buttons" style="margin-top:20px;">
-            <span class="white-btn middle-icon icon-lgr-ok" id="subscribed" rel="tooltip">Подписка оформлена</span>
+            <a  asp-controller="subscriptions" asp-action="add" asp-route-id="@Guid.NewGuid()" class="white-btn middle-icon icon-lgr-ok" id="subscribed" rel="tooltip">Подписка оформлена</a>
             <div id="subscribed-popover" style="display:none;text-align:center;">
                 Поздравляем!<br/>Теперь вы подписаны на запрос по теме «исследователь»
             </div>

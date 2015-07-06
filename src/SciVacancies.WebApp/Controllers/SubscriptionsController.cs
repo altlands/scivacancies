@@ -1,10 +1,13 @@
 ﻿using System;
 using MediatR;
+using Microsoft.AspNet.Authorization;
 using Microsoft.AspNet.Mvc;
 using SciVacancies.WebApp.Commands;
+using SciVacancies.WebApp.Engine;
 
 namespace SciVacancies.WebApp.Controllers
 {
+    [Authorize(Roles = ConstTerms.RequireRoleResearcher)]
     public class SubscriptionsController: Controller
     {
         private readonly IMediator _mediator;
