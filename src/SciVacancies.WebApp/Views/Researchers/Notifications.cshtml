@@ -53,11 +53,14 @@
                 <td class="bold">@item.Guid.ToString().Substring(0, 4)</td>
                 <td class="bold">@item.CreationDate</td>
                 <td class="bold">Организация @item.OrganizationGuid</td>
-                <td><a href="#" class="success-request-icon"><span class="italic bold">@item.Title</span></a></td>
                 <td>
-                    <a href="#" class="view-td-icon"></a>
-                    @*<a href="#" class="edit-td-icon"></a>*@
-                    <a asp-controller="notifications" asp-action="delete" asp-route-id=@item.Guid class="close-td-icon"></a>
+                    @*<a href="#" class="success-request-icon"><span class="italic bold">@item.Title</span></a>*@
+                    <span class="italic bold">@item.Title</span>
+                </td>
+                <td>
+                    <a asp-controller="notifications" asp-action="marknotificationread" asp-route-notificationguids=@item.Guid class="view-td-icon"></a>
+
+                    <a asp-controller="notifications" asp-action="delete" asp-route-notificationguids=@item.Guid class="close-td-icon" title="Удалить сообщение"></a>
                 </td>
             </tr>
         }

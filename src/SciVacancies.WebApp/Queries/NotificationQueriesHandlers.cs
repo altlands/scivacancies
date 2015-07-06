@@ -7,6 +7,24 @@ using MediatR;
 
 namespace SciVacancies.WebApp.Queries
 {
+    public class SingleNotificationQueryHandler : IRequestHandler<SingleNotificationQuery, Notification>
+    {
+        private readonly IDatabase _db;
+
+        public SingleNotificationQueryHandler(IDatabase db)
+        {
+            _db = db;
+        }
+
+        public Notification Handle(SingleNotificationQuery message)
+        {
+            if (message.NotificationGuid == Guid.Empty) throw new ArgumentNullException($"NotificationGuid is empty: {message.NotificationGuid}");
+
+            Notification notification = _db.SingleOrDefaultById<Notification>(message.NotificationGuid);
+
+            return notification;
+        }
+    }
     public class SelectPagedNotificationsByResearcherQueryHandler : IRequestHandler<SelectPagedNotificationsByResearcherQuery, Page<Notification>>
     {
         private readonly IDatabase _db;

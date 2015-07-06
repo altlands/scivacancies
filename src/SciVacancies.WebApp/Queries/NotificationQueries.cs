@@ -8,6 +8,10 @@ using NPoco;
 
 namespace SciVacancies.WebApp.Queries
 {
+    public class SingleNotificationQuery : IRequest<Notification>
+    {
+        public Guid NotificationGuid { get; set; }
+    }
     public class SelectPagedNotificationsByResearcherQuery : IRequest<Page<Notification>>
     {
         public Guid ResearcherGuid { get; set; }
