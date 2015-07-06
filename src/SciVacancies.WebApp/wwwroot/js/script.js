@@ -139,10 +139,32 @@ $(document).ready(function(){
     $('input[changeaction=true]').parents('form').submit(function(e) {
         e.preventDefault();
     });
+
+    /*
+     * показать все элементы
+     */
+    $('div.filter-contents span.show-all-list').click(function () {
+        var source = this;
+        $(source).siblings('ul').find('li').show(500, function () {
+            $(source).hide();
+            $(source).siblings('span.hide-unselected').show();
+        });
+    });
+    /*
+     * скрыть невыбранные элементы
+     */
+    $('div.filter-contents span.hide-unselected').click(function () {
+        var source = this;
+        $(source).siblings('ul').find('li').find('span.checkbox:not(.checked)').parents('li').hide(300, function () {
+            $(source).hide();
+            $(source).siblings('span.show-all-list').show();
+        });
+    });
+
+
     /*
     end of the code
     */
-
 });
 
 

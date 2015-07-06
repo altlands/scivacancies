@@ -77,7 +77,7 @@ namespace SciVacancies.WebApp.Controllers
             var model = new VacanciesInOrganizationIndexViewModel
             {
                 OrganizationGuid = organizationGuid,
-                //TODO: ntemnikov: нужно отказаться от Positions чтобы UI-Pager работало только с одной сущностью на странице
+                //TODO: ntemnikov: нужно отказаться от Positions, чтобы UI-Pager работал только с одной сущностью на странице
                 PagedPositions = _mediator.Send(new SelectPagedPositionsByOrganizationQuery { OrganizationGuid = organizationGuid, PageSize = pageSize, PageIndex = currentPage }).MapToPagedList(),
                 PagedVacancies = _mediator.Send(new SelectPagedVacanciesByOrganizationQuery { OrganizationGuid = organizationGuid, PageSize = pageSize, PageIndex = currentPage }).MapToPagedList(),
                 Name = preModel.Name
