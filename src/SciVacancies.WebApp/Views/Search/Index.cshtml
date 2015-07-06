@@ -72,10 +72,10 @@
                 <div class="cat-filter">
                     <div class="title">Заработная плата</div>
                     <div>
-                        От <input type="text" asp-for="SalaryMin" class="small-input"/>
+                        От <input type="text" asp-for="SalaryMin" class="small-input" />
                     </div>
                     <div>
-                        До <input type="text" asp-for="SalaryMax" class="small-input"/>
+                        До <input type="text" asp-for="SalaryMax" class="small-input" />
                     </div>
                 </div>
 
@@ -122,19 +122,22 @@
                     <select asp-for="OrderBy"
                             asp-items="ViewBag.FilterSource.OrderBys"></select>
                 </div>
-                <input type="submit" class="blue-btn-sm small-icon icon-sm-eye-wh" value="Показать"/>
+                <input type="submit" class="blue-btn-sm small-icon icon-sm-eye-wh" value="Показать" />
             </div>
 
             <div class="list-results">
 
-                @if(Model.Items.Items!=null)
+                @if (Model.Items.Items != null)
                 {
+                    var index = 0;
                     foreach (var item in Model.Items.Items)
                     {
+                        <text>
                         <div>
-                            <div class="index-number">17.</div>
+                            <div class="index-number">@(Model.Items.FirstRowIndexOnPage + index).</div>
                             <div class="index-text">
-                                <div class="title"><a asp-controller="vacancies" asp-action="card" asp-route-id="@item.Id" target="_blank">@item.Name</a>
+                                <div class="title">
+                                    <a asp-controller="vacancies" asp-action="card" asp-route-id="@item.Id" target="_blank">@item.Name</a>
                                 </div>
                                 <div class="inform">
                                     <p>Дата размещения: @item.DateStart.ToLocalVacancyString()</p>
@@ -151,6 +154,8 @@
                                 </div>
                             </div>
                         </div>
+                        </text>
+                        index++;
                     }
                 }
             </div>
