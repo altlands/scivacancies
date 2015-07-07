@@ -41,12 +41,32 @@ $(document).ready(function(){
 	// Popup
 	//$('.window-popup, .popup-bg, .bg-window').hide(); 
 	$(".popup-bg").css({opacity: .2});
-	alignCenter($('.window-popup')); 
+
+    function alignCenter(elem) {
+        var modalHeight = ($(window).height() - 40 * 2);
+        elem.css({
+            height: modalHeight + 'px',
+            left: ($(window).width() - elem.outerWidth()) / 2 + 'px',
+            top: /*($(window).height() - elem.outerHeight()) / 2*/ 20 + 'px'
+        });
+        $(elem).find('div.content-popup').css({
+            height: (modalHeight -100 -50)+ 'px'
+        });
+    }
+
+    alignCenter($('.window-popup')); 
 	$(window).resize(function() {
 		alignCenter($('.window-popup')); 
 	});
-	$('.open-popup').click(function() {
-		$('.popup-bg, .window-popup, .bg-window').fadeIn(300); 
+	$('.open-popup').click(function () {
+	    var source = this;
+	    if ($(source).attr('data-modal') != undefined) {
+	        $('.window-popup[data-name="' + $(source).attr('data-modal') + '"]').fadeIn(300);
+	    }
+            else
+	    {
+	        $('.popup-bg, .window-popup, .bg-window').fadeIn(300);
+	    } 
 		return false;
 	});
 	$('.close-popup').click(function() {
@@ -57,34 +77,28 @@ $(document).ready(function(){
         $('.close-popup').click();
     });
 	// function centering
-	function alignCenter(elem) {
-		elem.css({
-			left: ($(window).width() - elem.outerWidth()) / 2 + 'px', 
-			top: ($(window).height() - elem.outerHeight()) / 2 + 'px' 
-		});
-	}
-	$('#subscribe').popover({
+    $('#subscribe').popover({
 		'placement': 'bottom',
 		'trigger': 'hover',
 		html:true,
-		content:function(){
-			return $('#subscribe-popover').html()
+		content:function() {
+		    return $('#subscribe-popover').html();
 		}
 	});
 	$('#subscribed').popover({
 		'placement': 'bottom',
 		'trigger': 'hover',
 		html:true,
-		content:function(){
-			return $('#subscribed-popover').html()
+		content:function() {
+		    return $('#subscribed-popover').html();
 		}
 	});
 	$('#lk').popover({
 		'placement': 'bottom',
 		'trigger': 'hover',
 		html:true,
-		content:function(){
-			return $('#lk-popover').html()
+		content:function() {
+		    return $('#lk-popover').html();
 		}
 	});
 	//tabs
@@ -106,7 +120,7 @@ $(document).ready(function(){
 	//open block solutions
 	$(".solutions").click(function(){
 		$(this).parents(".content-slide").find(".b-solution").slideToggle("fast", function(){
-			current = slider.getCurrentSlide();
+			var current = slider.getCurrentSlide();
 			/*slider.reloadSlider();
 			slider.goToSlide(current);*/
 			//slider.find("li").eq(current).css("height", "100%");
@@ -160,8 +174,6 @@ $(document).ready(function(){
             $(source).siblings('span.show-all-list').show();
         });
     });
-
-
     /*
     end of the code
     */
@@ -217,3 +229,12 @@ function updateQueryStringParameter(uri, key, value) {
         return uri + separator + key + "=" + value;
     }
 }
+/*
+ * Выбрать отрасли науки
+ */
+function selectedItemFromModalDictionary(hiddenInputName, newValue, displayText) {
+    $('#' + hiddenInputName).val(newValue);
+    $('#' + hiddenInputName).siblings('a')[0].innerText = displayText;
+    $('div[data-name="'+hiddenInputName+'"]').find('.close-popup').click();
+    return false;
+};

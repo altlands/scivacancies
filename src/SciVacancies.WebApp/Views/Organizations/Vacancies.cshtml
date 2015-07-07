@@ -85,7 +85,7 @@
                     <td><span class="status  @item.Status.GetHtmlClass()">@item.Status.GetDescription() <!--Объявлен--></span></td>
                     <td>
                         <a asp-controller="positions" asp-action="details" asp-route-id="@item.Guid" class="view-td-icon" title="Просмотр вакансии"></a>
-                        <a asp-controller="positions" asp-action="edit" asp-route-id="@item.Guid" class="edit-td-icon" title="Изменить вакансию"></a>
+                        <a asp-controller="vacancies" asp-action="edit" asp-route-id="@item.Guid" class="edit-td-icon" title="Изменить вакансию"></a>
                         <a asp-controller="positions" asp-action="delete" asp-route-id="@item.Guid" onclick="javascript: return confirm('Вы уверены что хотите удалить эту вакансию?');" class="close-td-icon" title="Удалить вакансию"></a>
                         @if (item.Status == PositionStatus.InProcess)
                         {

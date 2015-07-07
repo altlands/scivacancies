@@ -40,6 +40,7 @@ namespace SciVacancies.WebApp.Controllers
 
             var model = new PositionCreateViewModel(organizationGuid);
             model.InitDictionaries(_mediator);
+            //TODO: ntemnikov: Vacancies -> Create : вернуть Криетерии во View
             return View(model);
         }
 
@@ -52,6 +53,15 @@ namespace SciVacancies.WebApp.Controllers
         {
             if (ModelState.IsValid)
             {
+                if (model.ContractType == ContractType.FixedTerm
+                    && model.ContractTimeYears == 0
+                    && model.ContractTimeYears == 0)
+                {
+                    ModelState.AddModelError("ContractTypeValue", $"Для договора типа \"{ContractType.FixedTerm.GetDescription()}\" укажите срок трудового договора");
+                    model.InitDictionaries(_mediator);
+                    return View(model);
+                }
+
                 var positionDataModel = Mapper.Map<PositionDataModel>(model);
                 var positionGuid = _mediator.Send(new CreatePositionCommand { OrganizationGuid = model.OrganizationGuid, Data = positionDataModel });
 
@@ -73,6 +83,77 @@ namespace SciVacancies.WebApp.Controllers
             model.InitDictionaries(_mediator);
             return View(model);
 
+        }
+
+        [PageTitle("Изменить вакансию")]
+        [BindOrganizationIdFromClaims]
+        public IActionResult Edit(Guid id, Guid organizationGuid)
+        {
+            if (id == Guid.Empty)
+                throw new ArgumentNullException(nameof(id));
+            if (organizationGuid == Guid.Empty)
+                throw new ArgumentNullException(nameof(organizationGuid));
+
+            var preModel = _mediator.Send(new SinglePositionQuery { PositionGuid = id });
+
+            if (preModel.OrganizationGuid != organizationGuid)
+                throw new Exception("Вы не можете изменять вакансии других организаций");
+
+            if (preModel.Status != PositionStatus.InProcess)
+                throw new Exception($"Вы не можете изменить вакансию с текущим статусом: {preModel.Status.GetDescription()}");
+
+            var model = Mapper.Map<PositionCreateViewModel>(preModel);
+            model.InitDictionaries(_mediator);
+
+            return View(model);
+        }
+
+        [PageTitle("Изменить вакансию")]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [BindOrganizationIdFromClaims("claimedUserGuid")]
+        public IActionResult Edit(PositionCreateViewModel model, Guid claimedUserGuid)
+        {
+            if (claimedUserGuid == Guid.Empty)
+                throw new ArgumentNullException(nameof(claimedUserGuid));
+
+            if (model.OrganizationGuid != claimedUserGuid)
+                throw new Exception("Вы не можете изменять вакансии других организаций");
+
+            if (ModelState.IsValid)
+            {
+                if (model.ContractType == ContractType.FixedTerm
+                    && model.ContractTimeYears == 0
+                    && model.ContractTimeYears == 0)
+                {
+                    ModelState.AddModelError("ContractTypeValue", $"Для договора типа \"{ContractType.FixedTerm.GetDescription()}\" укажите срок трудового договора");
+                    model.InitDictionaries(_mediator);
+                    return View(model);
+                }
+
+                var positionDataModel = Mapper.Map<PositionDataModel>(model);
+
+                if (positionDataModel.Status != PositionStatus.InProcess)
+                    throw new Exception($"Вы не можете изменить вакансию с текущим статусом: {model.Status.GetDescription()}");
+
+                var positionGuid = _mediator.Send(new UpdatePositionCommand { PositionGuid = model.Guid, OrganizationGuid = model.OrganizationGuid, Data = positionDataModel });
+
+                if (!model.ToPublish)
+                    return RedirectToAction("details", "positions", new { id = model.Guid });
+
+                var vacancyDataModel = Mapper.Map<VacancyDataModel>(positionDataModel);
+                vacancyDataModel.OrganizationName = _mediator.Send(new SingleOrganizationQuery { OrganizationGuid = model.OrganizationGuid }).Name;
+
+                var vacancyGuid = _mediator.Send(new PublishVacancyCommand
+                {
+                    OrganizationGuid = model.OrganizationGuid,
+                    PositionGuid = model.Guid,
+                    Data = vacancyDataModel
+                });
+                return RedirectToAction("details", "vacancies", new { id = vacancyGuid });
+            }
+            model.InitDictionaries(_mediator);
+            return View(model);
         }
 
         [PageTitle("Подробно о вакансии")]
@@ -309,10 +390,10 @@ namespace SciVacancies.WebApp.Controllers
             if (preModel.OrganizationGuid != organizationGuid)
                 throw new Exception("Вы не можете менять Вакансии других организаций");
 
-            if (preModel.WinnerGuid!= Guid.Empty)
+            if (preModel.WinnerGuid != Guid.Empty)
                 throw new Exception("Вы не можете закрыть Вакансию: не выбран победитель");
 
-            if (preModel.PretenderGuid!= Guid.Empty)
+            if (preModel.PretenderGuid != Guid.Empty)
                 throw new Exception("Вы не можете закрыть Вакансию: не выбран претендент");
 
             if (preModel.Status != VacancyStatus.InCommittee)
