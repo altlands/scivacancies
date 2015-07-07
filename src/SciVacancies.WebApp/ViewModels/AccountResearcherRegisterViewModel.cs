@@ -1,4 +1,5 @@
-﻿using System.ComponentModel;
+﻿using System;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 
 namespace SciVacancies.WebApp.ViewModels
@@ -8,10 +9,12 @@ namespace SciVacancies.WebApp.ViewModels
         [Required]
         [DefaultValue(false)]
         public bool Agreement { get; set; }
-        [Required]
+        [Required(ErrorMessage = "Требуется ввести логин")]
         public string UserName { get; set; }
 
+        [Required(ErrorMessage = "Требуется заоплнить поле Имя")]
         public string FirstName { get; set; }
+        [Required(ErrorMessage = "Требуется заоплнить поле Фамилия")]
         public string SecondName { get; set; }
         public string Patronymic { get; set; }
 
@@ -19,9 +22,11 @@ namespace SciVacancies.WebApp.ViewModels
         public string SecondNameEng { get; set; }
         public string PatronymicEng { get; set; }
 
+        [Required(ErrorMessage = "Требуется выбрать год рождения")]
         public int BirthYear { get; set; }
         //public DateTime BirthDate { get; set; }
 
+        [Required(ErrorMessage = "Требуется заполнить поле Электронная почта")]
         [EmailAddress(ErrorMessage = "Поле Электронная почта не содержит допустимый адрес электронной почты.")]
         public string Email { get; set; }
         [Phone(ErrorMessage = "Поле Телефон не содержит допустимый номер телефона.")]
@@ -34,6 +39,9 @@ namespace SciVacancies.WebApp.ViewModels
         //[PasswordPropertyText]
         [Compare("Password", ErrorMessage = "Пароли отличаются")]
         public string ConfirmPassword { get; set; }
+
+        [Required(ErrorMessage = "Требуется ввести код скартинки")]
+        public string Captcha { get; set; }
 
     }
 }

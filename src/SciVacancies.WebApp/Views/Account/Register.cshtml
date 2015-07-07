@@ -1,6 +1,6 @@
 ﻿@model SciVacancies.WebApp.ViewModels.AccountResearcherRegisterViewModel
 @{
-    var years = Enumerable.Range(DateTime.Now.Year-150, 150+1).OrderByDescending(c=>c).Select(c=> new SelectListItem {Text = c.ToString(), Value = c.ToString()});
+    var years = Enumerable.Range(DateTime.Now.Year-150, 150).OrderByDescending(c=>c).Select(c=> new SelectListItem {Text = c.ToString(), Value = c.ToString()});
 }
 <div class="crumbs">
     <a href="/">Главная</a><span class="separator">/</span>Регистрация
@@ -54,6 +54,7 @@
                 <select asp-for="BirthYear"
                         asp-items="years">
                 </select>
+                <span asp-validation-for="BirthYear"></span>
             </div>
         </div>
 
@@ -68,7 +69,7 @@
         </div>
 
         <div class="form-line mt27 form-row">
-            <label>Электронная почта (логин для входа)</label>
+            <label>Электронная почта</label>
             <div class="b-r-form">
                 <div class="input">
                     <input asp-for="Email" type="text" />
@@ -122,7 +123,8 @@
                     <span class="small-icon icon-update"><span>Обновить</span></span>
                 </div>
                 <div class="form-line">
-                    <input type="text" class="middle-input" />
+                    <input asp-for="Captcha" class="middle-input"/>
+                    <span asp-validation-for="Captcha"></span>
                 </div>
             </div>
         </div>

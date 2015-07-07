@@ -36,6 +36,7 @@ namespace SciVacancies.WebApp.Controllers
             _userManager = userManager;
         }
 
+        [PageTitle("Вход")]
         [ResponseCache(NoStore = true)]
         [HttpPost]
         public ActionResult Login(AccountLoginViewModel model)
@@ -86,6 +87,7 @@ namespace SciVacancies.WebApp.Controllers
             return Tuple.Create(state, nonce);
         }
 
+        [PageTitle("Оставить отзыв")]
         public async Task<ActionResult> Callback()
         {
             var authorizationCode = Request.Query["code"];
@@ -206,6 +208,7 @@ namespace SciVacancies.WebApp.Controllers
             Email = "researcher@mail.scivacancies.org"
         });
 
+        [PageTitle("Регистрация")]
         [HttpPost]
         public IActionResult Register(AccountResearcherRegisterViewModel model)
         {
@@ -235,11 +238,13 @@ namespace SciVacancies.WebApp.Controllers
             return RedirectToHome();
         }
 
+        [PageTitle("Восстановление пароля")]
         public ViewResult ForgotPassword()
         {
             return View();
         }
 
+        [PageTitle("Выход")]
         [ResponseCache(NoStore = true)]
         public ActionResult Logout()
         {
