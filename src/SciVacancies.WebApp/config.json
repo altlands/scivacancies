@@ -13,7 +13,9 @@
       "UserEndpoint": "http://www.sciencemon.ru/api/user"
     },
     "mapofscience.ru": {
-
+      "AuthorizationEndpoint": "",
+      "TokenEndpoint": "",
+      "UserEndpoint": ""
     }
   }
 }
