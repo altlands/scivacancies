@@ -2,25 +2,24 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace SciVacancies.Domain.DataModels
 {
     public class ResearcherDataModel
     {
-        /// <summary>
-        /// Идентификатор аккаунта, к которому привязан агрегат
-        /// </summary>
-        public string UserId { get; set; }
+        #region General
 
         public string FirstName { get; set; }
-        public string SecondName { get; set; }
-        public string Patronymic { get; set; }
-
         public string FirstNameEng { get; set; }
+
+        public string SecondName { get; set; }
         public string SecondNameEng { get; set; }
+
+        public string Patronymic { get; set; }
         public string PatronymicEng { get; set; }
+
+        public string FullName { get { return SecondName + " " + FirstName + " " + Patronymic; } }
+        public string FullNameEng { get { return SecondNameEng + " " + FirstNameEng + " " + PatronymicEng; } }
 
         public string PreviousSecondName { get; set; }
 
@@ -46,5 +45,13 @@ namespace SciVacancies.Domain.DataModels
 
         public List<Education> Educations { get; set; }
         public List<Publication> Publications { get; set; }
+
+        #endregion
+
+        /// <summary>
+        /// Идентификатор аккаунта, к которому привязан агрегат
+        /// </summary>
+        [Obsolete("No need to use. Will be removed.")]
+        public string UserId { get; set; }     
     }
 }

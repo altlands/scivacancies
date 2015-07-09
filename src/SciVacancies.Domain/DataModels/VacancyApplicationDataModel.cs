@@ -1,13 +1,13 @@
 ﻿using SciVacancies.Domain.Enums;
 using SciVacancies.Domain.Core;
+
 using System.Collections.Generic;
 
 namespace SciVacancies.Domain.DataModels
 {
     public class VacancyApplicationDataModel
     {
-        public string VacancyCode { get; set; }
-        public string PositionName { get; set; }
+        #region General
 
         public string ResearcherFullName { get; set; }
 
@@ -30,6 +30,11 @@ namespace SciVacancies.Domain.DataModels
         public List<Education> Educations { get; set; }
         public List<Publication> Publications { get; set; }
 
+        #endregion
+
+        public string VacancyCode { get; set; }
+        public string PositionName { get; set; }
+        public string FullName { get; set; }
         public VacancyApplicationStatus Status { get; set; }
     }
 }

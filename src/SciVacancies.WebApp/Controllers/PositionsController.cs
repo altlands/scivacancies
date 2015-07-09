@@ -12,6 +12,7 @@ using SciVacancies.WebApp.ViewModels;
 
 namespace SciVacancies.WebApp.Controllers
 {
+    [Obsolete("Positions will be removed from workflow")]
     [Authorize(Roles = ConstTerms.RequireRoleOrganizationAdmin)]
     public class PositionsController : Controller
     {

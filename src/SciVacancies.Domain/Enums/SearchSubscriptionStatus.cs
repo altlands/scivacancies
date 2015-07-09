@@ -9,11 +9,13 @@ namespace SciVacancies.Domain.Enums
         /// </summary>
         [Description("Активна")]
         Active = 0,
+
         /// <summary>
         /// Подписка отменена
         /// </summary>
-        [Description("Не активна")]
+        [Description("Неактивна")]
         Cancelled = 1,
+
         /// <summary>
         /// Подписка удалена
         /// </summary>

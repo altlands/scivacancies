@@ -1,53 +1,30 @@
 ﻿using SciVacancies.Domain.Enums;
+
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace SciVacancies.Domain.DataModels
 {
+    [Obsolete("Positions will be removed from workflow")]
     public class PositionDataModel
     {
+        //TODO - что делать с критериями?
+        ///// <summary>
+        ///// Критерии оценки где int - идентификатор критерия, 
+        ///// </summary>
+        //public List<KeyValuePair<int, decimal>> Criterias { get; set; } //<CriteriaId, Amount>
 
-        //TODO - привести в порядок и соответствие модели
-        public string OrganizationName { get; set; }
-        //public string ResearchDirection { get; set; }
-        public int ResearchThemeId { get; set; }
-
-        /// <summary>
-        /// Тип занятости
-        /// </summary>
-        public EmploymentType EmploymentType { get; set; }
-        /// <summary>
-        /// График работы
-        /// </summary>
-        public OperatingScheduleType OperatingScheduleType { get; set; }
+        #region General
 
         /// <summary>
-        /// Guid должности из справочника
-        /// </summary>
-        public Guid PositionTypeGuid { get; set; }
-        /// <summary>
-        /// Должность
+        /// Наименование должности кратко
         /// </summary>
         public string Name { get; set; }
 
         /// <summary>
-        /// Должность (Полное наименование)
+        /// Наименование должности полностью
         /// </summary>
         public string FullName { get; set; }
-
-
-        /// <summary>
-        /// Отрасль науки
-        /// </summary>
-        public string ResearchDirection { get; set; }
-        public int ResearchDirectionId { get; set; }
-
-        /// <summary>
-        /// Тематика исследований
-        /// </summary>
-        public string ResearchTheme { get; set; }
 
         /// <summary>
         /// Задачи
@@ -55,22 +32,58 @@ namespace SciVacancies.Domain.DataModels
         public string Tasks { get; set; }
 
         /// <summary>
-        /// Критерии оценки 
+        /// Тематика исследований
         /// </summary>
-        public KeyValuePair<int, int> Criteria { get; set; } //<CriteriaId, Amount>
+        public string ResearchTheme { get; set; }
 
         /// <summary>
-        /// Зарплата в месяц
+        /// Населенный пункт 
+        /// </summary>
+        public string CityName { get; set; }
+
+        /// <summary>
+        /// Дополнительные условия
+        /// </summary>
+        public string Details { get; set; }
+
+        /// <summary>
+        /// Полное имя лица для получениях справок
+        /// </summary>
+        public string ContactName { get; set; }
+
+        /// <summary>
+        /// Почта для получения справок
+        /// </summary>
+        public string ContactEmail { get; set; }
+
+        /// <summary>
+        /// Телефон для справок
+        /// </summary>
+        public string ContactPhone { get; set; }
+
+        /// <summary>
+        /// Дополнительная контактная информация
+        /// </summary>
+        public string ContactDetails { get; set; }
+
+        #endregion
+
+        #region Conditions
+
+        /// <summary>
+        /// Зарплата в месяц от
         /// </summary>
         public int SalaryFrom { get; set; }
+
+        /// <summary>
+        /// Зарплата в месяц до
+        /// </summary>
         public int SalaryTo { get; set; }
-        //public Currency SalaryCurrency { get; set; }
 
         /// <summary>
         /// Стимулирующие выплаты
         /// </summary>
         public string Bonuses { get; set; }
-
 
         /// <summary>
         /// Тип трудового договора
@@ -81,6 +94,16 @@ namespace SciVacancies.Domain.DataModels
         /// Срок трудового договора (для срочного договора)
         /// </summary>
         public decimal ContractTime { get; set; }
+
+        /// <summary>
+        /// Тип занятости
+        /// </summary>
+        public EmploymentType EmploymentType { get; set; }
+
+        /// <summary>
+        /// График работы
+        /// </summary>
+        public OperatingScheduleType OperatingScheduleType { get; set; }
 
         /// <summary>
         /// Социальный пакет
@@ -102,31 +125,63 @@ namespace SciVacancies.Domain.DataModels
         /// </summary>
         public bool TransportCompensation { get; set; }
 
+        #endregion
+
+        #region Dictionaries
+
         /// <summary>
-        /// Регион
+        /// Наименование позиции
+        /// </summary>
+        public string PositionType { get; set; }
+
+        /// <summary>
+        /// Идентификатор позиции
+        /// </summary>
+        public int PositionTypeId { get; set; }
+
+        /// <summary>
+        /// Название региона
         /// </summary>
         public string Region { get; set; }
+
+        /// <summary>
+        /// Идентфикатор региона
+        /// </summary>
         public int RegionId { get; set; }
 
         /// <summary>
-        /// Населенный пункт 
+        /// Наименование отрасли науки
         /// </summary>
-        public string CityName { get; set; }
+        public string ResearchDirection { get; set; }
 
         /// <summary>
-        /// Дополнительно
+        /// Идентификатор отрасли науки
         /// </summary>
-        public string Details { get; set; }
+        public int ResearchDirectionId { get; set; }
+
+        #endregion
+
+
+
+        //TODO - привести в порядок и соответствие модели
+        [Obsolete("No need to use. Will be removed.")]
+        public string OrganizationName { get; set; }
+        [Obsolete("You should use ResearchDirection")]
+        public int ResearchThemeId { get; set; }
+
+        /// <summary>
+        /// Guid должности из справочника
+        /// </summary>
+        [Obsolete("Use Id")]
+        public Guid PositionTypeGuid { get; set; }
 
 
         /// <summary>
-        /// Лицо для получения дополнительных справок
+        /// Критерии оценки 
         /// </summary>
-        public string ContactName { get; set; }
-        public string ContactEmail { get; set; }
-        public string ContactPhone { get; set; }
-        public string ContactDetails { get; set; }
+        public KeyValuePair<int, int> Criteria { get; set; } //<CriteriaId, Amount>
 
+        [Obsolete("Position status won't be in dataModel")]
         public PositionStatus Status { get; set; }
     }
 }

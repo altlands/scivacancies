@@ -3,9 +3,11 @@ using NPoco;
 using SciVacancies.Domain.Enums;
 using SciVacancies.Domain.Events;
 using SciVacancies.ReadModel.Core;
+using System;
 
 namespace SciVacancies.ReadModel.EventHandlers
 {
+    [Obsolete("Positions will be removed from workflow")]
     public class PositionEventsHandler : 
         INotificationHandler<PositionCreated>,
         INotificationHandler<PositionUpdated>,

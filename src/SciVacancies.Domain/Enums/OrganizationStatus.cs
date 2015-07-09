@@ -7,14 +7,19 @@ namespace SciVacancies.Domain.Enums
         /// <summary>
         /// Организация создана/активна
         /// </summary>
+        [Description("Активна")]
         Active = 0,
-        /// <summary>
-        /// Организация заблокирована (блокировка\разблокировка доступна только администратору)
-        /// </summary>
-        Banned = 1,
+
         /// <summary>
         /// Организация удалена
         /// </summary>
-        Removed = 2
+        [Description("Удалена")]
+        Removed = 1,
+
+        /// <summary>
+        /// Организация заблокирована (блокировка\разблокировка доступна только администратору)
+        /// </summary>
+        [Description("Заблокирована")]
+        Banned = 2
     }
 }

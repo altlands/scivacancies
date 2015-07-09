@@ -5,14 +5,11 @@ namespace SciVacancies.Domain.DataModels
 {
     public class OrganizationDataModel
     {
-        /// <summary>
-        /// Идентификатор аккаунта, к которому привязан агрегат
-        /// </summary>
-        public string UserId { get; set; }
+        #region General
+
         /// <summary>
         /// Полное наименование
         /// </summary>
-
         public string Name { get; set; }
 
         /// <summary>
@@ -61,42 +58,72 @@ namespace SciVacancies.Domain.DataModels
         public string OGRN { get; set; }
 
         /// <summary>
-        /// Организационно-правовая форма организации
+        /// Имя руководителя
         /// </summary>
-        public string OrgForm { get; set; }
-        public int OrgFormId { get; set; }
-        public Guid OrgFormGuid { get; set; }
+        public string HeadFirstName { get; set; }
 
         /// <summary>
-        /// Количество опубликованных вакансий на данный момент
+        /// Фамилия руководителя
         /// </summary>
-        public int PublishedVacancies { get; set; }
+        public string HeadLastName { get; set; }
 
         /// <summary>
-        /// ФОИВ
+        /// Отчество руководителя
         /// </summary>
-        public string Foiv { get; set; }
-        public int FoivId { get; set; }
-        public Guid FoivGuid { get; set; }
+        public string HeadPatronymic { get; set; }
 
+        #endregion
+
+        #region Dictionaries
 
         /// <summary>
-        /// Основной вид деятельности
-        /// </summary>
-        public string Activity { get; set; }
-        public int ActivityId { get; set; }
-        public Guid ActivityGuid { get; set; }
-
-        /// <summary>
-        /// Отрасли науки
+        /// Список идентификаторов отраслей науки
         /// </summary>
         public List<int> ResearchDirections { get; set; }
 
         /// <summary>
-        /// Руководитель
+        /// Название основного вида деятельности
         /// </summary>
-        public string HeadFirstName { get; set; }
-        public string HeadLastName { get; set; }
-        public string HeadPatronymic { get; set; } //HeadMiddleName
+        public string Activity { get; set; }
+
+        /// <summary>
+        /// Идентификатор основного вида деятельности
+        /// </summary>
+        public int ActivityId { get; set; }
+
+        /// <summary>
+        /// Наименование ФОИВ
+        /// </summary>
+        public string Foiv { get; set; }
+
+        /// <summary>
+        /// Идентификатор ФОИВ
+        /// </summary>
+        public int FoivId { get; set; }
+
+        /// <summary>
+        /// Наименование организационно-правовой формы
+        /// </summary>
+        public string OrgForm { get; set; }
+
+        /// <summary>
+        /// Идентификатор организационно-правовой формы
+        /// </summary>
+        public int OrgFormId { get; set; }
+
+        #endregion
+
+
+        [Obsolete("No need to use. Will be removed.")]
+        public string UserId { get; set; }
+        [Obsolete("You should use int Id")]
+        public Guid OrgFormGuid { get; set; }
+        [Obsolete("No need to use. Will be removed.")]
+        public int PublishedVacancies { get; set; }
+        [Obsolete("You should use int Id")]
+        public Guid FoivGuid { get; set; }
+        [Obsolete("You should use int Id")]
+        public Guid ActivityGuid { get; set; }
+
     }
 }

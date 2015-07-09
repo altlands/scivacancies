@@ -11,6 +11,7 @@ namespace SciVacancies.ReadModel.Core
 {
     [TableName("Positions")]
     [PrimaryKey("Guid", AutoIncrement = false)]
+    [Obsolete("Positions will be removed from workflow")]
     public class Position : BaseEntity
     {
         ////TODO - привести в порядок и соответствие модели
