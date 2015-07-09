@@ -24,6 +24,11 @@ namespace SciVacancies.ReadModel.Core
         public string Phone { get; set; }
         public string ExtraPhone { get; set; }
 
+        ///// <summary>
+        ///// временное поле для Образования, пока не перейдем на List[Education]
+        ///// </summary>
+        //public string Education { get; set; }
+
         public string ResearchActivity { get; set; }
         public string TeachingActivity { get; set; }
         public string OtherActivity { get; set; }

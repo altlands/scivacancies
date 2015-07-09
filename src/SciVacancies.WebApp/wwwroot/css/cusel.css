@@ -1,4 +1,4 @@
-@charset "utf-8";
+﻿@charset "utf-8";
 /*
 	styles for select
 */
@@ -133,4 +133,10 @@ span.cuselActive{
 	height:6px;
 	cursor:pointer;
 	background:url(../images/sprite.png) -226px -197px no-repeat
+}
+.cusel-scroll-pane > span{
+    width: 100%;
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
 }

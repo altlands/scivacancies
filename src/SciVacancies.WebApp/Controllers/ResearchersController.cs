@@ -1,10 +1,12 @@
 ﻿using System;
+using System.Data.Entity.Core;
 using System.Linq;
 using AutoMapper;
 using MediatR;
 using Microsoft.AspNet.Authorization;
 using Microsoft.AspNet.Mvc;
 using NPoco;
+using SciVacancies.Domain.DataModels;
 using SciVacancies.Domain.Enums;
 using SciVacancies.ReadModel.Core;
 using SciVacancies.WebApp.Commands;
@@ -41,16 +43,38 @@ namespace SciVacancies.WebApp.Controllers
 
         [ResponseCache(NoStore = true)]
         [PageTitle("Изменить данные")]
-        public ViewResult Edit(Guid id)
+        [BindResearcherIdFromClaims]
+        public ViewResult Edit(Guid researcherGuid)
         {
-            var model = new ResearcherEditViewModel { Guid = id };
+            if (researcherGuid== Guid.Empty)
+                throw new ArgumentNullException(nameof(researcherGuid));
+
+            var preModel = _mediator.Send(new SingleResearcherQuery {ResearcherGuid = researcherGuid});
+            if(preModel==null)
+                throw  new ObjectNotFoundException();
+
+            var model = Mapper.Map<ResearcherEditViewModel>(preModel);
             return View(model);
         }
         [HttpPut]
         [HttpPost]
         [PageTitle("Редактирование информации пользователя")]
-        public RedirectToActionResult Edit(ResearcherEditViewModel model)
+        [BindResearcherIdFromClaims("authorizedUserGuid")]
+        public IActionResult Edit(ResearcherEditViewModel model, Guid authorizedUserGuid)
         {
+            if(authorizedUserGuid != model.Guid)
+                throw new Exception("Вы не можете изменять чужой профиль");
+
+            if (!ModelState.IsValid)
+                return View(model);
+
+            var preModel = _mediator.Send(new SingleResearcherQuery { ResearcherGuid = authorizedUserGuid });
+            if (preModel == null)
+                throw new ObjectNotFoundException();
+
+            var data = Mapper.Map<ResearcherDataModel>(model);
+            _mediator.Send(new UpdateResearcherCommand {Data = data, ResearcherGuid = authorizedUserGuid});
+
             return RedirectToAction("account");
         }
 

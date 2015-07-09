@@ -16,13 +16,22 @@ namespace SciVacancies.ReadModel.Core
 
         public string FirstName { get; set; }
         public string SecondName { get; set; }
+        /// <summary>
+        /// Отчество
+        /// </summary>
         public string Patronymic { get; set; }
+        /// <summary>
+        /// Прежняя фамилия
+        /// </summary>
+        public string PreviousSecondName { get; set; }
 
         public string FirstNameEng { get; set; }
         public string SecondNameEng { get; set; }
         public string PatronymicEng { get; set; }
-
-        public string PreviousSecondName { get; set; }
+        ///// <summary>
+        ///// Прежняя фамилия
+        ///// </summary>
+        //public string PreviousSecondNameEng { get; set; }
 
         public DateTime BirthDate { get; set; }
 
@@ -31,6 +40,11 @@ namespace SciVacancies.ReadModel.Core
 
         public string Phone { get; set; }
         public string ExtraPhone { get; set; }
+
+        ///// <summary>
+        ///// Образование. в перспективе это свойство-коллекция
+        ///// </summary>
+        //public string Education { get; set; }
 
         public string Nationality { get; set; }
 

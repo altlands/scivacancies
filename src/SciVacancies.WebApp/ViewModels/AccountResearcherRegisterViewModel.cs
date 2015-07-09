@@ -26,11 +26,16 @@ namespace SciVacancies.WebApp.ViewModels
         public int BirthYear { get; set; }
         //public DateTime BirthDate { get; set; }
 
-        [Required(ErrorMessage = "Требуется заполнить поле Электронная почта")]
-        [EmailAddress(ErrorMessage = "Поле Электронная почта не содержит допустимый адрес электронной почты.")]
+        [Required(ErrorMessage = "Требуется указать адрес электронной почты")]
+        [EmailAddress(ErrorMessage = "Поле E-mail содержит не допустимый адрес электронной почты.")]
         public string Email { get; set; }
-        [Phone(ErrorMessage = "Поле Телефон не содержит допустимый номер телефона.")]
+        [EmailAddress(ErrorMessage = "Поле Добавить E-mail содержит не допустимый адрес электронной почты.")]
+        public string ExtraEmail { get; set; }
+        [Required(ErrorMessage = "Требуется заполнить поле Телефон")]
+        [Phone(ErrorMessage = "Поле Телефон содержит не допустимый номер телефона.")]
         public string Phone { get; set; }
+        [Phone(ErrorMessage = "Поле Добавить телефон содержит не допустимый номер телефона.")]
+        public string ExtraPhone { get; set; }
 
         [Required(ErrorMessage = "Требуется ввести пароль")]
         //[PasswordPropertyText]
@@ -43,5 +48,9 @@ namespace SciVacancies.WebApp.ViewModels
         [Required(ErrorMessage = "Требуется ввести код скартинки")]
         public string Captcha { get; set; }
 
+        /// <summary>
+        /// временное поле для Образования, пока не перейдем на List[Education]
+        /// </summary>
+        public string Education { get; set; }
     }
 }

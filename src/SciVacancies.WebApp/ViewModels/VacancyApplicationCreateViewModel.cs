@@ -1,5 +1,7 @@
 using System;
+using System.Collections.Generic;
 using Microsoft.AspNet.Mvc;
+using SciVacancies.ReadModel.Core;
 using SciVacancies.WebApp.ViewModels.Base;
 
 namespace SciVacancies.WebApp.ViewModels
@@ -11,9 +13,8 @@ namespace SciVacancies.WebApp.ViewModels
         public Guid ResearcherGuid { get; set; }
         [HiddenInput]
         public Guid VacancyGuid { get; set; }
-
-
         public string VacancyCode { get; set; }
+
         public string PositionName { get; set; }
 
         public string ResearcherFullName { get; set; }
@@ -23,6 +24,9 @@ namespace SciVacancies.WebApp.ViewModels
 
         public string Phone { get; set; }
         public string ExtraPhone { get; set; }
+
+        public List<Education> Educations { get; set; }
+        public List<Publication> Publications { get; set; }
 
         public string ResearchActivity { get; set; }
         public string TeachingActivity { get; set; }

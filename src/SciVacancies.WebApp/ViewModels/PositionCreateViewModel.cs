@@ -174,10 +174,10 @@ namespace SciVacancies.WebApp.ViewModels
         [Required(ErrorMessage = "Укажите контактное лицо")]
         public string ContactName { get; set; }
         [Required(ErrorMessage = "Укажите E-mail")]
-        [EmailAddress(ErrorMessage = "Поле E-mail не содержит допустимый адрес электронной почты.")]
+        [EmailAddress(ErrorMessage = "Поле E-mail содержит не допустимый адрес электронной почты.")]
         public string ContactEmail { get; set; }
         [Required(ErrorMessage = "Укажите номер телефона")]
-        [Phone(ErrorMessage = "Поле Телефон не содержит допустимый номер телефона.")]
+        [Phone(ErrorMessage = "Поле Телефон содержит не допустимый номер телефона.")]
         public string ContactPhone { get; set; }
         public string ContactDetails { get; set; }
 

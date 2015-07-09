@@ -69,12 +69,22 @@
         </div>
 
         <div class="form-line mt27 form-row">
-            <label>Электронная почта</label>
+            <label>E-mail</label>
             <div class="b-r-form">
                 <div class="input">
                     <input asp-for="Email" type="text" />
                 </div>
                 <span asp-validation-for="Email"></span>
+            </div>
+        </div>
+
+        <div class="form-line mt27 form-row">
+            <label>Добавить E-mail</label>
+            <div class="b-r-form">
+                <div class="input">
+                    <input asp-for="ExtraEmail" type="text" />
+                </div>
+                <span asp-validation-for="ExtraEmail"></span>
             </div>
         </div>
         
@@ -85,6 +95,16 @@
                     <input asp-for="Phone" type="text" />
                 </div>
                 <span asp-validation-for="Phone"></span>
+            </div>
+        </div>
+
+        <div class="form-line form-row">
+            <label>Добавить телефон</label>
+            <div class="b-r-form">
+                <div class="input">
+                    <input asp-for="ExtraPhone" type="text" />
+                </div>
+                <span asp-validation-for="ExtraPhone"></span>
             </div>
         </div>
 
