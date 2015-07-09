@@ -28,9 +28,11 @@ namespace SciVacancies.WebApp.ViewModels
         /// Сохранить как черновик (true) или сохранить и опубликовать данные (false)
         /// </summary>
         [HiddenInput]
-        public bool ToPublish {
-            get { return Status == PositionStatus.Published; }
-            set { Status = value ? PositionStatus.Published : PositionStatus.InProcess; } }
+        public bool ToPublish { get; set; }
+        //{
+        //    get { return Status == PositionStatus.Published; }
+        //    set { Status = value ? PositionStatus.Published : PositionStatus.InProcess; }
+        //}
 
         public PositionStatus Status { get; set; }
 
@@ -50,30 +52,34 @@ namespace SciVacancies.WebApp.ViewModels
             PositionTypes = mediator.Send(new SelectAllPositionTypesQuery()).Select(c => new SelectListItem { Text = c.Title, Value = c.Guid.ToString() });
             ResearchDirections = mediator.Send(new SelectAllResearchDirectionsQuery()).Select(c => new SelectListItem { Text = c.Title, Value = c.Id.ToString() });
 
-            ContractTypes = new List<ContractType>{ ContractType.Permanent, ContractType.FixedTerm}
+            ContractTypes = new List<ContractType> { ContractType.Permanent, ContractType.FixedTerm }
                 .Select(c => new SelectListItem { Value = ((int)c).ToString(), Text = c.GetDescription() });
         }
 
         /// <summary>
         /// Guid должности из справочника
         /// </summary>
+        [Required(ErrorMessage = "Требуется выбрать Должность", AllowEmptyStrings = false)]
         public Guid PositionTypeGuid { get; set; }
         public IEnumerable<SelectListItem> PositionTypes { get; set; }
 
         /// <summary>
-        /// Должность (Полное наименование)
+        /// Должность
         /// </summary>
+        [Required(ErrorMessage = "Требуется заполнить поле Наименование")]
         public string Name { get; set; }
 
         /// <summary>
         /// Должность (Полное наименование)
         /// </summary>
+        [Required(ErrorMessage = "Требуется заполнить поле Полное наименование")]
         public string FullName { get; set; }
 
         /// <summary>
         /// Отрасль науки
         /// </summary>
         public string ResearchDirection { get; set; }
+        [Required(ErrorMessage = "Требуется выбрать Отрасль науки")]
         public int ResearchDirectionId { get; set; }
         public IEnumerable<SelectListItem> ResearchDirections { get; set; }
 
@@ -85,12 +91,15 @@ namespace SciVacancies.WebApp.ViewModels
         /// <summary>
         /// Задачи
         /// </summary>
+        [Required(ErrorMessage = "Требуется описать Задачи")]
         public string Tasks { get; set; }
 
         /// <summary>
         /// Зарплата в месяц
         /// </summary>
+        [Required(ErrorMessage = "Укажите минимальную зарплату")]
         public int SalaryFrom { get; set; }
+        [Required(ErrorMessage = "Укажите максимальную зарплату")]
         public int SalaryTo { get; set; }
         //public Currency SalaryCurrency { get; set; }
 
@@ -108,9 +117,10 @@ namespace SciVacancies.WebApp.ViewModels
         /// <summary>
         /// Тип трудового договора
         /// </summary>
-        public ContractType ContractType {
-            get { return (ContractType) ContractTypeValue; }
-            set { ContractTypeValue = (int) value; }
+        public ContractType ContractType
+        {
+            get { return (ContractType)ContractTypeValue; }
+            set { ContractTypeValue = (int)value; }
         }
         public IEnumerable<SelectListItem> ContractTypes { get; set; }
 
@@ -118,6 +128,25 @@ namespace SciVacancies.WebApp.ViewModels
         /// Срок трудового договора (для срочного договора)
         /// </summary>
         public decimal ContractTime { get; set; }
+
+        /// <summary>
+        /// Срок трудового договора (для срочного договора)
+        /// </summary>
+        [Range(minimum: 0, maximum: 100, ErrorMessage = "Вы ввели недопустимое значение. Допустимо от 0 до 100 лет.")]
+        public decimal ContractTimeYears
+        {
+            get { return Math.Truncate(ContractTime); }
+            set { ContractTime = ContractTime - Math.Truncate(ContractTime) + value; }
+        }
+        /// <summary>
+        /// Срок трудового договора (для срочного договора)
+        /// </summary>
+        [Range(minimum: 0, maximum: 11, ErrorMessage = "Вы ввели недопустимое значение. Допустимо от 0 до 11 месяцев.")]
+        public decimal ContractTimeMonths
+        {
+            get { return ContractTime - Math.Truncate(ContractTime); }
+            set { ContractTime = Math.Truncate(ContractTime) + value; }
+        }
 
         /// <summary>
         /// Социальный пакет
@@ -142,10 +171,13 @@ namespace SciVacancies.WebApp.ViewModels
         /// <summary>
         /// Лицо для получения дополнительных справок
         /// </summary>
+        [Required(ErrorMessage = "Укажите контактное лицо")]
         public string ContactName { get; set; }
-        [EmailAddress]
+        [Required(ErrorMessage = "Укажите E-mail")]
+        [EmailAddress(ErrorMessage = "Поле E-mail содержит не допустимый адрес электронной почты.")]
         public string ContactEmail { get; set; }
-        [Phone]
+        [Required(ErrorMessage = "Укажите номер телефона")]
+        [Phone(ErrorMessage = "Поле Телефон содержит не допустимый номер телефона.")]
         public string ContactPhone { get; set; }
         public string ContactDetails { get; set; }
 

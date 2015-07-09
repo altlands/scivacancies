@@ -11,6 +11,8 @@
 
 <h3>Новая заявка</h3>
 
+<div asp-validation-summary="ValidationSummary.All"></div>
+
 <form>
 
     <input asp-for="ResearcherGuid" />
@@ -66,7 +68,7 @@
                         <label>Добавить E-mail:</label>
                     </div>
                     <div class="right-cell">
-                        <input asp-for="ExtraEmail" class="big-input" />
+                        <input asp-for="ExtraEmail" class="disabled big-input" />
                     </div>
                 </div>
 
@@ -84,7 +86,7 @@
                         <label>Добавить телефон:</label>
                     </div>
                     <div class="right-cell">
-                        <input asp-for="ExtraPhone" class="big-input" />
+                        <input asp-for="ExtraPhone" class="disabled big-input" />
                     </div>
                 </div>
             </div>
@@ -98,7 +100,7 @@
                         <label>Город:</label>
                     </div>
                     <div class="right-cell">
-                        <input type="text" value="Челябинск" disabled class="disabled big-input" />
+                        <input type="text" value="Челябинск" class="disabled big-input" />
                     </div>
                 </div>
 
@@ -107,7 +109,7 @@
                         <label>ВУЗ:</label>
                     </div>
                     <div class="right-cell">
-                        <input type="text" value="ЧГАКИ" disabled class="disabled big-input" />
+                        <input type="text" value="ЧГАКИ" class="disabled big-input" />
                     </div>
                 </div>
 
@@ -116,7 +118,7 @@
                         <label>Факультет:</label>
                     </div>
                     <div class="right-cell">
-                        <input type="text" value="Информационных ресурсов и технологий" disabled class="disabled big-input" />
+                        <input type="text" value="Информационных ресурсов и технологий" class="disabled big-input" />
                     </div>
                 </div>
 
@@ -125,7 +127,7 @@
                         <label>Год окончания:</label>
                     </div>
                     <div class="right-cell">
-                        <input type="text" value="2000" disabled class="disabled big-input" />
+                        <input type="text" value="2000" class="disabled big-input" />
                     </div>
                 </div>
             </div>
@@ -139,7 +141,7 @@
                         <label>Исследовательская деятельность:</label>
                     </div>
                     <div class="right-cell">
-                        <textarea asp-for="ResearchActivity"></textarea>
+                        <textarea asp-for="ResearchActivity" class="disabled"></textarea>
                     </div>
                 </div>
 
@@ -148,7 +150,7 @@
                         <label>Преподавательская деятельность:</label>
                     </div>
                     <div class="right-cell">
-                        <textarea asp-for="TeachingActivity"></textarea>
+                        <textarea asp-for="TeachingActivity" class="disabled"></textarea>
                     </div>
                 </div>
 
@@ -157,7 +159,7 @@
                         <label>Прочая деятельность:</label>
                     </div>
                     <div class="right-cell">
-                        <textarea asp-for="OtherActivity"></textarea>
+                        <textarea asp-for="OtherActivity" class="disabled"></textarea>
                     </div>
                 </div>
             </div>
@@ -203,18 +205,18 @@
                         <ol class="content-list">
                             <li>
                                 Научная публикация поколения 2.0: перспектива или реальность?
-                                <div class="buttons">
+                                @*<div class="buttons">
                                     <span class="big-link-edit"></span><span class="big-link-remove"></span>
-                                </div>
+                                </div>*@
                             </li>
                             <li>
                                 Электронно-библиотечная система: перевод понятия на «библиотечный» английский
-                                <div class="buttons">
+                                @*<div class="buttons">
                                     <span class="big-link-edit"></span><span class="big-link-remove"></span>
-                                </div>
+                                </div>*@
                             </li>
                         </ol>
-                        <a class="link-add lk-icon italic link-add-field" href="#">Добавить публикацию</a>
+                        @*<a class="link-add lk-icon italic link-add-field" href="#">Добавить публикацию</a>*@
                     </div>
                 </div>
             </div>
@@ -228,12 +230,12 @@
                     </div>
                     <div class="right-cell">
                         <ul class="content-list">
-                            <li>
+                            @*<li>
                                 Rezume.doc
                                 <div class="buttons">
                                     <span class="big-link-remove"></span>
                                 </div>
-                            </li>
+                            </li>*@
                         </ul>
                         <a class="link-add lk-icon italic" href="#">Приложить файл</a>
                     </div>

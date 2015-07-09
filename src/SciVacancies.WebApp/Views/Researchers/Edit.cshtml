@@ -1,7 +1,22 @@
 ﻿@using System.Threading.Tasks
+@using SciVacancies.ReadModel.Core
 @using SciVacancies.WebApp.Controllers
+@using SciVacancies.WebApp.ViewModels
 @model SciVacancies.WebApp.ViewModels.ResearcherEditViewModel
 
+@{
+    //добавляем пустые элементы, чтобы использовать их разметку в качестве шаблона для новых элементов
+    Model.Educations = Model.Educations ?? new List<EducationEditViewModel>();
+    Model.Educations.Insert(0, new EducationEditViewModel());
+    Model.Publications = Model.Publications ?? new List<Publication>();
+    Model.Publications.Insert(0, new Publication());
+    Model.Interests = Model.Interests ?? new List<string>();
+    Model.Interests.Insert(0, string.Empty);
+
+    var years = Enumerable.Range(DateTime.Now.Year - 150, 150 + 1).OrderByDescending(c => c).Select(c => new SelectListItem { Text = c.ToString(), Value = c.ToString() });
+    var invisibleItemStyle = "display: none;";
+    string useStyle;
+}
 <div class="crumbs">
     <a href="/">Главная</a><span class="separator">/</span>
     <a asp-controller="researchers" asp-action="account">Личная карточка</a><span class="separator">/</span>
@@ -13,14 +28,21 @@
 @Component.Invoke("AccountTabs", typeof(ResearchersController))
 
 <h4>@ViewBag.Title</h4>
+
+<div asp-validation-summary="ValidationSummary.All"></div>
+
 <form asp-controller="researchers" asp-action="edit" method="POST" class="l-information e-information b-edit">
     <div class="row">
         <div class="bold mb20">Общая информация</div>
         <a href="#" class="link-upload fs13">Загрузить данные из системы «Карта науки»</a>
+        <span style="color: red;">не реализовано</span>
         <div class="table-form">
             <div class="table-row mb15">
                 <div class="left-cell">
-                    <label class="mb10">Ваше фото</label>
+                    <label class="mb10">
+                        Ваше фото
+                        <span style="color: red;">не реализовано</span>
+                    </label>
                     <a href="#" class="link-upload fs13">Загрузить фото</a>
                     <div class="description mt10">
                         Выберите изображение размером<br /> не более 500 кБ<br />Рекомендуемое соотношение сторон – 3:4
@@ -37,7 +59,17 @@
                     <label>Фамилия</label>
                 </div>
                 <div class="right-cell">
-                    <input type="text" value="Глаголев" />
+                    <input asp-for="SecondName" />
+                    <span asp-validation-for="SecondName"></span>
+                </div>
+            </div>
+            <div class="table-row form-row">
+                <div class="left-cell">
+                    <label>Прежняя фамилия<br />(необязательно)</label>
+                </div>
+                <div class="right-cell">
+                    <input asp-for="PreviousSecondName" class="big-input" />
+                    <span asp-validation-for="PreviousSecondName"></span>
                 </div>
             </div>
             <div class="table-row form-row">
@@ -45,7 +77,8 @@
                     <label>Имя</label>
                 </div>
                 <div class="right-cell">
-                    <input type="text" value="Виктор" />
+                    <input asp-for="FirstName" class="big-input" />
+                    <span asp-validation-for="FirstName"></span>
                 </div>
             </div>
             <div class="table-row form-row">
@@ -53,7 +86,8 @@
                     <label>Отчество</label>
                 </div>
                 <div class="right-cell">
-                    <input type="text" value="Александрович" />
+                    <input asp-for="Patronymic" class="big-input" />
+                    <span asp-validation-for="Patronymic"></span>
                 </div>
             </div>
             <div class="table-row form-row">
@@ -61,7 +95,8 @@
                     <label>Фамилия (англ.)</label>
                 </div>
                 <div class="right-cell">
-                    <input type="text" value="" />
+                    <input asp-for="SecondNameEng" class="big-input" />
+                    <span asp-validation-for="SecondNameEng"></span>
                 </div>
             </div>
             <div class="table-row form-row">
@@ -69,7 +104,8 @@
                     <label>Имя (англ.)</label>
                 </div>
                 <div class="right-cell">
-                    <input type="text" value="" />
+                    <input asp-for="FirstNameEng" class="big-input" />
+                    <span asp-validation-for="FirstNameEng"></span>
                 </div>
             </div>
             <div class="table-row form-row">
@@ -77,37 +113,45 @@
                     <label>Отчество (англ.)</label>
                 </div>
                 <div class="right-cell">
-                    <input type="text" value="" />
+                    <input asp-for="PatronymicEng" class="big-input" />
+                    <span asp-validation-for="PatronymicEng"></span>
                 </div>
             </div>
             <div class="table-row form-row">
                 <div class="left-cell">
-                    <label>Прежняя фамилия</label>
+                    <label>Прежняя фамилия (англ.,)<br />(необязательно)</label>
                 </div>
                 <div class="right-cell">
-                    <input type="text" value="" />
+                    <input asp-for="PreviousSecondNameEng" class="big-input" />
+                    <span asp-validation-for="PreviousSecondNameEng"></span>
                 </div>
             </div>
             <div class="table-row form-row">
                 <div class="left-cell">
                     <label>Год рождения</label>
                 </div>
-                <div class="right-cell">
-                    <select>
-                        <option selected>1931</option>
-                        <option selected>1932</option>
-                        <option selected>1933</option>
-                        <option selected>1934</option>
-                    </select>
+                <div class="right-cell b-r-form w120">
+                    <select asp-for="BirthYear"
+                            asp-items="years"></select>
+                    <span asp-validation-for="BirthYear"></span>
                 </div>
             </div>
             <div class="table-row form-row">
                 <div class="left-cell">
-                    <label>Электронная почта</label>
+                    <label>E-mail</label>
                 </div>
                 <div class="right-cell">
-                    <input type="text" value="vaglagolev@pisem.net" />
-                    <a href="#" class="link-add lk-icon italic link-add-field">Добавить дополнительный адрес</a>
+                    <input asp-for="Email" class="big-input" />
+                    <span asp-validation-for="Email"></span>
+                </div>
+            </div>
+            <div class="table-row form-row">
+                <div class="left-cell">
+                    <label>Добавить E-mail</label>
+                </div>
+                <div class="right-cell">
+                    <input asp-for="ExtraEmail" class="big-input" />
+                    <span asp-validation-for="ExtraEmail"></span>
                 </div>
             </div>
             <div class="table-row form-row">
@@ -115,8 +159,17 @@
                     <label>Контактный телефон</label>
                 </div>
                 <div class="right-cell">
-                    <input type="text" value="+7 (495) 123-4567" />
-                    <a href="#" class="link-add lk-icon italic link-add-field">Добавить дополнительный номер</a>
+                    <input asp-for="Phone" class="big-input" />
+                    <span asp-validation-for="Phone"></span>
+                </div>
+            </div>
+            <div class="table-row form-row">
+                <div class="left-cell">
+                    <label>Добавить телефон</label>
+                </div>
+                <div class="right-cell">
+                    <input asp-for="ExtraPhone" class="big-input" />
+                    <span asp-validation-for="ExtraPhone"></span>
                 </div>
             </div>
             <div class="table-row form-row mt17">
@@ -124,7 +177,9 @@
                     <label>Гражданство</label>
                 </div>
                 <div class="right-cell">
-                    <a href="#" class="link-add lk-icon italic link-add-field">Добавить гражданство</a>
+                    <!--<select asp-for="Nationality"
+                                asp-items=""></select>
+                    <span asp-validation-for="Nationality"></span>-->
                 </div>
             </div>
             <div class="table-row form-row mt23">
@@ -147,129 +202,169 @@
     </div>
     <div class="row mb13">
         <div class="bold">Образование</div>
-        <div class="table-form mt15">
-            <div class="table-row form-row">
-                <div class="left-cell">
-                    <label>Город:</label>
+        <div class="table-form mt15" data-innercount="@(Model.Educations.Count+1)">
+            @for (var i = 0; i < Model.Educations.Count; i++)
+            {
+                useStyle = i == 0 ? invisibleItemStyle : string.Empty;
+                <text>
+                <div class="property-list-item" style="@useStyle" data-list-template="@(i == 0 ? "true" : "false")">
+                    <input type="hidden" asp-for="Educations[i].Guid" />
+                    <input type="hidden" name="Educations.Index" value="@i" />
+                    <div class="table-row form-row">
+                        <div class="left-cell">
+                            <label>Город:</label>
+                        </div>
+                        <div class="right-cell">
+                            <input asp-for="Educations[i].City" class="big-input" />
+                            <span asp-validation-for="Educations[i].City"></span>
+                        </div>
+                    </div>
+                    <div class="table-row form-row">
+                        <div class="left-cell">
+                            <label>ВУЗ:</label>
+                        </div>
+                        <div class="right-cell">
+                            <input asp-for="Educations[i].UniversityShortName" class="big-input" />
+                            <span asp-validation-for="Educations[i].UniversityShortName"></span>
+                        </div>
+                    </div>
+                    <div class="table-row form-row">
+                        <div class="left-cell">
+                            <label>Факультет:</label>
+                        </div>
+                        <div class="right-cell">
+                            <input asp-for="Educations[i].FacultyShortName" class="big-input" />
+                            <span asp-validation-for="Educations[i].FacultyShortName"></span>
+                        </div>
+                    </div>
+                    <div class="table-row form-row">
+                        <div class="left-cell">
+                            <label>Год окончания:</label>
+                        </div>
+                        <div class="right-cell b-r-form w120">
+                            <select asp-for="Educations[i].GraduationYear"
+                                    asp-items="years"></select>
+                            <span asp-validation-for="Educations[i].GraduationYear"></span>
+                        </div>
+                    </div>
+                    <div class="table-row form-row">
+                        <div class="left-cell">
+                            <label>Учёная степень:</label>
+                        </div>
+                        <div class="right-cell">
+                            <input asp-for="Educations[i].Degree" class="big-input" />
+                            <span asp-validation-for="Educations[i].Degree"></span>
+                        </div>
+                    </div>
+                    <br />
+                    <div class="table-row form-row">
+                        <div class="right-cell">
+                            <button class="btn btn-warning btn-sm" onclick="return removeItemFromList(this);">Удалить</button>
+                        </div>
+                    </div>
+                    <hr />
                 </div>
-                <div class="right-cell">
-                    <input type="text" value="Челябинск" class="big-input" />
-                </div>
-            </div>
-            <div class="table-row form-row">
-                <div class="left-cell">
-                    <label>ВУЗ:</label>
-                </div>
-                <div class="right-cell">
-                    <input type="text" value="ЧГАКИ" class="big-input" />
-                </div>
-            </div>
-            <div class="table-row form-row">
-                <div class="left-cell">
-                    <label>Факультет:</label>
-                </div>
-                <div class="right-cell">
-                    <input type="text" value="Информационных ресурсов и технологий" class="big-input" />
-                </div>
-            </div>
-            <div class="table-row form-row">
-                <div class="left-cell">
-                    <label>Год окончания:</label>
-                </div>
-                <div class="right-cell">
-                    <input type="text" value="2000" class="big-input" />
-                </div>
-            </div>
+                </text>
+            }
             <div class="table-row form-row mt17">
                 <div class="left-cell">
                     <label></label>
                 </div>
                 <div class="right-cell">
-                    <a href="#" class="link-add lk-icon italic link-add-field">Добавить Образование</a>
+                    <a href="#" onclick="return addNewItemToList(this, 'Educations')" class="link-add lk-icon italic link-add-field">Добавить Образование</a>
                 </div>
             </div>
+
         </div>
     </div>
-    <div class="row mb13">
-        <div class="bold">Опыт работы</div>
-        <div class="table-form mt15">
-            <div class="table-row form-row">
-                <div class="left-cell">
-                    <label>Исследовательская деятельность:</label>
+    @*<div class="row mb13">
+            <div class="bold">Опыт работы</div>
+            <div class="table-form mt15">
+                <div class="table-row form-row">
+                    <div class="left-cell">
+                        <label>Исследовательская деятельность:</label>
+                    </div>
+                    <div class="right-cell">
+                        <textarea asp-for=""></textarea>
+                        <span asp-validation-for=""></span>
+                    </div>
                 </div>
-                <div class="right-cell">
-                    <textarea></textarea>
+                <div class="table-row form-row">
+                    <div class="left-cell">
+                        <label>Преподавательская деятельность:</label>
+                    </div>
+                    <div class="right-cell">
+                        <textarea asp-for=""></textarea>
+                        <span asp-validation-for=""></span>
+                    </div>
+                </div>
+                <div class="table-row form-row">
+                    <div class="left-cell">
+                        <label>Прочая деятельность:</label>
+                    </div>
+                    <div class="right-cell">
+                        <textarea asp-for=""></textarea>
+                        <span asp-validation-for=""></span>
+                    </div>
+                </div>
+                <div class="table-row form-row mt17">
+                    <div class="left-cell">
+                        <label></label>
+                    </div>
+                    <div class="right-cell">
+                        <a href="#" class="link-add lk-icon italic link-add-field">Добавить Опыт работы</a>
+                    </div>
                 </div>
             </div>
-            <div class="table-row form-row">
-                <div class="left-cell">
-                    <label>Преподавательская деятельность:</label>
-                </div>
-                <div class="right-cell">
-                    <textarea></textarea>
-                </div>
-            </div>
-            <div class="table-row form-row">
-                <div class="left-cell">
-                    <label>Прочая деятельность:</label>
-                </div>
-                <div class="right-cell">
-                    <textarea></textarea>
-                </div>
-            </div>
-            <div class="table-row form-row mt17">
-                <div class="left-cell">
-                    <label></label>
-                </div>
-                <div class="right-cell">
-                    <a href="#" class="link-add lk-icon italic link-add-field">Добавить Опыт работы</a>
-                </div>
-            </div>
-        </div>
-    </div>
+        </div>*@
     <div class="row mb6">
         <div class="bold">Научная деятельность<br /> и достижения</div>
         <div class="table-form mt15">
-            <div class="table-row form-row">
-                <div class="left-cell">
-                    <label>Ученая степень:</label>
+            @*<div class="table-row form-row">
+                    <div class="left-cell">
+                        <label>Ученая степень:</label>
+                    </div>
+                    <div class="right-cell">
+                        <input asp-for="" class="big-input"/>
+                        <span asp-validation-for=""></span>
+                    </div>
                 </div>
-                <div class="right-cell">
-                    <input type="text" value="без степени" class="big-input" />
+                <div class="table-row form-row">
+                    <div class="left-cell">
+                        <label>Ученые звания:</label>
+                    </div>
+                    <div class="right-cell">
+                        <input asp-for="" class="big-input"/>
+                        <span asp-validation-for=""></span>
+                    </div>
                 </div>
-            </div>
-            <div class="table-row form-row">
-                <div class="left-cell">
-                    <label>Ученые звания:</label>
+                <div class="table-row form-row">
+                    <div class="left-cell">
+                        <label>Награды:</label>
+                    </div>
+                    <div class="right-cell">
+                        <input asp-for="" class="big-input"/>
+                        <span asp-validation-for=""></span>
+                    </div>
                 </div>
-                <div class="right-cell">
-                    <input type="text" value="без звания" class="big-input" />
+                <div class="table-row form-row">
+                    <div class="left-cell">
+                        <label>Членство в профессиональных сообществах:</label>
+                    </div>
+                    <div class="right-cell">
+                        <textarea asp-for=""></textarea>
+                        <span asp-validation-for=""></span>
+                    </div>
                 </div>
-            </div>
-            <div class="table-row form-row">
-                <div class="left-cell">
-                    <label>Награды:</label>
-                </div>
-                <div class="right-cell">
-                    <input type="text" value="" class="big-input" />
-                </div>
-            </div>
-            <div class="table-row form-row">
-                <div class="left-cell">
-                    <label>Членство в профессиональных сообществах:</label>
-                </div>
-                <div class="right-cell">
-                    <textarea></textarea>
-                </div>
-            </div>
-            <div class="table-row form-row">
-                <div class="left-cell">
-                    <label>Конференции, симпозиумы, конгрессы:</label>
-                </div>
-                <div class="right-cell">
-                    <textarea></textarea>
-                </div>
-            </div>
+                <div class="table-row form-row">
+                    <div class="left-cell">
+                        <label>Конференции, симпозиумы, конгрессы:</label>
+                    </div>
+                    <div class="right-cell">
+                        <textarea asp-for=""></textarea>
+                        <span asp-validation-for=""></span>
+                    </div>
+                </div>*@
             <div class="table-row form-row">
                 <div class="left-cell">
                     <label>Публикации:</label>
@@ -296,7 +391,7 @@
     </div>
     <div class="row">
         <div class="ctr-buttons button-align mt12 mb5">
-            <input type="submit" class="save-button" value="Сохранить изменения"/>
+            <input type="submit" class="save-button" onclick=" return beforeFormSubmit(this);" value="Сохранить изменения" />
             <a asp-controller="researchers" asp-action="account" class="close-button">Закрыть</a>
         </div>
     </div>

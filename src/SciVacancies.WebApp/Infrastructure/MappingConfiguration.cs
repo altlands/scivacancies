@@ -35,12 +35,16 @@ namespace SciVacancies.WebApp.Infrastructure
 
             /*Researcher*/
 
-            //Создание исследователя
             Mapper.CreateMap<Researcher, ResearcherCreated>();
-            //Обновление исследователя
             Mapper.CreateMap<Researcher, ResearcherDataModel>();
-            //Информация об исследователе
+            Mapper.CreateMap<ResearcherEditViewModel, ResearcherDataModel>();
             Mapper.CreateMap<Researcher, ResearcherDetailsViewModel>();
+            Mapper.CreateMap<Researcher, ResearcherEditViewModel>();
+
+            //education
+
+            Mapper.CreateMap<Education, EducationEditViewModel>();
+            Mapper.CreateMap<EducationEditViewModel, SciVacancies.Domain.Core.Education>();
 
 
             /*Vacancy*/
@@ -50,6 +54,7 @@ namespace SciVacancies.WebApp.Infrastructure
             Mapper.CreateMap<Position, VacancyDataModel>();
             Mapper.CreateMap<PositionCreateViewModel, PositionDataModel>();
             Mapper.CreateMap<Position, PositionEditViewModel>();
+            Mapper.CreateMap<Position, PositionCreateViewModel>();
             Mapper.CreateMap<PositionEditViewModel, Position>();
 
             //vacancy

@@ -30,6 +30,7 @@ namespace SciVacancies.WebApp.Controllers
                 Data = new AccountResearcherRegisterViewModel
                 {
                     Email = "researcher1@mailer.org",
+                    Phone = "8-333-22-22",
                     UserName = "researcher1",
                     FirstName = "Генрих",
                     SecondName = "Дубощит",
@@ -37,6 +38,7 @@ namespace SciVacancies.WebApp.Controllers
                     FirstNameEng = "Genrih",
                     SecondNameEng = "Pupkin",
                     PatronymicEng = "Ivanovich",
+                    Education = "Получено высшее образование с 2000 по 2005гг.",
                     BirthYear = DateTime.Now.AddYears(-50).Year
                 }
             };

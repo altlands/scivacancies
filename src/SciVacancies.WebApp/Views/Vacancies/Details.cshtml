@@ -24,57 +24,58 @@
 
     <table class="table request-table">
         <thead>
-        <tr>
-            <th>
-                <div class="inline-block">
-                    <img src="/images/icons/arrow-bottom-tab.png" class="va-middle"/>
-                </div>
-                <div class="inline-block ml6 va-middle">№</div>
-            </th>
-            <th>
-                <div class="inline-block">
-                    <img src="/images/icons/tab-head.png" class="va-middle"/>
-                </div>
-                <div class="inline-block ml6 va-middle">Дата подачи заявки</div>
-            </th>
-            <th>
-                <div class="pl21 va-middle lh30">Фамилия, имя, отчество</div>
-            </th>
-            <th>
-                <div class="pl21 va-middle">Победители</div>
-            </th>
-            <th>
-                <div class="pl21 va-middle">Статус</div>
-            </th>
-            <th>
-                <div class="pl21 va-middle">Действия</div>
-            </th>
-        </tr>
+            <tr>
+                <th>
+                    <div class="inline-block">
+                        <img src="images/icons/arrow-bottom-tab.png" class="va-middle" />
+                    </div>
+                    <div class="inline-block ml6 va-middle">
+                        №
+                    </div>
+                </th>
+                <th>
+                    <div class="inline-block">
+                        <img src="images/icons/tab-head.png" class="va-middle" />
+                    </div>
+                    <div class="inline-block ml6 va-middle">Дата подачи заявки</div>
+                </th>
+                <th>
+                    Фамилия, имя, отчество
+                </th>
+                <th class="align-center">
+                    Победители
+                </th>
+                <th class="align-center">
+                    Действия
+                </th>
+            </tr>
         </thead>
         <tbody>
 
-        @if (Model.Applications != null)
-        {
-            foreach (var item in Model.Applications.Items.Where(c => c.Status != VacancyApplicationStatus.Removed && c.Status != VacancyApplicationStatus.Cancelled && c.Status != VacancyApplicationStatus.InProcess))
+            @if (Model.Applications != null)
             {
-                <text>
+                foreach (var item in Model.Applications.Items.Where(c => c.Status != VacancyApplicationStatus.Removed && c.Status != VacancyApplicationStatus.Cancelled && c.Status != VacancyApplicationStatus.InProcess))
+                {
+                    <text>
                     <tr>
                         <td>@Model.Applications.Items.IndexOf(item)</td>
                         <td>@(item.SentDate?.ToLocalVacancyString())</td>
-                        <td>@item.Researcher.SecondName<br/>@item.Researcher.FullName @item.Researcher.Patronymic</td>
-                        <td class="align-center pl0">
-                            @if (Model.WinnerGuid == item.Guid)
-                            {
-                                <text>
-                                    Победитель
-                                </text>
-                            }
-                            @if (Model.PretenderGuid == item.Guid)
-                            {
-                                <text>
-                                    Второе место
-                                </text>
-                            }
+                        <td class="pl0">>@item.Researcher.SecondName<br />@item.Researcher.FullName @item.Researcher.Patronymic</td>
+                        <td class="pl0 align-center">
+                            <span class="status-request win">
+                                @if (Model.WinnerGuid == item.Guid)
+                                {
+                                    <text>
+                                    1
+                                    </text>
+                                }
+                                @if (Model.PretenderGuid == item.Guid)
+                                {
+                                    <text>
+                                    2
+                                    </text>
+                                }
+                            </span>
                         </td>
                         <td>
                             @if (item.Status != VacancyApplicationStatus.Applied)
@@ -88,9 +89,9 @@
                             <a asp-controller="applications" asp-action="print" asp-route-id="@item.Guid" class="print-td-icon" title="Распечатать Заявку"></a>
                         </td>
                     </tr>
-                </text>
+                    </text>
+                }
             }
-        }
 
         </tbody>
     </table>

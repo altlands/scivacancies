@@ -43,68 +43,6 @@ namespace SciVacancies.WebApp.Controllers
             return View(model);
         }
 
-        [PageTitle("Изменить вакансию")]
-        [BindOrganizationIdFromClaims]
-        public IActionResult Edit(Guid id, Guid organizationGuid)
-        {
-            if (id == Guid.Empty)
-                throw new ArgumentNullException(nameof(id));
-            if (organizationGuid == Guid.Empty)
-                throw new ArgumentNullException(nameof(organizationGuid));
-
-            var preModel = _mediator.Send(new SinglePositionQuery { PositionGuid = id });
-
-            if (preModel.OrganizationGuid != organizationGuid)
-                throw new Exception("Вы не можете изменять вакансии других организаций");
-
-            if (preModel.Status != PositionStatus.InProcess)
-                throw new Exception($"Вы не можете изменить вакансию с текущим статусом: {preModel.Status.GetDescription()}");
-
-            var model = Mapper.Map<PositionEditViewModel>(preModel);
-            model.InitDictionaries(_mediator);
-
-            return View(model);
-        }
-
-        [PageTitle("Изменить вакансию")]
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        [BindOrganizationIdFromClaims("claimedUserGuid")]
-        public IActionResult Edit(PositionEditViewModel model, Guid claimedUserGuid)
-        {
-            if (claimedUserGuid == Guid.Empty)
-                throw new ArgumentNullException(nameof(claimedUserGuid));
-
-            if (model.OrganizationGuid != claimedUserGuid)
-                throw new Exception("Вы не можете изменять вакансии других организаций");
-
-            if (ModelState.IsValid)
-            {
-                var positionDataModel = Mapper.Map<PositionDataModel>(model);
-
-                if (positionDataModel.Status != PositionStatus.InProcess)
-                    throw new Exception($"Вы не можете изменить вакансию с текущим статусом: {model.Status.GetDescription()}");
-
-                var positionGuid = _mediator.Send(new UpdatePositionCommand { PositionGuid = model.Guid, OrganizationGuid = model.OrganizationGuid, Data = positionDataModel });
-
-                if (!model.ToPublish)
-                    return RedirectToAction("details", "positions", new {id = positionGuid});
-
-                var vacancyDataModel = Mapper.Map<VacancyDataModel>(positionDataModel);
-                vacancyDataModel.OrganizationName = _mediator.Send(new SingleOrganizationQuery { OrganizationGuid = model.OrganizationGuid }).Name;
-
-                var vacancyGuid = _mediator.Send(new PublishVacancyCommand
-                {
-                    OrganizationGuid = model.OrganizationGuid,
-                    PositionGuid = model.Guid,
-                    Data = vacancyDataModel
-                });
-                return RedirectToAction("details", "vacancies", new { id = vacancyGuid });
-            }
-            model.InitDictionaries(_mediator);
-            return View(model);
-        }
-
         [PageTitle("Вакансия удалена")]
         [BindOrganizationIdFromClaims]
         public IActionResult Delete(Guid id, Guid organizationGuid)
@@ -160,6 +98,14 @@ namespace SciVacancies.WebApp.Controllers
             });
 
             return RedirectToAction("vacancies", "organizations");
+        }
+
+        [PageTitle("Копировать вакансию")]
+        public IActionResult Copy(Guid id, Guid oreganizationGuid)
+        {
+            //TODO: Positions -> Copy : реализовать копирование вакансии
+
+            return null;
         }
     }
 
