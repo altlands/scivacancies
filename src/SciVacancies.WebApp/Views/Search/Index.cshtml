@@ -18,7 +18,7 @@
                 </div>
 
                 <div class="cat-filter">
-                    <div class="title">Регион</div>
+                    <div class="title"><span>Регион</span></div>
                     <ul class="list-checkboxes">
                         <checkboxing items="ViewBag.FilterSource.Regions"
                                      values="Model.Regions"
@@ -32,7 +32,7 @@
                 </div>
 
                 <div class="cat-filter">
-                    <div class="title">ФОИВ</div>
+                    <div class="title"><span>ФОИВ</span></div>
                     <ul class="list-checkboxes">
                         <checkboxing items="ViewBag.FilterSource.Foivs"
                                      values="Model.Foivs"
@@ -44,7 +44,7 @@
                 </div>
 
                 <div class="cat-filter">
-                    <div class="title">Научное направление</div>
+                    <div class="title"><span>Научное направление</span></div>
                     <ul class="list-checkboxes">
                         <checkboxing items="ViewBag.FilterSource.ResearchDirections"
                                      values="Model.ResearchDirections"
@@ -56,7 +56,7 @@
                 </div>
 
                 <div class="cat-filter">
-                    <div class="title">Категория должности</div>
+                    <div class="title"><span>Научное направление</span></div>
                     <ul class="list-checkboxes">
                         <checkboxing items="ViewBag.FilterSource.Positions"
                                      values="Model.Positions"
@@ -68,19 +68,7 @@
                 </div>
 
                 <div class="cat-filter">
-                    <div class="title">Организация</div>
-                    <ul class="list-checkboxes">
-                        <checkboxing items="ViewBag.FilterSource.Organizations"
-                                     values="Model.Organizations"
-                                     property="Organizations"
-                                     showcount="10"></checkboxing>
-                    </ul>
-                    <span class="small-icon icon-sm-eye show-all-list"><span>Показать все</span></span>
-                    <span class="small-icon icon-sm-eye hide-unselected" style="display: none;"><span>Только выбранные</span></span>
-                </div>
-
-                <div class="cat-filter">
-                    <div class="title">Заработная плата</div>
+                    <div class="title"><span>Заработная плата</span></div>
                     <div>
                         От <input type="text" asp-for="SalaryMin" class="small-input" />
                     </div>
@@ -90,7 +78,7 @@
                 </div>
 
                 <div class="cat-filter">
-                    <div class="title">Статус вакансии</div>
+                    <div class="title"><span>Статус вакансии</span></div>
                     <ul class="list-checkboxes">
                         <checkboxing items="ViewBag.FilterSource.VacancyStates"
                                      values="Model.VacancyStates"

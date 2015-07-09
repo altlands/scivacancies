@@ -32,7 +32,7 @@
             </th>
             <th>
                 <div class="inline-block">
-                    <img src="/images/icons/tab-head.png" class="va-middle" />
+                    <!-- <img src="/images/icons/tab-head.png" class="va-middle"/> -->
                 </div>
                 <div class="inline-block ml6 va-middle">ID конкурса</div>
             </th>
@@ -41,7 +41,7 @@
             </th>
             <th>
                 <div class="inline-block">
-                    <img src="/images/icons/tab-head.png" class="va-middle" />
+                    <!-- <img src="/images/icons/tab-head.png" class="va-middle"/> -->
                 </div>
                 <div class="inline-block ml6 va-middle">
                     Дата<br /> создания
@@ -49,7 +49,7 @@
             </th>
             <th>
                 <div class="inline-block">
-                    <img src="/images/icons/tab-head.png" class="va-middle" />
+                    <!-- <img src="/images/icons/tab-head.png" class="va-middle"/> -->
                 </div>
                 <div class="inline-block ml6 va-middle">
                     Дата<br />публикации
@@ -57,7 +57,7 @@
             </th>
             <th>
                 <div class="inline-block">
-                    <img src="/images/icons/tab-head.png" class="va-middle" />
+                    <!-- <img src="/images/icons/tab-head.png" class="va-middle"/> -->
                 </div>
                 <div class="inline-block ml6 va-middle">
                     Статус<br />вакансии
@@ -84,6 +84,8 @@
                     <td></td>
                     <td><span class="status  @item.Status.GetHtmlClass()">@item.Status.GetDescription() <!--Объявлен--></span></td>
                     <td>
+
+                        <a asp-controller="positions" asp-action="copy" asp-route-id="@item.Guid" class="pages-td-icon" title="Копировать вакансию"></a>
                         <a asp-controller="positions" asp-action="details" asp-route-id="@item.Guid" class="view-td-icon" title="Просмотр вакансии"></a>
                         <a asp-controller="vacancies" asp-action="edit" asp-route-id="@item.Guid" class="edit-td-icon" title="Изменить вакансию"></a>
                         <a asp-controller="positions" asp-action="delete" asp-route-id="@item.Guid" onclick="javascript: return confirm('Вы уверены что хотите удалить эту вакансию?');" class="close-td-icon" title="Удалить вакансию"></a>
@@ -111,6 +113,7 @@
                     <td>@{item.DateStart.ToLocalVacancyString(); }</td>
                     <td><span class="status @item.Status.GetHtmlClass()">@item.Status.GetDescription()</span></td>
                     <td>
+                        <a asp-controller="vacancies" asp-action="copy" asp-route-id="@item.Guid" class="pages-td-icon" title="Копировать вакансию"></a>
                         <a asp-controller="vacancies" asp-action="details" asp-route-id="@item.Guid" class="view-td-icon" title="Просмотр вакансии"></a>
                         @if (item.Status == VacancyStatus.Published || item.Status == VacancyStatus.AppliesAcceptance)
                         {

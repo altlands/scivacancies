@@ -431,5 +431,13 @@ namespace SciVacancies.WebApp.Controllers
             return RedirectToAction("vacancies", "organizations");
         }
 
+        [PageTitle("Копировать вакансию")]
+        public IActionResult Copy(Guid id, Guid oreganizationGuid)
+        {
+            //TODO: Vacancies -> Copy : реализовать копирование вакансии
+
+            return null;
+        }
+
     }
 }

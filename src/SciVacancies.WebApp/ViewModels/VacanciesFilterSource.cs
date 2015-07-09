@@ -47,13 +47,10 @@ namespace SciVacancies.WebApp.ViewModels
                     mediator.Send(new SelectAllResearchDirectionsQuery())
                         .Select(c => new SelectListItem { Value = c.Id.ToString(), Text = c.Title });
 
-                //Positions =
-                //    _readModelService.SelectPositionTypes()
-                //        .Select(c => new SelectListItem { Value = c.Id.ToString(), Text = c.Title }); ;
+                Positions =
+                    mediator.Send(new SelectAllPositionTypesQuery())
+                        .Select(c => new SelectListItem { Value = c.Id.ToString(), Text = c.Title }); ;
 
-                Organizations =
-                    mediator.Send(new SelectOrganizationsForAutocompleteQuery {Query = "*", Take = 500})
-                        .Select(c => new SelectListItem { Value = c.Guid.ToString(), Text = c.Name });
             }
         }
 
@@ -64,7 +61,6 @@ namespace SciVacancies.WebApp.ViewModels
         public IEnumerable<SelectListItem> Foivs;
         public IEnumerable<SelectListItem> ResearchDirections;
         public IEnumerable<SelectListItem> Positions;
-        public IEnumerable<SelectListItem> Organizations;
         public IEnumerable<SelectListItem> VacancyStates;
         public List<int> PageSize;
     }
