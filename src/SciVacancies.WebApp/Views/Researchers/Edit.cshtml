@@ -109,23 +109,23 @@
                 </div>
             </div>
             <div class="table-row form-row">
-                <div class="left-cell">
-                    <label>Отчество (англ.)</label>
-                </div>
-                <div class="right-cell">
-                    <input asp-for="PatronymicEng" class="big-input" />
-                    <span asp-validation-for="PatronymicEng"></span>
-                </div>
-            </div>
-            <div class="table-row form-row">
-                <div class="left-cell">
-                    <label>Прежняя фамилия (англ.,)<br />(необязательно)</label>
-                </div>
-                <div class="right-cell">
-                    <input asp-for="PreviousSecondNameEng" class="big-input" />
-                    <span asp-validation-for="PreviousSecondNameEng"></span>
-                </div>
-            </div>
+        <div class="left-cell">
+            <label>Отчество (англ.)</label>
+        </div>
+        <div class="right-cell">
+            <input asp-for="PatronymicEng" class="big-input" />
+            <span asp-validation-for="PatronymicEng"></span>
+        </div>
+    </div>
+    <div class="table-row form-row">
+        <div class="left-cell">
+            <label>Прежняя фамилия (англ.,)<br />(необязательно)</label>
+        </div>
+        <div class="right-cell">
+            <input asp-for="PreviousSecondNameEng" class="big-input" />
+            <span asp-validation-for="PreviousSecondNameEng"></span>
+        </div>
+    </div>
             <div class="table-row form-row">
                 <div class="left-cell">
                     <label>Год рождения</label>
@@ -155,23 +155,23 @@
                 </div>
             </div>
             <div class="table-row form-row">
-                <div class="left-cell">
-                    <label>Контактный телефон</label>
-                </div>
-                <div class="right-cell">
-                    <input asp-for="Phone" class="big-input" />
-                    <span asp-validation-for="Phone"></span>
-                </div>
-            </div>
-            <div class="table-row form-row">
-                <div class="left-cell">
-                    <label>Добавить телефон</label>
-                </div>
-                <div class="right-cell">
-                    <input asp-for="ExtraPhone" class="big-input" />
-                    <span asp-validation-for="ExtraPhone"></span>
-                </div>
-            </div>
+        <div class="left-cell">
+            <label>Контактный телефон</label>
+        </div>
+        <div class="right-cell">
+            <input asp-for="Phone" class="big-input" />
+            <span asp-validation-for="Phone"></span>
+        </div>
+    </div>
+    <div class="table-row form-row">
+        <div class="left-cell">
+            <label>Добавить телефон</label>
+        </div>
+        <div class="right-cell">
+            <input asp-for="ExtraPhone" class="big-input" />
+            <span asp-validation-for="ExtraPhone"></span>
+        </div>
+    </div>
             <div class="table-row form-row mt17">
                 <div class="left-cell">
                     <label>Гражданство</label>
@@ -210,7 +210,7 @@
                 <div class="property-list-item" style="@useStyle" data-list-template="@(i == 0 ? "true" : "false")">
                     <input type="hidden" asp-for="Educations[i].Guid" />
                     <input type="hidden" name="Educations.Index" value="@i" />
-                    <div class="table-row form-row">
+                   <div class="table-row form-row">
                         <div class="left-cell">
                             <label>Город:</label>
                         </div>
@@ -219,51 +219,51 @@
                             <span asp-validation-for="Educations[i].City"></span>
                         </div>
                     </div>
-                    <div class="table-row form-row">
-                        <div class="left-cell">
-                            <label>ВУЗ:</label>
-                        </div>
-                        <div class="right-cell">
-                            <input asp-for="Educations[i].UniversityShortName" class="big-input" />
-                            <span asp-validation-for="Educations[i].UniversityShortName"></span>
-                        </div>
-                    </div>
-                    <div class="table-row form-row">
-                        <div class="left-cell">
-                            <label>Факультет:</label>
-                        </div>
-                        <div class="right-cell">
-                            <input asp-for="Educations[i].FacultyShortName" class="big-input" />
-                            <span asp-validation-for="Educations[i].FacultyShortName"></span>
-                        </div>
-                    </div>
-                    <div class="table-row form-row">
-                        <div class="left-cell">
-                            <label>Год окончания:</label>
-                        </div>
-                        <div class="right-cell b-r-form w120">
-                            <select asp-for="Educations[i].GraduationYear"
-                                    asp-items="years"></select>
-                            <span asp-validation-for="Educations[i].GraduationYear"></span>
-                        </div>
-                    </div>
-                    <div class="table-row form-row">
-                        <div class="left-cell">
-                            <label>Учёная степень:</label>
-                        </div>
-                        <div class="right-cell">
-                            <input asp-for="Educations[i].Degree" class="big-input" />
-                            <span asp-validation-for="Educations[i].Degree"></span>
-                        </div>
-                    </div>
-                    <br />
-                    <div class="table-row form-row">
-                        <div class="right-cell">
-                            <button class="btn btn-warning btn-sm" onclick="return removeItemFromList(this);">Удалить</button>
-                        </div>
-                    </div>
-                    <hr />
-                </div>
+                   <div class="table-row form-row">
+            <div class="left-cell">
+                <label>ВУЗ:</label>
+            </div>
+            <div class="right-cell">
+                <input asp-for="Educations[i].UniversityShortName" class="big-input" />
+                <span asp-validation-for="Educations[i].UniversityShortName"></span>
+            </div>
+        </div>
+        <div class="table-row form-row">
+            <div class="left-cell">
+                <label>Факультет:</label>
+            </div>
+            <div class="right-cell">
+                <input asp-for="Educations[i].FacultyShortName" class="big-input" />
+                <span asp-validation-for="Educations[i].FacultyShortName"></span>
+            </div>
+        </div>
+        <div class="table-row form-row">
+            <div class="left-cell">
+                <label>Год окончания:</label>
+            </div>
+            <div class="right-cell b-r-form w120">
+                <select asp-for="Educations[i].GraduationYear"
+                        asp-items="years"></select>
+                <span asp-validation-for="Educations[i].GraduationYear"></span>
+            </div>
+        </div>
+        <div class="table-row form-row">
+            <div class="left-cell">
+                <label>Учёная степень:</label>
+            </div>
+            <div class="right-cell">
+                <input asp-for="Educations[i].Degree" class="big-input" />
+                <span asp-validation-for="Educations[i].Degree"></span>
+            </div>
+        </div>
+        <br />
+        <div class="table-row form-row">
+            <div class="right-cell">
+                <button class="btn btn-warning btn-sm" onclick="return removeItemFromList(this);">Удалить</button>
+            </div>
+        </div>
+        <hr />
+    </div>
                 </text>
             }
             <div class="table-row form-row mt17">

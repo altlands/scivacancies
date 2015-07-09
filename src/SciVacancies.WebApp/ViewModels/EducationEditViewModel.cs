@@ -8,12 +8,14 @@ namespace SciVacancies.WebApp.ViewModels
     {
         public Guid ResearcherGuid { get; set; }
 
-        [Required(ErrorMessage = "")]
+        [Required(ErrorMessage = "Укажите название города")]
         public string City { get; set; }
-        [Required(ErrorMessage = "")]
+
+        [Required(ErrorMessage = "Укажите название университета")]
         public string UniversityShortName { get; set; }
+
         public string FacultyShortName { get; set; }
-        [Required(ErrorMessage = "")]
+
         public DateTime? GraduationYear { get; set; }
 
         public string Degree { get; set; }
