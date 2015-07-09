@@ -176,8 +176,6 @@ namespace SciVacancies.WebApp.Queries
             var sql = new SqlBuilder().AddTemplate("SELECT v.* FROM \"Vacancies\" v WHERE v.\"Guid\" IN (@items)", new { items = message.VacanciesGuids });
             var vacancies = _db.Page<Vacancy>(message.PageIndex, message.PageSize, sql);
             return vacancies;
-
-            return null;
         }
     }
 }

@@ -10,6 +10,12 @@ using Thinktecture.IdentityModel.Client;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
+using Newtonsoft.Json;
+using System.Text;
+using System.IO;
+using SciVacancies.WebApp.Models.OAuth;
+using AutoMapper;
 
 namespace SciVacancies.WebApp.Controllers
 {
@@ -93,7 +99,7 @@ namespace SciVacancies.WebApp.Controllers
 
             var tempCookies = GetTempCookies();
 
-            if (String.IsNullOrEmpty(authorizationCode) && !String.IsNullOrEmpty(state) && state.Equals(tempCookies.Item1, StringComparison.Ordinal))
+            if (!String.IsNullOrEmpty(authorizationCode) && !String.IsNullOrEmpty(state) && state.Equals(tempCookies.Item1, StringComparison.Ordinal))
             {
                 var tokenResponse = await GetTokens(authorizationCode);
 
@@ -123,59 +129,81 @@ namespace SciVacancies.WebApp.Controllers
             return await client.RequestAuthorizationCodeAsync(code, redirectUrl.AbsoluteUri);
         }
 
+        private string GetOrganizationInfo(string inn)
+        {
+            WebRequest req = WebRequest.Create(@"http://www.sciencemon.ru/ext-api/v1.0/org/" + inn);
+            req.Method = "GET";
+            req.Headers["Authorization"] = "Basic " + Convert.ToBase64String(Encoding.Default.GetBytes("dev:informika"));
+            //req.Credentials = new NetworkCredential("username", "password");
+            HttpWebResponse response = req.GetResponse() as HttpWebResponse;
+            string responseString = "";
+            using (Stream stream = response.GetResponseStream())
+            {
+                StreamReader reader = new StreamReader(stream, Encoding.UTF8);
+                responseString = reader.ReadToEnd();
+            }
+            return responseString;
+        }
         private async Task ValidateResponseAndSignInAsync(TokenResponse response, string nonce)
         {
-            if (!String.IsNullOrEmpty(response.IdentityToken))
+            //if (!String.IsNullOrEmpty(response.IdentityToken))
+            //{
+            //TODO - валидация токенов нужна?
+            //var tokenClaims = 
+
+            var claims = new List<Claim>();
+
+            if (!String.IsNullOrEmpty(response.AccessToken))
             {
-                //TODO - валидация токенов нужна?
-                //var tokenClaims = 
+                claims.AddRange(await GetUserInfoClaimsAsync(response.AccessToken));
 
-                var claims = new List<Claim>();
-
-                if (!String.IsNullOrEmpty(response.AccessToken))
-                {
-                    claims.AddRange(await GetUserInfoClaimsAsync(response.AccessToken));
-
-                    claims.Add(new Claim("access_token", response.AccessToken));
-                    //Expires In = неправильно считает
-                    claims.Add(new Claim("expires_in", DateTime.Now.AddSeconds(response.ExpiresIn).ToString()));
-                }
-
-                if (!string.IsNullOrEmpty(response.RefreshToken))
-                {
-                    claims.Add(new Claim("refresh_token", response.RefreshToken));
-                }
-
-                //TODO - по какому полю правильней искать?
-                var orgUser = _userManager.FindByEmail(claims.FirstOrDefault(f => f.Type.Equals("email")).Value);
-
-                if (orgUser == null)
-                {
-                    AccountOrganizationRegisterViewModel orgModel = new AccountOrganizationRegisterViewModel();
-
-                    //TODO - достаём из claims ИНН
-                    //TODO - забираем из их API данные по инн
-
-                    var command = new RegisterUserOrganizationCommand
-                    {
-                        Data = orgModel
-                    };
-                    var user = _mediator.Send(command);
-
-                    var identity = _userManager.CreateIdentity(user, DefaultAuthenticationTypes.ApplicationCookie);
-                    var cp = new ClaimsPrincipal(identity);
-                    //signing out...
-                    Context.Response.SignOut(DefaultAuthenticationTypes.ApplicationCookie);
-                    //...before signing in
-                    Context.Response.SignIn(DefaultAuthenticationTypes.ApplicationCookie, cp);
-                }
-                else
-                {
-                    var identity = _userManager.CreateIdentity(orgUser, DefaultAuthenticationTypes.ApplicationCookie);
-                    var cp = new ClaimsPrincipal(identity);
-                    Context.Response.SignIn(DefaultAuthenticationTypes.ApplicationCookie, cp);
-                }
+                claims.Add(new Claim("access_token", response.AccessToken));
+                //Expires In = неправильно считает
+                claims.Add(new Claim("expires_in", DateTime.Now.AddSeconds(response.ExpiresIn).ToString()));
             }
+
+            if (!string.IsNullOrEmpty(response.RefreshToken))
+            {
+                claims.Add(new Claim("refresh_token", response.RefreshToken));
+            }
+
+            //TODO - по какому полю правильней искать?
+            var orgUser = _userManager.FindByEmail(claims.FirstOrDefault(f => f.Type.Equals("email")).Value);
+
+            if (orgUser == null)
+            {
+
+
+                var orgClaim = JsonConvert.DeserializeObject<OAuthOrgClaim>(claims.FirstOrDefault(f => f.Type.Equals("org")).Value);
+
+                OAuthOrgInformation organizationInformation =JsonConvert.DeserializeObject<OAuthOrgInformation>(GetOrganizationInfo(orgClaim.Inn));
+                //TODO - достаём из claims ИНН
+                //TODO - забираем из их API данные по инн
+                //AccountOrganizationRegisterViewModel orgModel = Mapper.Map<AccountOrganizationRegisterViewModel>(organizationInformation);
+                AccountOrganizationRegisterViewModel orgModel = new AccountOrganizationRegisterViewModel();
+                orgModel.Address = organizationInformation.postAddress;
+                
+
+                var command = new RegisterUserOrganizationCommand
+                {
+                    Data = orgModel
+                };
+                var user = _mediator.Send(command);
+
+                var identity = _userManager.CreateIdentity(user, DefaultAuthenticationTypes.ApplicationCookie);
+                var cp = new ClaimsPrincipal(identity);
+                //signing out...
+                Context.Response.SignOut(DefaultAuthenticationTypes.ApplicationCookie);
+                //...before signing in
+                Context.Response.SignIn(DefaultAuthenticationTypes.ApplicationCookie, cp);
+            }
+            else
+            {
+                var identity = _userManager.CreateIdentity(orgUser, DefaultAuthenticationTypes.ApplicationCookie);
+                var cp = new ClaimsPrincipal(identity);
+                Context.Response.SignIn(DefaultAuthenticationTypes.ApplicationCookie, cp);
+            }
+            //}
         }
 
         private async Task<IEnumerable<Claim>> GetUserInfoClaimsAsync(string accessToken)

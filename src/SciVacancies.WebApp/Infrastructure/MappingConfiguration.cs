@@ -5,6 +5,7 @@ using SciVacancies.Domain.DataModels;
 using SciVacancies.Domain.Events;
 using SciVacancies.ReadModel.Core;
 using SciVacancies.WebApp.ViewModels;
+using SciVacancies.WebApp.Models.OAuth;
 
 namespace SciVacancies.WebApp.Infrastructure
 {
@@ -71,6 +72,7 @@ namespace SciVacancies.WebApp.Infrastructure
                 .ForMember(dest => dest.BirthDate, src => src.MapFrom(c => new DateTime(c.BirthYear, 1, 1)));
             //organization
             Mapper.CreateMap<AccountOrganizationRegisterViewModel, OrganizationDataModel>();
+            Mapper.CreateMap<OAuthOrgInformation, AccountOrganizationRegisterViewModel>();
         }
     }
 }
