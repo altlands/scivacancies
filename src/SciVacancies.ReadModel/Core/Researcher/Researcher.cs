@@ -53,6 +53,7 @@ namespace SciVacancies.ReadModel.Core
         public string OtherActivity { get; set; }
 
         public string ScienceDegree { get; set; }
+        [Obsolete("Will be renamed to ScienceRank")]
         public string AcademicStatus { get; set; }
         public string Rewards { get; set; }
         public string Memberships { get; set; }

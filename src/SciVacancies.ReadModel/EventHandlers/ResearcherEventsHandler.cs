@@ -94,6 +94,19 @@ namespace SciVacancies.ReadModel.EventHandlers
             researcher.UpdateDate = msg.TimeStamp;
 
             _db.Update(researcher);
+
+            //if (msg.Data.Educations.Count > 0)
+            //    using (var scope = _db.GetTransaction())
+            //    {
+            //        foreach (var education in msg.Data.Educations)
+            //        {
+
+            //        }
+            //    }
+            //else
+            //{
+            //    _db.DeleteMany<Education>().Where(x => x.ResearcherGuid == msg.ResearcherGuid).Execute();
+            //}
         }
         public void Handle(ResearcherRemoved msg)
         {
