@@ -272,7 +272,7 @@ function selectedItemFromModalDictionary(hiddenInputName, newValue, displayText)
  */
 function beforeFormSubmit(source) {
     var form = $(source).parents("form")[0];
-    $(form).find("div[data-list-template=\"true\"]").remove();
+    $(form).find("[data-list-template=\"true\"]").remove();
     return true;
 };
 /**
@@ -281,7 +281,7 @@ function beforeFormSubmit(source) {
  */
 function addNewItemToList(source, prefix) {
     //<div class="table-form mt15" data-innercount="@(Model.Educations.Count+1)">
-    var parentDiv = $(source).parents(".table-form.mt15")[0];
+    var parentDiv = $(source).parents(".property-list-container")[0];
 
     //получаем текущий индекс количества строк
     var newIndex = parseInt($(parentDiv).attr("data-innercount")) + 1;
@@ -291,7 +291,7 @@ function addNewItemToList(source, prefix) {
         newPrefixBracket = prefix + "[" + newIndex + "]";
 
     //находим шаблон для добавления строк
-    var templateDiv = $(parentDiv).find("div[data-list-template=\"true\"]").clone();
+    var templateDiv = $(parentDiv).find("[data-list-template=\"true\"]").clone();
     //меняем индексы в новом шаблоне
     var templateDivInnerHtml = templateDiv
         .html()
@@ -300,7 +300,7 @@ function addNewItemToList(source, prefix) {
     //обновляем шаблон
     templateDiv.html(templateDivInnerHtml);
 
-    var lastItemRow = $(parentDiv).find("div.property-list-item").last();
+    var lastItemRow = $(parentDiv).find(".property-list-item").last();
     $(templateDiv).removeAttr('data-list-template');
     $(templateDiv).find("input[name=\""+ prefix + '.Index"]').val(newIndex);
     $(lastItemRow).after(templateDiv);
@@ -316,7 +316,7 @@ function addNewItemToList(source, prefix) {
  */
 function removeItemFromList(source) {
     if (confirm("Вы уверены что хотите удалить эту запись?")) {
-        var parentDiv = $(source).parents("div.property-list-item")[0];
+        var parentDiv = $(source).parents(".property-list-item")[0];
         $(parentDiv).fadeOut(500, function () {
             $(parentDiv).remove();
             return false;

@@ -5,6 +5,7 @@ using AutoMapper;
 using MediatR;
 using Microsoft.AspNet.Authorization;
 using Microsoft.AspNet.Mvc;
+using Microsoft.AspNet.Mvc.ModelBinding;
 using NPoco;
 using SciVacancies.Domain.DataModels;
 using SciVacancies.Domain.Enums;
@@ -46,12 +47,12 @@ namespace SciVacancies.WebApp.Controllers
         [BindResearcherIdFromClaims]
         public ViewResult Edit(Guid researcherGuid)
         {
-            if (researcherGuid== Guid.Empty)
+            if (researcherGuid == Guid.Empty)
                 throw new ArgumentNullException(nameof(researcherGuid));
 
-            var preModel = _mediator.Send(new SingleResearcherQuery {ResearcherGuid = researcherGuid});
-            if(preModel==null)
-                throw  new ObjectNotFoundException();
+            var preModel = _mediator.Send(new SingleResearcherQuery { ResearcherGuid = researcherGuid });
+            if (preModel == null)
+                throw new ObjectNotFoundException();
 
             var model = Mapper.Map<ResearcherEditViewModel>(preModel);
             return View(model);
@@ -62,10 +63,13 @@ namespace SciVacancies.WebApp.Controllers
         [BindResearcherIdFromClaims("authorizedUserGuid")]
         public IActionResult Edit(ResearcherEditViewModel model, Guid authorizedUserGuid)
         {
-            if(authorizedUserGuid != model.Guid)
+            if (model.Guid == Guid.Empty)
+                throw new ArgumentNullException(nameof(model), "Отсутствует идентификатор исследователя");
+
+            if (authorizedUserGuid != model.Guid)
                 throw new Exception("Вы не можете изменять чужой профиль");
 
-            if (!ModelState.IsValid)
+            if (ModelState.ErrorCount>0)
                 return View(model);
 
             var preModel = _mediator.Send(new SingleResearcherQuery { ResearcherGuid = authorizedUserGuid });
@@ -73,7 +77,7 @@ namespace SciVacancies.WebApp.Controllers
                 throw new ObjectNotFoundException();
 
             var data = Mapper.Map<ResearcherDataModel>(model);
-            _mediator.Send(new UpdateResearcherCommand {Data = data, ResearcherGuid = authorizedUserGuid});
+            _mediator.Send(new UpdateResearcherCommand { Data = data, ResearcherGuid = authorizedUserGuid });
 
             return RedirectToAction("account");
         }

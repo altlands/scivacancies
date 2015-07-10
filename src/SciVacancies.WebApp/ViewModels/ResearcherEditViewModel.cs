@@ -56,7 +56,7 @@ namespace SciVacancies.WebApp.ViewModels
         public string Conferences { get; set; }
 
         public List<EducationEditViewModel> Educations { get; set; }
-        public List<Publication> Publications { get; set; }
+        public List<PublicationEditViewModel> Publications { get; set; }
         public List<string> Interests { get; set; } 
     }
 }
