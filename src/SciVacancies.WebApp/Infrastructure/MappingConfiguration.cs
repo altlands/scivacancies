@@ -46,7 +46,7 @@ namespace SciVacancies.WebApp.Infrastructure
             Mapper.CreateMap<Education, EducationEditViewModel>()
                 .ForMember(dest => dest.GraduationYear, src => src.MapFrom(c => c.GraduationYear.HasValue ? c.GraduationYear.Value.Year : 0));
             Mapper.CreateMap<EducationEditViewModel, SciVacancies.Domain.Core.Education>()
-                .ForMember(dest => dest.GraduationYear, src => src.MapFrom(c => c.GraduationYear!=0 ? new DateTime(c.GraduationYear, 1, 1) : default(DateTime)));
+                .ForMember(dest => dest.GraduationYear, src => src.MapFrom(c => (c.GraduationYear.HasValue && c.GraduationYear.Value!=0) ? new DateTime(c.GraduationYear.Value, 1, 1) : default(DateTime)));
 
             //piblication
             Mapper.CreateMap<Publication, PublicationEditViewModel>();

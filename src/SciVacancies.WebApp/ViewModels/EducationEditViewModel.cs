@@ -16,7 +16,7 @@ namespace SciVacancies.WebApp.ViewModels
 
         public string FacultyShortName { get; set; }
 
-        public int GraduationYear { get; set; }
+        public int? GraduationYear { get; set; }
 
         public string Degree { get; set; }
     }

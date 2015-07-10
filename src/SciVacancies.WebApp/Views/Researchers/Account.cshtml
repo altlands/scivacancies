@@ -1,4 +1,5 @@
 ﻿@using System.Threading.Tasks
+@using Microsoft.Framework.CodeGeneration
 @using SciVacancies.WebApp.Controllers
 @model SciVacancies.WebApp.ViewModels.ResearcherDetailsViewModel
 
@@ -33,39 +34,68 @@
     </div>
     <div class="row">
         <span class="bold">Образование</span>
-        <ul class="table-emulation" style="color: lightgray;">
-            <li>
-                <span class="w85 italic inline-block">Город</span> <span class="italic grey" style="color: lightgray;">Челябинск</span>
-            </li>
-            <li>
-                <span class="w85 italic inline-block">ВУЗ</span> <span class="italic grey" style="color: lightgray;">ЧГАКИ</span>
-            </li>
-            <li>
-                <span class="w85 italic inline-block">Факультет</span> <span class="italic grey" style="color: lightgray;">Информационных ресурсов и технологий</span>
-            </li>
-            <li>
-                <span class="w85 italic inline-block">Год окончания</span> <span class="italic grey" style="color: lightgray;">2000</span>
-            </li>
-        </ul>
+        @if (Model.Educations != null)
+        {
+            foreach (var item in Model.Educations)
+            {
+                <br />
+                <ul class="table-emulation">
+                    <li>
+                        <span class="w85 italic inline-block">Город</span> <span class="italic grey" style="color: lightgray;">@item.City</span>
+                    </li>
+                    <li>
+                        <span class="w85 italic inline-block">ВУЗ</span> <span class="italic grey" style="color: lightgray;">@item.UniversityShortName</span>
+                    </li>
+                    <li>
+                        <span class="w85 italic inline-block">Факультет</span> <span class="italic grey" style="color: lightgray;">@item.FacultyShortName</span>
+                    </li>
+                    <li>
+                        <span class="w85 italic inline-block">Год окончания</span> <span class="italic grey" style="color: lightgray;">@(item.GraduationYear)</span>
+                    </li>
+                </ul>
+            }
+        }
     </div>
     <div class="row">
         <span class="bold">Ученая степень</span>
+        <span class="italic">
+            @Model.ScienceDegree
+        </span>
     </div>
     <div class="row">
         <span class="bold">Ученые звания</span>
+        @Model.AcademicStatus
     </div>
     <div class="row">
         <span class="bold">Награды</span>
+        <span class="italic">
+            @Model.Rewards
+        </span>
     </div>
     <div class="row">
         <span class="bold">Членство в профессиональных сообществах</span><br />
-        <span class="italic">Редколлегии и консультативные советы рецензируемых научных изданий<br /> Научные общества и организации</span>
+        <span class="italic">
+            @Model.Memberships
+        </span>
     </div>
     <div class="row">
         <span class="bold">Конференции, симпозиумы, конгрессы</span>
+        <span class="italic">
+            @Model.Conferences
+        </span>
     </div>
     <div class="row">
         <span class="bold">Публикации</span>
+        @if (Model.Publications != null)
+        {
+            foreach (var item in Model.Publications)
+            {
+                <br />
+                <span>
+                    @item.Name;
+                </span>
+            }
+        }
     </div>
 </div>
 <div class="b-links mt-2 ml3">
