@@ -38,9 +38,9 @@ namespace SciVacancies.WebApp.Controllers
             if (organizationGuid == Guid.Empty)
                 throw new ArgumentNullException($"{nameof(organizationGuid)}");
 
-            var model = new PositionCreateViewModel(organizationGuid);
+            var model = new VacancyCreateViewModel(organizationGuid);
             model.InitDictionaries(_mediator);
-            //TODO: ntemnikov: Vacancies -> Create : вернуть Криетерии во View
+            //TODO: ntemnikov: Vacancies -> Create : вернуть редактирование Критериев во View
             return View(model);
         }
 
@@ -49,7 +49,7 @@ namespace SciVacancies.WebApp.Controllers
         [HttpPost]
         [Authorize(Roles = ConstTerms.RequireRoleOrganizationAdmin)]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(PositionCreateViewModel model)
+        public ActionResult Create(VacancyCreateViewModel model)
         {
             if (ModelState.IsValid)
             {
@@ -66,7 +66,7 @@ namespace SciVacancies.WebApp.Controllers
                 var positionGuid = _mediator.Send(new CreatePositionCommand { OrganizationGuid = model.OrganizationGuid, Data = positionDataModel });
 
                 if (!model.ToPublish)
-                    return RedirectToAction("details", "positions", new { id = positionGuid });
+                    return RedirectToAction("details", new { id = positionGuid });
 
                 var vacancyDataModel = Mapper.Map<VacancyDataModel>(positionDataModel);
                 vacancyDataModel.OrganizationName = _mediator.Send(new SingleOrganizationQuery { OrganizationGuid = model.OrganizationGuid }).Name;
@@ -78,10 +78,10 @@ namespace SciVacancies.WebApp.Controllers
                     Data = vacancyDataModel
                 });
 
-                return RedirectToAction("details", "vacancies", new { id = vacancyGuid });
+                return RedirectToAction("details", new { id = vacancyGuid });
             }
             model.InitDictionaries(_mediator);
-            return View(model);
+            return View("create", model);
 
         }
 
@@ -96,13 +96,16 @@ namespace SciVacancies.WebApp.Controllers
 
             var preModel = _mediator.Send(new SinglePositionQuery { PositionGuid = id });
 
+            if (preModel == null)
+                throw new ObjectNotFoundException($"Не найдена вакансия с идентификатором: {id}");
+
             if (preModel.OrganizationGuid != organizationGuid)
                 throw new Exception("Вы не можете изменять вакансии других организаций");
 
             if (preModel.Status != PositionStatus.InProcess)
                 throw new Exception($"Вы не можете изменить вакансию с текущим статусом: {preModel.Status.GetDescription()}");
 
-            var model = Mapper.Map<PositionCreateViewModel>(preModel);
+            var model = Mapper.Map<VacancyCreateViewModel>(preModel);
             model.InitDictionaries(_mediator);
 
             return View(model);
@@ -112,7 +115,7 @@ namespace SciVacancies.WebApp.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [BindOrganizationIdFromClaims("claimedUserGuid")]
-        public IActionResult Edit(PositionCreateViewModel model, Guid claimedUserGuid)
+        public IActionResult Edit(VacancyCreateViewModel model, Guid claimedUserGuid)
         {
             if (claimedUserGuid == Guid.Empty)
                 throw new ArgumentNullException(nameof(claimedUserGuid));
@@ -134,12 +137,12 @@ namespace SciVacancies.WebApp.Controllers
                 var positionDataModel = Mapper.Map<PositionDataModel>(model);
 
                 if (positionDataModel.Status != PositionStatus.InProcess)
-                    throw new Exception($"Вы не можете изменить вакансию с текущим статусом: {model.Status.GetDescription()}");
+                    throw new Exception($"Вы не можете изменить вакансию с текущим статусом: {positionDataModel.Status.GetDescription()}");
 
                 var positionGuid = _mediator.Send(new UpdatePositionCommand { PositionGuid = model.Guid, OrganizationGuid = model.OrganizationGuid, Data = positionDataModel });
 
                 if (!model.ToPublish)
-                    return RedirectToAction("details", "positions", new { id = model.Guid });
+                    return RedirectToAction("details", new { id = model.Guid });
 
                 var vacancyDataModel = Mapper.Map<VacancyDataModel>(positionDataModel);
                 vacancyDataModel.OrganizationName = _mediator.Send(new SingleOrganizationQuery { OrganizationGuid = model.OrganizationGuid }).Name;
@@ -150,7 +153,7 @@ namespace SciVacancies.WebApp.Controllers
                     PositionGuid = model.Guid,
                     Data = vacancyDataModel
                 });
-                return RedirectToAction("details", "vacancies", new { id = vacancyGuid });
+                return RedirectToAction("details", new { id = vacancyGuid });
             }
             model.InitDictionaries(_mediator);
             return View(model);
@@ -163,6 +166,9 @@ namespace SciVacancies.WebApp.Controllers
                 throw new ArgumentNullException(nameof(id));
 
             var preModel = _mediator.Send(new SingleVacancyQuery { VacancyGuid = id });
+
+            if (preModel == null)
+                throw new ObjectNotFoundException($"Не найдена вакансия с идентификатором: {id}");
 
             var model = Mapper.Map<VacancyDetailsViewModel>(preModel);
 
@@ -189,6 +195,9 @@ namespace SciVacancies.WebApp.Controllers
 
             var preModel = _mediator.Send(new SingleVacancyQuery { VacancyGuid = id });
 
+            if (preModel == null)
+                throw new ObjectNotFoundException($"Не найдена вакансия с идентификатором: {id}");
+
             var model = Mapper.Map<VacancyDetailsViewModel>(preModel);
 
             if (model == null)
@@ -214,7 +223,7 @@ namespace SciVacancies.WebApp.Controllers
                  }).MapToPagedList<VacancyApplication, VacancyApplicationDetailsViewModel>();
 
             if (model.Applications.Items.Count > 0)
-                //TODO: оптимизировать запрос и его обработку
+                //TODO: оптимизировать запрос и его обработку. Добавить валидацию на null
                 model.Applications.Items.ForEach(
                     c =>
                         c.Researcher =
@@ -233,6 +242,9 @@ namespace SciVacancies.WebApp.Controllers
                 throw new ArgumentNullException(nameof(id));
 
             var preModel = _mediator.Send(new SingleVacancyQuery { VacancyGuid = id });
+
+            if (preModel == null)
+                throw new ObjectNotFoundException($"Не найдена вакансия с идентификатором: {id}");
 
             var model = Mapper.Map<VacancyDetailsViewModel>(preModel);
 
@@ -266,17 +278,19 @@ namespace SciVacancies.WebApp.Controllers
 
             var preModel = _mediator.Send(new SingleVacancyQuery { VacancyGuid = id });
 
+            if (preModel == null)
+                throw new ObjectNotFoundException($"Не найдена вакансия с идентификатором: {id}");
+
             if (preModel.OrganizationGuid != organizationGuid)
                 throw new Exception("Вы не можете отменить вакансии других организаций");
 
-            if (preModel.Status != VacancyStatus.Published && preModel.Status != VacancyStatus.AppliesAcceptance && preModel.Status != VacancyStatus.InCommittee)
+            if (preModel.Status != VacancyStatus.Published && preModel.Status != VacancyStatus.InCommittee)
                 throw new Exception($"Вы не можете отменить вакансию со статусом: {preModel.Status.GetDescription()}");
 
             var model = Mapper.Map<VacancyDetailsViewModel>(preModel);
 
             return View(model);
         }
-
         [HttpPost]
         [ValidateAntiForgeryToken]
         [BindOrganizationIdFromClaims]
@@ -289,10 +303,13 @@ namespace SciVacancies.WebApp.Controllers
 
             var model = _mediator.Send(new SingleVacancyQuery { VacancyGuid = id });
 
+            if (model == null)
+                throw new ObjectNotFoundException($"Не найдена вакансия с идентификатором: {id}");
+
             if (model.OrganizationGuid != organizationGuid)
                 throw new Exception("Вы не можете отменить вакансии других организаций");
 
-            if (model.Status != VacancyStatus.Published && model.Status != VacancyStatus.AppliesAcceptance && model.Status != VacancyStatus.InCommittee)
+            if (model.Status != VacancyStatus.Published && model.Status != VacancyStatus.InCommittee)
                 throw new Exception($"Вы не можете отменить вакансию со статусом: {model.Status.GetDescription()}");
 
             _mediator.Send(new CancelVacancyCommand { VacancyGuid = id, OrganizationGuid = organizationGuid, Reason = reason });
@@ -300,34 +317,32 @@ namespace SciVacancies.WebApp.Controllers
             return RedirectToAction("vacancies", "organizations");
         }
 
+        [PageTitle("Вакансия удалена")]
         [BindOrganizationIdFromClaims]
-        [Authorize(Roles = ConstTerms.RequireRoleOrganizationAdmin)]
-        public IActionResult StartAcceptApplications(Guid id, Guid organizationGuid)
+        public IActionResult Delete(Guid id, Guid organizationGuid)
         {
             if (id == Guid.Empty)
                 throw new ArgumentNullException(nameof(id));
-
             if (organizationGuid == Guid.Empty)
                 throw new ArgumentNullException(nameof(organizationGuid));
 
-            var preModel = _mediator.Send(new SingleVacancyQuery { VacancyGuid = id });
+            var model = _mediator.Send(new SinglePositionQuery { PositionGuid = id });
 
-            if (preModel == null)
+            if (model == null)
                 throw new ObjectNotFoundException($"Не найдена вакансия с идентификатором: {id}");
 
-            if (preModel.OrganizationGuid != organizationGuid)
-                throw new Exception("Вы не можете менять Вакансии других организаций");
+            if (model.OrganizationGuid != organizationGuid)
+                throw new Exception("Вы не можете отменить удаление вакансии других организаций");
 
-            if (preModel.Status != VacancyStatus.Published)
-                throw new Exception($"Вы не можете начать включить режим приём Заявок для Вакансии со статусом: {preModel.Status.GetDescription()}");
+            if (model.Status == PositionStatus.Removed)
+                throw new Exception("Вакансия уже удалена");
 
-            _mediator.Send(new SwitchVacancyToAcceptApplicationsCommand
-            {
-                OrganizationGuid = organizationGuid,
-                VacancyGuid = id
-            });
+            if (model.Status != PositionStatus.InProcess)
+                throw new Exception($"Вы не можете удалить вакансию с текущим статусом: {model.Status.GetDescription()}");
 
-            return RedirectToAction("vacancies", "organizations");
+            _mediator.Send(new RemovePositionCommand { OrganizationGuid = organizationGuid, PositionGuid = id });
+
+            return View();
         }
 
         [BindOrganizationIdFromClaims]
@@ -348,7 +363,7 @@ namespace SciVacancies.WebApp.Controllers
             if (preModel.OrganizationGuid != organizationGuid)
                 throw new Exception("Вы не можете менять Вакансии других организаций");
 
-            if (preModel.Status != VacancyStatus.AppliesAcceptance)
+            if (preModel.Status != VacancyStatus.Published)
                 throw new Exception($"Вы не можете Вакансию на рассмотрение комиссии со статусом: {preModel.Status.GetDescription()}");
 
             //TODO: оптимизировать запрос и его обработку
@@ -390,14 +405,8 @@ namespace SciVacancies.WebApp.Controllers
             if (preModel.OrganizationGuid != organizationGuid)
                 throw new Exception("Вы не можете менять Вакансии других организаций");
 
-            if (preModel.WinnerGuid != Guid.Empty)
-                throw new Exception("Вы не можете закрыть Вакансию: не выбран победитель");
-
-            if (preModel.PretenderGuid != Guid.Empty)
-                throw new Exception("Вы не можете закрыть Вакансию: не выбран претендент");
-
-            if (preModel.Status != VacancyStatus.InCommittee)
-                throw new Exception($"Вы не можете выбрать победителя по Вакансии со статусом: {preModel.Status.GetDescription()}");
+            if (preModel.Status!=VacancyStatus.OfferAccepted && preModel.Status!=VacancyStatus.OfferRejected)
+                throw new Exception("Вы не можете закрыть вакансию, пока кто-то из победителей не даст согласится или оба не откажутся");
 
             return preModel;
         }
@@ -431,13 +440,67 @@ namespace SciVacancies.WebApp.Controllers
             return RedirectToAction("vacancies", "organizations");
         }
 
-        [PageTitle("Копировать вакансию")]
-        public IActionResult Copy(Guid id, Guid oreganizationGuid)
+        [Authorize(Roles = ConstTerms.RequireRoleOrganizationAdmin)]
+        [BindOrganizationIdFromClaims]
+        public IActionResult Publish(Guid id, Guid organizationGuid)
         {
-            //TODO: Vacancies -> Copy : реализовать копирование вакансии
+            if (id == Guid.Empty)
+                throw new ArgumentNullException(nameof(id));
+            if (organizationGuid == Guid.Empty)
+                throw new ArgumentNullException(nameof(organizationGuid));
 
-            return null;
+            var model = _mediator.Send(new SingleVacancyQuery { VacancyGuid = id });
+
+            if (model == null)
+                throw new ObjectNotFoundException($"Не найдена вакансия с идентификатором: {id}");
+
+            if (model.OrganizationGuid != organizationGuid)
+                throw new Exception("Вы не можете отменить удаление вакансии других организаций");
+
+            if (model.Status != VacancyStatus.InProcess)
+                throw new Exception($"Вы не можете опубликовать вакансию со статусом: {model.Status.GetDescription()}");
+
+            var vacancyDataModel = Mapper.Map<VacancyDataModel>(model);
+            vacancyDataModel.OrganizationName = _mediator.Send(new SingleOrganizationQuery { OrganizationGuid = organizationGuid }).Name;
+
+            var vacancyGuid = _mediator.Send(new PublishVacancyCommand
+            {
+                PositionGuid = id,
+                OrganizationGuid = model.OrganizationGuid,
+                Data = vacancyDataModel
+            });
+
+            return RedirectToAction("vacancies", "organizations");
         }
+
+        [PageTitle("Новая вакансия")]
+        [Authorize(Roles = ConstTerms.RequireRoleOrganizationAdmin)]
+        [BindOrganizationIdFromClaims]
+        public IActionResult Copy(Guid id, Guid organizationGuid)
+        {
+            if (id == Guid.Empty)
+                throw new ArgumentNullException(nameof(id));
+
+            var preModel = _mediator.Send(new SingleVacancyQuery { VacancyGuid = id });
+
+            if (preModel == null)
+                throw new ObjectNotFoundException($"Не найдена заявка с идентификатором {id}");
+
+            if (preModel.OrganizationGuid != organizationGuid)
+                throw new Exception("Копировать можно только свои заявки");
+
+            var model = Mapper.Map<VacancyCreateViewModel>(preModel);
+            model.Guid = Guid.Empty;
+            model.InitDictionaries(_mediator);
+
+            return View("create", model);
+        }
+
+        [PageTitle("Новая вакансия")]
+        [HttpPost]
+        [Authorize(Roles = ConstTerms.RequireRoleOrganizationAdmin)]
+        [ValidateAntiForgeryToken]
+        public IActionResult Copy(VacancyCreateViewModel model) { return Create(model); }
 
     }
 }

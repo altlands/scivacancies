@@ -1,12 +1,12 @@
 ﻿@using System.Threading.Tasks
 @using SciVacancies.WebApp.ViewModels
-@model PositionCreateViewModel
+@model VacancyCreateViewModel
 
 <div class="crumbs">
     <a href="/">Главная</a><span class="separator">/</span>
     <a asp-controller="organizations" asp-action="account">Карточка организации</a><span class="separator">/</span>
     <a asp-controller="organizations" asp-action="vacancies">Вакансии</a><span class="separator">/</span>
-    <a asp-controller="positions" asp-action="details" asp-route-id="@Model.Guid">@Model.Name</a><span class="separator">/</span>
+    <a asp-controller="vacancies" asp-action="details" asp-route-id="@Model.Guid">@Model.Name</a><span class="separator">/</span>
     @ViewBag.Title
 </div>
 
@@ -18,5 +18,5 @@
     <a href="/" class="small-icon icon-prev">Главная</a>
     <a asp-controller="organizations" asp-action="account" class="small-icon icon-prev">Карточка организации</a>
     <a asp-controller="organizations" asp-action="vacancies" class="small-icon icon-prev">Вакансии</a>
-    <a asp-controller="positions" asp-action="details" asp-route-id="@Model.Guid" class="small-icon icon-prev">@Model.Name</a>
+    <a asp-controller="vacancies" asp-action="details" asp-route-id="@Model.Guid" class="small-icon icon-prev">@Model.Name</a>
 </div>

@@ -5,7 +5,7 @@ namespace SciVacancies.WebApp.ViewComponents
 {
     public class CreateEditVacancy : ViewComponent
     {
-        public IViewComponentResult Invoke(PositionCreateViewModel model)
+        public IViewComponentResult Invoke(VacancyCreateViewModel model)
         {
             return View("/Views/Vacancies/_CreateEdit", model);
         }

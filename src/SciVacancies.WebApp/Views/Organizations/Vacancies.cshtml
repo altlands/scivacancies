@@ -69,35 +69,6 @@
         </tr>
     </thead>
     <tbody>
-        @if (Model.PagedPositions != null)
-        {
-            foreach (var item in Model.PagedPositions.Items.Where(c => c.Status == PositionStatus.InProcess))
-            {
-                <text>
-
-                <tr>
-                    <td>@item.Guid.ToString().Substring(0, 4)...</td>
-                    <td>ГНС600001</td>
-                    <td>@item.Name</td>
-                    <!--TODO: проверить правильность информации-->
-                    <td>@item.CreationDate.ToLocalVacancyString()</td>
-                    <td></td>
-                    <td><span class="status  @item.Status.GetHtmlClass()">@item.Status.GetDescription() <!--Объявлен--></span></td>
-                    <td>
-
-                        <a asp-controller="positions" asp-action="copy" asp-route-id="@item.Guid" class="pages-td-icon" title="Копировать вакансию"></a>
-                        <a asp-controller="positions" asp-action="details" asp-route-id="@item.Guid" class="view-td-icon" title="Просмотр вакансии"></a>
-                        <a asp-controller="vacancies" asp-action="edit" asp-route-id="@item.Guid" class="edit-td-icon" title="Изменить вакансию"></a>
-                        <a asp-controller="positions" asp-action="delete" asp-route-id="@item.Guid" onclick="javascript: return confirm('Вы уверены что хотите удалить эту вакансию?');" class="close-td-icon" title="Удалить вакансию"></a>
-                        @if (item.Status == PositionStatus.InProcess)
-                        {
-                            <a asp-controller="positions" asp-action="publish" asp-route-id="@item.Guid" class="class-td-icon" title="Опубликовать"></a>
-                        }
-                    </td>
-                </tr>
-                </text>
-            }
-        }
 
         @if (Model.PagedVacancies != null)
         {
@@ -110,24 +81,25 @@
                     <td>@item.Name</td>
                     <!--TODO: проверить правильность информации-->
                     <td>@item.DateStart.ToLocalVacancyString()</td>
-                    <td>@{item.DateStart.ToLocalVacancyString(); }</td>
-                    <td><span class="status @item.Status.GetHtmlClass()">@item.Status.GetDescription()</span></td>
+                    <td>@{ item.DateStart.ToLocalVacancyString(); }</td>
+                    <td><span class="status work @item.Status.GetHtmlClass()">@item.Status.GetDescription()</span></td>
                     <td>
-                        <a asp-controller="vacancies" asp-action="copy" asp-route-id="@item.Guid" class="pages-td-icon" title="Копировать вакансию"></a>
                         <a asp-controller="vacancies" asp-action="details" asp-route-id="@item.Guid" class="view-td-icon" title="Просмотр вакансии"></a>
-                        @if (item.Status == VacancyStatus.Published || item.Status == VacancyStatus.AppliesAcceptance)
+                        <a asp-controller="vacancies" asp-action="copy" asp-route-id="@item.Guid" class="pages-td-icon" title="Копировать вакансию"></a>
+                        @if (item.Status == VacancyStatus.InProcess)
+                        {
+                            <a asp-controller="vacancies" asp-action="delete" asp-route-id="@item.Guid" class="close-td-icon" title="Удалить"></a>
+                            <a asp-controller="vacancies" asp-action="publish" asp-route-id="@item.Guid" class="class-td-icon" title="Опубликовать"></a>
+                        }
+                        @if (item.Status == VacancyStatus.Published || item.Status == VacancyStatus.InCommittee)
                         {
                             <a asp-controller="vacancies" asp-action="cancel" asp-route-id="@item.Guid" class="close-td-icon" title="Отменить вакансию"></a>
                         }
                         @if (item.Status == VacancyStatus.Published)
                         {
-                            <a asp-controller="vacancies" asp-action="startacceptapplications" asp-route-id="@item.Guid" title="Включить приём заявок">вкл приём заявок</a>
-                        }
-                        @if (item.Status == VacancyStatus.AppliesAcceptance)
-                        {
                             <a asp-controller="vacancies" asp-action="startincommittee" asp-route-id="@item.Guid" title="Перевести на рассмотрение">на рассмотрение</a>
                         }
-                        @if (item.Status == VacancyStatus.InCommittee && item.WinnerGuid != Guid.Empty && item.PositionGuid != Guid.Empty)
+                        @if ((item.Status == VacancyStatus.OfferAccepted || item.Status == VacancyStatus.OfferRejected) && item.WinnerGuid != Guid.Empty && item.PositionGuid != Guid.Empty)
                         {
                             <a asp-controller="vacancies" asp-action="close" asp-route-id="@item.Guid" title="Выбрать победителя">Закрыть вакансию</a>
                         }

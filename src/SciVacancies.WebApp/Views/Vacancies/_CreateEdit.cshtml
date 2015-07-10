@@ -1,6 +1,6 @@
 ﻿@using System.Threading.Tasks
 @using SciVacancies.WebApp.ViewModels
-@model PositionCreateViewModel
+@model VacancyCreateViewModel
 
 <div asp-validation-summary="ValidationSummary.All"></div>
 
@@ -66,6 +66,17 @@
                     <textarea asp-for="ResearchTheme"></textarea>
                 </div>
             </div>
+
+            <div class="table-row form-row">
+                <div class="left-cell">
+                    <label>Дата окончания: <br/> приема заявок</label>
+                </div>
+                <div class="right-cell">
+                    <input asp-for="InCommitteeDate" class="big-input" />
+                    <span asp-validation-for="InCommitteeDate"></span>
+                </div>
+            </div>
+
         </div>
     </div>
 

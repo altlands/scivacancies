@@ -11,16 +11,19 @@ using SciVacancies.WebApp.ViewModels.Base;
 
 namespace SciVacancies.WebApp.ViewModels
 {
-    public class PositionCreateViewModel : PageViewModelBase
+    public class VacancyCreateViewModel : PageViewModelBase
     {
-        public PositionCreateViewModel() { }
+        public VacancyCreateViewModel() { }
 
-        public PositionCreateViewModel(Guid organizationGuid)
+        public VacancyCreateViewModel(Guid organizationGuid)
         {
             if (organizationGuid == Guid.Empty)
                 throw new ArgumentNullException(nameof(organizationGuid));
             OrganizationGuid = organizationGuid;
         }
+
+
+        public DateTime? InCommitteeDate{ get; set; }
 
         [HiddenInput]
         public Guid OrganizationGuid { get; set; }
@@ -29,12 +32,8 @@ namespace SciVacancies.WebApp.ViewModels
         /// </summary>
         [HiddenInput]
         public bool ToPublish { get; set; }
-        //{
-        //    get { return Status == PositionStatus.Published; }
-        //    set { Status = value ? PositionStatus.Published : PositionStatus.InProcess; }
-        //}
 
-        public PositionStatus Status { get; set; }
+        public VacancyStatus Status { get; set; }
 
         /// <summary>
         /// Инициализация справочников для формы

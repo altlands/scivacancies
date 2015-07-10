@@ -1406,6 +1406,9 @@ table.table.request-table a {
 .status.failed:before {
     background: url('../images/icons/failed-status.png') no-repeat center center;
 }
+.status.draft:before {
+    background: url('../images/icons/draft-status.png') no-repeat center center;
+}
 
 .minus-td-icon {
     display: inline-block;

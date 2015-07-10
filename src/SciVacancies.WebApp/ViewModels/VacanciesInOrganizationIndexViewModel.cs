@@ -9,7 +9,6 @@ namespace SciVacancies.WebApp.ViewModels
         public Guid OrganizationGuid { get; set; }
 
         public PagedList<Vacancy> PagedVacancies { get; set; }
-        public PagedList<Position> PagedPositions { get; set; }
 
         public string Name { get; set; }
     }

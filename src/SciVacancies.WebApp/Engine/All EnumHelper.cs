@@ -28,29 +28,20 @@ namespace SciVacancies.WebApp
         {
             switch (value)
             {
-                case VacancyStatus.Cancelled:
-                    return "failed";
+                case VacancyStatus.InProcess:
+                    return "draft";
                 case VacancyStatus.Published:
                 case VacancyStatus.InCommittee:
-                case VacancyStatus.AppliesAcceptance:
-                    return "executed";
-                case VacancyStatus.Closed:
                     return "work";
-                default: return null;
-            }
-        }
-
-        public static string GetHtmlClass(this PositionStatus value)
-        {
-            switch (value)
-            {
-                case PositionStatus.Removed:
-                case PositionStatus.InProcess:
-                    return "failed"; 
-                case PositionStatus.Published:
+                case VacancyStatus.Closed:
                     return "executed";
-                default:
-                    return null;
+                case VacancyStatus.Cancelled:
+                    return "failed";
+                case VacancyStatus.OfferAccepted:
+                    return "work";
+                case VacancyStatus.OfferRejected:
+                case VacancyStatus.Removed:
+                default:  return "failed";
             }
         }
 
