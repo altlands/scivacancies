@@ -85,6 +85,7 @@ namespace SciVacancies.WebApp.Infrastructure
 
             /*dictionaties*/
             Mapper.CreateMap<Foiv, FoivViewModel>();
+            Mapper.CreateMap<ResearchDirection, ResearchDirectionViewModel>();
         }
     }
 }

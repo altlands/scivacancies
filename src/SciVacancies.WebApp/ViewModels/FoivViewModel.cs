@@ -4,7 +4,7 @@ using SciVacancies.WebApp.ViewModels.Base;
 
 namespace SciVacancies.WebApp.ViewModels
 {
-    public class FoivViewModel
+    public class FoivViewModel: ViewModelBase
     {
         public int Id { get; set; }
         public int? ParentId { get; set; }
