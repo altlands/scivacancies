@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using AutoMapper;
 using MediatR;
 using Microsoft.AspNet.Mvc.Rendering;
 using SciVacancies.Domain.Enums;
@@ -29,7 +30,7 @@ namespace SciVacancies.WebApp.ViewModels
             VacancyStates = new List<VacancyStatus>
             {
                 VacancyStatus.Published
-                ,VacancyStatus.AppliesAcceptance
+                ,VacancyStatus.InCommittee
                 ,VacancyStatus.Closed
             }.Select(c => new SelectListItem { Value = ((int)c).ToString(), Text = c.GetDescription() });
 
@@ -39,9 +40,16 @@ namespace SciVacancies.WebApp.ViewModels
                     mediator.Send(new SelectAllRegionsQuery())
                         .Select(c => new SelectListItem { Value = c.Id.ToString(), Text = c.Title });
 
-                Foivs =
-                    mediator.Send(new SelectAllFoivsQuery())
-                        .Select(c => new SelectListItem { Value = c.Id.ToString(), Text = c.Title });
+                var allFoivs = Mapper.Map<IEnumerable<FoivViewModel>>(mediator.Send(new SelectAllFoivsQuery())).ToList();
+                Foivs = allFoivs.Where(c => c.ParentId == 0).ToList(); //заоплнили первый уровень
+                Foivs.ForEach(firstLevelItem =>
+                {
+                    firstLevelItem.Childs = allFoivs.Where(secondLevelItem => secondLevelItem.ParentId == firstLevelItem.Id).ToList(); //заполнили второй уровень
+                    firstLevelItem.Childs.ForEach(thirdLevelItem =>
+                    {
+                        thirdLevelItem.Items= allFoivs.Where(f => f.ParentId == thirdLevelItem.Id).Select(f => new SelectListItem { Value = f.Id.ToString(), Text = f.Title }); //заполнили третий уровень
+                    }); 
+                });
 
                 ResearchDirections =
                     mediator.Send(new SelectAllResearchDirectionsQuery())
@@ -58,7 +66,8 @@ namespace SciVacancies.WebApp.ViewModels
         public IEnumerable<SelectListItem> Periods;
         public IEnumerable<SelectListItem> OrderBys;
         public IEnumerable<SelectListItem> Regions;
-        public IEnumerable<SelectListItem> Foivs;
+        public List<FoivViewModel> Foivs;
+
         public IEnumerable<SelectListItem> ResearchDirections;
         public IEnumerable<SelectListItem> Positions;
         public IEnumerable<SelectListItem> VacancyStates;

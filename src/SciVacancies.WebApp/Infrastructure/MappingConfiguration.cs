@@ -55,15 +55,15 @@ namespace SciVacancies.WebApp.Infrastructure
             Mapper.CreateMap<Education, EducationEditViewModel>()
                 .ForMember(dest => dest.GraduationYear, src => src.MapFrom(c => c.GraduationYear.HasValue ? c.GraduationYear.Value.Year : 0));
             Mapper.CreateMap<EducationEditViewModel, SciVacancies.Domain.Core.Education>()
-                .ForMember(dest => dest.GraduationYear, src => src.MapFrom(c => (c.GraduationYear.HasValue && c.GraduationYear.Value!=0) ? new DateTime(c.GraduationYear.Value, 1, 1) : default(DateTime)));
+                .ForMember(dest => dest.GraduationYear, src => src.MapFrom(c => (c.GraduationYear.HasValue && c.GraduationYear.Value != 0) ? new DateTime(c.GraduationYear.Value, 1, 1) : default(DateTime)));
 
             //piblication
             Mapper.CreateMap<Publication, PublicationEditViewModel>();
-            Mapper.CreateMap<PublicationEditViewModel,SciVacancies.Domain.Core.Publication >();
+            Mapper.CreateMap<PublicationEditViewModel, SciVacancies.Domain.Core.Publication>();
 
 
             /*Vacancy*/
-            
+
             //vacancy
             Mapper.CreateMap<Vacancy, VacancyCreateViewModel>();
             Mapper.CreateMap<Vacancy, VacancyDetailsViewModel>();
@@ -81,6 +81,10 @@ namespace SciVacancies.WebApp.Infrastructure
             Mapper.CreateMap<VacancyApplication, VacancyApplicationDetailsViewModel>().IncludePagedResultMapping();
             Mapper.CreateMap<Page<VacancyApplication>, Page<VacancyApplicationDetailsViewModel>>();
             Mapper.CreateMap<VacancyApplication, VacancyApplicationSetWinnerViewModel>();
+
+
+            /*dictionaties*/
+            Mapper.CreateMap<Foiv, FoivViewModel>();
         }
     }
 }
