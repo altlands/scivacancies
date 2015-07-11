@@ -43,12 +43,12 @@ namespace SciVacancies.WebApp.ViewModels
                 Foivs = mediator.Send(new SelectAllFoivsQuery())
                     .Select(c => new SelectListItem { Value = c.Id.ToString(), Text = c.Title });
 
-                //var allFoivs = Mapper.Map<IEnumerable<FoivViewModel>>(mediator.Send(new SelectAllFoivsQuery())).ToList();
-                //Foivs = allFoivs.Where(c => c.ParentId == 0).ToList(); //заоплнили первый уровень
-                //Foivs.ForEach(firstLevelItem =>
-                //{
-                //    firstLevelItem.Items = allFoivs.Where(secondLevelItem => secondLevelItem.ParentId == firstLevelItem.Id).ToList().Select(f => new SelectListItem { Value = f.Id.ToString(), Text = f.Title }); //заполнили второй уровень
-                //});
+                var allFoivs = Mapper.Map<IEnumerable<FoivViewModel>>(mediator.Send(new SelectAllFoivsQuery())).ToList();
+                HFoivs = allFoivs.Where(c => c.ParentId == null).ToList(); //заоплнили первый уровень
+                HFoivs.ForEach(firstLevelItem =>
+                {
+                    firstLevelItem.Items = allFoivs.Where(secondLevelItem => secondLevelItem.ParentId == firstLevelItem.Id).ToList().Select(f => new SelectListItem { Value = f.Id.ToString(), Text = f.Title }); //заполнили второй уровень
+                });
 
                 var allResearchDirections = Mapper.Map<IEnumerable<ResearchDirectionViewModel>>(mediator.Send(new SelectAllResearchDirectionsQuery())).ToList();
                 ResearchDirections = allResearchDirections.Where(c => c.ParentId == 0).ToList(); //заоплнили первый уровень
@@ -76,7 +76,7 @@ namespace SciVacancies.WebApp.ViewModels
         public IEnumerable<SelectListItem> Regions;
 
         public IEnumerable<SelectListItem> Foivs;
-        //public List<FoivViewModel> Foivs;
+        public List<FoivViewModel> HFoivs;
         public List<ResearchDirectionViewModel> ResearchDirections;
 
         public IEnumerable<SelectListItem> Positions;

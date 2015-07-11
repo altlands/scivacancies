@@ -203,6 +203,20 @@ $(document).ready(function () {
         return false;
     });
     /*
+     *
+     */
+    $('.collapsible-filter-header').click(function() {
+        var source = this;
+        if ($(source).hasClass('open')) {
+            $(source).children('ul').hide();
+            $(source).removeClass('open');
+        }
+        else {
+            $(source).addClass('open');
+            $(source).children('ul').show();
+        }
+    });
+    /*
     end of the code
     */
 });
