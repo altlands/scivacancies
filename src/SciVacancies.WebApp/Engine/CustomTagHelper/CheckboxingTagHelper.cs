@@ -6,14 +6,19 @@ using Microsoft.AspNet.Razor.Runtime.TagHelpers;
 
 namespace SciVacancies.WebApp
 {
-    [TargetElement("checkboxing", Attributes = "items, values, property, showcount, labelforindex")]
+    [TargetElement("checkboxing", Attributes = "items, values, property")]
     public class CheckboxingTagHelper : TagHelper
     {
+        [HtmlAttributeName("items")]
         public IEnumerable<SelectListItem> Items { get; set; }
+        [HtmlAttributeName("values")]
         public IEnumerable<string> Values { get; set; }
+        [HtmlAttributeName("property")]
         public string Property { get; set; }
-        public int Showcount { get; set; } = 0;
-        public int LabelForIndex { get; set; } = 0;
+        [HtmlAttributeName("showcount")]
+        public int Showcount { get; set; }
+        [HtmlAttributeName("labelforindex")]
+        public int LabelForIndex { get; set; }
 
         public override void Process(TagHelperContext context, TagHelperOutput output)
         {

@@ -179,7 +179,9 @@ $(document).ready(function () {
      */
     $("div.filter-contents span.show-all-list").click(function () {
         var source = this;
-        $(source).siblings("ul").find("li").show(500, function () {
+        var parentContainer = $(source).parents('.cat-filter')[0];
+        //plain checkbox list
+        $(parentContainer).find("li").show(500, function () {
             $(source).hide();
             $(source).siblings("span.hide-unselected").show();
         });
@@ -189,7 +191,9 @@ $(document).ready(function () {
      */
     $("div.filter-contents span.hide-unselected").click(function () {
         var source = this;
-        $(source).siblings("ul").find("li").find("span.checkbox:not(.checked)").parents("li").hide(300, function () {
+        var parentContainer = $(source).parents('.cat-filter')[0];
+        //plain checkbox list
+        $(parentContainer).find("span.checkbox:not(.checked)").parents("li)").hide(300, function () {
             $(source).hide();
             $(source).siblings("span.show-all-list").show();
         });

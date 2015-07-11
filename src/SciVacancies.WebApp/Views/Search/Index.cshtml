@@ -44,61 +44,54 @@
                             var foivs = (List<FoivViewModel>)ViewBag.FilterSource.HFoivs;
                             for (var a = 0; a < foivs.Count; a++)
                             {
-                                <text>
-                                <li class="collapsible-filter-header">
-                                    <span>@foivs[a].Title (@foivs[a].Items.Count())</span>
-                                    <ul class="list-checkboxes" style="display: none;">
-                                        <checkboxing items="foivs[a].Items"
-                                                     values="Model.Foivs"
-                                                     property="Foivs"
-                                                     labelforindex="@labelForIndex"></checkboxing>
-                                    </ul>
-                                </li>
-                                </text>
-                                labelForIndex += foivs[a].Items.Count();
+                                if (foivs[a].Items.Any())
+                                {
+                                    <text>
+                                    <li class="collapsible-filter-header">
+                                        <span>@foivs[a].Title (@foivs[a].Items.Count())</span>
+                                        <ul class="list-checkboxes" style="display: none;">
+                                            <checkboxing items="foivs[a].Items"
+                                                         values="Model.Foivs"
+                                                         property="Foivs"
+                                                         labelforindex="@labelForIndex"></checkboxing>
+                                        </ul>
+                                    </li>
+                                    </text>
+                                    labelForIndex += foivs[a].Items.Count();
+                                }
                             }
                         }
                     </ul>
-                    <span class="small-icon icon-sm-eye show-all-list"><span>Показать все</span></span>
-                    <span class="small-icon icon-sm-eye hide-unselected" style="display: none;"><span>Только выбранные</span></span>
                 </div>
 
                 <div class="cat-filter">
                     <div class="title"><span>Научное направление</span></div>
                     <ul class="sub-cat level-1">
                         @{
-                            var researchDirections = (List<ResearchDirectionViewModel>)ViewBag.FilterSource.ResearchDirections;
+                            var researchDirections = (List<ResearchDirectionViewModel>) ViewBag.FilterSource.ResearchDirections;
                             labelForIndex = 0;
                             for (var a = 0; a < researchDirections.Count; a++)
                             {
                                 for (var b = 0; b < researchDirections[a].Childs.Count; b++)
                                 {
                                     <text>
-                                    <li class="collapsible-filter-header">
-                                        <span>@researchDirections[a].Childs[b].Title (@researchDirections[a].Childs[b].Items.Count())</span>
-                                        <ul class="list-checkboxes" style="display: none;">
-                                            <checkboxing items="researchDirections[a].Childs[b].Items"
-                                                         values="Model.ResearchDirections"
-                                                         property="ResearchDirections"
-                                                         showcount="0"
-                                                         labelforindex="@labelForIndex"></checkboxing>
-                                        </ul>
-                                    </li>
+                                        <li class="collapsible-filter-header">
+                                            <span>@researchDirections[a].Childs[b].Title (@researchDirections[a].Childs[b].Items.Count())</span>
+                                            <ul class="list-checkboxes" style="display: none;">
+                                                <checkboxing items="researchDirections[a].Childs[b].Items"
+                                                             values="Model.ResearchDirections"
+                                                             property="ResearchDirections"
+                                                             showcount="0"
+                                                             labelforindex="@labelForIndex"></checkboxing>
+                                            </ul>
+                                        </li>
                                     </text>
                                     labelForIndex += researchDirections[a].Childs[b].Items.Count();
                                 }
-
                             }
                         }
                     </ul>
                 </div>
-
-
-
-
-
-
-
 
                 <div class="cat-filter">
                     <div class="title"><span>Категория должности</span></div>
