@@ -86,6 +86,8 @@ namespace SciVacancies.WebApp
             {
                 InnerHtml = span.ToString() + label
             };
+            li.AddCssClass("li-checkbox");
+
             if (Showcount > 0 && i > Showcount)
             {
                 li.Attributes.Add("style", "display: none;");

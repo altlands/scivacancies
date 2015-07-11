@@ -25,6 +25,8 @@ namespace SciVacancies.WebApp.Controllers
                 VacanciesList = _mediator.Send(new SelectPagedVacanciesQuery {PageSize = 4, PageIndex = 1, OrderBy = ConstTerms.OrderByDateStartDescending, PublishedOnly = true}).MapToPagedList()
             };
 
+            model.ResearchDirections = new VacanciesFilterSource(_mediator).ResearchDirections;
+
             return View(model);
         }
 
@@ -42,6 +44,7 @@ namespace SciVacancies.WebApp.Controllers
             return View();
         }
 
+        [PageTitle("Error")]
         public IActionResult Error()
         {
             return View("~/Views/Shared/Error.cshtml");

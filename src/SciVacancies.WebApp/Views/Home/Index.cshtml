@@ -25,8 +25,8 @@
 
         </div>
         @*<a asp-controller="search" asp-route-order="">
-            <span class="small-icon icon-sm-eye inline-block ml9 mt13"><span>Показать все</span></span>
-        </a>*@
+                <span class="small-icon icon-sm-eye inline-block ml9 mt13"><span>Показать все</span></span>
+            </a>*@
     </div>
     <div class="row-2">
         <h4>Вакансии дня</h4>
@@ -49,8 +49,8 @@
             }
         </div>
         @*<a asp-controller="search" asp-route-order="">
-            <span class="small-icon icon-sm-eye inline-block ml9 mt13"><span>Показать все</span></span>
-        </a>*@
+                <span class="small-icon icon-sm-eye inline-block ml9 mt13"><span>Показать все</span></span>
+            </a>*@
     </div>
 </div>
 
@@ -58,136 +58,66 @@
     <h4 class="mb10">Вакансии по областям науки</h4>
 
     <ul class="nav nav-tabs" id="myTab">
-        <li class="active">
-            <a href="#natural">Естественные</a>
-        </li>
-        <li>
-            <a href="#medical">Медицинские</a>
-        </li>
-        <li>
-            <a href="#humanities">Гуманитарные</a>
-        </li>
-        <li>
-            <a href="#technical">Технические</a>
-        </li>
-        <li>
-            <a href="#social">Социальные</a>
-        </li>
-        <li>
-            <a href="#agricultural">Сельскохозяйственные</a>
-        </li>
+        @foreach (var item in Model.ResearchDirections[0].Childs)
+        {
+            <li>
+                <a href="#ResearchDirection_@item.Id">
+                    @item.Title
+                </a>
+            </li>
+        }
     </ul>
 
+
     <div class="tab-content tab-content-main-page">
-        <div class="tab-pane active" id="natural">
 
-            <div class="float-right">
-                <input type="text" placeholder="Поиск по научным направлениям" />
+        @foreach (var item in Model.ResearchDirections[0].Childs.Where(c => c.Childs.Count > 0))
+        {
+            <text>
+            <div class="tab-pane active" id="ResearchDirection_@item.Id">
+
+                @*<div class="float-right">
+                        <input type="text" placeholder="Поиск по научным направлениям" />
+                    </div>*@
+
+                <h4>@item.Title</h4>
+
+                <ul class="tabs">
+                    @for (int i = 0; i < item.Childs.Count; i++)
+                    {
+                        var innerItem = item.Childs[i];
+                        <text>
+                        <li class="sub-research-directions @(i == 0 ? "active" : string.Empty)" data-tabname="list-sections-science_@innerItem.Id">
+                            <span>@innerItem.Title</span>
+                        </li>
+                        </text>
+                    }
+                </ul>
+
+                @for (int i = 0; i < item.Childs.Count; i++)
+                {
+                    var innerItem = item.Childs[i];
+                    <text>
+                    <ul class="list-sections-science" id="list-sections-science_@innerItem.Id" @(i != 0 ? @"style=display:none;" : string.Empty)>
+                        @foreach (var innerInnerItem in innerItem.Childs)
+                        {
+                            <li>
+                                <a href="#">@innerInnerItem.Title</a>
+                                <p>1256 вакансий</p>
+                                <p>Средняя заработная плата – 67000 руб.</p>
+                            </li>
+                        }
+                    </ul>
+                    </text>
+                }
             </div>
+            </text>
+        }
 
-            <h4>Естественные и точные науки</h4>
 
-            <div class="read-italic">В данной категории – 2681110 вакансий</div>
-
-            <ul class="tabs">
-                <li class="active">
-                    <span>Науки о Земле и смежные экологические науки	</span>
-                </li>
-                <li>
-                    <span>Математика</span>
-                </li>
-                <li>
-                    <span>Компьютерные и информационные науки</span>
-                </li>
-                <li>
-                    <span>Биологические науки</span>
-                </li>
-                <li>
-                    <span>Химические науки</span>
-                </li>
-                <li>
-                    <span>Физика и Астрономия</span>
-                </li>
-                <li>
-                    <span>Прочие естественные науки</span>
-                </li>
-            </ul>
-
-            <ul class="list-sections-science">
-                <li>
-                    <a href="#">Океанография</a>
-                    <p>1256 вакансий</p>
-                    <p>Средняя заработная плата – 67000 руб.</p>
-                </li>
-                <li>
-                    <a href="#">Водные ресурсы</a>
-                    <p>1256 вакансий</p>
-                    <p>Средняя заработная плата – 67000 руб.</p>
-                </li>
-                <li>
-                    <a href="#">Минералогия</a>
-                    <p>1256 вакансий</p>
-                    <p>Средняя заработная плата – 67000 руб.</p>
-                </li>
-                <li>
-                    <a href="#">Палеонтология</a>
-                    <p>1256 вакансий</p>
-                    <p>Средняя заработная плата – 67000 руб.</p>
-                </li>
-                <li>
-                    <a href="#">Геология</a>
-                    <p>1256 вакансий</p>
-                    <p>Средняя заработная плата – 67000 руб.</p>
-                </li>
-                <li>
-                    <a href="#">Науки о земле – междисциплинарные</a>
-                    <p>1256 вакансий</p>
-                    <p>Средняя заработная плата – 67000 руб.</p>
-                </li>
-                <li>
-                    <a href="#">Физическая география</a>
-                    <p>1256 вакансий</p>
-                    <p>Средняя заработная плата – 67000 руб.</p>
-                </li>
-                <li>
-                    <a href="#">Геохимия и геофизика</a>
-                    <p>1256 вакансий</p>
-                    <p>Средняя заработная плата – 67000 руб.</p>
-                </li>
-                <li>
-                    <a href="#">Науки об окружающей среде</a>
-                    <p>1256 вакансий</p>
-                    <p>Средняя заработная плата – 67000 руб.</p>
-                </li>
-                <li>
-                    <a href="#">Геоинформационные системы</a>
-                    <p>1256 вакансий</p>
-                    <p>Средняя заработная плата – 67000 руб.</p>
-                </li>
-                <li>
-                    <a href="#">Метеорология и науки об атмосфере</a>
-                    <p>1256 вакансий</p>
-                    <p>Средняя заработная плата – 67000 руб.</p>
-                </li>
-            </ul>
-        </div>
-        <div class="tab-pane" id="medical">
-            <h4>Медицинские науки</h4>
-        </div>
-        <div class="tab-pane" id="humanities">
-            <h4>Гуманитарные науки</h4>
-        </div>
-        <div class="tab-pane" id="technical">
-            <h4>Технические науки</h4>
-        </div>
-        <div class="tab-pane" id="social">
-            <h4>Социальные науки</h4>
-        </div>
-        <div class="tab-pane" id="agricultural">
-            <h4>Сельскохозяйственные науки</h4>
-        </div>
     </div>
 </div>
+
 
 <div class="b-graphics">
     <h4>Вакансии в графиках</h4>

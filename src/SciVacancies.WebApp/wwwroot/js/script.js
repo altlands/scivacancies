@@ -209,16 +209,24 @@ $(document).ready(function () {
     /*
      *
      */
-    $('.collapsible-filter-header').click(function() {
+    $('.collapsible-filter-header').click(collapsibleFilterClicked);
+    /*
+     * Управление внутренними вклалками в Областях науки
+     */
+    $('.sub-research-directions').click(function () {
         var source = this;
-        if ($(source).hasClass('open')) {
-            $(source).children('ul').hide();
-            $(source).removeClass('open');
-        }
-        else {
-            $(source).addClass('open');
-            $(source).children('ul').show();
-        }
+
+        $(source).siblings().removeClass('active');
+        $(source).addClass('active');
+        var parentContainer = $(source).parents('ul.tabs')[0];
+        $(parentContainer).siblings('ul.list-sections-science').hide();
+        $(parentContainer).siblings('ul.list-sections-science[id="' + $(source).attr('data-tabname') + '"]').show();
+    });
+    /*
+     * 
+     */
+    $('li.li-checkbox').click(function (event) {
+        event.stopPropagation();
     });
     /*
     end of the code
@@ -320,7 +328,7 @@ function addNewItemToList(source, prefix) {
 
     var lastItemRow = $(parentDiv).find(".property-list-item").last();
     $(templateDiv).removeAttr('data-list-template');
-    $(templateDiv).find("input[name=\""+ prefix + '.Index"]').val(newIndex);
+    $(templateDiv).find("input[name=\"" + prefix + '.Index"]').val(newIndex);
     $(lastItemRow).after(templateDiv);
     $(templateDiv).fadeIn("slow");
 
@@ -342,4 +350,17 @@ function removeItemFromList(source) {
         return false;
     }
     return false;
+};
+
+function collapsibleFilterClicked(event) {
+    event.stopPropagation();
+    var source = this;
+    if ($(source).hasClass('open')) {
+        $(source).children('ul').hide();
+        $(source).removeClass('open');
+    }
+    else {
+        $(source).addClass('open');
+        $(source).children('ul').show();
+    }
 };
