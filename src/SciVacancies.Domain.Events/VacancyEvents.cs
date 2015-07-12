@@ -68,6 +68,19 @@ namespace SciVacancies.Domain.Events
         public string Reason { get; set; }
     }
 
+    public class VacancyOfferAcceptedByWinner : VacancyEventBase
+    {
+    }
+    public class VacancyOfferRejectedByWinner : VacancyEventBase
+    {
+    }
+    public class VacancyOfferAcceptedByPretender : VacancyEventBase
+    {
+    }
+    public class VacancyOfferRejectedByPretender : VacancyEventBase
+    {
+    }
+
     /// <summary>
     /// Вакансия закрыта (только в случае, если победитель или претендент приняли условия контракта)
     /// </summary>
@@ -80,26 +93,6 @@ namespace SciVacancies.Domain.Events
         public Guid PretenderResearcherGuid { get; set; }
         public Guid PretenderVacancyApplicationGuid { get; set; }
         public bool IsPretenderAccept { get; set; }
-    }
-
-    public class VacancyOfferAcceptedByWinner : VacancyEventBase
-    {
-
-    }
-
-    public class VacancyOfferRejectedByWinner : VacancyEventBase
-    {
-
-    }
-
-    public class VacancyOfferAcceptedByPretender : VacancyEventBase
-    {
-
-    }
-
-    public class VacancyOfferRejectedByPretender : VacancyEventBase
-    {
-
     }
 
     /// <summary>

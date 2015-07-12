@@ -129,13 +129,13 @@ namespace SciVacancies.ReadModel.Core
         public Guid winner_vacancyapplication_guid { get; set; }
         public DateTime? winner_request_date { get; set; }
         public DateTime? winner_response_date { get; set; }
-        public bool is_winner_accept { get; set; }
+        public bool? is_winner_accept { get; set; }
 
         public Guid pretender_researcher_guid { get; set; }
         public Guid pretender_vacancyapplication_guid { get; set; }
         public DateTime? pretender_request_date { get; set; }
         public DateTime? pretender_response_date { get; set; }
-        public bool is_pretender_accept { get; set; }
+        public bool? is_pretender_accept { get; set; }
 
         public DateTime? publish_date { get; set; }
 

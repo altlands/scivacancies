@@ -51,7 +51,7 @@ namespace SciVacancies.Domain.DataModels
         /// <summary>
         /// Фамилия руководителя
         /// </summary>
-        public string HeadLastName { get; set; }
+        public string HeadSecondName { get; set; }
 
         /// <summary>
         /// Отчество руководителя
