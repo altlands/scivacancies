@@ -12,22 +12,19 @@ namespace SciVacancies.Domain.Aggregates
 {
     public class Organization : AggregateBase
     {
+        private OrganizationDataModel Data { get; set; }
 
-        private bool Removed { get; set; }
-        public OrganizationDataModel Data { get; set; }
+        private OrganizationStatus Status { get; set; }
 
-        private List<Position> Positions { get; set; }
-        private List<Vacancy> Vacancies { get; set; }
+        private List<Guid> VacancyGuids { get; set; }
 
         public Organization()
         {
-            Positions = new List<Position>();
-            Vacancies = new List<Vacancy>();
+            VacancyGuids = new List<Guid>();
         }
         public Organization(Guid guid, OrganizationDataModel data)
         {
-            Positions = new List<Position>();
-            Vacancies = new List<Vacancy>();
+            VacancyGuids = new List<Guid>();
             RaiseEvent(new OrganizationCreated()
             {
                 OrganizationGuid = guid,
@@ -45,7 +42,7 @@ namespace SciVacancies.Domain.Aggregates
         }
         public void Remove()
         {
-            if (!this.Removed)
+            if (Status != OrganizationStatus.Removed)
             {
                 RaiseEvent(new OrganizationRemoved()
                 {
@@ -54,19 +51,19 @@ namespace SciVacancies.Domain.Aggregates
             }
         }
 
-        public Guid CreatePosition(PositionDataModel data)
+        public Guid CreateVacancy(VacancyDataModel data)
         {
-            Guid positionGuid = Guid.NewGuid();
-            RaiseEvent(new PositionCreated()
+            Guid vacancyGuid = Guid.NewGuid();
+            RaiseEvent(new VacancyCreated()
             {
-                PositionGuid = positionGuid,
+                VacancyGuid = vacancyGuid,
                 OrganizationGuid = this.Id,
                 Data = data
             });
 
-            return positionGuid;
+            return vacancyGuid;
         }
-        public void UpdatePosition(Guid positionGuid, PositionDataModel data)
+        public void UpdateVacancy(Guid vacancyGuid, VacancyDataModel data)
         {
             Position position = this.Positions.Find(f => f.PositionGuid == positionGuid);
             if (position != null && position.Status == PositionStatus.InProcess)

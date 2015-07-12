@@ -6,8 +6,6 @@ namespace SciVacancies.Domain.Events
     public class VacancyEventBase : EventBase
     {
         public Guid VacancyGuid { get; set; }
-        [Obsolete("Position will be removed")]
-        public Guid PositionGuid { get; set; }
         public Guid OrganizationGuid { get; set; }
     }
 
@@ -39,16 +37,6 @@ namespace SciVacancies.Domain.Events
     /// </summary>
     public class VacancyPublished : VacancyEventBase
     {
-        [Obsolete("This field will be removed")]
-        public VacancyDataModel Data { get; set; }
-    }
-
-    /// <summary>
-    /// Вакансия в статусе "приём заявок"
-    /// </summary>
-    [Obsolete("Will be removed")]
-    public class VacancyAcceptApplications : VacancyEventBase
-    {
     }
 
     /// <summary>
@@ -70,7 +58,7 @@ namespace SciVacancies.Domain.Events
     }
 
     /// <summary>
-    /// Для вакансии выбран претендент (второе место)
+    /// Для вакансии выбран претендент (второе место), после этого начинается работа с победителем и претендетом (отправка поочерёдно им предложения о работе)
     /// </summary>
     public class VacancyPretenderSet : VacancyEventBase
     {
@@ -81,7 +69,7 @@ namespace SciVacancies.Domain.Events
     }
 
     /// <summary>
-    /// Вакансия закрыта, начинается работа с победителем и претендетом (отправка поочерёдно им предложения о работе)
+    /// Вакансия закрыта (только в случае, если победитель или претендент приняли условия контракта)
     /// </summary>
     public class VacancyClosed : VacancyEventBase
     {

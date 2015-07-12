@@ -171,6 +171,8 @@ namespace SciVacancies.Domain.DataModels
 
         public DateTime? WinnerResponseDate { get; set; }
 
+        public bool IsWinnerAccept { get; set; }
+
         /// <summary>
         /// Guid исследователя-претендента
         /// </summary>
@@ -184,6 +186,8 @@ namespace SciVacancies.Domain.DataModels
         public DateTime? PretenderRequestDate { get; set; }
 
         public DateTime? PretenderResponseDate { get; set; }
+
+        public bool IsPretenderAccept { get; set; }
 
         /// <summary>
         /// Дата публикации (начало приёма заявок)
@@ -203,7 +207,5 @@ namespace SciVacancies.Domain.DataModels
         public List<VacancyCriteria> Criterias { get; set; }
 
         #endregion
-
-        public Guid OrganizationGuid { get; set; }
     }
 }

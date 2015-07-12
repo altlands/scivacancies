@@ -45,6 +45,8 @@ namespace SciVacancies.Domain.DataModels
         public List<Education> Educations { get; set; }
         public List<Publication> Publications { get; set; }
 
+        public List<SearchSubscription> SearchSubscriptions { get; set; }
+
         public List<Guid> FavoriteVacancyGuids { get; set; }
     }
 }

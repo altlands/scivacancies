@@ -12,11 +12,9 @@ namespace SciVacancies.Domain.Aggregates
 {
     public class Researcher : AggregateBase
     {
-        private bool Removed { get; set; }
         private ResearcherDataModel Data { get; set; }
 
-        private List<Guid> FavoriteVacancyGuids { get; set; }
-        private List<SearchSubscription> SearchSubscriptions { get; set; }
+        private ResearcherStatus Status { get; set; }
 
         private List<VacancyApplication> VacancyApplications { get; set; }
 

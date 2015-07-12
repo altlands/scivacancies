@@ -6,6 +6,11 @@ namespace SciVacancies.Domain.DataModels
 {
     public class OrganizationDataModel
     {
+        public OrganizationDataModel()
+        {
+            ResearchDirections = new List<ResearchDirection>();
+        }
+
         #region General
 
         /// <summary>
