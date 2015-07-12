@@ -1,25 +1,23 @@
-﻿using SciVacancies.Domain.Enums;
-
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
-using NPoco;
+﻿using NPoco;
 
 namespace SciVacancies.ReadModel.Core
 {
-    [TableName("Regions")]
-    [PrimaryKey("Guid", AutoIncrement = false)]
-    public class Region : BaseEntity
+    [TableName("regions")]
+    [PrimaryKey("id", AutoIncrement = false)]
+    public class Region
     {
-        public int Id { get; set; }
-        public int FedDistrictId { get; set; }
-        public string Title { get; set; }
-        public int OsmId { get; set; }
-        public string Okato { get; set; }
-        public string Slug { get; set; }
-        public int Code { get; set; }
+        public int id { get; set; }
 
+        public int? feddistrict_id { get; set; }
+
+        public string title { get; set; }
+
+        public int? osm_id { get; set; }
+
+        public string okato { get; set; }
+
+        public string slug { get; set; }
+
+        public int? code { get; set; }
     }
 }

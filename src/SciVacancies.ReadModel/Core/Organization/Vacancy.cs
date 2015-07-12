@@ -4,167 +4,155 @@ using System;
 using System.Collections.Generic;
 
 using NPoco;
-using Nest;
 
 namespace SciVacancies.ReadModel.Core
 {
-    [TableName("Vacancies")]
-    [PrimaryKey("Guid", AutoIncrement = false)]
+    [TableName("vacancies")]
+    [PrimaryKey("guid", AutoIncrement = false)]
     public class Vacancy : BaseEntity
     {
-        /// <summary>
-        /// Айдишник для поисковика
-        /// </summary>
-        [Ignore]
-        public Guid Id { get { return this.Guid; } }
+        #region General
 
-        /// <summary>
-        /// Тип занятости
-        /// </summary>
-        public EmploymentType EmploymentType { get; set; }
-        /// <summary>
-        /// График работы
-        /// </summary>
-        public OperatingScheduleType OperatingScheduleType { get; set; }
-
-        /// <summary>
-        /// Идентификатор организации
-        /// </summary>
-        public Guid OrganizationGuid { get; set; }
-
-        public Guid PositionGuid { get; set; }
-        [ElasticProperty(Index = FieldIndexOption.NotAnalyzed, Type = FieldType.String)]
-        public Guid PositionTypeGuid { get; set; }
-
-        public Guid WinnerGuid { get; set; }
-        public Guid PretenderGuid { get; set; }
-
-        public string OrganizationName { get; set; }
         /// <summary>
         /// Должность
         /// </summary>
-        public string Name { get; set; }
+        public string name { get; set; }
 
         /// <summary>
         /// Должность (Полное наименование)
         /// </summary>
-        public string FullName { get; set; }
+        public string fullname { get; set; }
 
-
-        /// <summary>
-        /// Отрасль науки
-        /// </summary>
-        public string ResearchDirection { get; set; }
-        public int ResearchDirectionId { get; set; }
-        /// <summary>
-        /// Тематика исследований
-        /// </summary>
-        public string ResearchTheme { get; set; }
-        public int ResearchThemeId { get; set; }
         /// <summary>
         /// Задачи
         /// </summary>
-        public string Tasks { get; set; }
+        public string tasks { get; set; }
 
         /// <summary>
-        /// Критерии оценки 
+        /// Тематика исследований
         /// </summary>
-        [Ignore]
-        [ElasticProperty(OptOut = true)]
-        public KeyValuePair<int, int> Criteria { get; set; } //<CriteriaId, Amount>
-
-        /// <summary>
-        /// Зарплата в месяц
-        /// </summary>
-        public int SalaryFrom { get; set; }
-        public int SalaryTo { get; set; }
-        //public Currency SalaryCurrency { get; set; }
-
-        /// <summary>
-        /// Стимулирующие выплаты
-        /// </summary>
-        public string Bonuses { get; set; }
-
-
-        /// <summary>
-        /// Тип трудового договора
-        /// </summary>
-        public ContractType ContractType { get; set; }
-
-        /// <summary>
-        /// Срок трудового договора (для срочного договора)
-        /// </summary>
-        public decimal ContractTime { get; set; }
-
-        /// <summary>
-        /// Социальный пакет
-        /// </summary>
-        public bool SocialPackage { get; set; }
-
-        /// <summary>
-        /// Найм жилья
-        /// </summary>
-        public bool Rent { get; set; }
-
-        /// <summary>
-        /// Служебное жильё
-        /// </summary>
-        public bool OfficeAccomodation { get; set; }
-
-        /// <summary>
-        /// Компенсация транспорта
-        /// </summary>
-        public bool TransportCompensation { get; set; }
-
-        /// <summary>
-        /// Регион
-        /// </summary>
-        public string Region { get; set; }
-        public int RegionId { get; set; }
+        public string researchtheme { get; set; }
 
         /// <summary>
         /// Населенный пункт 
         /// </summary>
-        public string CityName { get; set; }
+        public string cityname { get; set; }
 
         /// <summary>
         /// Дополнительно
         /// </summary>
-        public string Details { get; set; }
-
+        public string details { get; set; }
 
         /// <summary>
         /// Лицо для получения дополнительных справок
         /// </summary>
-        public string ContactName { get; set; }
-        public string ContactEmail { get; set; }
-        public string ContactPhone { get; set; }
-        public string ContactDetails { get; set; }
+        public string contact_name { get; set; }
+        public string contact_email { get; set; }
+        public string contact_phone { get; set; }
+        public string contact_details { get; set; }
 
-        public VacancyStatus Status { get; set; }
-        /// <summary>
-        /// Количество добавивших вакансию в избранное
-        /// </summary>
-        public int FollowersCounter { get; set; }
+        #endregion
+
+        #region Conditions
 
         /// <summary>
-        /// Дата начала публикации
+        /// Зарплата в месяц
         /// </summary>
-        public DateTime DateStart { get; set; }
+        public int? salary_from { get; set; }
+        public int? salary_to { get; set; }
 
         /// <summary>
-        /// Дата начала приёма заявок на вакансию
+        /// Стимулирующие выплаты
         /// </summary>
-        public DateTime DateStartAcceptance { get; set; }
+        public string bonuses { get; set; }
+
         /// <summary>
-        /// Дата окончания приёма заявок на вакансию
+        /// Тип трудового договора
         /// </summary>
-        public DateTime DateFinishAcceptance { get; set; }
+        public ContractType contract_type { get; set; }
+
         /// <summary>
-        /// Дата окончания публикации - когда вакансия переведена в статусы : отменена, закрыта
+        /// Срок трудового договора (для срочного договора)
         /// </summary>
-        public DateTime DateFinish { get; set; }
-        [Obsolete("Дублируется с DateStart")]
-        public DateTime CreationDate { get; set; }
+        public decimal? contract_time { get; set; }
+
+        /// <summary>
+        /// Тип занятости
+        /// </summary>
+        public EmploymentType employment_type { get; set; }
+        /// <summary>
+        /// График работы
+        /// </summary>
+        public OperatingScheduleType operatingschedule_type { get; set; }
+
+        /// <summary>
+        /// Социальный пакет
+        /// </summary>
+        public bool socialpackage { get; set; }
+
+        /// <summary>
+        /// Найм жилья
+        /// </summary>
+        public bool rent { get; set; }
+
+        /// <summary>
+        /// Служебное жильё
+        /// </summary>
+        public bool officeaccomodation { get; set; }
+
+        /// <summary>
+        /// Компенсация транспорта
+        /// </summary>
+        public bool transportcompensation { get; set; }
+
+        #endregion
+
+        #region Dictionaries
+
+        public int positiontype_id { get; set; }
+
+        /// <summary>
+        /// Регион
+        /// </summary>
+        public int region_id { get; set; }
+
+        /// <summary>
+        /// Отрасль науки
+        /// </summary>
+        public int researchdirection_id { get; set; }
+
+        #endregion
+
+        #region Contest
+
+        public Guid? winner_researcher_guid { get; set; }
+        public Guid? winner_vacancyapplication_guid { get; set; }
+        public DateTime? winner_request_date { get; set; }
+        public DateTime? winner_response_date { get; set; }
+
+        public Guid? pretender_researcher_guid { get; set; }
+        public Guid? pretender_vacancyapplication_guid { get; set; }
+        public DateTime? pretender_request_date { get; set; }
+        public DateTime? pretender_response_date { get; set; }
+
+        public DateTime? publish_date { get; set; }
+
+        public DateTime? committee_date { get; set; }
+        public DateTime? announcement_date { get; set; }
+
+        public List<VacancyCriteria> criterias { get; set; }
+
+        #endregion
+
+        /// <summary>
+        /// Идентификатор организации
+        /// </summary>
+        public Guid organization_guid { get; set; }
+
+        public VacancyStatus status { get; set; }
+
+        public DateTime creation_date { get; set; }
+
+        public DateTime? update_date { get; set; }
     }
 }

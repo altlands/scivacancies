@@ -1,22 +1,17 @@
-﻿using SciVacancies.Domain.Enums;
-
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
-using NPoco;
+﻿using NPoco;
 
 namespace SciVacancies.ReadModel.Core
 {
-    [TableName("Criterias")]
-    [PrimaryKey("Guid", AutoIncrement = false)]
-    public class Criteria : BaseEntity
+    [TableName("criterias")]
+    [PrimaryKey("id", AutoIncrement = false)]
+    public class Criteria
     {
-        public int Id { get; set; }
-        public int ParentId { get; set; }
-        public string Title { get; set; }
-        public string Code { get; set; }
+        public int id { get; set; }
 
+        public int? parent_id { get; set; }
+
+        public string title { get; set; }
+
+        public string code { get; set; }
     }
 }

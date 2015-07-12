@@ -1,19 +1,16 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 using NPoco;
 
 namespace SciVacancies.ReadModel.Core
 {
-    [TableName("FavoriteVacancies")]
-    [PrimaryKey("Guid", AutoIncrement = false)]
-    public class FavoriteVacancy:BaseEntity
+    [TableName("favoritevacancies")]
+    [PrimaryKey("guid", AutoIncrement = false)]
+    public class FavoriteVacancy : BaseEntity
     {
-        public Guid VacancyGuid { get; set; }
-        public Guid ResearcherGuid { get; set; }
+        public Guid vacancy_guid { get; set; }
+        public Guid researcher_guid { get; set; }
 
-        public DateTime CreationDate { get; set; }
+        public DateTime creation_date { get; set; }
     }
 }
