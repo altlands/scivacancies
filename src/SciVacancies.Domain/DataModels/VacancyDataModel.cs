@@ -1,17 +1,13 @@
-﻿using SciVacancies.Domain.Enums;
+﻿using SciVacancies.Domain.Core;
+using SciVacancies.Domain.Enums;
 
 using System;
+using System.Collections.Generic;
 
 namespace SciVacancies.Domain.DataModels
 {
     public class VacancyDataModel
     {
-        //TODO - что делать с критериями?
-        ///// <summary>
-        ///// Критерии оценки где int - идентификатор критерия, 
-        ///// </summary>
-        //public List<KeyValuePair<int, decimal>> Criterias { get; set; } //<CriteriaId, Amount>
-
         #region General
 
         /// <summary>
@@ -71,12 +67,12 @@ namespace SciVacancies.Domain.DataModels
         /// <summary>
         /// Зарплата в месяц от
         /// </summary>
-        public int SalaryFrom { get; set; }
+        public int? SalaryFrom { get; set; }
 
         /// <summary>
         /// Зарплата в месяц до
         /// </summary>
-        public int SalaryTo { get; set; }
+        public int? SalaryTo { get; set; }
 
         /// <summary>
         /// Стимулирующие выплаты
@@ -91,7 +87,7 @@ namespace SciVacancies.Domain.DataModels
         /// <summary>
         /// Срок трудового договора (для срочного договора)
         /// </summary>
-        public decimal ContractTime { get; set; }
+        public decimal? ContractTime { get; set; }
 
         /// <summary>
         /// Тип занятости
@@ -171,6 +167,10 @@ namespace SciVacancies.Domain.DataModels
         /// </summary>
         public Guid WinnerVacancyApplicationGuid { get; set; }
 
+        public DateTime? WinnerRequestDate { get; set; }
+
+        public DateTime? WinnerResponseDate { get; set; }
+
         /// <summary>
         /// Guid исследователя-претендента
         /// </summary>
@@ -181,10 +181,14 @@ namespace SciVacancies.Domain.DataModels
         /// </summary>
         public Guid PretenderVacancyApplicationGuid { get; set; }
 
+        public DateTime? PretenderRequestDate { get; set; }
+
+        public DateTime? PretenderResponseDate { get; set; }
+
         /// <summary>
         /// Дата публикации (начало приёма заявок)
         /// </summary>
-        public DateTime PublishDate { get; set; }
+        public DateTime? PublishDate { get; set; }
 
         /// <summary>
         /// Дата окончания приёма заявок (передача заявок в комиссию)
@@ -196,6 +200,10 @@ namespace SciVacancies.Domain.DataModels
         /// </summary>
         public DateTime? AnnouncementDate { get; set; }
 
+        public List<VacancyCriteria> Criterias { get; set; }
+
         #endregion
+
+        public Guid OrganizationGuid { get; set; }
     }
 }

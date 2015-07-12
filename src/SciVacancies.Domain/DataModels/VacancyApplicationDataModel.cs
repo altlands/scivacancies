@@ -8,7 +8,8 @@ namespace SciVacancies.Domain.DataModels
         /// <summary>
         /// Полное имя исследователя
         /// </summary>
-        public string FullName { get; set; }
+        public string ResearcherFullName { get; set; }
+        public string PositionName { get; set; }
 
         public string Email { get; set; }
         public string ExtraEmail { get; set; }
@@ -21,12 +22,13 @@ namespace SciVacancies.Domain.DataModels
         public string OtherActivity { get; set; }
 
         public string ScienceDegree { get; set; }
-        public string AcademicStatus { get; set; }
+        public string ScienceRank { get; set; }
         public string Rewards { get; set; }
         public string Memberships { get; set; }
         public string Conferences { get; set; }
 
         public List<Education> Educations { get; set; }
         public List<Publication> Publications { get; set; }
+        public List<Attachment> Attachments { get; set; }
     }
 }

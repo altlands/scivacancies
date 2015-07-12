@@ -7,7 +7,6 @@ using System.Linq;
 
 using NPoco;
 using MediatR;
-using Nest;
 
 namespace SciVacancies.WebApp.Queries
 {

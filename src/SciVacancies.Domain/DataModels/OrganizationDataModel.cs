@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using SciVacancies.Domain.Core;
+
+using System.Collections.Generic;
 
 namespace SciVacancies.Domain.DataModels
 {
@@ -12,34 +14,14 @@ namespace SciVacancies.Domain.DataModels
         public string Name { get; set; }
 
         /// <summary>
-        /// Полное наименование (на английском языке)
-        /// </summary>
-        public string NameEng { get; set; }
-
-        /// <summary>
         /// Сокращенное наименование
         /// </summary>
         public string ShortName { get; set; }
 
         /// <summary>
-        /// Сокращенное наименование (на английском языке)
-        /// </summary>
-        public string ShortNameEng { get; set; }
-
-        /// <summary>
-        /// Населенный пункт
-        /// </summary>
-        public string CityName { get; set; }
-
-        /// <summary>
         /// Почтовый адрес
         /// </summary>
         public string Address { get; set; }
-
-        /// <summary>
-        /// Веб-сайт
-        /// </summary>
-        public string Website { get; set; }
 
         /// <summary>
         /// E-mail
@@ -76,21 +58,6 @@ namespace SciVacancies.Domain.DataModels
         #region Dictionaries
 
         /// <summary>
-        /// Список идентификаторов отраслей науки
-        /// </summary>
-        public List<int> ResearchDirections { get; set; }
-
-        /// <summary>
-        /// Название основного вида деятельности
-        /// </summary>
-        public string Activity { get; set; }
-
-        /// <summary>
-        /// Идентификатор основного вида деятельности
-        /// </summary>
-        public int ActivityId { get; set; }
-
-        /// <summary>
         /// Наименование ФОИВ
         /// </summary>
         public string Foiv { get; set; }
@@ -109,6 +76,11 @@ namespace SciVacancies.Domain.DataModels
         /// Идентификатор организационно-правовой формы
         /// </summary>
         public int OrgFormId { get; set; }
+
+        /// <summary>
+        /// Список идентификаторов отраслей науки
+        /// </summary>
+        public List<ResearchDirection> ResearchDirections { get; set; }
 
         #endregion
     }

@@ -16,7 +16,7 @@ namespace SciVacancies.ReadModel.Core
         /// <summary>
         /// Размер
         /// </summary>
-        public string size { get; set; }
+        public long size { get; set; }
 
         /// <summary>
         /// Расширение

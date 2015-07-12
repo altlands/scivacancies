@@ -10,7 +10,7 @@ namespace SciVacancies.Domain.Core
         /// <summary>
         /// Guid поисковой подписки
         /// </summary>
-        public Guid SearchSubscriptionGuid { get; set; }
+        public Guid Guid { get; set; }
 
         /// <summary>
         /// Вся информация о поисковой подписке

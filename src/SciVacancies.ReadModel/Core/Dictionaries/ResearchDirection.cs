@@ -24,6 +24,6 @@ namespace SciVacancies.ReadModel.Core
 
         public string wos_code { get; set; }
 
-        public int? root { get; set; }
+        public int? root_id { get; set; }
     }
 }

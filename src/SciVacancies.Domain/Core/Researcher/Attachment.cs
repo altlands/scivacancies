@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace SciVacancies.Domain.Core
 {
@@ -10,7 +7,7 @@ namespace SciVacancies.Domain.Core
         /// <summary>
         /// Guid прикреплённого файла
         /// </summary>
-        public Guid AttachmentGuid { get; set; }
+        public Guid Guid { get; set; }
 
         /// <summary>
         /// Наименование файла
@@ -20,16 +17,21 @@ namespace SciVacancies.Domain.Core
         /// <summary>
         /// Размер файла в байтах
         /// </summary>
-        public double  Size { get; set; }
+        public long  Size { get; set; }
 
         /// <summary>
         /// Расширение файла
         /// </summary>
-        public string Type { get; set; }
+        public string Extension { get; set; }
 
         /// <summary>
         /// Путь к файлу
         /// </summary>
         public string Url { get; set; }
+
+        /// <summary>
+        /// Дата загрузки файла на сервер
+        /// </summary>
+        public DateTime UploadDate { get; set; }
     }
 }

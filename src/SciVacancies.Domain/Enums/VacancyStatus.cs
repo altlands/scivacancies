@@ -51,12 +51,6 @@ namespace SciVacancies.Domain.Enums
         /// Вакансия удалена и недоступна для организации (вакансию можно удалить, если она ещё не была опубликована)
         /// </summary>
         [Description("Удалена")]
-        Removed = 7,
-
-        /// <summary>
-        /// Приём заявок.
-        /// </summary>
-        [Obsolete("Will be removed")]
-        AppliesAcceptance = 8
+        Removed = 7
     }
 }

@@ -10,7 +10,7 @@ namespace SciVacancies.Domain.Core
         /// <summary>
         /// Guid заявки
         /// </summary>
-        public Guid VacancyApplicationGuid { get; set; }
+        public Guid Guid { get; set; }
 
         /// <summary>
         /// Guid вакансии, на которую подаётся заявка

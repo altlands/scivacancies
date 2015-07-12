@@ -7,7 +7,7 @@ namespace SciVacancies.Domain.Core
         /// <summary>
         /// Guid записи об образовании
         /// </summary>
-        public Guid EducationGuid { get; set; }
+        public Guid Guid { get; set; }
 
         /// <summary>
         /// Город получения образования

@@ -7,11 +7,11 @@ namespace SciVacancies.Domain.Core
         /// <summary>
         /// Guid публикации
         /// </summary>
-        public Guid PublicationGuid { get; set; }
+        public Guid Guid { get; set; }
 
         /// <summary>
         /// Название публикации
         /// </summary>
-        public string Name { get; set; }
+        public string Title { get; set; }
     }
 }
