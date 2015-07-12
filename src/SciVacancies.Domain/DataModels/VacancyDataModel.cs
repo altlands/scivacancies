@@ -8,6 +8,11 @@ namespace SciVacancies.Domain.DataModels
 {
     public class VacancyDataModel
     {
+        public VacancyDataModel()
+        {
+            this.Criterias = new List<VacancyCriteria>();
+        }
+
         #region General
 
         /// <summary>
@@ -155,57 +160,6 @@ namespace SciVacancies.Domain.DataModels
 
         #endregion
 
-        #region Contest
-
-        /// <summary>
-        /// Guid исследователя-победителя
-        /// </summary>
-        public Guid WinnerResearcherGuid { get; set; }
-
-        /// <summary>
-        /// Guid заявки-победителя
-        /// </summary>
-        public Guid WinnerVacancyApplicationGuid { get; set; }
-
-        public DateTime? WinnerRequestDate { get; set; }
-
-        public DateTime? WinnerResponseDate { get; set; }
-
-        public bool IsWinnerAccept { get; set; }
-
-        /// <summary>
-        /// Guid исследователя-претендента
-        /// </summary>
-        public Guid PretenderGuid { get; set; }
-
-        /// <summary>
-        /// Guid заявки-претендента
-        /// </summary>
-        public Guid PretenderVacancyApplicationGuid { get; set; }
-
-        public DateTime? PretenderRequestDate { get; set; }
-
-        public DateTime? PretenderResponseDate { get; set; }
-
-        public bool IsPretenderAccept { get; set; }
-
-        /// <summary>
-        /// Дата публикации (начало приёма заявок)
-        /// </summary>
-        public DateTime? PublishDate { get; set; }
-
-        /// <summary>
-        /// Дата окончания приёма заявок (передача заявок в комиссию)
-        /// </summary>
-        public DateTime? CommitteeDate { get; set; }
-
-        /// <summary>
-        /// Дата объявления результатов конкурса
-        /// </summary>
-        public DateTime? AnnouncementDate { get; set; }
-
         public List<VacancyCriteria> Criterias { get; set; }
-
-        #endregion
     }
 }

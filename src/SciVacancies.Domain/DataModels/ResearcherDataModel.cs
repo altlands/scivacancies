@@ -7,6 +7,12 @@ namespace SciVacancies.Domain.DataModels
 {
     public class ResearcherDataModel
     {
+        public ResearcherDataModel()
+        {
+            this.Educations = new List<Education>();
+            this.Publications = new List<Publication>();
+        }
+
         public string FirstName { get; set; }
         public string FirstNameEng { get; set; }
 
@@ -44,9 +50,5 @@ namespace SciVacancies.Domain.DataModels
 
         public List<Education> Educations { get; set; }
         public List<Publication> Publications { get; set; }
-
-        public List<SearchSubscription> SearchSubscriptions { get; set; }
-
-        public List<Guid> FavoriteVacancyGuids { get; set; }
     }
 }

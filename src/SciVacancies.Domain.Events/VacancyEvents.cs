@@ -51,8 +51,8 @@ namespace SciVacancies.Domain.Events
     /// </summary>
     public class VacancyWinnerSet : VacancyEventBase
     {
-        public Guid ReasearcherGuid { get; set; }
-        public Guid VacancyApplicationGuid { get; set; }
+        public Guid WinnerReasearcherGuid { get; set; }
+        public Guid WinnerVacancyApplicationGuid { get; set; }
 
         public string Reason { get; set; }
     }
@@ -62,8 +62,8 @@ namespace SciVacancies.Domain.Events
     /// </summary>
     public class VacancyPretenderSet : VacancyEventBase
     {
-        public Guid ReasearcherGuid { get; set; }
-        public Guid VacancyApplicationGuid { get; set; }
+        public Guid PretenderReasearcherGuid { get; set; }
+        public Guid PretenderVacancyApplicationGuid { get; set; }
 
         public string Reason { get; set; }
     }
@@ -75,9 +75,11 @@ namespace SciVacancies.Domain.Events
     {
         public Guid WinnerResearcherGuid { get; set; }
         public Guid WinnerVacancyApplicationGuid { get; set; }
+        public bool IsWinnerAccept { get; set; }
 
         public Guid PretenderResearcherGuid { get; set; }
         public Guid PretenderVacancyApplicationGuid { get; set; }
+        public bool IsPretenderAccept { get; set; }
     }
 
     public class VacancyOfferAcceptedByWinner : VacancyEventBase

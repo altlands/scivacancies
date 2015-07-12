@@ -8,7 +8,7 @@ namespace SciVacancies.Domain.DataModels
     {
         public OrganizationDataModel()
         {
-            ResearchDirections = new List<ResearchDirection>();
+            this.ResearchDirections = new List<ResearchDirection>();
         }
 
         #region General

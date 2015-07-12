@@ -5,6 +5,13 @@ namespace SciVacancies.Domain.DataModels
 {
     public class VacancyApplicationDataModel
     {
+        public VacancyApplicationDataModel()
+        {
+            this.Educations = new List<Education>();
+            this.Publications = new List<Publication>();
+            this.Attachments = new List<Attachment>();
+        }
+
         /// <summary>
         /// Полное имя исследователя
         /// </summary>

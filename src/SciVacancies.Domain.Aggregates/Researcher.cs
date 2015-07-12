@@ -18,17 +18,21 @@ namespace SciVacancies.Domain.Aggregates
 
         private List<VacancyApplication> VacancyApplications { get; set; }
 
+        public List<SearchSubscription> SearchSubscriptions { get; set; }
+
+        public List<Guid> FavoriteVacancyGuids { get; set; }
+
         public Researcher()
         {
-            FavoriteVacancyGuids = new List<Guid>();
-            SearchSubscriptions = new List<SearchSubscription>();
             VacancyApplications = new List<VacancyApplication>();
+            SearchSubscriptions = new List<SearchSubscription>();
+            FavoriteVacancyGuids = new List<Guid>();
         }
         public Researcher(Guid guid, ResearcherDataModel data)
         {
-            FavoriteVacancyGuids = new List<Guid>();
-            SearchSubscriptions = new List<SearchSubscription>();
             VacancyApplications = new List<VacancyApplication>();
+            SearchSubscriptions = new List<SearchSubscription>();
+            FavoriteVacancyGuids = new List<Guid>();
 
             RaiseEvent(new ResearcherCreated()
             {
@@ -36,17 +40,23 @@ namespace SciVacancies.Domain.Aggregates
                 Data = data
             });
         }
+
+        #region Methods
+
         public void Update(ResearcherDataModel data)
         {
-            RaiseEvent(new ResearcherUpdated()
+            if (Status == ResearcherStatus.Active)
             {
-                ResearcherGuid = this.Id,
-                Data = data
-            });
+                RaiseEvent(new ResearcherUpdated()
+                {
+                    ResearcherGuid = this.Id,
+                    Data = data
+                });
+            }
         }
         public void Remove()
         {
-            if (!Removed)
+            if (Status != ResearcherStatus.Removed)
             {
                 RaiseEvent(new ResearcherRemoved()
                 {
@@ -57,7 +67,7 @@ namespace SciVacancies.Domain.Aggregates
 
         public int AddVacancyToFavorites(Guid vacancyGuid)
         {
-            if (!this.FavoriteVacancyGuids.Contains(vacancyGuid))
+            if (Status == ResearcherStatus.Active && !this.FavoriteVacancyGuids.Contains(vacancyGuid))
             {
                 RaiseEvent(new VacancyAddedToFavorites()
                 {
@@ -74,7 +84,7 @@ namespace SciVacancies.Domain.Aggregates
         }
         public int RemoveVacancyFromFavorites(Guid vacancyGuid)
         {
-            if (this.FavoriteVacancyGuids.Contains(vacancyGuid))
+            if (Status == ResearcherStatus.Active && this.FavoriteVacancyGuids.Contains(vacancyGuid))
             {
                 RaiseEvent(new VacancyRemovedFromFavorites()
                 {
@@ -91,109 +101,135 @@ namespace SciVacancies.Domain.Aggregates
 
         public Guid CreateSearchSubscription(SearchSubscriptionDataModel data)
         {
-            Guid searchSubscriptionGuid = Guid.NewGuid();
-            RaiseEvent(new SearchSubscriptionCreated()
+            if (Status == ResearcherStatus.Active)
             {
-                SearchSubscriptionGuid = searchSubscriptionGuid,
-                ResearcherGuid = this.Id,
-                Data = data
-            });
+                Guid searchSubscriptionGuid = Guid.NewGuid();
+                RaiseEvent(new SearchSubscriptionCreated()
+                {
+                    SearchSubscriptionGuid = searchSubscriptionGuid,
+                    ResearcherGuid = this.Id,
+                    Data = data
+                });
 
-            return searchSubscriptionGuid;
+                return searchSubscriptionGuid;
+            }
+            return Guid.Empty;
         }
         public void ActivateSearchSubscription(Guid searchSubscriptionGuid)
         {
-            SearchSubscription searchSubscription = this.SearchSubscriptions.Find(f => f.SearchSubscriptionGuid == searchSubscriptionGuid);
-            if (searchSubscription != null && searchSubscription.Status == SearchSubscriptionStatus.Cancelled)
+            if (Status == ResearcherStatus.Active)
             {
-                RaiseEvent(new SearchSubscriptionActivated()
+                SearchSubscription searchSubscription = this.SearchSubscriptions.Find(f => f.Guid == searchSubscriptionGuid);
+                if (searchSubscription != null && searchSubscription.Status == SearchSubscriptionStatus.Cancelled)
                 {
-                    SearchSubscriptionGuid = searchSubscriptionGuid,
-                    ResearcherGuid = this.Id
-                });
+                    RaiseEvent(new SearchSubscriptionActivated()
+                    {
+                        SearchSubscriptionGuid = searchSubscriptionGuid,
+                        ResearcherGuid = this.Id
+                    });
+                }
             }
         }
         public void CancelSearchSubscription(Guid searchSubscriptionGuid)
         {
-            SearchSubscription searchSubscription = this.SearchSubscriptions.Find(f => f.SearchSubscriptionGuid == searchSubscriptionGuid);
-            if (searchSubscription != null && searchSubscription.Status == SearchSubscriptionStatus.Active)
+            if (Status == ResearcherStatus.Active)
             {
-                RaiseEvent(new SearchSubscriptionCanceled()
+                SearchSubscription searchSubscription = this.SearchSubscriptions.Find(f => f.Guid == searchSubscriptionGuid);
+                if (searchSubscription != null && searchSubscription.Status == SearchSubscriptionStatus.Active)
                 {
-                    SearchSubscriptionGuid = searchSubscriptionGuid,
-                    ResearcherGuid = this.Id
-                });
+                    RaiseEvent(new SearchSubscriptionCanceled()
+                    {
+                        SearchSubscriptionGuid = searchSubscriptionGuid,
+                        ResearcherGuid = this.Id
+                    });
+                }
             }
         }
         public void RemoveSearchSubscription(Guid searchSubscriptionGuid)
         {
-            SearchSubscription searchSubscription = this.SearchSubscriptions.Find(f => f.SearchSubscriptionGuid == searchSubscriptionGuid);
-            if (searchSubscription != null)
+            if (Status == ResearcherStatus.Active)
             {
-                RaiseEvent(new SearchSubscriptionRemoved()
+                SearchSubscription searchSubscription = this.SearchSubscriptions.Find(f => f.Guid == searchSubscriptionGuid);
+                if (searchSubscription != null)
                 {
-                    SearchSubscriptionGuid = searchSubscriptionGuid,
-                    ResearcherGuid = this.Id
-                });
+                    RaiseEvent(new SearchSubscriptionRemoved()
+                    {
+                        SearchSubscriptionGuid = searchSubscriptionGuid,
+                        ResearcherGuid = this.Id
+                    });
+                }
             }
         }
 
         public Guid CreateVacancyApplicationTemplate(Guid vacancyGuid, VacancyApplicationDataModel data)
         {
-            Guid vacancyApplicationGuid = Guid.NewGuid();
-            RaiseEvent(new VacancyApplicationCreated()
+            if (Status == ResearcherStatus.Active)
             {
-                VacancyApplicationGuid = vacancyApplicationGuid,
-                VacancyGuid = vacancyGuid,
-                ResearcherGuid = this.Id,
-                Data = data
-            });
-
-            return vacancyApplicationGuid;
-        }
-        public void UpdateVacancyApplicationTemplate(Guid vacancyApplicationGuid, VacancyApplicationDataModel data)
-        {
-            VacancyApplication vacancyApplication = this.VacancyApplications.Find(f => f.VacancyApplicationGuid == vacancyApplicationGuid);
-            if (vacancyApplication != null && vacancyApplication.Status == VacancyApplicationStatus.InProcess)
-            {
-                RaiseEvent(new VacancyApplicationUpdated()
+                Guid vacancyApplicationGuid = Guid.NewGuid();
+                RaiseEvent(new VacancyApplicationCreated()
                 {
-                    VacancyApplicationGuid = vacancyApplication.VacancyApplicationGuid,
+                    VacancyApplicationGuid = vacancyApplicationGuid,
+                    VacancyGuid = vacancyGuid,
                     ResearcherGuid = this.Id,
                     Data = data
                 });
+
+                return vacancyApplicationGuid;
+            }
+            return Guid.Empty;
+        }
+        public void UpdateVacancyApplicationTemplate(Guid vacancyApplicationGuid, VacancyApplicationDataModel data)
+        {
+            if (Status == ResearcherStatus.Active)
+            {
+                VacancyApplication vacancyApplication = this.VacancyApplications.Find(f => f.Guid == vacancyApplicationGuid);
+                if (vacancyApplication != null && vacancyApplication.Status == VacancyApplicationStatus.InProcess)
+                {
+                    RaiseEvent(new VacancyApplicationUpdated()
+                    {
+                        VacancyApplicationGuid = vacancyApplication.Guid,
+                        ResearcherGuid = this.Id,
+                        Data = data
+                    });
+                }
             }
         }
         public void RemoveVacancyApplicationTemplate(Guid vacancyApplicationGuid)
         {
-            VacancyApplication vacancyApplication = this.VacancyApplications.Find(f => f.VacancyApplicationGuid == vacancyApplicationGuid);
-            if (vacancyApplication != null && vacancyApplication.Status == VacancyApplicationStatus.InProcess)
+            if (Status == ResearcherStatus.Active)
             {
-                RaiseEvent(new VacancyApplicationRemoved()
+                VacancyApplication vacancyApplication = this.VacancyApplications.Find(f => f.Guid == vacancyApplicationGuid);
+                if (vacancyApplication != null && vacancyApplication.Status == VacancyApplicationStatus.InProcess)
                 {
-                    VacancyApplicationGuid = vacancyApplicationGuid,
-                    VacancyGuid = vacancyApplication.VacancyGuid,
-                    ResearcherGuid = this.Id
-                });
+                    RaiseEvent(new VacancyApplicationRemoved()
+                    {
+                        VacancyApplicationGuid = vacancyApplicationGuid,
+                        VacancyGuid = vacancyApplication.VacancyGuid,
+                        ResearcherGuid = this.Id
+                    });
+                }
             }
         }
         public void ApplyToVacancy(Guid vacancyApplicationGuid)
         {
-            VacancyApplication vacancyApplication = this.VacancyApplications.Find(f => f.VacancyApplicationGuid == vacancyApplicationGuid);
-            if (vacancyApplication != null && vacancyApplication.Status == VacancyApplicationStatus.InProcess)
+            if (Status == ResearcherStatus.Active)
             {
-                RaiseEvent(new VacancyApplicationApplied()
+                VacancyApplication vacancyApplication = this.VacancyApplications.Find(f => f.Guid == vacancyApplicationGuid);
+                if (vacancyApplication != null && vacancyApplication.Status == VacancyApplicationStatus.InProcess)
                 {
-                    VacancyApplicationGuid = vacancyApplicationGuid,
-                    VacancyGuid = vacancyApplication.VacancyGuid,
-                    ResearcherGuid = this.Id
-                });
+                    RaiseEvent(new VacancyApplicationApplied()
+                    {
+                        VacancyApplicationGuid = vacancyApplicationGuid,
+                        VacancyGuid = vacancyApplication.VacancyGuid,
+                        ResearcherGuid = this.Id
+                    });
+                }
             }
         }
         public void CancelVacancyApplication(Guid vacancyApplicationGuid)
         {
-            VacancyApplication vacancyApplication = this.VacancyApplications.Find(f => f.VacancyApplicationGuid == vacancyApplicationGuid);
-            if (vacancyApplication != null && vacancyApplication.Status == VacancyApplicationStatus.Applied)
+            VacancyApplication vacancyApplication = this.VacancyApplications.Find(f => f.Guid == vacancyApplicationGuid);
+            if (vacancyApplication != null && (vacancyApplication.Status == VacancyApplicationStatus.InProcess || vacancyApplication.Status == VacancyApplicationStatus.Applied))
             {
                 RaiseEvent(new VacancyApplicationCancelled()
                 {
@@ -205,23 +241,38 @@ namespace SciVacancies.Domain.Aggregates
         }
         public void MakeVacancyApplicationWinner(Guid vacancyApplicationGuid, string reason)
         {
-            VacancyApplication vacancyApplication = this.VacancyApplications.Find(f => f.VacancyApplicationGuid == vacancyApplicationGuid);
+            VacancyApplication vacancyApplication = this.VacancyApplications.Find(f => f.Guid == vacancyApplicationGuid);
             if (vacancyApplication != null && vacancyApplication.Status == VacancyApplicationStatus.Applied)
             {
                 RaiseEvent(new VacancyApplicationWon
                 {
                     VacancyApplicationGuid = vacancyApplicationGuid,
                     VacancyGuid = vacancyApplication.VacancyGuid,
-                    ResearcherGuid = this.Id
+                    ResearcherGuid = this.Id,
+                    Reason = reason
                 });
             }
         }
         public void MakeVacancyApplicationPretender(Guid vacancyApplicationGuid, string reason)
         {
-            VacancyApplication vacancyApplication = this.VacancyApplications.Find(f => f.VacancyApplicationGuid == vacancyApplicationGuid);
+            VacancyApplication vacancyApplication = this.VacancyApplications.Find(f => f.Guid == vacancyApplicationGuid);
             if (vacancyApplication != null && vacancyApplication.Status == VacancyApplicationStatus.Applied)
             {
                 RaiseEvent(new VacancyApplicationPretended
+                {
+                    VacancyApplicationGuid = vacancyApplicationGuid,
+                    VacancyGuid = vacancyApplication.VacancyGuid,
+                    ResearcherGuid = this.Id,
+                    Reason = reason
+                });
+            }
+        }
+        public void MakeVacancyApplicationLooser(Guid vacancyApplicationGuid)
+        {
+            VacancyApplication vacancyApplication = this.VacancyApplications.Find(f => f.Guid == vacancyApplicationGuid);
+            if (vacancyApplication != null && vacancyApplication.Status == VacancyApplicationStatus.Applied)
+            {
+                RaiseEvent(new VacancyApplicationLost
                 {
                     VacancyApplicationGuid = vacancyApplicationGuid,
                     VacancyGuid = vacancyApplication.VacancyGuid,
@@ -230,7 +281,10 @@ namespace SciVacancies.Domain.Aggregates
             }
         }
 
+        #endregion
+
         #region Apply-Handlers
+
         public void Apply(ResearcherCreated @event)
         {
             this.Id = @event.ResearcherGuid;
@@ -238,40 +292,11 @@ namespace SciVacancies.Domain.Aggregates
         }
         public void Apply(ResearcherUpdated @event)
         {
-            this.Data.FirstName = @event.Data.FirstName;
-            this.Data.SecondName = @event.Data.SecondName;
-            this.Data.Patronymic = @event.Data.Patronymic;
-
-            this.Data.FirstNameEng = @event.Data.FirstNameEng;
-            this.Data.SecondNameEng = @event.Data.SecondNameEng;
-            this.Data.PatronymicEng = @event.Data.PatronymicEng;
-
-            this.Data.PreviousSecondName = @event.Data.PreviousSecondName;
-
-            this.Data.BirthDate = @event.Data.BirthDate;
-
-            this.Data.ExtraEmail = @event.Data.ExtraEmail;
-
-            this.Data.ExtraPhone = @event.Data.ExtraPhone;
-
-            this.Data.Nationality = @event.Data.Nationality;
-
-            this.Data.ResearchActivity = @event.Data.ResearchActivity;
-            this.Data.TeachingActivity = @event.Data.TeachingActivity;
-            this.Data.OtherActivity = @event.Data.OtherActivity;
-
-            this.Data.ScienceDegree = @event.Data.ScienceDegree;
-            this.Data.AcademicStatus = @event.Data.AcademicStatus;
-            this.Data.Rewards = @event.Data.Rewards;
-            this.Data.Memberships = @event.Data.Memberships;
-            this.Data.Conferences = @event.Data.Conferences;
-
-            this.Data.Educations = @event.Data.Educations;
-            this.Data.Publications = @event.Data.Publications;
+            this.Data = @event.Data;
         }
         public void Apply(ResearcherRemoved @event)
         {
-            this.Removed = true;
+            this.Status = ResearcherStatus.Removed;
         }
 
         public void Apply(VacancyAddedToFavorites @event)
@@ -287,61 +312,63 @@ namespace SciVacancies.Domain.Aggregates
         {
             this.SearchSubscriptions.Add(new SearchSubscription()
             {
-                SearchSubscriptionGuid = @event.SearchSubscriptionGuid,
+                Guid = @event.SearchSubscriptionGuid,
                 Data = @event.Data,
                 Status = SearchSubscriptionStatus.Active
             });
         }
         public void Apply(SearchSubscriptionActivated @event)
         {
-            this.SearchSubscriptions.Find(f => f.SearchSubscriptionGuid == @event.SearchSubscriptionGuid).Status = SearchSubscriptionStatus.Active;
+            this.SearchSubscriptions.Find(f => f.Guid == @event.SearchSubscriptionGuid).Status = SearchSubscriptionStatus.Active;
         }
         public void Apply(SearchSubscriptionCanceled @event)
         {
-            this.SearchSubscriptions.Find(f => f.SearchSubscriptionGuid == @event.SearchSubscriptionGuid).Status = SearchSubscriptionStatus.Cancelled;
+            this.SearchSubscriptions.Find(f => f.Guid == @event.SearchSubscriptionGuid).Status = SearchSubscriptionStatus.Cancelled;
         }
         public void Apply(SearchSubscriptionRemoved @event)
         {
-            this.SearchSubscriptions.Remove(this.SearchSubscriptions.Find(f => f.SearchSubscriptionGuid == @event.SearchSubscriptionGuid));
+            this.SearchSubscriptions.Find(f => f.Guid == @event.SearchSubscriptionGuid).Status = SearchSubscriptionStatus.Removed;
         }
 
         public void Apply(VacancyApplicationCreated @event)
         {
             this.VacancyApplications.Add(new VacancyApplication()
             {
-                VacancyApplicationGuid = @event.VacancyApplicationGuid,
+                Guid = @event.VacancyApplicationGuid,
                 VacancyGuid = @event.VacancyGuid,
-                Data = @event.Data,
-                Status = VacancyApplicationStatus.InProcess
+                Data = @event.Data
             });
         }
         public void Apply(VacancyApplicationUpdated @event)
         {
-            VacancyApplication vacancyApplication = this.VacancyApplications.Find(f => f.VacancyApplicationGuid == @event.VacancyApplicationGuid);
-            //TODO - маппинг изменяемых данных
-            //vacancyApplication.Data.
+            VacancyApplication vacancyApplication = this.VacancyApplications.Find(f => f.Guid == @event.VacancyApplicationGuid);
+            vacancyApplication.Data = @event.Data;
         }
         public void Apply(VacancyApplicationRemoved @event)
         {
-            this.VacancyApplications.Find(f => f.VacancyApplicationGuid == @event.VacancyApplicationGuid).Status = VacancyApplicationStatus.Removed;
-            //this.VacancyApplications.Remove(this.VacancyApplications.Find(f => f.VacancyApplicationGuid == @event.VacancyApplicationGuid));
+            this.VacancyApplications.Find(f => f.Guid == @event.VacancyApplicationGuid).Status = VacancyApplicationStatus.Removed;
         }
         public void Apply(VacancyApplicationApplied @event)
         {
-            this.VacancyApplications.Find(f => f.VacancyApplicationGuid == @event.VacancyApplicationGuid).Status = VacancyApplicationStatus.Applied;
+            this.VacancyApplications.Find(f => f.Guid == @event.VacancyApplicationGuid).Status = VacancyApplicationStatus.Applied;
         }
         public void Apply(VacancyApplicationCancelled @event)
         {
-            this.VacancyApplications.Find(f => f.VacancyApplicationGuid == @event.VacancyApplicationGuid).Status = VacancyApplicationStatus.Cancelled;
+            this.VacancyApplications.Find(f => f.Guid == @event.VacancyApplicationGuid).Status = VacancyApplicationStatus.Cancelled;
         }
         public void Apply(VacancyApplicationWon @event)
         {
-            this.VacancyApplications.Find(f => f.VacancyApplicationGuid == @event.VacancyApplicationGuid).Status = VacancyApplicationStatus.Won;
+            this.VacancyApplications.Find(f => f.Guid == @event.VacancyApplicationGuid).Status = VacancyApplicationStatus.Won;
         }
         public void Apply(VacancyApplicationPretended @event)
         {
-            this.VacancyApplications.Find(f => f.VacancyApplicationGuid == @event.VacancyApplicationGuid).Status = VacancyApplicationStatus.Pretended;
+            this.VacancyApplications.Find(f => f.Guid == @event.VacancyApplicationGuid).Status = VacancyApplicationStatus.Pretended;
         }
+        public void Apply(VacancyApplicationLost @event)
+        {
+            this.VacancyApplications.Find(f => f.Guid == @event.VacancyApplicationGuid).Status = VacancyApplicationStatus.Lost;
+        }
+
         #endregion
     }
 }
