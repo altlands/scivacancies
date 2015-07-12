@@ -1,9 +1,6 @@
 ﻿using SciVacancies.ReadModel.ElasticSearchModel.Model;
 
-using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 
 using Nest;
 using MediatR;
@@ -11,11 +8,11 @@ using NPoco;
 
 namespace SciVacancies.WebApp.Queries
 {
-    public class SearchQueryHandler : IRequestHandler<SearchQuery, Page<Vacancy>>
+    public class SearchQueriesHandler : IRequestHandler<SearchQuery, Page<Vacancy>>
     {
         private readonly IElasticClient _elastic;
 
-        public SearchQueryHandler(IElasticClient elastic)
+        public SearchQueriesHandler(IElasticClient elastic)
         {
             _elastic = elastic;
         }

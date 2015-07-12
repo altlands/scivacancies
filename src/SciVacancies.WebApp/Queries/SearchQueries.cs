@@ -1,9 +1,6 @@
 ﻿using SciVacancies.ReadModel.ElasticSearchModel.Model;
 
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 using MediatR;
 using NPoco;
@@ -17,10 +14,12 @@ namespace SciVacancies.WebApp.Queries
         public long PageSize { get; set; }
         public long PageIndex { get; set; }
         public string OrderBy { get; set; }
-        //TODO - сделать массивы соответствующих типов
-        public IEnumerable<string> Regions { get; set; }
-        public IEnumerable<string> Foivs { get; set; }
-        public IEnumerable<string> ResearchDirections { get; set; }
-        public IEnumerable<string> PositionsTypes { get; set; }
+
+        public IEnumerable<int> FoivIds { get; set; }
+        public IEnumerable<int> OrgFormIds { get; set; }
+        public IEnumerable<int> PositionsTypeIds { get; set; }
+        public IEnumerable<int> RegionIds { get; set; }
+        public IEnumerable<int> ResearchDirectionIds { get; set; }
+
     }
 }

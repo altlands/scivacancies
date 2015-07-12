@@ -1,14 +1,13 @@
 ﻿using SciVacancies.ReadModel.Core;
 
 using System;
-using System.Collections.Generic;
 
 using MediatR;
 using NPoco;
 
 namespace SciVacancies.WebApp.Queries
 {
-    public class SelectPagedNotificationsByResearcherQuery : IRequest<Page<Notification>>
+    public class SelectPagedResearcherNotificationsQuery : IRequest<Page<ResearcherNotification>>
     {
         public Guid ResearcherGuid { get; set; }
 
@@ -16,7 +15,8 @@ namespace SciVacancies.WebApp.Queries
         public long PageIndex { get; set; }
         public string OrderBy { get; set; }
     }
-    public class SelectPagedNotificationsByOrganizationQuery : IRequest<Page<Notification>>
+
+    public class SelectPagedOrganizationNotificationsQuery : IRequest<Page<OrganizationNotification>>
     {
         public Guid OrganizationGuid { get; set; }
 
