@@ -2,7 +2,7 @@
 
 namespace SciVacancies.ReadModel.Core
 {
-    [TableName("foivs")]
+    [TableName("d_foivs")]
     [PrimaryKey("id", AutoIncrement = false)]
     public class Foiv
     {

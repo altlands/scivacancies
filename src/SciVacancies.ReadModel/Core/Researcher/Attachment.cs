@@ -4,7 +4,7 @@ using NPoco;
 
 namespace SciVacancies.ReadModel.Core
 {
-    [TableName("attachments")]
+    [TableName("res_attachments")]
     [PrimaryKey("guid", AutoIncrement = false)]
     public class Attachment : BaseEntity
     {

@@ -7,7 +7,7 @@ using NPoco;
 
 namespace SciVacancies.ReadModel.Core
 {
-    [TableName("vacancies")]
+    [TableName("org_vacancies")]
     [PrimaryKey("guid", AutoIncrement = false)]
     public class Vacancy : BaseEntity
     {
@@ -125,13 +125,13 @@ namespace SciVacancies.ReadModel.Core
 
         #region Contest
 
-        public Guid? winner_researcher_guid { get; set; }
-        public Guid? winner_vacancyapplication_guid { get; set; }
+        public Guid winner_researcher_guid { get; set; }
+        public Guid winner_vacancyapplication_guid { get; set; }
         public DateTime? winner_request_date { get; set; }
         public DateTime? winner_response_date { get; set; }
 
-        public Guid? pretender_researcher_guid { get; set; }
-        public Guid? pretender_vacancyapplication_guid { get; set; }
+        public Guid pretender_researcher_guid { get; set; }
+        public Guid pretender_vacancyapplication_guid { get; set; }
         public DateTime? pretender_request_date { get; set; }
         public DateTime? pretender_response_date { get; set; }
 

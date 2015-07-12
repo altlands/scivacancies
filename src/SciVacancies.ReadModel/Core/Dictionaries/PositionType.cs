@@ -2,7 +2,7 @@
 
 namespace SciVacancies.ReadModel.Core
 {
-    [TableName("positiontypes")]
+    [TableName("d_positiontypes")]
     [PrimaryKey("id", AutoIncrement = false)]
     public class PositionType
     {

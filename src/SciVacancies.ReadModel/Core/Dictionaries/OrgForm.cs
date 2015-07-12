@@ -2,7 +2,7 @@
 
 namespace SciVacancies.ReadModel.Core
 {
-    [TableName("orgforms")]
+    [TableName("d_orgforms")]
     [PrimaryKey("id", AutoIncrement = false)]
     public class OrgForm
     {

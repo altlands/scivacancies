@@ -2,7 +2,7 @@
 
 namespace SciVacancies.ReadModel.Core
 {
-    [TableName("regions")]
+    [TableName("d_regions")]
     [PrimaryKey("id", AutoIncrement = false)]
     public class Region
     {

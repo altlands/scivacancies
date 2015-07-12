@@ -2,7 +2,7 @@
 
 namespace SciVacancies.ReadModel.Core
 {
-    [TableName("researchdirections")]
+    [TableName("d_researchdirections")]
     [PrimaryKey("id", AutoIncrement = false)]
     public class ResearchDirection
     {

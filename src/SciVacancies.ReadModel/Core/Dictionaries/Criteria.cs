@@ -2,7 +2,7 @@
 
 namespace SciVacancies.ReadModel.Core
 {
-    [TableName("criterias")]
+    [TableName("d_criterias")]
     [PrimaryKey("id", AutoIncrement = false)]
     public class Criteria
     {

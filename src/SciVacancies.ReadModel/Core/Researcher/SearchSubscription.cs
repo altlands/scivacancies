@@ -6,7 +6,7 @@ using NPoco;
 
 namespace SciVacancies.ReadModel.Core
 {
-    [TableName("searchsubscriptions")]
+    [TableName("res_searchsubscriptions")]
     [PrimaryKey("guid", AutoIncrement = false)]
     public class SearchSubscription : BaseEntity
     {

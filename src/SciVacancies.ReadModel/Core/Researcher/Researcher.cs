@@ -7,7 +7,7 @@ using NPoco;
 
 namespace SciVacancies.ReadModel.Core
 {
-    [TableName("researchers")]
+    [TableName("res_researchers")]
     [PrimaryKey("guid", AutoIncrement = false)]
     public class Researcher : BaseEntity
     {
@@ -49,6 +49,8 @@ namespace SciVacancies.ReadModel.Core
 
         public List<Education> educations { get; set; }
         public List<Publication> publications { get; set; }
+
+        public List<Vacancy> favoritevacancies { get; set; }
 
         public ResearcherStatus status { get; set; }
 
