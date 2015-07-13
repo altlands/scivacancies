@@ -72,11 +72,6 @@
             <th>
                 <div class="inline-block"><!-- <img src="/images/icons/tab-head.png" class="va-middle"/> -->
                 </div>
-                <div class="inline-block ml6 va-middle">Дата<br/> создания
-                </div></th>
-            <th>
-                <div class="inline-block"><!-- <img src="/images/icons/tab-head.png" class="va-middle"/> -->
-                </div>
                 <div class="inline-block ml6 va-middle">Дата<br/> публикации
                 </div></th>
             <th>
@@ -94,18 +89,17 @@
 
         @if (Model.VacanciesInOrganization.PagedVacancies != null)
         {
-            foreach (var item in Model.VacanciesInOrganization.PagedVacancies.Items.Where(c => c.Status == VacancyStatus.Published || c.Status == VacancyStatus.AppliesAcceptance || c.Status == VacancyStatus.InCommittee))
+            foreach (var item in Model.VacanciesInOrganization.PagedVacancies.Items.Where(c => c.status== VacancyStatus.Published || c.status == VacancyStatus.InCommittee ))
             {
                 <text>
                     <tr>
-                        <td>@item.Guid.ToString().Substring(0, 4)...</td>
+                        <td>@item.guid.ToString().Substring(0, 4)...</td>
                         <td>ГНС600001</td>
-                        <td>@item.Name</td>
-                        <td>@item.DateStart.ToLocalVacancyString()</td>
-                        <td>@{item.DateStart.ToLocalVacancyString(); }</td>
-                        <td><span class="status @item.Status.GetHtmlClass()">@item.Status.GetDescription()</span></td>
+                        <td>@item.name</td>
+                        <td>@(item.publish_date?.ToLocalVacancyString())</td>
+                        <td><span class="status @item.status.GetHtmlClass()">@item.status.GetDescription()</span></td>
                         <td>
-                            <a asp-controller="vacancies" asp-action="card" asp-route-id="@item.Guid" class="view-td-icon" title="Просмотр вакансии"></a>
+                            <a asp-controller="vacancies" asp-action="card" asp-route-id="@item.guid" class="view-td-icon" title="Просмотр вакансии"></a>
                         </td>
                         <td class="ta-left"></td>
                     </tr>

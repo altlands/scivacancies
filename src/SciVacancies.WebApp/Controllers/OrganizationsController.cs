@@ -112,7 +112,7 @@ namespace SciVacancies.WebApp.Controllers
 
             var model = new NotificationsInOrganizationIndexViewModel
             {
-                PagedNotifications = _mediator.Send(new SelectPagedOrganizationNotificationsQuery
+                PagedItems = _mediator.Send(new SelectPagedOrganizationNotificationsQuery
                 {
                     OrganizationGuid = organizationGuid,
                     PageSize = pageSize,

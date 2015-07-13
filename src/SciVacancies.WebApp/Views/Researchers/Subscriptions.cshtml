@@ -49,14 +49,14 @@
         {
             <text>
                 <tr>
-                    <td>@item.Guid.ToString().Substring(0, 4)</td>
-                    <td>@item.Title</td>
-                    <td>@item.CreationDate.ToLocalVacancyString()</td>
+                    <td>@item.guid.ToString().Substring(0, 4)</td>
+                    <td>@item.title</td>
+                    <td>@item.creation_date.ToLocalVacancyString()</td>
                     <td><a href="#" class="mail-td-icon"></a></td>
                     <td>
                         <a href="#" class="view-td-icon"></a>
                         <a href="#" class="edit-td-icon"></a>
-                        <a asp-controller="subscriptions" asp-action="delete" asp-route-id=@item.Guid class="close-td-icon"></a>
+                        <a asp-controller="subscriptions" asp-action="delete" asp-route-id=@item.guid class="close-td-icon"></a>
                     </td>
                 </tr>
             </text>

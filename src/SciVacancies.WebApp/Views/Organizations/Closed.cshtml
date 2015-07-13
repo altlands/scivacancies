@@ -48,18 +48,18 @@
 
     @if (Model.PagedVacancies != null)
     {
-        foreach (var item in Model.PagedVacancies.Items.Where(c => c.Status == VacancyStatus.Published || c.Status == VacancyStatus.AppliesAcceptance || c.Status == VacancyStatus.InCommittee))
+        foreach (var item in Model.PagedVacancies.Items.Where(c=> c.status == VacancyStatus.Closed))
         {
             <text>
                 <tr>
-                    <td>@item.Guid.ToString().Substring(0, 4)...</td>
-                    <td><a asp-controller="vacancies" asp-action="details" asp-route-id="@item.Guid" title="Просмотр вакансии">ГНС600001</a></td>
-                    <td>@item.Name</td>
-                    <td>@{item.DateFinish.ToLocalVacancyString(); } <!--01-09-14, 16:04--></td>
+                    <td>@item.guid.ToString().Substring(0, 4)...</td>
+                    <td><a asp-controller="vacancies" asp-action="details" asp-route-id="@item.guid" title="Просмотр вакансии">ГНС600001</a></td>
+                    <td>@item.name</td>
+                    <td>@(item.announcement_date?.ToLocalVacancyString()) <!--01-09-14, 16:04--></td>
                     <td class="view-col">
-                        <a asp-controller="vacancies" asp-action="details" asp-route-id="@item.Guid" class="view-td-icon" title="Просмотр вакансии"></a>
+                        <a asp-controller="vacancies" asp-action="details" asp-route-id="@item.guid" class="view-td-icon" title="Просмотр вакансии"></a>
                     </td>
-                    <td><a asp-controller="applications" asp-action="preview" asp-route-id="@item.Guid" class="success-request-icon"><span class="italic bold">Победитель</span></a></td>
+                    <td><a asp-controller="applications" asp-action="preview" asp-route-id="@item.guid" class="success-request-icon"><span class="italic bold">Победитель</span></a></td>
                 </tr>
             </text>
         }
