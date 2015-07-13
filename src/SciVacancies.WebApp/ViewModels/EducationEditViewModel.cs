@@ -14,10 +14,13 @@ namespace SciVacancies.WebApp.ViewModels
         [Required(ErrorMessage = "Укажите название университета")]
         public string UniversityShortName { get; set; }
 
+        [Required(ErrorMessage = "Укажите название университета")]
         public string FacultyShortName { get; set; }
 
+        [Required(ErrorMessage = "Укажите год выпуска")]
         public int? GraduationYear { get; set; }
 
+        [Required(ErrorMessage = "Укажите учёную степень")]
         public string Degree { get; set; }
     }
 }
