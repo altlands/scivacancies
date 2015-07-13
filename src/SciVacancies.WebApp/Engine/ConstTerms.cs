@@ -2,6 +2,7 @@
 {
     public class ConstTerms
     {
+        public const string OrderByRelevant= "relevant";
         public const string OrderByDateDescending = "date";
         public const string OrderByDateAscending = "date_ascending";
         public const string OrderByDateStartDescending = "DateStart";
