@@ -250,7 +250,8 @@
                             <label>Год окончания:</label>
                         </div>
                         <div class="right-cell b-r-form w120">
-                            <select asp-for="Educations[i].GraduationYear"
+                            <select class="skip"
+                                    asp-for="Educations[i].GraduationYear"
                                     asp-items="years"></select>
                             <span asp-validation-for="Educations[i].GraduationYear"></span>
                         </div>

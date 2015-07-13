@@ -22,7 +22,7 @@
 $(document).ready(function () {
     //select
     var params = {
-        changedEl: "select",
+        changedEl: "select:not(.skip)",
         visRows: 12,
         scrollArrows: true
     }
@@ -326,14 +326,24 @@ function addNewItemToList(source, prefix) {
     //обновляем шаблон
     templateDiv.html(templateDivInnerHtml);
 
+    $(templateDiv).find("select.skip").removeClass("skip").addClass("newselect");
+
     var lastItemRow = $(parentDiv).find(".property-list-item").last();
     $(templateDiv).removeAttr('data-list-template');
     $(templateDiv).find("input[name=\"" + prefix + '.Index"]').val(newIndex);
     $(lastItemRow).after(templateDiv);
     $(templateDiv).fadeIn("slow");
 
+    var paramsSelect = {
+        changedEl: "select.newselect",
+        visRows: 12,
+        scrollArrows: true
+    }
+    cuSel(paramsSelect);
+
     //сохранить новый индекс
     $(parentDiv).attr("data-innercount", newIndex);
+
     return false;
 };
 /**
