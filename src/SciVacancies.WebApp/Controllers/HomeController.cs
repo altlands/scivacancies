@@ -1,5 +1,6 @@
 ﻿using MediatR;
 using Microsoft.AspNet.Mvc;
+using SciVacancies.ReadModel.Core;
 using SciVacancies.WebApp.Engine;
 using SciVacancies.WebApp.Queries;
 using SciVacancies.WebApp.ViewModels;
@@ -21,8 +22,8 @@ namespace SciVacancies.WebApp.Controllers
         {
             var model = new IndexViewModel
             {
-                OrganizationsList =_mediator.Send(new SelectPagedOrganizationsQuery {PageSize = 4, PageIndex = 1, OrderBy =ConstTerms.OrderByVacancyCountDescending}).MapToPagedList(),
-                VacanciesList = _mediator.Send(new SelectPagedVacanciesQuery {PageSize = 4, PageIndex = 1, OrderBy = ConstTerms.OrderByDateStartDescending, PublishedOnly = true}).MapToPagedList()
+                OrganizationsList =_mediator.Send(new SelectPagedOrganizationsQuery {PageSize = 4, PageIndex = 1, OrderBy =ConstTerms.OrderByVacancyCountDescending}).MapToPagedList<Organization, OrganizationDetailsViewModel>(),
+                VacanciesList = _mediator.Send(new SelectPagedVacanciesQuery {PageSize = 4, PageIndex = 1, OrderBy = ConstTerms.OrderByDateStartDescending, PublishedOnly = true}).MapToPagedList<Vacancy, VacancyDetailsViewModel>()
             };
 
             model.ResearchDirections = new VacanciesFilterSource(_mediator).ResearchDirections;

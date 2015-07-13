@@ -81,7 +81,8 @@ namespace SciVacancies.WebApp.Infrastructure
 
             Mapper.CreateMap<Organization, OrganizationDataModel>();
             //информация об организации
-            Mapper.CreateMap<Organization, OrganizationDetailsViewModel>();
+            Mapper.CreateMap<Organization, OrganizationDetailsViewModel>()
+                .ForMember(d => d.Id, o => o.MapFrom(s => s.OrganizationGuid));
             //индексация организации в поисковике
             Mapper.CreateMap<ReadModel.ElasticSearchModel.Model.Organization, OrganizationDataModel>();
 
@@ -358,7 +359,8 @@ namespace SciVacancies.WebApp.Infrastructure
 
             //vacancy
             Mapper.CreateMap<Vacancy, VacancyCreateViewModel>();
-            Mapper.CreateMap<Vacancy, VacancyDetailsViewModel>();
+            Mapper.CreateMap<Vacancy, VacancyDetailsViewModel>()
+                .ForMember(d => d.guid, o => o.MapFrom(s => s.VacancyApplicationGuid));
             Mapper.CreateMap<Vacancy, VacancyDataModel>();
             Mapper.CreateMap<VacancyCreateViewModel, Vacancy>();
             Mapper.CreateMap<VacancyCreateViewModel, VacancyDataModel>();
