@@ -64,7 +64,7 @@ namespace SciVacancies.WebApp.Queries
         }
         public IEnumerable<Criteria> Handle(SelectCriteriasByParentIdQuery message)
         {
-            if (message.ParentId == null || message.ParentId == 0) throw new ArgumentNullException($"ParentId is empty or 0: {message.ParentId}");
+            if (message.ParentId == 0) throw new ArgumentNullException($"ParentId is empty or 0: {message.ParentId}");
 
             IEnumerable<Criteria> criterias = _db.FetchBy<Criteria>(f => f.Where(w => w.parent_id == message.ParentId));
 
@@ -95,7 +95,7 @@ namespace SciVacancies.WebApp.Queries
         }
         public IEnumerable<Foiv> Handle(SelectFoivsByParentIdQuery message)
         {
-            if (message.ParentId == null || message.ParentId == 0) throw new ArgumentNullException($"ParentId is empty or 0: {message.ParentId}");
+            if (message.ParentId == 0) throw new ArgumentNullException($"ParentId is empty or 0: {message.ParentId}");
 
             IEnumerable<Foiv> foivs = _db.FetchBy<Foiv>(f => f.Where(w => w.parent_id == message.ParentId));
 
@@ -133,7 +133,7 @@ namespace SciVacancies.WebApp.Queries
         }
         public IEnumerable<PositionType> Handle(SelectPositionTypesForAutocompleteQuery message)
         {
-            if (String.IsNullOrEmpty(message.Query)) throw new ArgumentNullException($"Query is empty: {message.Query}");
+            if (string.IsNullOrEmpty(message.Query)) throw new ArgumentNullException($"Query is empty: {message.Query}");
 
             IEnumerable<PositionType> positionTypes;
             if (message.Take != 0)
@@ -195,7 +195,7 @@ namespace SciVacancies.WebApp.Queries
         }
         public IEnumerable<ResearchDirection> Handle(SelectResearchDirectionsByParentIdQuery message)
         {
-            if (message.ParentId == null || message.ParentId == 0) throw new ArgumentNullException($"ParentId is empty or 0: {message.ParentId}");
+            if (message.ParentId == 0) throw new ArgumentNullException($"ParentId is empty or 0: {message.ParentId}");
 
             IEnumerable<ResearchDirection> researchDirections = _db.FetchBy<ResearchDirection>(f => f.Where(w => w.parent_id == message.ParentId));
 
