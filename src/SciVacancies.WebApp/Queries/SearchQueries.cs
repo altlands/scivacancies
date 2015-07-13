@@ -16,10 +16,8 @@ namespace SciVacancies.WebApp.Queries
         public string OrderBy { get; set; }
 
         public IEnumerable<int> FoivIds { get; set; }
-        public IEnumerable<int> OrgFormIds { get; set; }
         public IEnumerable<int> PositionsTypeIds { get; set; }
         public IEnumerable<int> RegionIds { get; set; }
         public IEnumerable<int> ResearchDirectionIds { get; set; }
-
     }
 }

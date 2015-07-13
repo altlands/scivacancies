@@ -158,6 +158,8 @@ namespace SciVacancies.WebApp.Infrastructure
                 .ForMember(d => d.ResearchDirectionId, o => o.MapFrom(s => s.Data.ResearchDirectionId))
                 .ForMember(d => d.Criterias, o => o.MapFrom(s => s.Data.Criterias))
                 .ForMember(d => d.OrganizationGuid, o => o.MapFrom(s => s.OrganizationGuid))
+                .ForMember(d => d.OrganizationFoiv, o => o.MapFrom(s => s.Data.OrganizationFoiv))
+                .ForMember(d => d.OrganizationFoivId, o => o.MapFrom(s => s.Data.OrganizationFoivId))
                 .ForMember(d => d.CreationDate, o => o.MapFrom(s => s.TimeStamp));
 
             Mapper.CreateMap<VacancyUpdated, ReadModel.ElasticSearchModel.Model.Vacancy>()
@@ -191,6 +193,8 @@ namespace SciVacancies.WebApp.Infrastructure
                 .ForMember(d => d.ResearchDirectionId, o => o.MapFrom(s => s.Data.ResearchDirectionId))
                 .ForMember(d => d.Criterias, o => o.MapFrom(s => s.Data.Criterias))
                 .ForMember(d => d.OrganizationGuid, o => o.MapFrom(s => s.OrganizationGuid))
+                .ForMember(d => d.OrganizationFoiv, o => o.MapFrom(s => s.Data.OrganizationFoiv))
+                .ForMember(d => d.OrganizationFoivId, o => o.MapFrom(s => s.Data.OrganizationFoivId))
                 .ForMember(d => d.UpdateDate, o => o.MapFrom(s => s.TimeStamp));
 
             Mapper.CreateMap<Domain.Core.VacancyCriteria, ReadModel.ElasticSearchModel.Model.VacancyCriteria>();

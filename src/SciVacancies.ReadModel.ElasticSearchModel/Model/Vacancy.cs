@@ -168,6 +168,9 @@ namespace SciVacancies.ReadModel.ElasticSearchModel.Model
         /// </summary>
         public Guid OrganizationGuid { get; set; }
 
+        public string OrganizationFoiv { get; set; }
+        public int OrganizationFoivId { get; set; }
+
         public VacancyStatus Status { get; set; }
 
         public DateTime CreationDate { get; set; }
