@@ -17,40 +17,39 @@ namespace SciVacancies.WebApp.Queries
             _elastic = elastic;
         }
 
-        public Page<Vacancy> Handle(SearchQuery message)
+        public Page<Vacancy> Handle(SearchQuery msg)
         {
 
             var results = _elastic.Search<Vacancy>(s => s
                                     .Index("scivacancies")
-                                    .Skip((int)((message.CurrentPage- 1) * message.PageSize))
-                                    .Take((int)message.PageSize)
-                                    .Query(qr => qr
-                                        .FuzzyLikeThis(flt => flt
-                                            .LikeText(message.Query))
-                                    )
+                                    .Skip((int)((msg.CurrentPage - 1) * msg.PageSize))
+                                    .Take((int)msg.PageSize)
                                     //.Query(qr => qr
-                                    //    .Filtered(fltd => fltd
-                                    //        .Query(q => q
-                                    //            .FuzzyLikeThis(flt => flt
-                                    //                .LikeText(message.Query)
-                                    //            )
-                                    //        )
-                                    //        .Filter(f => f
-                                    //        //TODO - сделать массивы гуидов а не стринг
-                                    //            .Terms("positionTypeGuid", message.PositionsTypes)
-                                    //        && f.Terms("researchDirectionId", message.ResearchDirections)
-                                    //        && f.Terms("regionId", message.Regions)
-                                    //        && f.Terms("foivId", message.Foivs)
-                                    //        )
-                                    //    )
+                                    //    .FuzzyLikeThis(flt => flt
+                                    //        .LikeText(message.Query))
                                     //)
+                                    .Query(qr => qr
+                                        .Filtered(fltd => fltd
+                                            .Query(q => q
+                                                .FuzzyLikeThis(flt => flt
+                                                    .LikeText(msg.Query)
+                                                )
+                                            )
+                                            .Filter(f => f
+                                                .Terms<int>(ft => ft.OrganizationFoivId, msg.FoivIds)
+                                                && f.Terms<int>(ft => ft.PositionTypeId, msg.PositionsTypeIds)
+                                                && f.Terms<int>(ft => ft.RegionId, msg.RegionIds)
+                                                && f.Terms<int>(ft => ft.ResearchDirectionId, msg.ResearchDirectionIds)
+                                            )
+                                        )
+                                    )
                                     );
             var pageVacancies = new Page<Vacancy>
             {
-                CurrentPage = message.CurrentPage,
-                ItemsPerPage = message.PageSize,
+                CurrentPage = msg.CurrentPage,
+                ItemsPerPage = msg.PageSize,
                 TotalItems = results.Total,
-                TotalPages = results.Total / message.PageSize,
+                TotalPages = results.Total / msg.PageSize,
                 Items = results.Documents.ToList()
             };
 

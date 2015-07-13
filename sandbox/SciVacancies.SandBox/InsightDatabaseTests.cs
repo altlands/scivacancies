@@ -56,7 +56,7 @@ namespace SciVacancies.SandBox
                 repo.Commit();
             }
 
-            Assert.Equal(org1.Name, "Корпорация Umbrella");
+            Assert.Equal(org1.name, "Корпорация Umbrella");
         }
     }
 }
