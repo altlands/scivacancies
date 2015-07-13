@@ -138,8 +138,16 @@ namespace SciVacancies.WebApp.Commands
             if (msg.VacancyApplicationGuid == Guid.Empty) throw new ArgumentNullException($"VacancyApplicationGuid is empty: {msg.VacancyApplicationGuid}");
 
             Vacancy vacancy = _repository.GetById<Vacancy>(msg.VacancyGuid);
+
+            Guid winnerResearcherGuid = vacancy.WinnerResearcherGuid;
+            Guid winnerVacancyApplicationGuid = vacancy.WinnerVacancyApplicationGuid;
+
             vacancy.SetPretender(msg.ResearcherGuid, msg.VacancyApplicationGuid, msg.Reason);
             _repository.Save(vacancy, Guid.NewGuid(), null);
+
+            Researcher winnerResearcher = _repository.GetById<Researcher>(winnerResearcherGuid);
+            winnerResearcher.MakeVacancyApplicationWinner(winnerVacancyApplicationGuid,"");
+            _repository.Save(winnerResearcher, Guid.NewGuid(), null);
         }
     }
 
@@ -175,8 +183,16 @@ namespace SciVacancies.WebApp.Commands
             if (msg.VacancyGuid == Guid.Empty) throw new ArgumentNullException($"VacancyGuid is empty: {msg.VacancyGuid}");
 
             Vacancy vacancy = _repository.GetById<Vacancy>(msg.VacancyGuid);
+
+            Guid pretenderResearcherGuid = vacancy.PretenderResearcherGuid;
+            Guid pretenderVacancyApplicationGuid = vacancy.PretenderVacancyApplicationGuid;
+
             vacancy.WinnerRejectOffer();
             _repository.Save(vacancy, Guid.NewGuid(), null);
+
+            Researcher pretenderResearcher = _repository.GetById<Researcher>(pretenderResearcherGuid);
+            pretenderResearcher.MakeVacancyApplicationPretender(pretenderVacancyApplicationGuid, "");
+            _repository.Save(pretenderResearcher, Guid.NewGuid(), null);
         }
     }
     public class SetPretenderAcceptOfferCommandHandler : RequestHandler<SetPretenderAcceptOfferCommand>
@@ -212,6 +228,7 @@ namespace SciVacancies.WebApp.Commands
 
             Vacancy vacancy = _repository.GetById<Vacancy>(msg.VacancyGuid);
             vacancy.PretenderRejectOffer();
+            vacancy.Cancel("Победитель и претендент отказались от контракта");
             _repository.Save(vacancy, Guid.NewGuid(), null);
         }
     }

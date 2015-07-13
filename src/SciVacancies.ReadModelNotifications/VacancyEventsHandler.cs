@@ -13,7 +13,6 @@ namespace SciVacancies.ReadModel.Notifications
 {
     public class VacancyEventsHandler :
         INotificationHandler<VacancyInCommittee>,
-        INotificationHandler<VacancyPretenderSet>,
         INotificationHandler<VacancyOfferAcceptedByWinner>,
         INotificationHandler<VacancyOfferRejectedByWinner>,
         INotificationHandler<VacancyOfferAcceptedByPretender>,
@@ -40,20 +39,6 @@ namespace SciVacancies.ReadModel.Notifications
                 }
                 transaction.Complete();
             }
-        }
-        public void Handle(VacancyPretenderSet msg)
-        {
-            //List<Guid> researcherGuids = _db.Fetch<Guid>(new Sql($"SELECT va.researcher_guid FROM res_vacancyapplications va WHERE va.vacancy_guid = @0", msg.VacancyGuid));
-
-            //string title = "Ваша заявка на конкурс " + msg.VacancyGuid + " отправлена на комиссию";
-            //using (var transaction = _db.GetTransaction())
-            //{
-            //    foreach (Guid researcherGuid in researcherGuids)
-            //    {
-            //        _db.Insert(new Sql($"INSERT INTO res_notifications (guid, title, vacancy_guid, researcher_guid, creation_date) VALUES(@0, @1, @2, @3, @4)", Guid.NewGuid(), title, msg.VacancyGuid, researcherGuid, msg.TimeStamp));
-            //    }
-            //    transaction.Complete();
-            //}
         }
         public void Handle(VacancyOfferAcceptedByWinner msg)
         {
@@ -125,15 +110,6 @@ namespace SciVacancies.ReadModel.Notifications
                 _db.Insert(new Sql($"INSERT INTO res_notifications (guid, title, vacancy_guid, researcher_guid, creation_date) VALUES(@0, @1, @2, @3, @4)", Guid.NewGuid(), title, msg.VacancyGuid, vacancy.pretender_researcher_guid, msg.TimeStamp));
                 transaction.Complete();
             }
-            //string title = "Ваша заявка на конкурс " + msg.VacancyGuid + " отправлена на комиссию";
-            //using (var transaction = _db.GetTransaction())
-            //{
-            //    foreach (Guid researcherGuid in researcherGuids)
-            //    {
-            //        _db.Insert(new Sql($"INSERT INTO res_notifications (guid, title, vacancy_guid, researcher_guid, creation_date) VALUES(@0, @1, @2, @3, @4)", Guid.NewGuid(), title, msg.VacancyGuid, researcherGuid, msg.TimeStamp));
-            //    }
-            //    transaction.Complete();
-            //}
         }
         public void Handle(VacancyCancelled msg)
         {

@@ -16,13 +16,13 @@ namespace SciVacancies.Domain.Aggregates
 
         private VacancyStatus Status { get; set; }
 
-        private Guid WinnerResearcherGuid { get; set; }
-        private Guid WinnerVacancyApplicationGuid { get; set; }
-        public bool? IsWinnerAccept { get; set; }
+        public Guid WinnerResearcherGuid { get; set; }
+        public Guid WinnerVacancyApplicationGuid { get; set; }
+        private bool? IsWinnerAccept { get; set; }
 
         public Guid PretenderResearcherGuid { get; set; }
         public Guid PretenderVacancyApplicationGuid { get; set; }
-        public bool? IsPretenderAccept { get; set; }
+        private bool? IsPretenderAccept { get; set; }
 
         public Vacancy()
         {
