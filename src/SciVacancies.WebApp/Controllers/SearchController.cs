@@ -7,6 +7,7 @@ using SciVacancies.WebApp.ViewModels;
 
 namespace SciVacancies.WebApp.Controllers
 {
+
     public class SearchController : Controller
     {
         private readonly IMediator _mediator;
@@ -34,7 +35,8 @@ namespace SciVacancies.WebApp.Controllers
                 PositionsTypeIds = model.Positions,
                 RegionIds = model.Regions,
                 FoivIds = model.Foivs,
-                ResearchDirectionIds = model.ResearchDirections
+                ResearchDirectionIds = model.ResearchDirections,
+                OrderBy = model.OrderBy
             }).MapToPagedList<Vacancy, VacancyElasticResult>();
 
             if (model.Items.Items != null && model.Items.Items.Any())

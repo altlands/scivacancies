@@ -46,7 +46,8 @@ namespace SciVacancies.WebApp.ViewModels
             {
                 return _orderBys ?? (_orderBys = new List<SelectListItem>
                     {
-                        new SelectListItem {Value = ConstTerms.OrderByDateDescending, Text = "Сначала последние"}
+                        new SelectListItem {Value =ConstTerms.OrderByRelevant, Text ="По-релевантности" }
+                        ,new SelectListItem {Value = ConstTerms.OrderByDateDescending, Text = "Сначала последние"}
                         ,new SelectListItem {Value =ConstTerms.OrderByDateAscending , Text ="Сначала первые" }
                     });
             }
