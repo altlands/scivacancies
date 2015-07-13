@@ -85,7 +85,7 @@ CREATE TABLE org_organizations
   head_patronymic text,
   foiv_id integer,
   orgform_id integer,
-  status smallint NOT NULL,
+  status smallint NOT NULL DEFAULT 0,
   creation_date timestamp without time zone NOT NULL,
   update_date timestamp without time zone,
   CONSTRAINT organization_pkey PRIMARY KEY (guid)
@@ -118,7 +118,7 @@ CREATE TABLE res_researchers
   rewards text,
   memberships text,
   conferences text,
-  status smallint NOT NULL,
+  status smallint NOT NULL DEFAULT 0,
   creation_date timestamp without time zone NOT NULL,
   update_date timestamp without time zone,
   CONSTRAINT researcher_pkey PRIMARY KEY (guid)
@@ -157,7 +157,7 @@ CREATE TABLE res_searchsubscriptions
   title text NOT NULL,
   query text NOT NULL,
   researcher_guid uuid NOT NULL REFERENCES res_researchers(guid) ON DELETE CASCADE,
-  status smallint NOT NULL,
+  status smallint NOT NULL DEFAULT 0,
   creation_date timestamp without time zone NOT NULL,
   update_date timestamp without time zone,
   CONSTRAINT searchsubscription_pkey PRIMARY KEY (guid)
@@ -206,7 +206,7 @@ CREATE TABLE org_vacancies
   committee_date timestamp without time zone,
   announcement_date timestamp without time zone,
   organization_guid uuid NOT NULL REFERENCES org_organizations(guid) ON DELETE CASCADE,
-  status smallint NOT NULL,
+  status smallint NOT NULL DEFAULT 0,
   creation_date timestamp without time zone NOT NULL,
   update_date timestamp without time zone,
   CONSTRAINT vacancy_pkey PRIMARY KEY (guid)
@@ -236,7 +236,7 @@ CREATE TABLE res_vacancyapplications
   publications text,
   vacancy_guid uuid NOT NULL REFERENCES org_vacancies(guid) ON DELETE CASCADE,
   researcher_guid uuid NOT NULL REFERENCES res_researchers(guid) ON DELETE CASCADE,
-  status smallint NOT NULL,
+  status smallint NOT NULL DEFAULT 0,
   creation_date timestamp without time zone NOT NULL,
   update_date timestamp without time zone,
   apply_date timestamp without time zone,
@@ -295,7 +295,7 @@ CREATE TABLE "org_notifications"
   "title" text NOT NULL,
   "vacancyapplication_guid" uuid NOT NULL REFERENCES res_vacancyapplications(guid) ON DELETE CASCADE,
   "organization_guid" uuid NOT NULL REFERENCES org_organizations(guid) ON DELETE CASCADE,
-  "status" smallint NOT NULL,
+  "status" smallint NOT NULL DEFAULT 0,
   "creation_date" timestamp without time zone NOT NULL,
   "update_date" timestamp without time zone,
   CONSTRAINT "org_notification_pkey" PRIMARY KEY ("guid")
@@ -308,7 +308,7 @@ CREATE TABLE "res_notifications"
   "title" text NOT NULL,
   "vacancy_guid" uuid NOT NULL REFERENCES org_vacancies(guid) ON DELETE CASCADE,
   "researcher_guid" uuid NOT NULL REFERENCES res_researchers(guid) ON DELETE CASCADE,
-  "status" smallint NOT NULL,
+  "status" smallint NOT NULL DEFAULT 0,
   "creation_date" timestamp without time zone NOT NULL,
   "update_date" timestamp without time zone,
   CONSTRAINT "res_notification_pkey" PRIMARY KEY ("guid")
