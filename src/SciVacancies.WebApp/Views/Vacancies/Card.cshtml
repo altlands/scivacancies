@@ -26,7 +26,7 @@
 @if (User.IsInRole(ConstTerms.RequireRoleResearcher))
 {
 
-    if (Model.Status == VacancyStatus.AppliesAcceptance)
+    if (Model.Status == VacancyStatus.Published)
     {
         <text>
         <a asp-controller="applications" asp-action="create" asp-route-vacancyguid="@Model.Guid" class="green-btn middle-icon" target="_blank">Подать заявку</a>

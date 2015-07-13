@@ -1,5 +1,4 @@
 ﻿@using System.Threading.Tasks
-@using Microsoft.Framework.CodeGeneration
 @using SciVacancies.WebApp.Controllers
 @model SciVacancies.WebApp.ViewModels.ResearcherDetailsViewModel
 
@@ -64,7 +63,7 @@
     </div>
     <div class="row">
         <span class="bold">Ученые звания</span>
-        @Model.AcademicStatus
+        @Model.ScienceRank
     </div>
     <div class="row">
         <span class="bold">Награды</span>
@@ -92,7 +91,7 @@
             {
                 <br />
                 <span>
-                    @item.Name;
+                    @item.Title;
                 </span>
             }
         }
