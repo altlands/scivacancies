@@ -1,7 +1,9 @@
-﻿using System;
+﻿using SciVacancies.Domain.Aggregates;
+
+using System;
+
 using CommonDomain.Persistence;
 using MediatR;
-using SciVacancies.Domain.Aggregates;
 
 namespace SciVacancies.WebApp.Commands
 {
@@ -14,11 +16,9 @@ namespace SciVacancies.WebApp.Commands
             _repository = repository;
         }
 
-        public Guid Handle(CreateOrganizationCommand message)
+        public Guid Handle(CreateOrganizationCommand msg)
         {
-            var rdm = message.Data;
-
-            Organization organization = new Organization(Guid.NewGuid(), rdm);
+            Organization organization = new Organization(Guid.NewGuid(), msg.Data);
             _repository.Save(organization, Guid.NewGuid(), null);
 
             return organization.Id;
@@ -33,14 +33,12 @@ namespace SciVacancies.WebApp.Commands
             _repository = repository;
         }
 
-        protected override void HandleCore(UpdateOrganizationCommand message)
+        protected override void HandleCore(UpdateOrganizationCommand msg)
         {
-            if (message.OrganizationGuid == Guid.Empty) throw new ArgumentNullException($"OrganizationGuid is empty: {message.OrganizationGuid}");
+            if (msg.OrganizationGuid == Guid.Empty) throw new ArgumentNullException($"OrganizationGuid is empty: {msg.OrganizationGuid}");
 
-            var rdm = message.Data;
-
-            Organization organization = _repository.GetById<Organization>(message.OrganizationGuid);
-            organization.Update(rdm);
+            Organization organization = _repository.GetById<Organization>(msg.OrganizationGuid);
+            organization.Update(msg.Data);
             _repository.Save(organization, Guid.NewGuid(), null);
         }
     }
@@ -53,11 +51,11 @@ namespace SciVacancies.WebApp.Commands
             _repository = repository;
         }
 
-        protected override void HandleCore(RemoveOrganizationCommand message)
+        protected override void HandleCore(RemoveOrganizationCommand msg)
         {
-            if (message.OrganizationGuid == Guid.Empty) throw new ArgumentNullException($"OrganizationGuid is empty: {message.OrganizationGuid}");
+            if (msg.OrganizationGuid == Guid.Empty) throw new ArgumentNullException($"OrganizationGuid is empty: {msg.OrganizationGuid}");
 
-            Organization organization = _repository.GetById<Organization>(message.OrganizationGuid);
+            Organization organization = _repository.GetById<Organization>(msg.OrganizationGuid);
             organization.Remove();
             _repository.Save(organization, Guid.NewGuid(), null);
         }

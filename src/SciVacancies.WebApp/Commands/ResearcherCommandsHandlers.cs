@@ -2,7 +2,6 @@
 
 using System;
 
-using AutoMapper;
 using CommonDomain.Persistence;
 using MediatR;
 
@@ -17,11 +16,9 @@ namespace SciVacancies.WebApp.Commands
             _repository = repository;
         }
 
-        public Guid Handle(CreateResearcherCommand message)
+        public Guid Handle(CreateResearcherCommand msg)
         {
-            var rdm = message.Data;
-
-            Researcher researcher = new Researcher(Guid.NewGuid(), rdm);
+            Researcher researcher = new Researcher(Guid.NewGuid(), msg.Data);
             _repository.Save(researcher, Guid.NewGuid(), null);
 
             return researcher.Id;
@@ -36,14 +33,12 @@ namespace SciVacancies.WebApp.Commands
             _repository = repository;
         }
 
-        protected override void HandleCore(UpdateResearcherCommand message)
+        protected override void HandleCore(UpdateResearcherCommand msg)
         {
-            if (message.ResearcherGuid == Guid.Empty) throw new ArgumentNullException($"ResearcherGuid is empty: {message.ResearcherGuid}");
+            if (msg.ResearcherGuid == Guid.Empty) throw new ArgumentNullException($"ResearcherGuid is empty: {msg.ResearcherGuid}");
 
-            var rdm = message.Data;
-
-            Researcher researcher = _repository.GetById<Researcher>(message.ResearcherGuid);
-            researcher.Update(rdm);
+            Researcher researcher = _repository.GetById<Researcher>(msg.ResearcherGuid);
+            researcher.Update(msg.Data);
             _repository.Save(researcher, Guid.NewGuid(), null);
         }
     }
@@ -56,11 +51,11 @@ namespace SciVacancies.WebApp.Commands
             _repository = repository;
         }
 
-        protected override void HandleCore(RemoveResearcherCommand message)
+        protected override void HandleCore(RemoveResearcherCommand msg)
         {
-            if (message.ResearcherGuid == Guid.Empty) throw new ArgumentNullException($"ResearcherGuid is empty: {message.ResearcherGuid}");
+            if (msg.ResearcherGuid == Guid.Empty) throw new ArgumentNullException($"ResearcherGuid is empty: {msg.ResearcherGuid}");
 
-            Researcher researcher = _repository.GetById<Researcher>(message.ResearcherGuid);
+            Researcher researcher = _repository.GetById<Researcher>(msg.ResearcherGuid);
             researcher.Remove();
             _repository.Save(researcher, Guid.NewGuid(), null);
         }
