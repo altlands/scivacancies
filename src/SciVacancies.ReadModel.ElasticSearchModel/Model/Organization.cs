@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace SciVacancies.ReadModel.ElasticSearchModel.Model
 {
@@ -9,15 +10,12 @@ namespace SciVacancies.ReadModel.ElasticSearchModel.Model
         /// </summary>            
         public Guid Id { get; set; }
 
+        #region General
+
         /// <summary>
         /// Полное наименование
         /// </summary>
         public string Name { get; set; }
-
-        /// <summary>
-        /// Полное наименование (на английском языке)
-        /// </summary>
-        public string NameEng { get; set; }
 
         /// <summary>
         /// Сокращенное наименование
@@ -25,24 +23,9 @@ namespace SciVacancies.ReadModel.ElasticSearchModel.Model
         public string ShortName { get; set; }
 
         /// <summary>
-        /// Сокращенное наименование (на английском языке)
-        /// </summary>
-        public string ShortNameEng { get; set; }
-
-        /// <summary>
-        /// Населенный пункт
-        /// </summary>
-        public string CityName { get; set; }
-
-        /// <summary>
         /// Почтовый адрес
         /// </summary>
         public string Address { get; set; }
-
-        /// <summary>
-        /// Веб-сайт
-        /// </summary>
-        public string Website { get; set; }
 
         /// <summary>
         /// E-mail
@@ -60,22 +43,26 @@ namespace SciVacancies.ReadModel.ElasticSearchModel.Model
         public string OGRN { get; set; }
 
         /// <summary>
-        /// Организационно-правовая форма организации
+        /// Имя руководителя
         /// </summary>
-        public string OrgForm { get; set; }
+        public string HeadFirstName { get; set; }
 
         /// <summary>
-        /// Идентификатор организационно-правовой формы организации
+        /// Фамилия руководителя
         /// </summary>
-        public int OrgFormId { get; set; }
+        public string HeadSecondName { get; set; }
 
         /// <summary>
-        /// Количество опубликованных вакансий на данный момент
+        /// Отчество руководителя
         /// </summary>
-        public int PublishedVacancies { get; set; }
+        public string HeadPatronymic { get; set; }
+
+        #endregion
+
+        #region Dictionaries
 
         /// <summary>
-        /// ФОИВ
+        /// Наименование ФОИВ
         /// </summary>
         public string Foiv { get; set; }
 
@@ -85,29 +72,21 @@ namespace SciVacancies.ReadModel.ElasticSearchModel.Model
         public int FoivId { get; set; }
 
         /// <summary>
-        /// Основной вид деятельности
+        /// Наименование организационно-правовой формы
         /// </summary>
-        public string Activity { get; set; }
+        public string OrgForm { get; set; }
 
         /// <summary>
-        /// Идентификатор основого вида деятельности
+        /// Идентификатор организационно-правовой формы
         /// </summary>
-        public int ActivityId { get; set; }
+        public int OrgFormId { get; set; }
 
         /// <summary>
-        /// Имя руководителя
+        /// Список идентификаторов отраслей науки
         /// </summary>
-        public string HeadFirstName { get; set; }
+        public List<ResearchDirection> ResearchDirections { get; set; }
 
-        /// <summary>
-        /// Фамилия руководителя
-        /// </summary>
-        public string HeadLastName { get; set; }
-
-        /// <summary>
-        /// Отчество руководителя
-        /// </summary>
-        public string HeadPatronymic { get; set; }
+        #endregion
 
         /// <summary>
         /// Дата регистрация организации на сайте

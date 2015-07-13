@@ -31,7 +31,6 @@ namespace SciVacancies.WebApp.Infrastructure
             Mapper.CreateMap<AccountOrganizationRegisterViewModel, OrganizationDataModel>();
             Mapper.CreateMap<OAuthOrgInformation, AccountOrganizationRegisterViewModel>();
 
-            /*Organization*/
             #region Organization
 
             //Создание организации
@@ -57,6 +56,117 @@ namespace SciVacancies.WebApp.Infrastructure
             Mapper.CreateMap<ReadModel.ElasticSearchModel.Model.Organization, OrganizationDataModel>();
 
             #endregion
+
+            #region Elastic
+
+            Mapper.CreateMap<OrganizationCreated, ReadModel.ElasticSearchModel.Model.Organization>()
+                .ForMember(d => d.Id, o => o.MapFrom(s => s.OrganizationGuid))
+                .ForMember(d => d.Name, o => o.MapFrom(s => s.Data.Name))
+                .ForMember(d => d.ShortName, o => o.MapFrom(s => s.Data.ShortName))
+                .ForMember(d => d.Address, o => o.MapFrom(s => s.Data.Address))
+                .ForMember(d => d.Email, o => o.MapFrom(s => s.Data.Email))
+                .ForMember(d => d.INN, o => o.MapFrom(s => s.Data.INN))
+                .ForMember(d => d.OGRN, o => o.MapFrom(s => s.Data.OGRN))
+                .ForMember(d => d.HeadFirstName, o => o.MapFrom(s => s.Data.HeadFirstName))
+                .ForMember(d => d.HeadSecondName, o => o.MapFrom(s => s.Data.HeadSecondName))
+                .ForMember(d => d.HeadPatronymic, o => o.MapFrom(s => s.Data.HeadPatronymic))
+                .ForMember(d => d.Foiv, o => o.MapFrom(s => s.Data.Foiv))
+                .ForMember(d => d.FoivId, o => o.MapFrom(s => s.Data.FoivId))
+                .ForMember(d => d.OrgForm, o => o.MapFrom(s => s.Data.OrgForm))
+                .ForMember(d => d.OrgFormId, o => o.MapFrom(s => s.Data.OrgFormId))
+                .ForMember(d => d.ResearchDirections, o => o.MapFrom(s => s.Data.ResearchDirections))
+                .ForMember(d => d.CreationDate, o => o.MapFrom(s => s.TimeStamp));
+
+            Mapper.CreateMap<OrganizationUpdated, ReadModel.ElasticSearchModel.Model.Organization>()
+                .ForMember(d => d.Id, o => o.MapFrom(s => s.OrganizationGuid))
+                .ForMember(d => d.Name, o => o.MapFrom(s => s.Data.Name))
+                .ForMember(d => d.ShortName, o => o.MapFrom(s => s.Data.ShortName))
+                .ForMember(d => d.Address, o => o.MapFrom(s => s.Data.Address))
+                .ForMember(d => d.Email, o => o.MapFrom(s => s.Data.Email))
+                .ForMember(d => d.INN, o => o.MapFrom(s => s.Data.INN))
+                .ForMember(d => d.OGRN, o => o.MapFrom(s => s.Data.OGRN))
+                .ForMember(d => d.HeadFirstName, o => o.MapFrom(s => s.Data.HeadFirstName))
+                .ForMember(d => d.HeadSecondName, o => o.MapFrom(s => s.Data.HeadSecondName))
+                .ForMember(d => d.HeadPatronymic, o => o.MapFrom(s => s.Data.HeadPatronymic))
+                .ForMember(d => d.Foiv, o => o.MapFrom(s => s.Data.Foiv))
+                .ForMember(d => d.FoivId, o => o.MapFrom(s => s.Data.FoivId))
+                .ForMember(d => d.OrgForm, o => o.MapFrom(s => s.Data.OrgForm))
+                .ForMember(d => d.OrgFormId, o => o.MapFrom(s => s.Data.OrgFormId))
+                .ForMember(d => d.ResearchDirections, o => o.MapFrom(s => s.Data.ResearchDirections))
+                .ForMember(d => d.CreationDate, o => o.MapFrom(s => s.TimeStamp));
+
+            Mapper.CreateMap<Domain.Core.ResearchDirection, ReadModel.ElasticSearchModel.Model.ResearchDirection>();
+
+            Mapper.CreateMap<VacancyCreated, ReadModel.ElasticSearchModel.Model.Vacancy>()
+                .ForMember(d => d.Id, o => o.MapFrom(s => s.VacancyGuid))
+                .ForMember(d => d.Name, o => o.MapFrom(s => s.Data.Name))
+                .ForMember(d => d.FullName, o => o.MapFrom(s => s.Data.FullName))
+                .ForMember(d => d.Tasks, o => o.MapFrom(s => s.Data.Tasks))
+                .ForMember(d => d.ResearchTheme, o => o.MapFrom(s => s.Data.ResearchTheme))
+                .ForMember(d => d.CityName, o => o.MapFrom(s => s.Data.CityName))
+                .ForMember(d => d.Details, o => o.MapFrom(s => s.Data.Details))
+                .ForMember(d => d.ContactName, o => o.MapFrom(s => s.Data.ContactName))
+                .ForMember(d => d.ContactEmail, o => o.MapFrom(s => s.Data.ContactEmail))
+                .ForMember(d => d.ContactPhone, o => o.MapFrom(s => s.Data.ContactPhone))
+                .ForMember(d => d.ContactDetails, o => o.MapFrom(s => s.Data.ContactDetails))
+                .ForMember(d => d.SalaryFrom, o => o.MapFrom(s => s.Data.SalaryFrom))
+                .ForMember(d => d.SalaryTo, o => o.MapFrom(s => s.Data.SalaryTo))
+                .ForMember(d => d.Bonuses, o => o.MapFrom(s => s.Data.Bonuses))
+                .ForMember(d => d.ContractType, o => o.MapFrom(s => s.Data.ContractType))
+                .ForMember(d => d.ContractTime, o => o.MapFrom(s => s.Data.ContractTime))
+                .ForMember(d => d.EmploymentType, o => o.MapFrom(s => s.Data.EmploymentType))
+                .ForMember(d => d.OperatingScheduleType, o => o.MapFrom(s => s.Data.OperatingScheduleType))
+                .ForMember(d => d.SocialPackage, o => o.MapFrom(s => s.Data.SocialPackage))
+                .ForMember(d => d.Rent, o => o.MapFrom(s => s.Data.Rent))
+                .ForMember(d => d.OfficeAccomodation, o => o.MapFrom(s => s.Data.OfficeAccomodation))
+                .ForMember(d => d.TransportCompensation, o => o.MapFrom(s => s.Data.TransportCompensation))
+                .ForMember(d => d.PositionType, o => o.MapFrom(s => s.Data.PositionType))
+                .ForMember(d => d.PositionTypeId, o => o.MapFrom(s => s.Data.PositionTypeId))
+                .ForMember(d => d.Region, o => o.MapFrom(s => s.Data.Region))
+                .ForMember(d => d.RegionId, o => o.MapFrom(s => s.Data.RegionId))
+                .ForMember(d => d.ResearchDirection, o => o.MapFrom(s => s.Data.ResearchDirection))
+                .ForMember(d => d.ResearchDirectionId, o => o.MapFrom(s => s.Data.ResearchDirectionId))
+                .ForMember(d => d.Criterias, o => o.MapFrom(s => s.Data.Criterias))
+                .ForMember(d => d.OrganizationGuid, o => o.MapFrom(s => s.OrganizationGuid))
+                .ForMember(d => d.CreationDate, o => o.MapFrom(s => s.TimeStamp));
+
+            Mapper.CreateMap<VacancyUpdated, ReadModel.ElasticSearchModel.Model.Vacancy>()
+                .ForMember(d => d.Id, o => o.MapFrom(s => s.VacancyGuid))
+                .ForMember(d => d.Name, o => o.MapFrom(s => s.Data.Name))
+                .ForMember(d => d.FullName, o => o.MapFrom(s => s.Data.FullName))
+                .ForMember(d => d.Tasks, o => o.MapFrom(s => s.Data.Tasks))
+                .ForMember(d => d.ResearchTheme, o => o.MapFrom(s => s.Data.ResearchTheme))
+                .ForMember(d => d.CityName, o => o.MapFrom(s => s.Data.CityName))
+                .ForMember(d => d.Details, o => o.MapFrom(s => s.Data.Details))
+                .ForMember(d => d.ContactName, o => o.MapFrom(s => s.Data.ContactName))
+                .ForMember(d => d.ContactEmail, o => o.MapFrom(s => s.Data.ContactEmail))
+                .ForMember(d => d.ContactPhone, o => o.MapFrom(s => s.Data.ContactPhone))
+                .ForMember(d => d.ContactDetails, o => o.MapFrom(s => s.Data.ContactDetails))
+                .ForMember(d => d.SalaryFrom, o => o.MapFrom(s => s.Data.SalaryFrom))
+                .ForMember(d => d.SalaryTo, o => o.MapFrom(s => s.Data.SalaryTo))
+                .ForMember(d => d.Bonuses, o => o.MapFrom(s => s.Data.Bonuses))
+                .ForMember(d => d.ContractType, o => o.MapFrom(s => s.Data.ContractType))
+                .ForMember(d => d.ContractTime, o => o.MapFrom(s => s.Data.ContractTime))
+                .ForMember(d => d.EmploymentType, o => o.MapFrom(s => s.Data.EmploymentType))
+                .ForMember(d => d.OperatingScheduleType, o => o.MapFrom(s => s.Data.OperatingScheduleType))
+                .ForMember(d => d.SocialPackage, o => o.MapFrom(s => s.Data.SocialPackage))
+                .ForMember(d => d.Rent, o => o.MapFrom(s => s.Data.Rent))
+                .ForMember(d => d.OfficeAccomodation, o => o.MapFrom(s => s.Data.OfficeAccomodation))
+                .ForMember(d => d.TransportCompensation, o => o.MapFrom(s => s.Data.TransportCompensation))
+                .ForMember(d => d.PositionType, o => o.MapFrom(s => s.Data.PositionType))
+                .ForMember(d => d.PositionTypeId, o => o.MapFrom(s => s.Data.PositionTypeId))
+                .ForMember(d => d.Region, o => o.MapFrom(s => s.Data.Region))
+                .ForMember(d => d.RegionId, o => o.MapFrom(s => s.Data.RegionId))
+                .ForMember(d => d.ResearchDirection, o => o.MapFrom(s => s.Data.ResearchDirection))
+                .ForMember(d => d.ResearchDirectionId, o => o.MapFrom(s => s.Data.ResearchDirectionId))
+                .ForMember(d => d.Criterias, o => o.MapFrom(s => s.Data.Criterias))
+                .ForMember(d => d.OrganizationGuid, o => o.MapFrom(s => s.OrganizationGuid))
+                .ForMember(d => d.UpdateDate, o => o.MapFrom(s => s.TimeStamp));
+
+            Mapper.CreateMap<Domain.Core.VacancyCriteria, ReadModel.ElasticSearchModel.Model.VacancyCriteria>();   
+
+            #endregion
+
 
             #region Researcher
 
@@ -99,6 +209,7 @@ namespace SciVacancies.WebApp.Infrastructure
             //piblication
             Mapper.CreateMap<Publication, PublicationEditViewModel>();
             Mapper.CreateMap<PublicationEditViewModel, SciVacancies.Domain.Core.Publication>();
+
             #endregion
 
             #region SearchSubscription

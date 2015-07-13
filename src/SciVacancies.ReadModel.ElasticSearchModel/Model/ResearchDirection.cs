@@ -1,4 +1,4 @@
-﻿namespace SciVacancies.Domain.Core
+﻿namespace SciVacancies.ReadModel.ElasticSearchModel.Model
 {
     public class ResearchDirection
     {
