@@ -62,7 +62,7 @@ namespace SciVacancies.WebApp.Queries
 
         public IEnumerable<ResearchDirection> Handle(SelectOrganizationResearchDirectionsQuery msg)
         {
-            IEnumerable<ResearchDirection> orgResearchDirections = _db.Fetch<ResearchDirection>(new Sql($"SELECT ors.researchdirection_id FROM org_researchdirections ors WHERE ors.organization_guid = @0 INNER JOIN d.researchdirections drs ON (ors.researchdirection_id = drs.id)", msg.OrganizationGuid));
+            IEnumerable<ResearchDirection> orgResearchDirections = _db.Fetch<ResearchDirection>(new Sql($"SELECT * FROM org_researchdirections ors, d_researchdirections drs WHERE ors.organization_guid = @0 AND ors.researchdirection_id = drs.id", msg.OrganizationGuid));
 
             return orgResearchDirections;
         }

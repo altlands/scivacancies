@@ -82,7 +82,7 @@ namespace SciVacancies.WebApp.Queries
         {
             if (message.ResearcherGuid == Guid.Empty) throw new ArgumentNullException($"ResearcherGuid is empty: {message.ResearcherGuid}");
 
-            Page<Vacancy> favoriteVacancies = _db.Page<Vacancy>(message.PageIndex, message.PageSize, new Sql($"SELECT fv.vacancy_guid FROM res_favoritevacancies fv WHERE fv.researcher_guid = @0 INNER JOIN org_vacancies v ON (fv.vacancy_guid = v.guid)", message.ResearcherGuid));
+            Page<Vacancy> favoriteVacancies = _db.Page<Vacancy>(message.PageIndex, message.PageSize, new Sql($"SELECT * FROM res_favoritevacancies fv, org_vacancies v WHERE fv.researcher_guid = @0 AND fv.vacancy_guid = v.guid", message.ResearcherGuid));
 
             return favoriteVacancies;
         }
