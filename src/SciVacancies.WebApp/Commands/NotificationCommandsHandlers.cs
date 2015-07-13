@@ -1,10 +1,6 @@
 ﻿using SciVacancies.Domain.Enums;
-using SciVacancies.ReadModel.Core;
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 using MediatR;
 using NPoco;
