@@ -32,7 +32,7 @@ namespace SciVacancies.WebApp.Controllers
                 PageSize = model.PageSize,
                 CurrentPage = model.CurrentPage,
                 
-                PositionsTypeIds = model.Positions,
+                PositionTypeIds = model.Positions,
                 RegionIds = model.Regions,
                 FoivIds = model.Foivs,
                 ResearchDirectionIds = model.ResearchDirections,
