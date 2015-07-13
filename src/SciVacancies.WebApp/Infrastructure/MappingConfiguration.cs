@@ -289,6 +289,8 @@ namespace SciVacancies.WebApp.Infrastructure
                 .ForMember(d => d.SecondNameEng, o => o.MapFrom(s => s.secondname_eng))
                 .ForMember(d => d.Patronymic, o => o.MapFrom(s => s.patronymic))
                 .ForMember(d => d.PatronymicEng, o => o.MapFrom(s => s.patronymic_eng))
+                .ForMember(d => d.PreviousSecondName, o => o.MapFrom(s => s.previous_secondname))
+                .ForMember(d => d.PreviousSecondNameEng, o => o.MapFrom(s => s.previous_secondname_eng))
                 .ForMember(d => d.BirthDate, o => o.MapFrom(s => s.birthdate))
                 .ForMember(d => d.Email, o => o.MapFrom(s => s.email))
                 .ForMember(d => d.ExtraEmail, o => o.MapFrom(s => s.extraemail))
@@ -308,17 +310,50 @@ namespace SciVacancies.WebApp.Infrastructure
                 .ForMember(d => d.Status, o => o.MapFrom(s => s.status))
                 .ForMember(d => d.CreationDate, o => o.MapFrom(s => s.creation_date))
                 .ForMember(d => d.UpdateDate, o => o.MapFrom(s => s.update_date));
-            Mapper.CreateMap<Researcher, ResearcherEditViewModel>();
+            Mapper.CreateMap<Researcher, ResearcherEditViewModel>()
+                .ForMember(d => d.Guid, o => o.MapFrom(s => s.guid))
+                .ForMember(d => d.FirstName, o => o.MapFrom(s => s.firstname))
+                .ForMember(d => d.FirstNameEng, o => o.MapFrom(s => s.firstname_eng))
+                .ForMember(d => d.SecondName, o => o.MapFrom(s => s.secondname))
+                .ForMember(d => d.SecondNameEng, o => o.MapFrom(s => s.secondname_eng))
+                .ForMember(d => d.Patronymic, o => o.MapFrom(s => s.patronymic))
+                .ForMember(d => d.PatronymicEng, o => o.MapFrom(s => s.patronymic_eng))
+                .ForMember(d => d.PreviousSecondName, o => o.MapFrom(s => s.previous_secondname))
+                .ForMember(d => d.PreviousSecondNameEng, o => o.MapFrom(s => s.previous_secondname_eng))
+                .ForMember(d => d.BirthDate, o => o.MapFrom(s => s.birthdate))
+                .ForMember(d => d.Email, o => o.MapFrom(s => s.email))
+                .ForMember(d => d.ExtraEmail, o => o.MapFrom(s => s.extraemail))
+                .ForMember(d => d.Phone, o => o.MapFrom(s => s.phone))
+                .ForMember(d => d.ExtraPhone, o => o.MapFrom(s => s.extraphone))
+                .ForMember(d => d.Nationality, o => o.MapFrom(s => s.nationality))
+                .ForMember(d => d.ResearchActivity, o => o.MapFrom(s => s.research_activity))
+                .ForMember(d => d.TeachingActivity, o => o.MapFrom(s => s.teaching_activity))
+                .ForMember(d => d.OtherActivity, o => o.MapFrom(s => s.other_activity))
+                .ForMember(d => d.ScienceDegree, o => o.MapFrom(s => s.science_degree))
+                .ForMember(d => d.ScienceRank, o => o.MapFrom(s => s.science_rank))
+                .ForMember(d => d.Rewards, o => o.MapFrom(s => s.rewards))
+                .ForMember(d => d.Memberships, o => o.MapFrom(s => s.memberships))
+                .ForMember(d => d.Conferences, o => o.MapFrom(s => s.conferences))
+                .ForMember(d => d.Educations, o => o.MapFrom(s => s.educations))
+                .ForMember(d => d.Publications, o => o.MapFrom(s => s.publications));
 
             //education
 
             Mapper.CreateMap<Education, EducationEditViewModel>()
-                .ForMember(dest => dest.GraduationYear, src => src.MapFrom(c => c.graduation_date.HasValue ? c.graduation_date.Value.Year : 0));
+                .ForMember(d => d.ResearcherGuid, o => o.MapFrom(s => s.researcher_guid))
+                .ForMember(d => d.City, o => o.MapFrom(s => s.city))
+                .ForMember(d => d.UniversityShortName, o => o.MapFrom(s => s.university_shortname))
+                .ForMember(d => d.FacultyShortName, o => o.MapFrom(s => s.faculty_shortname))
+                .ForMember(dest => dest.GraduationYear, src => src.MapFrom(c => c.graduation_date.HasValue ? c.graduation_date.Value.Year : 0))
+                .ForMember(d => d.Degree, o => o.MapFrom(s => s.degree));
             Mapper.CreateMap<EducationEditViewModel, SciVacancies.Domain.Core.Education>()
                 .ForMember(dest => dest.GraduationYear, src => src.MapFrom(c => (c.GraduationYear.HasValue && c.GraduationYear.Value != 0) ? new DateTime(c.GraduationYear.Value, 1, 1) : default(DateTime)));
 
             //piblication
-            Mapper.CreateMap<Publication, PublicationEditViewModel>();
+            Mapper.CreateMap<Publication, PublicationEditViewModel>()
+                .ForMember(d => d.Guid, o => o.MapFrom(s => s.guid))
+                .ForMember(d => d.ResearcherGuid, o => o.MapFrom(s => s.researcher_guid))
+                .ForMember(d => d.Title, o => o.MapFrom(s => s.title));
             Mapper.CreateMap<PublicationEditViewModel, SciVacancies.Domain.Core.Publication>();
 
             #endregion
@@ -400,14 +435,63 @@ namespace SciVacancies.WebApp.Infrastructure
                 .ForMember(d => d.to, o => o.MapFrom(s => s.To));
 
             //vacancy
-            Mapper.CreateMap<Vacancy, VacancyCreateViewModel>();
+            Mapper.CreateMap<Vacancy, VacancyCreateViewModel>()
+                .ForMember(d => d, o => o.MapFrom(s => s))
+                .ForMember(d => d, o => o.MapFrom(s => s))
+                .ForMember(d => d, o => o.MapFrom(s => s))
+                .ForMember(d => d, o => o.MapFrom(s => s))
+                .ForMember(d => d, o => o.MapFrom(s => s))
+                .ForMember(d => d, o => o.MapFrom(s => s))
+                .ForMember(d => d, o => o.MapFrom(s => s))
+                .ForMember(d => d, o => o.MapFrom(s => s))
+                .ForMember(d => d, o => o.MapFrom(s => s))
+                .ForMember(d => d, o => o.MapFrom(s => s))
+                .ForMember(d => d, o => o.MapFrom(s => s))
+                .ForMember(d => d, o => o.MapFrom(s => s))
+                .ForMember(d => d, o => o.MapFrom(s => s))
+                .ForMember(d => d, o => o.MapFrom(s => s))
+                ;
             Mapper.CreateMap<Vacancy, VacancyDetailsViewModel>()
-                .ForMember(d => d.guid, o => o.MapFrom(s => s.VacancyApplicationGuid));
-            Mapper.CreateMap<Vacancy, VacancyDataModel>();
-            Mapper.CreateMap<VacancyCreateViewModel, Vacancy>();
-            Mapper.CreateMap<VacancyCreateViewModel, VacancyDataModel>();
-            //индексация только что созданной вакансии в поисковике
-            Mapper.CreateMap<SciVacancies.ReadModel.ElasticSearchModel.Model.Vacancy, VacancyPublished>();
+                .ForMember(d => d.guid, o => o.MapFrom(s => s.VacancyApplicationGuid))
+                .ForMember(d => d, o => o.MapFrom(s => s))
+                .ForMember(d => d, o => o.MapFrom(s => s))
+                .ForMember(d => d, o => o.MapFrom(s => s))
+                .ForMember(d => d, o => o.MapFrom(s => s))
+                .ForMember(d => d, o => o.MapFrom(s => s))
+                .ForMember(d => d, o => o.MapFrom(s => s))
+                .ForMember(d => d, o => o.MapFrom(s => s))
+                .ForMember(d => d, o => o.MapFrom(s => s))
+                .ForMember(d => d, o => o.MapFrom(s => s))
+                .ForMember(d => d, o => o.MapFrom(s => s))
+                .ForMember(d => d, o => o.MapFrom(s => s))
+                .ForMember(d => d, o => o.MapFrom(s => s))
+                .ForMember(d => d, o => o.MapFrom(s => s))
+                .ForMember(d => d, o => o.MapFrom(s => s))
+                .ForMember(d => d, o => o.MapFrom(s => s))
+                .ForMember(d => d, o => o.MapFrom(s => s))
+                .ForMember(d => d, o => o.MapFrom(s => s))
+                .ForMember(d => d, o => o.MapFrom(s => s))
+                ;
+            Mapper.CreateMap<VacancyCreateViewModel, VacancyDataModel>()
+                .ForMember(d => d, o => o.MapFrom(s => s))
+                .ForMember(d => d, o => o.MapFrom(s => s))
+                .ForMember(d => d, o => o.MapFrom(s => s))
+                .ForMember(d => d, o => o.MapFrom(s => s))
+                .ForMember(d => d, o => o.MapFrom(s => s))
+                .ForMember(d => d, o => o.MapFrom(s => s))
+                .ForMember(d => d, o => o.MapFrom(s => s))
+                .ForMember(d => d, o => o.MapFrom(s => s))
+                .ForMember(d => d, o => o.MapFrom(s => s))
+                .ForMember(d => d, o => o.MapFrom(s => s))
+                .ForMember(d => d, o => o.MapFrom(s => s))
+                .ForMember(d => d, o => o.MapFrom(s => s))
+                .ForMember(d => d, o => o.MapFrom(s => s))
+                .ForMember(d => d, o => o.MapFrom(s => s))
+                .ForMember(d => d, o => o.MapFrom(s => s))
+                .ForMember(d => d, o => o.MapFrom(s => s))
+                ;
+
+            //TODO - VACANCY EDIT VIEW MODEL MAPPINGS
 
             #endregion
 
