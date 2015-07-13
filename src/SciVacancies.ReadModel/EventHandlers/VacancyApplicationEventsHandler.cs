@@ -32,8 +32,11 @@ namespace SciVacancies.ReadModel.EventHandlers
 
             using (var transaction = _db.GetTransaction())
             {
-
                 _db.Insert(vacancyApplication);
+                foreach (Attachment at in vacancyApplication.attachments)
+                {
+                    _db.Insert(at);
+                }
                 transaction.Complete();
             }
         }
@@ -42,11 +45,16 @@ namespace SciVacancies.ReadModel.EventHandlers
             VacancyApplication vacancyApplication = _db.SingleById<VacancyApplication>(msg.VacancyApplicationGuid);
 
             VacancyApplication updatedVacancyApplication = Mapper.Map<VacancyApplication>(msg);
+            updatedVacancyApplication.creation_date = vacancyApplication.creation_date;
 
             using (var transaction = _db.GetTransaction())
             {
-
                 _db.Update(vacancyApplication);
+                _db.Delete(new Sql($"DELETE FROM res_attachments WHERE vacancyapplication_guid = @0", msg.VacancyApplicationGuid));
+                foreach (Attachment at in updatedVacancyApplication.attachments)
+                {
+                    _db.Insert(at);
+                }
                 transaction.Complete();
             }
         }
