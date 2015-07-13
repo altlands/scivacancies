@@ -5,6 +5,7 @@ using Microsoft.AspNet.Mvc;
 using SciVacancies.Domain.DataModels;
 using SciVacancies.WebApp.Commands;
 using SciVacancies.WebApp.Engine;
+using SciVacancies.WebApp.Queries;
 using SciVacancies.WebApp.ViewModels;
 
 // For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
@@ -64,7 +65,7 @@ namespace SciVacancies.WebApp.Controllers
                 }
             };
             var organization = _mediator.Send(createUserOrganizationCommand);
-            var orgGuid = Guid.Parse(organization.Claims.Single(s => s.ClaimType.Equals(ConstTerms.ClaimTypeOrganizationId)).ClaimValue);
+            var organizationGuid0 = Guid.Parse(organization.Claims.Single(s => s.ClaimType.Equals(ConstTerms.ClaimTypeOrganizationId)).ClaimValue);
 
 
 
@@ -86,63 +87,59 @@ namespace SciVacancies.WebApp.Controllers
                 }
             };
             var organization1 = _mediator.Send(createUserOrganizationCommand1);
-            var orgGuid1 = Guid.Parse(organization1.Claims.Single(s => s.ClaimType.Equals(ConstTerms.ClaimTypeOrganizationId)).ClaimValue);
+            var organizationGuid1 = Guid.Parse(organization1.Claims.Single(s => s.ClaimType.Equals(ConstTerms.ClaimTypeOrganizationId)).ClaimValue);
 
 
 
-            var subscriptionGuid = _mediator.Send(new CreateSearchSubscriptionCommand
+            _mediator.Send(new CreateSearchSubscriptionCommand
             {
                 ResearcherGuid = resGuid,
                 Data = new SearchSubscriptionDataModel { Title = "Разведение лазерных акул" }
             });
 
 
-            Guid vacancyGuid1 = _mediator.Send(new CreateVacancyCommand
+            var positions = _mediator.Send(new SelectAllPositionTypesQuery()).ToList();
+            var rnd = new Random();
+
+            var vacancyGuid1 = _mediator.Send(new CreateVacancyCommand
             {
-                OrganizationGuid = orgGuid,
+                OrganizationGuid = organizationGuid0,
                 Data = new VacancyDataModel
                 {
                     Name = "Разводчик акул",
                     FullName = "Младший сотрудник по разведению лазерных акул",
-                    PositionTypeGuid = Guid.Parse("b7280ace-d237-c007-42fe-ec4aed8f52d4"),
+                    PositionTypeId = positions.Skip( rnd.Next(positions.Count()-1) ).First().id,
                     ResearchDirection = "Аналитическая химия",
                     ResearchDirectionId = 3026
                 }
             });
-            Guid vacancyGuid2 = _mediator.Send(new CreateVacancyCommand
+            _mediator.Send(new CreateVacancyCommand
             {
-                OrganizationGuid = orgGuid,
+                OrganizationGuid = organizationGuid0,
                 Data = new VacancyDataModel
                 {
                     Name = "Настройщик лазеров",
                     FullName = "Младший сотрудник по настройке лазеров",
-                    PositionTypeGuid = Guid.Parse("b7280ace-d237-c007-42fe-ec4aed8f52d4"),
+                    PositionTypeId = positions.Skip(rnd.Next(positions.Count() - 1)).First().id,
                     ResearchDirection = "Прикладная математика",
                     ResearchDirectionId = 2999
                 }
             });
-            var vacancyGuid1_published = _mediator.Send(new PublishVacancyCommand
-            {
-                VacancyGuid =  vacancyGuid1
-            });
+            _mediator.Send(new PublishVacancyCommand { VacancyGuid = vacancyGuid1 });
 
             var vacancyGuid3 = _mediator.Send(new CreateVacancyCommand
             {
-                OrganizationGuid = orgGuid1,
+                OrganizationGuid = organizationGuid1,
                 Data = new VacancyDataModel
                 {
                     Name = "Ремонтник всевидящего ока",
                     FullName = "Младший сотрудник по калибровке фокусного зеркала",
-                    PositionTypeGuid = Guid.Parse("b7280ace-d237-c007-42fe-ec4aed8f52d4"),
+                    PositionTypeId = positions.Skip(rnd.Next(positions.Count() - 1)).First().id,
                     ResearchDirection = "Аналитическая химия",
                     ResearchDirectionId = 3026
                 }
             });
-
-            var vacancyGuid3_published = _mediator.Send(new PublishVacancyCommand
-            {
-                VacancyGuid=  vacancyGuid3
-            });
+            _mediator.Send(new PublishVacancyCommand { VacancyGuid = vacancyGuid3 });
         }
     }
 }

@@ -76,7 +76,7 @@ namespace SciVacancies.WebApp.Controllers
             {
                 OrganizationGuid = organizationGuid,
                 PagedVacancies = _mediator.Send(new SelectPagedVacanciesByOrganizationQuery { OrganizationGuid = organizationGuid, PageSize = pageSize, PageIndex = currentPage }).MapToPagedList(),
-                Name = preModel.Name
+                Name = preModel.name
             };
 
             return View(model);
@@ -95,7 +95,7 @@ namespace SciVacancies.WebApp.Controllers
             var model = new VacanciesInOrganizationIndexViewModel
             {
                 PagedVacancies = _mediator.Send(new SelectPagedVacanciesByOrganizationQuery { OrganizationGuid = organizationGuid, PageSize = pageSize, PageIndex = currentPage }).MapToPagedList(),
-                Name = preModel.Name
+                Name = preModel.name
             };
             return View(model);
         }
@@ -112,13 +112,13 @@ namespace SciVacancies.WebApp.Controllers
 
             var model = new NotificationsInOrganizationIndexViewModel
             {
-                PagedNotifications = _mediator.Send(new SelectPagedNotificationsByOrganizationQuery
+                PagedNotifications = _mediator.Send(new SelectPagedOrganizationNotificationsQuery
                 {
                     OrganizationGuid = organizationGuid,
                     PageSize = pageSize,
                     PageIndex = currentPage
                 }).MapToPagedList(),
-                Name = preModel.Name
+                Name = preModel.name
             };
             return View(model);
         }
