@@ -25,6 +25,7 @@ namespace SciVacancies.WebApp.ViewModels
         public string PatronymicEng { get; set; }
 
         public string PreviousSecondName { get; set; }
+        public string PreviousSecondNameEng { get; set; }
 
         public DateTime BirthDate { get; set; }
 
