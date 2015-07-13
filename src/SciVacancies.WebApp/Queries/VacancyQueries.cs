@@ -75,4 +75,9 @@ namespace SciVacancies.WebApp.Queries
         //public string NameFilterValue { get; set; }
         //public string AddressFilterValue { get; set; }
     }
+
+    public class SelectVacancyCriteriasQuery : IRequest<IEnumerable<VacancyCriteria>>
+    {
+        public Guid VacancyGuid { get; set; }
+    }
 }

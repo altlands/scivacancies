@@ -13,7 +13,8 @@ namespace SciVacancies.WebApp.Queries
         IRequestHandler<SingleOrganizationQuery, Organization>,
         IRequestHandler<SelectOrganizationsForAutocompleteQuery, IEnumerable<Organization>>,
         IRequestHandler<SelectPagedOrganizationsQuery, Page<Organization>>,
-        IRequestHandler<SelectOrganizationsByGuidsQuery, IEnumerable<Organization>>
+        IRequestHandler<SelectOrganizationsByGuidsQuery, IEnumerable<Organization>>,
+        IRequestHandler<SelectOrganizationResearchDirectionsQuery, IEnumerable<ResearchDirection>>
     {
         private readonly IDatabase _db;
 
@@ -57,6 +58,13 @@ namespace SciVacancies.WebApp.Queries
             IEnumerable<Organization> organizations = _db.Fetch<Organization>(new Sql($"SELECT o.* FROM org_organizations o WHERE o.guid IN (@0) ORDER BY o.guid DESC", msg.OrganizationGuids));
 
             return organizations;
+        }
+
+        public IEnumerable<ResearchDirection> Handle(SelectOrganizationResearchDirectionsQuery msg)
+        {
+            IEnumerable<ResearchDirection> orgResearchDirections = _db.Fetch<ResearchDirection>(new Sql($"SELECT ors.researchdirection_id FROM org_researchdirections ors WHERE ors.organization_guid = @0 INNER JOIN d.researchdirections drs ON (ors.researchdirection_id = drs.id)", msg.OrganizationGuid));
+
+            return orgResearchDirections;
         }
     }
 }

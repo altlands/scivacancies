@@ -29,4 +29,9 @@ namespace SciVacancies.WebApp.Queries
     {
         public IEnumerable<Guid> OrganizationGuids { get; set; }
     }
+
+    public class SelectOrganizationResearchDirectionsQuery:IRequest<IEnumerable<ResearchDirection>>
+    {
+        public Guid OrganizationGuid { get; set; }
+    }
 }

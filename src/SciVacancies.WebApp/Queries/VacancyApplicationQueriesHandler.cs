@@ -2,6 +2,7 @@
 using SciVacancies.ReadModel.Core;
 
 using System;
+using System.Collections.Generic;
 
 using NPoco;
 using MediatR;
@@ -43,6 +44,13 @@ namespace SciVacancies.WebApp.Queries
             Page<VacancyApplication> vacancyApplications = _db.Page<VacancyApplication>(message.PageIndex, message.PageSize, new Sql("SELECT va.* FROM res_vacancyapplications va WHERE va.status != @0 ORDER BY va.guid DESC", (int)VacancyApplicationStatus.Removed));
 
             return vacancyApplications;
+        }
+
+        public IEnumerable<Attachment> Handle(SelectVacancyApplicationAttachmentsQuery msg)
+        {
+            IEnumerable<Attachment> vaAttachments = _db.Fetch<Attachment>(new Sql($"SELECT * FROM res_attachments ra WHERE ra.vacancyapplication_guid = @0", msg.VacancyApplicationGuid));
+
+            return vaAttachments;
         }
     }
 }
