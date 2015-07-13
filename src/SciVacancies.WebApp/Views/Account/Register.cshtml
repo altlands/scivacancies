@@ -1,4 +1,8 @@
-﻿@model SciVacancies.WebApp.ViewModels.AccountResearcherRegisterViewModel
+﻿@using System
+@using System.Linq
+@using System.Threading.Tasks
+@using Microsoft.AspNet.Mvc.Rendering
+@model SciVacancies.WebApp.ViewModels.AccountResearcherRegisterViewModel
 @{
     var years = Enumerable.Range(DateTime.Now.Year-150, 150).OrderByDescending(c=>c).Select(c=> new SelectListItem {Text = c.ToString(), Value = c.ToString()});
 }
