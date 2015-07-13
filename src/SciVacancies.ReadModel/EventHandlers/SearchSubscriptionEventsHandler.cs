@@ -35,7 +35,7 @@ namespace SciVacancies.ReadModel.EventHandlers
         {
             using (var transaction = _db.GetTransaction())
             {
-                _db.Update(new Sql($"UPDATE res_searchsubscriptions SET status = @0, update_date = @1 WHERE guid = @2", SearchSubscriptionStatus.Active, msg.TimeStamp, msg.SearchSubscriptionGuid));
+                _db.Execute(new Sql($"UPDATE res_searchsubscriptions SET status = @0, update_date = @1 WHERE guid = @2", SearchSubscriptionStatus.Active, msg.TimeStamp, msg.SearchSubscriptionGuid));
                 transaction.Complete();
             }
         }
@@ -43,7 +43,7 @@ namespace SciVacancies.ReadModel.EventHandlers
         {
             using (var transaction = _db.GetTransaction())
             {
-                _db.Update(new Sql($"UPDATE res_searchsubscriptions SET status = @0, update_date = @1 WHERE guid = @2", SearchSubscriptionStatus.Cancelled, msg.TimeStamp, msg.SearchSubscriptionGuid));
+                _db.Execute(new Sql($"UPDATE res_searchsubscriptions SET status = @0, update_date = @1 WHERE guid = @2", SearchSubscriptionStatus.Cancelled, msg.TimeStamp, msg.SearchSubscriptionGuid));
                 transaction.Complete();
             }
         }
@@ -51,7 +51,7 @@ namespace SciVacancies.ReadModel.EventHandlers
         {
             using (var transaction = _db.GetTransaction())
             {
-                _db.Update(new Sql($"UPDATE res_searchsubscriptions SET status = @0, update_date = @1 WHERE guid = @2", SearchSubscriptionStatus.Removed, msg.TimeStamp, msg.SearchSubscriptionGuid));
+                _db.Execute(new Sql($"UPDATE res_searchsubscriptions SET status = @0, update_date = @1 WHERE guid = @2", SearchSubscriptionStatus.Removed, msg.TimeStamp, msg.SearchSubscriptionGuid));
                 transaction.Complete();
             }
         }

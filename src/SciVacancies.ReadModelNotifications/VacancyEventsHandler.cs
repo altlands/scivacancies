@@ -35,7 +35,7 @@ namespace SciVacancies.ReadModel.Notifications
             {
                 foreach (Guid researcherGuid in researcherGuids)
                 {
-                    _db.Insert(new Sql($"INSERT INTO res_notifications (guid, title, vacancy_guid, researcher_guid, creation_date) VALUES(@0, @1, @2, @3, @4)", Guid.NewGuid(), title, msg.VacancyGuid, researcherGuid, msg.TimeStamp));
+                    _db.Execute(new Sql($"INSERT INTO res_notifications (guid, title, vacancy_guid, researcher_guid, creation_date) VALUES(@0, @1, @2, @3, @4)", Guid.NewGuid(), title, msg.VacancyGuid, researcherGuid, msg.TimeStamp));
                 }
                 transaction.Complete();
             }
@@ -49,7 +49,7 @@ namespace SciVacancies.ReadModel.Notifications
             string title = "На ваш конкурс " + msg.VacancyGuid + " заявка-победитель " + vacancyApplication.guid + " подписывает контракт";
             using (var transaction = _db.GetTransaction())
             {
-                _db.Insert(new Sql($"INSERT INTO org_notifications (guid, title, vacancyapplication_guid, organization_guid, creation_date) VALUES(@0, @1, @2, @3, @4)", Guid.NewGuid(), title, vacancyApplication.guid, msg.OrganizationGuid, msg.TimeStamp));
+                _db.Execute(new Sql($"INSERT INTO org_notifications (guid, title, vacancyapplication_guid, organization_guid, creation_date) VALUES(@0, @1, @2, @3, @4)", Guid.NewGuid(), title, vacancyApplication.guid, msg.OrganizationGuid, msg.TimeStamp));
                 transaction.Complete();
             }
         }
@@ -62,7 +62,7 @@ namespace SciVacancies.ReadModel.Notifications
             string title = "На ваш конкурс " + msg.VacancyGuid + " заявка-победитель " + vacancyApplication.guid + " отказывается от контракта";
             using (var transaction = _db.GetTransaction())
             {
-                _db.Insert(new Sql($"INSERT INTO org_notifications (guid, title, vacancyapplication_guid, organization_guid, creation_date) VALUES(@0, @1, @2, @3, @4)", Guid.NewGuid(), title, vacancyApplication.guid, msg.OrganizationGuid, msg.TimeStamp));
+                _db.Execute(new Sql($"INSERT INTO org_notifications (guid, title, vacancyapplication_guid, organization_guid, creation_date) VALUES(@0, @1, @2, @3, @4)", Guid.NewGuid(), title, vacancyApplication.guid, msg.OrganizationGuid, msg.TimeStamp));
                 transaction.Complete();
             }
         }
@@ -75,7 +75,7 @@ namespace SciVacancies.ReadModel.Notifications
             string title = "На ваш конкурс " + msg.VacancyGuid + " заявка-претендент " + vacancyApplication.guid + " подписывает контракт";
             using (var transaction = _db.GetTransaction())
             {
-                _db.Insert(new Sql($"INSERT INTO org_notifications (guid, title, vacancyapplication_guid, organization_guid, creation_date) VALUES(@0, @1, @2, @3, @4)", Guid.NewGuid(), title, vacancyApplication.guid, msg.OrganizationGuid, msg.TimeStamp));
+                _db.Execute(new Sql($"INSERT INTO org_notifications (guid, title, vacancyapplication_guid, organization_guid, creation_date) VALUES(@0, @1, @2, @3, @4)", Guid.NewGuid(), title, vacancyApplication.guid, msg.OrganizationGuid, msg.TimeStamp));
                 transaction.Complete();
             }
         }
@@ -88,7 +88,7 @@ namespace SciVacancies.ReadModel.Notifications
             string title = "На ваш конкурс " + msg.VacancyGuid + " заявка-претендент " + vacancyApplication.guid + " отказывается от контракта";
             using (var transaction = _db.GetTransaction())
             {
-                _db.Insert(new Sql($"INSERT INTO org_notifications (guid, title, vacancyapplication_guid, organization_guid, creation_date) VALUES(@0, @1, @2, @3, @4)", Guid.NewGuid(), title, vacancyApplication.guid, msg.OrganizationGuid, msg.TimeStamp));
+                _db.Execute(new Sql($"INSERT INTO org_notifications (guid, title, vacancyapplication_guid, organization_guid, creation_date) VALUES(@0, @1, @2, @3, @4)", Guid.NewGuid(), title, vacancyApplication.guid, msg.OrganizationGuid, msg.TimeStamp));
                 transaction.Complete();
             }
         }
@@ -104,10 +104,10 @@ namespace SciVacancies.ReadModel.Notifications
             {
                 foreach (Guid researcherGuid in researcherLooserGuids)
                 {
-                    _db.Insert(new Sql($"INSERT INTO res_notifications (guid, title, vacancy_guid, researcher_guid, creation_date) VALUES(@0, @1, @2, @3, @4)", Guid.NewGuid(), looserTitle, msg.VacancyGuid, researcherGuid, msg.TimeStamp));
+                    _db.Execute(new Sql($"INSERT INTO res_notifications (guid, title, vacancy_guid, researcher_guid, creation_date) VALUES(@0, @1, @2, @3, @4)", Guid.NewGuid(), looserTitle, msg.VacancyGuid, researcherGuid, msg.TimeStamp));
                 }
-                _db.Insert(new Sql($"INSERT INTO res_notifications (guid, title, vacancy_guid, researcher_guid, creation_date) VALUES(@0, @1, @2, @3, @4)", Guid.NewGuid(), title, msg.VacancyGuid, vacancy.winner_researcher_guid, msg.TimeStamp));
-                _db.Insert(new Sql($"INSERT INTO res_notifications (guid, title, vacancy_guid, researcher_guid, creation_date) VALUES(@0, @1, @2, @3, @4)", Guid.NewGuid(), title, msg.VacancyGuid, vacancy.pretender_researcher_guid, msg.TimeStamp));
+                _db.Execute(new Sql($"INSERT INTO res_notifications (guid, title, vacancy_guid, researcher_guid, creation_date) VALUES(@0, @1, @2, @3, @4)", Guid.NewGuid(), title, msg.VacancyGuid, vacancy.winner_researcher_guid, msg.TimeStamp));
+                _db.Execute(new Sql($"INSERT INTO res_notifications (guid, title, vacancy_guid, researcher_guid, creation_date) VALUES(@0, @1, @2, @3, @4)", Guid.NewGuid(), title, msg.VacancyGuid, vacancy.pretender_researcher_guid, msg.TimeStamp));
                 transaction.Complete();
             }
         }
@@ -120,7 +120,7 @@ namespace SciVacancies.ReadModel.Notifications
             {
                 foreach (Guid researcherGuid in researcherGuids)
                 {
-                    _db.Insert(new Sql($"INSERT INTO res_notifications (guid, title, vacancy_guid, researcher_guid, creation_date) VALUES(@0, @1, @2, @3, @4)", Guid.NewGuid(), title, msg.VacancyGuid, researcherGuid, msg.TimeStamp));
+                    _db.Execute(new Sql($"INSERT INTO res_notifications (guid, title, vacancy_guid, researcher_guid, creation_date) VALUES(@0, @1, @2, @3, @4)", Guid.NewGuid(), title, msg.VacancyGuid, researcherGuid, msg.TimeStamp));
                 }
                 transaction.Complete();
             }

@@ -22,7 +22,7 @@ namespace SciVacancies.WebApp.Commands
 
             using (var transaction = _db.GetTransaction())
             {
-                _db.Update(new Sql($"UPDATE res_notifications SET status = @0, update_date = @1 WHERE guid = @2", NotificationStatus.Read, msg.TimeStamp, msg.NotificationGuid));
+                _db.Execute(new Sql($"UPDATE res_notifications SET status = @0, update_date = @1 WHERE guid = @2", NotificationStatus.Read, msg.TimeStamp, msg.NotificationGuid));
                 transaction.Complete();
             }
         }
@@ -42,7 +42,7 @@ namespace SciVacancies.WebApp.Commands
 
             using (var transaction = _db.GetTransaction())
             {
-                _db.Update(new Sql($"UPDATE res_notifications SET status = @0, update_date = @1 WHERE guid = @2", NotificationStatus.Removed, msg.TimeStamp, msg.NotificationGuid));
+                _db.Execute(new Sql($"UPDATE res_notifications SET status = @0, update_date = @1 WHERE guid = @2", NotificationStatus.Removed, msg.TimeStamp, msg.NotificationGuid));
                 transaction.Complete();
             }
         }
@@ -63,7 +63,7 @@ namespace SciVacancies.WebApp.Commands
 
             using (var transaction = _db.GetTransaction())
             {
-                _db.Update(new Sql($"UPDATE org_notifications SET status = @0, update_date = @1 WHERE guid = @2", NotificationStatus.Read, msg.TimeStamp, msg.NotificationGuid));
+                _db.Execute(new Sql($"UPDATE org_notifications SET status = @0, update_date = @1 WHERE guid = @2", NotificationStatus.Read, msg.TimeStamp, msg.NotificationGuid));
                 transaction.Complete();
             }
         }
@@ -83,7 +83,7 @@ namespace SciVacancies.WebApp.Commands
 
             using (var transaction = _db.GetTransaction())
             {
-                _db.Update(new Sql($"UPDATE res_notifications SET status = @0, update_date = @1 WHERE guid = @2", NotificationStatus.Removed, msg.TimeStamp, msg.NotificationGuid));
+                _db.Execute(new Sql($"UPDATE res_notifications SET status = @0, update_date = @1 WHERE guid = @2", NotificationStatus.Removed, msg.TimeStamp, msg.NotificationGuid));
                 transaction.Complete();
             }
         }
