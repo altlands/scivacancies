@@ -20,15 +20,10 @@ namespace SciVacancies.WebApp.Queries
 
         public Page<Vacancy> Handle(SearchQuery msg)
         {
-
             var results = _elastic.Search<Vacancy>(s => s
                                     .Index("scivacancies")
                                     .Skip((int)((msg.CurrentPage - 1) * msg.PageSize))
                                     .Take((int)msg.PageSize)
-                                    //.Query(qr => qr
-                                    //    .FuzzyLikeThis(flt => flt
-                                    //        .LikeText(message.Query))
-                                    //)
                                     .Query(qr => qr
                                         .Filtered(fltd => fltd
                                             .Query(q => q
