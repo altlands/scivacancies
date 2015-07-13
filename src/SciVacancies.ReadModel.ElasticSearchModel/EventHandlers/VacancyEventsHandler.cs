@@ -8,7 +8,10 @@ using AutoMapper;
 
 namespace SciVacancies.ReadModel.ElasticSearchModel.EventHandlers
 {
-    public class VacancyEventsHandler : 
+    public class VacancyEventsHandler :
+        INotificationHandler<VacancyCreated>,
+        INotificationHandler<VacancyUpdated>,
+        INotificationHandler<VacancyRemoved>,
         INotificationHandler<VacancyPublished>,
         INotificationHandler<VacancyInCommittee>,
         INotificationHandler<VacancyClosed>,
@@ -20,11 +23,29 @@ namespace SciVacancies.ReadModel.ElasticSearchModel.EventHandlers
         {
             _elasticClient = elasticClient;
         }
-        public void Handle(VacancyPublished msg)
+
+        public void Handle(VacancyCreated msg)
         {
             Vacancy vacancy = Mapper.Map<Vacancy>(msg);
 
             _elasticClient.Index(vacancy);
+        }
+        public void Handle(VacancyUpdated msg)
+        {
+            Vacancy vacancy = Mapper.Map<Vacancy>(msg);
+
+            _elasticClient.Update<Vacancy>(u => u.IdFrom(vacancy).Doc(vacancy));
+        }
+        public void Handle(VacancyRemoved msg)
+        {
+            _elasticClient.Delete<Vacancy>(msg.VacancyGuid.ToString());
+        }
+        public void Handle(VacancyPublished msg)
+        {
+            Vacancy vacancy = _elasticClient.Get<Vacancy>(msg.VacancyGuid.ToString()).Source;
+            vacancy.Status = VacancyStatus.Published;
+
+            _elasticClient.Update<Vacancy>(u => u.IdFrom(vacancy).Doc(vacancy));
         }
         public void Handle(VacancyInCommittee msg)
         {
@@ -33,7 +54,6 @@ namespace SciVacancies.ReadModel.ElasticSearchModel.EventHandlers
 
             _elasticClient.Update<Vacancy>(u => u.IdFrom(vacancy).Doc(vacancy));
         }
-
         public void Handle(VacancyClosed msg)
         {
             Vacancy vacancy = _elasticClient.Get<Vacancy>(msg.VacancyGuid.ToString()).Source;
@@ -41,7 +61,6 @@ namespace SciVacancies.ReadModel.ElasticSearchModel.EventHandlers
 
             _elasticClient.Update<Vacancy>(u => u.IdFrom(vacancy).Doc(vacancy));
         }
-
         public void Handle(VacancyCancelled msg)
         {
             Vacancy vacancy = _elasticClient.Get<Vacancy>(msg.VacancyGuid.ToString()).Source;

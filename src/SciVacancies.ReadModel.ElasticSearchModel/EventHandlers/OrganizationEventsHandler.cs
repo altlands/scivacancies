@@ -25,15 +25,15 @@ namespace SciVacancies.ReadModel.ElasticSearchModel.EventHandlers
 
             _elasticClient.Index(organization);
         }
-        public void Handle(OrganizationUpdated notification)
+        public void Handle(OrganizationUpdated msg)
         {
-            Organization organization = _elasticClient.Get<Organization>(notification.OrganizationGuid.ToString()).Source;
+            Organization organization = Mapper.Map<Organization>(msg);
 
             _elasticClient.Update<Organization>(u => u.IdFrom(organization).Doc(organization));
         }
-        public void Handle(OrganizationRemoved notification)
+        public void Handle(OrganizationRemoved msg)
         {
-            _elasticClient.Delete<Organization>(notification.OrganizationGuid.ToString());
+            _elasticClient.Delete<Organization>(msg.OrganizationGuid.ToString());
         }
     }
 }
