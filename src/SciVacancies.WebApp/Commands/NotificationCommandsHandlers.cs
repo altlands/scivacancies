@@ -11,16 +11,16 @@ using NPoco;
 
 namespace SciVacancies.WebApp.Commands
 {
-    public class SwitchResearchNotificationToReadCommandHandler : RequestHandler<SwitchResearchNotificationToReadCommand>
+    public class SwitchResearcherNotificationToReadCommandHandler : RequestHandler<SwitchResearcherNotificationToReadCommand>
     {
         private readonly IDatabase _db;
 
-        public SwitchResearchNotificationToReadCommandHandler(IDatabase db)
+        public SwitchResearcherNotificationToReadCommandHandler(IDatabase db)
         {
             _db = db;
         }
 
-        protected override void HandleCore(SwitchResearchNotificationToReadCommand msg)
+        protected override void HandleCore(SwitchResearcherNotificationToReadCommand msg)
         {
             if (msg.NotificationGuid == Guid.Empty) throw new ArgumentNullException($"NotificationGuid is empty: {msg.NotificationGuid}");
 
@@ -31,7 +31,7 @@ namespace SciVacancies.WebApp.Commands
             }
         }
     }
-    public class RemoveResearcherNotificationCommandHandler : RequestHandler<RemoveResearchNotificationCommand>
+    public class RemoveResearcherNotificationCommandHandler : RequestHandler<RemoveResearcherNotificationCommand>
     {
         private readonly IDatabase _db;
 
@@ -40,7 +40,7 @@ namespace SciVacancies.WebApp.Commands
             _db = db;
         }
 
-        protected override void HandleCore(RemoveResearchNotificationCommand msg)
+        protected override void HandleCore(RemoveResearcherNotificationCommand msg)
         {
             if (msg.NotificationGuid == Guid.Empty) throw new ArgumentNullException($"NotificationGuid is empty: {msg.NotificationGuid}");
 

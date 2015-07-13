@@ -4,11 +4,11 @@ using MediatR;
 
 namespace SciVacancies.WebApp.Commands
 {
-    public class SwitchResearchNotificationToReadCommand : CommandBase, IRequest
+    public class SwitchResearcherNotificationToReadCommand : CommandBase, IRequest
     {
         public Guid NotificationGuid { get; set; }
     }
-    public class RemoveResearchNotificationCommand : CommandBase, IRequest
+    public class RemoveResearcherNotificationCommand : CommandBase, IRequest
     {
         public Guid NotificationGuid { get; set; }
     }
