@@ -18,7 +18,8 @@ namespace SciVacancies.WebApp.Infrastructure
             Mapper.CreateMap<Researcher, Researcher>().IncludePagedResultMapping();
             Mapper.CreateMap<Vacancy, Vacancy>().IncludePagedResultMapping();
             Mapper.CreateMap<ReadModel.ElasticSearchModel.Model.Vacancy, ReadModel.ElasticSearchModel.Model.Vacancy>().IncludePagedResultMapping();
-            Mapper.CreateMap<Notification, Notification>().IncludePagedResultMapping();
+            Mapper.CreateMap<OrganizationNotification, OrganizationNotification>().IncludePagedResultMapping();
+            Mapper.CreateMap<ResearcherNotification, ResearcherNotification>().IncludePagedResultMapping();
             Mapper.CreateMap<SearchSubscription, SearchSubscription>().IncludePagedResultMapping();
 
 
@@ -202,7 +203,7 @@ namespace SciVacancies.WebApp.Infrastructure
             //education
 
             Mapper.CreateMap<Education, EducationEditViewModel>()
-                .ForMember(dest => dest.GraduationYear, src => src.MapFrom(c => c.GraduationYear.HasValue ? c.GraduationYear.Value.Year : 0));
+                .ForMember(dest => dest.GraduationYear, src => src.MapFrom(c => c.graduation_date.HasValue ? c.graduation_date.Value.Year : 0));
             Mapper.CreateMap<EducationEditViewModel, SciVacancies.Domain.Core.Education>()
                 .ForMember(dest => dest.GraduationYear, src => src.MapFrom(c => (c.GraduationYear.HasValue && c.GraduationYear.Value != 0) ? new DateTime(c.GraduationYear.Value, 1, 1) : default(DateTime)));
 
