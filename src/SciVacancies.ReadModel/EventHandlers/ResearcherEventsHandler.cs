@@ -28,10 +28,12 @@ namespace SciVacancies.ReadModel.EventHandlers
                 _db.Insert(researcher);
                 foreach (Education ed in researcher.educations)
                 {
+                    ed.researcher_guid = researcher.guid;
                     _db.Insert(ed);
                 }
                 foreach (Publication pb in researcher.publications)
                 {
+                    pb.researcher_guid = researcher.guid;
                     _db.Insert(pb);
                 }
                 transaction.Complete();
@@ -42,6 +44,7 @@ namespace SciVacancies.ReadModel.EventHandlers
             Researcher researcher = _db.SingleById<Researcher>(msg.ResearcherGuid);
 
             Researcher updatedResearcher = Mapper.Map<Researcher>(msg);
+            updatedResearcher.creation_date = researcher.creation_date;
 
             using (var transaction = _db.GetTransaction())
             {
@@ -49,12 +52,14 @@ namespace SciVacancies.ReadModel.EventHandlers
                 _db.Update(researcher);
                 _db.Delete(new Sql($"DELETE FROM res_educations WHERE researcher_guid = @0", msg.ResearcherGuid));
                 _db.Delete(new Sql($"DELETE FROM res_publications WHERE researcher_guid = @0", msg.ResearcherGuid));
-                foreach (Education ed in researcher.educations)
+                foreach (Education ed in updatedResearcher.educations)
                 {
+                    ed.researcher_guid = researcher.guid;
                     _db.Insert(ed);
                 }
-                foreach (Publication pb in researcher.publications)
+                foreach (Publication pb in updatedResearcher.publications)
                 {
+                    pb.researcher_guid = researcher.guid;
                     _db.Insert(pb);
                 }
                 transaction.Complete();
