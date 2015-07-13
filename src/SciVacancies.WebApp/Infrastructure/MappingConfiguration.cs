@@ -84,7 +84,7 @@ namespace SciVacancies.WebApp.Infrastructure
                 .ForMember(d => d.root_id, o => o.MapFrom(s => s.RootId));
 
             //информация об организации во View
-            Mapper.CreateMap<Organization, OrganizationDetailsViewModel>()
+            Mapper.CreateMap<Organization, OrganizationDetailsViewModel>().IncludePagedResultMapping()
                 .ForMember(d => d.Guid, o => o.MapFrom(s => s.guid))
                 .ForMember(d => d.Name, o => o.MapFrom(s => s.name))
                 .ForMember(d => d.ShortName, o => o.MapFrom(s => s.shortname))
@@ -465,7 +465,7 @@ namespace SciVacancies.WebApp.Infrastructure
                 .ForMember(d => d.ResearchDirectionId, o => o.MapFrom(s => s.researchdirection_id))
                 //.ForMember(d => d, o => o.MapFrom(s => s.criterias))
                 .ForMember(d => d.OrganizationGuid, o => o.MapFrom(s => s.organization_guid));
-            Mapper.CreateMap<Vacancy, VacancyDetailsViewModel>()
+            Mapper.CreateMap<Vacancy, VacancyDetailsViewModel>().IncludePagedResultMapping()
                 .ForMember(d => d.Guid, o => o.MapFrom(s => s.guid))
                 .ForMember(d => d.Name, o => o.MapFrom(s => s.name))
                 .ForMember(d => d.FullName, o => o.MapFrom(s => s.fullname))
@@ -593,9 +593,8 @@ namespace SciVacancies.WebApp.Infrastructure
             //create 
             Mapper.CreateMap<VacancyApplicationCreateViewModel, VacancyApplicationDataModel>();
             Mapper.CreateMap<VacancyApplication, VacancyApplicationDetailsViewModel>().IncludePagedResultMapping();
-            Mapper.CreateMap<Page<VacancyApplication>, Page<VacancyApplicationDetailsViewModel>>();
             Mapper.CreateMap<VacancyApplication, VacancyApplicationSetWinnerViewModel>();
-
+            
             #endregion
 
             #region Dictionaries

@@ -1,5 +1,6 @@
 ﻿using MediatR;
 using Microsoft.AspNet.Mvc;
+using NPoco;
 using SciVacancies.ReadModel.Core;
 using SciVacancies.WebApp.Engine;
 using SciVacancies.WebApp.Queries;
@@ -22,27 +23,28 @@ namespace SciVacancies.WebApp.Controllers
         {
             var model = new IndexViewModel
             {
-                OrganizationsList =_mediator.Send(new SelectPagedOrganizationsQuery {PageSize = 4, PageIndex = 1, OrderBy =ConstTerms.OrderByVacancyCountDescending}).MapToPagedList<Organization, OrganizationDetailsViewModel>(),
-                VacanciesList = _mediator.Send(new SelectPagedVacanciesQuery {PageSize = 4, PageIndex = 1, OrderBy = ConstTerms.OrderByDateStartDescending, PublishedOnly = true}).MapToPagedList<Vacancy, VacancyDetailsViewModel>()
+                VacanciesList =
+                    _mediator.Send(new SelectPagedVacanciesQuery
+                    {
+                        PageSize = 4,
+                        PageIndex = 1,
+                        OrderBy = ConstTerms.OrderByDateStartDescending,
+                        PublishedOnly = true
+                    }).MapToPagedList<Vacancy, VacancyDetailsViewModel>(),
+                OrganizationsList =
+                    _mediator.Send(new SelectPagedOrganizationsQuery
+                    {
+                        PageSize = 4,
+                        PageIndex = 1,
+                        OrderBy = ConstTerms.OrderByVacancyCountDescending
+                    })
+                        .MapToPagedList<Organization, OrganizationDetailsViewModel>(),
+                ResearchDirections = new VacanciesFilterSource(_mediator).ResearchDirections
             };
 
-            model.ResearchDirections = new VacanciesFilterSource(_mediator).ResearchDirections;
+
 
             return View(model);
-        }
-
-        public IActionResult About()
-        {
-            ViewBag.Message = "Your application description page. SSSSSSSSS";
-
-            return View();
-        }
-
-        public IActionResult Contact()
-        {
-            ViewBag.Message = "Your contact page.";
-
-            return View();
         }
 
         [PageTitle("Error")]
