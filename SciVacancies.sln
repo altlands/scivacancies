@@ -40,7 +40,7 @@ Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "buildtools", "build\buildto
 EndProject
 Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "SciVacancies.SmtpNotifications", "src\SciVacancies.SmtpNotifications\SciVacancies.SmtpNotifications.xproj", "{1E0F6640-4331-401B-B991-EC852F59D89F}"
 EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "SciVacancies.ReadModelNotifications", "src\SciVacancies.ReadModelNotifications\SciVacancies.ReadModelNotifications.xproj", "{93D8803B-C42D-4315-B957-2F06C7C27E7F}"
+Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "SciVacancies.ReadModel.Notifications", "src\SciVacancies.ReadModelNotifications\SciVacancies.ReadModel.Notifications.xproj", "{93D8803B-C42D-4315-B957-2F06C7C27E7F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

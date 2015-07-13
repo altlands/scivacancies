@@ -97,9 +97,9 @@ namespace SciVacancies.WebApp.Infrastructure
                 .ForMember(d => d.HeadPatronymic, o => o.MapFrom(s => s.head_patronymic))
                 .ForMember(d => d.FoivId, o => o.MapFrom(s => s.foiv_id))
                 .ForMember(d => d.OrgFormId, o => o.MapFrom(s => s.orgform_id))
-                .ForMember(d => d.ResearchDirectionIds, o => o.MapFrom(s => s.researchdirections))
+                //.ForMember(d => d.ResearchDirectionIds, o => o.MapFrom(s => s.researchdirections))
                 .ForMember(d => d.Status, o => o.MapFrom(s => s.status));
-            Mapper.CreateMap<ResearchDirection, int>().ForMember(d => d, o => o.MapFrom(s => s.id));
+            //Mapper.CreateMap<ResearchDirection, int>().ForMember(d => d, o => o.MapFrom(s => s.id));
 
             #endregion
 

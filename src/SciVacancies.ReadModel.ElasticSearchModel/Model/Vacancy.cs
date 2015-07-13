@@ -161,6 +161,11 @@ namespace SciVacancies.ReadModel.ElasticSearchModel.Model
 
         #endregion
 
+        /// <summary>
+        /// Дата, когда вакансия была опубликована
+        /// </summary>
+        public DateTime? PublishDate { get; set; }
+
         public List<VacancyCriteria> Criterias { get; set; }
 
         /// <summary>
