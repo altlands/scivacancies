@@ -1,6 +1,7 @@
 ﻿using System;
 using AutoMapper;
 using NPoco;
+using Newtonsoft.Json;
 using SciVacancies.Domain.DataModels;
 using SciVacancies.Domain.Events;
 using SciVacancies.ReadModel.Core;
@@ -367,7 +368,16 @@ namespace SciVacancies.WebApp.Infrastructure
                 .ForMember(d => d.researcher_guid, o => o.MapFrom(s => s.ResearcherGuid))
                 .ForMember(d => d.title, o => o.MapFrom(s => s.Data.Title))
                 .ForMember(d => d.query, o => o.MapFrom(s => s.Data.Query))
+                .ForMember(d=>d.foiv_ids,o=>o.MapFrom(s=>s))
+                .ForMember(d => d.positiontype_ids, o => o.MapFrom(s => JsonConvert.SerializeObject(s.Data.PositionTypeIds)))
+                .ForMember(d => d.region_ids, o => o.MapFrom(s => JsonConvert.SerializeObject(s.Data.RegionIds)))
+                .ForMember(d => d.researchdirection_ids, o => o.MapFrom(s => JsonConvert.SerializeObject(s.Data.ResearchDirectionIds)))
+                .ForMember(d => d.salary_from, o => o.MapFrom(s => s.Data.SalaryFrom))
+                .ForMember(d => d.salary_to, o => o.MapFrom(s => s.Data.SalaryTo))
+                .ForMember(d => d.vacancy_statuses, o => o.MapFrom(s => JsonConvert.SerializeObject(s.Data.VacancyStatuses)))
                 .ForMember(d => d.creation_date, o => o.MapFrom(s => s.TimeStamp));
+
+
 
             #endregion
 
