@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using NPoco;
 using SciVacancies.WebApp.ViewModels.Base;
+using SciVacancies.Domain.Enums;
 
 namespace SciVacancies.WebApp.ViewModels
 {
@@ -40,13 +41,15 @@ namespace SciVacancies.WebApp.ViewModels
         public string OtherActivity { get; set; }
 
         public string ScienceDegree { get; set; }
-        public string AcademicStatus { get; set; }
+        public string ScienceRank { get; set; }
         public string Rewards { get; set; }
         public string Memberships { get; set; }
         public string Conferences { get; set; }
 
         public List<EducationEditViewModel> Educations { get; set; }
         public List<PublicationEditViewModel> Publications { get; set; }
+
+        public ResearcherStatus Status { get; set; }
 
         public DateTime CreationDate { get; set; }
         public DateTime? UpdateDate { get; set; }
