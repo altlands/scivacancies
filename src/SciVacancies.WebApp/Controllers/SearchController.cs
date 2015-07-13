@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using MediatR;
 using Microsoft.AspNet.Mvc;
 using SciVacancies.ReadModel.ElasticSearchModel.Model;
@@ -41,10 +40,8 @@ namespace SciVacancies.WebApp.Controllers
             if (model.Items.Items != null && model.Items.Items.Any())
             {
                 var organizaitonsGuid = model.Items.Items.Select(c => c.OrganizationGuid).ToList();
-                //TODO: ntemnikov : убрать лишнее приведение в типу
-                var organizations = (List<Organization>) (_mediator.Send(new SelectOrganizationsByGuidsQuery { organizaitonsGuid }));
-                var existingOrganizations = organizations.Select(c => c.Id);
-                model.Items.Items.Where(c=> existingOrganizations.Contains(c.OrganizationGuid)).ToList().ForEach(c=> c.OrganizationName = organizations.First(d=>d.Id == c.OrganizationGuid).Name);
+                var organizations = _mediator.Send(new SelectOrganizationsByGuidsQuery {OrganizationGuids = organizaitonsGuid }).ToList();
+                model.Items.Items.Where(c=> organizations.Select(d => d.guid).Contains(c.OrganizationGuid)).ToList().ForEach(c=> c.OrganizationName = organizations.First(d=>d.guid == c.OrganizationGuid).name);
             }
 
             //dicitonaries
