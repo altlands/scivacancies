@@ -68,8 +68,6 @@ namespace SciVacancies.WebApp.Controllers
                 if (!model.ToPublish)
                     return RedirectToAction("details", new { id = vacancyGuid });
 
-                vacancyDataModel.OrganizationName = _mediator.Send(new SingleOrganizationQuery { OrganizationGuid = model.OrganizationGuid }).Name;
-
                 _mediator.Send(new PublishVacancyCommand
                 {
                     VacancyGuid  = vacancyGuid
@@ -131,18 +129,19 @@ namespace SciVacancies.WebApp.Controllers
                     return View(model);
                 }
 
+                var vacancy = _mediator.Send(new SingleVacancyQuery {VacancyGuid = model.Guid});
+                if(vacancy==null)
+                    throw new ObjectNotFoundException($"Не найдена вакансия с идентификатором {model.Guid}");
+
+                if (vacancy.status!= VacancyStatus.InProcess)
+                    throw new Exception($"Вы не можете изменить вакансию с текущим статусом: {vacancy.status.GetDescription()}");
+
                 var vacancyDataModel = Mapper.Map<VacancyDataModel>(model);
-
-                if (vacancyDataModel.Status!= VacancyStatus.InProcess)
-                    throw new Exception($"Вы не можете изменить вакансию с текущим статусом: {vacancyDataModel.Status.GetDescription()}");
-
                 var vacancyGuid = _mediator.Send(new UpdateVacancyCommand { VacancyGuid = model.Guid, Data = vacancyDataModel });
 
                 if (!model.ToPublish)
                     return RedirectToAction("details", new { id = model.Guid });
                 
-                vacancyDataModel.OrganizationName = _mediator.Send(new SingleOrganizationQuery { OrganizationGuid = model.OrganizationGuid }).Name;
-
                 _mediator.Send(new PublishVacancyCommand
                 {
                     VacancyGuid =  model.Guid
@@ -446,9 +445,6 @@ namespace SciVacancies.WebApp.Controllers
 
             if (model.status != VacancyStatus.InProcess)
                 throw new Exception($"Вы не можете опубликовать вакансию со статусом: {model.status.GetDescription()}");
-
-            var vacancyDataModel = Mapper.Map<VacancyDataModel>(model);
-            vacancyDataModel.OrganizationName = _mediator.Send(new SingleOrganizationQuery { OrganizationGuid = organizationGuid }).Name;
 
             var vacancyGuid = _mediator.Send(new PublishVacancyCommand
             {
