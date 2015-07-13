@@ -64,7 +64,7 @@ namespace SciVacancies.WebApp.Controllers
                 TeachingActivity = researcher.teaching_activity,
                 OtherActivity = researcher.other_activity,
                 ScienceDegree = researcher.science_degree,
-                AcademicStatus = researcher.science_rank,
+                ScienceRank = researcher.science_rank,
                 Rewards = researcher.rewards
             };
 
@@ -107,7 +107,7 @@ namespace SciVacancies.WebApp.Controllers
                 model.Phone = researcher.phone;
                 model.ResearcherFullName = $"{researcher.secondname} {researcher.firstname} {researcher.patronymic}";
                 model.ScienceDegree = researcher.science_degree;
-                model.AcademicStatus = researcher.science_rank;
+                model.ScienceRank = researcher.science_rank;
                 model.Rewards = researcher.rewards;
                 return View(model);
             }
