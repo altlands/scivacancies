@@ -1,4 +1,5 @@
 ﻿@using System.Threading.Tasks
+@using SciVacancies.Domain.Enums
 @using SciVacancies.WebApp
 @using SciVacancies.WebApp.Controllers
 @model SciVacancies.WebApp.ViewModels.NotificationsInOrganizationIndexViewModel
@@ -24,48 +25,66 @@
 
 <table class="table request-table">
     <thead>
-    <tr>
-        <th>
-            <div class="inline-block"><img src="/images/icons/arrow-bottom-tab.png" class="va-middle"/>
-            </div>
-            <div class="inline-block ml6 va-middle">№</div></th>
-        <th>
-            <div class="inline-block"><!-- <img src="/images/icons/tab-head.png" class="va-middle"/> -->
-            </div>
-            <div class="inline-block ml6 va-middle">Дата</div></th>
-        <th>
-            <div class="inline-block"><!-- <img src="/images/icons/tab-head.png" class="va-middle"/> -->
-            </div>
-            <div class="inline-block ml6 va-middle">Вакансия</div></th>
-        <th>
-            <div class="inline-block"><!-- <img src="/images/icons/tab-head.png" class="va-middle"/> -->
-            </div>
-            <div class="inline-block ml6 va-middle">Текст</div></th>
-        <th>
-            <div class="pl21 va-middle lh30">Действия</div></th>
-    </tr>
+        <tr>
+            <th>
+                <div class="inline-block">
+                    <img src="/images/icons/arrow-bottom-tab.png" class="va-middle" />
+                </div>
+                <div class="inline-block ml6 va-middle">№</div>
+            </th>
+            <th>
+                <div class="inline-block">
+                    <!-- <img src="/images/icons/tab-head.png" class="va-middle"/> -->
+                </div>
+                <div class="inline-block ml6 va-middle">Дата</div>
+            </th>
+            <th>
+                <div class="inline-block">
+                    <!-- <img src="/images/icons/tab-head.png" class="va-middle"/> -->
+                </div>
+                <div class="inline-block ml6 va-middle">Вакансия</div>
+            </th>
+            <th>
+                <div class="inline-block">
+                    <!-- <img src="/images/icons/tab-head.png" class="va-middle"/> -->
+                </div>
+                <div class="inline-block ml6 va-middle">Текст</div>
+            </th>
+            <th>
+                <div class="pl21 va-middle lh30">Действия</div>
+            </th>
+        </tr>
     </thead>
     <tbody>
-    @if (Model.PagedNotifications != null)
-    {
-        foreach (var item in Model.PagedNotifications.Items)
+        @if (Model.PagedItems != null)
         {
-            var unreadClass = item.UpdateDate.HasValue ? string.Empty : "bold";
-            <text>
+            foreach (var item in Model.PagedItems.Items)
+            {
+                var unreadClass = item.update_date.HasValue ? string.Empty : "bold";
+                <text>
                 <tr>
 
-                    <td class="@unreadClass">@item.Guid.ToString().Substring(0, 4)...</td>
-                    <td class="@unreadClass">@item.CreationDate.ToLocalVacancyString()</td>
-                    <td class="@unreadClass">Исследователь @item.ResearcherGuid</td>
-                    <td class="@unreadClass"><a href="#" class="success-request-icon"><span class="italic bold">@item.Title</span></a></td>
+                    <td class="@unreadClass">@item.guid.ToString().Substring(0, 4)...</td>
+                    <td class="@unreadClass">@item.creation_date.ToLocalVacancyString()</td>
+                    <td class="bold">
+                        <a asp-controller="applications" asp-action="preview" asp-route-guid="@item.vacancyapplication_guid" class="view-td-icon">заявка</a>
+                    </td>
+                    <td class="@unreadClass"><a href="#" class="success-request-icon"><span class="italic bold">@item.title</span></a></td>
                     <td>
-                        <a href="#" class="view-td-icon open-popup"></a>
-                        <a href="#" class="close-td-icon"></a>
+                        @if (item.status != NotificationStatus.Read && item.status != NotificationStatus.Removed)
+                        {
+                            <a asp-controller="notifications" asp-action="marknotificationread" asp-route-notificationguids="@item.guid" class="view-td-icon"></a>
+                        }
+
+                        @if (item.status != NotificationStatus.Removed)
+                        {
+                            <a asp-controller="notifications" asp-action="delete" asp-route-notificationguids="@item.guid" class="close-td-icon" title="Удалить сообщение"></a>
+                        }
                     </td>
                 </tr>
-            </text>
+                </text>
+            }
         }
-    }
     </tbody>
 </table>
 
