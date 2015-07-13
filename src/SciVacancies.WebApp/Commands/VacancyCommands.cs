@@ -6,44 +6,33 @@ using MediatR;
 
 namespace SciVacancies.WebApp.Commands
 {
-    public class PublishVacancyCommand : CommandBase, IRequest<Guid>
+    public class CreateVacancyCommand : CommandBase, IRequest<Guid>
     {
         public Guid OrganizationGuid { get; set; }
-        public Guid PositionGuid { get; set; }
 
         public VacancyDataModel Data { get; set; }
     }
-    public class SwitchVacancyToAcceptApplicationsCommand : CommandBase, IRequest
+    public class UpdateVacancyCommand : CommandBase, IRequest
     {
-        public Guid OrganizationGuid { get; set; }
+        public Guid VacancyGuid { get; set; }
+
+        public VacancyDataModel Data { get; set; }
+    }
+    public class RemoveVacancyCommand : CommandBase, IRequest
+    {
+        public Guid VacancyGuid { get; set; }
+    }
+
+    public class PublishVacancyCommand : CommandBase, IRequest
+    {
         public Guid VacancyGuid { get; set; }
     }
     public class SwitchVacancyInCommitteeCommand : CommandBase, IRequest
     {
-        public Guid OrganizationGuid { get; set; }
         public Guid VacancyGuid { get; set; }
-    }
-    public class CloseVacancyCommand : CommandBase, IRequest
-    {
-        public Guid OrganizationGuid { get; set; }
-        public Guid VacancyGuid { get; set; }
-
-        public Guid WinnerGuid { get; set; }
-        //public Guid WinnerVacancyApplicationGuid { get; set; }
-
-        public Guid PretenderGuid { get; set; }
-        //public Guid PretenderVacancyApplicationGuid { get; set; }
-    }
-    public class CancelVacancyCommand : CommandBase, IRequest
-    {
-        public Guid OrganizationGuid { get; set; }
-        public Guid VacancyGuid { get; set; }
-
-        public string Reason { get; set; }
     }
     public class SetVacancyWinnerCommand : CommandBase, IRequest
     {
-        public Guid OrganizationGuid { get; set; }
         public Guid VacancyGuid { get; set; }
 
         public Guid ResearcherGuid { get; set; }
@@ -53,7 +42,6 @@ namespace SciVacancies.WebApp.Commands
     }
     public class SetVacancyPretenderCommand : CommandBase, IRequest
     {
-        public Guid OrganizationGuid { get; set; }
         public Guid VacancyGuid { get; set; }
 
         public Guid ResearcherGuid { get; set; }
@@ -61,7 +49,33 @@ namespace SciVacancies.WebApp.Commands
 
         public string Reason { get; set; }
     }
+    public class SetWinnerAcceptOfferCommand:CommandBase,IRequest
+    {
+        public Guid VacancyGuid { get; set; }
+    }
+    public class SetWinnerRejectOfferCommand : CommandBase, IRequest
+    {
+        public Guid VacancyGuid { get; set; }
+    }
+    public class SetPretenderAcceptOfferCommand : CommandBase, IRequest
+    {
+        public Guid VacancyGuid { get; set; }
+    }
+    public class SetPretenderRejectOfferCommand : CommandBase, IRequest
+    {
+        public Guid VacancyGuid { get; set; }
+    }
 
+    public class CloseVacancyCommand : CommandBase, IRequest
+    {
+        public Guid VacancyGuid { get; set; }
+    }
+    public class CancelVacancyCommand : CommandBase, IRequest
+    {
+        public Guid VacancyGuid { get; set; }
+
+        public string Reason { get; set; }
+    }
 
     public class AddVacancyToFavoritesCommand : CommandBase, IRequest<int>
     {

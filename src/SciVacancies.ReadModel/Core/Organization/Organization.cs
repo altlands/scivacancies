@@ -1,110 +1,68 @@
-﻿using System;
+﻿using SciVacancies.Domain.Enums;
+
+using System;
 using System.Collections.Generic;
+
 using NPoco;
 
 namespace SciVacancies.ReadModel.Core
 {
-    [TableName("Organizations")]
-    [PrimaryKey("Guid", AutoIncrement = false)]
+    [TableName("org_organizations")]
+    [PrimaryKey("guid", AutoIncrement = false)]
     public class Organization : BaseEntity
     {
         /// <summary>
-        /// Айдишник для поисковика
-        /// </summary>
-        [Ignore]        
-        public Guid Id { get { return this.Guid; } }
-                
-        /// <summary>
         /// Полное наименование
         /// </summary>
-        public string Name { get; set; }
-
-        /// <summary>
-        /// Полное наименование (на английском языке)
-        /// </summary>
-        public string NameEng { get; set; }
+        public string name { get; set; }
 
         /// <summary>
         /// Сокращенное наименование
         /// </summary>
-        public string ShortName { get; set; }
-
-        /// <summary>
-        /// Сокращенное наименование (на английском языке)
-        /// </summary>
-        public string ShortNameEng { get; set; }
-
-        /// <summary>
-        /// Населенный пункт
-        /// </summary>
-        public string CityName { get; set; }
+        public string shortname { get; set; }
 
         /// <summary>
         /// Почтовый адрес
         /// </summary>
-        public string Address { get; set; }
-
-        /// <summary>
-        /// Веб-сайт
-        /// </summary>
-        public string Website { get; set; }
+        public string address { get; set; }
 
         /// <summary>
         /// E-mail
         /// </summary>
-        public string Email { get; set; }
+        public string email { get; set; }
 
         /// <summary>
         /// ИНН
         /// </summary>
-        public string INN { get; set; }
+        public string inn { get; set; }
 
         /// <summary>
         /// ОГРН
         /// </summary>
-        public string OGRN { get; set; }
-
-        /// <summary>
-        /// Организационно-правовая форма организации
-        /// </summary>
-        public string OrgForm { get; set; }
-        public int OrgFormId { get; set; }
-        public Guid OrgFormGuid { get; set; }
-
-        /// <summary>
-        /// Количество опубликованных вакансий на данный момент
-        /// </summary>
-        public int PublishedVacancies { get; set; }
-
-        /// <summary>
-        /// ФОИВ
-        /// </summary>
-        public string Foiv { get; set; }
-        public int FoivId { get; set; }
-        public Guid FoivGuid { get; set; }
-
-
-        /// <summary>
-        /// Основной вид деятельности
-        /// </summary>
-        public string Activity { get; set; }
-        public int ActivityId { get; set; }
-        public Guid ActivityGuid { get; set; }
-
-        /// <summary>
-        /// Отрасли науки
-        /// </summary>
-        [Ignore]        
-        public List<int> ResearchDirections { get; set; }
+        public string ogrn { get; set; }
 
         /// <summary>
         /// Руководитель
         /// </summary>
-        public string HeadFirstName { get; set; }
-        public string HeadLastName { get; set; }
-        public string HeadPatronymic { get; set; } //HeadMiddleName
+        public string head_firstname { get; set; }
+        public string head_secondname { get; set; }
+        public string head_patronymic { get; set; }
 
-        public DateTime CreationDate { get; set; }
-        public DateTime? UpdateDate { get; set; }
+        /// <summary>
+        /// ФОИВ
+        /// </summary>
+        public int foiv_id { get; set; }
+
+        /// <summary>
+        /// Организационно-правовая форма организации
+        /// </summary>
+        public int orgform_id { get; set; }
+
+        public List<ResearchDirection> researchdirections { get; set; }
+
+        public OrganizationStatus status { get; set; }
+
+        public DateTime creation_date { get; set; }
+        public DateTime? update_date { get; set; }
     }
 }

@@ -1,14 +1,17 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace SciVacancies.Domain.Core
 {
     public class Publication
     {
-        public Guid PublicationGuid { get; set; }
+        /// <summary>
+        /// Guid публикации
+        /// </summary>
+        public Guid Guid { get; set; }
 
-        public string Name { get; set; }
+        /// <summary>
+        /// Название публикации
+        /// </summary>
+        public string Title { get; set; }
     }
 }

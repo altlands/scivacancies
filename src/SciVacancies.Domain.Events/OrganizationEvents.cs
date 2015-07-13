@@ -1,5 +1,6 @@
-﻿using System;
-using SciVacancies.Domain.DataModels;
+﻿using SciVacancies.Domain.DataModels;
+
+using System;
 
 namespace SciVacancies.Domain.Events
 {
@@ -9,7 +10,7 @@ namespace SciVacancies.Domain.Events
     }
 
     /// <summary>
-    /// Организация создана. Данные слиты с внешнего ресурса.
+    /// Организация создана (данные слиты с внешнего ресурса)
     /// </summary>
     public class OrganizationCreated : OrganizationEventBase
     {
@@ -25,7 +26,8 @@ namespace SciVacancies.Domain.Events
     }
 
     /// <summary>
-    /// Организация удалена.
+    /// Организация удалена (удаление доступно только администратору)
+    /// //TODO - нужно ли это?
     /// </summary>
     public class OrganizationRemoved : OrganizationEventBase
     {

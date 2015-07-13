@@ -1,19 +1,17 @@
-﻿using SciVacancies.Domain.Enums;
+﻿using SciVacancies.Domain.Core;
+using SciVacancies.Domain.Enums;
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace SciVacancies.Domain.DataModels
 {
     public class VacancyDataModel
     {
-        //TODO - что делать с критериями?
-        ///// <summary>
-        ///// Критерии оценки где int - идентификатор критерия, 
-        ///// </summary>
-        //public List<KeyValuePair<int, decimal>> Criterias { get; set; } //<CriteriaId, Amount>
+        public VacancyDataModel()
+        {
+            this.Criterias = new List<VacancyCriteria>();
+        }
 
         #region General
 
@@ -74,12 +72,12 @@ namespace SciVacancies.Domain.DataModels
         /// <summary>
         /// Зарплата в месяц от
         /// </summary>
-        public int SalaryFrom { get; set; }
+        public int? SalaryFrom { get; set; }
 
         /// <summary>
         /// Зарплата в месяц до
         /// </summary>
-        public int SalaryTo { get; set; }
+        public int? SalaryTo { get; set; }
 
         /// <summary>
         /// Стимулирующие выплаты
@@ -94,7 +92,7 @@ namespace SciVacancies.Domain.DataModels
         /// <summary>
         /// Срок трудового договора (для срочного договора)
         /// </summary>
-        public decimal ContractTime { get; set; }
+        public decimal? ContractTime { get; set; }
 
         /// <summary>
         /// Тип занятости
@@ -162,66 +160,6 @@ namespace SciVacancies.Domain.DataModels
 
         #endregion
 
-        #region Contest
-
-        /// <summary>
-        /// Guid исследователя-победителя
-        /// </summary>
-        public Guid WinnerResearcherGuid { get; set; }
-
-        /// <summary>
-        /// Guid заявки-победителя
-        /// </summary>
-        public Guid WinnerVacancyApplicationGuid { get; set; }
-
-        /// <summary>
-        /// Guid исследователя-претендента
-        /// </summary>
-        public Guid PretenderResearcherGuid { get; set; }
-
-        /// <summary>
-        /// Guid заявки-претендента
-        /// </summary>
-        public Guid PretenderVacancyApplicationGuid { get; set; }
-
-        /// <summary>
-        /// Дата публикации (начало приёма заявок)
-        /// </summary>
-        public DateTime PublishDate { get; set; }
-
-        /// <summary>
-        /// Дата окончания приёма заявок (передача заявок в комиссию)
-        /// </summary>
-        public DateTime? CommitteeDate { get; set; }
-
-        /// <summary>
-        /// Дата объявления результатов конкурса
-        /// </summary>
-        public DateTime? AnnouncementDate { get; set; }
-
-        #endregion
-
-
-
-        public Guid WinnerGuid { get; set; }
-        public Guid PretenderGuid { get; set; }
-        public Guid PositionTypeGuid { get; set; }
-        public string OrganizationName { get; set; }
-        public int ResearchThemeId { get; set; }
-        public KeyValuePair<int, int> Criteria { get; set; } //<CriteriaId, Amount>
-        /// <summary>
-        /// Дата начала публикации
-        /// </summary>
-        public DateTime DateStart { get; set; }
-        /// <summary>
-        /// Дата начала приёма заявок на вакансию
-        /// </summary>
-        public DateTime DateStartAcceptance { get; set; }
-        /// <summary>
-        /// Дата окончания публикации
-        /// </summary>
-        public DateTime DateFinish { get; set; }
-        public VacancyStatus Status { get; set; }
-
+        public List<VacancyCriteria> Criterias { get; set; }
     }
 }

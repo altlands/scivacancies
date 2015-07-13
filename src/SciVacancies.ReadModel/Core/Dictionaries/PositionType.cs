@@ -1,20 +1,13 @@
-﻿using SciVacancies.Domain.Enums;
-
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
-using NPoco;
+﻿using NPoco;
 
 namespace SciVacancies.ReadModel.Core
 {
-    [TableName("PositionTypes")]
-    [PrimaryKey("Guid", AutoIncrement = false)]
-    public class PositionType : BaseEntity
+    [TableName("d_positiontypes")]
+    [PrimaryKey("id", AutoIncrement = false)]
+    public class PositionType
     {
-        public int Id { get; set; }
-        public string Title { get; set; }
+        public int id { get; set; }
 
+        public string title { get; set; }
     }
 }

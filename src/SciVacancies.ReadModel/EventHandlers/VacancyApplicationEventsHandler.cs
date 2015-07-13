@@ -1,19 +1,23 @@
-﻿using MediatR;
-using NPoco;
-using System;
-using SciVacancies.Domain.Enums;
+﻿using SciVacancies.Domain.Enums;
 using SciVacancies.Domain.Events;
 using SciVacancies.ReadModel.Core;
 
+using System;
+
+using MediatR;
+using NPoco;
+using AutoMapper;
+
 namespace SciVacancies.ReadModel.EventHandlers
 {
-    public class VacancyApplicationEventsHandler : 
+    public class VacancyApplicationEventsHandler :
         INotificationHandler<VacancyApplicationCreated>,
         INotificationHandler<VacancyApplicationUpdated>,
         INotificationHandler<VacancyApplicationRemoved>,
         INotificationHandler<VacancyApplicationApplied>,
         INotificationHandler<VacancyApplicationCancelled>,
         INotificationHandler<VacancyApplicationWon>,
+        INotificationHandler<VacancyApplicationPretended>,
         INotificationHandler<VacancyApplicationLost>
     {
         private readonly IDatabase _db;
@@ -24,137 +28,73 @@ namespace SciVacancies.ReadModel.EventHandlers
         }
         public void Handle(VacancyApplicationCreated msg)
         {
-            VacancyApplication vacancyApplication = new VacancyApplication()
+            VacancyApplication vacancyApplication = Mapper.Map<VacancyApplication>(msg);
+
+            using (var transaction = _db.GetTransaction())
             {
-                Guid = msg.VacancyApplicationGuid,
-                VacancyGuid = msg.VacancyGuid,
-                ResearcherGuid = msg.ResearcherGuid,
-                CreationDate = msg.TimeStamp,
-                Status = VacancyApplicationStatus.InProcess
-            };
 
-            _db.Insert(vacancyApplication);
+                _db.Insert(vacancyApplication);
+                transaction.Complete();
+            }
         }
-
         public void Handle(VacancyApplicationUpdated msg)
         {
             VacancyApplication vacancyApplication = _db.SingleById<VacancyApplication>(msg.VacancyApplicationGuid);
-            //TODO
-            vacancyApplication.UpdateDate = msg.TimeStamp;
 
-            _db.Update(vacancyApplication);
+            using (var transaction = _db.GetTransaction())
+            {
+
+                _db.Update(vacancyApplication);
+                transaction.Complete();
+            }
         }
-
         public void Handle(VacancyApplicationRemoved msg)
         {
-            VacancyApplication vacancyApplication = _db.SingleById<VacancyApplication>(msg.VacancyApplicationGuid);
-
-            vacancyApplication.Status = VacancyApplicationStatus.Removed;
-
-            _db.Update(vacancyApplication);
-            //_db.Delete<VacancyApplication>(msg.VacancyApplicationGuid);
+            using (var transaction = _db.GetTransaction())
+            {
+                _db.Update(new Sql($"UPDATE res_vacancyapplications SET status = @0, update_date = @1 WHERE guid = @2", VacancyApplicationStatus.Removed, msg.TimeStamp, msg.VacancyApplicationGuid));
+                transaction.Complete();
+            }
         }
-
         public void Handle(VacancyApplicationApplied msg)
         {
-            VacancyApplication vacancyApplication = _db.SingleById<VacancyApplication>(msg.VacancyApplicationGuid);
-            vacancyApplication.Status = VacancyApplicationStatus.Applied;
-            vacancyApplication.UpdateDate = msg.TimeStamp;
-
-            _db.Update(vacancyApplication);
-
-            Vacancy vacancy = _db.SingleById<Vacancy>(msg.VacancyGuid);
-
-            Notification notification = new Notification()
+            using (var transaction = _db.GetTransaction())
             {
-                Guid = Guid.NewGuid(),
-                OrganizationGuid = vacancy.OrganizationGuid,
-                CreationDate = msg.TimeStamp,
-                Status = NotificationStatus.Created,
-                Title = "На ваш конкурс" + msg.VacancyGuid + " подана новая заявка "
-            };
-
-            _db.Insert(notification);
+                _db.Update(new Sql($"UPDATE res_vacancyapplications SET status = @0, update_date = @1 WHERE guid = @2", VacancyApplicationStatus.Applied, msg.TimeStamp, msg.VacancyApplicationGuid));
+                transaction.Complete();
+            }
         }
-
         public void Handle(VacancyApplicationCancelled msg)
         {
-            VacancyApplication vacancyApplication = _db.SingleById<VacancyApplication>(msg.VacancyApplicationGuid);
-            vacancyApplication.Status = VacancyApplicationStatus.Cancelled;
-            vacancyApplication.UpdateDate = msg.TimeStamp;
-
-            _db.Update(vacancyApplication);
-
-            Notification notification = new Notification()
+            using (var transaction = _db.GetTransaction())
             {
-                Guid = Guid.NewGuid(),
-                ResearcherGuid = msg.ResearcherGuid,
-                CreationDate = msg.TimeStamp,
-                Status = NotificationStatus.Created,
-                Title = "Ваша заявка" + msg.VacancyApplicationGuid + " отклонена"
-            };
-
-            _db.Insert(notification);
+                _db.Update(new Sql($"UPDATE res_vacancyapplications SET status = @0, update_date = @1 WHERE guid = @2", VacancyApplicationStatus.Cancelled, msg.TimeStamp, msg.VacancyApplicationGuid));
+                transaction.Complete();
+            }
         }
-
         public void Handle(VacancyApplicationWon msg)
         {
-            VacancyApplication vacancyApplication = _db.SingleById<VacancyApplication>(msg.VacancyApplicationGuid);
-            vacancyApplication.Status = VacancyApplicationStatus.Won;
-            vacancyApplication.UpdateDate = msg.TimeStamp;
-
-            _db.Update(vacancyApplication);
-
-            Notification notification = new Notification()
+            using (var transaction = _db.GetTransaction())
             {
-                Guid = Guid.NewGuid(),
-                ResearcherGuid = msg.ResearcherGuid,
-                CreationDate = msg.TimeStamp,
-                Status = NotificationStatus.Created,
-                Title = "Ваша заявка" + msg.VacancyApplicationGuid + " выйграла конкурс"
-            };
-
-            _db.Insert(notification);
+                _db.Update(new Sql($"UPDATE res_vacancyapplications SET status = @0, update_date = @1 WHERE guid = @2", VacancyApplicationStatus.Won, msg.TimeStamp, msg.VacancyApplicationGuid));
+                transaction.Complete();
+            }
         }
-
         public void Handle(VacancyApplicationPretended msg)
         {
-            VacancyApplication vacancyApplication = _db.SingleById<VacancyApplication>(msg.VacancyApplicationGuid);
-            vacancyApplication.Status = VacancyApplicationStatus.Pretended;
-            vacancyApplication.UpdateDate = msg.TimeStamp;
-
-            _db.Update(vacancyApplication);
-
-            Notification notification = new Notification()
+            using (var transaction = _db.GetTransaction())
             {
-                Guid = Guid.NewGuid(),
-                ResearcherGuid = msg.ResearcherGuid,
-                CreationDate = msg.TimeStamp,
-                Status = NotificationStatus.Created,
-                Title = "Ваша заявка" + msg.VacancyApplicationGuid + " получила второе место в конкурсе. Ожидайте чуда."
-            };
-
-            _db.Insert(notification);
+                _db.Update(new Sql($"UPDATE res_vacancyapplications SET status = @0, update_date = @1 WHERE guid = @2", VacancyApplicationStatus.Pretended, msg.TimeStamp, msg.VacancyApplicationGuid));
+                transaction.Complete();
+            }
         }
-
         public void Handle(VacancyApplicationLost msg)
         {
-            VacancyApplication vacancyApplication = _db.SingleById<VacancyApplication>(msg.VacancyApplicationGuid);
-            vacancyApplication.Status = VacancyApplicationStatus.Lost;
-            vacancyApplication.UpdateDate = msg.TimeStamp;
-
-            _db.Update(vacancyApplication);
-
-            Notification notification = new Notification()
+            using (var transaction = _db.GetTransaction())
             {
-                Guid = Guid.NewGuid(),
-                ResearcherGuid = msg.ResearcherGuid,
-                CreationDate = msg.TimeStamp,
-                Status = NotificationStatus.Created,
-                Title = "Ваша заявка" + msg.VacancyApplicationGuid + " проиграла конкурс"
-            };
-
-            _db.Insert(notification);
+                _db.Update(new Sql($"UPDATE res_vacancyapplications SET status = @0, update_date = @1 WHERE guid = @2", VacancyApplicationStatus.Lost, msg.TimeStamp, msg.VacancyApplicationGuid));
+                transaction.Complete();
+            }
         }
     }
 }

@@ -1,23 +1,23 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 using NPoco;
 
 namespace SciVacancies.ReadModel.Core
 {
-    [TableName("Educations")]
-    [PrimaryKey("Guid", AutoIncrement = false)]
+    [TableName("res_educations")]
+    [PrimaryKey("guid", AutoIncrement = false)]
     public class Education : BaseEntity
     {
-        public Guid ResearcherGuid { get; set; }
+        public string city { get; set; }
 
-        public string City { get; set; }
-        public string UniversityShortName { get; set; }
-        public string FacultyShortName { get; set; }
-        public DateTime? GraduationYear { get; set; }
+        public string university_shortname { get; set; }
 
-        public string Degree { get; set; }
+        public string faculty_shortname { get; set; }
+
+        public DateTime? graduation_date { get; set; }
+
+        public string degree { get; set; }
+
+        public Guid researcher_guid { get; set; }
     }
 }

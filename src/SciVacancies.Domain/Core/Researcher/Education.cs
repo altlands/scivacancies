@@ -1,19 +1,37 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace SciVacancies.Domain.Core
 {
     public class Education
     {
-        public Guid EducationGuid { get; set; }
+        /// <summary>
+        /// Guid записи об образовании
+        /// </summary>
+        public Guid Guid { get; set; }
 
+        /// <summary>
+        /// Город получения образования
+        /// </summary>
         public string City { get; set; }
+        
+        /// <summary>
+        /// Аббревиатура учебного заведения
+        /// </summary>
         public string UniversityShortName { get; set;}
-        public string FacultyShortName { get; set; }
-        public DateTime GraduationYear { get; set; }
 
+        /// <summary>
+        /// Аббревиатура факультета
+        /// </summary>
+        public string FacultyShortName { get; set; }
+
+        /// <summary>
+        /// Год окончания
+        /// </summary>
+        public DateTime? GraduationYear { get; set; }
+
+        /// <summary>
+        /// Академическая степень (бакалавр, магистр и т.д.)
+        /// </summary>
         public string Degree { get; set; }
     }
 }

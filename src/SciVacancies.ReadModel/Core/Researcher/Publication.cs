@@ -1,14 +1,15 @@
 ﻿using System;
+
 using NPoco;
 
 namespace SciVacancies.ReadModel.Core
 {
-    [TableName("Publications")]
-    [PrimaryKey("Guid", AutoIncrement = false)]
+    [TableName("res_publications")]
+    [PrimaryKey("guid", AutoIncrement = false)]
     public class Publication : BaseEntity
     {
-        public Guid ResearcherGuid { get; set; }
+        public string title { get; set; }
 
-        public string Name { get; set; }
+        public Guid researcher_guid { get; set; }
     }
 }

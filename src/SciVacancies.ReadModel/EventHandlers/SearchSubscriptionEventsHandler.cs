@@ -1,8 +1,10 @@
-﻿using MediatR;
-using NPoco;
-using SciVacancies.Domain.Enums;
+﻿using SciVacancies.Domain.Enums;
 using SciVacancies.Domain.Events;
 using SciVacancies.ReadModel.Core;
+
+using MediatR;
+using NPoco;
+using AutoMapper;
 
 namespace SciVacancies.ReadModel.EventHandlers
 {
@@ -21,40 +23,37 @@ namespace SciVacancies.ReadModel.EventHandlers
 
         public void Handle(SearchSubscriptionCreated msg)
         {
-            SearchSubscription searchSubscription = new SearchSubscription()
+            SearchSubscription searchSubscription = Mapper.Map<SearchSubscription>(msg);
+
+            using (var transaction = _db.GetTransaction())
             {
-                Guid = msg.SearchSubscriptionGuid,
-                ResearcherGuid = msg.ResearcherGuid,
-                CreationDate = msg.TimeStamp,
-                Status = SearchSubscriptionStatus.Active
-            };
-
-            _db.Insert(searchSubscription);
+                _db.Insert(searchSubscription);
+                transaction.Complete();
+            }
         }
-
         public void Handle(SearchSubscriptionActivated msg)
         {
-            SearchSubscription searchSubscription = _db.SingleById<SearchSubscription>(msg.SearchSubscriptionGuid);
-
-            searchSubscription.UpdateDate = msg.TimeStamp;
-            searchSubscription.Status = SearchSubscriptionStatus.Active;
-
-            _db.Update(searchSubscription);
+            using (var transaction = _db.GetTransaction())
+            {
+                _db.Update(new Sql($"UPDATE res_searchsubscriptions SET status = @0, update_date = @1 WHERE guid = @2", SearchSubscriptionStatus.Active, msg.TimeStamp, msg.SearchSubscriptionGuid));
+                transaction.Complete();
+            }
         }
-
         public void Handle(SearchSubscriptionCanceled msg)
         {
-            SearchSubscription searchSubscription = _db.SingleById<SearchSubscription>(msg.SearchSubscriptionGuid);
-
-            searchSubscription.UpdateDate = msg.TimeStamp;
-            searchSubscription.Status = SearchSubscriptionStatus.Cancelled;
-
-            _db.Update(searchSubscription);
+            using (var transaction = _db.GetTransaction())
+            {
+                _db.Update(new Sql($"UPDATE res_searchsubscriptions SET status = @0, update_date = @1 WHERE guid = @2", SearchSubscriptionStatus.Cancelled, msg.TimeStamp, msg.SearchSubscriptionGuid));
+                transaction.Complete();
+            }
         }
-
         public void Handle(SearchSubscriptionRemoved msg)
         {
-            _db.Delete<SearchSubscription>(msg.SearchSubscriptionGuid);
+            using (var transaction = _db.GetTransaction())
+            {
+                _db.Update(new Sql($"UPDATE res_searchsubscriptions SET status = @0, update_date = @1 WHERE guid = @2", SearchSubscriptionStatus.Removed, msg.TimeStamp, msg.SearchSubscriptionGuid));
+                transaction.Complete();
+            }
         }
     }
 }

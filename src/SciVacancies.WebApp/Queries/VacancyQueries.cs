@@ -66,7 +66,7 @@ namespace SciVacancies.WebApp.Queries
     }
     public class SelectPagedVacanciesByGuidsQuery : IRequest<Page<Vacancy>>
     {
-        public IEnumerable<Guid> VacanciesGuids { get; set; }
+        public IEnumerable<Guid> VacancyGuids { get; set; }
 
         public long PageSize { get; set; }
         public long PageIndex { get; set; }

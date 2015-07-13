@@ -1,10 +1,16 @@
-﻿using System;
+﻿using SciVacancies.Domain.Core;
+
 using System.Collections.Generic;
 
 namespace SciVacancies.Domain.DataModels
 {
     public class OrganizationDataModel
     {
+        public OrganizationDataModel()
+        {
+            this.ResearchDirections = new List<ResearchDirection>();
+        }
+
         #region General
 
         /// <summary>
@@ -13,34 +19,14 @@ namespace SciVacancies.Domain.DataModels
         public string Name { get; set; }
 
         /// <summary>
-        /// Полное наименование (на английском языке)
-        /// </summary>
-        public string NameEng { get; set; }
-
-        /// <summary>
         /// Сокращенное наименование
         /// </summary>
         public string ShortName { get; set; }
 
         /// <summary>
-        /// Сокращенное наименование (на английском языке)
-        /// </summary>
-        public string ShortNameEng { get; set; }
-
-        /// <summary>
-        /// Населенный пункт
-        /// </summary>
-        public string CityName { get; set; }
-
-        /// <summary>
         /// Почтовый адрес
         /// </summary>
         public string Address { get; set; }
-
-        /// <summary>
-        /// Веб-сайт
-        /// </summary>
-        public string Website { get; set; }
 
         /// <summary>
         /// E-mail
@@ -65,7 +51,7 @@ namespace SciVacancies.Domain.DataModels
         /// <summary>
         /// Фамилия руководителя
         /// </summary>
-        public string HeadLastName { get; set; }
+        public string HeadSecondName { get; set; }
 
         /// <summary>
         /// Отчество руководителя
@@ -75,21 +61,6 @@ namespace SciVacancies.Domain.DataModels
         #endregion
 
         #region Dictionaries
-
-        /// <summary>
-        /// Список идентификаторов отраслей науки
-        /// </summary>
-        public List<int> ResearchDirections { get; set; }
-
-        /// <summary>
-        /// Название основного вида деятельности
-        /// </summary>
-        public string Activity { get; set; }
-
-        /// <summary>
-        /// Идентификатор основного вида деятельности
-        /// </summary>
-        public int ActivityId { get; set; }
 
         /// <summary>
         /// Наименование ФОИВ
@@ -111,19 +82,11 @@ namespace SciVacancies.Domain.DataModels
         /// </summary>
         public int OrgFormId { get; set; }
 
+        /// <summary>
+        /// Список идентификаторов отраслей науки
+        /// </summary>
+        public List<ResearchDirection> ResearchDirections { get; set; }
+
         #endregion
-
-
-        [Obsolete("No need to use. Will be removed.")]
-        public string UserId { get; set; }
-        [Obsolete("You should use int Id")]
-        public Guid OrgFormGuid { get; set; }
-        [Obsolete("No need to use. Will be removed.")]
-        public int PublishedVacancies { get; set; }
-        [Obsolete("You should use int Id")]
-        public Guid FoivGuid { get; set; }
-        [Obsolete("You should use int Id")]
-        public Guid ActivityGuid { get; set; }
-
     }
 }

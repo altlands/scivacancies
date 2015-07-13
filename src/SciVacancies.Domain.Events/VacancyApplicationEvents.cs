@@ -6,8 +6,9 @@ namespace SciVacancies.Domain.Events
     public class VacancyApplicationEventBase : EventBase
     {
         public Guid VacancyApplicationGuid { get; set; }
-        public Guid VacancyGuid { get; set; }
         public Guid ResearcherGuid { get; set; }
+
+        public Guid VacancyGuid { get; set; }
     }
 
     /// <summary>
@@ -41,14 +42,14 @@ namespace SciVacancies.Domain.Events
     }
 
     /// <summary>
-    /// Заявка отклонена из-за отмены вакансии(конкурса)
+    /// Заявка отклонена из-за отмены вакансии (конкурса)
     /// </summary>
     public class VacancyApplicationCancelled : VacancyApplicationEventBase
     {
     }
 
     /// <summary>
-    /// Заявка выйграла вакансию(конкурс)
+    /// Заявка выйграла вакансию (конкурс)
     /// </summary>
     public class VacancyApplicationWon : VacancyApplicationEventBase
     {
