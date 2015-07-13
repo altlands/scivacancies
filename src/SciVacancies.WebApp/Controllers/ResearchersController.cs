@@ -107,14 +107,14 @@ namespace SciVacancies.WebApp.Controllers
 
                 var innerObjects = _mediator.Send(new SelectPagedVacanciesByGuidsQuery
                 {
-                    VacanciesGuids = model.Applications.Items.Select(c => c.VacancyGuid).Distinct(),
+                    VacancyGuids = model.Applications.Items.Select(c => c.VacancyGuid).Distinct(),
                     PageSize = 1000,
                     PageIndex = 1,
                     OrderBy = ConstTerms.OrderByDateDescending
                 });
                 model.Applications.Items.ForEach(
                     c =>
-                        c.Vacancy = Mapper.Map<VacancyDetailsViewModel>(innerObjects.Items.Single(d => d.Guid == c.VacancyGuid)));
+                        c.Vacancy = Mapper.Map<VacancyDetailsViewModel>(innerObjects.Items.Single(d => d.guid== c.VacancyGuid)));
             }
 
             return View(model);
@@ -160,7 +160,7 @@ namespace SciVacancies.WebApp.Controllers
         {
             var model = new NotificationsInResearcherIndexViewModel
             {
-                PagedItems = _mediator.Send(new SelectPagedNotificationsByResearcherQuery
+                PagedItems = _mediator.Send(new SelectPagedResearcherNotificationsQuery
                 {
                     ResearcherGuid = researcherGuid,
                     PageSize = pageSize,
@@ -181,7 +181,7 @@ namespace SciVacancies.WebApp.Controllers
 
             var model = _mediator.Send(new SingleVacancyQuery { VacancyGuid = vacancyGuid });
             //если заявка на готовится к открытию или открыта
-            if (model.Status == VacancyStatus.AppliesAcceptance || model.Status == VacancyStatus.Published)
+            if (model.status == VacancyStatus.Published)
             {
                 //TODO: оптимизировать запрос и его обработку
                 //если есть GUID Исследователя
@@ -189,7 +189,7 @@ namespace SciVacancies.WebApp.Controllers
                 //если текущей вакансии нет в списке избранных
                 if (favoritesVacancies == null
                     || favoritesVacancies.TotalItems == 0
-                    || !favoritesVacancies.Items.Select(c => c.Guid).ToList().Contains(vacancyGuid))
+                    || !favoritesVacancies.Items.Select(c => c.guid).ToList().Contains(vacancyGuid))
                     _mediator.Send(new AddVacancyToFavoritesCommand { ResearcherGuid = researcherGuid, VacancyGuid = vacancyGuid });
             }
 
@@ -209,7 +209,7 @@ namespace SciVacancies.WebApp.Controllers
             var favoritesVacancies = _mediator.Send(new SelectPagedFavoriteVacanciesByResearcherQuery { PageSize = 1000, PageIndex = 1, ResearcherGuid = researcherGuid, OrderBy = ConstTerms.OrderByDateAscending });
             if (favoritesVacancies == null)
                 throw new Exception("У вас нет избранных вакансий");
-            if (favoritesVacancies.Items.All(c => c.Guid != vacancyGuid))
+            if (favoritesVacancies.Items.All(c => c.guid != vacancyGuid))
                 throw new Exception($"У вас нет избранной вакансии с идентификатором {vacancyGuid}");
 
             var preModel = _mediator.Send(new SingleVacancyQuery { VacancyGuid = vacancyGuid });
@@ -232,7 +232,7 @@ namespace SciVacancies.WebApp.Controllers
             var favoritesVacancies = _mediator.Send(new SelectPagedFavoriteVacanciesByResearcherQuery { PageSize = 100, PageIndex = 1, ResearcherGuid = researcherGuid, OrderBy = ConstTerms.OrderByDateAscending });
             if (favoritesVacancies == null)
                 throw new Exception("У вас нет избранных вакансий");
-            if (favoritesVacancies.Items.All(c => c.Guid != vacancyGuid))
+            if (favoritesVacancies.Items.All(c => c.guid != vacancyGuid))
                 throw new Exception($"У вас нет избранной вакансии с идентификатором {vacancyGuid}");
 
             if (!ModelState.IsValid)

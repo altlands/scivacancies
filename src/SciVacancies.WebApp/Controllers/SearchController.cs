@@ -28,11 +28,11 @@ namespace SciVacancies.WebApp.Controllers
                 Query = model.Search,
                 PageSize = model.PageSize,
                 CurrentPage = model.CurrentPage,
-
-                PositionsTypes = model.Positions,
-                Regions = model.Regions,
-                Foivs = model.Foivs,
-                ResearchDirections = model.ResearchDirections
+                
+                PositionsTypeIds = model.Positions,
+                RegionIds = model.Regions,
+                FoivIds = model.Foivs,
+                ResearchDirectionIds = model.ResearchDirections
             }).MapToPagedList();
 
             //dicitonaries
