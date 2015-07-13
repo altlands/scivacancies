@@ -41,6 +41,8 @@ namespace SciVacancies.ReadModel.EventHandlers
         {
             VacancyApplication vacancyApplication = _db.SingleById<VacancyApplication>(msg.VacancyApplicationGuid);
 
+            VacancyApplication updatedVacancyApplication = Mapper.Map<VacancyApplication>(msg);
+
             using (var transaction = _db.GetTransaction())
             {
 

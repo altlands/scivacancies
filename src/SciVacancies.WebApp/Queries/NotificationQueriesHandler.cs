@@ -8,7 +8,9 @@ using MediatR;
 namespace SciVacancies.WebApp.Queries
 {
     public class NotificationQueriesHandler :
+        IRequestHandler<SingleResearcherNotificationQuery, ResearcherNotification>,
         IRequestHandler<SelectPagedResearcherNotificationsQuery, Page<ResearcherNotification>>,
+        IRequestHandler<SingleOrganizationNotificationQuery, OrganizationNotification>,
         IRequestHandler<SelectPagedOrganizationNotificationsQuery, Page<OrganizationNotification>>
     {
         private readonly IDatabase _db;
@@ -17,21 +19,36 @@ namespace SciVacancies.WebApp.Queries
         {
             _db = db;
         }
-
-        public Page<ResearcherNotification> Handle(SelectPagedResearcherNotificationsQuery message)
+        public ResearcherNotification Handle(SingleResearcherNotificationQuery msg)
         {
-            if (message.ResearcherGuid == Guid.Empty) throw new ArgumentNullException($"ResearcherGuid is empty: {message.ResearcherGuid}");
+            if (msg.Guid == Guid.Empty) throw new ArgumentNullException($"Guid is empty: {msg.Guid}");
 
-            Page<ResearcherNotification> notifications = _db.Page<ResearcherNotification>(message.PageIndex, message.PageSize, new Sql($"SELECT n.* FROM res_notifications n WHERE n.researcher_guid = @0 ORDER BY n.guid DESC", message.ResearcherGuid));
+            ResearcherNotification notification = _db.SingleById<ResearcherNotification>(msg.Guid);
+
+            return notification;
+        }
+        public Page<ResearcherNotification> Handle(SelectPagedResearcherNotificationsQuery msg)
+        {
+            if (msg.ResearcherGuid == Guid.Empty) throw new ArgumentNullException($"ResearcherGuid is empty: {msg.ResearcherGuid}");
+
+            Page<ResearcherNotification> notifications = _db.Page<ResearcherNotification>(msg.PageIndex, msg.PageSize, new Sql($"SELECT n.* FROM res_notifications n WHERE n.researcher_guid = @0 ORDER BY n.guid DESC", msg.ResearcherGuid));
 
             return notifications;
         }
 
-        public Page<OrganizationNotification> Handle(SelectPagedOrganizationNotificationsQuery message)
+        public OrganizationNotification Handle(SingleOrganizationNotificationQuery msg)
         {
-            if (message.OrganizationGuid == Guid.Empty) throw new ArgumentNullException($"OrganizationGuid is empty: {message.OrganizationGuid}");
+            if (msg.Guid == Guid.Empty) throw new ArgumentNullException($"Guid is empty: {msg.Guid}");
 
-            Page<OrganizationNotification> notifications = _db.Page<OrganizationNotification>(message.PageIndex, message.PageSize, new Sql($"SELECT n.* FROM org_notifications n WHERE n.organization_guid = @0 ORDER BY n.guid DESC", message.OrganizationGuid));
+            OrganizationNotification notification = _db.SingleById<OrganizationNotification>(msg.Guid);
+
+            return notification;
+        }
+        public Page<OrganizationNotification> Handle(SelectPagedOrganizationNotificationsQuery msg)
+        {
+            if (msg.OrganizationGuid == Guid.Empty) throw new ArgumentNullException($"OrganizationGuid is empty: {msg.OrganizationGuid}");
+
+            Page<OrganizationNotification> notifications = _db.Page<OrganizationNotification>(msg.PageIndex, msg.PageSize, new Sql($"SELECT n.* FROM org_notifications n WHERE n.organization_guid = @0 ORDER BY n.guid DESC", msg.OrganizationGuid));
 
             return notifications;
         }
