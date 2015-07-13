@@ -1,4 +1,5 @@
-﻿using SciVacancies.ReadModel.ElasticSearchModel.Model;
+﻿using SciVacancies.Domain.Enums;
+using SciVacancies.ReadModel.ElasticSearchModel.Model;
 
 using System.Linq;
 
@@ -40,6 +41,11 @@ namespace SciVacancies.WebApp.Queries
                                                 && f.Terms<int>(ft => ft.PositionTypeId, msg.PositionsTypeIds)
                                                 && f.Terms<int>(ft => ft.RegionId, msg.RegionIds)
                                                 && f.Terms<int>(ft => ft.ResearchDirectionId, msg.ResearchDirectionIds)
+                                                && f.Range(fr => fr
+                                                    .GreaterOrEquals((long)msg.SalaryFrom)
+                                                    .LowerOrEquals((long)msg.SalaryTo)
+                                                )
+                                                && f.Terms<VacancyStatus>(ft => ft.Status, msg.Statuses)
                                             )
                                         )
                                     )
