@@ -26,6 +26,14 @@ namespace SciVacancies.ReadModel.EventHandlers
             using (var transaction = _db.GetTransaction())
             {
                 _db.Insert(researcher);
+                foreach (Education ed in researcher.educations)
+                {
+                    _db.Insert(ed);
+                }
+                foreach (Publication pb in researcher.publications)
+                {
+                    _db.Insert(pb);
+                }
                 transaction.Complete();
             }
         }
@@ -33,10 +41,22 @@ namespace SciVacancies.ReadModel.EventHandlers
         {
             Researcher researcher = _db.SingleById<Researcher>(msg.ResearcherGuid);
 
+            Researcher updatedResearcher = Mapper.Map<Researcher>(msg);
+
             using (var transaction = _db.GetTransaction())
             {
 
                 _db.Update(researcher);
+                _db.Delete(new Sql($"DELETE FROM res_educations WHERE researcher_guid = @0", msg.ResearcherGuid));
+                _db.Delete(new Sql($"DELETE FROM res_publications WHERE researcher_guid = @0", msg.ResearcherGuid));
+                foreach (Education ed in researcher.educations)
+                {
+                    _db.Insert(ed);
+                }
+                foreach (Publication pb in researcher.publications)
+                {
+                    _db.Insert(pb);
+                }
                 transaction.Complete();
             }
         }

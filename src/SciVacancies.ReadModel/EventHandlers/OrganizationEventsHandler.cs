@@ -2,6 +2,8 @@
 using SciVacancies.Domain.Events;
 using SciVacancies.ReadModel.Core;
 
+using System;
+
 using MediatR;
 using NPoco;
 using AutoMapper;
@@ -27,6 +29,10 @@ namespace SciVacancies.ReadModel.EventHandlers
             using (var transaction = _db.GetTransaction())
             {
                 _db.Insert(organization);
+                foreach (ResearchDirection rd in organization.researchdirections)
+                {
+                    _db.Insert(new Sql($"INSERT INTO org_researchdirections (guid, researchdirection_id, organization_guid) VALUES (@0, @1, @2)", Guid.NewGuid(), rd.id, msg.OrganizationGuid));
+                }
                 transaction.Complete();
             }
         }
@@ -34,14 +40,18 @@ namespace SciVacancies.ReadModel.EventHandlers
         {
             Organization organization = _db.SingleById<Organization>(msg.OrganizationGuid);
 
+            Organization updatedOrganization = Mapper.Map<Organization>(msg);
 
             using (var transaction = _db.GetTransaction())
             {
-
                 _db.Update(organization);
+                _db.Delete(new Sql($"DELETE FROM org_researchdirections WHERE organization_guid = @0", msg.OrganizationGuid));
+                foreach (ResearchDirection rd in organization.researchdirections)
+                {
+                    _db.Insert(new Sql($"INSERT INTO org_researchdirections (guid, researchdirection_id, organization_guid) VALUES (@0, @1, @2)", Guid.NewGuid(), rd.id, msg.OrganizationGuid));
+                }
                 transaction.Complete();
             }
-
         }
         public void Handle(OrganizationRemoved msg)
         {

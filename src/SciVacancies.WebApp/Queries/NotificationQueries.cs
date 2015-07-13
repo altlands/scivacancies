@@ -7,6 +7,10 @@ using NPoco;
 
 namespace SciVacancies.WebApp.Queries
 {
+    public class SingleResearcherNotificationQuery:IRequest<ResearcherNotification>
+    {
+        public Guid Guid { get; set; }
+    }
     public class SelectPagedResearcherNotificationsQuery : IRequest<Page<ResearcherNotification>>
     {
         public Guid ResearcherGuid { get; set; }
@@ -16,6 +20,10 @@ namespace SciVacancies.WebApp.Queries
         public string OrderBy { get; set; }
     }
 
+    public class SingleOrganizationNotificationQuery : IRequest<OrganizationNotification>
+    {
+        public Guid Guid { get; set; }
+    }
     public class SelectPagedOrganizationNotificationsQuery : IRequest<Page<OrganizationNotification>>
     {
         public Guid OrganizationGuid { get; set; }
