@@ -525,7 +525,7 @@ namespace SciVacancies.WebApp.Infrastructure
                 //.ForMember(d => d.OrganizationFoiv, o => o.MapFrom(s => s))
                 //.ForMember(d => d.OrganizationFoivId, o => o.MapFrom(s => s))
                 ;
-            Mapper.CreateMap<ReadModel.ElasticSearchModel.Model.Vacancy, VacancyElasticResult>()
+            Mapper.CreateMap<ReadModel.ElasticSearchModel.Model.Vacancy, VacancyElasticResult>().IncludePagedResultMapping();
                 ;
 
             //TODO - VACANCY EDIT VIEW MODEL MAPPINGS
