@@ -21,8 +21,8 @@ namespace SciVacancies.WebApp.Queries
         public IEnumerable<int> RegionIds { get; set; }
         public IEnumerable<int> ResearchDirectionIds { get; set; }
 
-        public int? SalaryFrom { get; set; }
-        public int? SalaryTo { get; set; }
+        public int SalaryFrom { get; set; }
+        public int SalaryTo { get; set; }
         public IEnumerable<VacancyStatus> Statuses { get; set; }
     }
 }
