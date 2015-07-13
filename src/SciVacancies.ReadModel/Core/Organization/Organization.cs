@@ -58,6 +58,7 @@ namespace SciVacancies.ReadModel.Core
         /// </summary>
         public int orgform_id { get; set; }
 
+        [Ignore]
         public List<ResearchDirection> researchdirections { get; set; }
 
         public OrganizationStatus status { get; set; }

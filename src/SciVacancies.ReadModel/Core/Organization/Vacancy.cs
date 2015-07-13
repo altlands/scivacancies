@@ -142,6 +142,7 @@ namespace SciVacancies.ReadModel.Core
         public DateTime? committee_date { get; set; }
         public DateTime? announcement_date { get; set; }
 
+        [Ignore]
         public List<VacancyCriteria> criterias { get; set; }
 
         #endregion
