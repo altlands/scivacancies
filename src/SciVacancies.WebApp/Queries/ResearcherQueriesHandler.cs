@@ -7,11 +7,12 @@ using MediatR;
 
 namespace SciVacancies.WebApp.Queries
 {
-    public class SingleResearcherQueryHandler : IRequestHandler<SingleResearcherQuery, Researcher>
+    public class ResearcherQueriesHandler :
+        IRequestHandler<SingleResearcherQuery, Researcher>
     {
         private readonly IDatabase _db;
 
-        public SingleResearcherQueryHandler(IDatabase db)
+        public ResearcherQueriesHandler(IDatabase db)
         {
             _db = db;
         }

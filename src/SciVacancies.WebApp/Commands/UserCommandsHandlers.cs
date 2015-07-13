@@ -1,13 +1,15 @@
-﻿using System;
-using AutoMapper;
-using MediatR;
-using Microsoft.AspNet.Identity;
-using Microsoft.AspNet.Identity.EntityFramework;
-using SciVacancies.Domain.DataModels;
+﻿using SciVacancies.Domain.DataModels;
 using SciVacancies.WebApp.Engine;
 using SciVacancies.WebApp.Infrastructure.Identity;
 using SciVacancies.WebApp.ViewModels;
 using SciVacancies.Domain.Aggregates;
+
+using System;
+using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.Identity.EntityFramework;
+
+using AutoMapper;
+using MediatR;
 using CommonDomain.Persistence;
 
 namespace SciVacancies.WebApp.Commands
@@ -35,7 +37,7 @@ namespace SciVacancies.WebApp.Commands
             };
 
             var researcherDataModel = Mapper.Map<AccountResearcherRegisterViewModel, ResearcherDataModel>(message.Data);
-            researcherDataModel.UserId = user.Id;
+            //researcherDataModel.UserId = user.Id;
 
             Researcher researcher = new Researcher(Guid.NewGuid(), researcherDataModel);
             _repository.Save(researcher, Guid.NewGuid(), null);
@@ -78,7 +80,7 @@ namespace SciVacancies.WebApp.Commands
             };
 
             var organizationDataModel = Mapper.Map<AccountOrganizationRegisterViewModel, OrganizationDataModel>(message.Data);
-            organizationDataModel.UserId = user.Id;
+            //organizationDataModel.UserId = user.Id;
 
             Organization organization = new Organization(Guid.NewGuid(), organizationDataModel);
             _repository.Save(organization, Guid.NewGuid(), null);

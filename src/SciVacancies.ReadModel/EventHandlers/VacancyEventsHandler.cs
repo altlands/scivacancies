@@ -1,20 +1,30 @@
-﻿using System.Linq;
-using MediatR;
-using NPoco;
-using SciVacancies.Domain.Enums;
+﻿using SciVacancies.Domain.Enums;
 using SciVacancies.Domain.Events;
 using SciVacancies.ReadModel.Core;
+
+using System;
+
+using MediatR;
+using NPoco;
+using AutoMapper;
 
 namespace SciVacancies.ReadModel.EventHandlers
 {
     public class VacancyEventsHandler :
+        INotificationHandler<VacancyCreated>,
+        INotificationHandler<VacancyUpdated>,
+        INotificationHandler<VacancyRemoved>,
         INotificationHandler<VacancyPublished>,
-        INotificationHandler<VacancyAcceptApplications>,
         INotificationHandler<VacancyInCommittee>,
-        INotificationHandler<VacancyClosed>,
-        INotificationHandler<VacancyCancelled>,
         INotificationHandler<VacancyWinnerSet>,
         INotificationHandler<VacancyPretenderSet>,
+        INotificationHandler<VacancyOfferAcceptedByWinner>,
+        INotificationHandler<VacancyOfferRejectedByWinner>,
+        INotificationHandler<VacancyOfferAcceptedByPretender>,
+        INotificationHandler<VacancyOfferRejectedByPretender>,
+        INotificationHandler<VacancyClosed>,
+        INotificationHandler<VacancyCancelled>,
+
         INotificationHandler<VacancyAddedToFavorites>,
         INotificationHandler<VacancyRemovedFromFavorites>
     {
@@ -24,138 +34,128 @@ namespace SciVacancies.ReadModel.EventHandlers
         {
             _db = db;
         }
+        public void Handle(VacancyCreated msg)
+        {
+            Vacancy vacancy = Mapper.Map<Vacancy>(msg);
+
+            using (var transaction = _db.GetTransaction())
+            {
+                _db.Insert(vacancy);
+                transaction.Complete();
+            }
+        }
+        public void Handle(VacancyUpdated msg)
+        {
+            using (var transaction = _db.GetTransaction())
+            {
+
+                transaction.Complete();
+            }
+        }
+        public void Handle(VacancyRemoved msg)
+        {
+            using (var transaction = _db.GetTransaction())
+            {
+                _db.Update(new Sql($"UPDATE org_vacancies SET status = @0, update_date = @1 WHERE guid = @2", VacancyStatus.Removed, msg.TimeStamp, msg.VacancyGuid));
+                transaction.Complete();
+            }
+        }
         public void Handle(VacancyPublished msg)
         {
-            Position position = _db.SingleById<Position>(msg.PositionGuid);
-            position.Status = PositionStatus.Published;
-
-            _db.Update(position);
-
-            Vacancy vacancy = new Vacancy()
+            using (var transaction = _db.GetTransaction())
             {
-                Guid = msg.VacancyGuid,
-                PositionGuid = msg.PositionGuid,
-                OrganizationGuid = msg.OrganizationGuid,
-                Name = msg.Data.Name,
-
-                //TODO - Clean Up
-                PositionTypeGuid = msg.Data.PositionTypeGuid,
-                ResearchDirectionId = msg.Data.ResearchDirectionId,
-                ResearchThemeId = msg.Data.ResearchThemeId,
-
-                OrganizationName = msg.Data.OrganizationName,
-
-                FullName = msg.Data.FullName,
-                ResearchDirection = msg.Data.ResearchDirection,
-                ResearchTheme = msg.Data.ResearchTheme,
-                Tasks = msg.Data.Tasks,
-                Criteria = msg.Data.Criteria,
-                SalaryFrom = msg.Data.SalaryFrom,
-                SalaryTo = msg.Data.SalaryTo,
-                Bonuses = msg.Data.Bonuses,
-                ContractType = msg.Data.ContractType,
-                ContractTime = msg.Data.ContractTime,
-                SocialPackage = msg.Data.SocialPackage,
-                Rent = msg.Data.Rent,
-                OfficeAccomodation = msg.Data.OfficeAccomodation,
-                TransportCompensation = msg.Data.TransportCompensation,
-                Region = msg.Data.Region,
-                RegionId = msg.Data.RegionId,
-                CityName = msg.Data.CityName,
-                Details = msg.Data.Details,
-                ContactName = msg.Data.ContactName,
-                ContactEmail = msg.Data.ContactEmail,
-                ContactPhone = msg.Data.ContactPhone,
-                ContactDetails = msg.Data.ContactDetails,
-                DateStart = msg.Data.DateStart,
-                DateStartAcceptance = msg.Data.DateStartAcceptance,
-                DateFinish = msg.Data.DateFinish
-            };
-
-            _db.Insert(vacancy);
+                _db.Update(new Sql($"UPDATE org_vacancies SET status = @0, update_date = @1 WHERE guid = @2", VacancyStatus.Published, msg.TimeStamp, msg.VacancyGuid));
+                transaction.Complete();
+            }
         }
-
-        public void Handle(VacancyAcceptApplications msg)
-        {
-            Vacancy vacancy = _db.SingleById<Vacancy>(msg.VacancyGuid);
-            vacancy.Status = VacancyStatus.AppliesAcceptance;
-
-            _db.Update(vacancy);
-        }
-
         public void Handle(VacancyInCommittee msg)
         {
-            Vacancy vacancy = _db.SingleById<Vacancy>(msg.VacancyGuid);
-            vacancy.Status = VacancyStatus.InCommittee;
-
-            _db.Update(vacancy);
-        }
-
-        public void Handle(VacancyClosed msg)
-        {
-            Position position = _db.SingleById<Position>(msg.PositionGuid);
-            position.Status = PositionStatus.InProcess;
-
-            _db.Update(position);
-
-            Vacancy vacancy = _db.SingleById<Vacancy>(msg.VacancyGuid);
-            vacancy.Status = VacancyStatus.Closed;
-
-            _db.Update(vacancy);
-        }
-
-        public void Handle(VacancyCancelled msg)
-        {
-            Position position = _db.SingleById<Position>(msg.PositionGuid);
-            position.Status = PositionStatus.InProcess;
-
-            _db.Update(position);
-
-            Vacancy vacancy = _db.SingleById<Vacancy>(msg.VacancyGuid);
-            vacancy.Status = VacancyStatus.Cancelled;
-
-            _db.Update(vacancy);
+            using (var transaction = _db.GetTransaction())
+            {
+                _db.Update(new Sql($"UPDATE org_vacancies SET status = @0, update_date = @1 WHERE guid = @2", VacancyStatus.InCommittee, msg.TimeStamp, msg.VacancyGuid));
+                transaction.Complete();
+            }
         }
         public void Handle(VacancyWinnerSet msg)
         {
-            Vacancy vacancy = _db.SingleById<Vacancy>(msg.VacancyGuid);
-            vacancy.WinnerGuid = msg.ReasearcherGuid;
-
-            _db.Update(vacancy);
+            using (var transaction = _db.GetTransaction())
+            {
+                _db.Update(new Sql($"UPDATE org_vacancies SET winner_researcher_guid = @0, winner_vacancyapplication_guid = @1, update_date = @2 WHERE guid = @3", msg.WinnerReasearcherGuid, msg.WinnerVacancyApplicationGuid, msg.TimeStamp, msg.VacancyGuid));
+                transaction.Complete();
+            }
         }
         public void Handle(VacancyPretenderSet msg)
         {
-            Vacancy vacancy = _db.SingleById<Vacancy>(msg.VacancyGuid);
-            vacancy.PretenderGuid = msg.ReasearcherGuid;
-
-            _db.Update(vacancy);
+            using (var transaction = _db.GetTransaction())
+            {
+                _db.Update(new Sql($"UPDATE org_vacancies SET pretender_researcher_guid = @0, pretender_vacancyapplication_guid = @1, update_date = @2 WHERE guid = @3", msg.PretenderReasearcherGuid, msg.PretenderVacancyApplicationGuid, msg.TimeStamp, msg.VacancyGuid));
+                transaction.Complete();
+            }
+        }
+        public void Handle(VacancyOfferAcceptedByWinner msg)
+        {
+            using (var transaction = _db.GetTransaction())
+            {
+                _db.Update(new Sql($"UPDATE org_vacancies SET is_winner_accept = @0, status = @1, update_date = @2 WHERE guid = @3", true, VacancyStatus.OfferAccepted, msg.TimeStamp, msg.VacancyGuid));
+                transaction.Complete();
+            }
+        }
+        public void Handle(VacancyOfferRejectedByWinner msg)
+        {
+            using (var transaction = _db.GetTransaction())
+            {
+                _db.Update(new Sql($"UPDATE org_vacancies SET is_winner_accept = @0, update_date = @1 WHERE guid = @2", false, msg.TimeStamp, msg.VacancyGuid));
+                transaction.Complete();
+            }
+        }
+        public void Handle(VacancyOfferAcceptedByPretender msg)
+        {
+            using (var transaction = _db.GetTransaction())
+            {
+                _db.Update(new Sql($"UPDATE org_vacancies SET is_pretender_accept = @0, status = @1, update_date = @2 WHERE guid = @3", true, VacancyStatus.OfferAccepted, msg.TimeStamp, msg.VacancyGuid));
+                transaction.Complete();
+            }
+        }
+        public void Handle(VacancyOfferRejectedByPretender msg)
+        {
+            using (var transaction = _db.GetTransaction())
+            {
+                _db.Update(new Sql($"UPDATE org_vacancies SET is_pretender_accept = @0, status = @1, update_date = @2 WHERE guid = @3", false, VacancyStatus.OfferRejected, msg.TimeStamp, msg.VacancyGuid));
+                transaction.Complete();
+            }
+        }
+        public void Handle(VacancyClosed msg)
+        {
+            using (var transaction = _db.GetTransaction())
+            {
+                _db.Update(new Sql($"UPDATE org_vacancies SET status = @0, update_date = @1 WHERE guid = @2", VacancyStatus.Closed, msg.TimeStamp, msg.VacancyGuid));
+                transaction.Complete();
+            }
+        }
+        public void Handle(VacancyCancelled msg)
+        {
+            using (var transaction = _db.GetTransaction())
+            {
+                _db.Update(new Sql($"UPDATE org_vacancies SET status = @0, update_date = @1 WHERE guid = @2", VacancyStatus.Cancelled, msg.TimeStamp, msg.VacancyGuid));
+                transaction.Complete();
+            }
         }
 
         public void Handle(VacancyAddedToFavorites msg)
         {
-            Vacancy vacancy = _db.SingleById<Vacancy>(msg.VacancyGuid);
-            vacancy.FollowersCounter++;
-
-            _db.Update(vacancy);
-
-            FavoriteVacancy favoriteVacancy = new FavoriteVacancy()
+            using (var transaction = _db.GetTransaction())
             {
-                VacancyGuid = msg.VacancyGuid,
-                ResearcherGuid = msg.ResearcherGuid
-            };
-
-            _db.Insert(favoriteVacancy);
+                _db.Insert(new Sql($"INSERT INTO res_favoritevacancies (guid, vacancy_guid, researcher_guid) VALUES(@0, @1, @2)", Guid.NewGuid(), msg.VacancyGuid, msg.ResearcherGuid));
+                transaction.Complete();
+            }
         }
-
         public void Handle(VacancyRemovedFromFavorites msg)
         {
-            Vacancy vacancy = _db.SingleById<Vacancy>(msg.VacancyGuid);
-            vacancy.FollowersCounter--;
-
-            _db.Update(vacancy);
-
-            FavoriteVacancy favoriteVacancy = _db.FetchBy<FavoriteVacancy>(sql => sql.Where(x => x.VacancyGuid == msg.VacancyGuid && x.ResearcherGuid == msg.ResearcherGuid)).FirstOrDefault();
-            _db.Delete(favoriteVacancy);
+            using (var transaction = _db.GetTransaction())
+            {
+                _db.Delete(new Sql($"DELETE FROM res_favoritevacancies WHERE researcher_guid = @0 AND vacancy_guid = @1", msg.ResearcherGuid, msg.VacancyGuid));
+                transaction.Complete();
+            }
         }
     }
 }

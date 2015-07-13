@@ -7,7 +7,11 @@ namespace SciVacancies.Domain.DataModels
 {
     public class ResearcherDataModel
     {
-        #region General
+        public ResearcherDataModel()
+        {
+            this.Educations = new List<Education>();
+            this.Publications = new List<Publication>();
+        }
 
         public string FirstName { get; set; }
         public string FirstNameEng { get; set; }
@@ -22,6 +26,7 @@ namespace SciVacancies.Domain.DataModels
         public string FullNameEng { get { return SecondNameEng + " " + FirstNameEng + " " + PatronymicEng; } }
 
         public string PreviousSecondName { get; set; }
+        public string PreviousSecondNameEng { get; set; }
 
         public DateTime BirthDate { get; set; }
 
@@ -38,20 +43,12 @@ namespace SciVacancies.Domain.DataModels
         public string OtherActivity { get; set; }
 
         public string ScienceDegree { get; set; }
-        public string AcademicStatus { get; set; }
+        public string ScienceRank { get; set; }
         public string Rewards { get; set; }
         public string Memberships { get; set; }
         public string Conferences { get; set; }
 
         public List<Education> Educations { get; set; }
         public List<Publication> Publications { get; set; }
-
-        #endregion
-
-        /// <summary>
-        /// Идентификатор аккаунта, к которому привязан агрегат
-        /// </summary>
-        [Obsolete("No need to use. Will be removed.")]
-        public string UserId { get; set; }     
     }
 }

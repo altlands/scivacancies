@@ -11,40 +11,85 @@ using NPoco;
 
 namespace SciVacancies.WebApp.Commands
 {
-    public class SwitchNotificationToReadCommandHandler : RequestHandler<SwitchNotificationToReadCommand>
+    public class SwitchResearchNotificationToReadCommandHandler : RequestHandler<SwitchResearchNotificationToReadCommand>
     {
         private readonly IDatabase _db;
 
-        public SwitchNotificationToReadCommandHandler(IDatabase db)
+        public SwitchResearchNotificationToReadCommandHandler(IDatabase db)
         {
             _db = db;
         }
 
-        protected override void HandleCore(SwitchNotificationToReadCommand message)
+        protected override void HandleCore(SwitchResearchNotificationToReadCommand msg)
         {
-            if (message.NotificationGuid == Guid.Empty) throw new ArgumentNullException($"NotificationGuid is empty: {message.NotificationGuid}");
+            if (msg.NotificationGuid == Guid.Empty) throw new ArgumentNullException($"NotificationGuid is empty: {msg.NotificationGuid}");
 
-            Notification notification = _db.SingleOrDefaultById<Notification>(message.NotificationGuid);
-
-            notification.Status = NotificationStatus.Read;
-
-            _db.Update(notification);
+            using (var transaction = _db.GetTransaction())
+            {
+                _db.Update(new Sql($"UPDATE res_notifications SET status = @0, update_date = @1 WHERE guid = @2", NotificationStatus.Read, msg.TimeStamp, msg.NotificationGuid));
+                transaction.Complete();
+            }
         }
     }
-    public class RemoveNotificationCommandHandler : RequestHandler<RemoveNotificationCommand>
+    public class RemoveResearcherNotificationCommandHandler : RequestHandler<RemoveResearchNotificationCommand>
     {
         private readonly IDatabase _db;
 
-        public RemoveNotificationCommandHandler(IDatabase db)
+        public RemoveResearcherNotificationCommandHandler(IDatabase db)
         {
             _db = db;
         }
 
-        protected override void HandleCore(RemoveNotificationCommand message)
+        protected override void HandleCore(RemoveResearchNotificationCommand msg)
         {
-            if (message.NotificationGuid == Guid.Empty) throw new ArgumentNullException($"NotificationGuid is empty: {message.NotificationGuid}");
+            if (msg.NotificationGuid == Guid.Empty) throw new ArgumentNullException($"NotificationGuid is empty: {msg.NotificationGuid}");
 
-            _db.Delete<Notification>(message.NotificationGuid);
+            using (var transaction = _db.GetTransaction())
+            {
+                _db.Update(new Sql($"UPDATE res_notifications SET status = @0, update_date = @1 WHERE guid = @2", NotificationStatus.Removed, msg.TimeStamp, msg.NotificationGuid));
+                transaction.Complete();
+            }
+        }
+    }
+
+    public class SwitchOrganizationNotificationToReadCommandHandler : RequestHandler<SwitchOrganizationNotificationToReadCommand>
+    {
+        private readonly IDatabase _db;
+
+        public SwitchOrganizationNotificationToReadCommandHandler(IDatabase db)
+        {
+            _db = db;
+        }
+
+        protected override void HandleCore(SwitchOrganizationNotificationToReadCommand msg)
+        {
+            if (msg.NotificationGuid == Guid.Empty) throw new ArgumentNullException($"NotificationGuid is empty: {msg.NotificationGuid}");
+
+            using (var transaction = _db.GetTransaction())
+            {
+                _db.Update(new Sql($"UPDATE org_notifications SET status = @0, update_date = @1 WHERE guid = @2", NotificationStatus.Read, msg.TimeStamp, msg.NotificationGuid));
+                transaction.Complete();
+            }
+        }
+    }
+    public class RemoveOrganizationNotificationCommandHandler : RequestHandler<RemoveOrganizationNotificationCommand>
+    {
+        private readonly IDatabase _db;
+
+        public RemoveOrganizationNotificationCommandHandler(IDatabase db)
+        {
+            _db = db;
+        }
+
+        protected override void HandleCore(RemoveOrganizationNotificationCommand msg)
+        {
+            if (msg.NotificationGuid == Guid.Empty) throw new ArgumentNullException($"NotificationGuid is empty: {msg.NotificationGuid}");
+
+            using (var transaction = _db.GetTransaction())
+            {
+                _db.Update(new Sql($"UPDATE res_notifications SET status = @0, update_date = @1 WHERE guid = @2", NotificationStatus.Removed, msg.TimeStamp, msg.NotificationGuid));
+                transaction.Complete();
+            }
         }
     }
 }

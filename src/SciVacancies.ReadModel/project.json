@@ -11,7 +11,8 @@
         "SciVacancies.Domain.Events": "1.0.0-*",
         "NPoco": "2.9.103",
         "SciVacancies.Domain": "1.0.0-*",
-        "NEST": "1.6.1"        
+        "NEST": "1.6.1",
+        "AutoMapper": "3.3.1"
     },
 
     "frameworks": {

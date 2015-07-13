@@ -1,11 +1,9 @@
-﻿using SciVacancies.Domain.Enums;
+﻿using System;
 
 namespace SciVacancies.Domain.DataModels
 {
     public class SearchSubscriptionDataModel
     {
-        #region General
-
         /// <summary>
         /// Название подписки (задаётся исследователем)
         /// </summary>
@@ -15,10 +13,5 @@ namespace SciVacancies.Domain.DataModels
         /// Поисковой запрос в json-е
         /// </summary>
         public string Query { get; set; }
-
-        #endregion
-
-        [System.Obsolete("Status will be moved from dataModel")]
-        public SearchSubscriptionStatus Status { get; set; }
     }
 }

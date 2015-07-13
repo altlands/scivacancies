@@ -1,7 +1,6 @@
 ﻿using SciVacancies.ReadModel.Core;
 
 using System;
-using System.Collections.Generic;
 
 using MediatR;
 using NPoco;
