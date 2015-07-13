@@ -48,8 +48,8 @@ namespace SciVacancies.WebApp.ViewModels
 
 
 
-            PositionTypes = mediator.Send(new SelectAllPositionTypesQuery()).Select(c => new SelectListItem { Text = c.Title, Value = c.Guid.ToString() });
-            ResearchDirections = mediator.Send(new SelectAllResearchDirectionsQuery()).Select(c => new SelectListItem { Text = c.Title, Value = c.Id.ToString() });
+            PositionTypes = mediator.Send(new SelectAllPositionTypesQuery()).Select(c => new SelectListItem { Text = c.title, Value = c.id.ToString() });
+            ResearchDirections = mediator.Send(new SelectAllResearchDirectionsQuery()).Select(c => new SelectListItem { Text = c.title, Value = c.id.ToString() });
 
             ContractTypes = new List<ContractType> { ContractType.Permanent, ContractType.FixedTerm }
                 .Select(c => new SelectListItem { Value = ((int)c).ToString(), Text = c.GetDescription() });
