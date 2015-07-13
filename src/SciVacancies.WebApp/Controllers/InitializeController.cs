@@ -90,17 +90,17 @@ namespace SciVacancies.WebApp.Controllers
 
 
 
-            var subGuid = _mediator.Send(new CreateSearchSubscriptionCommand
+            var subscriptionGuid = _mediator.Send(new CreateSearchSubscriptionCommand
             {
                 ResearcherGuid = resGuid,
                 Data = new SearchSubscriptionDataModel { Title = "Разведение лазерных акул" }
             });
 
 
-            Guid posGuid1 = _mediator.Send(new CreatePositionCommand
+            Guid vacancyGuid1 = _mediator.Send(new CreateVacancyCommand
             {
                 OrganizationGuid = orgGuid,
-                Data = new PositionDataModel
+                Data = new VacancyDataModel
                 {
                     Name = "Разводчик акул",
                     FullName = "Младший сотрудник по разведению лазерных акул",
@@ -109,10 +109,10 @@ namespace SciVacancies.WebApp.Controllers
                     ResearchDirectionId = 3026
                 }
             });
-            Guid posGuid2 = _mediator.Send(new CreatePositionCommand
+            Guid vacancyGuid2 = _mediator.Send(new CreateVacancyCommand
             {
                 OrganizationGuid = orgGuid,
-                Data = new PositionDataModel
+                Data = new VacancyDataModel
                 {
                     Name = "Настройщик лазеров",
                     FullName = "Младший сотрудник по настройке лазеров",
@@ -121,23 +121,15 @@ namespace SciVacancies.WebApp.Controllers
                     ResearchDirectionId = 2999
                 }
             });
-            var vacGuid1 = _mediator.Send(new PublishVacancyCommand
+            var vacancyGuid1_published = _mediator.Send(new PublishVacancyCommand
             {
-                OrganizationGuid = orgGuid,
-                PositionGuid = posGuid1,
-                Data = new VacancyDataModel
-                {
-                    Name = "Разводчик акул",
-                    FullName = "Младший сотрудник по разведению лазерных акул",
-                    ResearchDirection = "Аналитическая химия",
-                    OrganizationName = "Научно Исследотельский Институт Горных массивов"
-                }
+                VacancyGuid =  vacancyGuid1
             });
 
-            var posGuid3 = _mediator.Send(new CreatePositionCommand
+            var vacancyGuid3 = _mediator.Send(new CreateVacancyCommand
             {
                 OrganizationGuid = orgGuid1,
-                Data = new PositionDataModel
+                Data = new VacancyDataModel
                 {
                     Name = "Ремонтник всевидящего ока",
                     FullName = "Младший сотрудник по калибровке фокусного зеркала",
@@ -147,19 +139,9 @@ namespace SciVacancies.WebApp.Controllers
                 }
             });
 
-            Guid vacGuid3 = _mediator.Send(new PublishVacancyCommand
+            var vacancyGuid3_published = _mediator.Send(new PublishVacancyCommand
             {
-                OrganizationGuid = orgGuid1,
-                PositionGuid = posGuid3,
-                Data = new VacancyDataModel
-                {
-                    Name = "Ремонтник всевидящего ока",
-                    FullName = "Младший сотрудник по калибровке фокусного зеркала",
-                    PositionTypeGuid = Guid.Parse("b7280ace-d237-c007-42fe-ec4aed8f52d4"),
-                    ResearchDirection = "Аналитическая химия",
-                    ResearchDirectionId = 3026,
-                    OrganizationName = "НИИ добра"
-                }
+                VacancyGuid=  vacancyGuid3
             });
         }
     }

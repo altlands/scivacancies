@@ -57,7 +57,7 @@ namespace SciVacancies.WebApp.ViewModels
             get
             {
                 return _regions ?? (_regions = _mediator.Send(new SelectAllRegionsQuery())
-                    .Select(c => new SelectListItem {Value = c.Id.ToString(), Text = c.Title}));
+                    .Select(c => new SelectListItem {Value = c.id.ToString(), Text = c.title}));
             }
         }
 
@@ -110,7 +110,7 @@ namespace SciVacancies.WebApp.ViewModels
             get
             {
                 return _positions ?? (_positions = _mediator.Send(new SelectAllPositionTypesQuery())
-                    .Select(c => new SelectListItem { Value = c.Id.ToString(), Text = c.Title }));
+                    .Select(c => new SelectListItem { Value = c.id.ToString(), Text = c.title }));
             }
         }
 

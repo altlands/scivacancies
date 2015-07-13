@@ -3,7 +3,7 @@ using SciVacancies.WebApp.Commands;
 
 namespace SciVacancies.WebApp.Validation
 {
-    public class CreatePositionCommandValidator : AbstractValidator<CreatePositionCommand>
+    public class CreatePositionCommandValidator : AbstractValidator<CreateVacancyCommand>
     {
         public CreatePositionCommandValidator()
         {

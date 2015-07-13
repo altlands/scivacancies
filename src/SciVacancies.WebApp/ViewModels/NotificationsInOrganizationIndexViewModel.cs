@@ -7,7 +7,7 @@ namespace SciVacancies.WebApp.ViewModels
     public class NotificationsInOrganizationIndexViewModel
     {
      public Guid OrganizationGuid { get; set; }
-        public PagedList<Notification> PagedNotifications { get; set; }
+        public PagedList<OrganizationNotification> PagedNotifications { get; set; }
         public string Name { get; set; }
 
     }

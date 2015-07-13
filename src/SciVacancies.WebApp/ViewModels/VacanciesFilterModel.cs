@@ -8,11 +8,11 @@ namespace SciVacancies.WebApp.ViewModels
 
     public class VacanciesFilterModel
     {
-        public IEnumerable<string> Regions { get; set; }
-        public IEnumerable<string> Foivs { get; set; }
-        public IEnumerable<string> ResearchDirections { get; set; }
+        public IEnumerable<int> Regions { get; set; }
+        public IEnumerable<int> Foivs { get; set; }
+        public IEnumerable<int> ResearchDirections { get; set; }
         //TODO - переименовать в PositionTypes
-        public IEnumerable<string> Positions { get; set; }
+        public IEnumerable<int> Positions { get; set; }
         public IEnumerable<string> VacancyStates { get; set; }
 
         public int Period { get; set; }
