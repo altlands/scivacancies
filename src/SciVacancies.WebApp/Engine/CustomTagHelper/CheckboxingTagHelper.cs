@@ -12,7 +12,7 @@ namespace SciVacancies.WebApp
         [HtmlAttributeName("items")]
         public IEnumerable<SelectListItem> Items { get; set; }
         [HtmlAttributeName("values")]
-        public IEnumerable<string> Values { get; set; }
+        public IEnumerable<int> Values { get; set; }
         [HtmlAttributeName("property")]
         public string Property { get; set; }
         [HtmlAttributeName("showcount")]
@@ -35,14 +35,16 @@ namespace SciVacancies.WebApp
             var i = LabelForIndex;
             if (Values != null)
             {
-                var selectedCount = Items.Count(c => Values.Contains(c.Value));
+                var valuesString = Values.Select(c => c.ToString());
+
+                var selectedCount = Items.Count(c => valuesString.Contains(c.Value));
                 Showcount = selectedCount > Showcount ? selectedCount : Showcount;
-                foreach (var item in Items.Where(c => Values.Contains(c.Value)))
+                foreach (var item in Items.Where(c => valuesString.Contains(c.Value)))
                 {
                     i++;
                     AppendItem(output, i, item, true);
                 }
-                foreach (var item in Items.Where(c => !Values.Contains(c.Value)))
+                foreach (var item in Items.Where(c => !valuesString.Contains(c.Value)))
                 {
                     i++;
                     AppendItem(output, i, item, false);
