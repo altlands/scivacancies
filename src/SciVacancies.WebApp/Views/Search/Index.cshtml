@@ -7,8 +7,7 @@
 @model VacanciesFilterModel
 
 @{
-    int a, b, c;
-    ResearchDirectionViewModel researchDirection;
+    int a, b;
     var labelForIndex = 0;
 }
 
@@ -72,7 +71,7 @@
                     <div class="title"><span>Научное направление</span></div>
                     <ul class="sub-cat level-1">
                         @{
-                            researchDirection = (ResearchDirectionViewModel)ViewBag.FilterSource.ResearchDirections[0];
+                            var researchDirection = (ResearchDirectionViewModel)ViewBag.FilterSource.ResearchDirections[0];
                             labelForIndex = 0;
                             for (a = 0; a < researchDirection.Childs.Count; a++)
                             {
@@ -188,7 +187,7 @@
                                     <a asp-controller="vacancies" asp-action="card" asp-route-id="@item.Id" target="_blank">@item.Name</a>
                                 </div>
                                 <div class="inform">
-                                    <p>Дата размещения: @item.DateStart.ToLocalVacancyString()</p>
+                                    <p>Дата размещения: @(item.PublishDate?.ToLocalVacancyString())</p>
                                     <p>
                                         Регион: <span>@item.CityName</span>
                                     </p>
@@ -256,5 +255,5 @@
 
 
 <div class="b-bottom-nav">
-    <a href="/" class="small-icon icon-prev">Главная страницу</a>
+    <a href="/" class="small-icon icon-prev">Главная</a>
 </div>

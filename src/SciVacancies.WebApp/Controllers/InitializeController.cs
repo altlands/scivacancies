@@ -23,6 +23,8 @@ namespace SciVacancies.WebApp.Controllers
 
         public void Index()
         {
+            var rnd = new Random();
+
             _mediator.Send(new RemoveSearchIndexCommand());
             _mediator.Send(new CreateSearchIndexCommand());
 
@@ -30,7 +32,7 @@ namespace SciVacancies.WebApp.Controllers
             {
                 Data = new AccountResearcherRegisterViewModel
                 {
-                    Email = "researcher1@mailer.org",
+                    Email = $"researcher{rnd.Next(999)}@mailer.org",
                     Phone = "8-333-22-22",
                     UserName = "researcher1",
                     FirstName = "Генрих",
@@ -52,7 +54,7 @@ namespace SciVacancies.WebApp.Controllers
             {
                 Data = new AccountOrganizationRegisterViewModel
                 {
-                    Email = "organization1@mailer.org",
+                    Email = $"organization{rnd.Next(999)}@mailer.org",
                     UserName = "organization1",
                     Name = "Научно Исследотельский Институт Горных массивов",
                     ShortName = "НИИ Горных массивов",
@@ -74,7 +76,7 @@ namespace SciVacancies.WebApp.Controllers
             {
                 Data = new AccountOrganizationRegisterViewModel
                 {
-                    Email = "organization2@mailer.org",
+                    Email = $"organization{rnd.Next(2000,3000)}@mailer.org",
                     UserName = "organization2",
                     Name = "НИИ добра",
                     ShortName = "Good Science",
@@ -89,8 +91,6 @@ namespace SciVacancies.WebApp.Controllers
             var organization1 = _mediator.Send(createUserOrganizationCommand1);
             var organizationGuid1 = Guid.Parse(organization1.Claims.Single(s => s.ClaimType.Equals(ConstTerms.ClaimTypeOrganizationId)).ClaimValue);
 
-
-
             _mediator.Send(new CreateSearchSubscriptionCommand
             {
                 ResearcherGuid = resGuid,
@@ -99,7 +99,6 @@ namespace SciVacancies.WebApp.Controllers
 
 
             var positions = _mediator.Send(new SelectAllPositionTypesQuery()).ToList();
-            var rnd = new Random();
 
             var vacancyGuid1 = _mediator.Send(new CreateVacancyCommand
             {

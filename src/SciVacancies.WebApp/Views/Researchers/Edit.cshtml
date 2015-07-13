@@ -342,8 +342,8 @@
                     <label>Ученые звания:</label>
                 </div>
                 <div class="right-cell">
-                    <input asp-for="AcademicStatus" class="big-input" />
-                    <span asp-validation-for="AcademicStatus"></span>
+                    <input asp-for="ScienceRank" class="big-input" />
+                    <span asp-validation-for="ScienceRank"></span>
                 </div>
             </div>
             <div class="table-row form-row">
@@ -389,7 +389,7 @@
                                     <input type="hidden" asp-for="Publications[i].ResearcherGuid" />
                                     <input type="hidden" asp-for="Publications[i].Guid" />
                                     <input type="hidden" name="Publications.Index" value="@i" />
-                                    <input asp-for="Publications[i].Name" />
+                                    <input asp-for="Publications[i].Title" />
                                     <div class="buttons">
                                         @*<span class="big-link-edit"></span>*@
                                         <span class="big-link-remove"  onclick="return removeItemFromList(this);"></span>
