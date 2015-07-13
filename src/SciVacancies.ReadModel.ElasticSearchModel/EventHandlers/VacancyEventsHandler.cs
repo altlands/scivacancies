@@ -44,6 +44,7 @@ namespace SciVacancies.ReadModel.ElasticSearchModel.EventHandlers
         {
             Vacancy vacancy = _elasticClient.Get<Vacancy>(msg.VacancyGuid.ToString()).Source;
             vacancy.Status = VacancyStatus.Published;
+            vacancy.PublishDate = msg.TimeStamp;
 
             _elasticClient.Update<Vacancy>(u => u.IdFrom(vacancy).Doc(vacancy));
         }

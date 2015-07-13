@@ -43,52 +43,52 @@ namespace SciVacancies.IntegrationTests
         }
     }
 
-    public class AggregateTests
-    {
-        public IConfiguration Config { get; set; }
+    //public class AggregateTests
+    //{
+    //    public IConfiguration Config { get; set; }
 
-        public AggregateTests()
-        {
-            var config = new Configuration();
-            config.AddJsonFile("config.json");
-            Config = config;
-        }
+    //    public AggregateTests()
+    //    {
+    //        var config = new Configuration();
+    //        config.AddJsonFile("config.json");
+    //        Config = config;
+    //    }
 
-        public IStoreEvents GetEventStore()
-        {
-            return Wireup.Init()
-                    .UsingSqlPersistence(new MssqlConnectionFactory(Config.Get("DB:ConnectionString")))
-                        .WithDialect(new MsSqlDialect())
-                        .InitializeStorageEngine()
-                        .UsingJsonSerialization()
-                            .Compress()
-                  .Build();
-        }
+    //    public IStoreEvents GetEventStore()
+    //    {
+    //        return Wireup.Init()
+    //                .UsingSqlPersistence(new MssqlConnectionFactory(Config.Get("DB:ConnectionString")))
+    //                    .WithDialect(new MsSqlDialect())
+    //                    .InitializeStorageEngine()
+    //                    .UsingJsonSerialization()
+    //                        .Compress()
+    //              .Build();
+    //    }
 
-        [Fact]
-        public void Test1()
-        {
-            var store = GetEventStore();
-            var repository = new EventStoreRepository(store, new NullAggregateFactory(), new ConflictDetector());
-            var id = Guid.NewGuid();
-            var org1 = new Organization(id, new OrganizationDataModel() { Name = "Российский Фонд Фундаментальных Исследований", ShortName="РФФИ" });            
-            repository.Save(org1, Guid.NewGuid(), null);
-            var org2 = repository.GetById<Organization>(id);
+    //    [Fact]
+    //    public void Test1()
+    //    {
+    //        var store = GetEventStore();
+    //        var repository = new EventStoreRepository(store, new NullAggregateFactory(), new ConflictDetector());
+    //        var id = Guid.NewGuid();
+    //        var org1 = new Organization(id, new OrganizationDataModel() { Name = "Российский Фонд Фундаментальных Исследований", ShortName="РФФИ" });            
+    //        repository.Save(org1, Guid.NewGuid(), null);
+    //        var org2 = repository.GetById<Organization>(id);
 
-            Assert.NotNull(org2);
-            Assert.Equal(id, org2.Id);
-            //Assert.Equal("Российский Фонд Фундаментальных Исследований", org2.Data.Name);
-            //Assert.Equal("РФФИ", org2.);
-        }
-        [Fact]
-        public void OrganizationRegistration()
-        {
+    //        Assert.NotNull(org2);
+    //        Assert.Equal(id, org2.Id);
+    //        //Assert.Equal("Российский Фонд Фундаментальных Исследований", org2.Data.Name);
+    //        //Assert.Equal("РФФИ", org2.);
+    //    }
+    //    [Fact]
+    //    public void OrganizationRegistration()
+    //    {
 
-        }
-        [Fact]
-        public void ResearcherRegistration()
-        {
+    //    }
+    //    [Fact]
+    //    public void ResearcherRegistration()
+    //    {
 
-        }
-    }
+    //    }
+    //}
 }
