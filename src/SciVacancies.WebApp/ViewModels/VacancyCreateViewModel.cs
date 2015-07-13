@@ -180,5 +180,13 @@ namespace SciVacancies.WebApp.ViewModels
         public string ContactPhone { get; set; }
         public string ContactDetails { get; set; }
 
+
+
+        public string CityName { get; set; }
+        public EmploymentType EmploymentType { get; set; }
+        public OperatingScheduleType OperatingScheduleType { get; set; }
+        public int PositionTypeId { get; set; }
+        public int RegionId { get; set; }
+        //public List<Criterias>
     }
 }

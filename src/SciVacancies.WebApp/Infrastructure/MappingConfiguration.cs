@@ -25,7 +25,7 @@ namespace SciVacancies.WebApp.Infrastructure
 
             #endregion
 
-            /*Account*/
+            #region Account
 
             //researcher
             Mapper.CreateMap<AccountResearcherRegisterViewModel, ResearcherDataModel>()
@@ -33,6 +33,8 @@ namespace SciVacancies.WebApp.Infrastructure
             //organization
             Mapper.CreateMap<AccountOrganizationRegisterViewModel, OrganizationDataModel>();
             Mapper.CreateMap<OAuthOrgInformation, AccountOrganizationRegisterViewModel>();
+
+            #endregion
 
             #region Organization
 
@@ -436,59 +438,92 @@ namespace SciVacancies.WebApp.Infrastructure
 
             //vacancy
             Mapper.CreateMap<Vacancy, VacancyCreateViewModel>()
-                .ForMember(d => d, o => o.MapFrom(s => s))
-                .ForMember(d => d, o => o.MapFrom(s => s))
-                .ForMember(d => d, o => o.MapFrom(s => s))
-                .ForMember(d => d, o => o.MapFrom(s => s))
-                .ForMember(d => d, o => o.MapFrom(s => s))
-                .ForMember(d => d, o => o.MapFrom(s => s))
-                .ForMember(d => d, o => o.MapFrom(s => s))
-                .ForMember(d => d, o => o.MapFrom(s => s))
-                .ForMember(d => d, o => o.MapFrom(s => s))
-                .ForMember(d => d, o => o.MapFrom(s => s))
-                .ForMember(d => d, o => o.MapFrom(s => s))
-                .ForMember(d => d, o => o.MapFrom(s => s))
-                .ForMember(d => d, o => o.MapFrom(s => s))
-                .ForMember(d => d, o => o.MapFrom(s => s))
-                ;
+                .ForMember(d => d.Guid, o => o.MapFrom(s => s.guid))
+                .ForMember(d => d.Name, o => o.MapFrom(s => s.name))
+                .ForMember(d => d.FullName, o => o.MapFrom(s => s.fullname))
+                .ForMember(d => d.Tasks, o => o.MapFrom(s => s.tasks))
+                .ForMember(d => d.ResearchTheme, o => o.MapFrom(s => s.researchtheme))
+                .ForMember(d => d.CityName, o => o.MapFrom(s => s.cityname))
+                .ForMember(d => d.Details, o => o.MapFrom(s => s.details))
+                .ForMember(d => d.ContactName, o => o.MapFrom(s => s.contact_name))
+                .ForMember(d => d.ContactEmail, o => o.MapFrom(s => s.contact_email))
+                .ForMember(d => d.ContactPhone, o => o.MapFrom(s => s.contact_phone))
+                .ForMember(d => d.ContactDetails, o => o.MapFrom(s => s.contact_details))
+                .ForMember(d => d.SalaryFrom, o => o.MapFrom(s => s.salary_from))
+                .ForMember(d => d.SalaryTo, o => o.MapFrom(s => s.salary_to))
+                .ForMember(d => d.Bonuses, o => o.MapFrom(s => s.bonuses))
+                .ForMember(d => d.ContractType, o => o.MapFrom(s => s.contract_type))
+                .ForMember(d => d.ContractTime, o => o.MapFrom(s => s.contract_time))
+                .ForMember(d => d.EmploymentType, o => o.MapFrom(s => s.employment_type))
+                .ForMember(d => d.OperatingScheduleType, o => o.MapFrom(s => s.operatingschedule_type))
+                .ForMember(d => d.SocialPackage, o => o.MapFrom(s => s.socialpackage))
+                .ForMember(d => d.Rent, o => o.MapFrom(s => s.rent))
+                .ForMember(d => d.OfficeAccomodation, o => o.MapFrom(s => s.officeaccomodation))
+                .ForMember(d => d.TransportCompensation, o => o.MapFrom(s => s.transportcompensation))
+                .ForMember(d => d.PositionTypeId, o => o.MapFrom(s => s.positiontype_id))
+                .ForMember(d => d.RegionId, o => o.MapFrom(s => s.region_id))
+                .ForMember(d => d.ResearchDirectionId, o => o.MapFrom(s => s.researchdirection_id))
+                //.ForMember(d => d, o => o.MapFrom(s => s.criterias))
+                .ForMember(d => d.OrganizationGuid, o => o.MapFrom(s => s.organization_guid));
             Mapper.CreateMap<Vacancy, VacancyDetailsViewModel>()
-                .ForMember(d => d.guid, o => o.MapFrom(s => s.VacancyApplicationGuid))
-                .ForMember(d => d, o => o.MapFrom(s => s))
-                .ForMember(d => d, o => o.MapFrom(s => s))
-                .ForMember(d => d, o => o.MapFrom(s => s))
-                .ForMember(d => d, o => o.MapFrom(s => s))
-                .ForMember(d => d, o => o.MapFrom(s => s))
-                .ForMember(d => d, o => o.MapFrom(s => s))
-                .ForMember(d => d, o => o.MapFrom(s => s))
-                .ForMember(d => d, o => o.MapFrom(s => s))
-                .ForMember(d => d, o => o.MapFrom(s => s))
-                .ForMember(d => d, o => o.MapFrom(s => s))
-                .ForMember(d => d, o => o.MapFrom(s => s))
-                .ForMember(d => d, o => o.MapFrom(s => s))
-                .ForMember(d => d, o => o.MapFrom(s => s))
-                .ForMember(d => d, o => o.MapFrom(s => s))
-                .ForMember(d => d, o => o.MapFrom(s => s))
-                .ForMember(d => d, o => o.MapFrom(s => s))
-                .ForMember(d => d, o => o.MapFrom(s => s))
-                .ForMember(d => d, o => o.MapFrom(s => s))
-                ;
+                .ForMember(d => d.Guid, o => o.MapFrom(s => s.guid))
+                .ForMember(d => d.Name, o => o.MapFrom(s => s.name))
+                .ForMember(d => d.FullName, o => o.MapFrom(s => s.fullname))
+                .ForMember(d => d.Tasks, o => o.MapFrom(s => s.tasks))
+                .ForMember(d => d.ResearchTheme, o => o.MapFrom(s => s.researchtheme))
+                .ForMember(d => d.CityName, o => o.MapFrom(s => s.cityname))
+                .ForMember(d => d.Details, o => o.MapFrom(s => s.details))
+                .ForMember(d => d.ContactName, o => o.MapFrom(s => s.contact_name))
+                .ForMember(d => d.ContactEmail, o => o.MapFrom(s => s.contact_email))
+                .ForMember(d => d.ContactPhone, o => o.MapFrom(s => s.contact_phone))
+                .ForMember(d => d.ContactDetails, o => o.MapFrom(s => s.contact_details))
+                .ForMember(d => d.SalaryFrom, o => o.MapFrom(s => s.salary_from))
+                .ForMember(d => d.SalaryTo, o => o.MapFrom(s => s.salary_to))
+                .ForMember(d => d.Bonuses, o => o.MapFrom(s => s.bonuses))
+                .ForMember(d => d.ContractType, o => o.MapFrom(s => s.contract_type))
+                .ForMember(d => d.ContractTime, o => o.MapFrom(s => s.contract_time))
+                .ForMember(d => d.EmploymentType, o => o.MapFrom(s => s.employment_type))
+                .ForMember(d => d.OperatingScheduleType, o => o.MapFrom(s => s.operatingschedule_type))
+                .ForMember(d => d.SocialPackage, o => o.MapFrom(s => s.socialpackage))
+                .ForMember(d => d.Rent, o => o.MapFrom(s => s.rent))
+                .ForMember(d => d.OfficeAccomodation, o => o.MapFrom(s => s.officeaccomodation))
+                .ForMember(d => d.TransportCompensation, o => o.MapFrom(s => s.transportcompensation))
+                .ForMember(d => d.PositionTypeId, o => o.MapFrom(s => s.positiontype_id))
+                .ForMember(d => d.RegionId, o => o.MapFrom(s => s.region_id))
+                .ForMember(d => d.ResearchDirectionId, o => o.MapFrom(s => s.researchdirection_id))
+                //.ForMember(d => d., o => o.MapFrom(s => s.criterias))
+                .ForMember(d => d.OrganizationGuid, o => o.MapFrom(s => s.organization_guid));
             Mapper.CreateMap<VacancyCreateViewModel, VacancyDataModel>()
-                .ForMember(d => d, o => o.MapFrom(s => s))
-                .ForMember(d => d, o => o.MapFrom(s => s))
-                .ForMember(d => d, o => o.MapFrom(s => s))
-                .ForMember(d => d, o => o.MapFrom(s => s))
-                .ForMember(d => d, o => o.MapFrom(s => s))
-                .ForMember(d => d, o => o.MapFrom(s => s))
-                .ForMember(d => d, o => o.MapFrom(s => s))
-                .ForMember(d => d, o => o.MapFrom(s => s))
-                .ForMember(d => d, o => o.MapFrom(s => s))
-                .ForMember(d => d, o => o.MapFrom(s => s))
-                .ForMember(d => d, o => o.MapFrom(s => s))
-                .ForMember(d => d, o => o.MapFrom(s => s))
-                .ForMember(d => d, o => o.MapFrom(s => s))
-                .ForMember(d => d, o => o.MapFrom(s => s))
-                .ForMember(d => d, o => o.MapFrom(s => s))
-                .ForMember(d => d, o => o.MapFrom(s => s))
+                .ForMember(d => d.Name, o => o.MapFrom(s => s.Name))
+                .ForMember(d => d.FullName, o => o.MapFrom(s => s.FullName))
+                .ForMember(d => d.Tasks, o => o.MapFrom(s => s.Tasks))
+                .ForMember(d => d.ResearchTheme, o => o.MapFrom(s => s.ResearchTheme))
+                .ForMember(d => d.CityName, o => o.MapFrom(s => s.CityName))
+                .ForMember(d => d.Details, o => o.MapFrom(s => s.Details))
+                .ForMember(d => d.ContactName, o => o.MapFrom(s => s.ContactName))
+                .ForMember(d => d.ContactEmail, o => o.MapFrom(s => s.ContactEmail))
+                .ForMember(d => d.ContactPhone, o => o.MapFrom(s => s.ContactPhone))
+                .ForMember(d => d.ContactDetails, o => o.MapFrom(s => s.ContactDetails))
+                .ForMember(d => d.SalaryFrom, o => o.MapFrom(s => s.SalaryFrom))
+                .ForMember(d => d.SalaryTo, o => o.MapFrom(s => s.SalaryTo))
+                .ForMember(d => d.Bonuses, o => o.MapFrom(s => s.Bonuses))
+                .ForMember(d => d.ContractType, o => o.MapFrom(s => s.ContractType))
+                .ForMember(d => d.ContractTime, o => o.MapFrom(s => s.ContractTime))
+                .ForMember(d => d.EmploymentType, o => o.MapFrom(s => s.EmploymentType))
+                .ForMember(d => d.OperatingScheduleType, o => o.MapFrom(s => s.OperatingScheduleType))
+                .ForMember(d => d.SocialPackage, o => o.MapFrom(s => s.SocialPackage))
+                .ForMember(d => d.Rent, o => o.MapFrom(s => s.Rent))
+                .ForMember(d => d.OfficeAccomodation, o => o.MapFrom(s => s.OfficeAccomodation))
+                .ForMember(d => d.TransportCompensation, o => o.MapFrom(s => s.TransportCompensation))
+                //.ForMember(d => d.PositionType, o => o.MapFrom(s => s))
+                .ForMember(d => d.PositionTypeId, o => o.MapFrom(s => s.PositionTypeId))
+                //.ForMember(d => d.Region, o => o.MapFrom(s => s))
+                .ForMember(d => d.RegionId, o => o.MapFrom(s => s.RegionId))
+                .ForMember(d => d.ResearchDirection, o => o.MapFrom(s => s.ResearchDirection))
+                .ForMember(d => d.ResearchDirectionId, o => o.MapFrom(s => s.ResearchDirectionId))
+                //.ForMember(d => d.Criterias, o => o.MapFrom(s => s))
+                //.ForMember(d => d.OrganizationFoiv, o => o.MapFrom(s => s))
+                //.ForMember(d => d.OrganizationFoivId, o => o.MapFrom(s => s))
                 ;
 
             //TODO - VACANCY EDIT VIEW MODEL MAPPINGS
@@ -550,8 +585,6 @@ namespace SciVacancies.WebApp.Infrastructure
                 .ForMember(d => d.url, o => o.MapFrom(s => s.Url))
                 .ForMember(d => d.upload_date, o => o.MapFrom(s => s.UploadDate));
 
-            Mapper.CreateMap<ReadModel.ElasticSearchModel.Model.Vacancy, VacancyPublished>();
-
 
             /*VacancyApplication*/
 
@@ -563,18 +596,26 @@ namespace SciVacancies.WebApp.Infrastructure
 
             #endregion
 
-            #region Account
+            #region Dictionaries
 
-            //researcher
-            Mapper.CreateMap<AccountResearcherRegisterViewModel, ResearcherDataModel>()
-                .ForMember(dest => dest.BirthDate, src => src.MapFrom(c => new DateTime(c.BirthYear, 1, 1)));
-            //organization
-            Mapper.CreateMap<AccountOrganizationRegisterViewModel, OrganizationDataModel>();
+            Mapper.CreateMap<Foiv, FoivViewModel>()
+                .ForMember(d=>d.Id,o=>o.MapFrom(s=>s.id))
+                .ForMember(d => d.ParentId, o => o.MapFrom(s => s.parent_id))
+                .ForMember(d => d.Title, o => o.MapFrom(s => s.title))
+                .ForMember(d => d.ShortTitle, o => o.MapFrom(s => s.shorttitle));
+            Mapper.CreateMap<ResearchDirection, ResearchDirectionViewModel>()
+                .ForMember(d => d.Id, o => o.MapFrom(s => s.id))
+                .ForMember(d => d.ParentId, o => o.MapFrom(s => s.parent_id))
+                .ForMember(d => d.Title, o => o.MapFrom(s => s.title))
+                .ForMember(d => d.TitleEng, o => o.MapFrom(s => s.title_eng))
+                .ForMember(d => d.Lft, o => o.MapFrom(s => s.lft))
+                .ForMember(d => d.Rgt, o => o.MapFrom(s => s.rgt))
+                .ForMember(d => d.Lvl, o => o.MapFrom(s => s.lvl))
+                .ForMember(d => d.OecdCode, o => o.MapFrom(s => s.oecd_code))
+                .ForMember(d => d.WosCode, o => o.MapFrom(s => s.wos_code))
+                .ForMember(d => d.Root, o => o.MapFrom(s => s.root_id));
 
             #endregion
-            /*dictionaties*/
-            Mapper.CreateMap<Foiv, FoivViewModel>();
-            Mapper.CreateMap<ResearchDirection, ResearchDirectionViewModel>();
         }
     }
 }

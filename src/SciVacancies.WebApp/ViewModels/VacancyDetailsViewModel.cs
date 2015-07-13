@@ -158,5 +158,9 @@ namespace SciVacancies.WebApp.ViewModels
 
         public ResearcherDetailsViewModel Winner { get; set; }
         public ResearcherDetailsViewModel Pretender { get; set; }
+
+        public EmploymentType EmploymentType { get; set; }
+        public OperatingScheduleType OperatingScheduleType { get; set; }
+        public int PositionTypeId { get; set; }
     }
 }
