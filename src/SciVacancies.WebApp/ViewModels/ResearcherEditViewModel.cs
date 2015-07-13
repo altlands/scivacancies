@@ -50,7 +50,7 @@ namespace SciVacancies.WebApp.ViewModels
         public string OtherActivity { get; set; }
 
         public string ScienceDegree { get; set; }
-        public string AcademicStatus { get; set; }
+        public string ScienceRank { get; set; }
         public string Rewards { get; set; }
         public string Memberships { get; set; }
         public string Conferences { get; set; }
