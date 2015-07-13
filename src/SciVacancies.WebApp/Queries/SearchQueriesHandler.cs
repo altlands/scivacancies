@@ -33,14 +33,14 @@ namespace SciVacancies.WebApp.Queries
                                             )
                                             .Filter(f => f
                                                 .Terms<int>(ft => ft.OrganizationFoivId, msg.FoivIds)
-                                                && f.Terms<int>(ft => ft.PositionTypeId, msg.PositionsTypeIds)
+                                                && f.Terms<int>(ft => ft.PositionTypeId, msg.PositionTypeIds)
                                                 && f.Terms<int>(ft => ft.RegionId, msg.RegionIds)
                                                 && f.Terms<int>(ft => ft.ResearchDirectionId, msg.ResearchDirectionIds)
                                                 && f.Range(fr => fr
                                                     .GreaterOrEquals((long)msg.SalaryFrom)
                                                     .LowerOrEquals((long)msg.SalaryTo)
                                                 )
-                                                && f.Terms<VacancyStatus>(ft => ft.Status, msg.Statuses)
+                                                && f.Terms<VacancyStatus>(ft => ft.Status, msg.VacancyStatuses)
                                             )
                                         )
                                     )

@@ -17,12 +17,12 @@ namespace SciVacancies.WebApp.Queries
         public string OrderBy { get; set; }
 
         public IEnumerable<int> FoivIds { get; set; }
-        public IEnumerable<int> PositionsTypeIds { get; set; }
+        public IEnumerable<int> PositionTypeIds { get; set; }
         public IEnumerable<int> RegionIds { get; set; }
         public IEnumerable<int> ResearchDirectionIds { get; set; }
 
         public int SalaryFrom { get; set; }
         public int SalaryTo { get; set; }
-        public IEnumerable<VacancyStatus> Statuses { get; set; }
+        public IEnumerable<VacancyStatus> VacancyStatuses { get; set; }
     }
 }
