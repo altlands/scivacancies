@@ -13,7 +13,7 @@ namespace SciVacancies.WebApp.ViewModels
         public IEnumerable<int> ResearchDirections { get; set; }
         //TODO - переименовать в PositionTypes
         public IEnumerable<int> Positions { get; set; }
-        public IEnumerable<string> VacancyStates { get; set; }
+        public IEnumerable<int> VacancyStates { get; set; }
 
         public int Period { get; set; }
         public int PageSize { get; set; } = 10;
