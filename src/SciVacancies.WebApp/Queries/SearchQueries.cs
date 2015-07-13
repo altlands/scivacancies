@@ -1,4 +1,5 @@
-﻿using SciVacancies.ReadModel.ElasticSearchModel.Model;
+﻿using SciVacancies.Domain.Enums;
+using SciVacancies.ReadModel.ElasticSearchModel.Model;
 
 using System.Collections.Generic;
 
@@ -19,5 +20,9 @@ namespace SciVacancies.WebApp.Queries
         public IEnumerable<int> PositionsTypeIds { get; set; }
         public IEnumerable<int> RegionIds { get; set; }
         public IEnumerable<int> ResearchDirectionIds { get; set; }
+
+        public int SalaryFrom { get; set; }
+        public int SalaryTo { get; set; }
+        public IEnumerable<VacancyStatus> Statuses { get; set; }
     }
 }
