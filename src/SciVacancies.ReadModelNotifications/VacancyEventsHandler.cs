@@ -43,57 +43,109 @@ namespace SciVacancies.ReadModel.Notifications
         }
         public void Handle(VacancyPretenderSet msg)
         {
-            using (var transaction = _db.GetTransaction())
-            {
-                _db.Update(new Sql($"UPDATE org_vacancies SET pretender_researcher_guid = @0, pretender_vacancyapplication_guid = @1, update_date = @2 WHERE guid = @3", msg.PretenderReasearcherGuid, msg.PretenderVacancyApplicationGuid, msg.TimeStamp, msg.VacancyGuid));
-                transaction.Complete();
-            }
+            //List<Guid> researcherGuids = _db.Fetch<Guid>(new Sql($"SELECT va.researcher_guid FROM res_vacancyapplications va WHERE va.vacancy_guid = @0", msg.VacancyGuid));
+
+            //string title = "Ваша заявка на конкурс " + msg.VacancyGuid + " отправлена на комиссию";
+            //using (var transaction = _db.GetTransaction())
+            //{
+            //    foreach (Guid researcherGuid in researcherGuids)
+            //    {
+            //        _db.Insert(new Sql($"INSERT INTO res_notifications (guid, title, vacancy_guid, researcher_guid, creation_date) VALUES(@0, @1, @2, @3, @4)", Guid.NewGuid(), title, msg.VacancyGuid, researcherGuid, msg.TimeStamp));
+            //    }
+            //    transaction.Complete();
+            //}
         }
         public void Handle(VacancyOfferAcceptedByWinner msg)
         {
+            Vacancy vacancy = _db.SingleById<Vacancy>(msg.VacancyGuid);
+
+            VacancyApplication vacancyApplication = _db.Single<VacancyApplication>(new Sql($"SELECT va.* FROM res_vacancyapplications va WHERE va.guid = @0", vacancy.winner_vacancyapplication_guid));
+
+            string title = "На ваш конкурс " + msg.VacancyGuid + " заявка-победитель " + vacancyApplication.guid + " подписывает контракт";
             using (var transaction = _db.GetTransaction())
             {
-                _db.Update(new Sql($"UPDATE org_vacancies SET is_winner_accept = @0, status = @1, update_date = @2 WHERE guid = @3", true, VacancyStatus.OfferAccepted, msg.TimeStamp, msg.VacancyGuid));
+                _db.Insert(new Sql($"INSERT INTO org_notifications (guid, title, vacancyapplication_guid, organization_guid, creation_date) VALUES(@0, @1, @2, @3, @4)", Guid.NewGuid(), title, vacancyApplication.guid, msg.OrganizationGuid, msg.TimeStamp));
                 transaction.Complete();
             }
         }
         public void Handle(VacancyOfferRejectedByWinner msg)
         {
+            Vacancy vacancy = _db.SingleById<Vacancy>(msg.VacancyGuid);
+
+            VacancyApplication vacancyApplication = _db.Single<VacancyApplication>(new Sql($"SELECT va.* FROM res_vacancyapplications va WHERE va.guid = @0", vacancy.winner_vacancyapplication_guid));
+
+            string title = "На ваш конкурс " + msg.VacancyGuid + " заявка-победитель " + vacancyApplication.guid + " отказывается от контракта";
             using (var transaction = _db.GetTransaction())
             {
-                _db.Update(new Sql($"UPDATE org_vacancies SET is_winner_accept = @0, update_date = @1 WHERE guid = @2", false, msg.TimeStamp, msg.VacancyGuid));
+                _db.Insert(new Sql($"INSERT INTO org_notifications (guid, title, vacancyapplication_guid, organization_guid, creation_date) VALUES(@0, @1, @2, @3, @4)", Guid.NewGuid(), title, vacancyApplication.guid, msg.OrganizationGuid, msg.TimeStamp));
                 transaction.Complete();
             }
         }
         public void Handle(VacancyOfferAcceptedByPretender msg)
         {
+            Vacancy vacancy = _db.SingleById<Vacancy>(msg.VacancyGuid);
+
+            VacancyApplication vacancyApplication = _db.Single<VacancyApplication>(new Sql($"SELECT va.* FROM res_vacancyapplications va WHERE va.guid = @0", vacancy.pretender_vacancyapplication_guid));
+
+            string title = "На ваш конкурс " + msg.VacancyGuid + " заявка-претендент " + vacancyApplication.guid + " подписывает контракт";
             using (var transaction = _db.GetTransaction())
             {
-                _db.Update(new Sql($"UPDATE org_vacancies SET is_pretender_accept = @0, status = @1, update_date = @2 WHERE guid = @3", true, VacancyStatus.OfferAccepted, msg.TimeStamp, msg.VacancyGuid));
+                _db.Insert(new Sql($"INSERT INTO org_notifications (guid, title, vacancyapplication_guid, organization_guid, creation_date) VALUES(@0, @1, @2, @3, @4)", Guid.NewGuid(), title, vacancyApplication.guid, msg.OrganizationGuid, msg.TimeStamp));
                 transaction.Complete();
             }
         }
         public void Handle(VacancyOfferRejectedByPretender msg)
         {
+            Vacancy vacancy = _db.SingleById<Vacancy>(msg.VacancyGuid);
+
+            VacancyApplication vacancyApplication = _db.Single<VacancyApplication>(new Sql($"SELECT va.* FROM res_vacancyapplications va WHERE va.guid = @0", vacancy.pretender_vacancyapplication_guid));
+
+            string title = "На ваш конкурс " + msg.VacancyGuid + " заявка-претендент " + vacancyApplication.guid + " отказывается от контракта";
             using (var transaction = _db.GetTransaction())
             {
-                _db.Update(new Sql($"UPDATE org_vacancies SET is_pretender_accept = @0, status = @1, update_date = @2 WHERE guid = @3", false, VacancyStatus.OfferRejected, msg.TimeStamp, msg.VacancyGuid));
+                _db.Insert(new Sql($"INSERT INTO org_notifications (guid, title, vacancyapplication_guid, organization_guid, creation_date) VALUES(@0, @1, @2, @3, @4)", Guid.NewGuid(), title, vacancyApplication.guid, msg.OrganizationGuid, msg.TimeStamp));
                 transaction.Complete();
             }
         }
         public void Handle(VacancyClosed msg)
         {
+            Vacancy vacancy = _db.SingleById<Vacancy>(msg.VacancyGuid);
+
+            List<Guid> researcherLooserGuids = _db.Fetch<Guid>(new Sql($"SELECT va.researcher_guid FROM res_vacancyapplications va WHERE va.vacancy_guid = @0 AND va.guid != @1 AND va.guid != @2", msg.VacancyGuid, vacancy.winner_vacancyapplication_guid, vacancy.pretender_vacancyapplication_guid));
+
+            string looserTitle = "Ваша заявка на конкурс " + msg.VacancyGuid + " проиграла, конкурс закрыт";
+            string title = "Конкурс: " + msg.VacancyGuid + " закрыт";
             using (var transaction = _db.GetTransaction())
             {
-                _db.Update(new Sql($"UPDATE org_vacancies SET status = @0, update_date = @1 WHERE guid = @2", VacancyStatus.Closed, msg.TimeStamp, msg.VacancyGuid));
+                foreach (Guid researcherGuid in researcherLooserGuids)
+                {
+                    _db.Insert(new Sql($"INSERT INTO res_notifications (guid, title, vacancy_guid, researcher_guid, creation_date) VALUES(@0, @1, @2, @3, @4)", Guid.NewGuid(), looserTitle, msg.VacancyGuid, researcherGuid, msg.TimeStamp));
+                }
+                _db.Insert(new Sql($"INSERT INTO res_notifications (guid, title, vacancy_guid, researcher_guid, creation_date) VALUES(@0, @1, @2, @3, @4)", Guid.NewGuid(), title, msg.VacancyGuid, vacancy.winner_researcher_guid, msg.TimeStamp));
+                _db.Insert(new Sql($"INSERT INTO res_notifications (guid, title, vacancy_guid, researcher_guid, creation_date) VALUES(@0, @1, @2, @3, @4)", Guid.NewGuid(), title, msg.VacancyGuid, vacancy.pretender_researcher_guid, msg.TimeStamp));
                 transaction.Complete();
             }
+            //string title = "Ваша заявка на конкурс " + msg.VacancyGuid + " отправлена на комиссию";
+            //using (var transaction = _db.GetTransaction())
+            //{
+            //    foreach (Guid researcherGuid in researcherGuids)
+            //    {
+            //        _db.Insert(new Sql($"INSERT INTO res_notifications (guid, title, vacancy_guid, researcher_guid, creation_date) VALUES(@0, @1, @2, @3, @4)", Guid.NewGuid(), title, msg.VacancyGuid, researcherGuid, msg.TimeStamp));
+            //    }
+            //    transaction.Complete();
+            //}
         }
         public void Handle(VacancyCancelled msg)
         {
+            List<Guid> researcherGuids = _db.Fetch<Guid>(new Sql($"SELECT va.researcher_guid FROM res_vacancyapplications va WHERE va.vacancy_guid = @0", msg.VacancyGuid));
+
+            string title = "Ваша заявка на конкурс " + msg.VacancyGuid + " отменена. Причина: " + msg.Reason;
             using (var transaction = _db.GetTransaction())
             {
-                _db.Update(new Sql($"UPDATE org_vacancies SET status = @0, update_date = @1 WHERE guid = @2", VacancyStatus.Cancelled, msg.TimeStamp, msg.VacancyGuid));
+                foreach (Guid researcherGuid in researcherGuids)
+                {
+                    _db.Insert(new Sql($"INSERT INTO res_notifications (guid, title, vacancy_guid, researcher_guid, creation_date) VALUES(@0, @1, @2, @3, @4)", Guid.NewGuid(), title, msg.VacancyGuid, researcherGuid, msg.TimeStamp));
+                }
                 transaction.Complete();
             }
         }

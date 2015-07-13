@@ -12,7 +12,8 @@ namespace SciVacancies.WebApp.Queries
     public class OrganizationQueriesHandler :
         IRequestHandler<SingleOrganizationQuery, Organization>,
         IRequestHandler<SelectOrganizationsForAutocompleteQuery, IEnumerable<Organization>>,
-        IRequestHandler<SelectPagedOrganizationsQuery, Page<Organization>>
+        IRequestHandler<SelectPagedOrganizationsQuery, Page<Organization>>,
+        IRequestHandler<SelectOrganizationsByGuidsQuery, IEnumerable<Organization>>
     {
         private readonly IDatabase _db;
 
@@ -21,33 +22,39 @@ namespace SciVacancies.WebApp.Queries
             _db = db;
         }
 
-        public Organization Handle(SingleOrganizationQuery message)
+        public Organization Handle(SingleOrganizationQuery msg)
         {
-            if (message.OrganizationGuid == Guid.Empty) throw new ArgumentNullException($"OrganizationGuid is empty: {message.OrganizationGuid}");
+            if (msg.OrganizationGuid == Guid.Empty) throw new ArgumentNullException($"OrganizationGuid is empty: {msg.OrganizationGuid}");
 
-            Organization organization = _db.SingleOrDefaultById<Organization>(message.OrganizationGuid);
+            Organization organization = _db.SingleOrDefaultById<Organization>(msg.OrganizationGuid);
 
             return organization;
         }
-        public IEnumerable<Organization> Handle(SelectOrganizationsForAutocompleteQuery message)
+        public IEnumerable<Organization> Handle(SelectOrganizationsForAutocompleteQuery msg)
         {
-            if (String.IsNullOrEmpty(message.Query)) throw new ArgumentNullException($"Query is empty: {message.Query}");
+            if (String.IsNullOrEmpty(msg.Query)) throw new ArgumentNullException($"Query is empty: {msg.Query}");
 
             IEnumerable<Organization> organizations;
-            if (message.Take != 0)
+            if (msg.Take != 0)
             {
-                organizations = _db.FetchBy<Organization>(f => f.Where(w => w.name.Contains(message.Query))).Take(message.Take);
+                organizations = _db.FetchBy<Organization>(f => f.Where(w => w.name.Contains(msg.Query))).Take(msg.Take);
             }
             else
             {
-                organizations = _db.FetchBy<Organization>(f => f.Where(w => w.name.Contains(message.Query)));
+                organizations = _db.FetchBy<Organization>(f => f.Where(w => w.name.Contains(msg.Query)));
             }
 
             return organizations;
         }
-        public Page<Organization> Handle(SelectPagedOrganizationsQuery message)
+        public Page<Organization> Handle(SelectPagedOrganizationsQuery msg)
         {
-            Page<Organization> organizations = _db.Page<Organization>(message.PageIndex, message.PageSize, new Sql("SELECT o.* FROM org_organizations o ORDER BY o.guid DESC"));
+            Page<Organization> organizations = _db.Page<Organization>(msg.PageIndex, msg.PageSize, new Sql("SELECT o.* FROM org_organizations o ORDER BY o.guid DESC"));
+
+            return organizations;
+        }
+        public IEnumerable<Organization> Handle(SelectOrganizationsByGuidsQuery msg)
+        {
+            IEnumerable<Organization> organizations = _db.Fetch<Organization>(new Sql($"SELECT o.* FROM org_organizations o WHERE o.guid IN (@0) ORDER BY o.guid DESC", msg.OrganizationGuids));
 
             return organizations;
         }
