@@ -44,6 +44,6 @@ namespace SciVacancies.WebApp.ViewModels
             }
         }
 
-        public PagedList<Vacancy> Items { get; set; }
+        public PagedList<VacancyElasticResult> Items { get; set; }
     }
 }
