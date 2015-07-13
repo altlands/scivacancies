@@ -3,6 +3,7 @@ using System.Linq;
 using MediatR;
 using Microsoft.AspNet.Mvc;
 using SciVacancies.Domain.DataModels;
+using SciVacancies.Domain.Enums;
 using SciVacancies.WebApp.Commands;
 using SciVacancies.WebApp.Engine;
 using SciVacancies.WebApp.Queries;
@@ -58,6 +59,9 @@ namespace SciVacancies.WebApp.Controllers
                     UserName = "organization1",
                     Name = "Научно Исследотельский Институт Горных массивов",
                     ShortName = "НИИ Горных массивов",
+                    Address = "Ул. Василяб д.100",
+                    INN = "23093209230923",
+                    OGRN = "2309230923",
                     OrgFormId = 1,
                     FoivId = 42,
                     ActivityId = 1,
@@ -76,10 +80,13 @@ namespace SciVacancies.WebApp.Controllers
             {
                 Data = new AccountOrganizationRegisterViewModel
                 {
-                    Email = $"organization{rnd.Next(2000,3000)}@mailer.org",
+                    Email = $"organization{rnd.Next(2000, 3000)}@mailer.org",
                     UserName = "organization2",
                     Name = "НИИ добра",
                     ShortName = "Good Science",
+                    Address = "Луна, море спокойствия",
+                    INN = "2332232332",
+                    OGRN = "23111113",
                     OrgFormId = 2,
                     FoivId = 42,
                     ActivityId = 1,
@@ -94,7 +101,7 @@ namespace SciVacancies.WebApp.Controllers
             _mediator.Send(new CreateSearchSubscriptionCommand
             {
                 ResearcherGuid = resGuid,
-                Data = new SearchSubscriptionDataModel { Title = "Разведение лазерных акул" }
+                Data = new SearchSubscriptionDataModel { Title = "Разведение лазерных акул", Query = "" }
             });
 
 
@@ -107,7 +114,19 @@ namespace SciVacancies.WebApp.Controllers
                 {
                     Name = "Разводчик акул",
                     FullName = "Младший сотрудник по разведению лазерных акул",
-                    PositionTypeId = positions.Skip( rnd.Next(positions.Count()-1) ).First().id,
+                    Tasks = "чистить плавники у акул; кормить;",
+                    ContactName = "Доктор Зло",
+                    ContactEmail = "zlo@gmail.com",
+                    ContactPhone = "666-999",
+                    ContractType = ContractType.Permanent,
+                    EmploymentType = EmploymentType.Probation,
+                    OperatingScheduleType = OperatingScheduleType.Rotation,
+                    SocialPackage = false,
+                    Rent = false,
+                    OfficeAccomodation = true,
+                    TransportCompensation = true,
+                    PositionTypeId = positions.Skip(rnd.Next(positions.Count() - 1)).First().id,
+                    RegionId = 25,
                     ResearchDirection = "Аналитическая химия",
                     ResearchDirectionId = 3026
                 }
@@ -119,7 +138,19 @@ namespace SciVacancies.WebApp.Controllers
                 {
                     Name = "Настройщик лазеров",
                     FullName = "Младший сотрудник по настройке лазеров",
+                    Tasks = "калибровка зеркал лазеров; быть живой мешенью",
+                    ContactName = "Доктор Зло",
+                    ContactEmail = "zlo@gmail.com",
+                    ContactPhone = "666-999",
+                    ContractType = ContractType.Permanent,
+                    EmploymentType = EmploymentType.Probation,
+                    OperatingScheduleType = OperatingScheduleType.Rotation,
+                    SocialPackage = false,
+                    Rent = false,
+                    OfficeAccomodation = true,
+                    TransportCompensation = true,
                     PositionTypeId = positions.Skip(rnd.Next(positions.Count() - 1)).First().id,
+                    RegionId = 26,
                     ResearchDirection = "Прикладная математика",
                     ResearchDirectionId = 2999
                 }
@@ -133,7 +164,19 @@ namespace SciVacancies.WebApp.Controllers
                 {
                     Name = "Ремонтник всевидящего ока",
                     FullName = "Младший сотрудник по калибровке фокусного зеркала",
+                    Tasks = "калибровка зеркала Саурона;",
+                    ContactName = "Саурон Сауронович",
+                    ContactEmail = "sauron@thering.com",
+                    ContactPhone = "900923-322",
+                    ContractType = ContractType.FixedTerm,
+                    EmploymentType = EmploymentType.Full,
+                    OperatingScheduleType = OperatingScheduleType.FullTime,
+                    SocialPackage = true,
+                    Rent = true,
+                    OfficeAccomodation = true,
+                    TransportCompensation = false,
                     PositionTypeId = positions.Skip(rnd.Next(positions.Count() - 1)).First().id,
+                    RegionId = 29,
                     ResearchDirection = "Аналитическая химия",
                     ResearchDirectionId = 3026
                 }
