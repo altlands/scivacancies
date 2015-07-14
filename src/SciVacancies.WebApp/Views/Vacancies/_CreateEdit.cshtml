@@ -33,16 +33,16 @@
                     <span asp-validation-for="FullName"></span>
                 </div>
             </div>
+
             <div class="table-row form-row">
                 <div class="left-cell">
                     <label>Должность:</label>
                 </div>
                 <div class="right-cell">
-                    <a onclick="javascript: return false;" class="link-add lk-icon italic open-popup" data-modal="PositionTypeGuid">Выбрать должность</a>
-                    <input type="hidden" asp-for="PositionTypeGuid" />
-                    <span asp-validation-for="PositionTypeGuid"></span>
-                    <!-- <select asp-for="PositionTypeGuid"
-                            asp-items="Model.PositionTypes"></select> -->
+                    <input type="text" disabled asp-for="PositionType" clas="big-input" />
+                    <a onclick="javascript: return false;" class="link-add lk-icon italic open-popup" data-modal="PositionTypeId">Выбрать должность</a>
+                    <input type="hidden" asp-for="PositionTypeId" />
+                    <span asp-validation-for="PositionTypeId"></span>
                 </div>
             </div>
 
@@ -52,6 +52,7 @@
                     <label>Отрасль науки:</label>
                 </div>
                 <div class="right-cell">
+                    <input type="text" disabled asp-for="ResearchDirection" clas="big-input" />
                     <a onclick="javascript: return false;" class="link-add lk-icon italic open-popup" data-modal="ResearchDirectionId">Добавить из Государственного рубрикатора научно-технической информации</a>
                     <input type="hidden" asp-for="ResearchDirectionId" />
                     <span asp-validation-for="ResearchDirectionId"></span>
@@ -69,11 +70,39 @@
 
             <div class="table-row form-row">
                 <div class="left-cell">
-                    <label>Дата окончания: <br/> приема заявок</label>
+                    <label>Дата окончания: <br /> приема заявок</label>
                 </div>
                 <div class="right-cell">
                     <input asp-for="InCommitteeDate" class="big-input" />
                     <span asp-validation-for="InCommitteeDate"></span>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <div class="row">
+        <div class="bold row-title">Место:</div>
+        <div class="table-form">
+
+            <div class="table-row form-row">
+                <div class="left-cell">
+                    <label>Регион:</label>
+                </div>
+                <div class="right-cell">
+                    <input type="text" disabled asp-for="Region" clas="big-input"/> 
+                    <a onclick="javascript: return false;" class="link-add lk-icon italic open-popup" data-modal="RegionId">Выбрать регион</a>
+                    <input type="hidden" asp-for="RegionId"/>
+                    <span asp-validation-for="RegionId"></span>
+                </div>
+            </div>
+
+            <div class="table-row form-row">
+                <div class="left-cell">
+                    <label>Населенный пункт:</label>
+                </div>
+                <div class="right-cell">
+                    <input asp-for="CityName" class="big-input" />
+                    <span asp-validation-for="CityName"></span>
                 </div>
             </div>
 
@@ -227,6 +256,33 @@
                     <textarea as-for="details"></textarea>
                 </div>
             </div>
+
+            <div class="table-row form-row">
+                <div class="left-cell">
+                    <label>Тип занятости:</label>
+                </div>
+                <div class="right-cell">
+                    <div class="inline-block w290 sorting">
+                        <select asp-for="EmploymentType"
+                                asp-items="Model.EmploymentTypes"></select>
+                        <span asp-validation-for="EmploymentType"></span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="table-row form-row">
+                <div class="left-cell">
+                    <label>Режим работы:</label>
+                </div>
+                <div class="right-cell">
+                    <div class="inline-block w290 sorting">
+                        <select asp-for="OperatingScheduleType"
+                                asp-items="Model.OperatingScheduleTypes"></select>
+                        <span asp-validation-for="OperatingScheduleType"></span>
+                    </div>
+                </div>
+            </div>
+
         </div>
     </div>
 
@@ -286,17 +342,18 @@
 </form>
 
 
-<div class="window-popup middle" style="display: none;" data-name="ResearchDirectionId">
+
+<div class="window-popup middle" style="display: none;" data-name="PositionTypeId">
     <span class="close-popup"></span>
     <div class="title-popup">
-        <h4>Выбор отрасли науки</h4>
+        <h4>Выбор должности</h4>
     </div>
     <div class="content-popup" style="overflow: scroll;">
         <div>
-            @foreach (var item in Model.ResearchDirections)
+            @foreach (var item in Model.PositionTypes)
             {
                 <text>
-                <a href="#" onclick="javascript: return selectedItemFromModalDictionary('ResearchDirectionId', '@item.Value', '@item.Text');">
+                <a href="#" onclick="javascript: return selectedItemFromModalDictionary('PositionTypeId', 'PositionType','@item.Value', '@item.Text');">
                     @item.Text
                 </a>
 
@@ -309,19 +366,40 @@
     </div>
 </div>
 
+<div class="window-popup middle" style="display: none;" data-name="ResearchDirectionId">
+    <span class="close-popup"></span>
+    <div class="title-popup">
+        <h4>Выбор отрасли науки</h4>
+    </div>
+    <div class="content-popup" style="overflow: scroll;">
+        <div>
+            @foreach (var item in Model.ResearchDirections)
+            {
+                <text>
+                <a href="#" onclick="javascript: return selectedItemFromModalDictionary('ResearchDirectionId', 'ResearchDirection','@item.Value', '@item.Text');">
+                    @item.Text
+                </a>
 
+                <br />
+                <br />
 
-<div class="window-popup middle" style="display: none;" data-name="PositionTypeGuid">
+                </text>
+            }
+        </div>
+    </div>
+</div>
+
+<div class="window-popup middle" style="display: none;" data-name="RegionId">
     <span class="close-popup"></span>
     <div class="title-popup">
         <h4>Выбор должности</h4>
     </div>
     <div class="content-popup" style="overflow: scroll;">
         <div>
-            @foreach (var item in Model.PositionTypes)
+            @foreach (var item in Model.Regions)
             {
                 <text>
-                <a href="#" onclick="javascript: return selectedItemFromModalDictionary('PositionTypeGuid', '@item.Value', '@item.Text');">
+                <a href="#" onclick="javascript: return selectedItemFromModalDictionary('RegionId', 'Region','@item.Value', '@item.Text');">
                     @item.Text
                 </a>
 

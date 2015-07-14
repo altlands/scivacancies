@@ -31,17 +31,20 @@ namespace SciVacancies.WebApp
                 case VacancyStatus.InProcess:
                     return "draft";
                 case VacancyStatus.Published:
+                    return "executed";
                 case VacancyStatus.InCommittee:
                     return "work";
                 case VacancyStatus.Closed:
-                    return "executed";
-                case VacancyStatus.Cancelled:
                     return "failed";
+                case VacancyStatus.Cancelled:
+                    return "work";
                 case VacancyStatus.OfferAccepted:
                     return "work";
                 case VacancyStatus.OfferRejected:
+                    return "failed";
                 case VacancyStatus.Removed:
-                default:  return "failed";
+                    return "failed";
+                default:  return null;
             }
         }
 
@@ -49,16 +52,20 @@ namespace SciVacancies.WebApp
         {
             switch (value)
             {
+                case VacancyApplicationStatus.InProcess:
+                    return "draft";
                 case VacancyApplicationStatus.Cancelled:
+                    return "failed";
                 case VacancyApplicationStatus.Removed:
                     return "failed";
-                case VacancyApplicationStatus.InProcess:
                 case VacancyApplicationStatus.Applied:
-                case VacancyApplicationStatus.Lost:
-                    return "work"; 
+                    return "work";
                 case VacancyApplicationStatus.Won:
+                    return "executed";
                 case VacancyApplicationStatus.Pretended:
                     return "executed";
+                case VacancyApplicationStatus.Lost:
+                    return "failed";
                 default:
                     return null;
             }

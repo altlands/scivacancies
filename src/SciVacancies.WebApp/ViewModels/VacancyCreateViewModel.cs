@@ -50,16 +50,40 @@ namespace SciVacancies.WebApp.ViewModels
 
             PositionTypes = mediator.Send(new SelectAllPositionTypesQuery()).Select(c => new SelectListItem { Text = c.title, Value = c.id.ToString() });
             ResearchDirections = mediator.Send(new SelectAllResearchDirectionsQuery()).Select(c => new SelectListItem { Text = c.title, Value = c.id.ToString() });
+            Regions= mediator.Send(new SelectAllRegionsQuery()).Select(c => new SelectListItem { Text = c.title, Value = c.id.ToString() });
 
             ContractTypes = new List<ContractType> { ContractType.Permanent, ContractType.FixedTerm }
                 .Select(c => new SelectListItem { Value = ((int)c).ToString(), Text = c.GetDescription() });
+
+
+            EmploymentTypes = new List<EmploymentType>
+            {
+               EmploymentType.Full,
+               EmploymentType.Partial,
+               EmploymentType.Probation,
+               EmploymentType.Temporary,
+               EmploymentType.Volunteering
+            }
+                .Select(c => new SelectListItem { Value = ((int)c).ToString(), Text = c.GetDescription() });
+
+            OperatingScheduleTypes = new List<OperatingScheduleType>
+            {
+                OperatingScheduleType.Flexible,
+                OperatingScheduleType.FullTime,
+                OperatingScheduleType.Remote,
+                OperatingScheduleType.Replacement,
+                OperatingScheduleType.Rotation
+            }
+                .Select(c => new SelectListItem { Value = ((int)c).ToString(), Text = c.GetDescription() });
         }
 
+        
         /// <summary>
         /// Guid должности из справочника
         /// </summary>
         [Required(ErrorMessage = "Требуется выбрать Должность", AllowEmptyStrings = false)]
-        public Guid PositionTypeGuid { get; set; }
+        public int PositionTypeId { get; set; }
+        public string PositionType { get; set; }
         public IEnumerable<SelectListItem> PositionTypes { get; set; }
 
         /// <summary>
@@ -181,12 +205,21 @@ namespace SciVacancies.WebApp.ViewModels
         public string ContactDetails { get; set; }
 
 
+        [Required(ErrorMessage = "Требуется выбрать тип занятости")]
+        public EmploymentType EmploymentType { get; set; }
+        public IEnumerable<SelectListItem> EmploymentTypes { get; set; }
+
+        [Required(ErrorMessage = "Требуется выбрать режим работы")]
+        public OperatingScheduleType OperatingScheduleType { get; set; }
+        public IEnumerable<SelectListItem> OperatingScheduleTypes { get; set; }
+
+        [Required(ErrorMessage = "Требуется выбрать регион")]
+        public int RegionId { get; set; }
+        public string Region { get; set; }
+        public IEnumerable<SelectListItem> Regions { get; set; }
 
         public string CityName { get; set; }
-        public EmploymentType EmploymentType { get; set; }
-        public OperatingScheduleType OperatingScheduleType { get; set; }
-        public int PositionTypeId { get; set; }
-        public int RegionId { get; set; }
+
         //public List<Criterias>
     }
 }

@@ -286,9 +286,9 @@ function updateQueryStringParameter(uri, key, value) {
 /*
  * Выбрать отрасли науки
  */
-function selectedItemFromModalDictionary(hiddenInputName, newValue, displayText) {
+function selectedItemFromModalDictionary(hiddenInputName, textInput, newValue, displayText) {
     $("#" + hiddenInputName).val(newValue);
-    $("#" + hiddenInputName).siblings("a")[0].innerText = displayText;
+    $("#" + textInput).val(displayText);
     $("div[data-name=\"" + hiddenInputName + "\"]").find(".close-popup").click();
     return false;
 };

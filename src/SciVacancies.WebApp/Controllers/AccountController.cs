@@ -42,16 +42,28 @@ namespace SciVacancies.WebApp.Controllers
             _userManager = userManager;
         }
 
+        public IActionResult LoginUser(string id)
+        {
+            var user = id=="user1" ? _userManager.FindByName("researcher1") : _userManager.FindByName("researcher2");
+            var identity = _userManager.CreateIdentity(user, DefaultAuthenticationTypes.ApplicationCookie);
+            var cp = new ClaimsPrincipal(identity);
+            Context.Response.SignIn(DefaultAuthenticationTypes.ApplicationCookie, cp);
+            return RedirectToHome();
+        }
+        public IActionResult LoginOrganization()
+        {
+            var user = _userManager.FindByName("organization1");
+            var identity = _userManager.CreateIdentity(user, DefaultAuthenticationTypes.ApplicationCookie);
+            var cp = new ClaimsPrincipal(identity);
+            Context.Response.SignIn(DefaultAuthenticationTypes.ApplicationCookie, cp);
+            return RedirectToHome();
+        }
+
         [PageTitle("Вход")]
         [ResponseCache(NoStore = true)]
         [HttpPost]
         public ActionResult Login(AccountLoginViewModel model)
         {
-            var user = model.IsResearcher ? _userManager.FindByName("researcher1") : _userManager.FindByName("organization1");
-            var identity = _userManager.CreateIdentity(user, DefaultAuthenticationTypes.ApplicationCookie);
-            var cp = new ClaimsPrincipal(identity);
-            Context.Response.SignIn(DefaultAuthenticationTypes.ApplicationCookie, cp);
-
             //TODO - uncomment to pin it down to any job
             //if (model.IsResearcher)
             //{
@@ -74,8 +86,7 @@ namespace SciVacancies.WebApp.Controllers
 
             //    return Redirect(authorizationUrl);
             //}
-
-            return RedirectToHome();
+            return null;
         }
 
         #region OAuth
@@ -179,6 +190,8 @@ namespace SciVacancies.WebApp.Controllers
                 var orgClaim = JsonConvert.DeserializeObject<OAuthOrgClaim>(claims.FirstOrDefault(f => f.Type.Equals("org")).Value);
 
                 OAuthOrgInformation organizationInformation =JsonConvert.DeserializeObject<OAuthOrgInformation>(GetOrganizationInfo(orgClaim.Inn));
+                //TODO: AccountController -> Organization -> ntemnikov : десериализовать
+                //TODO: AccountController -> Organization -> ntemnikov : замапить данные и отправить в комманду
                 //TODO - достаём из claims ИНН
                 //TODO - забираем из их API данные по инн
                 //AccountOrganizationRegisterViewModel orgModel = Mapper.Map<AccountOrganizationRegisterViewModel>(organizationInformation);
