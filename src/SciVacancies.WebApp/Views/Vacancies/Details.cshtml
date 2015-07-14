@@ -108,6 +108,28 @@
     <span class="blue-btn middle-icon icon-print-button" style="margin-right: 15px;" rel="tooltip" title="Распечатать все заявки">Распечатать все заявки</span>
 }
 
+@if (Model.Status == VacancyStatus.InCommittee)
+{
+    if (Model.WinnerRequestDate.HasValue)
+    {
+        //ожидаем ответ от победителя
+        if (!Model.WinnerResponseDate.HasValue)
+        {
+            <a asp-controller="vacancies" asp-action="winnerdecision" asp-route-id="@Model.Guid" asp-route-iswinner="true" asp-route-decision="true" title="Победитель принял">Победитель принял</a>
+            <a asp-controller="vacancies" asp-action="winnerdecision" asp-route-id="@Model.Guid" asp-route-iswinner="true" asp-route-decision="false" title="Победитель отказался">Победитель отказался</a>
+        }
+        else //ожидаем ответ от претендента
+        {
+            if (Model.IsWinnerAccept.HasValue && !Model.IsWinnerAccept.Value)
+            {
+                <a asp-controller="vacancies" asp-action="winnerdecision" asp-route-id="@Model.Guid" asp-route-iswinner="false" asp-route-decision="true" title="Претендент принял">Претендент принял</a>
+                <a asp-controller="vacancies" asp-action="winnerdecision" asp-route-id="@Model.Guid" asp-route-iswinner="false" asp-route-decision="false" title="Претендент отказался">Претендент отказался</a>
+
+            }
+        }
+    }
+}
+
 <br />
 <br />
 <br />

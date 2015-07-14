@@ -103,27 +103,6 @@
                         {
                             <a asp-controller="vacancies" asp-action="close" asp-route-id="@item.guid" title="Выбрать победителя">Закрыть вакансию</a>
                         }
-                        @if (item.status == VacancyStatus.InCommittee)
-                        {
-                            if (item.winner_request_date.HasValue)
-                            {
-                                //ожидаем ответ от победителя
-                                if (!item.winner_response_date.HasValue)
-                                {
-                                    <a asp-controller="vacancies" asp-action="winnerdecision" asp-route-id="@item.guid" asp-route-isWinner="true"  asp-route-decision="true" title="Победитель принял">Победитель принял</a>
-                                    <a asp-controller="vacancies" asp-action="winnerdecision" asp-route-id="@item.guid" asp-route-isWinner="true"  asp-route-decision="false" title="Победитель отказался">Победитель отказался</a>
-                                }
-                                else //ожидаем ответ от претендента
-                                {
-                                    if (item.is_winner_accept.HasValue && !item.is_winner_accept.Value)
-                                    {
-                                    <a asp-controller="vacancies" asp-action="winnerdecision" asp-route-id="@item.guid" asp-route-isWinner="false" asp-route-decision="true" title="Претендент принял">Претендент принял</a>
-                                    <a asp-controller="vacancies" asp-action="winnerdecision" asp-route-id="@item.guid" asp-route-isWinner="false" asp-route-decision="false" title="Претендент отказался">Претендент отказался</a>
-
-                                    }
-                                }
-                            }
-                        }
                     </td>
                 </tr>
                 </text>
