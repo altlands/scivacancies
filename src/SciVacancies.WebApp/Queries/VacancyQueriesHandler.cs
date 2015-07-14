@@ -39,9 +39,9 @@ namespace SciVacancies.WebApp.Queries
             Page<Vacancy> vacancies =
                 message.PublishedOnly
                 ?
-                _db.Page<Vacancy>(message.PageIndex, message.PageSize, new Sql($"SELECT v.* FROM org_vacancies v WHERE v.status = @0 ORDER BY v.publish_date DESC", (int)VacancyStatus.Published))
+                _db.Page<Vacancy>(message.PageIndex, message.PageSize, new Sql($"SELECT v.* FROM org_vacancies v WHERE v.status = @0 ORDER BY v.publish_date DESC", VacancyStatus.Published))
                 :
-                _db.Page<Vacancy>(message.PageIndex, message.PageSize, new Sql($"SELECT v.* FROM org_vacancies v ORDER BY v.publish_date DESC"))
+                _db.Page<Vacancy>(message.PageIndex, message.PageSize, new Sql($"SELECT v.* FROM org_vacancies v WHERE v.status != @0 ORDER BY v.publish_date DESC", VacancyStatus.Removed))
                 ;
 
             return vacancies;
@@ -50,7 +50,7 @@ namespace SciVacancies.WebApp.Queries
         {
             if (message.OrganizationGuid == Guid.Empty) throw new ArgumentNullException($"OrganizationGuid is empty: {message.OrganizationGuid}");
 
-            Page<Vacancy> vacancies = _db.Page<Vacancy>(message.PageIndex, message.PageSize, new Sql($"SELECT v.* FROM org_vacancies v WHERE v.organization_guid = @0 ORDER BY v.guid DESC", message.OrganizationGuid));
+            Page<Vacancy> vacancies = _db.Page<Vacancy>(message.PageIndex, message.PageSize, new Sql($"SELECT v.* FROM org_vacancies v WHERE v.organization_guid = @0 AND v.status != @1 ORDER BY v.guid DESC", message.OrganizationGuid, VacancyStatus.Removed));
 
             return vacancies;
         }
@@ -61,11 +61,11 @@ namespace SciVacancies.WebApp.Queries
             IEnumerable<Vacancy> vacancies;
             if (message.Take != 0)
             {
-                vacancies = _db.FetchBy<Vacancy>(f => f.Where(w => w.name.Contains(message.Query))).Take(message.Take);
+                vacancies = _db.FetchBy<Vacancy>(f => f.Where(w => w.name.Contains(message.Query) && w.status != VacancyStatus.Removed)).Take(message.Take);
             }
             else
             {
-                vacancies = _db.FetchBy<Vacancy>(f => f.Where(w => w.name.Contains(message.Query)));
+                vacancies = _db.FetchBy<Vacancy>(f => f.Where(w => w.name.Contains(message.Query) && w.status != VacancyStatus.Removed));
             }
 
             return vacancies;
@@ -74,7 +74,7 @@ namespace SciVacancies.WebApp.Queries
         {
             if (message.OrganizationGuid == Guid.Empty) throw new ArgumentNullException($"OrganizationGuid is empty: {message.OrganizationGuid}");
 
-            Page<Vacancy> vacancies = _db.Page<Vacancy>(message.PageIndex, message.PageSize, new Sql($"SELECT v.* FROM org_vacancies v  WHERE v.organization_guid = @0 AND v.status = @1 ORDER BY v.guid DESC", message.OrganizationGuid, (int)VacancyStatus.Closed));
+            Page<Vacancy> vacancies = _db.Page<Vacancy>(message.PageIndex, message.PageSize, new Sql($"SELECT v.* FROM org_vacancies v  WHERE v.organization_guid = @0 AND v.status = @1 ORDER BY v.guid DESC", message.OrganizationGuid, VacancyStatus.Closed));
 
             return vacancies;
         }

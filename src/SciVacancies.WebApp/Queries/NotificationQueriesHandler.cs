@@ -1,4 +1,5 @@
-﻿using SciVacancies.ReadModel.Core;
+﻿using SciVacancies.Domain.Enums;
+using SciVacancies.ReadModel.Core;
 
 using System;
 
@@ -31,7 +32,7 @@ namespace SciVacancies.WebApp.Queries
         {
             if (msg.ResearcherGuid == Guid.Empty) throw new ArgumentNullException($"ResearcherGuid is empty: {msg.ResearcherGuid}");
 
-            Page<ResearcherNotification> notifications = _db.Page<ResearcherNotification>(msg.PageIndex, msg.PageSize, new Sql($"SELECT n.* FROM res_notifications n WHERE n.researcher_guid = @0 ORDER BY n.guid DESC", msg.ResearcherGuid));
+            Page<ResearcherNotification> notifications = _db.Page<ResearcherNotification>(msg.PageIndex, msg.PageSize, new Sql($"SELECT n.* FROM res_notifications n WHERE n.researcher_guid = @0 AND n.status != @1 ORDER BY n.guid DESC", msg.ResearcherGuid, NotificationStatus.Removed));
 
             return notifications;
         }
@@ -48,7 +49,7 @@ namespace SciVacancies.WebApp.Queries
         {
             if (msg.OrganizationGuid == Guid.Empty) throw new ArgumentNullException($"OrganizationGuid is empty: {msg.OrganizationGuid}");
 
-            Page<OrganizationNotification> notifications = _db.Page<OrganizationNotification>(msg.PageIndex, msg.PageSize, new Sql($"SELECT n.* FROM org_notifications n WHERE n.organization_guid = @0 ORDER BY n.guid DESC", msg.OrganizationGuid));
+            Page<OrganizationNotification> notifications = _db.Page<OrganizationNotification>(msg.PageIndex, msg.PageSize, new Sql($"SELECT n.* FROM org_notifications n WHERE n.organization_guid = @0 AND n.status != @1  ORDER BY n.guid DESC", msg.OrganizationGuid, NotificationStatus.Removed));
 
             return notifications;
         }

@@ -25,7 +25,7 @@ namespace SciVacancies.WebApp.Queries
         {
             if (message.SearchSubscriptionGuid == Guid.Empty) throw new ArgumentNullException($"SearchSubscriptionGuid is empty: {message.SearchSubscriptionGuid}");
 
-            SearchSubscription searchSubscription = _db.SingleOrDefault<SearchSubscription>(new Sql($"SELECT s.* FROM res_searchsubscriptions s WHERE s.guid = @0 AND s.status != @1", message.SearchSubscriptionGuid, (int)SearchSubscriptionStatus.Removed));
+            SearchSubscription searchSubscription = _db.SingleOrDefault<SearchSubscription>(new Sql($"SELECT s.* FROM res_searchsubscriptions s WHERE s.guid = @0 AND s.status != @1", message.SearchSubscriptionGuid, SearchSubscriptionStatus.Removed));
 
             return searchSubscription;
         }
@@ -35,7 +35,7 @@ namespace SciVacancies.WebApp.Queries
 
             //TODO - фильтрация и сортировка
 
-            Page<SearchSubscription> searchSubscriptions = _db.Page<SearchSubscription>(message.PageIndex, message.PageSize, new Sql($"SELECT s.* FROM res_searchsubscriptions s WHERE s.researcher_guid = @0 AND s.status != @1 ORDER BY s.guid DESC", message.ResearcherGuid, (int)SearchSubscriptionStatus.Removed));
+            Page<SearchSubscription> searchSubscriptions = _db.Page<SearchSubscription>(message.PageIndex, message.PageSize, new Sql($"SELECT s.* FROM res_searchsubscriptions s WHERE s.researcher_guid = @0 AND s.status != @1 ORDER BY s.guid DESC", message.ResearcherGuid, SearchSubscriptionStatus.Removed));
 
             return searchSubscriptions;
         }

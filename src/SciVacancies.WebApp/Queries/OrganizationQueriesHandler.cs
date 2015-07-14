@@ -1,4 +1,5 @@
-﻿using SciVacancies.ReadModel.Core;
+﻿using SciVacancies.Domain.Enums;
+using SciVacancies.ReadModel.Core;
 
 using System;
 using System.Collections.Generic;
@@ -38,24 +39,24 @@ namespace SciVacancies.WebApp.Queries
             IEnumerable<Organization> organizations;
             if (msg.Take != 0)
             {
-                organizations = _db.FetchBy<Organization>(f => f.Where(w => w.name.Contains(msg.Query))).Take(msg.Take);
+                organizations = _db.FetchBy<Organization>(f => f.Where(w => w.name.Contains(msg.Query) && w.status != OrganizationStatus.Removed)).Take(msg.Take);
             }
             else
             {
-                organizations = _db.FetchBy<Organization>(f => f.Where(w => w.name.Contains(msg.Query)));
+                organizations = _db.FetchBy<Organization>(f => f.Where(w => w.name.Contains(msg.Query) && w.status != OrganizationStatus.Removed));
             }
 
             return organizations;
         }
         public Page<Organization> Handle(SelectPagedOrganizationsQuery msg)
         {
-            Page<Organization> organizations = _db.Page<Organization>(msg.PageIndex, msg.PageSize, new Sql("SELECT o.* FROM org_organizations o ORDER BY o.guid DESC"));
+            Page<Organization> organizations = _db.Page<Organization>(msg.PageIndex, msg.PageSize, new Sql("SELECT o.* FROM org_organizations o WHERE o.status != @0 ORDER BY o.guid DESC", OrganizationStatus.Removed));
 
             return organizations;
         }
         public IEnumerable<Organization> Handle(SelectOrganizationsByGuidsQuery msg)
         {
-            IEnumerable<Organization> organizations = _db.Fetch<Organization>(new Sql($"SELECT o.* FROM org_organizations o WHERE o.guid IN (@0) ORDER BY o.guid DESC", msg.OrganizationGuids));
+            IEnumerable<Organization> organizations = _db.Fetch<Organization>(new Sql($"SELECT o.* FROM org_organizations o WHERE o.guid IN (@0) AND o.status != @1 ORDER BY o.guid DESC", msg.OrganizationGuids, OrganizationStatus.Removed));
 
             return organizations;
         }
