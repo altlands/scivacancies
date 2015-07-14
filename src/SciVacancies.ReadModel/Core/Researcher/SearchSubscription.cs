@@ -12,6 +12,7 @@ namespace SciVacancies.ReadModel.Core
     {
         public string title { get; set; }
         public string query { get; set; }
+        public string orderby { get; set; }
 
         public string foiv_ids { get; set; }
         public string positiontype_ids { get; set; }
@@ -20,6 +21,11 @@ namespace SciVacancies.ReadModel.Core
         public int salary_from { get; set; }
         public int salary_to { get; set; }
         public string vacancy_statuses { get; set; }
+
+        public long currenttotal_count { get; set; }
+        public DateTime? currentcheck_date { get; set; }
+        public long lasttotal_count { get; set; }
+        public DateTime? lastcheck_date { get; set; }
 
         public SearchSubscriptionStatus status { get; set; }
 

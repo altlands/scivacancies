@@ -12,6 +12,7 @@ namespace SciVacancies.SmtpNotifications.Handlers
 {
     public class VacancyEventsHandler :
         INotificationHandler<VacancyInCommittee>,
+        INotificationHandler<VacancyPretenderSet>,
         INotificationHandler<VacancyOfferAcceptedByWinner>,
         INotificationHandler<VacancyOfferRejectedByWinner>,
         INotificationHandler<VacancyOfferAcceptedByPretender>,
@@ -34,6 +35,10 @@ namespace SciVacancies.SmtpNotifications.Handlers
             {
 
             }
+        }
+        public void Handle(VacancyPretenderSet msg)
+        {
+
         }
         public void Handle(VacancyOfferAcceptedByWinner msg)
         {

@@ -15,6 +15,7 @@ namespace SciVacancies.Domain.DataModels
         /// Поисковой запрос
         /// </summary>
         public string Query { get; set; }
+        public string OrderBy { get; set; }
 
         public IEnumerable<int> FoivIds { get; set; }
         public IEnumerable<int> PositionTypeIds { get; set; }

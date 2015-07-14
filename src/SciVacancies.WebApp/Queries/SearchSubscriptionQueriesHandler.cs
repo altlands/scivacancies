@@ -2,6 +2,7 @@
 using SciVacancies.ReadModel.Core;
 
 using System;
+using System.Collections.Generic;
 
 using NPoco;
 using MediatR;
@@ -37,6 +38,12 @@ namespace SciVacancies.WebApp.Queries
             Page<SearchSubscription> searchSubscriptions = _db.Page<SearchSubscription>(message.PageIndex, message.PageSize, new Sql($"SELECT s.* FROM res_searchsubscriptions s WHERE s.researcher_guid = @0 AND s.status != @1 ORDER BY s.guid DESC", message.ResearcherGuid, (int)SearchSubscriptionStatus.Removed));
 
             return searchSubscriptions;
+        }
+        public IEnumerable<SearchSubscription> Handle(SelectActiveSearchSubscriptionsQuery msg)
+        {
+            IEnumerable<SearchSubscription> searchsubscriptions = _db.Fetch<SearchSubscription>(new Sql($"SELECT * FROM res_searchsubscriptions ss WHERE ss.status = @0", SearchSubscriptionStatus.Active));
+
+            return searchsubscriptions;
         }
     }
 }
