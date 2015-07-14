@@ -46,6 +46,7 @@ namespace SciVacancies.ReadModel.EventHandlers
             using (var transaction = _db.GetTransaction())
             {
                 _db.Update(updatedOrganization);
+                //TODO - без удаления надо
                 _db.Execute(new Sql($"DELETE FROM org_researchdirections WHERE organization_guid = @0", msg.OrganizationGuid));
                 foreach (ResearchDirection rd in updatedOrganization.researchdirections)
                 {
