@@ -13,6 +13,13 @@ namespace SciVacancies.WebApp.Commands
 
         public VacancyApplicationDataModel Data { get; set; }
     }
+    public class CreateAndApplyVacancyApplicationCommand : CommandBase, IRequest<Guid>
+    {
+        public Guid ResearcherGuid { get; set; }
+        public Guid VacancyGuid { get; set; }
+
+        public VacancyApplicationDataModel Data { get; set; }
+    }
     public class UpdateVacancyApplicationTemplateCommand : CommandBase, IRequest
     {
         public Guid ResearcherGuid { get; set; }

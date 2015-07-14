@@ -121,7 +121,7 @@ namespace SciVacancies.WebApp.Controllers
             _mediator.Send(new CreateSearchSubscriptionCommand
             {
                 ResearcherGuid = researcherGuid1,
-                Data = new SearchSubscriptionDataModel { Title = "Разведение лазерных акул", Query = "" }
+                Data = new SearchSubscriptionDataModel { Title = "Разведение лазерных акул", Query = "",OrderBy= "relevant" }
             });
 
 
