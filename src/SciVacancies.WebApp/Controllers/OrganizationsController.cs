@@ -94,7 +94,7 @@ namespace SciVacancies.WebApp.Controllers
 
             var model = new VacanciesInOrganizationIndexViewModel
             {
-                PagedVacancies = _mediator.Send(new SelectPagedVacanciesByOrganizationQuery { OrganizationGuid = organizationGuid, PageSize = pageSize, PageIndex = currentPage }).MapToPagedList(),
+                PagedVacancies = _mediator.Send(new SelectPagedClosedVacanciesByOrganizationQuery { OrganizationGuid = organizationGuid, PageSize = pageSize, PageIndex = currentPage }).MapToPagedList(),
                 Name = preModel.name
             };
             return View(model);

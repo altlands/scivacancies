@@ -5,7 +5,7 @@
 
 <div class="crumbs">
     <a href="/">Главная</a><span class="separator">/</span>
-    <a asp-controller="organizations" asp-action="account">@Model.OrganizationName</a><span class="separator">/</span>
+    <a asp-controller="organizations" asp-action="account">Карточка организации</a><span class="separator">/</span>
     <a asp-controller="organizations" asp-action="vacancies">Вакансии</a><span class="separator">/</span>
     @ViewBag.Title
 </div>
@@ -18,6 +18,29 @@
 
 <div class="content-popup">
 
+    <a asp-controller="vacancies" asp-action="copy" asp-route-id="@Model.Guid" class="btn btn-info btn-xs" title="Копировать вакансию">Копировать вакансию</a>
+    @if (Model.Status == VacancyStatus.InProcess)
+    {
+        <a asp-controller="vacancies" asp-action="edit" asp-route-id="@Model.Guid" class="btn btn-info btn-xs" title="Изменить">Изменить</a>
+        <a asp-controller="vacancies" asp-action="delete" asp-route-id="@Model.Guid" onclick="javascript: return confirm('Вы уверены что хотите удалить вакансию?');" class="btn btn-info btn-xs" title="Удалить">Удалить</a>
+        <a asp-controller="vacancies" asp-action="publish" asp-route-id="@Model.Guid" class="btn btn-info btn-xs" title="Опубликовать">Опубликовать</a>
+    }
+    @if (Model.Status == VacancyStatus.Published || Model.Status == VacancyStatus.InCommittee)
+    {
+        <a asp-controller="vacancies" asp-action="cancel" asp-route-id="@Model.Guid" onclick="javascript: return confirm('Вы уверены что хотите отменить вакансию?');" class="btn btn-info btn-xs" title="Отменить вакансию">Отменить вакансию</a>
+    }
+    @if (Model.Status == VacancyStatus.Published)
+    {
+        <a asp-controller="vacancies" asp-action="startincommittee" asp-route-id="@Model.Guid" class="btn btn-info btn-xs" title="Перевести на рассмотрение">Перевести на рассмотрение</a>
+    }
+    @if (Model.Status == VacancyStatus.OfferAccepted || Model.Status == VacancyStatus.OfferRejected)
+    {
+        <a asp-controller="vacancies" asp-action="close" asp-route-id="@Model.Guid" class="btn btn-info btn-xs" title="Выбрать победителя">Выбрать победителя</a>
+    }
+
+    <br />
+    <br />
+
     @Component.Invoke("VacancyInfo", Model)
 
     <h4 class="mt45 mb12">Поданные заявки</h4>
@@ -27,7 +50,7 @@
             <tr>
                 <th>
                     <div class="inline-block">
-                        <img src="images/icons/arrow-bottom-tab.png" class="va-middle" />
+                        @*<img src="/images/icons/arrow-bottom-tab.png" class="va-middle" />*@
                     </div>
                     <div class="inline-block ml6 va-middle">
                         №
@@ -35,7 +58,7 @@
                 </th>
                 <th>
                     <div class="inline-block">
-                        <img src="images/icons/tab-head.png" class="va-middle" />
+                        @*<img src="/images/icons/tab-head.png" class="va-middle" />*@
                     </div>
                     <div class="inline-block ml6 va-middle">Дата подачи заявки</div>
                 </th>
