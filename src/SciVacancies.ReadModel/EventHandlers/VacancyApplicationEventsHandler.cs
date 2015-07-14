@@ -35,6 +35,7 @@ namespace SciVacancies.ReadModel.EventHandlers
                 _db.Insert(vacancyApplication);
                 foreach (Attachment at in vacancyApplication.attachments)
                 {
+                    if (at.guid == Guid.Empty) at.guid = Guid.NewGuid();
                     at.vacancyapplication_guid = vacancyApplication.guid;
                     _db.Insert(at);
                 }
@@ -54,6 +55,7 @@ namespace SciVacancies.ReadModel.EventHandlers
                 _db.Execute(new Sql($"DELETE FROM res_attachments WHERE vacancyapplication_guid = @0", msg.VacancyApplicationGuid));
                 foreach (Attachment at in updatedVacancyApplication.attachments)
                 {
+                    if (at.guid == Guid.Empty) at.guid = Guid.NewGuid();
                     at.vacancyapplication_guid = vacancyApplication.guid;
                     _db.Insert(at);
                 }
