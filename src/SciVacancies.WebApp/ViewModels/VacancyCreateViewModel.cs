@@ -82,6 +82,7 @@ namespace SciVacancies.WebApp.ViewModels
         /// Guid должности из справочника
         /// </summary>
         [Required(ErrorMessage = "Требуется выбрать Должность", AllowEmptyStrings = false)]
+        [Range(1, int.MaxValue, ErrorMessage = "Требуется выбрать Должность")]
         public int PositionTypeId { get; set; }
         public string PositionType { get; set; }
         public IEnumerable<SelectListItem> PositionTypes { get; set; }
@@ -103,6 +104,7 @@ namespace SciVacancies.WebApp.ViewModels
         /// </summary>
         public string ResearchDirection { get; set; }
         [Required(ErrorMessage = "Требуется выбрать Отрасль науки")]
+        [Range(1, int.MaxValue, ErrorMessage = "Требуется выбрать Отрасль науки")]
         public int ResearchDirectionId { get; set; }
         public IEnumerable<SelectListItem> ResearchDirections { get; set; }
 
@@ -214,6 +216,7 @@ namespace SciVacancies.WebApp.ViewModels
         public IEnumerable<SelectListItem> OperatingScheduleTypes { get; set; }
 
         [Required(ErrorMessage = "Требуется выбрать регион")]
+        [Range(1, int.MaxValue, ErrorMessage = "Требуется выбрать регион")]
         public int RegionId { get; set; }
         public string Region { get; set; }
         public IEnumerable<SelectListItem> Regions { get; set; }
