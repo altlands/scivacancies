@@ -58,7 +58,7 @@ namespace SciVacancies.ReadModel.EventHandlers
 
             using (var transaction = _db.GetTransaction())
             {
-                _db.Update(vacancy);
+                _db.Update(updatedVacancy);
                 _db.Execute(new Sql($"DELETE FROM org_vacancycriterias WHERE vacancy_guid = @0", msg.VacancyGuid));
                 foreach (VacancyCriteria vc in vacancy.criterias)
                 {

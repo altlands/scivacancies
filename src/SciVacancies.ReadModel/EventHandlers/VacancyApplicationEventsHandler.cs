@@ -50,7 +50,7 @@ namespace SciVacancies.ReadModel.EventHandlers
 
             using (var transaction = _db.GetTransaction())
             {
-                _db.Update(vacancyApplication);
+                _db.Update(updatedVacancyApplication);
                 _db.Execute(new Sql($"DELETE FROM res_attachments WHERE vacancyapplication_guid = @0", msg.VacancyApplicationGuid));
                 foreach (Attachment at in updatedVacancyApplication.attachments)
                 {
