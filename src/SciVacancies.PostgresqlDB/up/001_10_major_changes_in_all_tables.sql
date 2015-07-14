@@ -216,7 +216,9 @@ CREATE TABLE org_vacancies
   is_pretender_accept boolean,
   publish_date timestamp without time zone,
   committee_date timestamp without time zone,
+  awaiting_date timestamp without time zone,
   announcement_date timestamp without time zone,
+  cancel_reason text,
   organization_guid uuid NOT NULL REFERENCES org_organizations(guid) ON DELETE CASCADE,
   status smallint NOT NULL DEFAULT 0,
   creation_date timestamp without time zone NOT NULL,
@@ -267,7 +269,7 @@ CREATE TABLE res_favoritevacancies
 
 
 DROP TABLE "Attachments";
-CREATE TABLE res_attachments
+CREATE TABLE res_vacancyapplication_attachments
 (
   guid uuid NOT NULL DEFAULT uuid_in((md5(((random())::text || (now())::text)))::cstring),
   name text NOT NULL,
@@ -277,9 +279,21 @@ CREATE TABLE res_attachments
   vacancyapplication_guid uuid NOT NULL REFERENCES res_vacancyapplications(guid) ON DELETE CASCADE,
   upload_date timestamp without time zone NOT NULL,
 
-  CONSTRAINT attachment_pkey PRIMARY KEY (guid)
+  CONSTRAINT vacancyapplication_attachment_pkey PRIMARY KEY (guid)
 );
 
+CREATE TABLE org_vacancy_attachments
+(
+  guid uuid NOT NULL DEFAULT uuid_in((md5(((random())::text || (now())::text)))::cstring),
+  name text NOT NULL,
+  size bigint NOT NULL,
+  extension text NOT NULL,
+  url text NOT NULL,
+  vacancy_guid uuid NOT NULL REFERENCES org_vacancies(guid) ON DELETE CASCADE,
+  upload_date timestamp without time zone NOT NULL,
+
+  CONSTRAINT vacancy_attachment_pkey PRIMARY KEY (guid)
+);
 
 CREATE TABLE "org_vacancycriterias"
 (

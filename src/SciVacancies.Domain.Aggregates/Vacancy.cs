@@ -24,6 +24,8 @@ namespace SciVacancies.Domain.Aggregates
         public Guid PretenderVacancyApplicationGuid { get; set; }
         private bool? IsPretenderAccept { get; set; }
 
+        private string CancelReason { get; set; }
+
         public Vacancy()
         {
 
@@ -115,7 +117,7 @@ namespace SciVacancies.Domain.Aggregates
         }
         public void WinnerAcceptOffer()
         {
-            if (Status == VacancyStatus.InCommittee
+            if (Status == VacancyStatus.OfferResponseAwaiting
                 && WinnerResearcherGuid != Guid.Empty
                 && WinnerVacancyApplicationGuid != Guid.Empty
                 && PretenderResearcherGuid != Guid.Empty
@@ -130,7 +132,7 @@ namespace SciVacancies.Domain.Aggregates
         }
         public void WinnerRejectOffer()
         {
-            if (Status == VacancyStatus.InCommittee
+            if (Status == VacancyStatus.OfferResponseAwaiting
                 && WinnerResearcherGuid != Guid.Empty
                 && WinnerVacancyApplicationGuid != Guid.Empty
                 && PretenderResearcherGuid != Guid.Empty
@@ -145,7 +147,7 @@ namespace SciVacancies.Domain.Aggregates
         }
         public void PretenderAcceptOffer()
         {
-            if (Status == VacancyStatus.InCommittee
+            if (Status == VacancyStatus.OfferResponseAwaiting
                 && WinnerResearcherGuid != Guid.Empty
                 && WinnerVacancyApplicationGuid != Guid.Empty
                 && PretenderResearcherGuid != Guid.Empty
@@ -161,7 +163,7 @@ namespace SciVacancies.Domain.Aggregates
         }
         public void PretenderRejectOffer()
         {
-            if (Status == VacancyStatus.InCommittee
+            if (Status == VacancyStatus.OfferResponseAwaiting
                 && WinnerResearcherGuid != Guid.Empty
                 && WinnerVacancyApplicationGuid != Guid.Empty
                 && PretenderResearcherGuid != Guid.Empty
@@ -245,6 +247,7 @@ namespace SciVacancies.Domain.Aggregates
         {
             this.PretenderResearcherGuid = @event.PretenderReasearcherGuid;
             this.PretenderVacancyApplicationGuid = @event.PretenderVacancyApplicationGuid;
+            this.Status = VacancyStatus.OfferResponseAwaiting;
         }
         public void Apply(VacancyOfferAcceptedByWinner @event)
         {
@@ -271,6 +274,7 @@ namespace SciVacancies.Domain.Aggregates
         }
         public void Apply(VacancyCancelled @event)
         {
+            this.CancelReason = @event.Reason;
             this.Status = VacancyStatus.Cancelled;
         }
 

@@ -46,9 +46,9 @@ namespace SciVacancies.WebApp.Queries
             return vacancyApplications;
         }
 
-        public IEnumerable<Attachment> Handle(SelectVacancyApplicationAttachmentsQuery msg)
+        public IEnumerable<VacancyApplicationAttachment> Handle(SelectVacancyApplicationAttachmentsQuery msg)
         {
-            IEnumerable<Attachment> vaAttachments = _db.Fetch<Attachment>(new Sql($"SELECT * FROM res_attachments ra WHERE ra.vacancyapplication_guid = @0", msg.VacancyApplicationGuid));
+            IEnumerable<VacancyApplicationAttachment> vaAttachments = _db.Fetch<VacancyApplicationAttachment>(new Sql($"SELECT * FROM res_vacancyapplication_attachments ra WHERE ra.vacancyapplication_guid = @0", msg.VacancyApplicationGuid));
 
             return vaAttachments;
         }

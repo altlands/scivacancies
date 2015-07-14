@@ -41,11 +41,17 @@ namespace SciVacancies.ReadModel.EventHandlers
             using (var transaction = _db.GetTransaction())
             {
                 _db.Insert(vacancy);
-                foreach(VacancyCriteria vc in vacancy.criterias)
+                foreach (VacancyCriteria vc in vacancy.criterias)
                 {
                     if (vc.guid == Guid.Empty) vc.guid = Guid.NewGuid();
                     vc.vacancy_guid = vacancy.guid;
                     _db.Insert(vc);
+                }
+                foreach (VacancyAttachment at in vacancy.attachments)
+                {
+                    if (at.guid == Guid.Empty) at.guid = Guid.NewGuid();
+                    at.vacancy_guid = vacancy.guid;
+                    _db.Insert(at);
                 }
                 transaction.Complete();
             }
@@ -61,11 +67,18 @@ namespace SciVacancies.ReadModel.EventHandlers
             {
                 _db.Update(updatedVacancy);
                 _db.Execute(new Sql($"DELETE FROM org_vacancycriterias WHERE vacancy_guid = @0", msg.VacancyGuid));
+                _db.Execute(new Sql($"DELETE FROM org_vacancy_attachments WHERE vacancy_guid = @0", msg.VacancyGuid));
                 foreach (VacancyCriteria vc in vacancy.criterias)
                 {
                     if (vc.guid == Guid.Empty) vc.guid = Guid.NewGuid();
                     vc.vacancy_guid = vacancy.guid;
                     _db.Insert(vc);
+                }
+                foreach (VacancyAttachment at in vacancy.attachments)
+                {
+                    if (at.guid == Guid.Empty) at.guid = Guid.NewGuid();
+                    at.vacancy_guid = vacancy.guid;
+                    _db.Insert(at);
                 }
                 transaction.Complete();
             }

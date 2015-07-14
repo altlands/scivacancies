@@ -161,6 +161,7 @@ namespace SciVacancies.Domain.DataModels
         #endregion
 
         public List<VacancyCriteria> Criterias { get; set; }
+        public List<VacancyAttachment> Attachments { get; set; }
 
         public string OrganizationFoiv { get; set; }
         public int OrganizationFoivId { get; set; }

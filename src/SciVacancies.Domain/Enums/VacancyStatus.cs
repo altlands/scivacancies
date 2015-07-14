@@ -24,33 +24,40 @@ namespace SciVacancies.Domain.Enums
         InCommittee = 2,
 
         /// <summary>
-        /// Вакансия закрыта, результаты объявлены
+        /// Ожидается решение победителя (будет подписывать контракт или нет).
+        /// Если победитель отказался, то ожидается решение претендента
         /// </summary>
-        [Description("Закрыта")]
-        Closed = 3,
-
-        /// <summary>
-        /// Вакансия отменена
-        /// </summary>
-        [Description("Отменена")]
-        Cancelled = 4,
+        [Description("Предложение контракта")]
+        OfferResponseAwaiting = 3,
 
         /// <summary>
         /// Контракт подписан с победителем или претендентом
         /// </summary>
         [Description("Контракт подписан")]
-        OfferAccepted = 5,
+        OfferAccepted = 4,
 
         /// <summary>
         /// И победитель и претендент отказались от подписания контракта
         /// </summary>
         [Description("Контракт отклонён")]
-        OfferRejected = 6,
+        OfferRejected = 5,
+
+        /// <summary>
+        /// Вакансия закрыта, результаты объявлены
+        /// </summary>
+        [Description("Закрыта")]
+        Closed = 6,
+
+        /// <summary>
+        /// Вакансия отменена
+        /// </summary>
+        [Description("Отменена")]
+        Cancelled = 7,
 
         /// <summary>
         /// Вакансия удалена и недоступна для организации (вакансию можно удалить, если она ещё не была опубликована)
         /// </summary>
         [Description("Удалена")]
-        Removed = 7
+        Removed = 8
     }
 }
