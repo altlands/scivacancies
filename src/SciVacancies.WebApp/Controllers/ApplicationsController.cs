@@ -36,6 +36,8 @@ namespace SciVacancies.WebApp.Controllers
                 throw new ArgumentNullException(nameof(vacancyGuid));
 
             var researcher = _mediator.Send(new SingleResearcherQuery { ResearcherGuid = researcherGuid });
+            researcher.educations= _mediator.Send(new SelectResearcherEducationsQuery { ResearcherGuid = researcherGuid }).ToList();
+            researcher.publications= _mediator.Send(new SelectResearcherPublicationsQuery { ResearcherGuid = researcherGuid }).ToList();
             var vacancy = _mediator.Send(new SingleVacancyQuery { VacancyGuid = vacancyGuid });
 
             //TODO: оптимизировать запрос и его обработку
@@ -101,6 +103,8 @@ namespace SciVacancies.WebApp.Controllers
 
             //с формы мы не оплучам практически никакие данные, поэтоу заново наполняем ViewModel
             var researcher = _mediator.Send(new SingleResearcherQuery { ResearcherGuid = researcherGuid });
+            researcher.educations = _mediator.Send(new SelectResearcherEducationsQuery { ResearcherGuid = researcherGuid }).ToList();
+            researcher.publications = _mediator.Send(new SelectResearcherPublicationsQuery { ResearcherGuid = researcherGuid }).ToList();
             model.Conferences = researcher.conferences;
             model.Educations= researcher.educations;
             model.Email = researcher.email;
