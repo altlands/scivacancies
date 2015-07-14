@@ -2,7 +2,7 @@
 
 namespace SciVacancies.Domain.Core
 {
-    public class Attachment
+    public class VacancyApplicationAttachment
     {
         /// <summary>
         /// Guid прикреплённого файла
@@ -17,7 +17,7 @@ namespace SciVacancies.Domain.Core
         /// <summary>
         /// Размер файла в байтах
         /// </summary>
-        public long  Size { get; set; }
+        public long Size { get; set; }
 
         /// <summary>
         /// Расширение файла

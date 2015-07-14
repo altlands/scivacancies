@@ -410,6 +410,7 @@ namespace SciVacancies.WebApp.Infrastructure
                 .ForMember(d => d.region_id, o => o.MapFrom(s => s.Data.RegionId))
                 .ForMember(d => d.researchdirection_id, o => o.MapFrom(s => s.Data.ResearchDirectionId))
                 .ForMember(d => d.criterias, o => o.MapFrom(s => s.Data.Criterias))
+                .ForMember(d => d.attachments, o => o.MapFrom(s => s.Data.Attachments))
                 .ForMember(d => d.organization_guid, o => o.MapFrom(s => s.OrganizationGuid))
                 .ForMember(d => d.creation_date, o => o.MapFrom(s => s.TimeStamp));
 
@@ -439,6 +440,7 @@ namespace SciVacancies.WebApp.Infrastructure
                 .ForMember(d => d.region_id, o => o.MapFrom(s => s.Data.RegionId))
                 .ForMember(d => d.researchdirection_id, o => o.MapFrom(s => s.Data.ResearchDirectionId))
                 .ForMember(d => d.criterias, o => o.MapFrom(s => s.Data.Criterias))
+                .ForMember(d => d.attachments, o => o.MapFrom(s => s.Data.Attachments))
                 .ForMember(d => d.organization_guid, o => o.MapFrom(s => s.OrganizationGuid))
                 .ForMember(d => d.update_date, o => o.MapFrom(s => s.TimeStamp));
 
@@ -446,6 +448,12 @@ namespace SciVacancies.WebApp.Infrastructure
                 .ForMember(d => d.criteria_id, o => o.MapFrom(s => s.CriteriaId))
                 .ForMember(d => d.from, o => o.MapFrom(s => s.From))
                 .ForMember(d => d.to, o => o.MapFrom(s => s.To));
+            Mapper.CreateMap<Domain.Core.VacancyAttachment, ReadModel.Core.VacancyAttachment>()
+                .ForMember(d => d.name, o => o.MapFrom(s => s.Name))
+                .ForMember(d => d.size, o => o.MapFrom(s => s.Size))
+                .ForMember(d => d.extension, o => o.MapFrom(s => s.Extension))
+                .ForMember(d => d.url, o => o.MapFrom(s => s.Url))
+                .ForMember(d => d.upload_date, o => o.MapFrom(s => s.UploadDate));
 
             //vacancy
             Mapper.CreateMap<Vacancy, VacancyCreateViewModel>()
@@ -475,6 +483,7 @@ namespace SciVacancies.WebApp.Infrastructure
                 .ForMember(d => d.RegionId, o => o.MapFrom(s => s.region_id))
                 .ForMember(d => d.ResearchDirectionId, o => o.MapFrom(s => s.researchdirection_id))
                 //.ForMember(d => d, o => o.MapFrom(s => s.criterias))
+                //.ForMember(d => d, o => o.MapFrom(s => s.attachments))
                 .ForMember(d => d.OrganizationGuid, o => o.MapFrom(s => s.organization_guid));
             Mapper.CreateMap<Vacancy, VacancyDetailsViewModel>().IncludePagedResultMapping()
                 .ForMember(d => d.Guid, o => o.MapFrom(s => s.guid))
@@ -604,7 +613,7 @@ namespace SciVacancies.WebApp.Infrastructure
                 .ForMember(d => d.attachments, o => o.MapFrom(s => s.Data.Attachments))
                 .ForMember(d => d.update_date, o => o.MapFrom(s => s.TimeStamp));
 
-            Mapper.CreateMap<Domain.Core.Attachment, ReadModel.Core.Attachment>()
+            Mapper.CreateMap<Domain.Core.VacancyApplicationAttachment, ReadModel.Core.VacancyApplicationAttachment>()
                 .ForMember(d => d.name, o => o.MapFrom(s => s.Name))
                 .ForMember(d => d.size, o => o.MapFrom(s => s.Size))
                 .ForMember(d => d.extension, o => o.MapFrom(s => s.Extension))

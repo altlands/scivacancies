@@ -33,7 +33,7 @@ namespace SciVacancies.WebApp.Queries
         //TODO - добавить фильтр сортировки по колонкам
     }
 
-    public class SelectVacancyApplicationAttachmentsQuery:IRequest<IEnumerable<Attachment>>
+    public class SelectVacancyApplicationAttachmentsQuery:IRequest<IEnumerable<VacancyApplicationAttachment>>
     {
         public Guid VacancyApplicationGuid { get; set; }
     }

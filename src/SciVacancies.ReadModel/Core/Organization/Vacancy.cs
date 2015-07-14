@@ -140,10 +140,15 @@ namespace SciVacancies.ReadModel.Core
         public DateTime? publish_date { get; set; }
 
         public DateTime? committee_date { get; set; }
+        public DateTime? awaiting_date { get; set; }
         public DateTime? announcement_date { get; set; }
+
+        public string cancel_reason { get; set; }
 
         [Ignore]
         public List<VacancyCriteria> criterias { get; set; }
+        [Ignore]
+        public List<VacancyAttachment> attachments { get; set; }
 
         #endregion
 

@@ -4,9 +4,9 @@ using NPoco;
 
 namespace SciVacancies.ReadModel.Core
 {
-    [TableName("res_attachments")]
+    [TableName("org_vacancy_attachments")]
     [PrimaryKey("guid", AutoIncrement = false)]
-    public class Attachment : BaseEntity
+    public class VacancyAttachment : BaseEntity
     {
         /// <summary>
         /// Наименование файла
@@ -31,7 +31,7 @@ namespace SciVacancies.ReadModel.Core
         /// <summary>
         /// Guid заявки
         /// </summary>
-        public Guid vacancyapplication_guid { get; set; }
+        public Guid vacancy_guid { get; set; }
 
         /// <summary>
         /// Дата создания

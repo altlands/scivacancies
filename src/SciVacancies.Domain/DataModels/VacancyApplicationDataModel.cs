@@ -9,7 +9,7 @@ namespace SciVacancies.Domain.DataModels
         {
             this.Educations = new List<Education>();
             this.Publications = new List<Publication>();
-            this.Attachments = new List<Attachment>();
+            this.Attachments = new List<VacancyApplicationAttachment>();
         }
 
         /// <summary>
@@ -36,6 +36,6 @@ namespace SciVacancies.Domain.DataModels
 
         public List<Education> Educations { get; set; }
         public List<Publication> Publications { get; set; }
-        public List<Attachment> Attachments { get; set; }
+        public List<VacancyApplicationAttachment> Attachments { get; set; }
     }
 }

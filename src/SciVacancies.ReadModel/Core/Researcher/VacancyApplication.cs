@@ -36,7 +36,7 @@ namespace SciVacancies.ReadModel.Core
         public Guid researcher_guid { get; set; }
 
         [Ignore]
-        public List<Attachment> attachments { get; set; }
+        public List<VacancyApplicationAttachment> attachments { get; set; }
 
         public VacancyApplicationStatus status { get; set; }
 

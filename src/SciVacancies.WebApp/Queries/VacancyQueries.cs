@@ -80,4 +80,8 @@ namespace SciVacancies.WebApp.Queries
     {
         public Guid VacancyGuid { get; set; }
     }
+    public class SelectVacancyAttachmentsQuery : IRequest<IEnumerable<VacancyAttachment>>
+    {
+        public Guid VacancyGuid { get; set; }
+    }
 }

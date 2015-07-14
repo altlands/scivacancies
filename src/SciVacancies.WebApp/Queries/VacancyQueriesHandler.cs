@@ -101,5 +101,11 @@ namespace SciVacancies.WebApp.Queries
 
             return vacancyCriterias;
         }
+        public IEnumerable<VacancyAttachment> Handle(SelectVacancyAttachmentsQuery msg)
+        {
+            IEnumerable<VacancyAttachment> vaAttachments = _db.Fetch<VacancyAttachment>(new Sql($"SELECT * FROM org_vacancy_attachments ra WHERE ra.vacancy_guid = @0", msg.VacancyGuid));
+
+            return vaAttachments;
+        }
     }
 }
