@@ -71,7 +71,7 @@ namespace SciVacancies.WebApp.Controllers
 
 
 
-            var createUserOrganizationCommand = new RegisterUserOrganizationCommand
+            var createUserOrganizationCommand0 = new RegisterUserOrganizationCommand
             {
                 Data = new AccountOrganizationRegisterViewModel
                 {
@@ -90,8 +90,8 @@ namespace SciVacancies.WebApp.Controllers
                     HeadPatronymic = "Иванович"
                 }
             };
-            var organization = _mediator.Send(createUserOrganizationCommand);
-            var organizationGuid0 = Guid.Parse(organization.Claims.Single(s => s.ClaimType.Equals(ConstTerms.ClaimTypeOrganizationId)).ClaimValue);
+            var organization0 = _mediator.Send(createUserOrganizationCommand0);
+            var organizationGuid0 = Guid.Parse(organization0.Claims.Single(s => s.ClaimType.Equals(ConstTerms.ClaimTypeOrganizationId)).ClaimValue);
 
 
 
@@ -179,7 +179,7 @@ namespace SciVacancies.WebApp.Controllers
 
             var vacancyGuid3 = _mediator.Send(new CreateVacancyCommand
             {
-                OrganizationGuid = organizationGuid1,
+                OrganizationGuid = organizationGuid0,
                 Data = new VacancyDataModel
                 {
                     Name = "Ремонтник всевидящего ока",
