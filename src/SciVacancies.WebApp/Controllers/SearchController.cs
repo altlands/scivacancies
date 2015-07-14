@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using MediatR;
 using Microsoft.AspNet.Mvc;
 using SciVacancies.ReadModel.ElasticSearchModel.Model;
@@ -31,7 +32,7 @@ namespace SciVacancies.WebApp.Controllers
                 Query = model.Search,
                 PageSize = model.PageSize,
                 CurrentPage = model.CurrentPage,
-                
+                PublishDateFrom = DateTime.Now,
                 PositionTypeIds = model.Positions,
                 RegionIds = model.Regions,
                 FoivIds = model.Foivs,

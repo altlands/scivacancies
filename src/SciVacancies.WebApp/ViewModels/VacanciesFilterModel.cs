@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using SciVacancies.ReadModel.ElasticSearchModel.Model;
 using SciVacancies.ReadModel.Pager;
 using SciVacancies.WebApp.Engine;
