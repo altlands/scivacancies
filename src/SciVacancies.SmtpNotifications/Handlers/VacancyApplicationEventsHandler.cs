@@ -1,11 +1,24 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using SciVacancies.Domain.Events;
+using SciVacancies.ReadModel.Core;
+
+using System;
+
+using MediatR;
 
 namespace SciVacancies.SmtpNotifications.Handlers
 {
-    public class VacancyApplicationEventsHandler
+    public class VacancyApplicationEventsHandler :
+        INotificationHandler<VacancyApplicationApplied>
     {
+        //private readonly IDatabase _db;
+
+        //public VacancyApplicationEventsHandler(IDatabase db)
+        //{
+        //    _db = db;
+        //}
+        public void Handle(VacancyApplicationApplied msg)
+        {
+
+        }
     }
 }

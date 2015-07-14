@@ -43,6 +43,7 @@ namespace SciVacancies.ReadModel.EventHandlers
                 _db.Insert(vacancy);
                 foreach(VacancyCriteria vc in vacancy.criterias)
                 {
+                    if (vc.guid == Guid.Empty) vc.guid = Guid.NewGuid();
                     vc.vacancy_guid = vacancy.guid;
                     _db.Insert(vc);
                 }
@@ -62,6 +63,7 @@ namespace SciVacancies.ReadModel.EventHandlers
                 _db.Execute(new Sql($"DELETE FROM org_vacancycriterias WHERE vacancy_guid = @0", msg.VacancyGuid));
                 foreach (VacancyCriteria vc in vacancy.criterias)
                 {
+                    if (vc.guid == Guid.Empty) vc.guid = Guid.NewGuid();
                     vc.vacancy_guid = vacancy.guid;
                     _db.Insert(vc);
                 }

@@ -2,6 +2,8 @@
 using SciVacancies.Domain.Events;
 using SciVacancies.ReadModel.Core;
 
+using System;
+
 using MediatR;
 using NPoco;
 using AutoMapper;
@@ -54,11 +56,13 @@ namespace SciVacancies.ReadModel.EventHandlers
                 _db.Execute(new Sql($"DELETE FROM res_publications WHERE researcher_guid = @0", msg.ResearcherGuid));
                 foreach (Education ed in updatedResearcher.educations)
                 {
+                    if (ed.guid == Guid.Empty) ed.guid = Guid.NewGuid();
                     ed.researcher_guid = researcher.guid;
                     _db.Insert(ed);
                 }
                 foreach (Publication pb in updatedResearcher.publications)
                 {
+                    if (pb.guid == Guid.Empty) pb.guid = Guid.NewGuid();
                     pb.researcher_guid = researcher.guid;
                     _db.Insert(pb);
                 }

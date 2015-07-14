@@ -1,15 +1,17 @@
-﻿{
-  "version": "1.0.0-*",
-  "description": "",
-  "authors": [ "" ],
-  "tags": [ "" ],
-  "projectUrl": "",
-  "licenseUrl": "",
+{
+    "version": "1.0.0-*",
+    "description": "",
+    "authors": [ "" ],
+    "tags": [ "" ],
+    "projectUrl": "",
+    "licenseUrl": "",
 
-  "dependencies": {
-  },
+    "dependencies": {
+        "SciVacancies.Domain.Events": "1.0.0-*",
+        "SciVacancies.ReadModel": "1.0.0-*"
+    },
 
-  "frameworks" : {
-    "dnx451": { }
-  }
+    "frameworks": {
+        "dnx451": { }
+    }
 }
