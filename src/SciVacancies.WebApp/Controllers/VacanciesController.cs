@@ -211,12 +211,15 @@ namespace SciVacancies.WebApp.Controllers
                  }).MapToPagedList<VacancyApplication, VacancyApplicationDetailsViewModel>();
 
             if (model.Applications?.Items != null && model.Applications.Items.Count > 0)
+            {
+                model.Applications.Items.Where(c => c.ResearcherGuid == Guid.Empty).ToList().ForEach(c => model.Applications.Items.Remove(c));
                 //TODO: оптимизировать запрос и его обработку.
                 model.Applications.Items.ForEach(
                     c =>
                         c.Researcher =
                             Mapper.Map<ResearcherDetailsViewModel>(
                                 _mediator.Send(new SingleResearcherQuery { ResearcherGuid = c.ResearcherGuid })));
+            }
 
             return View(model);
         }
