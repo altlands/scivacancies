@@ -25,7 +25,7 @@ namespace SciVacancies.WebApp.Queries
         {
             if (message.VacancyApplicationGuid == Guid.Empty) throw new ArgumentNullException($"VacancyApplicationGuid is empty: {message.VacancyApplicationGuid}");
 
-            VacancyApplication vacancyApplication = _db.SingleOrDefault<VacancyApplication>(new Sql($"SELECT va.* FROM res_vacancyapplications va WHERE va.guid = @0 AND va.status != @1", message.VacancyApplicationGuid, (int)VacancyApplicationStatus.Removed));
+            VacancyApplication vacancyApplication = _db.SingleOrDefault<VacancyApplication>(new Sql($"SELECT va.* FROM res_vacancyapplications va WHERE va.guid = @0 AND va.status != @1", message.VacancyApplicationGuid, VacancyApplicationStatus.Removed));
 
             return vacancyApplication;
         }
@@ -33,7 +33,7 @@ namespace SciVacancies.WebApp.Queries
         {
             if (message.ResearcherGuid == Guid.Empty) throw new ArgumentNullException($"ResearcherGuid is empty: {message.ResearcherGuid}");
 
-            Page<VacancyApplication> vacancyApplications = _db.Page<VacancyApplication>(message.PageIndex, message.PageSize, new Sql($"SELECT va.* FROM res_vacancyapplications va WHERE va.status != @0 ORDER BY va.guid DESC", (int)VacancyApplicationStatus.Removed));
+            Page<VacancyApplication> vacancyApplications = _db.Page<VacancyApplication>(message.PageIndex, message.PageSize, new Sql($"SELECT va.* FROM res_vacancyapplications va WHERE va.status != @0 ORDER BY va.guid DESC", VacancyApplicationStatus.Removed));
 
             return vacancyApplications;
         }
@@ -41,7 +41,7 @@ namespace SciVacancies.WebApp.Queries
         {
             if (message.VacancyGuid == Guid.Empty) throw new ArgumentNullException($"VacancyGuid is empty: {message.VacancyGuid}");
 
-            Page<VacancyApplication> vacancyApplications = _db.Page<VacancyApplication>(message.PageIndex, message.PageSize, new Sql("SELECT va.* FROM res_vacancyapplications va WHERE va.status != @0 ORDER BY va.guid DESC", (int)VacancyApplicationStatus.Removed));
+            Page<VacancyApplication> vacancyApplications = _db.Page<VacancyApplication>(message.PageIndex, message.PageSize, new Sql("SELECT va.* FROM res_vacancyapplications va WHERE va.status != @0 ORDER BY va.guid DESC", VacancyApplicationStatus.Removed));
 
             return vacancyApplications;
         }
