@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNet.Mvc;
 using SciVacancies.ReadModel.Core;
 using SciVacancies.WebApp.ViewModels.Base;
@@ -16,7 +17,6 @@ namespace SciVacancies.WebApp.ViewModels
         public string VacancyCode { get; set; }
 
         public string PositionName { get; set; }
-
         public string ResearcherFullName { get; set; }
 
         public string Email { get; set; }

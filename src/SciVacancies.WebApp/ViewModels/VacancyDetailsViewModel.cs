@@ -162,5 +162,18 @@ namespace SciVacancies.WebApp.ViewModels
         public EmploymentType EmploymentType { get; set; }
         public OperatingScheduleType OperatingScheduleType { get; set; }
         public int PositionTypeId { get; set; }
+
+        public bool? IsWinnerAccept { get; set; }
+        public Guid WinnerResearcherGuid { get; set; }
+        public DateTime? WinnerRequestDate { get; set; }
+        public DateTime? WinnerResponseDate { get; set; }
+        public Guid WinnerVacancyApplicationGuid { get; set; }
+
+        public bool? IsPretenderAccept { get; set; }
+        public Guid PretenderResearcherGuid { get; set; }
+        public DateTime? PretenderRequestDate { get; set; }
+        public DateTime? PretenderResponseDate { get; set; }
+        public Guid PretenderVacancyApplicationGuid { get; set; }
+
     }
 }

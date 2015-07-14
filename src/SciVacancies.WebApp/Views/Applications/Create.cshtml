@@ -8,7 +8,6 @@
     @ViewBag.Title
 </div>
 
-
 <h3>Новая заявка</h3>
 
 <div asp-validation-summary="ValidationSummary.All"></div>
@@ -203,18 +202,18 @@
                     </div>
                     <div class="right-cell">
                         <ol class="content-list">
-                            <li>
-                                Научная публикация поколения 2.0: перспектива или реальность?
-                                @*<div class="buttons">
-                                    <span class="big-link-edit"></span><span class="big-link-remove"></span>
-                                </div>*@
-                            </li>
-                            <li>
-                                Электронно-библиотечная система: перевод понятия на «библиотечный» английский
-                                @*<div class="buttons">
-                                    <span class="big-link-edit"></span><span class="big-link-remove"></span>
-                                </div>*@
-                            </li>
+                            @if (Model.Publications!=null)
+                            {
+                                foreach (var item in Model.Publications)
+                                {
+                                    <text>
+
+                                    <li>
+                                        @item.title
+                                    </li>
+                                    </text>
+                                }
+                            }
                         </ol>
                         @*<a class="link-add lk-icon italic link-add-field" href="#">Добавить публикацию</a>*@
                     </div>
@@ -231,11 +230,11 @@
                     <div class="right-cell">
                         <ul class="content-list">
                             @*<li>
-                                Rezume.doc
-                                <div class="buttons">
-                                    <span class="big-link-remove"></span>
-                                </div>
-                            </li>*@
+                                    Rezume.doc
+                                    <div class="buttons">
+                                        <span class="big-link-remove"></span>
+                                    </div>
+                                </li>*@
                         </ul>
                         <a class="link-add lk-icon italic" href="#">Приложить файл</a>
                     </div>
