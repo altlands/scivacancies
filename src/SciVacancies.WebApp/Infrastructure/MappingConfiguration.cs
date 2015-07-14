@@ -368,7 +368,8 @@ namespace SciVacancies.WebApp.Infrastructure
                 .ForMember(d => d.researcher_guid, o => o.MapFrom(s => s.ResearcherGuid))
                 .ForMember(d => d.title, o => o.MapFrom(s => s.Data.Title))
                 .ForMember(d => d.query, o => o.MapFrom(s => s.Data.Query))
-                .ForMember(d=>d.foiv_ids,o=>o.MapFrom(s=>s))
+                .ForMember(d => d.orderby, o => o.MapFrom(s => s.Data.OrderBy))
+                .ForMember(d => d.foiv_ids, o => o.MapFrom(s => s))
                 .ForMember(d => d.positiontype_ids, o => o.MapFrom(s => JsonConvert.SerializeObject(s.Data.PositionTypeIds)))
                 .ForMember(d => d.region_ids, o => o.MapFrom(s => JsonConvert.SerializeObject(s.Data.RegionIds)))
                 .ForMember(d => d.researchdirection_ids, o => o.MapFrom(s => JsonConvert.SerializeObject(s.Data.ResearchDirectionIds)))
@@ -549,7 +550,7 @@ namespace SciVacancies.WebApp.Infrastructure
                 //.ForMember(d => d.OrganizationFoivId, o => o.MapFrom(s => s))
                 ;
             Mapper.CreateMap<ReadModel.ElasticSearchModel.Model.Vacancy, VacancyElasticResult>().IncludePagedResultMapping();
-                ;
+            ;
 
             //TODO - VACANCY EDIT VIEW MODEL MAPPINGS
 
@@ -617,13 +618,13 @@ namespace SciVacancies.WebApp.Infrastructure
             Mapper.CreateMap<VacancyApplicationCreateViewModel, VacancyApplicationDataModel>();
             Mapper.CreateMap<VacancyApplication, VacancyApplicationDetailsViewModel>().IncludePagedResultMapping();
             Mapper.CreateMap<VacancyApplication, VacancyApplicationSetWinnerViewModel>();
-            
+
             #endregion
 
             #region Dictionaries
 
             Mapper.CreateMap<Foiv, FoivViewModel>()
-                .ForMember(d=>d.Id,o=>o.MapFrom(s=>s.id))
+                .ForMember(d => d.Id, o => o.MapFrom(s => s.id))
                 .ForMember(d => d.ParentId, o => o.MapFrom(s => s.parent_id))
                 .ForMember(d => d.Title, o => o.MapFrom(s => s.title))
                 .ForMember(d => d.ShortTitle, o => o.MapFrom(s => s.shorttitle));

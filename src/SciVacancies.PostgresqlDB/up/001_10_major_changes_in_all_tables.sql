@@ -156,6 +156,7 @@ CREATE TABLE res_searchsubscriptions
 
   title text NOT NULL,
   query text NOT NULL,
+  orderby text NOT NULL,
   foiv_ids text,
   positiontype_ids text,
   region_ids text,
@@ -164,6 +165,10 @@ CREATE TABLE res_searchsubscriptions
   salary_to integer,
   vacancy_statuses text,
   researcher_guid uuid NOT NULL REFERENCES res_researchers(guid) ON DELETE CASCADE,
+  currenttotal_count bigint,
+  currentcheck_date timestamp without time zone,
+  lasttotal_count bigint,
+  lastcheck_date timestamp without time zone,
   status smallint NOT NULL DEFAULT 0,
   creation_date timestamp without time zone NOT NULL,
   update_date timestamp without time zone,

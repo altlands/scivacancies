@@ -28,6 +28,28 @@ namespace SciVacancies.WebApp.Commands
             return vacancyApplicationGuid;
         }
     }
+    public class CreateAndApplyVacancyApplicationCommandHandler : IRequestHandler<CreateAndApplyVacancyApplicationCommand, Guid>
+    {
+        private readonly IRepository _repository;
+
+        public CreateAndApplyVacancyApplicationCommandHandler(IRepository repository)
+        {
+            _repository = repository;
+        }
+
+        public Guid Handle(CreateAndApplyVacancyApplicationCommand msg)
+        {
+            if (msg.ResearcherGuid == Guid.Empty) throw new ArgumentNullException($"ResearcherGuid is empty: {msg.ResearcherGuid}");
+            if (msg.VacancyGuid == Guid.Empty) throw new ArgumentNullException($"VacancyGuid is empty: {msg.VacancyGuid}");
+
+            Researcher researcher = _repository.GetById<Researcher>(msg.ResearcherGuid);
+            Guid vacancyApplicationGuid = researcher.CreateVacancyApplicationTemplate(msg.VacancyGuid, msg.Data);
+            researcher.ApplyToVacancy(vacancyApplicationGuid);
+            _repository.Save(researcher, Guid.NewGuid(), null);
+
+            return vacancyApplicationGuid;
+        }
+    }
     public class UpdateVacancyApplicationTemplateCommandHandler : RequestHandler<UpdateVacancyApplicationTemplateCommand>
     {
         private readonly IRepository _repository;
