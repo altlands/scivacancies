@@ -29,7 +29,7 @@ namespace SciVacancies.WebApp.Controllers
             _mediator.Send(new RemoveSearchIndexCommand());
             _mediator.Send(new CreateSearchIndexCommand());
 
-            var createUserResearcherCommand = new RegisterUserResearcherCommand
+            var createUserResearcherCommand1 = new RegisterUserResearcherCommand
             {
                 Data = new AccountResearcherRegisterViewModel
                 {
@@ -46,8 +46,28 @@ namespace SciVacancies.WebApp.Controllers
                     BirthYear = DateTime.Now.AddYears(-50).Year
                 }
             };
-            var user = _mediator.Send(createUserResearcherCommand);
-            var resGuid = Guid.Parse(user.Claims.Single(s => s.ClaimType.Equals(ConstTerms.ClaimTypeResearcherId)).ClaimValue);
+            var user1 = _mediator.Send(createUserResearcherCommand1);
+            var researcherGuid1 = Guid.Parse(user1.Claims.Single(s => s.ClaimType.Equals(ConstTerms.ClaimTypeResearcherId)).ClaimValue);
+
+            var createUserResearcherCommand2 = new RegisterUserResearcherCommand
+            {
+                Data = new AccountResearcherRegisterViewModel
+                {
+                    Email = $"researcher{rnd.Next(999)}@mailer.org",
+                    Phone = "8-333-22-22",
+                    UserName = "researcher2",
+                    FirstName = "Анфиса",
+                    SecondName = "Иванова",
+                    Patronymic = "Павловна",
+                    FirstNameEng = "Anfisa",
+                    SecondNameEng = "Ivanova",
+                    PatronymicEng = "Pavlovna",
+                    Education = "Получено высшее образование с 2004 по 2009гг.",
+                    BirthYear = DateTime.Now.AddYears(-29).Year
+                }
+            };
+            var user2 = _mediator.Send(createUserResearcherCommand2);
+            var researcherGuid2 = Guid.Parse(user2.Claims.Single(s => s.ClaimType.Equals(ConstTerms.ClaimTypeResearcherId)).ClaimValue);
 
 
 
@@ -100,7 +120,7 @@ namespace SciVacancies.WebApp.Controllers
 
             _mediator.Send(new CreateSearchSubscriptionCommand
             {
-                ResearcherGuid = resGuid,
+                ResearcherGuid = researcherGuid1,
                 Data = new SearchSubscriptionDataModel { Title = "Разведение лазерных акул", Query = "" }
             });
 

@@ -29,8 +29,12 @@
             <h4>Вход в личный кабинет</h4>
         </div>
         <div class="content-popup">
+            <a class="researcherslogin" href="/account/loginuser/user1">Пользователь1.Вход</a><br />
+            <a class="researcherslogin" href="/account/loginuser/user2">Пользователь2.Вход</a><br/>
+            <a class="researcherslogin" href="/account/LoginOrganization">Организация.Вход</a>
+
             <form asp-controller="account" asp-action="login" method="POST">
-                <input type="hidden" id="IsResearcher1" name="IsResearcher" value="true" checked="checked"/>
+                <input type="hidden" id="IsResearcher1" name="IsResearcher" value="true" checked="checked" />
 
                 <div class="b-tabs">
                     <ul class="nav nav-tabs" id="tab">
@@ -44,6 +48,7 @@
                     <div class="tab-content">
                         <div class="tab-pane" id="b-user">
                             <p>Для зарегистрированных пользователей (соискателей) - введите в форму входа логин и пароль, полученные при регистрации на Портале.</p>
+
                             <a asp-controller="acccount" asp-action="register" class="italic">Регистрация</a><br />
                             <a asp-controller="acccount" asp-action="forgotpassword" class="italic">Забыли пароль?</a>
                         </div>
