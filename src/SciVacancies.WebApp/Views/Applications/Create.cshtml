@@ -93,43 +93,49 @@
 
         <div class="row">
             <div class="bold row-title">Образование:</div>
-            <div class="table-form">
-                <div class="table-row form-row">
-                    <div class="left-cell">
-                        <label>Город:</label>
-                    </div>
-                    <div class="right-cell">
-                        <input type="text" value="Челябинск" class="disabled big-input" />
-                    </div>
-                </div>
+            @if (Model.Educations != null)
+            {
+                for (int index = 0; index < Model.Educations.Count; index++)
+                {
+                    <div class="table-form">
+                        <div class="table-row form-row">
+                            <div class="left-cell">
+                                <label>Город:</label>
+                            </div>
+                            <div class="right-cell">
+                                <input asp-for="Educations[index].city" class="disabled big-input"/>
+                            </div>
+                        </div>
 
-                <div class="table-row form-row">
-                    <div class="left-cell">
-                        <label>ВУЗ:</label>
-                    </div>
-                    <div class="right-cell">
-                        <input type="text" value="ЧГАКИ" class="disabled big-input" />
-                    </div>
-                </div>
+                        <div class="table-row form-row">
+                            <div class="left-cell">
+                                <label>ВУЗ:</label>
+                            </div>
+                            <div class="right-cell">
+                                <input asp-for="Educations[index].university_shortname" class="disabled big-input"/>
+                            </div>
+                        </div>
 
-                <div class="table-row form-row">
-                    <div class="left-cell">
-                        <label>Факультет:</label>
-                    </div>
-                    <div class="right-cell">
-                        <input type="text" value="Информационных ресурсов и технологий" class="disabled big-input" />
-                    </div>
-                </div>
+                        <div class="table-row form-row">
+                            <div class="left-cell">
+                                <label>Факультет:</label>
+                            </div>
+                            <div class="right-cell">
+                                <input asp-for="Educations[index].faculty_shortname" value="Информационных ресурсов и технологий" class="disabled big-input"/>
+                            </div>
+                        </div>
 
-                <div class="table-row form-row">
-                    <div class="left-cell">
-                        <label>Год окончания:</label>
+                        <div class="table-row form-row">
+                            <div class="left-cell">
+                                <label>Год окончания:</label>
+                            </div>
+                            <div class="right-cell">
+                                <input asp-for="Educations[index].graduation_date" class="disabled big-input"/>
+                            </div>
+                        </div>
                     </div>
-                    <div class="right-cell">
-                        <input type="text" value="2000" class="disabled big-input" />
-                    </div>
-                </div>
-            </div>
+                }
+            }
         </div>
 
         <div class="row">
