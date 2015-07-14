@@ -52,6 +52,7 @@ namespace SciVacancies.ReadModel.EventHandlers
             {
 
                 _db.Update(updatedResearcher);
+                //TODO - сделать без удаления неизменённых записей
                 _db.Execute(new Sql($"DELETE FROM res_educations WHERE researcher_guid = @0", msg.ResearcherGuid));
                 _db.Execute(new Sql($"DELETE FROM res_publications WHERE researcher_guid = @0", msg.ResearcherGuid));
                 foreach (Education ed in updatedResearcher.educations)
