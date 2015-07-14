@@ -148,7 +148,9 @@ namespace SciVacancies.WebApp.Controllers
 
             var model = Mapper.Map<VacancyApplicationDetailsViewModel>(preModel);
             model.Researcher = Mapper.Map<ResearcherDetailsViewModel>(_mediator.Send(new SingleResearcherQuery { ResearcherGuid = researcherGuid }));
-
+            model.Vacancy= Mapper.Map<VacancyDetailsViewModel>(_mediator.Send(new SingleVacancyQuery { VacancyGuid = preModel.vacancy_guid}));
+            //TODO: ntemnikov : показать Приложенные файлы
+            //TODO: ntemnikov : показать Научные интересы
             return View(model);
         }
 
