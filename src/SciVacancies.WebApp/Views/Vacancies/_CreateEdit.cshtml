@@ -38,9 +38,9 @@
                     <label>Должность:</label>
                 </div>
                 <div class="right-cell">
-                    <a onclick="javascript: return false;" class="link-add lk-icon italic open-popup" data-modal="PositionTypeGuid">Выбрать должность</a>
-                    <input type="hidden" asp-for="PositionTypeGuid" />
-                    <span asp-validation-for="PositionTypeGuid"></span>
+                    <a onclick="javascript: return false;" class="link-add lk-icon italic open-popup" data-modal="PositionTypeId">Выбрать должность</a>
+                    <input type="hidden" asp-for="PositionTypeId" />
+                    <span asp-validation-for="PositionTypeId"></span>
                     <!-- <select asp-for="PositionTypeGuid"
                             asp-items="Model.PositionTypes"></select> -->
                 </div>
@@ -311,7 +311,7 @@
 
 
 
-<div class="window-popup middle" style="display: none;" data-name="PositionTypeGuid">
+<div class="window-popup middle" style="display: none;" data-name="PositionTypeId">
     <span class="close-popup"></span>
     <div class="title-popup">
         <h4>Выбор должности</h4>
@@ -321,7 +321,7 @@
             @foreach (var item in Model.PositionTypes)
             {
                 <text>
-                <a href="#" onclick="javascript: return selectedItemFromModalDictionary('PositionTypeGuid', '@item.Value', '@item.Text');">
+                <a href="#" onclick="javascript: return selectedItemFromModalDictionary('PositionTypeId', '@item.Value', '@item.Text');">
                     @item.Text
                 </a>
 

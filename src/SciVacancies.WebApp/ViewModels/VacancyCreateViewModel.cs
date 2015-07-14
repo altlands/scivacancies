@@ -59,7 +59,7 @@ namespace SciVacancies.WebApp.ViewModels
         /// Guid должности из справочника
         /// </summary>
         [Required(ErrorMessage = "Требуется выбрать Должность", AllowEmptyStrings = false)]
-        public Guid PositionTypeGuid { get; set; }
+        public int PositionTypeId { get; set; }
         public IEnumerable<SelectListItem> PositionTypes { get; set; }
 
         /// <summary>
@@ -185,7 +185,6 @@ namespace SciVacancies.WebApp.ViewModels
         public string CityName { get; set; }
         public EmploymentType EmploymentType { get; set; }
         public OperatingScheduleType OperatingScheduleType { get; set; }
-        public int PositionTypeId { get; set; }
         public int RegionId { get; set; }
         //public List<Criterias>
     }

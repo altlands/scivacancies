@@ -82,7 +82,7 @@
                     <!--TODO: проверить правильность информации-->
                     <td>@(item.creation_date.ToLocalVacancyString())</td>
                     <td>@(item.publish_date?.ToLocalVacancyString())</td>
-                    <td><span class="status work @item.status.GetHtmlClass()">@item.status.GetDescription()</span></td>
+                    <td><span class="status @item.status.GetHtmlClass()">@item.status.GetDescription()</span></td>
                     <td>
                         <a asp-controller="vacancies" asp-action="details" asp-route-id="@item.guid" class="view-td-icon" title="Просмотр вакансии"></a>
                         <a asp-controller="vacancies" asp-action="copy" asp-route-id="@item.guid" class="pages-td-icon" title="Копировать вакансию"></a>
