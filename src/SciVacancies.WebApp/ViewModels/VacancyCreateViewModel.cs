@@ -52,6 +52,13 @@ namespace SciVacancies.WebApp.ViewModels
             ResearchDirections = mediator.Send(new SelectAllResearchDirectionsQuery()).Select(c => new SelectListItem { Text = c.title, Value = c.id.ToString() });
             Regions= mediator.Send(new SelectAllRegionsQuery()).Select(c => new SelectListItem { Text = c.title, Value = c.id.ToString() });
 
+            if (PositionTypeId != 0)
+                PositionType = PositionTypes.Single(c => c.Value == PositionTypeId.ToString()).Text;
+            if (ResearchDirectionId != 0)
+                ResearchDirection = ResearchDirections.Single(c => c.Value == ResearchDirectionId.ToString()).Text;
+            if (RegionId != 0)
+                Region = Regions.Single(c => c.Value == RegionId.ToString()).Text;
+
             ContractTypes = new List<ContractType> { ContractType.Permanent, ContractType.FixedTerm }
                 .Select(c => new SelectListItem { Value = ((int)c).ToString(), Text = c.GetDescription() });
 
