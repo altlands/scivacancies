@@ -179,6 +179,8 @@ namespace SciVacancies.WebApp.Controllers
                 var orgClaim = JsonConvert.DeserializeObject<OAuthOrgClaim>(claims.FirstOrDefault(f => f.Type.Equals("org")).Value);
 
                 OAuthOrgInformation organizationInformation =JsonConvert.DeserializeObject<OAuthOrgInformation>(GetOrganizationInfo(orgClaim.Inn));
+                //TODO: AccountController -> Organization -> ntemnikov : десериализовать
+                //TODO: AccountController -> Organization -> ntemnikov : замапить данные и отправить в комманду
                 //TODO - достаём из claims ИНН
                 //TODO - забираем из их API данные по инн
                 //AccountOrganizationRegisterViewModel orgModel = Mapper.Map<AccountOrganizationRegisterViewModel>(organizationInformation);
