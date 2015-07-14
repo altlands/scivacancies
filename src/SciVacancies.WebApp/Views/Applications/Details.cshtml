@@ -13,6 +13,8 @@
 
 <h4>@ViewBag.Title: заявка на ID МНС6000567 №001 от @Model.CreationDate.ToLocalVacancyDateString()</h4>
 
+<a asp-controller="researchers" asp-action="account" asp-route-id="@Model.VacancyGuid">Вакансия: @Model.Vacancy.FullName</a>
+<br />
 
 <div class="content-slide">
     <div class="profile">
@@ -24,52 +26,75 @@
             <span class="int-name">@Model.Researcher.FirstNameEng</span>
             <span class="block bold">Год рождения: @Model.Researcher.BirthDate.Year.ToString("0000")</span>
             <span class="block"><span class="bold">Индивидуальный номер ученого:</span> 00005444</span>
-            <span class="block">
+            @*<span class="block">
                 <span class="bold">Научные интересы (Государственный рубрикатор научно-технической информации):</span>
-                <span>Автоматизация и автоматизированные системы в области науковедения; Библиотечное дело, библиотековедение; Информационная деятельность в области науковедения...</span>
-            </span>
+                <span>
+                    @if (Model.Researcher.!= null)
+                    {
+                        foreach (var item in Model.Researcher.Publications)
+                        {
+                            @item.Title
+                        }
+                    }
+                </span>
+            </span>*@
             <span class="small-icon icon-sm-eye"><span>Показать все (23)</span></span>
         </div>
     </div>
     <div class="list-info">
         <div class="list-item">
             <div class="bold">Образование</div>
-            <ul class="table-emulation" style="color: lightgray;">
-                <li>
-                    <span class="w85 italic inline-block">Город</span> <span class="italic grey" style="color: lightgray;">Челябинск</span>
-                </li>
-                <li>
-                    <span class="w85 italic inline-block">ВУЗ</span> <span class="italic grey" style="color: lightgray;">ЧГАКИ</span>
-                </li>
-                <li>
-                    <span class="w85 italic inline-block">Факультет</span> <span class="italic grey" style="color: lightgray;">Информационных ресурсов и технологий</span>
-                </li>
-                <li>
-                    <span class="w85 italic inline-block">Год окончания</span> <span class="italic grey" style="color: lightgray;">2000</span>
-                </li>
-            </ul>
+
+            @if (Model.Researcher.Educations != null)
+            {
+                foreach (var item in Model.Researcher.Educations)
+                {
+                    <text>
+                    <ul class="table-emulation">
+                        <li>
+                            <span class="w85 italic inline-block">Город</span> <span class="italic">@item.City</span>
+                        </li>
+                        <li>
+                            <span class="w85 italic inline-block">ВУЗ</span> <span class="italic">@item.UniversityShortName</span>
+                        </li>
+                        <li>
+                            <span class="w85 italic inline-block">Факультет</span> <span class="italic">@item.FacultyShortName</span>
+                        </li>
+                        <li>
+                            <span class="w85 italic inline-block">Год окончания</span> <span class="italic">@(item.GraduationYear)</span>
+                        </li>
+                    </ul>
+                    </text>
+                }
+            }
+
         </div>
         <div class="list-item">
             <div class="bold">Публикации</div>
             <ol>
-                <li>Научная публикация поколения 2.0: перспектива или реальность?</li>
-                <li>Электронно-библиотечная система: перевод понятия на «библиотечный» английский</li>
+                @if (Model.Researcher.Publications != null)
+                {
+                    foreach (var item in Model.Researcher.Publications)
+                    {
+                        <li>@item.Title</li>
+                    }
+                }
             </ol>
-            <span class="small-icon icon-sm-eye"><span>Показать все (5)</span></span>
+            @*<span class="small-icon icon-sm-eye"><span>Показать все (5)</span></span>*@
         </div>
-        <div class="list-item">
-            <div class="bold">Приложенные файлы</div>
-            <ol>
-                <li>
-                    Доклад по автоматизированным системам в области науковедения.doc<br/>
-                    <span class="small-icon icon-sm-download"><span>Скачать</span></span>
-                </li>
-                <li>
-                    Резюме на английском языке.pdf<br/>
-                    <span class="small-icon icon-sm-download"><span>Скачать</span></span>
-                </li>
-            </ol>
-        </div>
+        @*<div class="list-item">
+                <div class="bold"><del>Приложенные файлы</del> </div>
+                <ol>
+                    <li>
+                        Доклад по автоматизированным системам в области науковедения.doc<br/>
+                        <span class="small-icon icon-sm-download"><span>Скачать</span></span>
+                    </li>
+                    <li>
+                        Резюме на английском языке.pdf<br/>
+                        <span class="small-icon icon-sm-download"><span>Скачать</span></span>
+                    </li>
+                </ol>
+            </div>*@
     </div>
 
 
