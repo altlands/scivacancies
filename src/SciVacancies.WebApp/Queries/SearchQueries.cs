@@ -2,6 +2,7 @@
 using SciVacancies.ReadModel.ElasticSearchModel.Model;
 
 using System.Collections.Generic;
+using System;
 
 using MediatR;
 using NPoco;
@@ -15,6 +16,8 @@ namespace SciVacancies.WebApp.Queries
         public long PageSize { get; set; }
         public long CurrentPage { get; set; }
         public string OrderBy { get; set; }
+
+        public DateTime? PublishDateFrom { get; set; }
 
         public IEnumerable<int> FoivIds { get; set; }
         public IEnumerable<int> PositionTypeIds { get; set; }

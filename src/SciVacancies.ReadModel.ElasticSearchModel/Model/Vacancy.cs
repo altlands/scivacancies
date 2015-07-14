@@ -166,6 +166,12 @@ namespace SciVacancies.ReadModel.ElasticSearchModel.Model
         /// </summary>
         public DateTime? PublishDate { get; set; }
 
+        public DateTime? CommitteeDate { get; set; }
+        public DateTime? AwaitingDate { get; set; }
+        public DateTime? AnnouncementDate { get; set; }
+
+        public string CancelReason { get; set; }
+
         public List<VacancyCriteria> Criterias { get; set; }
 
         /// <summary>

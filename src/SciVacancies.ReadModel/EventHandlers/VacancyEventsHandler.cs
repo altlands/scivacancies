@@ -95,7 +95,7 @@ namespace SciVacancies.ReadModel.EventHandlers
         {
             using (var transaction = _db.GetTransaction())
             {
-                _db.Execute(new Sql($"UPDATE org_vacancies SET status = @0, update_date = @1 WHERE guid = @2", VacancyStatus.Published, msg.TimeStamp, msg.VacancyGuid));
+                _db.Execute(new Sql($"UPDATE org_vacancies SET publish_date = @0, status = @1, update_date = @2 WHERE guid = @3", msg.TimeStamp, VacancyStatus.Published, msg.TimeStamp, msg.VacancyGuid));
                 transaction.Complete();
             }
         }
@@ -103,7 +103,7 @@ namespace SciVacancies.ReadModel.EventHandlers
         {
             using (var transaction = _db.GetTransaction())
             {
-                _db.Execute(new Sql($"UPDATE org_vacancies SET status = @0, update_date = @1 WHERE guid = @2", VacancyStatus.InCommittee, msg.TimeStamp, msg.VacancyGuid));
+                _db.Execute(new Sql($"UPDATE org_vacancies SET committee_date = @0, status = @1, update_date = @2 WHERE guid = @3", msg.TimeStamp, VacancyStatus.InCommittee, msg.TimeStamp, msg.VacancyGuid));
                 transaction.Complete();
             }
         }
@@ -119,7 +119,7 @@ namespace SciVacancies.ReadModel.EventHandlers
         {
             using (var transaction = _db.GetTransaction())
             {
-                _db.Execute(new Sql($"UPDATE org_vacancies SET pretender_researcher_guid = @0, pretender_vacancyapplication_guid = @1, update_date = @2 WHERE guid = @3", msg.PretenderReasearcherGuid, msg.PretenderVacancyApplicationGuid, msg.TimeStamp, msg.VacancyGuid));
+                _db.Execute(new Sql($"UPDATE org_vacancies SET awaiting_date = @0, pretender_researcher_guid = @1, pretender_vacancyapplication_guid = @2, update_date = @3 WHERE guid = @4", msg.TimeStamp, msg.PretenderReasearcherGuid, msg.PretenderVacancyApplicationGuid, msg.TimeStamp, msg.VacancyGuid));
                 transaction.Complete();
             }
         }
@@ -159,7 +159,7 @@ namespace SciVacancies.ReadModel.EventHandlers
         {
             using (var transaction = _db.GetTransaction())
             {
-                _db.Execute(new Sql($"UPDATE org_vacancies SET status = @0, update_date = @1 WHERE guid = @2", VacancyStatus.Closed, msg.TimeStamp, msg.VacancyGuid));
+                _db.Execute(new Sql($"UPDATE org_vacancies SET announcement_date = @0, status = @1, update_date = @2 WHERE guid = @3", msg.TimeStamp, VacancyStatus.Closed, msg.TimeStamp, msg.VacancyGuid));
                 transaction.Complete();
             }
         }
@@ -167,7 +167,7 @@ namespace SciVacancies.ReadModel.EventHandlers
         {
             using (var transaction = _db.GetTransaction())
             {
-                _db.Execute(new Sql($"UPDATE org_vacancies SET cancel_reason = @0, status = @1, update_date = @2 WHERE guid = @2", msg.Reason, VacancyStatus.Cancelled, msg.TimeStamp, msg.VacancyGuid));
+                _db.Execute(new Sql($"UPDATE org_vacancies SET announcement_date = @0, cancel_reason = @1, status = @2, update_date = @3 WHERE guid = @4", msg.TimeStamp, msg.Reason, VacancyStatus.Cancelled, msg.TimeStamp, msg.VacancyGuid));
                 transaction.Complete();
             }
         }

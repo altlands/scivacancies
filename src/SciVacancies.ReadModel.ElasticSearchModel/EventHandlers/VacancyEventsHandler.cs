@@ -14,6 +14,7 @@ namespace SciVacancies.ReadModel.ElasticSearchModel.EventHandlers
         INotificationHandler<VacancyRemoved>,
         INotificationHandler<VacancyPublished>,
         INotificationHandler<VacancyInCommittee>,
+        INotificationHandler<VacancyPretenderSet>,
         INotificationHandler<VacancyClosed>,
         INotificationHandler<VacancyCancelled>
     {
@@ -43,6 +44,7 @@ namespace SciVacancies.ReadModel.ElasticSearchModel.EventHandlers
         public void Handle(VacancyPublished msg)
         {
             Vacancy vacancy = _elasticClient.Get<Vacancy>(msg.VacancyGuid.ToString()).Source;
+            vacancy.PublishDate = msg.TimeStamp;
             vacancy.Status = VacancyStatus.Published;
             vacancy.PublishDate = msg.TimeStamp;
 
@@ -51,13 +53,23 @@ namespace SciVacancies.ReadModel.ElasticSearchModel.EventHandlers
         public void Handle(VacancyInCommittee msg)
         {
             Vacancy vacancy = _elasticClient.Get<Vacancy>(msg.VacancyGuid.ToString()).Source;
+            vacancy.CommitteeDate = msg.TimeStamp;
             vacancy.Status = VacancyStatus.InCommittee;
+
+            _elasticClient.Update<Vacancy>(u => u.IdFrom(vacancy).Doc(vacancy));
+        }
+        public void Handle(VacancyPretenderSet msg)
+        {
+            Vacancy vacancy = _elasticClient.Get<Vacancy>(msg.VacancyGuid.ToString()).Source;
+            vacancy.AwaitingDate = msg.TimeStamp;
+            vacancy.Status = VacancyStatus.OfferResponseAwaiting;
 
             _elasticClient.Update<Vacancy>(u => u.IdFrom(vacancy).Doc(vacancy));
         }
         public void Handle(VacancyClosed msg)
         {
             Vacancy vacancy = _elasticClient.Get<Vacancy>(msg.VacancyGuid.ToString()).Source;
+            vacancy.AnnouncementDate = msg.TimeStamp;
             vacancy.Status = VacancyStatus.Closed;
 
             _elasticClient.Update<Vacancy>(u => u.IdFrom(vacancy).Doc(vacancy));
@@ -65,6 +77,8 @@ namespace SciVacancies.ReadModel.ElasticSearchModel.EventHandlers
         public void Handle(VacancyCancelled msg)
         {
             Vacancy vacancy = _elasticClient.Get<Vacancy>(msg.VacancyGuid.ToString()).Source;
+            vacancy.AnnouncementDate = msg.TimeStamp;
+            vacancy.CancelReason = msg.Reason;
             vacancy.Status = VacancyStatus.Cancelled;
 
             _elasticClient.Update<Vacancy>(u => u.IdFrom(vacancy).Doc(vacancy));
