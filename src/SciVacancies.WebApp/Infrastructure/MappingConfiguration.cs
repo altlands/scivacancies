@@ -37,6 +37,7 @@ namespace SciVacancies.WebApp.Infrastructure
 
             #endregion
 
+            
             #region Organization
 
             //Создание организации
@@ -103,6 +104,7 @@ namespace SciVacancies.WebApp.Infrastructure
             //Mapper.CreateMap<ResearchDirection, int>().ForMember(d => d, o => o.MapFrom(s => s.id));
 
             #endregion
+
 
             #region Elastic
 
@@ -342,6 +344,7 @@ namespace SciVacancies.WebApp.Infrastructure
 
             //education
 
+            Mapper.CreateMap<Education, SciVacancies.Domain.Core.Education>();
             Mapper.CreateMap<Education, EducationEditViewModel>()
                 .ForMember(d => d.ResearcherGuid, o => o.MapFrom(s => s.researcher_guid))
                 .ForMember(d => d.City, o => o.MapFrom(s => s.city))
@@ -353,6 +356,7 @@ namespace SciVacancies.WebApp.Infrastructure
                 .ForMember(dest => dest.GraduationYear, src => src.MapFrom(c => (c.GraduationYear.HasValue && c.GraduationYear.Value != 0) ? new DateTime(c.GraduationYear.Value, 1, 1) : default(DateTime)));
 
             //piblication
+            Mapper.CreateMap<Publication, SciVacancies.Domain.Core.Publication>();
             Mapper.CreateMap<Publication, PublicationEditViewModel>()
                 .ForMember(d => d.Guid, o => o.MapFrom(s => s.guid))
                 .ForMember(d => d.ResearcherGuid, o => o.MapFrom(s => s.researcher_guid))
@@ -360,6 +364,7 @@ namespace SciVacancies.WebApp.Infrastructure
             Mapper.CreateMap<PublicationEditViewModel, SciVacancies.Domain.Core.Publication>();
 
             #endregion
+
 
             #region SearchSubscription
 
@@ -381,6 +386,7 @@ namespace SciVacancies.WebApp.Infrastructure
 
 
             #endregion
+
 
             #region Vacancy
 
@@ -565,6 +571,7 @@ namespace SciVacancies.WebApp.Infrastructure
 
             #endregion
 
+
             #region VacancyApplication
 
             Mapper.CreateMap<VacancyApplicationCreated, VacancyApplication>()
@@ -630,6 +637,7 @@ namespace SciVacancies.WebApp.Infrastructure
 
             #endregion
 
+
             #region Dictionaries
 
             Mapper.CreateMap<Foiv, FoivViewModel>()
@@ -650,6 +658,7 @@ namespace SciVacancies.WebApp.Infrastructure
                 .ForMember(d => d.Root, o => o.MapFrom(s => s.root_id));
 
             #endregion
+
         }
     }
 }

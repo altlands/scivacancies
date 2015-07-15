@@ -72,6 +72,7 @@
                         }
                     </td>
                     <td>
+                        <a asp-controller="subscriptions" asp-action="details" asp-route-id="@item.guid" class="view-td-icon" title="Выполнить поиск по подписке"></a>
                         <a asp-controller="subscriptions" asp-action="delete" asp-route-id=@item.guid class="close-td-icon" title="Удалить" onclick="javascript: return confirm('Вы уверены что хотите удалить текущую подписку?');"></a>
                     </td>
                 </tr>

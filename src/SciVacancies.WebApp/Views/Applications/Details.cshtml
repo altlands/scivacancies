@@ -13,8 +13,7 @@
 
 <h4>@ViewBag.Title: заявка на ID МНС6000567 №001 от @Model.CreationDate.ToLocalVacancyDateString()</h4>
 
-<a asp-controller="researchers" asp-action="account" asp-route-id="@Model.VacancyGuid">Вакансия: @Model.Vacancy.FullName</a>
-<br />
+<h4> Вакансия: <a asp-controller="vacancies" asp-action="card" asp-route-id="@Model.VacancyGuid">@Model.Vacancy.FullName</a></h4>
 
 <div class="content-slide">
     <div class="profile">
