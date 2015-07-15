@@ -52,5 +52,11 @@ namespace SciVacancies.WebApp.Controllers
         {
             return View("~/Views/Shared/Error.cshtml");
         }
+
+        [PageTitle("Информация о системе")]
+        public ActionResult About()
+        {
+            return View();
+        }
     }
 }
