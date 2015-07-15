@@ -1,6 +1,9 @@
 ﻿using SciVacancies.Domain.Enums;
 using SciVacancies.ReadModel.ElasticSearchModel.Model;
+using SciVacancies.WebApp.Engine;
 
+using System;
+using System.Collections.Generic;
 using System.Linq;
 
 using Nest;
@@ -20,41 +23,87 @@ namespace SciVacancies.WebApp.Queries
 
         public Page<Vacancy> Handle(SearchQuery msg)
         {
-            var results = _elastic.Search<Vacancy>(s => s
-                                    .Index("scivacancies")
-                                    .Skip((int)((msg.CurrentPage - 1) * (msg.PageSize??10)))
-                                    .Take((int)(msg.PageSize ?? 10))
-                                    .Query(qr => qr
-                                        .Filtered(fltd => fltd
-                                            .Query(q => q
-                                                .FuzzyLikeThis(flt => flt
-                                                    .LikeText(msg.Query)
-                                                )
-                                            )
-                                            .Filter(f => f
-                                                .Terms<int>(ft => ft.OrganizationFoivId, msg.FoivIds)
-                                                && f.Terms<int>(ft => ft.PositionTypeId, msg.PositionTypeIds)
-                                                && f.Terms<int>(ft => ft.RegionId, msg.RegionIds)
-                                                && f.Terms<int>(ft => ft.ResearchDirectionId, msg.ResearchDirectionIds)
-                                                && f.Range(fr => fr
-                                                    .GreaterOrEquals((long)(msg.SalaryFrom ?? 0))
-                                                    .LowerOrEquals((long)(msg.SalaryTo ?? 0))
-                                                )
-                                                && f.Terms<VacancyStatus>(ft => ft.Status, msg.VacancyStatuses)
-                                            )
-                                        )
-                                    )
-                                    );
+            Func<SearchQuery, SearchDescriptor<Vacancy>> searchSelector = VacancySearchDescriptor;
+
+            var results = _elastic.Search<Vacancy>(searchSelector(msg));
+
             var pageVacancies = new Page<Vacancy>
             {
-                CurrentPage = msg.CurrentPage ?? 1,
-                ItemsPerPage = msg.PageSize ?? 10,
+                CurrentPage = msg.CurrentPage.Value,
+                ItemsPerPage = msg.PageSize.Value,
                 TotalItems = results.Total,
-                TotalPages = results.Total / (msg.PageSize ?? 10),
+                TotalPages = msg.PageSize.HasValue ? results.Total / msg.PageSize.Value : 0,
                 Items = results.Documents.ToList()
             };
 
             return pageVacancies;
         }
+
+        #region QueryContainers
+
+        public SearchDescriptor<Vacancy> VacancySearchDescriptor(SearchQuery sq)
+        {
+            SearchDescriptor<Vacancy> sdescriptor = new SearchDescriptor<Vacancy>();
+
+            sdescriptor.Index("scivacancies");
+            if (sq.PageSize.Value != 0 && sq.CurrentPage.Value != 0)
+            {
+                sdescriptor.Skip((int)((sq.CurrentPage - 1) * sq.PageSize));
+                sdescriptor.Take((int)sq.PageSize);
+            }
+            switch (sq.OrderBy)
+            {
+                case ConstTerms.OrderByDateDescending:
+                    sdescriptor.Sort(sort => sort.OnField(of => of.PublishDate).Descending());
+                    break;
+                case ConstTerms.OrderByDateAscending:
+                    sdescriptor.Sort(sort => sort.OnField(of => of.PublishDate).Ascending());
+                    break;
+            }
+            Func<SearchQuery, QueryContainer> querySelector = VacancyQueryContainer;
+
+            sdescriptor.Query(querySelector(sq));
+
+            return sdescriptor;
+        }
+        public QueryContainer VacancyQueryContainer(SearchQuery sq)
+        {
+
+            QueryContainer query = Query<Vacancy>.Filtered(fltd => fltd
+                                                        .Query(q => q
+                                                            .FuzzyLikeThis(flt => flt
+                                                                .LikeText(sq.Query)
+                                                            )
+                                                        )
+                                                        .Filter(f => f
+                                                            .Terms<int>(ft => ft.OrganizationFoivId, sq.FoivIds)
+                                                            && f.Terms<int>(ft => ft.PositionTypeId, sq.PositionTypeIds)
+                                                            && f.Terms<int>(ft => ft.RegionId, sq.RegionIds)
+                                                            && f.Terms<int>(ft => ft.ResearchDirectionId, sq.ResearchDirectionIds)
+                                                            && f.Range(fr => fr
+                                                                    .GreaterOrEquals((long?)sq.SalaryFrom)
+                                                                    .OnField(of => of.SalaryFrom)
+                                                            )
+                                                            && f.Range(fr => fr
+                                                                    .LowerOrEquals((long?)sq.SalaryTo)
+                                                                    .OnField(of => of.SalaryTo)
+                                                            )
+                                                            && f.Terms<VacancyStatus>(ft => ft.Status, sq.VacancyStatuses)
+                                                            && f.Range(fr => fr
+                                                                    .GreaterOrEquals(sq.PublishDateFrom)
+                                                                    .OnField(of => of.PublishDate)
+                                                            )
+                                                            && f.Bool(b => b
+                                                                    .MustNot(mn => mn
+                                                                        .Terms<VacancyStatus>(mnt => mnt.Status, new List<VacancyStatus> { VacancyStatus.InProcess })
+                                                                    )
+                                                            )
+                                                        )
+                                                );
+
+            return query;
+        }
+
+        #endregion
     }
 }
