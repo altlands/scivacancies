@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Data.Entity.Core;
 using System.Linq;
 using AutoMapper;
@@ -34,10 +35,13 @@ namespace SciVacancies.WebApp.Controllers
             if (researcherGuid == Guid.Empty)
                 throw new ArgumentNullException(nameof(researcherGuid));
 
-            var model = Mapper.Map<ResearcherDetailsViewModel>(_mediator.Send(new SingleResearcherQuery { ResearcherGuid = researcherGuid }));
-
-            if (model == null)
+            var preModel = _mediator.Send(new SingleResearcherQuery {ResearcherGuid = researcherGuid});
+            if (preModel == null)
                 return RedirectToAction("logout", "account");
+
+            var model = Mapper.Map<ResearcherDetailsViewModel>(preModel);
+            model.Educations = Mapper.Map<List<EducationEditViewModel>>(_mediator.Send(new SelectResearcherEducationsQuery { ResearcherGuid = researcherGuid }));
+            model.Publications= Mapper.Map<List<PublicationEditViewModel>>(_mediator.Send(new SelectResearcherPublicationsQuery{ ResearcherGuid = researcherGuid }));
 
             return View(model);
         }

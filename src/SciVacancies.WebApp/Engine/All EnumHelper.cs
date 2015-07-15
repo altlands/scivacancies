@@ -38,6 +38,8 @@ namespace SciVacancies.WebApp
                     return "failed";
                 case VacancyStatus.Cancelled:
                     return "work";
+                case VacancyStatus.OfferResponseAwaiting:
+                    return "work";
                 case VacancyStatus.OfferAccepted:
                     return "work";
                 case VacancyStatus.OfferRejected:

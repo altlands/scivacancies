@@ -131,7 +131,7 @@
     <span class="blue-btn middle-icon icon-print-button" style="margin-right: 15px;" rel="tooltip" title="Распечатать все заявки">Распечатать все заявки</span>
 }
 
-@if (Model.Status == VacancyStatus.InCommittee)
+@if (Model.Status == VacancyStatus.OfferResponseAwaiting)
 {
     if (Model.WinnerRequestDate.HasValue)
     {
