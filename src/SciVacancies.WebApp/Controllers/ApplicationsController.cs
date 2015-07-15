@@ -62,6 +62,8 @@ namespace SciVacancies.WebApp.Controllers
                 Email = researcher.email,
                 Phone = researcher.phone,
                 ResearcherFullName = $"{researcher.secondname} {researcher.firstname} {researcher.patronymic}",
+                Educations = researcher.educations,
+                Publications = researcher.publications,
                 ResearchActivity = researcher.research_activity,
                 TeachingActivity = researcher.teaching_activity,
                 OtherActivity = researcher.other_activity,
@@ -118,6 +120,8 @@ namespace SciVacancies.WebApp.Controllers
             model.ResearcherFullName = $"{researcher.secondname} {researcher.firstname} {researcher.patronymic}";
             model.ResearcherGuid = researcherGuid;
             model.Rewards = researcher.rewards;
+            model.Educations = researcher.educations;
+            model.Publications = researcher.publications;
             model.ScienceDegree = researcher.science_degree;
             model.ScienceRank = researcher.science_rank;
             model.TeachingActivity = researcher.teaching_activity;
