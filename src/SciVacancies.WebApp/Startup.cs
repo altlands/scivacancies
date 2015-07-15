@@ -109,7 +109,7 @@ namespace SciVacancies.WebApp
 
             MappingConfiguration.Initialize();
 
-            SearchSubscriptionService.Initialize();                      
+            SearchSubscriptionService.Initialize();
         }
     }
 }
