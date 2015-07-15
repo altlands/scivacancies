@@ -18,8 +18,8 @@ namespace SciVacancies.ReadModel.Core
         public string positiontype_ids { get; set; }
         public string region_ids { get; set; }
         public string researchdirection_ids { get; set; }
-        public int salary_from { get; set; }
-        public int salary_to { get; set; }
+        public int? salary_from { get; set; }
+        public int? salary_to { get; set; }
         public string vacancy_statuses { get; set; }
 
         public long currenttotal_count { get; set; }

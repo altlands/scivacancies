@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using MediatR;
 using Microsoft.AspNet.Mvc;
+using SciVacancies.Domain.Enums;
 using SciVacancies.ReadModel.ElasticSearchModel.Model;
 using SciVacancies.WebApp.Queries;
 using SciVacancies.WebApp.ViewModels;
@@ -30,14 +32,23 @@ namespace SciVacancies.WebApp.Controllers
             model.Items= _mediator.Send(new SearchQuery
             {
                 Query = model.Search,
+
                 PageSize = model.PageSize,
                 CurrentPage = model.CurrentPage,
-                PublishDateFrom = DateTime.Now,
+                OrderBy = model.OrderBy,
+
+                //PublishDateFrom = DateTime.Now.AddDays(-10),
+
+                FoivIds = model.Foivs,
                 PositionTypeIds = model.Positions,
                 RegionIds = model.Regions,
-                FoivIds = model.Foivs,
                 ResearchDirectionIds = model.ResearchDirections,
-                OrderBy = model.OrderBy
+
+                SalaryFrom = model.SalaryMin,
+                SalaryTo = model.SalaryMax,
+
+                VacancyStatuses =(IEnumerable<VacancyStatus>)model.VacancyStates
+
             }).MapToPagedList<Vacancy, VacancyElasticResult>();
 
             if (model.Items.Items != null && model.Items.Items.Any())
