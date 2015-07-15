@@ -20,9 +20,6 @@ namespace SciVacancies.WebApp.ViewModels
         [ElasticProperty(Index = FieldIndexOption.NotAnalyzed, Type = FieldType.String)]
         public Guid PositionTypeGuid { get; set; }
 
-        public Guid WinnerGuid { get; set; }
-        public Guid PretenderGuid { get; set; }
-
         public string OrganizationName { get; set; }
         /// <summary>
         /// Должность

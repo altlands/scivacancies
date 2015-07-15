@@ -13,7 +13,7 @@ namespace SciVacancies.WebApp.ViewModels
         public ResearcherDetailsViewModel Researcher { get; set; }
 
         public int PositionTypeId { get; set; }
-        public int PositionTypeName{ get; set; }
+        public string PositionTypeName{ get; set; }
 
         public string FullName { get; set; }
         public string Email { get; set; }

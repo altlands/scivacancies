@@ -5,7 +5,7 @@
 
 <div class="crumbs">
     <a href="/">Главная</a><span class="separator">/</span>
-    <a asp-controller="organizations" asp-action="account">@Model.Vacancy.OrganizationName</a><span class="separator">/</span>
+    <a asp-controller="organizations" asp-action="account">Карточка организации</a><span class="separator">/</span>
     <a asp-controller="organizations" asp-action="vacancies">Вакансии</a><span class="separator">/</span>
     <a asp-controller="vacancies" asp-action="details" asp-route-id="@Model.VacancyGuid">@Model.Vacancy.Name</a><span class="separator">/</span>
     @ViewBag.Title
@@ -75,7 +75,7 @@
 
     @if (Model.Status == VacancyApplicationStatus.Applied && Model.Vacancy.Status == VacancyStatus.InCommittee)
     {
-        if (Model.Vacancy.WinnerGuid != Model.ResearcherGuid)
+        if (Model.Vacancy.WinnerResearcherGuid!= Model.ResearcherGuid)
         {
             <text>
             <br />
@@ -85,7 +85,7 @@
             </text>
         }
 
-        else if (Model.Vacancy.PretenderGuid != Model.ResearcherGuid)
+        else if (Model.Vacancy.PretenderResearcherGuid!= Model.ResearcherGuid)
         {
             <text>
             <br />
@@ -100,7 +100,7 @@
 
 <div class="b-bottom-nav">
     <a href="/" class="small-icon icon-prev">Главная</a>
-    <a asp-controller="organizations" asp-action="account" class="small-icon icon-prev">@Model.Vacancy.OrganizationName</a>
+    <a asp-controller="organizations" asp-action="account" class="small-icon icon-prev">Карточка организации</a>
     <a asp-controller="organizations" asp-action="vacancies" class="small-icon icon-prev">Вакансии</a>
     <a asp-controller="vacancies" asp-action="details" asp-route-id="@Model.VacancyGuid" class="small-icon icon-prev">@Model.Vacancy.Name</a>
 </div>

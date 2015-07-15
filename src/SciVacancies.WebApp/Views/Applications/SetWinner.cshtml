@@ -3,15 +3,15 @@
 @using SciVacancies.WebApp.ViewModels
 @model VacancyApplicationSetWinnerViewModel
 @{
-    if (Model.Vacancy.WinnerGuid != Guid.Empty || Model.Vacancy.PretenderGuid != Guid.Empty)
+    if (Model.Vacancy.WinnerResearcherGuid!= Guid.Empty || Model.Vacancy.PretenderResearcherGuid!= Guid.Empty)
     {
-        Model.IsWinner = Model.Vacancy.PretenderGuid != Guid.Empty;
+        Model.IsWinner = Model.Vacancy.PretenderResearcherGuid!= Guid.Empty;
     }
 }
 
 <div class="crumbs">
     <a href="/">Главная</a><span class="separator">/</span>
-    <a asp-controller="organizations" asp-action="account">@Model.Vacancy.OrganizationName</a><span class="separator">/</span>
+    <a asp-controller="organizations" asp-action="account">Карточка организации</a><span class="separator">/</span>
     <a asp-controller="organizations" asp-action="vacancies">Вакансии</a><span class="separator">/</span>
     <a asp-controller="vacancies" asp-action="details" asp-route-id="@Model.VacancyGuid">@Model.Vacancy.Name</a><span class="separator">/</span>
     <a asp-controller="applications" asp-action="preview" asp-route-id="@Model.Guid">@Model.FullName</a><span class="separator">/</span>
@@ -42,7 +42,7 @@
             </div>
             <div class="right-cell">
                 <ul class="radio-list">
-                    @if (Model.Vacancy.WinnerGuid == Guid.Empty)
+                    @if (Model.Vacancy.WinnerResearcherGuid== Guid.Empty)
                     {
                         <li>
                             <span class="radio @(Model.IsWinner ? "checked" : string.Empty)">
@@ -50,7 +50,7 @@
                             </span><label for="winner1">Первое место</label>
                         </li>
                     }
-                    @if (Model.Vacancy.PretenderGuid == Guid.Empty)
+                    @if (Model.Vacancy.PretenderResearcherGuid== Guid.Empty)
                     {
                         <li>
                             <span class="radio @(!Model.IsWinner ? "checked" : string.Empty)">
@@ -100,7 +100,7 @@
 
 <div class="b-bottom-nav">
     <a href="/" class="small-icon icon-prev">Главная</a>
-    <a asp-controller="organizations" asp-action="account" class="small-icon icon-prev">@Model.Vacancy.OrganizationName</a>
+    <a asp-controller="organizations" asp-action="account" class="small-icon icon-prev">Карточка организации</a>
     <a asp-controller="organizations" asp-action="vacancies" class="small-icon icon-prev">Вакансии</a>
     <a asp-controller="vacancies" asp-action="details" asp-route-id="@Model.VacancyGuid" class="small-icon icon-prev">@Model.Vacancy.Name</a>
     <a asp-controller="applications" asp-action="preview" asp-route-id="@Model.Guid" class="small-icon icon-prev">@Model.FullName</a>
