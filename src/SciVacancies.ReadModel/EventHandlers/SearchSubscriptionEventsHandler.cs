@@ -25,6 +25,8 @@ namespace SciVacancies.ReadModel.EventHandlers
         {
             SearchSubscription searchSubscription = Mapper.Map<SearchSubscription>(msg);
 
+            searchSubscription.currentcheck_date = msg.TimeStamp;
+
             using (var transaction = _db.GetTransaction())
             {
                 _db.Insert(searchSubscription);

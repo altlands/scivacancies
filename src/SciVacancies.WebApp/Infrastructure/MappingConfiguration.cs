@@ -369,7 +369,7 @@ namespace SciVacancies.WebApp.Infrastructure
                 .ForMember(d => d.title, o => o.MapFrom(s => s.Data.Title))
                 .ForMember(d => d.query, o => o.MapFrom(s => s.Data.Query))
                 .ForMember(d => d.orderby, o => o.MapFrom(s => s.Data.OrderBy))
-                .ForMember(d => d.foiv_ids, o => o.MapFrom(s => s))
+                .ForMember(d => d.foiv_ids, o => o.MapFrom(s => JsonConvert.SerializeObject(s.Data.FoivIds)))
                 .ForMember(d => d.positiontype_ids, o => o.MapFrom(s => JsonConvert.SerializeObject(s.Data.PositionTypeIds)))
                 .ForMember(d => d.region_ids, o => o.MapFrom(s => JsonConvert.SerializeObject(s.Data.RegionIds)))
                 .ForMember(d => d.researchdirection_ids, o => o.MapFrom(s => JsonConvert.SerializeObject(s.Data.ResearchDirectionIds)))

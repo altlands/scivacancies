@@ -46,7 +46,8 @@ namespace SciVacancies.WebApp.Queries
             SearchDescriptor<Vacancy> sdescriptor = new SearchDescriptor<Vacancy>();
 
             sdescriptor.Index("scivacancies");
-            if (sq.PageSize.Value != 0 && sq.CurrentPage.Value != 0)
+            if (sq.PageSize.HasValue && sq.CurrentPage.HasValue &&
+                sq.PageSize.Value != 0 && sq.CurrentPage.Value != 0)
             {
                 sdescriptor.Skip((int)((sq.CurrentPage - 1) * sq.PageSize));
                 sdescriptor.Take((int)sq.PageSize);
@@ -81,11 +82,11 @@ namespace SciVacancies.WebApp.Queries
                                                             && f.Terms<int>(ft => ft.RegionId, sq.RegionIds)
                                                             && f.Terms<int>(ft => ft.ResearchDirectionId, sq.ResearchDirectionIds)
                                                             && f.Range(fr => fr
-                                                                    .GreaterOrEquals((long?)sq.SalaryFrom)
+                                                                    .GreaterOrEquals((sq.SalaryFrom.HasValue && sq.SalaryFrom > 0) ? (long?)sq.SalaryFrom : null)
                                                                     .OnField(of => of.SalaryFrom)
                                                             )
                                                             && f.Range(fr => fr
-                                                                    .LowerOrEquals((long?)sq.SalaryTo)
+                                                                    .LowerOrEquals((sq.SalaryTo.HasValue && sq.SalaryTo < 0) ? (long?)sq.SalaryTo : null)
                                                                     .OnField(of => of.SalaryTo)
                                                             )
                                                             && f.Terms<VacancyStatus>(ft => ft.Status, sq.VacancyStatuses)
