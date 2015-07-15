@@ -153,6 +153,7 @@ namespace SciVacancies.WebApp.Controllers
                     PageIndex = currentPage
                 }).MapToPagedList()
             };
+            //TODO: ntemnikov : Researchers -> Subscriptions : реализовать кнопки управления подписками
             return View(model);
         }
 

@@ -1,6 +1,7 @@
 ﻿@using System.Linq
 @using System.Threading.Tasks
 @using SciVacancies.WebApp
+@using SciVacancies.WebApp.Engine
 @using SciVacancies.WebApp.ViewModels
 @model VacanciesFilterModel
 
@@ -14,6 +15,7 @@
 </div>
 
 <form method="GET">
+    <input type="hidden" asp-for="NewSubscriptionAdd" />
     <div class="l-search">
         <div class="b-filter float-right">
             <h4>Фильтр по результатам</h4>
@@ -104,9 +106,9 @@
                 <div class="cat-filter">
                     <div class="title"><span>Категория должности</span></div>
                     <ul class="list-checkboxes">
-                        <checkboxing items="ViewBag.FilterSource.Positions"
-                                     values="Model.Positions"
-                                     property="Positions"
+                        <checkboxing items="ViewBag.FilterSource.PositionTypes"
+                                     values="Model.PositionTypes"
+                                     property="PositionTypes"
                                      showcount="10"></checkboxing>
                     </ul>
                     <span class="small-icon icon-sm-eye show-all-list"><span>Показать все</span></span>
@@ -141,22 +143,67 @@
                 @Html.Raw(!string.IsNullOrWhiteSpace(Model.Search) ? string.Format("По запросу «{1}» с учетом фильтрации найдено {0} записей.", Model.Items.TotalItems, Model.Search) : "&nbsp;")
             </div>
 
-            <!--<div class="ctr-buttons" style="margin-top: 20px;">
-                <a asp-controller="subscriptions" asp-action="add" asp-route-id="@Guid.NewGuid()" class="success-btn-submit open-popup" id="subscribe" rel="tooltip">Подписаться</a>
 
-                <div id="subscribe-popover" style="display: none;">
-                    Задав поисковый запрос и выбрав необходимые критерии поиска в фильтре результатов, вы можете подписаться на данную конфигурацию запроса. Это позволит в дальнейшем оперативно отслеживать необходимую информацию с учётом выбранных предпочтений. Ваши подписки отображаются в Личном Кабинете в соответствующей вкладке
-                </div>
-            </div> -->
-            <!--div class="ctr-buttons" style="margin-top:20px;">
-            <a  asp-controller="subscriptions" asp-action="delete" asp-route-id="@Guid.NewGuid()" class="blue-btn middle-icon icon-close" rel="tooltip" title="">Отменить подписку</a>
-            </div-->
-            <!--div class="ctr-buttons" style="margin-top:20px;">
-            <a  asp-controller="subscriptions" asp-action="add" asp-route-id="@Guid.NewGuid()" class="white-btn middle-icon icon-lgr-ok" id="subscribed" rel="tooltip">Подписка оформлена</a>
-            <div id="subscribed-popover" style="display:none;text-align:center;">
-                Поздравляем!<br/>Теперь вы подписаны на запрос по теме «исследователь»
-            </div>
-            </div-->
+            @if (User.IsInRole(ConstTerms.RequireRoleResearcher))
+            {
+                if (Model.SubscriptionInfo == null || !Model.SubscriptionInfo.NewJustAdded)
+                {
+                    <text>
+                    <div class="ctr-buttons" style="margin-top: 20px;">
+                        <a class="success-btn-submit open-popup" id="subscribe" rel="tooltip">Подписаться</a>
+
+                        <div id="subscribe-popover" style="display: none;">
+                            Задав поисковый запрос и выбрав необходимые критерии поиска в фильтре результатов, вы можете подписаться на данную конфигурацию запроса.
+                            Это позволит в дальнейшем оперативно отслеживать необходимую информацию с учётом выбранных предпочтений. Ваши подписки отображаются в Личном Кабинете в соответствующей вкладке
+                        </div>
+                    </div>
+
+                    <div class="window-popup middle" style="display:none;">
+                        <span class="close-popup"></span>
+                        <div class="title-popup">
+                            <h4>Подписка на поисковый запрос</h4>
+                        </div>
+                        <div class="content-popup">
+                            <p class="fs14 arial">Подписываясь на запрос, вы сможете быстро перейти к соответствующим результатам из Личного кабинета, а также будете получать электронные уведомления обо всех обновлениях по теме данного запроса</p>
+                            <div class="form-line">
+                                <input type="text" asp-for="NewSubscriptionTitle" style="width: 340px;" placeholder="Название запроса"/>
+                            </div>
+
+                            @*<div class="form-line">
+                                    <input type="text" style="width:340px;" placeholder="Ключевые слова" />
+                                </div>*@
+
+                            <div class="form-line mt25">
+                                <span class="checkbox ">
+                                    <input type="checkbox"  asp-for="NewSubscriptionNotifyByEmail"/>
+                                </span>
+                                <label asp-for="NewSubscriptionNotifyByEmail">Получать уведомления по электронной почте</label>
+                            </div>
+
+                            <div class="ctr-buttons mt40">
+                                <input type="submit" class="green-btn middle-icon icon-arr-right" onclick="javascript: return addNewSubscription(this);" value="Подписаться"/>
+                                <span class="blue-btn middle-icon icon-close" onclick="javqascript: return false;">Отмена</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="bg-window" style="display: none;"></div>
+                    </text>
+                }
+                if (Model.SubscriptionInfo!=null && Model.SubscriptionInfo.NewJustAdded)
+                {
+                    <div class="ctr-buttons" style="margin-top: 20px;">
+                        <a asp-controller="researchers" asp-action="subscriptions" class="white-btn middle-icon icon-lgr-ok" id="subscribed" rel="tooltip" target="_blank">Подписка оформлена</a>
+                        <div id="subscribed-popover" style="display: none; text-align: center;">
+                            Поздравляем!<br />Вы добавили новую подписку «@Model.SubscriptionInfo.Title»
+                        </div>
+                    </div>
+                    <div class="ctr-buttons" style="margin-top: 20px;">
+                        <a asp-controller="subscriptions" asp-action="delete" asp-route-id="@Model.SubscriptionInfo.NewGuid" onclick="javascript: return confirm('Вы уверены что хотите удалить текущую подписку?');" class="blue-btn middle-icon icon-close" rel="tooltip" title="">Отменить подписку</a>
+                    </div>
+                }
+            }
+
+
 
             <div class="sorting">
                 <div class="inline-block w120">
@@ -205,7 +252,9 @@
                 }
             </div>
         </div>
+
     </div>
+
 
 </form>
 
@@ -215,41 +264,6 @@
          request="Context.Request">
     </div>
 </div>
-
-
-
-
-
-@*<div class="window-popup middle" style="display:none;">
-        <span class="close-popup"></span>
-        <div class="title-popup">
-            <h4>Подписка на поисковый запрос</h4>
-        </div>
-        <div class="content-popup">
-            <p class="fs14 arial">Подписываясь на запрос, вы сможете быстро перейти к соответствующим результатам из Личного кабинета, а также будете получать электронные уведомления обо всех обновлениях по теме данного запроса</p>
-            <div class="form-line">
-                <input type="text" style="width:340px;" placeholder="Название запроса" />
-            </div>
-
-            <div class="form-line">
-                <input type="text" style="width:340px;" placeholder="Ключевые слова" />
-            </div>
-
-            <div class="form-line mt25">
-                <span class="checkbox checked">
-                    <input type="checkbox" checked />
-                </span><label>Получать уведомления по электронной почте</label>
-            </div>
-
-            <div class="ctr-buttons mt40">
-                <span class="green-btn middle-icon icon-arr-right">Подписаться</span><span class="blue-btn middle-icon icon-close">Отмена</span>
-            </div>
-        </div>
-    </div>
-    <div class="bg-window" style="display: none;"></div>*@
-
-
-
 
 
 <div class="b-bottom-nav">

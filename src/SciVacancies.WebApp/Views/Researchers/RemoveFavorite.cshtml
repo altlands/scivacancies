@@ -3,7 +3,7 @@
 
 <div class="crumbs">
     <a href="/">Главная</a><span class="separator">/</span>
-    <a asp-controller="organizations" asp-action="card" asp-route-id="@Model.OrganizationGuid">@Model.OrganizationName</a><span class="separator">/</span>
+    <a asp-controller="organizations" asp-action="card" asp-route-id="@Model.OrganizationGuid">Карточка организации</a><span class="separator">/</span>
     <a asp-controller="vacancies" asp-action="card" asp-route-id="@Model.Guid">@Model.Name</a><span class="separator">/</span>
     @ViewBag.Title
 </div>
@@ -27,6 +27,6 @@
 
 <div class="b-bottom-nav">
     <a href="/" class="small-icon icon-prev">Главная</a>
-    <a asp-controller="organizations" asp-action="card" asp-route-id="@Model.OrganizationGuid" class="small-icon icon-prev">@Model.OrganizationName</a>
+    <a asp-controller="organizations" asp-action="card" asp-route-id="@Model.OrganizationGuid" class="small-icon icon-prev">Карточка организации</a>
     <a asp-controller="vacancies" asp-action="card" asp-route-id="@Model.Guid" class="small-icon icon-prev">@Model.Name</a>
 </div>

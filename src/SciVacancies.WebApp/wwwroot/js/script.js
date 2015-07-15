@@ -223,14 +223,23 @@ $(document).ready(function () {
         $(parentContainer).siblings('ul.list-sections-science[id="' + $(source).attr('data-tabname') + '"]').show();
     });
     /*
-     * 
+     * исправление распространения событий для списка фильтров при поиске
      */
     $('li.li-checkbox').click(function (event) {
         event.stopPropagation();
     });
     /*
+     * закрывать модальное окно при нажатии кнопки Отмены
+     */
+    $('span.icon-close').click(function() {
+        var source = this;
+        var parent = $(source).parents('.window-popup')[0];
+        $(parent).find('span.close-popup').click();
+    });
+    /*
     end of the code
     */
+
 });
 
 
@@ -374,3 +383,23 @@ function collapsibleFilterClicked(event) {
         $(source).children('ul').show();
     }
 };
+/**
+  * добавить метку о том что поискаовый запрос нужно сохранить в качестве подписки
+  */
+function isNullOrWhitespace( input ) {
+
+    if (typeof input === 'undefined' || input == null) return true;
+
+    return input.replace(/\s/g, '').length < 1;
+}
+function addNewSubscription(source) {
+    var parentForm = $(source).parents("form")[0];
+
+    var titleValue = $(parentForm).find("input[name=\"NewSubscriptionTitle\"]").val();
+    if (isNullOrWhitespace(titleValue)) {
+        confirm("Укажите новый заголовок Подписки");
+        return false;
+    }
+    $(parentForm).find("input[name=\"NewSubscriptionAdd\"]").val(true);
+    return true;
+}

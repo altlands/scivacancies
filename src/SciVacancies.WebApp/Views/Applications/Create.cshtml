@@ -130,7 +130,7 @@
                                 <label>Год окончания:</label>
                             </div>
                             <div class="right-cell">
-                                <input asp-for="Educations[index].graduation_date" class="disabled big-input"/>
+                                <input type="text" value="@(Model.Educations[index].graduation_date.HasValue ? Model.Educations[index].graduation_date.Value.Year.ToString() : string.Empty)" class="disabled big-input" />
                             </div>
                         </div>
                     </div>
