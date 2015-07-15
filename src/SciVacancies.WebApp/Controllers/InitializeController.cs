@@ -6,8 +6,10 @@ using SciVacancies.Domain.DataModels;
 using SciVacancies.Domain.Enums;
 using SciVacancies.WebApp.Commands;
 using SciVacancies.WebApp.Engine;
+using SciVacancies.WebApp.Infrastructure.Identity;
 using SciVacancies.WebApp.Queries;
 using SciVacancies.WebApp.ViewModels;
+using Microsoft.AspNet.Identity;
 
 // For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -16,14 +18,20 @@ namespace SciVacancies.WebApp.Controllers
     public class InitializeController : Controller
     {
         private readonly IMediator _mediator;
+        private readonly SciVacUserManager _userManager;
 
-        public InitializeController(IMediator mediator)
+        public InitializeController(SciVacUserManager userManager, IMediator mediator)
         {
+            _userManager = userManager;
             _mediator = mediator;
         }
 
         public void Index()
         {
+            var user = _userManager.FindByName("researcher1");
+            if (user != null)
+                return;
+
             var rnd = new Random();
 
             _mediator.Send(new RemoveSearchIndexCommand());

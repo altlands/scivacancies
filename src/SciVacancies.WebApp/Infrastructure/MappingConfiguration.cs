@@ -37,7 +37,7 @@ namespace SciVacancies.WebApp.Infrastructure
 
             #endregion
 
-            
+
             #region Organization
 
             //Создание организации
@@ -632,8 +632,46 @@ namespace SciVacancies.WebApp.Infrastructure
 
             //create 
             Mapper.CreateMap<VacancyApplicationCreateViewModel, VacancyApplicationDataModel>();
-            Mapper.CreateMap<VacancyApplication, VacancyApplicationDetailsViewModel>().IncludePagedResultMapping();
-            Mapper.CreateMap<VacancyApplication, VacancyApplicationSetWinnerViewModel>();
+            Mapper.CreateMap<VacancyApplication, VacancyApplicationDetailsViewModel>().IncludePagedResultMapping()
+                .ForMember(d => d.AcademicStatus, o => o.MapFrom(s => s.science_rank))
+                .ForMember(d => d.Conferences, o => o.MapFrom(s => s.conferences))
+                .ForMember(d => d.CreationDate, o => o.MapFrom(s => s.creation_date))
+                .ForMember(d => d.Email, o => o.MapFrom(s => s.email))
+                .ForMember(d => d.ExtraEmail, o => o.MapFrom(s => s.extraemail))
+                .ForMember(d => d.ExtraPhone, o => o.MapFrom(s => s.extraphone))
+                .ForMember(d => d.FullName, o => o.MapFrom(s => s.researcher_fullname))
+                .ForMember(d => d.Memberships, o => o.MapFrom(s => s.memberships))
+                .ForMember(d => d.OtherActivity, o => o.MapFrom(s => s.other_activity))
+                .ForMember(d => d.Phone, o => o.MapFrom(s => s.phone))
+                .ForMember(d => d.PositionTypeName, o => o.MapFrom(s => s.position_name))
+                .ForMember(d => d.ResearchActivity, o => o.MapFrom(s => s.research_activity))
+                .ForMember(d => d.ResearcherGuid, o => o.MapFrom(s => s.researcher_guid))
+                .ForMember(d => d.Rewards, o => o.MapFrom(s => s.rewards))
+                .ForMember(d => d.ScienceDegree, o => o.MapFrom(s => s.science_degree))
+                .ForMember(d => d.TeachingActivity, o => o.MapFrom(s => s.teaching_activity))
+                .ForMember(d => d.UpdateDate, o => o.MapFrom(s => s.update_date))
+                .ForMember(d => d.VacancyGuid, o => o.MapFrom(s => s.vacancy_guid))
+                ;
+            Mapper.CreateMap<VacancyApplication, VacancyApplicationSetWinnerViewModel>()
+                .ForMember(d => d.AcademicStatus, o => o.MapFrom(s => s.science_rank))
+                .ForMember(d => d.Conferences, o => o.MapFrom(s => s.conferences))
+                .ForMember(d => d.CreationDate, o => o.MapFrom(s => s.creation_date))
+                .ForMember(d => d.Email, o => o.MapFrom(s => s.email))
+                .ForMember(d => d.ExtraEmail, o => o.MapFrom(s => s.extraemail))
+                .ForMember(d => d.ExtraPhone, o => o.MapFrom(s => s.extraphone))
+                .ForMember(d => d.FullName, o => o.MapFrom(s => s.researcher_fullname))
+                .ForMember(d => d.Memberships, o => o.MapFrom(s => s.memberships))
+                .ForMember(d => d.OtherActivity, o => o.MapFrom(s => s.other_activity))
+                .ForMember(d => d.Phone, o => o.MapFrom(s => s.phone))
+                .ForMember(d => d.PositionTypeName, o => o.MapFrom(s => s.position_name))
+                .ForMember(d => d.ResearchActivity, o => o.MapFrom(s => s.research_activity))
+                .ForMember(d => d.ResearcherGuid, o => o.MapFrom(s => s.researcher_guid))
+                .ForMember(d => d.Rewards, o => o.MapFrom(s => s.rewards))
+                .ForMember(d => d.ScienceDegree, o => o.MapFrom(s => s.science_degree))
+                .ForMember(d => d.TeachingActivity, o => o.MapFrom(s => s.teaching_activity))
+                .ForMember(d => d.UpdateDate, o => o.MapFrom(s => s.update_date))
+                .ForMember(d => d.VacancyGuid, o => o.MapFrom(s => s.vacancy_guid))
+                ;
 
             #endregion
 

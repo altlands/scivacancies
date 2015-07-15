@@ -24,6 +24,7 @@ namespace SciVacancies.WebApp.ViewModels
         public ResearcherDetailsViewModel Researcher { get; set; }
 
         public int PositionTypeId { get; set; }
+        public string PositionTypeName { get; set; }
 
         public string FullName { get; set; }
         public string Email { get; set; }
@@ -50,5 +51,6 @@ namespace SciVacancies.WebApp.ViewModels
         public bool IsWinner { get; set; }
         [Required]
         public string Reason { get; set; }
+
     }
 }
