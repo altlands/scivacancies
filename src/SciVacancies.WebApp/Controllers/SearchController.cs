@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using AutoMapper;
 using MediatR;
 using Microsoft.AspNet.Mvc;
+using Newtonsoft.Json;
+using SciVacancies.Domain.DataModels;
 using SciVacancies.Domain.Enums;
 using SciVacancies.ReadModel.ElasticSearchModel.Model;
+using SciVacancies.WebApp.Commands;
 using SciVacancies.WebApp.Queries;
 using SciVacancies.WebApp.ViewModels;
 
@@ -92,7 +94,7 @@ namespace SciVacancies.WebApp.Controllers
                 SalaryFrom = model.SalaryMin,
                 SalaryTo = model.SalaryMax,
 
-                VacancyStatuses =(IEnumerable<VacancyStatus>)model.VacancyStates
+                VacancyStatuses =model.VacancyStates as IEnumerable<VacancyStatus>
 
             }).MapToPagedList<Vacancy, VacancyElasticResult>();
 
