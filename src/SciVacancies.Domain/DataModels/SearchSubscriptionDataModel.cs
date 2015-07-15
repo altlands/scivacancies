@@ -22,8 +22,8 @@ namespace SciVacancies.Domain.DataModels
         public IEnumerable<int> RegionIds { get; set; }
         public IEnumerable<int> ResearchDirectionIds { get; set; }
 
-        public int SalaryFrom { get; set; }
-        public int SalaryTo { get; set; }
+        public int? SalaryFrom { get; set; }
+        public int? SalaryTo { get; set; }
         public IEnumerable<VacancyStatus> VacancyStatuses { get; set; }
     }
 }

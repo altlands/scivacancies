@@ -22,8 +22,8 @@ namespace SciVacancies.WebApp.Queries
         {
             var results = _elastic.Search<Vacancy>(s => s
                                     .Index("scivacancies")
-                                    .Skip((int)((msg.CurrentPage - 1) * msg.PageSize))
-                                    .Take((int)msg.PageSize)
+                                    .Skip((int)((msg.CurrentPage - 1) * (msg.PageSize??10)))
+                                    .Take((int)(msg.PageSize ?? 10))
                                     .Query(qr => qr
                                         .Filtered(fltd => fltd
                                             .Query(q => q
@@ -37,8 +37,8 @@ namespace SciVacancies.WebApp.Queries
                                                 && f.Terms<int>(ft => ft.RegionId, msg.RegionIds)
                                                 && f.Terms<int>(ft => ft.ResearchDirectionId, msg.ResearchDirectionIds)
                                                 && f.Range(fr => fr
-                                                    .GreaterOrEquals((long)msg.SalaryFrom)
-                                                    .LowerOrEquals((long)msg.SalaryTo)
+                                                    .GreaterOrEquals((long)(msg.SalaryFrom ?? 0))
+                                                    .LowerOrEquals((long)(msg.SalaryTo ?? 0))
                                                 )
                                                 && f.Terms<VacancyStatus>(ft => ft.Status, msg.VacancyStatuses)
                                             )
@@ -47,10 +47,10 @@ namespace SciVacancies.WebApp.Queries
                                     );
             var pageVacancies = new Page<Vacancy>
             {
-                CurrentPage = msg.CurrentPage,
-                ItemsPerPage = msg.PageSize,
+                CurrentPage = msg.CurrentPage ?? 1,
+                ItemsPerPage = msg.PageSize ?? 10,
                 TotalItems = results.Total,
-                TotalPages = results.Total / msg.PageSize,
+                TotalPages = results.Total / (msg.PageSize ?? 10),
                 Items = results.Documents.ToList()
             };
 

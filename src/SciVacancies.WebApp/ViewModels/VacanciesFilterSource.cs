@@ -18,7 +18,7 @@ namespace SciVacancies.WebApp.ViewModels
         private IEnumerable<SelectListItem> _vacancyStates;
         private IEnumerable<SelectListItem> _periods;
         private IEnumerable<SelectListItem> _orderBys;
-        private IEnumerable<SelectListItem> _positions;
+        private IEnumerable<SelectListItem> _positionTypes;
         private List<FoivViewModel> _foivs;
         private List<ResearchDirectionViewModel> _researchDirections;
 
@@ -106,11 +106,11 @@ namespace SciVacancies.WebApp.ViewModels
             }
         }
 
-        public IEnumerable<SelectListItem> Positions
+        public IEnumerable<SelectListItem> PositionTypes
         {
             get
             {
-                return _positions ?? (_positions = _mediator.Send(new SelectAllPositionTypesQuery())
+                return _positionTypes ?? (_positionTypes = _mediator.Send(new SelectAllPositionTypesQuery())
                     .Select(c => new SelectListItem { Value = c.id.ToString(), Text = c.title }));
             }
         }
@@ -124,7 +124,6 @@ namespace SciVacancies.WebApp.ViewModels
                     _vacancyStates = new List<VacancyStatus>
                         {
                             VacancyStatus.Published
-                            ,VacancyStatus.InCommittee
                             ,VacancyStatus.Closed
                         }.Select(c => new SelectListItem { Value = ((int)c).ToString(), Text = c.GetDescription() });
                 return _vacancyStates;
