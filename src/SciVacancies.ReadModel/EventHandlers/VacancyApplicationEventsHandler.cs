@@ -75,7 +75,7 @@ namespace SciVacancies.ReadModel.EventHandlers
         {
             using (var transaction = _db.GetTransaction())
             {
-                _db.Execute(new Sql($"UPDATE res_vacancyapplications SET status = @0, update_date = @1 WHERE guid = @2", VacancyApplicationStatus.Applied, msg.TimeStamp, msg.VacancyApplicationGuid));
+                _db.Execute(new Sql($"UPDATE res_vacancyapplications SET apply_date = @0, status = @1, update_date = @2 WHERE guid = @3", msg.TimeStamp, VacancyApplicationStatus.Applied, msg.TimeStamp, msg.VacancyApplicationGuid));
                 transaction.Complete();
             }
         }

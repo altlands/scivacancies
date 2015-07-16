@@ -43,7 +43,8 @@
         "FluentValidation": "5.6.2",
         "Thinktecture.IdentityModel": "3.6.1",
         "Thinktecture.IdentityModel.Client": "4.0.1",
-        "Quartz": "2.3.3"
+        "Quartz": "2.3.3",
+        "SciVacancies.ReadModelNotifications": "1.0.0-*"
     },
 
     "commands": {
