@@ -1,6 +1,22 @@
 ﻿{
   "Data": {
-        "ReadModelDb": "Server=localhost;Database=scivacancies;User Id=postgres;Password=postgres",
-        "EventStoreDb": "Server=localhost;Database=scivacancies;User Id=postgres;Password=postgres"        
+    "ReadModelDb": "Server=localhost;Database=scivacancies;User Id=postgres;Password=postgres",
+    "EventStoreDb": "Server=localhost;Database=scivacancies;User Id=postgres;Password=postgres"
+  },
+  "OAuthSettings": {
+    "sciencemon.ru": {
+      "AuthorizationEndpoint": "http://www.sciencemon.ru/oauth/v2/auth",
+      "TokenEndpoint": "http://www.sciencemon.ru/oauth/v2/token",
+      "UserEndpoint": "http://www.sciencemon.ru/api/user"
+    },
+    "mapofscience.ru": {
+      "AuthorizationEndpoint": "",
+      "TokenEndpoint": "",
+      "UserEndpoint": ""
+    }
+  },
+  "ElasticSettings": {
+    "ConnectionUrl": "http://localhost:9200/",
+    "DefaultIndex": "scivacancies"
   }
 }
