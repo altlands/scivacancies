@@ -1,24 +1,18 @@
 ﻿using SciVacancies.Domain.Enums;
-//using SciVacancies.ReadModel.Core;
 using SciVacancies.WebApp.Queries;
-using SciVacancies.WebApp.Commands;
 
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
-using SciVacancies.WebApp.Queries;
-using MediatR;
 using NPoco;
 using Nest;
 using Quartz;
 using Quartz.Impl;
 using Newtonsoft.Json;
 using Npgsql;
-using SciVacancies.ReadModel.Core;
 using SciVacancies.WebApp.Engine;
 using SciVacancies.WebApp.Engine.SmtpNotificators;
-using Vacancy = SciVacancies.ReadModel.ElasticSearchModel.Model.Vacancy;
+using SciVacancies.ReadModel.ElasticSearchModel.Model;
 
 namespace SciVacancies.WebApp.Infrastructure
 {
@@ -61,15 +55,15 @@ namespace SciVacancies.WebApp.Infrastructure
         {
             public void Execute(IJobExecutionContext context)
             {
-                Database db = new Database("Server = localhost; Database = scivacancies; User Id = postgres; Password = postgres", NpgsqlFactory.Instance);
-                ElasticClient elasticClient = new ElasticClient(new ConnectionSettings(new Uri("http://localhost:9200/"), defaultIndex: "scivacancies"));
-                IEnumerable<SciVacancies.ReadModel.Core.SearchSubscription> searchsubscriptions = db.Fetch<SciVacancies.ReadModel.Core.SearchSubscription>(new Sql($"SELECT * FROM res_searchsubscriptions ss WHERE ss.status = @0", SearchSubscriptionStatus.Active));
+                var dataBase = new Database("Server = localhost; Database = scivacancies; User Id = postgres; Password = postgres", NpgsqlFactory.Instance);
+                var elasticClient = new ElasticClient(new ConnectionSettings(new Uri("http://localhost:9200/"), defaultIndex: "scivacancies"));
+                IEnumerable<SciVacancies.ReadModel.Core.SearchSubscription> searchsubscriptions = dataBase.Fetch<SciVacancies.ReadModel.Core.SearchSubscription>(new Sql($"SELECT * FROM res_searchsubscriptions ss WHERE ss.status = @0", SearchSubscriptionStatus.Active));
 
                 var winnerSetSmtpNotificator = new WinnerSetSmtpNotificator();
                 
                 foreach (SciVacancies.ReadModel.Core.SearchSubscription searchSubscription in searchsubscriptions)
                 {
-                    SearchQuery searchQuery = new SearchQuery
+                    var searchQuery = new SearchQuery
                     {
                         Query = searchSubscription.query,
                         PublishDateFrom = searchSubscription.currentcheck_date,
@@ -84,19 +78,19 @@ namespace SciVacancies.WebApp.Infrastructure
                     Func<SearchQuery, SearchDescriptor<Vacancy>> searchSelector = VacancySearchDescriptor;
 
                     var searchResults = elasticClient.Search<Vacancy>(searchSelector(searchQuery));
-                    List<Vacancy> vacancies = searchResults.Documents.ToList();
+                    var vacanciesList = searchResults.Documents.ToList();
 
-                    if (vacancies.Count > 0)
+                    if (vacanciesList.Count > 0)
                     {
-                        using (var transaction = db.GetTransaction())
+                        using (var transaction = dataBase.GetTransaction())
                         {
-                            db.Execute(new Sql("UPDATE res_searchsubscriptions SET currenttotal_count = @0, currentcheck_date = @1, lasttotal_count = @2, lastcheck_date = @3 WHERE guid = @4", vacancies.Count, DateTime.UtcNow, searchSubscription.currenttotal_count, searchSubscription.currentcheck_date, searchSubscription.guid));
+                            dataBase.Execute(new Sql("UPDATE res_searchsubscriptions SET currenttotal_count = @0, currentcheck_date = @1, lasttotal_count = @2, lastcheck_date = @3 WHERE guid = @4", vacanciesList.Count, DateTime.UtcNow, searchSubscription.currenttotal_count, searchSubscription.currentcheck_date, searchSubscription.guid));
                             transaction.Complete();
                         }
 
                         //TODO - отправка письма счастья
-                        var researcher = db.SingleOrDefaultById<Researcher>(searchSubscription.researcher_guid);
-                        winnerSetSmtpNotificator.Send(searchSubscription,researcher, vacancies);
+                        var researcher = dataBase.SingleOrDefaultById<SciVacancies.ReadModel.Core.Researcher>(searchSubscription.researcher_guid);
+                        winnerSetSmtpNotificator.Send(searchSubscription,researcher, vacanciesList);
 
                     }
                 }
@@ -105,29 +99,29 @@ namespace SciVacancies.WebApp.Infrastructure
 
             public SearchDescriptor<Vacancy> VacancySearchDescriptor(SearchQuery sq)
             {
-                SearchDescriptor<Vacancy> sdescriptor = new SearchDescriptor<Vacancy>();
-
-                sdescriptor.Index("scivacancies");
+                var searchDescriptor = new SearchDescriptor<Vacancy>();
+                rt
+                searchDescriptor.Index("scivacancies");
                 if (sq.PageSize.HasValue && sq.CurrentPage.HasValue)
                 //sq.PageSize.Value != 0 && sq.CurrentPage.Value != 0)
                 {
-                    sdescriptor.Skip((int)((sq.CurrentPage - 1) * sq.PageSize));
-                    sdescriptor.Take((int)sq.PageSize);
+                    searchDescriptor.Skip((int)((sq.CurrentPage - 1) * sq.PageSize));
+                    searchDescriptor.Take((int)sq.PageSize);
                 }
                 switch (sq.OrderBy)
                 {
                     case ConstTerms.OrderByDateDescending:
-                        sdescriptor.Sort(sort => sort.OnField(of => of.PublishDate).Descending());
+                        searchDescriptor.Sort(sort => sort.OnField(of => of.PublishDate).Descending());
                         break;
                     case ConstTerms.OrderByDateAscending:
-                        sdescriptor.Sort(sort => sort.OnField(of => of.PublishDate).Ascending());
+                        searchDescriptor.Sort(sort => sort.OnField(of => of.PublishDate).Ascending());
                         break;
                 }
                 Func<SearchQuery, QueryContainer> querySelector = VacancyQueryContainer;
 
-                sdescriptor.Query(querySelector(sq));
+                searchDescriptor.Query(querySelector(sq));
 
-                return sdescriptor;
+                return searchDescriptor;
             }
             public QueryContainer VacancyQueryContainer(SearchQuery sq)
             {

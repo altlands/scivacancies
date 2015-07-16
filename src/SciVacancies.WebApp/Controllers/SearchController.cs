@@ -58,7 +58,7 @@ namespace SciVacancies.WebApp.Controllers
                 });
 
                 if (model.NewSubscriptionNotifyByEmail)
-                    _mediator.Send(new CancelSearchSubscriptionCommand { ResearcherGuid = researcherGuid, SearchSubscriptionGuid = newSubscriptionGuid });
+                    _mediator.Send(new ActivateSearchSubscriptionCommand { ResearcherGuid = researcherGuid, SearchSubscriptionGuid = newSubscriptionGuid });
 
                 model.SubscriptionInfo = new SubscriptionInfoViewModel
                 {
@@ -77,6 +77,14 @@ namespace SciVacancies.WebApp.Controllers
                 return RedirectToAction("index");
             }
 
+            //dicitonaries
+            var filterSource = new VacanciesFilterSource(_mediator);
+            ViewBag.FilterSource = filterSource;
+
+            //задаем значения по-умолчанию
+            if (model.VacancyStates == null)
+                model.VacancyStates = filterSource.VacancyStates.Select(c => int.Parse(c.Value));
+
             model.Items = _mediator.Send(new SearchQuery
             {
                 Query = model.Search,
@@ -94,7 +102,7 @@ namespace SciVacancies.WebApp.Controllers
                 SalaryFrom = model.SalaryMin,
                 SalaryTo = model.SalaryMax,
 
-                VacancyStatuses =model.VacancyStates as IEnumerable<VacancyStatus>
+                VacancyStatuses = model.VacancyStates.Select(c => (VacancyStatus)c)
 
             }).MapToPagedList<Vacancy, VacancyElasticResult>();
 
@@ -104,9 +112,6 @@ namespace SciVacancies.WebApp.Controllers
                 var organizations = _mediator.Send(new SelectOrganizationsByGuidsQuery { OrganizationGuids = organizaitonsGuid }).ToList();
                 model.Items.Items.Where(c => organizations.Select(d => d.guid).Contains(c.OrganizationGuid)).ToList().ForEach(c => c.OrganizationName = organizations.First(d => d.guid == c.OrganizationGuid).name);
             }
-
-            //dicitonaries
-            ViewBag.FilterSource = new VacanciesFilterSource(_mediator);
 
             return View(model);
         }
