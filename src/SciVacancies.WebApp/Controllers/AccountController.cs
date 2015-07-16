@@ -19,6 +19,7 @@ using AutoMapper;
 
 namespace SciVacancies.WebApp.Controllers
 {
+        [ResponseCache(NoStore = true)]
     public class AccountController : Controller
     {
         private readonly IMediator _mediator;

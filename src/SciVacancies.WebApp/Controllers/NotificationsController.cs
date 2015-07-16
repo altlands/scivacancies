@@ -8,6 +8,7 @@ using SciVacancies.WebApp.Queries;
 
 namespace SciVacancies.WebApp.Controllers
 {
+        [ResponseCache(NoStore = true)]
     [Authorize]
     public class NotificationsController : Controller
     {
@@ -19,7 +20,6 @@ namespace SciVacancies.WebApp.Controllers
         [BindOrganizationIdFromClaims]
         public ActionResult MarkNotificationRead(IList<Guid> notificationGuids, Guid researcherGuid, Guid organizationGuid)
         {
-            //TODO: Notifications -> MarkNotificationRead : перевести уведомление в статус "прочитано" - при клике на конверт показывается попап с полным текстом и вызывается этот метод
             if (notificationGuids == null)
                 if (string.IsNullOrWhiteSpace(Request.Headers["referer"]))
                     return Redirect(Request.Headers["referer"]);

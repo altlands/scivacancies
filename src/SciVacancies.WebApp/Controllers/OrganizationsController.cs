@@ -11,6 +11,7 @@ using SciVacancies.WebApp.ViewModels;
 
 namespace SciVacancies.WebApp.Controllers
 {
+        [ResponseCache(NoStore = true)]
     [Authorize(Roles = ConstTerms.RequireRoleOrganizationAdmin)]
     public class OrganizationsController : Controller
     {

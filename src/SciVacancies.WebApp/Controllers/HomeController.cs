@@ -1,16 +1,13 @@
-﻿using System;
-using System.Net.Mail;
-using MediatR;
+﻿using MediatR;
 using Microsoft.AspNet.Mvc;
-using NPoco;
 using SciVacancies.ReadModel.Core;
-using SciVacancies.SmtpNotifications.Vendors;
 using SciVacancies.WebApp.Engine;
 using SciVacancies.WebApp.Queries;
 using SciVacancies.WebApp.ViewModels;
 
 namespace SciVacancies.WebApp.Controllers
 {
+    [ResponseCache(NoStore = true)]
     public class HomeController : Controller
     {
         private readonly IMediator _mediator;

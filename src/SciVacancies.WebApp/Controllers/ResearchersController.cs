@@ -19,6 +19,7 @@ using SciVacancies.WebApp.ViewModels;
 
 namespace SciVacancies.WebApp.Controllers
 {
+    [ResponseCache(NoStore = true)]
     [Authorize(Roles = ConstTerms.RequireRoleResearcher)]
     public class ResearchersController : Controller
     {

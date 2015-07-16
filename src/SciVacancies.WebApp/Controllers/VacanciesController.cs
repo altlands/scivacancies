@@ -5,7 +5,6 @@ using AutoMapper;
 using MediatR;
 using Microsoft.AspNet.Authorization;
 using Microsoft.AspNet.Mvc;
-using NPoco;
 using SciVacancies.Domain.DataModels;
 using SciVacancies.Domain.Enums;
 using SciVacancies.ReadModel.Core;
@@ -19,6 +18,7 @@ namespace SciVacancies.WebApp.Controllers
     /// <summary>
     /// страница с вакансиями (конкурсами)
     /// </summary>
+        [ResponseCache(NoStore = true)]
     [Authorize]
     public class VacanciesController : Controller
     {

@@ -15,6 +15,7 @@ using SciVacancies.WebApp.ViewModels;
 
 namespace SciVacancies.WebApp.Controllers
 {
+    [ResponseCache(NoStore = true)]
     [Authorize]
     public class ApplicationsController : Controller
     {
@@ -36,8 +37,8 @@ namespace SciVacancies.WebApp.Controllers
                 throw new ArgumentNullException(nameof(vacancyGuid));
 
             var researcher = _mediator.Send(new SingleResearcherQuery { ResearcherGuid = researcherGuid });
-            researcher.educations= _mediator.Send(new SelectResearcherEducationsQuery { ResearcherGuid = researcherGuid }).ToList();
-            researcher.publications= _mediator.Send(new SelectResearcherPublicationsQuery { ResearcherGuid = researcherGuid }).ToList();
+            researcher.educations = _mediator.Send(new SelectResearcherEducationsQuery { ResearcherGuid = researcherGuid }).ToList();
+            researcher.publications = _mediator.Send(new SelectResearcherPublicationsQuery { ResearcherGuid = researcherGuid }).ToList();
             var vacancy = _mediator.Send(new SingleVacancyQuery { VacancyGuid = vacancyGuid });
 
             //TODO: оптимизировать запрос и его обработку
@@ -108,10 +109,10 @@ namespace SciVacancies.WebApp.Controllers
             researcher.educations = _mediator.Send(new SelectResearcherEducationsQuery { ResearcherGuid = researcherGuid }).ToList();
             researcher.publications = _mediator.Send(new SelectResearcherPublicationsQuery { ResearcherGuid = researcherGuid }).ToList();
             model.Conferences = researcher.conferences;
-            model.Educations= researcher.educations;
+            model.Educations = researcher.educations;
             model.Email = researcher.email;
-            model.ExtraEmail= researcher.extraemail;
-            model.ExtraPhone= researcher.extraphone;
+            model.ExtraEmail = researcher.extraemail;
+            model.ExtraPhone = researcher.extraphone;
             model.OtherActivity = researcher.other_activity;
             model.Phone = researcher.phone;
             model.Publications = researcher.publications;
@@ -156,7 +157,7 @@ namespace SciVacancies.WebApp.Controllers
 
             var model = Mapper.Map<VacancyApplicationDetailsViewModel>(preModel);
             model.Researcher = Mapper.Map<ResearcherDetailsViewModel>(_mediator.Send(new SingleResearcherQuery { ResearcherGuid = researcherGuid }));
-            model.Vacancy= Mapper.Map<VacancyDetailsViewModel>(_mediator.Send(new SingleVacancyQuery { VacancyGuid = preModel.vacancy_guid}));
+            model.Vacancy = Mapper.Map<VacancyDetailsViewModel>(_mediator.Send(new SingleVacancyQuery { VacancyGuid = preModel.vacancy_guid }));
             //TODO: ntemnikov : показать Приложенные файлы
             //TODO: ntemnikov : показать Научные интересы
             return View(model);
@@ -212,7 +213,7 @@ namespace SciVacancies.WebApp.Controllers
             if (vacancy.organization_guid != organizationGuid)
                 throw new Exception("Вы не можете изменять Заявки, поданные на вакансии других организаций.");
 
-            if (isWinner && vacancy.winner_researcher_guid != Guid.Empty )
+            if (isWinner && vacancy.winner_researcher_guid != Guid.Empty)
                 throw new Exception("Для данной Вакансии уже выбран Победитель.");
 
             if (!isWinner && vacancy.winner_researcher_guid == Guid.Empty)
