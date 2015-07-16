@@ -100,7 +100,6 @@ namespace SciVacancies.WebApp.Infrastructure
             public SearchDescriptor<Vacancy> VacancySearchDescriptor(SearchQuery sq)
             {
                 var searchDescriptor = new SearchDescriptor<Vacancy>();
-                rt
                 searchDescriptor.Index("scivacancies");
                 if (sq.PageSize.HasValue && sq.CurrentPage.HasValue)
                 //sq.PageSize.Value != 0 && sq.CurrentPage.Value != 0)
