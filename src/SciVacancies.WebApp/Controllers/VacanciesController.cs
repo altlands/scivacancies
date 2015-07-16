@@ -366,7 +366,6 @@ namespace SciVacancies.WebApp.Controllers
                 OrderBy = ConstTerms.OrderByDateDescending
             });
 
-            //TODO: Vacancy -> InCommitte : нужно ли проверять минимальное (какое) количество заявок, поданных на вакансию
             if (vacancyApplications.TotalItems == 0
                 || vacancyApplications.Items.Count(c => c.status == VacancyApplicationStatus.Applied) < 2)
                 throw new Exception("Подано недостаточно Заявок для перевода Вакансии на рассмотрение комиссии");
