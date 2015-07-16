@@ -123,7 +123,7 @@
 
 @if (Model.Applications != null && Model.Applications.Items.Any())
 {
-    <span class="blue-btn middle-icon icon-print-button" style="margin-right: 15px;" rel="tooltip" title="Распечатать все заявки">Распечатать все заявки</span>
+    <a asp-controller="vacancies" asp-action="print" asp-route-id="@Model.Guid" class="blue-btn middle-icon icon-print-button" style="margin-right: 15px;" rel="tooltip" target="_blank" title="Распечатать все заявки">Распечатать все заявки</a>
 }
 
 @if (Model.Status == VacancyStatus.OfferResponseAwaiting)

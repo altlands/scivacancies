@@ -647,6 +647,7 @@ namespace SciVacancies.WebApp.Infrastructure
             //create 
             Mapper.CreateMap<VacancyApplicationCreateViewModel, VacancyApplicationDataModel>();
             Mapper.CreateMap<VacancyApplication, VacancyApplicationDetailsViewModel>().IncludePagedResultMapping()
+                .ForMember(d => d.SentDate, o => o.MapFrom(s => s.apply_date))
                 .ForMember(d => d.AcademicStatus, o => o.MapFrom(s => s.science_rank))
                 .ForMember(d => d.Conferences, o => o.MapFrom(s => s.conferences))
                 .ForMember(d => d.CreationDate, o => o.MapFrom(s => s.creation_date))

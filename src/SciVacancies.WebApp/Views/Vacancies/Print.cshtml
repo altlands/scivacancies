@@ -1,0 +1,93 @@
+﻿@using System.Threading.Tasks
+@using SciVacancies.Domain.Enums
+@using SciVacancies.WebApp
+@model SciVacancies.WebApp.ViewModels.VacancyDetailsViewModel
+
+@{
+    Layout = "_LayoutPrint";
+}
+
+<h3>@ViewBag.Title</h3>
+<div class="title-popup">
+    <h4>Вакансия ID @Model.Guid.ToString()</h4>
+</div>
+
+
+<div class="content-popup">
+
+
+    @Component.Invoke("VacancyInfo", Model)
+
+    <h4 class="mt45 mb12">Поданные заявки</h4>
+
+    <table class="table request-table">
+        <thead>
+            <tr>
+                <th>
+                    <div class="inline-block">
+                        @*<img src="/images/icons/arrow-bottom-tab.png" class="va-middle" />*@
+                    </div>
+                    <div class="inline-block ml6 va-middle">
+                        №
+                    </div>
+                </th>
+                <th>
+                    <div class="inline-block">
+                        @*<img src="/images/icons/tab-head.png" class="va-middle" />*@
+                    </div>
+                    <div class="inline-block ml6 va-middle">Дата подачи заявки</div>
+                </th>
+                <th>
+                    Фамилия, имя, отчество
+                </th>
+                <th>
+                    Контакты
+                </th>
+                <th class="align-center">
+                    Победители
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+
+            @if (Model.Applications != null)
+            {
+                foreach (var item in Model.Applications.Items.Where(c => c.Status != VacancyApplicationStatus.Removed && c.Status != VacancyApplicationStatus.Cancelled && c.Status != VacancyApplicationStatus.InProcess))
+                {
+                    <text>
+                    <tr>
+                        <td>@Model.Applications.Items.IndexOf(item)</td>
+                        <td>@(item.SentDate?.ToLocalVacancyString())</td>
+                        <td class="pl0">@item.Researcher.FullName</td>
+                        <td class="pl0">
+                            Телефон:@item.Phone  &nbsp;&nbsp;  @item.ExtraPhone
+                            <br />
+                            Email: @item.Email  &nbsp;&nbsp;   @item.ExtraEmail
+                        </td>
+                        <td class="pl0 align-center">
+                            @if (Model.WinnerResearcherGuid == item.ResearcherGuid)
+                            {
+                                <text>
+                                <span class="status-request win">
+                                    1
+                                </span> Победитель
+                                </text>
+                            }
+                            @if (Model.PretenderResearcherGuid == item.ResearcherGuid)
+                            {
+                                <text>
+                                <span class="status-request win">
+                                    2
+                                </span> Претендент
+                                </text>
+                            }
+                        </td>
+                    </tr>
+                    </text>
+                }
+            }
+
+        </tbody>
+    </table>
+
+</div>

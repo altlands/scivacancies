@@ -88,7 +88,6 @@ namespace SciVacancies.WebApp.Infrastructure
                             transaction.Complete();
                         }
 
-                        //TODO - отправка письма счастья
                         var researcher = dataBase.SingleOrDefaultById<SciVacancies.ReadModel.Core.Researcher>(searchSubscription.researcher_guid);
                         winnerSetSmtpNotificator.Send(searchSubscription,researcher, vacanciesList);
 

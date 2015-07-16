@@ -528,5 +528,58 @@ namespace SciVacancies.WebApp.Controllers
 
         }
 
+
+
+
+        [Authorize(Roles = ConstTerms.RequireRoleOrganizationAdmin)]
+        [PageTitle("Подробно о вакансии")]
+        [BindOrganizationIdFromClaims]
+        public ViewResult Print(Guid id, Guid organizationGuid, int pageSize = 10, int currentPage = 1)
+        {
+            if (id == Guid.Empty)
+                throw new ArgumentNullException(nameof(id));
+            if (organizationGuid == Guid.Empty)
+                throw new ArgumentNullException(nameof(organizationGuid));
+
+            var preModel = _mediator.Send(new SingleVacancyQuery { VacancyGuid = id });
+
+            if (preModel == null)
+                throw new ObjectNotFoundException($"Не найдена вакансия с идентификатором: {id}");
+
+            var model = Mapper.Map<VacancyDetailsViewModel>(preModel);
+
+            if (model == null)
+                throw new ObjectNotFoundException($"Не найдена вакансия с Guid: {id}");
+
+            ViewBag.VacancyInFavorites = false;
+
+            if (organizationGuid != model.OrganizationGuid)
+                throw new Exception("Вы не можете просматривать детальную информацию о Вакансиях других организаций");
+
+            var page = _mediator.Send(new SelectPagedVacancyApplicationsByVacancyQuery
+            {
+                PageSize = pageSize,
+                PageIndex = currentPage,
+                VacancyGuid = id,
+                OrderBy = "Guid"
+            });
+            model.Applications =
+                 page.MapToPagedList<VacancyApplication, VacancyApplicationDetailsViewModel>();
+
+            if (model.Applications?.Items != null && model.Applications.Items.Count > 0)
+            {
+                model.Applications.Items.Where(c => c.ResearcherGuid == Guid.Empty).ToList().ForEach(c => model.Applications.Items.Remove(c));
+                //TODO: оптимизировать запрос и его обработку.
+                model.Applications.Items.ForEach(
+                    c =>
+                        c.Researcher =
+                            Mapper.Map<ResearcherDetailsViewModel>(
+                                _mediator.Send(new SingleResearcherQuery { ResearcherGuid = c.ResearcherGuid })));
+            }
+
+            return View(model);
+        }
+
+
     }
 }
