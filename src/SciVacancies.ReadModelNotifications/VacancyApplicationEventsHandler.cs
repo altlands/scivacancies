@@ -21,7 +21,9 @@ namespace SciVacancies.ReadModel.Notifications
         {
             Vacancy vacancy = _db.SingleById<Vacancy>(msg.VacancyGuid);
 
-            string title = "На конкурс " + msg.VacancyGuid + " подана новая заявка " + msg.VacancyApplicationGuid;
+            //string title = "На конкурс " + msg.VacancyGuid + " подана новая заявка " + msg.VacancyApplicationGuid;
+            Random rand = new Random((int)DateTime.Now.Ticks);
+            string title = "Подана заявка ORD00" + rand.Next(1, 1000) + " на вакансию VAC00"+ rand.Next(1, 1000);
             using (var transaction = _db.GetTransaction())
             {
                 _db.Execute(new Sql($"INSERT INTO org_notifications (guid, title, vacancyapplication_guid, organization_guid, creation_date) VALUES(@0, @1, @2, @3, @4)", Guid.NewGuid(), title, msg.VacancyApplicationGuid, vacancy.organization_guid, msg.TimeStamp));
