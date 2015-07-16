@@ -35,15 +35,12 @@ namespace SciVacancies.WebApp.Engine.SmtpNotificators
     <a target='_blank' href='http://{domain}/researchers/account/'>личном кабинете</a>.
 </div>
 ";
-            var mailMessage = new MailMessage(from: "mailer@alt-lan.com", to: "nistoc@gmail.com", body: body, subject: "Уведомление с портала вакансий")
+            var mailMessage = new MailMessage(from: "mailer@alt-lan.com", to: "mail@mail.ru", body: body, subject: "Уведомление с портала вакансий")
             {
-                IsBodyHtml = true,
-
+                IsBodyHtml = true
             };
 
-
             Send(mailMessage);
-
         }
     }
 }
