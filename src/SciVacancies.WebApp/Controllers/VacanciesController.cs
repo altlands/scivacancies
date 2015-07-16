@@ -563,6 +563,14 @@ namespace SciVacancies.WebApp.Controllers
                 VacancyGuid = id,
                 OrderBy = "Guid"
             });
+            page = _mediator.Send(new SelectPagedVacancyApplicationsByVacancyQuery
+            {
+                PageSize = page.TotalItems,
+                PageIndex = 1,
+                VacancyGuid = id,
+                OrderBy = "Guid"
+            });
+
             model.Applications =
                  page.MapToPagedList<VacancyApplication, VacancyApplicationDetailsViewModel>();
 
