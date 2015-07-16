@@ -1,6 +1,5 @@
 ﻿using SciVacancies.Domain.Enums;
 //using SciVacancies.ReadModel.Core;
-using SciVacancies.ReadModel.ElasticSearchModel.Model;
 using SciVacancies.WebApp.Queries;
 using SciVacancies.WebApp.Commands;
 
@@ -16,7 +15,10 @@ using Quartz;
 using Quartz.Impl;
 using Newtonsoft.Json;
 using Npgsql;
+using SciVacancies.ReadModel.Core;
 using SciVacancies.WebApp.Engine;
+using SciVacancies.WebApp.Engine.SmtpNotificators;
+using Vacancy = SciVacancies.ReadModel.ElasticSearchModel.Model.Vacancy;
 
 namespace SciVacancies.WebApp.Infrastructure
 {
@@ -63,34 +65,39 @@ namespace SciVacancies.WebApp.Infrastructure
                 ElasticClient elasticClient = new ElasticClient(new ConnectionSettings(new Uri("http://localhost:9200/"), defaultIndex: "scivacancies"));
                 IEnumerable<SciVacancies.ReadModel.Core.SearchSubscription> searchsubscriptions = db.Fetch<SciVacancies.ReadModel.Core.SearchSubscription>(new Sql($"SELECT * FROM res_searchsubscriptions ss WHERE ss.status = @0", SearchSubscriptionStatus.Active));
 
-                foreach (SciVacancies.ReadModel.Core.SearchSubscription ss in searchsubscriptions)
+                var winnerSetSmtpNotificator = new WinnerSetSmtpNotificator();
+                
+                foreach (SciVacancies.ReadModel.Core.SearchSubscription searchSubscription in searchsubscriptions)
                 {
-                    SearchQuery sq = new SearchQuery
+                    SearchQuery searchQuery = new SearchQuery
                     {
-                        Query = ss.query,
-                        PublishDateFrom = ss.currentcheck_date,
-                        FoivIds = JsonConvert.DeserializeObject<IEnumerable<int>>(ss.foiv_ids),
-                        PositionTypeIds = JsonConvert.DeserializeObject<IEnumerable<int>>(ss.positiontype_ids),
-                        RegionIds = JsonConvert.DeserializeObject<IEnumerable<int>>(ss.region_ids),
-                        ResearchDirectionIds = JsonConvert.DeserializeObject<IEnumerable<int>>(ss.researchdirection_ids),
-                        SalaryFrom = ss.salary_from,
-                        SalaryTo = ss.salary_to,
-                        VacancyStatuses = JsonConvert.DeserializeObject<IEnumerable<VacancyStatus>>(ss.vacancy_statuses)
+                        Query = searchSubscription.query,
+                        PublishDateFrom = searchSubscription.currentcheck_date,
+                        FoivIds = JsonConvert.DeserializeObject<IEnumerable<int>>(searchSubscription.foiv_ids),
+                        PositionTypeIds = JsonConvert.DeserializeObject<IEnumerable<int>>(searchSubscription.positiontype_ids),
+                        RegionIds = JsonConvert.DeserializeObject<IEnumerable<int>>(searchSubscription.region_ids),
+                        ResearchDirectionIds = JsonConvert.DeserializeObject<IEnumerable<int>>(searchSubscription.researchdirection_ids),
+                        SalaryFrom = searchSubscription.salary_from,
+                        SalaryTo = searchSubscription.salary_to,
+                        VacancyStatuses = JsonConvert.DeserializeObject<IEnumerable<VacancyStatus>>(searchSubscription.vacancy_statuses)
                     };
                     Func<SearchQuery, SearchDescriptor<Vacancy>> searchSelector = VacancySearchDescriptor;
 
-                    var results = elasticClient.Search<Vacancy>(searchSelector(sq));
-                    List<Vacancy> vacancies = results.Documents.ToList();
+                    var searchResults = elasticClient.Search<Vacancy>(searchSelector(searchQuery));
+                    List<Vacancy> vacancies = searchResults.Documents.ToList();
 
                     if (vacancies.Count > 0)
                     {
                         using (var transaction = db.GetTransaction())
                         {
-                            db.Execute(new Sql($"UPDATE res_searchsubscriptions SET currenttotal_count = @0, currentcheck_date = @1, lasttotal_count = @2, lastcheck_date = @3 WHERE guid = @4", vacancies.Count, DateTime.UtcNow, ss.currenttotal_count, ss.currentcheck_date, ss.guid));
+                            db.Execute(new Sql("UPDATE res_searchsubscriptions SET currenttotal_count = @0, currentcheck_date = @1, lasttotal_count = @2, lastcheck_date = @3 WHERE guid = @4", vacancies.Count, DateTime.UtcNow, searchSubscription.currenttotal_count, searchSubscription.currentcheck_date, searchSubscription.guid));
                             transaction.Complete();
                         }
 
                         //TODO - отправка письма счастья
+                        var researcher = db.SingleOrDefaultById<Researcher>(searchSubscription.researcher_guid);
+                        winnerSetSmtpNotificator.Send(searchSubscription,researcher, vacancies);
+
                     }
                 }
             }
