@@ -29,10 +29,14 @@ namespace SciVacancies.ReadModel.EventHandlers
             using (var transaction = _db.GetTransaction())
             {
                 _db.Insert(organization);
-                foreach (ResearchDirection rd in organization.researchdirections)
+                if(organization.researchdirections!=null)
                 {
-                    _db.Execute(new Sql($"INSERT INTO org_researchdirections (guid, researchdirection_id, organization_guid) VALUES (@0, @1, @2)", Guid.NewGuid(), rd.id, msg.OrganizationGuid));
+                    foreach (ResearchDirection rd in organization.researchdirections)
+                    {
+                        _db.Execute(new Sql($"INSERT INTO org_researchdirections (guid, researchdirection_id, organization_guid) VALUES (@0, @1, @2)", Guid.NewGuid(), rd.id, msg.OrganizationGuid));
+                    }
                 }
+
                 transaction.Complete();
             }
         }
@@ -48,10 +52,14 @@ namespace SciVacancies.ReadModel.EventHandlers
                 _db.Update(updatedOrganization);
                 //TODO - без удаления надо
                 _db.Execute(new Sql($"DELETE FROM org_researchdirections WHERE organization_guid = @0", msg.OrganizationGuid));
-                foreach (ResearchDirection rd in updatedOrganization.researchdirections)
+                if (organization.researchdirections != null)
                 {
-                    _db.Execute(new Sql($"INSERT INTO org_researchdirections (guid, researchdirection_id, organization_guid) VALUES (@0, @1, @2)", Guid.NewGuid(), rd.id, msg.OrganizationGuid));
+                    foreach (ResearchDirection rd in updatedOrganization.researchdirections)
+                    {
+                        _db.Execute(new Sql($"INSERT INTO org_researchdirections (guid, researchdirection_id, organization_guid) VALUES (@0, @1, @2)", Guid.NewGuid(), rd.id, msg.OrganizationGuid));
+                    }
                 }
+
                 transaction.Complete();
             }
         }
