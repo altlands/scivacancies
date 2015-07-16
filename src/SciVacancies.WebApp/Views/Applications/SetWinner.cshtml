@@ -35,6 +35,7 @@
         <input type="hidden" asp-for="Guid" />
         <input type="hidden" asp-for="VacancyGuid" />
         <input type="hidden" asp-for="ResearcherGuid" />
+        <input type="hidden" asp-for="SetWinner"/>
 
         <div class="table-row">
             <div class="left-cell">
@@ -50,7 +51,7 @@
                             </span><label for="winner1">Первое место</label>
                         </li>
                     }
-                    @if (Model.Vacancy.PretenderResearcherGuid== Guid.Empty)
+                    else
                     {
                         <li>
                             <span class="radio @(!Model.IsWinner ? "checked" : string.Empty)">
