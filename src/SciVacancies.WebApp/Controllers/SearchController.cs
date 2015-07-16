@@ -52,7 +52,7 @@ namespace SciVacancies.WebApp.Controllers
                         PositionTypeIds = model.PositionTypes,
                         RegionIds = model.Regions,
                         ResearchDirectionIds = model.ResearchDirections,
-                        VacancyStatuses = model.VacancyStates?.Select(c => (VacancyStatus)c),
+                        VacancyStatuses = model.VacancyStates?.Select(c => (VacancyStatus)c).ToList(),
                         SalaryFrom = model.SalaryMin,
                         SalaryTo = model.SalaryMax
                     }
@@ -103,7 +103,7 @@ namespace SciVacancies.WebApp.Controllers
                 SalaryFrom = model.SalaryMin,
                 SalaryTo = model.SalaryMax,
 
-                VacancyStatuses = model.VacancyStates.Select(c => (VacancyStatus)c)
+                VacancyStatuses = model.VacancyStates?.Select(c => (VacancyStatus)c)
 
             }).MapToPagedList<Vacancy, VacancyElasticResult>();
 
