@@ -11,7 +11,7 @@ namespace SciVacancies.WebApp.Engine.SmtpNotificators
         public SmtpNotificator()
         {
             var p1 = "mailer@alt-lan.com";
-            var p2 = "";
+            var p2 = "123456-mailer";
             if (string.IsNullOrWhiteSpace(p1))
                 throw new Exception("Не указан логин для подключения в серверу рассылку email-уведомлений");
             if (string.IsNullOrWhiteSpace(p2))
