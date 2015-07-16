@@ -15,6 +15,7 @@ using Microsoft.AspNet.Identity;
 
 namespace SciVacancies.WebApp.Controllers
 {
+        [ResponseCache(NoStore = true)]
     public class InitializeController : Controller
     {
         private readonly IMediator _mediator;

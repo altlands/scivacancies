@@ -14,6 +14,7 @@ using SciVacancies.WebApp.ViewModels;
 namespace SciVacancies.WebApp.Controllers
 {
 
+        [ResponseCache(NoStore = true)]
     public class SearchController : Controller
     {
         private readonly IMediator _mediator;

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using MediatR;
 using Microsoft.AspNet.Authorization;
 using Microsoft.AspNet.Mvc;
@@ -10,10 +9,9 @@ using SciVacancies.WebApp.Engine;
 using SciVacancies.WebApp.Queries;
 using SciVacancies.WebApp.ViewModels;
 
-using Newtonsoft.Json;
-
 namespace SciVacancies.WebApp.Controllers
 {
+        [ResponseCache(NoStore = true)]
     [Authorize(Roles = ConstTerms.RequireRoleResearcher)]
     public class SubscriptionsController : Controller
     {
