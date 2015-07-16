@@ -339,5 +339,35 @@ namespace SciVacancies.WebApp.Controllers
             _mediator.Send(new CancelVacancyApplicationCommand { ResearcherGuid = researcherGuid, VacancyApplicationGuid = id });
             return RedirectToAction("applications", "researchers");
         }
+
+        [Authorize(Roles = ConstTerms.RequireRoleOrganizationAdmin)]
+        [PageTitle("Детали заявки")]
+        [BindOrganizationIdFromClaims]
+        public ViewResult Print(Guid id, Guid organizationGuid)
+        {
+            if (id == Guid.Empty)
+                throw new ArgumentNullException(nameof(id));
+
+            var preModel = _mediator.Send(new SingleVacancyApplicationQuery { VacancyApplicationGuid = id });
+
+            if (preModel == null)
+                throw new ObjectNotFoundException($"Не найденая Заявка c идентификатором: {id}");
+
+            if (preModel.status == VacancyApplicationStatus.InProcess
+                || preModel.status == VacancyApplicationStatus.Cancelled
+                || preModel.status == VacancyApplicationStatus.Lost
+                || preModel.status == VacancyApplicationStatus.Removed)
+                throw new Exception($"Вы не можете просматривать Заявку со статусом: {preModel.status.GetDescription()}");
+
+            var vacancy = _mediator.Send(new SingleVacancyQuery { VacancyGuid = preModel.vacancy_guid });
+            if (vacancy.organization_guid != organizationGuid)
+                throw new Exception("Вы не можете изменять Заявки, поданные на вакансии других организаций.");
+
+            var model = Mapper.Map<VacancyApplicationDetailsViewModel>(preModel);
+            model.Researcher = Mapper.Map<ResearcherDetailsViewModel>(_mediator.Send(new SingleResearcherQuery { ResearcherGuid = preModel.researcher_guid }));
+            model.Vacancy = Mapper.Map<VacancyDetailsViewModel>(vacancy);
+
+            return View(model);
+        }
     }
 }

@@ -104,8 +104,7 @@
                         </td>
                         <td>
                             <a asp-controller="applications" asp-action="preview" asp-route-id="@item.Guid" class="view-td-icon" title="Просмотр заявки"></a>
-                            <!--TODO: Vacancy -> Applications -> Print: распечатать заявку-->
-                            @*<a asp-controller="applications" asp-action="print" asp-route-id="@item.Guid" class="print-td-icon" title="Распечатать Заявку"></a>*@
+                            <a asp-controller="applications" asp-action="print" asp-route-id="@item.Guid" class="print-td-icon" title="Распечатать Заявку" target="_blank"></a>
                         </td>
                     </tr>
                     </text>

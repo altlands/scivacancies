@@ -3,13 +3,9 @@
 @using SciVacancies.WebApp
 @model SciVacancies.WebApp.ViewModels.VacancyApplicationDetailsViewModel
 
-<div class="crumbs">
-    <a href="/">Главная</a><span class="separator">/</span>
-    <a asp-controller="organizations" asp-action="account">Карточка организации</a><span class="separator">/</span>
-    <a asp-controller="organizations" asp-action="vacancies">Вакансии</a><span class="separator">/</span>
-    <a asp-controller="vacancies" asp-action="details" asp-route-id="@Model.VacancyGuid">@Model.Vacancy.Name</a><span class="separator">/</span>
-    @ViewBag.Title
-</div>
+@{
+    Layout = "_LayoutPrint";
+}
 
 <h3>@ViewBag.Title: заявка на ID МНС6000567 №001 от @(Model.SentDate?.ToLocalVacancyDateString()) </h3>
 
@@ -32,7 +28,7 @@
     </div>
     <div class="list-info">
         <div class="list-item">
-            <div class="bold">Образование</div> 
+            <div class="bold">Образование</div>
             @if (Model.Researcher.Educations != null)
             {
                 foreach (var item in Model.Researcher.Educations)
@@ -55,8 +51,6 @@
                     </text>
                 }
             }
-
-
         </div>
         <div class="list-item">
             <div class="bold">Публикации</div>
@@ -71,19 +65,6 @@
             </ol>
             <span class="small-icon icon-sm-eye"><span>Показать все (5)</span></span>
         </div>
-        <div class="list-item">
-            <div class="bold">Приложенные файлы</div>
-            <ol>
-                <li>
-                    Доклад по автоматизированным системам в области науковедения.doc<br />
-                    <span class="small-icon icon-sm-download"><span>Скачать</span></span>
-                </li>
-                <li>
-                    Резюме на английском языке.pdf<br />
-                    <span class="small-icon icon-sm-download"><span>Скачать</span></span>
-                </li>
-            </ol>
-        </div>
     </div>
 
     <br />
@@ -95,58 +76,25 @@
             {
                 <text>
                 <div class="alert alert-success" style="padding: 15px;">
-                    Победитель в конкурсе на <a asp-controller="vacancies" asp-action="details" asp-route-id="@Model.VacancyGuid">вакансию</a>
+                    Победитель в конкурсе на "@Model.Vacancy.FullName" (@Model.VacancyGuid)
                 </div>
                 </text>
             }
-
             else
             {
-
-                if (Model.Vacancy.WinnerResearcherGuid == Guid.Empty)
+                if (Model.Vacancy.WinnerResearcherGuid != Guid.Empty && Model.Vacancy.PretenderResearcherGuid == Model.ResearcherGuid)
                 {
+
                     <text>
-                    <a asp-controller="applications" asp-action="setwinner" asp-route-id="@Model.Guid" asp-route-iswinner="true" class="green-btn middle-icon">Выбрать победителем</a>
+                    <div class="alert alert-success" style="padding: 15px;">
+                        Претендент на вакансию "@Model.Vacancy.FullName" (@Model.VacancyGuid)
+                    </div>
                     </text>
                 }
-                else
-                {
-
-                    if (Model.Vacancy.PretenderResearcherGuid == Model.ResearcherGuid)
-                    {
-                        <text>
-                        <div class="alert alert-success" style="padding: 15px;">
-                            Претендент на <a asp-controller="vacancies" asp-action="details" asp-route-id="@Model.VacancyGuid">вакансию</a>
-                        </div>
-                        </text>
-                    }
-                    else
-                    {
-                        if (Model.Vacancy.PretenderResearcherGuid == Guid.Empty)
-                        {
-
-                            <text>
-                            <a asp-controller="applications" asp-action="setwinner" asp-route-id="@Model.Guid" asp-route-iswinner="false" class="green-btn middle-icon">Выбрать претендентом</a>
-                            </text>
-                        }
-                        else
-                        {
-                            //у вакансии есть победитель и претендент
-                        }
-                    }
-                }
             }
-
         }
     </div>
 
 
 
-</div>
-
-<div class="b-bottom-nav">
-    <a href="/" class="small-icon icon-prev">Главная</a>
-    <a asp-controller="organizations" asp-action="account" class="small-icon icon-prev">Карточка организации</a>
-    <a asp-controller="organizations" asp-action="vacancies" class="small-icon icon-prev">Вакансии</a>
-    <a asp-controller="vacancies" asp-action="details" asp-route-id="@Model.VacancyGuid" class="small-icon icon-prev">@Model.Vacancy.Name</a>
 </div>
