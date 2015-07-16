@@ -32,7 +32,21 @@ namespace SciVacancies.WebApp.Infrastructure
             Mapper.CreateMap<AccountResearcherRegisterViewModel, ResearcherDataModel>()
                 .ForMember(dest => dest.BirthDate, src => src.MapFrom(c => new DateTime(c.BirthYear, 1, 1)));
             //organization
-            Mapper.CreateMap<AccountOrganizationRegisterViewModel, OrganizationDataModel>();
+            Mapper.CreateMap<AccountOrganizationRegisterViewModel, OrganizationDataModel>()
+                .ForMember(d => d.Name, o => o.MapFrom(s => s.Name))
+                .ForMember(d => d.ShortName, o => o.MapFrom(s => s.ShortName))
+                .ForMember(d => d.Address, o => o.MapFrom(s => s.Address))
+                .ForMember(d => d.Email, o => o.MapFrom(s => s.Email))
+                .ForMember(d => d.INN, o => o.MapFrom(s => s.INN))
+                .ForMember(d => d.OGRN, o => o.MapFrom(s => s.OGRN))
+                .ForMember(d => d.HeadFirstName, o => o.MapFrom(s => s.HeadFirstName))
+                .ForMember(d => d.HeadSecondName, o => o.MapFrom(s => s.HeadLastName))
+                .ForMember(d => d.HeadPatronymic, o => o.MapFrom(s => s.HeadPatronymic))
+                .ForMember(d => d.Foiv, o => o.MapFrom(s => s.Foiv))
+                .ForMember(d => d.FoivId, o => o.MapFrom(s => s.FoivId))
+                .ForMember(d => d.OrgForm, o => o.MapFrom(s => s.OrgForm))
+                .ForMember(d => d.OrgFormId, o => o.MapFrom(s => s.OrgFormId))
+                .ForMember(d => d.ResearchDirections, o => o.Ignore());
             Mapper.CreateMap<OAuthOrgInformation, AccountOrganizationRegisterViewModel>();
 
             #endregion

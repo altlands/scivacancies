@@ -11,6 +11,8 @@ using Microsoft.AspNet.Identity.EntityFramework;
 using AutoMapper;
 using MediatR;
 using CommonDomain.Persistence;
+using System.Threading.Tasks;
+using Newtonsoft.Json;
 
 namespace SciVacancies.WebApp.Commands
 {
@@ -76,7 +78,8 @@ namespace SciVacancies.WebApp.Commands
 
             var user = new SciVacUser
             {
-                UserName = message.Data.UserName
+                UserName = message.Data.UserName,
+                Email=message.Data.Email
             };
 
             var organizationDataModel = Mapper.Map<AccountOrganizationRegisterViewModel, OrganizationDataModel>(message.Data);
@@ -87,16 +90,18 @@ namespace SciVacancies.WebApp.Commands
 
             var organizationGuid = organization.Id;
 
-            _userManager.Create(user);
-            _userManager.AddClaim(user.Id, new System.Security.Claims.Claim(ConstTerms.ClaimTypeOrganizationId, organizationGuid.ToString()));
-            //user.Claims.Add(new IdentityUserClaim
-            //{
-            //    ClaimType = ConstTerms.ClaimTypeOrganizationId,
-            //    ClaimValue = organizationGuid.ToString(),
-            //    UserId = user.Id
-            //});
+            user.Claims.Add(new IdentityUserClaim
+            {
+                ClaimType = ConstTerms.ClaimTypeOrganizationId,
+                ClaimValue = organizationGuid.ToString(),
+                UserId = user.Id
+            });
 
+            //_userManager.CreateAsync(user).Wait();
+            var identity = _userManager.Create(user);
 
+            //_userManager.AddClaim(user.Id, new System.Security.Claims.Claim(ConstTerms.ClaimTypeOrganizationId, organizationGuid.ToString()));
+            //_userManager.AddClaim(user.Id, new System.Security.Claims.Claim("Email", organizationDataModel.Email));
             _userManager.AddToRole(user.Id, ConstTerms.RequireRoleOrganizationAdmin);
 
             return user;

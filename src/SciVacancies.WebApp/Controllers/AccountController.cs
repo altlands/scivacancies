@@ -65,27 +65,27 @@ namespace SciVacancies.WebApp.Controllers
         public ActionResult Login(AccountLoginViewModel model)
         {
             //TODO - uncomment to pin it down to any job
-            //if (model.IsResearcher)
-            //{
-            //    var state = Guid.NewGuid().ToString("N");
-            //    var nonce = Guid.NewGuid().ToString("N");
-            //    SetTempCookies(state, nonce);
+            if (model.IsResearcher)
+            {
+                //var state = Guid.NewGuid().ToString("N");
+                //var nonce = Guid.NewGuid().ToString("N");
+                //SetTempCookies(state, nonce);
 
-            //    //TODO - допилить авторизацию с картой науки
-            //}
-            //else
-            //{
-            //    //записываем ключи в печеньки (против CSRF атак)
-            //    var state = Guid.NewGuid().ToString("N");
-            //    var nonce = Guid.NewGuid().ToString("N");
-            //    SetTempCookies(state, nonce);
+                //TODO - допилить авторизацию с картой науки
+            }
+            else
+            {
+                //записываем ключи в печеньки (против CSRF атак)
+                var state = Guid.NewGuid().ToString("N");
+                var nonce = Guid.NewGuid().ToString("N");
+                SetTempCookies(state, nonce);
 
-            //    //получаем урл на страницу OAuth авторизации на их стороне
-            //    var client = new OAuth2Client(sciencemonAuthorizationEndpoint);
-            //    var authorizationUrl = client.CreateCodeFlowUrl(sciencemonClientId, sciencemonScope, redirectUrl.AbsoluteUri, state, nonce);
+                //получаем урл на страницу OAuth авторизации на их стороне
+                var client = new OAuth2Client(sciencemonAuthorizationEndpoint);
+                var authorizationUrl = client.CreateCodeFlowUrl(sciencemonClientId, sciencemonScope, redirectUrl.AbsoluteUri, state, nonce);
 
-            //    return Redirect(authorizationUrl);
-            //}
+                return Redirect(authorizationUrl);
+            }
             return null;
         }
 
@@ -180,14 +180,20 @@ namespace SciVacancies.WebApp.Controllers
                 claims.Add(new Claim("refresh_token", response.RefreshToken));
             }
 
+            var orgClaim = JsonConvert.DeserializeObject<OAuthOrgClaim>(claims.FirstOrDefault(f => f.Type.Equals("org")).Value);
             //TODO - по какому полю правильней искать?
-            var orgUser = _userManager.FindByEmail(claims.FirstOrDefault(f => f.Type.Equals("email")).Value);
+            //var orgUser = _userManager.FindByEmail(claims.FirstOrDefault(f => f.Type.Equals("email")).Value);
+            var orgUser = _userManager.FindByName(orgClaim.Inn);
 
             if (orgUser == null)
             {
 
 
-                var orgClaim = JsonConvert.DeserializeObject<OAuthOrgClaim>(claims.FirstOrDefault(f => f.Type.Equals("org")).Value);
+
+
+
+
+                //var test = GetOrganizationInfo(orgClaim.Inn);
 
                 OAuthOrgInformation organizationInformation =JsonConvert.DeserializeObject<OAuthOrgInformation>(GetOrganizationInfo(orgClaim.Inn));
                 //TODO: AccountController -> Organization -> ntemnikov : десериализовать
@@ -195,7 +201,25 @@ namespace SciVacancies.WebApp.Controllers
                 //TODO - достаём из claims ИНН
                 //TODO - забираем из их API данные по инн
                 //AccountOrganizationRegisterViewModel orgModel = Mapper.Map<AccountOrganizationRegisterViewModel>(organizationInformation);
-                AccountOrganizationRegisterViewModel orgModel = new AccountOrganizationRegisterViewModel();
+                AccountOrganizationRegisterViewModel orgModel = new AccountOrganizationRegisterViewModel
+                {
+                    UserName=organizationInformation.inn,
+                    Email = JsonConvert.SerializeObject(organizationInformation.email),
+                    Foiv = organizationInformation.foiv.title,
+                    FoivId = Int32.Parse(organizationInformation.foiv.id),
+                    HeadFirstName = organizationInformation.headFirstName,
+                    HeadLastName = organizationInformation.headLastName,
+                    HeadPatronymic = organizationInformation.headPatronymic,
+                    INN = organizationInformation.inn,
+                    OGRN = organizationInformation.ogrn,
+                    OrgForm = organizationInformation.opf.title,
+                    OrgFormId = Int32.Parse(organizationInformation.opf.id),
+                    Address = organizationInformation.postAddress,
+                    ResearchDirections = organizationInformation.researchDirections.Select(s => Int32.Parse(s.id)).ToList(),
+                    ShortName=organizationInformation.shortTitle,
+                    Name=organizationInformation.title
+                };
+
                 orgModel.Address = organizationInformation.postAddress;
                 
 
