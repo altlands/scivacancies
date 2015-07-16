@@ -59,7 +59,7 @@ namespace SciVacancies.WebApp.Controllers
                 {
                     ModelState.AddModelError("ContractTypeValue", $"Для договора типа \"{ContractType.FixedTerm.GetDescription()}\" укажите срок трудового договора");
                     model.InitDictionaries(_mediator);
-                    return View(model);
+                    return View("create", model);
                 }
 
                 var vacancyDataModel = Mapper.Map<VacancyDataModel>(model);
@@ -484,7 +484,10 @@ namespace SciVacancies.WebApp.Controllers
         [HttpPost]
         [Authorize(Roles = ConstTerms.RequireRoleOrganizationAdmin)]
         [ValidateAntiForgeryToken]
-        public IActionResult Copy(VacancyCreateViewModel model) { return Create(model); }
+        public IActionResult Copy(VacancyCreateViewModel model)
+        {
+            return Create(model);
+        }
 
         [Authorize(Roles = ConstTerms.RequireRoleOrganizationAdmin)]
         [BindOrganizationIdFromClaims]
