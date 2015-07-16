@@ -52,5 +52,9 @@ namespace SciVacancies.WebApp.ViewModels
         [Required]
         public string Reason { get; set; }
 
+        /// <summary>
+        /// кого выбираем - победителя или претендента
+        /// </summary>
+        public bool SetWinner { get; set; }
     }
 }

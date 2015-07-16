@@ -37,7 +37,7 @@ namespace SciVacancies.Domain.Enums
         /// <summary>
         /// Заявка "проиграла" конкурс
         /// </summary>
-        [Description("Проигравший")]
+        [Description("Не в финале")]
         Lost = 5,
 
         /// <summary>

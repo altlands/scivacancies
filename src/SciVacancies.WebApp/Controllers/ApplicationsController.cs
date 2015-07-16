@@ -193,7 +193,7 @@ namespace SciVacancies.WebApp.Controllers
         }
 
 
-        private VacancyApplication SetWinnerPreValidation(Guid vacancyApplicationGuid, Guid organizationGuid, out Vacancy vacancy)
+        private VacancyApplication SetWinnerPreValidation(Guid vacancyApplicationGuid, Guid organizationGuid, out Vacancy vacancy, bool isWinner)
         {
             var vacancyApplicaiton = _mediator.Send(new SingleVacancyApplicationQuery { VacancyApplicationGuid = vacancyApplicationGuid });
 
@@ -212,6 +212,12 @@ namespace SciVacancies.WebApp.Controllers
             if (vacancy.organization_guid != organizationGuid)
                 throw new Exception("Вы не можете изменять Заявки, поданные на вакансии других организаций.");
 
+            if (isWinner && vacancy.winner_researcher_guid != Guid.Empty )
+                throw new Exception("Для данной Вакансии уже выбран Победитель.");
+
+            if (!isWinner && vacancy.winner_researcher_guid == Guid.Empty)
+                throw new Exception("Для данной Вакансии еще не выбран Победитель.");
+
             if (vacancy.winner_researcher_guid != Guid.Empty && vacancy.pretender_researcher_guid != Guid.Empty)
                 throw new Exception("Для данной Вакансии уже выбраны Победитель и Претендент.");
 
@@ -224,7 +230,7 @@ namespace SciVacancies.WebApp.Controllers
         [PageTitle("Выбор победителя")]
         [BindOrganizationIdFromClaims]
         [Authorize(Roles = ConstTerms.RequireRoleOrganizationAdmin)]
-        public IActionResult SetWinner(Guid id, Guid organizationGuid)
+        public IActionResult SetWinner(Guid id, Guid organizationGuid, bool isWinner)
         {
             if (id == Guid.Empty)
                 throw new ArgumentNullException(nameof(id));
@@ -232,13 +238,13 @@ namespace SciVacancies.WebApp.Controllers
                 throw new ArgumentNullException(nameof(organizationGuid));
 
             Vacancy vacancy;
-            var vacancyApplicaiton = SetWinnerPreValidation(id, organizationGuid, out vacancy);
+            var vacancyApplicaiton = SetWinnerPreValidation(id, organizationGuid, out vacancy, isWinner);
 
             var model = Mapper.Map<VacancyApplicationSetWinnerViewModel>(vacancyApplicaiton);
             model.Vacancy = Mapper.Map<VacancyDetailsViewModel>(vacancy);
             model.Researcher = Mapper.Map<ResearcherDetailsViewModel>(_mediator.Send(new SingleResearcherQuery { ResearcherGuid = vacancyApplicaiton.researcher_guid }));
-
-
+            model.IsWinner = isWinner;
+            model.SetWinner = isWinner;
 
             return View(model);
         }
@@ -254,7 +260,7 @@ namespace SciVacancies.WebApp.Controllers
                 throw new ArgumentNullException(nameof(organizationGuid));
 
             Vacancy vacancy;
-            var vacancyApplicaiton = SetWinnerPreValidation(model.Guid, organizationGuid, out vacancy);
+            var vacancyApplicaiton = SetWinnerPreValidation(model.Guid, organizationGuid, out vacancy, model.SetWinner);
 
             if (ModelState.IsValid)
             {
