@@ -28,16 +28,25 @@ namespace SciVacancies.ReadModel.EventHandlers
             using (var transaction = _db.GetTransaction())
             {
                 _db.Insert(researcher);
-                foreach (Education ed in researcher.educations)
+                if(researcher.educations!=null)
                 {
-                    ed.researcher_guid = researcher.guid;
-                    _db.Insert(ed);
+                    foreach (Education ed in researcher.educations)
+                    {
+                        if (ed.guid == Guid.Empty) ed.guid = Guid.NewGuid();
+                        ed.researcher_guid = researcher.guid;
+                        _db.Insert(ed);
+                    }
                 }
-                foreach (Publication pb in researcher.publications)
+                if (researcher.publications != null)
                 {
-                    pb.researcher_guid = researcher.guid;
-                    _db.Insert(pb);
+                    foreach (Publication pb in researcher.publications)
+                    {
+                        if (pb.guid == Guid.Empty) pb.guid = Guid.NewGuid();
+                        pb.researcher_guid = researcher.guid;
+                        _db.Insert(pb);
+                    }
                 }
+
                 transaction.Complete();
             }
         }
@@ -55,18 +64,25 @@ namespace SciVacancies.ReadModel.EventHandlers
                 //TODO - сделать без удаления неизменённых записей
                 _db.Execute(new Sql($"DELETE FROM res_educations WHERE researcher_guid = @0", msg.ResearcherGuid));
                 _db.Execute(new Sql($"DELETE FROM res_publications WHERE researcher_guid = @0", msg.ResearcherGuid));
-                foreach (Education ed in updatedResearcher.educations)
+                if (updatedResearcher.educations != null)
                 {
-                    if (ed.guid == Guid.Empty) ed.guid = Guid.NewGuid();
-                    ed.researcher_guid = researcher.guid;
-                    _db.Insert(ed);
+                    foreach (Education ed in updatedResearcher.educations)
+                    {
+                        if (ed.guid == Guid.Empty) ed.guid = Guid.NewGuid();
+                        ed.researcher_guid = researcher.guid;
+                        _db.Insert(ed);
+                    }
                 }
-                foreach (Publication pb in updatedResearcher.publications)
+                if(updatedResearcher.publications!=null)
                 {
-                    if (pb.guid == Guid.Empty) pb.guid = Guid.NewGuid();
-                    pb.researcher_guid = researcher.guid;
-                    _db.Insert(pb);
+                    foreach (Publication pb in updatedResearcher.publications)
+                    {
+                        if (pb.guid == Guid.Empty) pb.guid = Guid.NewGuid();
+                        pb.researcher_guid = researcher.guid;
+                        _db.Insert(pb);
+                    }
                 }
+
                 transaction.Complete();
             }
         }

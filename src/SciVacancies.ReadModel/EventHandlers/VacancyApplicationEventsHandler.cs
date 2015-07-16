@@ -33,12 +33,16 @@ namespace SciVacancies.ReadModel.EventHandlers
             using (var transaction = _db.GetTransaction())
             {
                 _db.Insert(vacancyApplication);
-                foreach (VacancyApplicationAttachment at in vacancyApplication.attachments)
+                if(vacancyApplication.attachments!=null)
                 {
-                    if (at.guid == Guid.Empty) at.guid = Guid.NewGuid();
-                    at.vacancyapplication_guid = vacancyApplication.guid;
-                    _db.Insert(at);
+                    foreach (VacancyApplicationAttachment at in vacancyApplication.attachments)
+                    {
+                        if (at.guid == Guid.Empty) at.guid = Guid.NewGuid();
+                        at.vacancyapplication_guid = vacancyApplication.guid;
+                        _db.Insert(at);
+                    }
                 }
+
                 transaction.Complete();
             }
         }
@@ -54,12 +58,16 @@ namespace SciVacancies.ReadModel.EventHandlers
                 _db.Update(updatedVacancyApplication);
                 //TODO - без удаления
                 _db.Execute(new Sql($"DELETE FROM res_vacancyapplication_attachments WHERE vacancyapplication_guid = @0", msg.VacancyApplicationGuid));
-                foreach (VacancyApplicationAttachment at in updatedVacancyApplication.attachments)
+                if(updatedVacancyApplication.attachments!=null)
                 {
-                    if (at.guid == Guid.Empty) at.guid = Guid.NewGuid();
-                    at.vacancyapplication_guid = vacancyApplication.guid;
-                    _db.Insert(at);
+                    foreach (VacancyApplicationAttachment at in updatedVacancyApplication.attachments)
+                    {
+                        if (at.guid == Guid.Empty) at.guid = Guid.NewGuid();
+                        at.vacancyapplication_guid = vacancyApplication.guid;
+                        _db.Insert(at);
+                    }
                 }
+
                 transaction.Complete();
             }
         }
