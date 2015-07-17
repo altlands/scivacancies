@@ -239,11 +239,11 @@ namespace SciVacancies.WebApp.Controllers
                 throw new ArgumentNullException(nameof(organizationGuid));
 
             Vacancy vacancy;
-            var vacancyApplicaiton = SetWinnerPreValidation(id, organizationGuid, out vacancy, isWinner);
+            var vacancyApplication = SetWinnerPreValidation(id, organizationGuid, out vacancy, isWinner);
 
-            var model = Mapper.Map<VacancyApplicationSetWinnerViewModel>(vacancyApplicaiton);
+            var model = Mapper.Map<VacancyApplicationSetWinnerViewModel>(vacancyApplication);
             model.Vacancy = Mapper.Map<VacancyDetailsViewModel>(vacancy);
-            model.Researcher = Mapper.Map<ResearcherDetailsViewModel>(_mediator.Send(new SingleResearcherQuery { ResearcherGuid = vacancyApplicaiton.researcher_guid }));
+            model.Researcher = Mapper.Map<ResearcherDetailsViewModel>(_mediator.Send(new SingleResearcherQuery { ResearcherGuid = vacancyApplication.researcher_guid }));
             model.IsWinner = isWinner;
             model.SetWinner = isWinner;
 
@@ -370,5 +370,70 @@ namespace SciVacancies.WebApp.Controllers
 
             return View(model);
         }
+
+        private void OfferAcceptionPreValidation(Guid vacancyApplicationGuid, Guid organizationGuid, bool isWinner)
+        {
+            var vacancyApplicaiton = _mediator.Send(new SingleVacancyApplicationQuery { VacancyApplicationGuid = vacancyApplicationGuid });
+
+            if (vacancyApplicaiton == null)
+                throw new ObjectNotFoundException($"Не найденая Заявка c идентификатором: {vacancyApplicationGuid}");
+
+            if (isWinner && vacancyApplicaiton.status != VacancyApplicationStatus.Won)
+                throw new Exception($"Вы не можете зафиксировать принятие предложения от Победителя если Заявка имеет статус: {vacancyApplicaiton.status.GetDescription()}");
+
+            if (!isWinner && vacancyApplicaiton.status != VacancyApplicationStatus.Pretended)
+                throw new Exception($"Вы не можете зафиксировать принятие предложения от Претендента если Заявка имеет статус: {vacancyApplicaiton.status.GetDescription()}");
+
+            var vacancy = _mediator.Send(new SingleVacancyQuery { VacancyGuid = vacancyApplicaiton.vacancy_guid });
+
+            if (vacancy == null)
+                throw new ObjectNotFoundException($"Не найденая Вакансия c идентификатором: {vacancyApplicaiton.vacancy_guid}");
+
+            if (vacancy.organization_guid != organizationGuid)
+                throw new Exception("Вы не можете изменять Заявки, поданные на вакансии других организаций.");
+
+            if (vacancy.status != VacancyStatus.OfferResponseAwaiting)
+                throw new Exception(
+                    $"Вы не можете зафиксироватиьо принятие или отказ от предложения если Заявка имеет статус: {vacancy.status.GetDescription()}");
+        }
+
+        [Authorize(Roles = ConstTerms.RequireRoleOrganizationAdmin)]
+        [BindOrganizationIdFromClaims]
+        public IActionResult OfferAcception(Guid id, Guid organizationGuid, bool isWinner, bool hasAccepted)
+        {
+            if (id == Guid.Empty)
+                throw new ArgumentNullException(nameof(id));
+            if (organizationGuid == Guid.Empty)
+                throw new ArgumentNullException(nameof(organizationGuid));
+
+            OfferAcceptionPreValidation(id, organizationGuid, isWinner);
+
+            if (isWinner)
+                if (hasAccepted)
+                    _mediator.Send(new SetWinnerAcceptOfferCommand
+                    {
+                        VacancyGuid = id
+                    });
+                else
+                    _mediator.Send(new SetWinnerRejectOfferCommand
+                    {
+                        VacancyGuid = id
+                    });
+            else
+                if (hasAccepted)
+                    _mediator.Send(new SetPretenderAcceptOfferCommand
+                    {
+                        VacancyGuid = id
+                    });
+                else
+                    _mediator.Send(new SetPretenderRejectOfferCommand
+                    {
+                        VacancyGuid = id
+                    });
+
+            return RedirectToAction("preview", "applications", new { id });
+
+        }
+
     }
 }

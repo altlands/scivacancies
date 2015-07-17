@@ -24,15 +24,15 @@
             <span class="block bold">Год рождения: @Model.Researcher.BirthDate.ToLocalVacancyDateString()</span>
             <span class="block"><span class="bold">Индивидуальный номер ученого:</span> 00005444</span>
             @*<span class="block">
-                <span class="bold">Научные интересы (Государственный рубрикатор научно-технической информации):</span>
-                <span>Автоматизация и автоматизированные системы в области науковедения; Библиотечное дело, библиотековедение; Информационная деятельность в области науковедения...</span>
-            </span>
-            <span class="small-icon icon-sm-eye"><span>Показать все (23)</span></span>*@
+                    <span class="bold">Научные интересы (Государственный рубрикатор научно-технической информации):</span>
+                    <span>Автоматизация и автоматизированные системы в области науковедения; Библиотечное дело, библиотековедение; Информационная деятельность в области науковедения...</span>
+                </span>
+                <span class="small-icon icon-sm-eye"><span>Показать все (23)</span></span>*@
         </div>
     </div>
     <div class="list-info">
         <div class="list-item">
-            <div class="bold">Образование</div> 
+            <div class="bold">Образование</div>
             @if (Model.Researcher.Educations != null)
             {
                 foreach (var item in Model.Researcher.Educations)
@@ -88,7 +88,7 @@
 
     <br />
     <div class="ctr-buttons">
-        @if (Model.Status == VacancyApplicationStatus.Applied && !(Model.Vacancy.Status == VacancyStatus.InProcess|| Model.Vacancy.Status == VacancyStatus.Published))
+        @if (Model.Status == VacancyApplicationStatus.Applied && !(Model.Vacancy.Status == VacancyStatus.InProcess || Model.Vacancy.Status == VacancyStatus.Published))
         {
 
             if (Model.Vacancy.WinnerResearcherGuid == Model.ResearcherGuid)
@@ -137,6 +137,48 @@
                 }
             }
 
+        }
+        else
+        {
+            if (Model.Vacancy.Status == VacancyStatus.OfferResponseAwaiting)
+            {
+                if (Model.Status == VacancyApplicationStatus.Won && !Model.Vacancy.IsWinnerAccept.HasValue)
+                {
+                    if (Model.Vacancy.WinnerResearcherGuid == Model.ResearcherGuid)
+                    {
+                        <text>
+                        <a asp-controller="applications" asp-action="offeracception" asp-route-id="@Model.Guid" asp-route-iswinner="true" asp-route-hasaccepted="true" class="btn btn-success">Победитель принял предложение</a>
+                        <a asp-controller="applications" asp-action="offeracception" asp-route-id="@Model.Guid" asp-route-iswinner="true" asp-route-hasaccepted="false" class="btn btn-danger">Победитель отказался от предложения</a>
+                        </text>
+                    }
+                }
+                if (Model.Status == VacancyApplicationStatus.Pretended && !Model.Vacancy.IsPretenderAccept.HasValue)
+                {
+                    if (Model.Vacancy.WinnerResearcherGuid == Model.ResearcherGuid)
+                    {
+                        <text>
+                        <a asp-controller="applications" asp-action="offeracception" asp-route-id="@Model.Guid" asp-route-iswinner="false" asp-route-hasaccepted="true" class="btn btn-success">Претендент принял предложение</a>
+                        <a asp-controller="applications" asp-action="offeracception" asp-route-id="@Model.Guid" asp-route-iswinner="false" asp-route-hasaccepted="false" class="btn btn-danger">Претендент отказался от предложения</a>
+                        </text>
+                    }
+                }
+            }
+            if (Model.Vacancy.IsWinnerAccept.HasValue)
+            {
+                <text>
+                <div class="alert @(Model.Vacancy.IsWinnerAccept.Value ? "alert-success" :"alert-danger")" style="padding: 15px;">
+                    Победитель в конкурсе на <a asp-controller="vacancies" asp-action="details" asp-route-id="@Model.VacancyGuid">вакансию</a> @(Model.Vacancy.IsWinnerAccept.Value ? "принял предложение" : "отказался от предложения")
+                </div>
+                </text>
+            }
+            if (Model.Vacancy.IsPretenderAccept.HasValue)
+            {
+                <text>
+                <div class="alert @(Model.Vacancy.IsPretenderAccept.Value ? "alert-success" :"alert-danger")" style="padding: 15px;">
+                    Претендент на <a asp-controller="vacancies" asp-action="details" asp-route-id="@Model.VacancyGuid">вакансию</a> @(Model.Vacancy.IsPretenderAccept.Value ? "принял предложение" : "отказался от предложения")
+                </div>
+                </text>
+            }
         }
     </div>
 
