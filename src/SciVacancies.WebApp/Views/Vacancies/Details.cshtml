@@ -81,7 +81,7 @@
                 {
                     <text>
                     <tr>
-                        <td>@Model.Applications.Items.IndexOf(item)</td>
+                        <td>@(Model.Applications.Items.IndexOf(item)+1)</td>
                         <td>@(item.SentDate?.ToLocalVacancyString())</td>
                         <td class="pl0">@item.Researcher.FullName</td>
                         <td class="pl0 align-center">
@@ -89,9 +89,16 @@
                             {
                                 <text>
                                 <span class="status-request win">
-                                    1 
+                                    1
                                 </span> Победитель
                                 </text>
+                                if (Model.IsWinnerAccept.HasValue)
+                                {
+                                    <text>
+                                    <br />
+                                    (@(Model.IsWinnerAccept.Value ? "принял предложение" : "отказался от предложения"))
+                                    </text>
+                                }
                             }
                             @if (Model.PretenderResearcherGuid == item.ResearcherGuid)
                             {
@@ -100,6 +107,13 @@
                                     2
                                 </span> Претендент
                                 </text>
+                                if (Model.IsPretenderAccept.HasValue)
+                                {
+                                    <text>
+                                    <br />
+                                    (@(Model.IsPretenderAccept.Value ? "принял предложение" : "отказался от предложения"))
+                                    </text>
+                                }
                             }
                         </td>
                         <td>

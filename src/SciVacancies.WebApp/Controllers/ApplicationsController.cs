@@ -371,7 +371,7 @@ namespace SciVacancies.WebApp.Controllers
             return View(model);
         }
 
-        private void OfferAcceptionPreValidation(Guid vacancyApplicationGuid, Guid organizationGuid, bool isWinner)
+        private Vacancy OfferAcceptionPreValidation(Guid vacancyApplicationGuid, Guid organizationGuid, bool isWinner)
         {
             var vacancyApplicaiton = _mediator.Send(new SingleVacancyApplicationQuery { VacancyApplicationGuid = vacancyApplicationGuid });
 
@@ -395,6 +395,7 @@ namespace SciVacancies.WebApp.Controllers
             if (vacancy.status != VacancyStatus.OfferResponseAwaiting)
                 throw new Exception(
                     $"Вы не можете зафиксироватиьо принятие или отказ от предложения если Заявка имеет статус: {vacancy.status.GetDescription()}");
+            return vacancy;
         }
 
         [Authorize(Roles = ConstTerms.RequireRoleOrganizationAdmin)]
@@ -406,29 +407,29 @@ namespace SciVacancies.WebApp.Controllers
             if (organizationGuid == Guid.Empty)
                 throw new ArgumentNullException(nameof(organizationGuid));
 
-            OfferAcceptionPreValidation(id, organizationGuid, isWinner);
+            var vacancy = OfferAcceptionPreValidation(id, organizationGuid, isWinner);
 
             if (isWinner)
                 if (hasAccepted)
                     _mediator.Send(new SetWinnerAcceptOfferCommand
                     {
-                        VacancyGuid = id
+                        VacancyGuid = vacancy.guid
                     });
                 else
                     _mediator.Send(new SetWinnerRejectOfferCommand
                     {
-                        VacancyGuid = id
+                        VacancyGuid = vacancy.guid
                     });
             else
                 if (hasAccepted)
                     _mediator.Send(new SetPretenderAcceptOfferCommand
                     {
-                        VacancyGuid = id
+                        VacancyGuid = vacancy.guid
                     });
                 else
                     _mediator.Send(new SetPretenderRejectOfferCommand
                     {
-                        VacancyGuid = id
+                        VacancyGuid = vacancy.guid
                     });
 
             return RedirectToAction("preview", "applications", new { id });

@@ -154,7 +154,7 @@
                 }
                 if (Model.Status == VacancyApplicationStatus.Pretended && !Model.Vacancy.IsPretenderAccept.HasValue)
                 {
-                    if (Model.Vacancy.WinnerResearcherGuid == Model.ResearcherGuid)
+                    if (Model.Vacancy.PretenderResearcherGuid == Model.ResearcherGuid)
                     {
                         <text>
                         <a asp-controller="applications" asp-action="offeracception" asp-route-id="@Model.Guid" asp-route-iswinner="false" asp-route-hasaccepted="true" class="btn btn-success">Претендент принял предложение</a>
@@ -163,7 +163,7 @@
                     }
                 }
             }
-            if (Model.Vacancy.IsWinnerAccept.HasValue)
+            if (Model.Vacancy.IsWinnerAccept.HasValue && Model.Guid == Model.Vacancy.WinnerVacancyApplicationGuid)
             {
                 <text>
                 <div class="alert @(Model.Vacancy.IsWinnerAccept.Value ? "alert-success" :"alert-danger")" style="padding: 15px;">
@@ -171,7 +171,7 @@
                 </div>
                 </text>
             }
-            if (Model.Vacancy.IsPretenderAccept.HasValue)
+            if (Model.Vacancy.IsPretenderAccept.HasValue && Model.Guid == Model.Vacancy.PretenderVacancyApplicationGuid)
             {
                 <text>
                 <div class="alert @(Model.Vacancy.IsPretenderAccept.Value ? "alert-success" :"alert-danger")" style="padding: 15px;">
