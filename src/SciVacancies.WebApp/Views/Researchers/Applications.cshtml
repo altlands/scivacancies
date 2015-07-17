@@ -64,8 +64,8 @@
             <text>
                 <tr>
                     <td>ГНС600001</td>
-                    <td>@item.FullName</td>
-                    <td>@item.Rewards руб.</td>
+                    <td>@item.PositionTypeName</td>
+                    <td>@item.Vacancy.SalaryFrom-@item.Vacancy.SalaryTo руб.</td>
                     <td>@(item.SentDate?.ToLocalVacancyString())</td>
                     <td><span class="status @item.Vacancy.Status.GetHtmlClass()">@item.Vacancy.Status.GetDescription()</span></td>
                     <td><span class="status @item.Status.GetHtmlClass()">@item.Status.GetDescription()</span></td>
