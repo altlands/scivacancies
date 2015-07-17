@@ -30,7 +30,7 @@ namespace SciVacancies.ReadModel.Notifications
         {
             List<Guid> researcherGuids = _db.Fetch<Guid>(new Sql($"SELECT va.researcher_guid FROM res_vacancyapplications va WHERE va.vacancy_guid = @0", msg.VacancyGuid));
 
-            string title = "Ваша заявка на конкурс " + msg.VacancyGuid + " отправлена на комиссию";
+            string title = "Ваша заявка на вакансию " + msg.VacancyGuid + " отправлена на комиссию";
             using (var transaction = _db.GetTransaction())
             {
                 foreach (Guid researcherGuid in researcherGuids)
@@ -46,7 +46,7 @@ namespace SciVacancies.ReadModel.Notifications
 
             VacancyApplication vacancyApplication = _db.Single<VacancyApplication>(new Sql($"SELECT va.* FROM res_vacancyapplications va WHERE va.guid = @0", vacancy.winner_vacancyapplication_guid));
 
-            string title = "На ваш конкурс " + msg.VacancyGuid + " заявка-победитель " + vacancyApplication.guid + " подписывает контракт";
+            string title = "На вашу вакансию " + msg.VacancyGuid + " заявка-победитель " + vacancyApplication.guid + " подписывает контракт";
             using (var transaction = _db.GetTransaction())
             {
                 _db.Execute(new Sql($"INSERT INTO org_notifications (guid, title, vacancyapplication_guid, organization_guid, creation_date) VALUES(@0, @1, @2, @3, @4)", Guid.NewGuid(), title, vacancyApplication.guid, msg.OrganizationGuid, msg.TimeStamp));
@@ -59,7 +59,7 @@ namespace SciVacancies.ReadModel.Notifications
 
             VacancyApplication vacancyApplication = _db.Single<VacancyApplication>(new Sql($"SELECT va.* FROM res_vacancyapplications va WHERE va.guid = @0", vacancy.winner_vacancyapplication_guid));
 
-            string title = "На ваш конкурс " + msg.VacancyGuid + " заявка-победитель " + vacancyApplication.guid + " отказывается от контракта";
+            string title = "На вашу вакансию " + msg.VacancyGuid + " заявка-победитель " + vacancyApplication.guid + " отказывается от контракта";
             using (var transaction = _db.GetTransaction())
             {
                 _db.Execute(new Sql($"INSERT INTO org_notifications (guid, title, vacancyapplication_guid, organization_guid, creation_date) VALUES(@0, @1, @2, @3, @4)", Guid.NewGuid(), title, vacancyApplication.guid, msg.OrganizationGuid, msg.TimeStamp));
@@ -85,7 +85,7 @@ namespace SciVacancies.ReadModel.Notifications
 
             VacancyApplication vacancyApplication = _db.Single<VacancyApplication>(new Sql($"SELECT va.* FROM res_vacancyapplications va WHERE va.guid = @0", vacancy.pretender_vacancyapplication_guid));
 
-            string title = "На ваш конкурс " + msg.VacancyGuid + " заявка-претендент " + vacancyApplication.guid + " отказывается от контракта";
+            string title = "На вашу вакансию " + msg.VacancyGuid + " заявка-претендент " + vacancyApplication.guid + " отказывается от контракта";
             using (var transaction = _db.GetTransaction())
             {
                 _db.Execute(new Sql($"INSERT INTO org_notifications (guid, title, vacancyapplication_guid, organization_guid, creation_date) VALUES(@0, @1, @2, @3, @4)", Guid.NewGuid(), title, vacancyApplication.guid, msg.OrganizationGuid, msg.TimeStamp));
@@ -98,8 +98,8 @@ namespace SciVacancies.ReadModel.Notifications
 
             List<Guid> researcherLooserGuids = _db.Fetch<Guid>(new Sql($"SELECT va.researcher_guid FROM res_vacancyapplications va WHERE va.vacancy_guid = @0 AND va.guid != @1 AND va.guid != @2", msg.VacancyGuid, vacancy.winner_vacancyapplication_guid, vacancy.pretender_vacancyapplication_guid));
 
-            string looserTitle = "Ваша заявка на конкурс " + msg.VacancyGuid + " проиграла, конкурс закрыт";
-            string title = "Конкурс: " + msg.VacancyGuid + " закрыт";
+            string looserTitle = "Ваша заявка на вакансию " + msg.VacancyGuid + " проиграла, конкурс закрыт";
+            string title = "Вакансия " + msg.VacancyGuid + ": закрыта";
             using (var transaction = _db.GetTransaction())
             {
                 foreach (Guid researcherGuid in researcherLooserGuids)
@@ -115,7 +115,7 @@ namespace SciVacancies.ReadModel.Notifications
         {
             List<Guid> researcherGuids = _db.Fetch<Guid>(new Sql($"SELECT va.researcher_guid FROM res_vacancyapplications va WHERE va.vacancy_guid = @0", msg.VacancyGuid));
 
-            string title = "Ваша заявка на конкурс " + msg.VacancyGuid + " отменена. Причина: " + msg.Reason;
+            string title = "Ваша заявка на вакансию " + msg.VacancyGuid + " отменена. Причина: " + msg.Reason;
             using (var transaction = _db.GetTransaction())
             {
                 foreach (Guid researcherGuid in researcherGuids)

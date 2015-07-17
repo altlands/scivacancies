@@ -16,7 +16,7 @@ using SciVacancies.WebApp.ViewModels;
 namespace SciVacancies.WebApp.Controllers
 {
     /// <summary>
-    /// страница с вакансиями (конкурсами)
+    /// страница с вакансиями
     /// </summary>
         [ResponseCache(NoStore = true)]
     [Authorize]

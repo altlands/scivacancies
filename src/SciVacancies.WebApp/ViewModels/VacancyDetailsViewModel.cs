@@ -149,7 +149,7 @@ namespace SciVacancies.WebApp.ViewModels
         public DateTime CreationDate { get; set; }
 
         /// <summary>
-        /// Заявки на конкурс
+        /// Заявки на вакансию
         /// </summary>
         public PagedList<VacancyApplicationDetailsViewModel> Applications { get; set; }
 

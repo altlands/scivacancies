@@ -42,14 +42,14 @@ namespace SciVacancies.Domain.Events
     }
 
     /// <summary>
-    /// Заявка отклонена из-за отмены вакансии (конкурса)
+    /// Заявка отклонена из-за отмены конкурса на вакансии
     /// </summary>
     public class VacancyApplicationCancelled : VacancyApplicationEventBase
     {
     }
 
     /// <summary>
-    /// Заявка выйграла вакансию (конкурс)
+    /// Заявка выйграла в конкурсе на вакансию
     /// </summary>
     public class VacancyApplicationWon : VacancyApplicationEventBase
     {
@@ -65,7 +65,7 @@ namespace SciVacancies.Domain.Events
     }
 
     /// <summary>
-    /// Заявка проиграла вакансию (конкурс). Событие для всех заявок, не занявших 1-ое или 2-ое места.
+    /// Заявка проиграла в конкурсе на вакансию. Событие для всех заявок, не занявших 1-ое или 2-ое места.
     /// </summary>
     public class VacancyApplicationLost : VacancyApplicationEventBase
     {
