@@ -14,7 +14,7 @@
       "ClientId": "1_ikniwc909y8kog4k4sc00oogg0g8scc8o4k0wocgw4cg84k00",
       "ClientSecret": "67sq61c6xekgw0wgkosg04gwo488osk48ogks4og40cgws8ook",
       "Scope": "",
-      "RedirectUrl": "http://scivac.dev.alt-lan.com//account/callback"
+      "RedirectUrl": "http://scivac.dev.alt-lan.com/account/callback"
     },
     "Mapofscience": {
       "AuthorizationEndpoint": "",
