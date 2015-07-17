@@ -2,7 +2,9 @@
   "locked": false,
   "version": -9998,
   "projectFileDependencyGroups": {
-    "": [],
+    "": [
+      "OctopusTools >= 2.6.1.52"
+    ],
     "DNX,Version=v4.5.1": [],
     "DNXCore,Version=v5.0": [
       "System.Collections >= 4.0.10-beta-22816",
@@ -50,6 +52,31 @@
         "lib/contract/Microsoft.CSharp.dll",
         "lib/net45/_._",
         "lib/portable-wpa81+wp80+win80+net45+aspnetcore50/Microsoft.CSharp.dll"
+      ]
+    },
+    "OctopusTools/2.6.1.52": {
+      "serviceable": false,
+      "sha": "ZVq1iNMB9VEeIOgZDAuBn1BdT15RwbzuujOFouvIReQN7fJ1SRVJEVfink/1r9GkarSUO1XRKezBYVToWPeSmA==",
+      "frameworks": {
+        "DNX,Version=v4.5.1": {
+          "dependencies": {},
+          "frameworkAssemblies": [],
+          "runtimeAssemblies": [],
+          "compileAssemblies": []
+        },
+        "DNXCore,Version=v5.0": {
+          "dependencies": {},
+          "frameworkAssemblies": [],
+          "runtimeAssemblies": [],
+          "compileAssemblies": []
+        }
+      },
+      "files": [
+        "Octo.exe",
+        "Octo.exe.config",
+        "OctopusTools.2.6.1.52.nupkg",
+        "OctopusTools.2.6.1.52.nupkg.sha512",
+        "OctopusTools.nuspec"
       ]
     },
     "System.Collections/4.0.10-beta-22816": {
