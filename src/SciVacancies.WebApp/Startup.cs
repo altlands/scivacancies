@@ -14,6 +14,8 @@ using Microsoft.Framework.Logging;
 using SciVacancies.ApplicationInfrastructure;
 using SciVacancies.WebApp.Commands;
 using SciVacancies.WebApp.Infrastructure;
+using Microsoft.AspNet.Http;
+using Microsoft.Framework.WebEncoders;
 
 namespace SciVacancies.WebApp
 {
@@ -86,7 +88,9 @@ namespace SciVacancies.WebApp
             // Add the following to the request pipeline only in development environment.
             if (env.IsEnvironment("Development") && devEnv!="ntemnikov")
             {
-                app.UseErrorPage(ErrorPageOptions.ShowAll);
+                //app.UseErrorPage(ErrorPageOptions.ShowAll);
+                var errorPageOptions = new ErrorPageOptions {ShowCookies = false};
+                app.UseErrorPage(errorPageOptions);
             }
             else
             {

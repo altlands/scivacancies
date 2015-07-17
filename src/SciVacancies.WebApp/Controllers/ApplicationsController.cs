@@ -148,7 +148,7 @@ namespace SciVacancies.WebApp.Controllers
             var preModel = _mediator.Send(new SingleVacancyApplicationQuery { VacancyApplicationGuid = id });
 
             if (preModel == null)
-                return HttpNotFound(); //throw new ObjectNotFoundException($"Не найденая Заявка c идентификатором: {id}");
+                throw new ObjectNotFoundException($"Не найденая Заявка c идентификатором: {id}");
 
             if (researcherGuid != Guid.Empty
                 && User.IsInRole(ConstTerms.RequireRoleResearcher)
@@ -174,7 +174,7 @@ namespace SciVacancies.WebApp.Controllers
             var preModel = _mediator.Send(new SingleVacancyApplicationQuery { VacancyApplicationGuid = id });
 
             if (preModel == null)
-                return HttpNotFound(); //throw new ObjectNotFoundException($"Не найденая Заявка c идентификатором: {id}");
+                throw new ObjectNotFoundException($"Не найденая Заявка c идентификатором: {id}");
 
             if (preModel.status == VacancyApplicationStatus.InProcess
                 || preModel.status == VacancyApplicationStatus.Cancelled
@@ -352,7 +352,7 @@ namespace SciVacancies.WebApp.Controllers
             var preModel = _mediator.Send(new SingleVacancyApplicationQuery { VacancyApplicationGuid = id });
 
             if (preModel == null)
-                return HttpNotFound(); //throw new ObjectNotFoundException($"Не найденая Заявка c идентификатором: {id}");
+                throw new ObjectNotFoundException($"Не найденая Заявка c идентификатором: {id}");
 
             if (preModel.status == VacancyApplicationStatus.InProcess
                 || preModel.status == VacancyApplicationStatus.Cancelled

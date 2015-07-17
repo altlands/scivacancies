@@ -55,7 +55,7 @@ namespace SciVacancies.WebApp.Controllers
 
             var preModel = _mediator.Send(new SingleResearcherQuery { ResearcherGuid = researcherGuid });
             if (preModel == null)
-                return HttpNotFound(); //throw new ObjectNotFoundException();
+                throw new ObjectNotFoundException();
 
             var model = Mapper.Map<ResearcherEditViewModel>(preModel);
             return View(model);

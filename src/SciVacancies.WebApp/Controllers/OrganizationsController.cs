@@ -32,7 +32,7 @@ namespace SciVacancies.WebApp.Controllers
             var preModel = _mediator.Send(new SingleOrganizationQuery { OrganizationGuid = id });
 
             if (preModel == null)
-                return HttpNotFound(); //throw new ObjectNotFoundException($"Не найдена организация по идентификатору: {id}");
+                throw new ObjectNotFoundException($"Не найдена организация по идентификатору: {id}");
 
             var model = Mapper.Map<OrganizationDetailsViewModel>(preModel);
 
