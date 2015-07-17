@@ -218,7 +218,7 @@ namespace SciVacancies.WebApp.Controllers
             FirstName = "Имён",
             Patronymic = "Отчествович",
             UserName = "researcher@mail.scivacancies.org",
-            Phone = "964abcdefg",
+            Phone = "35413541",
             BirthYear = DateTime.Now.AddYears(-40).Year,
             Email = "researcher@mail.scivacancies.org"
         });

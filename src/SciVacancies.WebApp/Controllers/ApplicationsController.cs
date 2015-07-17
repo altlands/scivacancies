@@ -140,7 +140,7 @@ namespace SciVacancies.WebApp.Controllers
         [Authorize(Roles = ConstTerms.RequireRoleResearcher)]
         [PageTitle("Детали заявки")]
         [BindResearcherIdFromClaims]
-        public ViewResult Details(Guid id, Guid researcherGuid)
+        public IActionResult Details(Guid id, Guid researcherGuid)
         {
             if (id == Guid.Empty)
                 throw new ArgumentNullException(nameof(id));
@@ -166,7 +166,7 @@ namespace SciVacancies.WebApp.Controllers
         [Authorize(Roles = ConstTerms.RequireRoleOrganizationAdmin)]
         [PageTitle("Детали заявки")]
         [BindOrganizationIdFromClaims]
-        public ViewResult Preview(Guid id, Guid organizationGuid)
+        public IActionResult Preview(Guid id, Guid organizationGuid)
         {
             if (id == Guid.Empty)
                 throw new ArgumentNullException(nameof(id));
@@ -344,7 +344,7 @@ namespace SciVacancies.WebApp.Controllers
         [Authorize(Roles = ConstTerms.RequireRoleOrganizationAdmin)]
         [PageTitle("Детали заявки")]
         [BindOrganizationIdFromClaims]
-        public ViewResult Print(Guid id, Guid organizationGuid)
+        public IActionResult Print(Guid id, Guid organizationGuid)
         {
             if (id == Guid.Empty)
                 throw new ArgumentNullException(nameof(id));

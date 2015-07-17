@@ -16,7 +16,7 @@ using SciVacancies.WebApp.ViewModels;
 namespace SciVacancies.WebApp.Controllers
 {
     /// <summary>
-    /// страница с вакансиями (конкурсами)
+    /// страница с вакансиями
     /// </summary>
         [ResponseCache(NoStore = true)]
     [Authorize]
@@ -153,7 +153,7 @@ namespace SciVacancies.WebApp.Controllers
         }
 
         [PageTitle("Подробно о вакансии")]
-        public ViewResult Preview(Guid id)
+        public IActionResult Preview(Guid id)
         {
             if (id == Guid.Empty)
                 throw new ArgumentNullException(nameof(id));
@@ -179,7 +179,7 @@ namespace SciVacancies.WebApp.Controllers
         [Authorize(Roles = ConstTerms.RequireRoleOrganizationAdmin)]
         [PageTitle("Подробно о вакансии")]
         [BindOrganizationIdFromClaims]
-        public ViewResult Details(Guid id, Guid organizationGuid, int pageSize = 10, int currentPage = 1)
+        public IActionResult Details(Guid id, Guid organizationGuid, int pageSize = 10, int currentPage = 1)
         {
             if (id == Guid.Empty)
                 throw new ArgumentNullException(nameof(id));
@@ -227,7 +227,7 @@ namespace SciVacancies.WebApp.Controllers
         [AllowAnonymous]
         [PageTitle("Карточка вакансии")]
         [BindResearcherIdFromClaims]
-        public ViewResult Card(Guid id, Guid researcherGuid)
+        public IActionResult Card(Guid id, Guid researcherGuid)
         {
             if (id == Guid.Empty)
                 throw new ArgumentNullException(nameof(id));
@@ -366,7 +366,6 @@ namespace SciVacancies.WebApp.Controllers
                 OrderBy = ConstTerms.OrderByDateDescending
             });
 
-            //TODO: Vacancy -> InCommitte : нужно ли проверять минимальное (какое) количество заявок, поданных на вакансию
             if (vacancyApplications.TotalItems == 0
                 || vacancyApplications.Items.Count(c => c.status == VacancyApplicationStatus.Applied) < 2)
                 throw new Exception("Подано недостаточно Заявок для перевода Вакансии на рассмотрение комиссии");
@@ -531,13 +530,10 @@ namespace SciVacancies.WebApp.Controllers
 
         }
 
-
-
-
         [Authorize(Roles = ConstTerms.RequireRoleOrganizationAdmin)]
         [PageTitle("Подробно о вакансии")]
         [BindOrganizationIdFromClaims]
-        public ViewResult Print(Guid id, Guid organizationGuid, int pageSize = 10, int currentPage = 1)
+        public IActionResult Print(Guid id, Guid organizationGuid, int pageSize = 10, int currentPage = 1)
         {
             if (id == Guid.Empty)
                 throw new ArgumentNullException(nameof(id));

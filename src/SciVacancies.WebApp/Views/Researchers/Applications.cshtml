@@ -27,7 +27,7 @@
         <th>
             <div class="inline-block"><!-- <img src="/images/icons/tab-head.png" class="va-middle"/> -->
             </div>
-            <div class="inline-block ml6 va-middle">ID конкурса</div></th>
+            <div class="inline-block ml6 va-middle">ID вакансии</div></th>
         <th>
             <div class="inline-block"><img src="/images/icons/arrow-bottom-tab.png" class="va-middle"/>
             </div>
@@ -45,7 +45,7 @@
         <th>
             <div class="inline-block"><!-- <img src="/images/icons/tab-head.png" class="va-middle"/> -->
             </div>
-            <div class="inline-block ml6 va-middle">Статус<br/>конкурса
+            <div class="inline-block ml6 va-middle">Статус<br/>вакансии
             </div></th>
         <th>
             <div class="inline-block"><!-- <img src="/images/icons/tab-head.png" class="va-middle"/> -->
@@ -64,8 +64,8 @@
             <text>
                 <tr>
                     <td>ГНС600001</td>
-                    <td>@item.FullName</td>
-                    <td>@item.Rewards руб.</td>
+                    <td>@item.PositionTypeName</td>
+                    <td>@item.Vacancy.SalaryFrom-@item.Vacancy.SalaryTo руб.</td>
                     <td>@(item.SentDate?.ToLocalVacancyString())</td>
                     <td><span class="status @item.Vacancy.Status.GetHtmlClass()">@item.Vacancy.Status.GetDescription()</span></td>
                     <td><span class="status @item.Status.GetHtmlClass()">@item.Status.GetDescription()</span></td>

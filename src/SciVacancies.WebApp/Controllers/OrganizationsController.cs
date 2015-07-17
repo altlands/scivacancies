@@ -24,7 +24,7 @@ namespace SciVacancies.WebApp.Controllers
 
         [AllowAnonymous]
         [PageTitle("Карточка организации")]
-        public ViewResult Card(Guid id, int pageSize = 10, int currentPage = 1)
+        public IActionResult Card(Guid id, int pageSize = 10, int currentPage = 1)
         {
             if (id == Guid.Empty)
                 throw new ArgumentNullException(nameof(id));

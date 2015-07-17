@@ -6,8 +6,6 @@ using AutoMapper;
 using MediatR;
 using Microsoft.AspNet.Authorization;
 using Microsoft.AspNet.Mvc;
-using Microsoft.AspNet.Mvc.ModelBinding;
-using NPoco;
 using SciVacancies.Domain.DataModels;
 using SciVacancies.Domain.Enums;
 using SciVacancies.ReadModel.Core;
@@ -50,7 +48,7 @@ namespace SciVacancies.WebApp.Controllers
         [ResponseCache(NoStore = true)]
         [PageTitle("Изменить данные")]
         [BindResearcherIdFromClaims]
-        public ViewResult Edit(Guid researcherGuid)
+        public IActionResult Edit(Guid researcherGuid)
         {
             if (researcherGuid == Guid.Empty)
                 throw new ArgumentNullException(nameof(researcherGuid));
@@ -154,7 +152,6 @@ namespace SciVacancies.WebApp.Controllers
                     PageIndex = currentPage
                 }).MapToPagedList()
             };
-            //TODO: ntemnikov : Researchers -> Subscriptions : реализовать кнопки управления подписками
             return View(model);
         }
 

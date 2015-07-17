@@ -14,15 +14,19 @@ using Microsoft.Framework.Logging;
 //using SciVacancies.ApplicationInfrastructure;
 using SciVacancies.WebApp.Commands;
 using SciVacancies.WebApp.Infrastructure;
+using Microsoft.AspNet.Http;
+using Microsoft.Framework.WebEncoders;
 
 namespace SciVacancies.WebApp
 {
     public class Startup
     {
+        private readonly string devEnv;
+
         public Startup(IHostingEnvironment env)
         {
             var vars = Environment.GetEnvironmentVariables();
-            var devEnv = vars.Cast<DictionaryEntry>().FirstOrDefault(e => e.Key.Equals("dev_env")).Value;
+            devEnv = (string) vars.Cast<DictionaryEntry>().FirstOrDefault(e => e.Key.Equals("dev_env")).Value;
             // Setup configuration sources.
             Configuration = new Configuration()
                 .AddJsonFile("config.json")
@@ -86,9 +90,11 @@ namespace SciVacancies.WebApp
             loggerfactory.AddConsole();
 
             // Add the following to the request pipeline only in development environment.
-            if (env.IsEnvironment("Development"))
+            if (env.IsEnvironment("Development") && devEnv!="ntemnikov")
             {
-                app.UseErrorPage(ErrorPageOptions.ShowAll);
+                //app.UseErrorPage(ErrorPageOptions.ShowAll);
+                var errorPageOptions = new ErrorPageOptions {ShowCookies = false};
+                app.UseErrorPage(errorPageOptions);
             }
             else
             {
