@@ -48,14 +48,14 @@ namespace SciVacancies.WebApp.Controllers
         [ResponseCache(NoStore = true)]
         [PageTitle("Изменить данные")]
         [BindResearcherIdFromClaims]
-        public ViewResult Edit(Guid researcherGuid)
+        public IActionResult Edit(Guid researcherGuid)
         {
             if (researcherGuid == Guid.Empty)
                 throw new ArgumentNullException(nameof(researcherGuid));
 
             var preModel = _mediator.Send(new SingleResearcherQuery { ResearcherGuid = researcherGuid });
             if (preModel == null)
-                throw new ObjectNotFoundException();
+                return HttpNotFound(); //throw new ObjectNotFoundException();
 
             var model = Mapper.Map<ResearcherEditViewModel>(preModel);
             return View(model);

@@ -140,7 +140,7 @@ namespace SciVacancies.WebApp.Controllers
         [Authorize(Roles = ConstTerms.RequireRoleResearcher)]
         [PageTitle("Детали заявки")]
         [BindResearcherIdFromClaims]
-        public ViewResult Details(Guid id, Guid researcherGuid)
+        public IActionResult Details(Guid id, Guid researcherGuid)
         {
             if (id == Guid.Empty)
                 throw new ArgumentNullException(nameof(id));
@@ -148,7 +148,7 @@ namespace SciVacancies.WebApp.Controllers
             var preModel = _mediator.Send(new SingleVacancyApplicationQuery { VacancyApplicationGuid = id });
 
             if (preModel == null)
-                throw new ObjectNotFoundException($"Не найденая Заявка c идентификатором: {id}");
+                return HttpNotFound(); //throw new ObjectNotFoundException($"Не найденая Заявка c идентификатором: {id}");
 
             if (researcherGuid != Guid.Empty
                 && User.IsInRole(ConstTerms.RequireRoleResearcher)
@@ -166,7 +166,7 @@ namespace SciVacancies.WebApp.Controllers
         [Authorize(Roles = ConstTerms.RequireRoleOrganizationAdmin)]
         [PageTitle("Детали заявки")]
         [BindOrganizationIdFromClaims]
-        public ViewResult Preview(Guid id, Guid organizationGuid)
+        public IActionResult Preview(Guid id, Guid organizationGuid)
         {
             if (id == Guid.Empty)
                 throw new ArgumentNullException(nameof(id));
@@ -174,7 +174,7 @@ namespace SciVacancies.WebApp.Controllers
             var preModel = _mediator.Send(new SingleVacancyApplicationQuery { VacancyApplicationGuid = id });
 
             if (preModel == null)
-                throw new ObjectNotFoundException($"Не найденая Заявка c идентификатором: {id}");
+                return HttpNotFound(); //throw new ObjectNotFoundException($"Не найденая Заявка c идентификатором: {id}");
 
             if (preModel.status == VacancyApplicationStatus.InProcess
                 || preModel.status == VacancyApplicationStatus.Cancelled
@@ -344,7 +344,7 @@ namespace SciVacancies.WebApp.Controllers
         [Authorize(Roles = ConstTerms.RequireRoleOrganizationAdmin)]
         [PageTitle("Детали заявки")]
         [BindOrganizationIdFromClaims]
-        public ViewResult Print(Guid id, Guid organizationGuid)
+        public IActionResult Print(Guid id, Guid organizationGuid)
         {
             if (id == Guid.Empty)
                 throw new ArgumentNullException(nameof(id));
@@ -352,7 +352,7 @@ namespace SciVacancies.WebApp.Controllers
             var preModel = _mediator.Send(new SingleVacancyApplicationQuery { VacancyApplicationGuid = id });
 
             if (preModel == null)
-                throw new ObjectNotFoundException($"Не найденая Заявка c идентификатором: {id}");
+                return HttpNotFound(); //throw new ObjectNotFoundException($"Не найденая Заявка c идентификатором: {id}");
 
             if (preModel.status == VacancyApplicationStatus.InProcess
                 || preModel.status == VacancyApplicationStatus.Cancelled

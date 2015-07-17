@@ -24,7 +24,7 @@ namespace SciVacancies.WebApp.Controllers
 
         [AllowAnonymous]
         [PageTitle("Карточка организации")]
-        public ViewResult Card(Guid id, int pageSize = 10, int currentPage = 1)
+        public IActionResult Card(Guid id, int pageSize = 10, int currentPage = 1)
         {
             if (id == Guid.Empty)
                 throw new ArgumentNullException(nameof(id));
@@ -32,7 +32,7 @@ namespace SciVacancies.WebApp.Controllers
             var preModel = _mediator.Send(new SingleOrganizationQuery { OrganizationGuid = id });
 
             if (preModel == null)
-                throw new ObjectNotFoundException($"Не найдена организация по идентификатору: {id}");
+                return HttpNotFound(); //throw new ObjectNotFoundException($"Не найдена организация по идентификатору: {id}");
 
             var model = Mapper.Map<OrganizationDetailsViewModel>(preModel);
 

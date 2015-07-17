@@ -92,7 +92,7 @@ namespace SciVacancies.WebApp.Controllers
             var preModel = _mediator.Send(new SingleVacancyQuery { VacancyGuid = id });
 
             if (preModel == null)
-                throw new ObjectNotFoundException($"Не найдена вакансия с идентификатором: {id}");
+                return HttpNotFound(); //throw new ObjectNotFoundException($"Не найдена вакансия с идентификатором: {id}");
 
             if (preModel.organization_guid != organizationGuid)
                 throw new Exception("Вы не можете изменять вакансии других организаций");
@@ -153,7 +153,7 @@ namespace SciVacancies.WebApp.Controllers
         }
 
         [PageTitle("Подробно о вакансии")]
-        public ViewResult Preview(Guid id)
+        public IActionResult Preview(Guid id)
         {
             if (id == Guid.Empty)
                 throw new ArgumentNullException(nameof(id));
@@ -161,7 +161,7 @@ namespace SciVacancies.WebApp.Controllers
             var preModel = _mediator.Send(new SingleVacancyQuery { VacancyGuid = id });
 
             if (preModel == null)
-                throw new ObjectNotFoundException($"Не найдена вакансия с идентификатором: {id}");
+                return HttpNotFound(); //throw new ObjectNotFoundException($"Не найдена вакансия с идентификатором: {id}");
 
             var model = Mapper.Map<VacancyDetailsViewModel>(preModel);
 
@@ -179,7 +179,7 @@ namespace SciVacancies.WebApp.Controllers
         [Authorize(Roles = ConstTerms.RequireRoleOrganizationAdmin)]
         [PageTitle("Подробно о вакансии")]
         [BindOrganizationIdFromClaims]
-        public ViewResult Details(Guid id, Guid organizationGuid, int pageSize = 10, int currentPage = 1)
+        public IActionResult Details(Guid id, Guid organizationGuid, int pageSize = 10, int currentPage = 1)
         {
             if (id == Guid.Empty)
                 throw new ArgumentNullException(nameof(id));
@@ -189,7 +189,7 @@ namespace SciVacancies.WebApp.Controllers
             var preModel = _mediator.Send(new SingleVacancyQuery { VacancyGuid = id });
 
             if (preModel == null)
-                throw new ObjectNotFoundException($"Не найдена вакансия с идентификатором: {id}");
+                return HttpNotFound(); //throw new ObjectNotFoundException($"Не найдена вакансия с идентификатором: {id}");
 
             var model = Mapper.Map<VacancyDetailsViewModel>(preModel);
 
@@ -227,7 +227,7 @@ namespace SciVacancies.WebApp.Controllers
         [AllowAnonymous]
         [PageTitle("Карточка вакансии")]
         [BindResearcherIdFromClaims]
-        public ViewResult Card(Guid id, Guid researcherGuid)
+        public IActionResult Card(Guid id, Guid researcherGuid)
         {
             if (id == Guid.Empty)
                 throw new ArgumentNullException(nameof(id));
@@ -235,7 +235,7 @@ namespace SciVacancies.WebApp.Controllers
             var preModel = _mediator.Send(new SingleVacancyQuery { VacancyGuid = id });
 
             if (preModel == null)
-                throw new ObjectNotFoundException($"Не найдена вакансия с идентификатором: {id}");
+                return HttpNotFound(); //throw new ObjectNotFoundException($"Не найдена вакансия с идентификатором: {id}");
 
             var model = Mapper.Map<VacancyDetailsViewModel>(preModel);
 
@@ -270,7 +270,7 @@ namespace SciVacancies.WebApp.Controllers
             var preModel = _mediator.Send(new SingleVacancyQuery { VacancyGuid = id });
 
             if (preModel == null)
-                throw new ObjectNotFoundException($"Не найдена вакансия с идентификатором: {id}");
+                return HttpNotFound(); //throw new ObjectNotFoundException($"Не найдена вакансия с идентификатором: {id}");
 
             if (preModel.organization_guid != organizationGuid)
                 throw new Exception("Вы не можете отменить вакансии других организаций");
@@ -320,7 +320,7 @@ namespace SciVacancies.WebApp.Controllers
             var model = _mediator.Send(new SingleVacancyQuery { VacancyGuid = id });
 
             if (model == null)
-                throw new ObjectNotFoundException($"Не найдена вакансия с идентификатором: {id}");
+                return HttpNotFound(); //throw new ObjectNotFoundException($"Не найдена вакансия с идентификатором: {id}");
 
             if (model.organization_guid != organizationGuid)
                 throw new Exception("Вы не можете отменить удаление вакансии других организаций");
@@ -349,7 +349,7 @@ namespace SciVacancies.WebApp.Controllers
             var preModel = _mediator.Send(new SingleVacancyQuery { VacancyGuid = id });
 
             if (preModel == null)
-                throw new ObjectNotFoundException($"Не найдена вакансия с идентификатором: {id}");
+                return HttpNotFound(); //throw new ObjectNotFoundException($"Не найдена вакансия с идентификатором: {id}");
 
             if (preModel.organization_guid != organizationGuid)
                 throw new Exception("Вы не можете менять Вакансии других организаций");
@@ -440,7 +440,7 @@ namespace SciVacancies.WebApp.Controllers
             var model = _mediator.Send(new SingleVacancyQuery { VacancyGuid = id });
 
             if (model == null)
-                throw new ObjectNotFoundException($"Не найдена вакансия с идентификатором: {id}");
+                return HttpNotFound(); //throw new ObjectNotFoundException($"Не найдена вакансия с идентификатором: {id}");
 
             if (model.organization_guid != organizationGuid)
                 throw new Exception("Вы не можете отменить удаление вакансии других организаций");
@@ -467,7 +467,7 @@ namespace SciVacancies.WebApp.Controllers
             var preModel = _mediator.Send(new SingleVacancyQuery { VacancyGuid = id });
 
             if (preModel == null)
-                throw new ObjectNotFoundException($"Не найдена заявка с идентификатором {id}");
+                return HttpNotFound(); //throw new ObjectNotFoundException($"Не найдена заявка с идентификатором {id}");
 
             if (preModel.organization_guid != organizationGuid)
                 throw new Exception("Копировать можно только свои заявки");
@@ -500,7 +500,7 @@ namespace SciVacancies.WebApp.Controllers
             var preModel = _mediator.Send(new SingleVacancyQuery { VacancyGuid = id });
 
             if (preModel == null)
-                throw new ObjectNotFoundException($"Не найдена вакансия с идентификатором: {id}");
+                return HttpNotFound(); //throw new ObjectNotFoundException($"Не найдена вакансия с идентификатором: {id}");
 
             if (preModel.organization_guid != organizationGuid)
                 throw new Exception("Вы не можете изменять вакансии других организаций");
@@ -530,13 +530,10 @@ namespace SciVacancies.WebApp.Controllers
 
         }
 
-
-
-
         [Authorize(Roles = ConstTerms.RequireRoleOrganizationAdmin)]
         [PageTitle("Подробно о вакансии")]
         [BindOrganizationIdFromClaims]
-        public ViewResult Print(Guid id, Guid organizationGuid, int pageSize = 10, int currentPage = 1)
+        public IActionResult Print(Guid id, Guid organizationGuid, int pageSize = 10, int currentPage = 1)
         {
             if (id == Guid.Empty)
                 throw new ArgumentNullException(nameof(id));
@@ -546,7 +543,7 @@ namespace SciVacancies.WebApp.Controllers
             var preModel = _mediator.Send(new SingleVacancyQuery { VacancyGuid = id });
 
             if (preModel == null)
-                throw new ObjectNotFoundException($"Не найдена вакансия с идентификатором: {id}");
+                return HttpNotFound(); //throw new ObjectNotFoundException($"Не найдена вакансия с идентификатором: {id}");
 
             var model = Mapper.Map<VacancyDetailsViewModel>(preModel);
 
