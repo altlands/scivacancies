@@ -6,7 +6,7 @@ using Autofac.Dnx;
 using Insight.Database.Providers.PostgreSQL;
 using Microsoft.Framework.OptionsModel;
 using Npgsql;
-using SciVacancies.ApplicationInfrastructure;
+//using SciVacancies.ApplicationInfrastructure;
 using Xunit;
 using Insight.Database;
 using Microsoft.Framework.ConfigurationModel;

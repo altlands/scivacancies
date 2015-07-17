@@ -18,7 +18,7 @@ namespace SciVacancies.WebApp.Infrastructure
             Builder.RegisterModule(new EventBusModule());
             Builder.RegisterModule(new EventHandlersModule());
             Builder.RegisterModule(new ReadModelModule(configuration));
-            Builder.RegisterModule(new ServicesModule());
+            Builder.RegisterModule(new ServicesModule(configuration));
             Builder.RegisterModule(new IdentityModule());
         }
     }

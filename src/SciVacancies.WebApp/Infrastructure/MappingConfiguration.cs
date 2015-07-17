@@ -7,6 +7,8 @@ using SciVacancies.Domain.Events;
 using SciVacancies.ReadModel.Core;
 using SciVacancies.WebApp.ViewModels;
 using SciVacancies.WebApp.Models.OAuth;
+using System.Linq;
+using System.Collections.Generic;
 
 namespace SciVacancies.WebApp.Infrastructure
 {
@@ -47,7 +49,23 @@ namespace SciVacancies.WebApp.Infrastructure
                 .ForMember(d => d.OrgForm, o => o.MapFrom(s => s.OrgForm))
                 .ForMember(d => d.OrgFormId, o => o.MapFrom(s => s.OrgFormId))
                 .ForMember(d => d.ResearchDirections, o => o.Ignore());
-            Mapper.CreateMap<OAuthOrgInformation, AccountOrganizationRegisterViewModel>();
+
+            Mapper.CreateMap<OAuthOrgInformation, AccountOrganizationRegisterViewModel>()
+                .ForMember(d => d.UserName, o => o.MapFrom(s => s.inn))
+                .ForMember(d => d.Email, o => o.MapFrom(s => s.email))
+                .ForMember(d => d.Foiv, o => o.MapFrom(s => s.foiv.title))
+                .ForMember(d => d.FoivId, o => o.MapFrom(s => s.foiv.id))
+                .ForMember(d => d.HeadFirstName, o => o.MapFrom(s => s.headFirstName))
+                .ForMember(d => d.HeadLastName, o => o.MapFrom(s => s.headLastName))
+                .ForMember(d => d.HeadPatronymic, o => o.MapFrom(s => s.headPatronymic))
+                .ForMember(d => d.INN, o => o.MapFrom(s => s.inn))
+                .ForMember(d => d.OGRN, o => o.MapFrom(s => s.ogrn))
+                .ForMember(d => d.OrgForm, o => o.MapFrom(s => s.opf.title))
+                .ForMember(d => d.OrgFormId, o => o.MapFrom(s => s.opf.id))
+                .ForMember(d => d.Address, o => o.MapFrom(s => s.postAddress))
+                .ForMember(d => d.ResearchDirections, o => o.MapFrom(s => s.researchDirections.Select(ss => Int32.Parse(ss.id))))
+                .ForMember(d => d.ShortName, o => o.MapFrom(s => s.shortTitle))
+                .ForMember(d => d.Name, o => o.MapFrom(s => s.title));
 
             #endregion
 
@@ -56,20 +74,20 @@ namespace SciVacancies.WebApp.Infrastructure
 
             //Создание организации
             Mapper.CreateMap<OrganizationCreated, Organization>()
-                .ForMember(d => d.guid, o => o.MapFrom(s => s.OrganizationGuid))
-                .ForMember(d => d.name, o => o.MapFrom(s => s.Data.Name))
-                .ForMember(d => d.shortname, o => o.MapFrom(s => s.Data.ShortName))
-                .ForMember(d => d.address, o => o.MapFrom(s => s.Data.Address))
-                .ForMember(d => d.email, o => o.MapFrom(s => s.Data.Email))
-                .ForMember(d => d.inn, o => o.MapFrom(s => s.Data.INN))
-                .ForMember(d => d.ogrn, o => o.MapFrom(s => s.Data.OGRN))
-                .ForMember(d => d.head_firstname, o => o.MapFrom(s => s.Data.HeadFirstName))
-                .ForMember(d => d.head_secondname, o => o.MapFrom(s => s.Data.HeadSecondName))
-                .ForMember(d => d.head_patronymic, o => o.MapFrom(s => s.Data.HeadPatronymic))
-                .ForMember(d => d.foiv_id, o => o.MapFrom(s => s.Data.FoivId))
-                .ForMember(d => d.orgform_id, o => o.MapFrom(s => s.Data.OrgFormId))
-                .ForMember(d => d.researchdirections, o => o.MapFrom(s => s.Data.ResearchDirections))
-                .ForMember(d => d.creation_date, o => o.MapFrom(s => s.TimeStamp));
+                    .ForMember(d => d.guid, o => o.MapFrom(s => s.OrganizationGuid))
+                    .ForMember(d => d.name, o => o.MapFrom(s => s.Data.Name))
+                    .ForMember(d => d.shortname, o => o.MapFrom(s => s.Data.ShortName))
+                    .ForMember(d => d.address, o => o.MapFrom(s => s.Data.Address))
+                    .ForMember(d => d.email, o => o.MapFrom(s => s.Data.Email))
+                    .ForMember(d => d.inn, o => o.MapFrom(s => s.Data.INN))
+                    .ForMember(d => d.ogrn, o => o.MapFrom(s => s.Data.OGRN))
+                    .ForMember(d => d.head_firstname, o => o.MapFrom(s => s.Data.HeadFirstName))
+                    .ForMember(d => d.head_secondname, o => o.MapFrom(s => s.Data.HeadSecondName))
+                    .ForMember(d => d.head_patronymic, o => o.MapFrom(s => s.Data.HeadPatronymic))
+                    .ForMember(d => d.foiv_id, o => o.MapFrom(s => s.Data.FoivId))
+                    .ForMember(d => d.orgform_id, o => o.MapFrom(s => s.Data.OrgFormId))
+                    .ForMember(d => d.researchdirections, o => o.MapFrom(s => s.Data.ResearchDirections))
+                    .ForMember(d => d.creation_date, o => o.MapFrom(s => s.TimeStamp));
             //Обновление организации
             Mapper.CreateMap<OrganizationUpdated, Organization>()
                 .ForMember(d => d.guid, o => o.MapFrom(s => s.OrganizationGuid))

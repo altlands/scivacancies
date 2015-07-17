@@ -1,4 +1,4 @@
-﻿namespace SciVacancies.ApplicationInfrastructure
+﻿namespace SciVacancies.WebApp
 {
     public class DbSettings
     {

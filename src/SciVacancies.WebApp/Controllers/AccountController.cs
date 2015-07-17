@@ -3,6 +3,7 @@ using System.Security.Claims;
 using MediatR;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Mvc;
+using Microsoft.Framework.ConfigurationModel;
 using SciVacancies.WebApp.Commands;
 using SciVacancies.WebApp.Infrastructure.Identity;
 using SciVacancies.WebApp.ViewModels;
@@ -15,37 +16,28 @@ using Newtonsoft.Json;
 using System.Text;
 using System.IO;
 using SciVacancies.WebApp.Models.OAuth;
+using Microsoft.Framework.OptionsModel;
 using AutoMapper;
 
 namespace SciVacancies.WebApp.Controllers
 {
-        [ResponseCache(NoStore = true)]
+    [ResponseCache(NoStore = true)]
     public class AccountController : Controller
     {
         private readonly IMediator _mediator;
         private readonly SciVacUserManager _userManager;
+        private readonly IOptions<OAuthSettings> _oauthSettings;
 
-        //TODO - move to config.json
-        #region OAuth configuration
-        Uri sciencemonAuthorizationEndpoint = new Uri("http://www.sciencemon.ru/oauth/v2/auth");
-        Uri sciencemonTokenEndpoint = new Uri("http://www.sciencemon.ru/oauth/v2/token");
-        Uri sciencemonUserEndpoint = new Uri("http://www.sciencemon.ru/api/user");
-        string sciencemonClientId = "1_ikniwc909y8kog4k4sc00oogg0g8scc8o4k0wocgw4cg84k00";
-        string sciencemonClientSecret = "67sq61c6xekgw0wgkosg04gwo488osk48ogks4og40cgws8ook";
-        string sciencemonScope = null;
-
-        Uri redirectUrl = new Uri("http://localhost:59075/account/callback");
-        #endregion
-
-        public AccountController(SciVacUserManager userManager, IMediator mediator)
+        public AccountController(SciVacUserManager userManager, IMediator mediator, IOptions<OAuthSettings> oAuthSettings)
         {
             _mediator = mediator;
             _userManager = userManager;
+            _oauthSettings = oAuthSettings;
         }
 
         public IActionResult LoginUser(string id)
         {
-            var user = id=="user1" ? _userManager.FindByName("researcher1") : _userManager.FindByName("researcher2");
+            var user = id == "user1" ? _userManager.FindByName("researcher1") : _userManager.FindByName("researcher2");
             var identity = _userManager.CreateIdentity(user, DefaultAuthenticationTypes.ApplicationCookie);
             var cp = new ClaimsPrincipal(identity);
             Context.Response.SignIn(DefaultAuthenticationTypes.ApplicationCookie, cp);
@@ -68,87 +60,84 @@ namespace SciVacancies.WebApp.Controllers
             //TODO - uncomment to pin it down to any job
             if (model.IsResearcher)
             {
-                //var state = Guid.NewGuid().ToString("N");
-                //var nonce = Guid.NewGuid().ToString("N");
-                //SetTempCookies(state, nonce);
-
                 //TODO - допилить авторизацию с картой науки
             }
             else
             {
-                //записываем ключи в печеньки (против CSRF атак)
-                var state = Guid.NewGuid().ToString("N");
-                var nonce = Guid.NewGuid().ToString("N");
-                SetTempCookies(state, nonce);
-
-                //получаем урл на страницу OAuth авторизации на их стороне
-                var client = new OAuth2Client(sciencemonAuthorizationEndpoint);
-                var authorizationUrl = client.CreateCodeFlowUrl(sciencemonClientId, sciencemonScope, redirectUrl.AbsoluteUri, state, nonce);
-
-                return Redirect(authorizationUrl);
+                return Redirect(GetOAuthAuthorizationUrl(_oauthSettings.Options.Sciencemon));
             }
+
             return null;
         }
 
         #region OAuth
 
-        private void SetTempCookies(string state, string nonce)
+        private string SetStateCookie()
         {
-            Response.Cookies.Append("state", state, new Microsoft.AspNet.Http.CookieOptions { Expires = DateTime.Now.AddHours(1) });
-            Response.Cookies.Append("nonce", nonce, new Microsoft.AspNet.Http.CookieOptions { Expires = DateTime.Now.AddHours(1) });
+            string state = Guid.NewGuid().ToString("N");
+            Response.Cookies.Append("state", state, new Microsoft.AspNet.Http.CookieOptions { Expires = DateTime.Now.AddMinutes(10) });
+
+            return state;
         }
-        private Tuple<string, string> GetTempCookies()
+        private string SetNonceCookie()
         {
-            var state = Request.Cookies["state"];
-            var nonce = Request.Cookies["nonce"];
+            var nonce = Guid.NewGuid().ToString("N");
+            Response.Cookies.Append("nonce", nonce, new Microsoft.AspNet.Http.CookieOptions { Expires = DateTime.Now.AddMinutes(10) });
 
-            return Tuple.Create(state, nonce);
+            return nonce;
         }
-
-        [PageTitle("Оставить отзыв")]
-        public async Task<ActionResult> Callback()
+        private string GetStateCookie()
         {
-            var authorizationCode = Request.Query["code"];
-            var state = Request.Query["state"];
-
-            var tempCookies = GetTempCookies();
-
-            if (!String.IsNullOrEmpty(authorizationCode) && !String.IsNullOrEmpty(state) && state.Equals(tempCookies.Item1, StringComparison.Ordinal))
-            {
-                var tokenResponse = await GetTokens(authorizationCode);
-
-                await ValidateResponseAndSignInAsync(tokenResponse, tempCookies.Item2);
-
-                if (!String.IsNullOrEmpty(tokenResponse.IdentityToken))
-                {
-
-                }
-                if (!String.IsNullOrEmpty(tokenResponse.AccessToken))
-                {
-
-                }
-            }
-            else
-            {
-                ViewBag.Error = "Не подфартило";
-            }
-
-            return RedirectToHome();
+            return Request.Cookies["state"];
+        }
+        private string GetNonceCookie()
+        {
+            return Request.Cookies["nonce"];
+        }
+        private string GetCodeFromQuery()
+        {
+            return Request.Query["code"];
+        }
+        private string GetStateFromQuery()
+        {
+            return Request.Query["state"];
+        }
+        private string GetNonceFromQuery()
+        {
+            return Request.Query["nonce"];
         }
 
-        private async Task<TokenResponse> GetTokens(string code)
+        private string GetOAuthAuthorizationUrl(OAuthProviderSettings oauth)
         {
-            var client = new OAuth2Client(sciencemonTokenEndpoint, sciencemonClientId, sciencemonClientSecret);
+            OAuth2Client client = new OAuth2Client(new Uri(oauth.AuthorizationEndpoint));
 
-            return await client.RequestAuthorizationCodeAsync(code, redirectUrl.AbsoluteUri);
+            return client.CreateCodeFlowUrl(oauth.ClientId, oauth.Scope, oauth.RedirectUrl, SetStateCookie(), SetNonceCookie());
         }
+        private async Task<TokenResponse> GetOAuthTokensAsync(OAuthProviderSettings oauth, string code)
+        {
+            var client = new OAuth2Client(new Uri(oauth.TokenEndpoint), oauth.ClientId, oauth.ClientSecret);
+
+            return await client.RequestAuthorizationCodeAsync(code, oauth.RedirectUrl);
+        }
+        private async Task<IEnumerable<Claim>> GetOAuthUserClaimsAsync(OAuthProviderSettings oauth, string accesToken)
+        {
+            UserInfoClient client = new UserInfoClient(new Uri(oauth.UserEndpoint), accesToken);
+            UserInfoResponse userInfo = await client.GetAsync();
+
+            List<Claim> claims = new List<Claim>();
+            userInfo.Claims.ToList().ForEach(f => claims.Add(new Claim(f.Item1, f.Item2)));
+
+            return claims;
+        }
+
+        #endregion
+        #region API
 
         private string GetOrganizationInfo(string inn)
         {
             WebRequest req = WebRequest.Create(@"http://www.sciencemon.ru/ext-api/v1.0/org/" + inn);
             req.Method = "GET";
             req.Headers["Authorization"] = "Basic " + Convert.ToBase64String(Encoding.Default.GetBytes("dev:informika"));
-            //req.Credentials = new NetworkCredential("username", "password");
             HttpWebResponse response = req.GetResponse() as HttpWebResponse;
             string responseString = "";
             using (Stream stream = response.GetResponseStream())
@@ -158,107 +147,67 @@ namespace SciVacancies.WebApp.Controllers
             }
             return responseString;
         }
-        private async Task ValidateResponseAndSignInAsync(TokenResponse response, string nonce)
-        {
-            //if (!String.IsNullOrEmpty(response.IdentityToken))
-            //{
-            //TODO - валидация токенов нужна?
-            //var tokenClaims = 
-
-            var claims = new List<Claim>();
-
-            if (!String.IsNullOrEmpty(response.AccessToken))
-            {
-                claims.AddRange(await GetUserInfoClaimsAsync(response.AccessToken));
-
-                claims.Add(new Claim("access_token", response.AccessToken));
-                //Expires In = неправильно считает
-                claims.Add(new Claim("expires_in", DateTime.Now.AddSeconds(response.ExpiresIn).ToString()));
-            }
-
-            if (!string.IsNullOrEmpty(response.RefreshToken))
-            {
-                claims.Add(new Claim("refresh_token", response.RefreshToken));
-            }
-
-            var orgClaim = JsonConvert.DeserializeObject<OAuthOrgClaim>(claims.FirstOrDefault(f => f.Type.Equals("org")).Value);
-            //TODO - по какому полю правильней искать?
-            //var orgUser = _userManager.FindByEmail(claims.FirstOrDefault(f => f.Type.Equals("email")).Value);
-            var orgUser = _userManager.FindByName(orgClaim.Inn);
-
-            if (orgUser == null)
-            {
-
-
-
-
-
-
-                //var test = GetOrganizationInfo(orgClaim.Inn);
-
-                OAuthOrgInformation organizationInformation =JsonConvert.DeserializeObject<OAuthOrgInformation>(GetOrganizationInfo(orgClaim.Inn));
-                //TODO: AccountController -> Organization -> ntemnikov : десериализовать
-                //TODO: AccountController -> Organization -> ntemnikov : замапить данные и отправить в комманду
-                //TODO - достаём из claims ИНН
-                //TODO - забираем из их API данные по инн
-                //AccountOrganizationRegisterViewModel orgModel = Mapper.Map<AccountOrganizationRegisterViewModel>(organizationInformation);
-                AccountOrganizationRegisterViewModel orgModel = new AccountOrganizationRegisterViewModel
-                {
-                    UserName=organizationInformation.inn,
-                    Email = JsonConvert.SerializeObject(organizationInformation.email),
-                    Foiv = organizationInformation.foiv.title,
-                    FoivId = Int32.Parse(organizationInformation.foiv.id),
-                    HeadFirstName = organizationInformation.headFirstName,
-                    HeadLastName = organizationInformation.headLastName,
-                    HeadPatronymic = organizationInformation.headPatronymic,
-                    INN = organizationInformation.inn,
-                    OGRN = organizationInformation.ogrn,
-                    OrgForm = organizationInformation.opf.title,
-                    OrgFormId = Int32.Parse(organizationInformation.opf.id),
-                    Address = organizationInformation.postAddress,
-                    ResearchDirections = organizationInformation.researchDirections.Select(s => Int32.Parse(s.id)).ToList(),
-                    ShortName=organizationInformation.shortTitle,
-                    Name=organizationInformation.title
-                };
-
-                orgModel.Address = organizationInformation.postAddress;
-                
-
-                var command = new RegisterUserOrganizationCommand
-                {
-                    Data = orgModel
-                };
-                var user = _mediator.Send(command);
-
-                var identity = _userManager.CreateIdentity(user, DefaultAuthenticationTypes.ApplicationCookie);
-                var cp = new ClaimsPrincipal(identity);
-                //signing out...
-                Context.Response.SignOut(DefaultAuthenticationTypes.ApplicationCookie);
-                //...before signing in
-                Context.Response.SignIn(DefaultAuthenticationTypes.ApplicationCookie, cp);
-            }
-            else
-            {
-                var identity = _userManager.CreateIdentity(orgUser, DefaultAuthenticationTypes.ApplicationCookie);
-                var cp = new ClaimsPrincipal(identity);
-                Context.Response.SignIn(DefaultAuthenticationTypes.ApplicationCookie, cp);
-            }
-            //}
-        }
-
-        private async Task<IEnumerable<Claim>> GetUserInfoClaimsAsync(string accessToken)
-        {
-            var userInfoClient = new UserInfoClient(sciencemonUserEndpoint, accessToken);
-            var userInfo = await userInfoClient.GetAsync();
-
-            var claims = new List<Claim>();
-            userInfo.Claims.ToList().ForEach(f => claims.Add(new Claim(f.Item1, f.Item2)));
-
-            return claims;
-        }
 
         #endregion
 
+
+        [PageTitle("Оставить отзыв")]
+        //Сюда редиректит после OAuth авторизации
+        public async Task<ActionResult> Callback()
+        {
+            if (!String.IsNullOrEmpty(GetStateFromQuery()) && !String.IsNullOrEmpty(GetStateCookie()) && GetStateFromQuery().Equals(GetStateCookie()))
+            {
+                if (!String.IsNullOrEmpty(GetCodeFromQuery()))
+                {
+                    TokenResponse tokenResponse = await GetOAuthTokensAsync(_oauthSettings.Options.Sciencemon, GetCodeFromQuery());
+
+                    if (!String.IsNullOrEmpty(tokenResponse.AccessToken))
+                    {
+                        List<Claim> claims = new List<Claim>();
+
+                        claims.AddRange(await GetOAuthUserClaimsAsync(_oauthSettings.Options.Sciencemon, tokenResponse.AccessToken));
+
+                        claims.Add(new Claim("access_token", tokenResponse.AccessToken));
+                        claims.Add(new Claim("expires_in", DateTime.Now.AddSeconds(tokenResponse.ExpiresIn).ToString()));
+                        if (!String.IsNullOrEmpty(tokenResponse.RefreshToken)) claims.Add(new Claim("refresh_token", tokenResponse.RefreshToken));
+
+                        OAuthOrgClaim orgClaim = JsonConvert.DeserializeObject<OAuthOrgClaim>(claims.Find(f=>f.Type.Equals("org")).Value);
+
+                        var orgUser = _userManager.FindByName(orgClaim.Inn);
+
+                        if (orgUser == null)
+                        {
+                            OAuthOrgInformation organizationInformation = JsonConvert.DeserializeObject<OAuthOrgInformation>(GetOrganizationInfo(orgClaim.Inn));
+                            AccountOrganizationRegisterViewModel orgModel = Mapper.Map<AccountOrganizationRegisterViewModel>(organizationInformation);
+
+                            var command = new RegisterUserOrganizationCommand
+                            {
+                                Data = orgModel
+                            };
+                            var user = _mediator.Send(command);
+
+                            var identity = _userManager.CreateIdentity(user, DefaultAuthenticationTypes.ApplicationCookie);
+                            var cp = new ClaimsPrincipal(identity);
+                            //signing out...
+                            Context.Response.SignOut(DefaultAuthenticationTypes.ApplicationCookie);
+                            //...before signing in
+                            Context.Response.SignIn(DefaultAuthenticationTypes.ApplicationCookie, cp);
+                        }
+                        else
+                        {
+                            var identity = _userManager.CreateIdentity(orgUser, DefaultAuthenticationTypes.ApplicationCookie);
+                            var cp = new ClaimsPrincipal(identity);
+                            Context.Response.SignIn(DefaultAuthenticationTypes.ApplicationCookie, cp);
+                        }
+                    }
+                    else throw new ArgumentNullException("Token response is null");
+                }
+                else throw new ArgumentNullException("Oauth authorization code is null or empty");
+            }
+            else throw new ArgumentException("Oauth state mismatch");
+
+            return RedirectToHome();
+        }
 
         [PageTitle("Регистрация")]
         public ViewResult Register() => View(new AccountResearcherRegisterViewModel());

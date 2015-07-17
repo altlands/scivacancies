@@ -13,13 +13,18 @@ using Npgsql;
 using SciVacancies.WebApp.Engine;
 using SciVacancies.WebApp.Engine.SmtpNotificators;
 using SciVacancies.ReadModel.ElasticSearchModel.Model;
+using Microsoft.Framework.ConfigurationModel;
 
 namespace SciVacancies.WebApp.Infrastructure
 {
     public static class SearchSubscriptionService
     {
-        public static void Initialize()
+        private static readonly IConfiguration _configuration;
+
+        public static void Initialize(IConfiguration configuration)
         {
+            //_configuration = configuration;
+
             int HourRun = 16;
             int MinuteRun = 00;
             int HourInterval = 10;
@@ -37,8 +42,8 @@ namespace SciVacancies.WebApp.Infrastructure
                 ITrigger trigger = TriggerBuilder.Create()
                     .WithIdentity("searchsubscriptiontrigger", "group1")
                     .WithDailyTimeIntervalSchedule(s => s
-                        .WithIntervalInMinutes(1)
-                        //.WithIntervalInSeconds(HourInterval)
+                        //.WithIntervalInMinutes(60)
+                        .WithIntervalInSeconds(HourInterval)
                         .OnEveryDay()
                     //.StartingDailyAt(TimeOfDay.HourAndMinuteOfDay(HourRun, MinuteRun))
                     )
@@ -55,6 +60,7 @@ namespace SciVacancies.WebApp.Infrastructure
         {
             public void Execute(IJobExecutionContext context)
             {
+
                 var dataBase = new Database("Server = localhost; Database = scivacancies; User Id = postgres; Password = postgres", NpgsqlFactory.Instance);
                 var elasticClient = new ElasticClient(new ConnectionSettings(new Uri("http://localhost:9200/"), defaultIndex: "scivacancies"));
                 IEnumerable<SciVacancies.ReadModel.Core.SearchSubscription> searchsubscriptions = dataBase.Fetch<SciVacancies.ReadModel.Core.SearchSubscription>(new Sql($"SELECT * FROM res_searchsubscriptions ss WHERE ss.status = @0", SearchSubscriptionStatus.Active));

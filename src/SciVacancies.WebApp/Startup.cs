@@ -11,7 +11,7 @@ using Microsoft.AspNet.Identity;
 using Microsoft.Framework.ConfigurationModel;
 using Microsoft.Framework.DependencyInjection;
 using Microsoft.Framework.Logging;
-using SciVacancies.ApplicationInfrastructure;
+//using SciVacancies.ApplicationInfrastructure;
 using SciVacancies.WebApp.Commands;
 using SciVacancies.WebApp.Infrastructure;
 
@@ -37,12 +37,16 @@ namespace SciVacancies.WebApp
         {
             services.Configure<AppSettings>(Configuration.GetSubKey("AppSettings"));
             services.Configure<DbSettings>(Configuration.GetSubKey("Data"));
+            services.Configure<OAuthSettings>(Configuration.GetSubKey("OAuthSettings"));
+            services.Configure<ApiSettings>(Configuration.GetSubKey("ApiSettings"));
 
             services.ConfigureCookieAuthentication(options =>
             {
                 options.AutomaticAuthentication = true;
             });
             services.AddMvc();
+            //TODO -  remove
+            services.AddSingleton(c => Configuration);
 
             var builder = new ContainerBuilder();
             builder.RegisterSource(new ContravariantRegistrationSource());
@@ -62,7 +66,7 @@ namespace SciVacancies.WebApp
             builder.RegisterModule(new EventBusModule());
             builder.RegisterModule(new EventHandlersModule());
             builder.RegisterModule(new ReadModelModule(Configuration));
-            builder.RegisterModule(new ServicesModule());
+            builder.RegisterModule(new ServicesModule(Configuration));
             builder.RegisterModule(new IdentityModule());
         }
 
@@ -109,7 +113,7 @@ namespace SciVacancies.WebApp
 
             MappingConfiguration.Initialize();
 
-            SearchSubscriptionService.Initialize();
+            //SearchSubscriptionService.Initialize(Configuration);
         }
     }
 }

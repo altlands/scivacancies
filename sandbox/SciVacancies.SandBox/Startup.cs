@@ -8,7 +8,7 @@ using Microsoft.AspNet.Hosting;
 using Microsoft.Framework.ConfigurationModel;
 using Microsoft.Framework.DependencyInjection;
 using Microsoft.Framework.Logging;
-using SciVacancies.ApplicationInfrastructure;
+//using SciVacancies.ApplicationInfrastructure;
 using SciVacancies.WebApp;
 
 namespace SciVacancies.SandBox
@@ -32,7 +32,7 @@ namespace SciVacancies.SandBox
         public IServiceProvider ConfigureServices(IServiceCollection services)
         {
             services.Configure<AppSettings>(Configuration.GetSubKey("AppSettings"));
-            services.Configure<DbSettings>(Configuration.GetSubKey("Data"));            
+            services.Configure<DbSettings>(Configuration.GetSubKey("Data"));                     
 
             var builder = new ContainerBuilder();
 

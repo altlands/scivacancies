@@ -115,6 +115,17 @@ namespace SciVacancies.Domain.Aggregates
                 });
             }
         }
+        //public void VacancyToResponseAwaiting()
+        //{
+        //    if (Status == VacancyStatus.InCommittee
+        //        && WinnerResearcherGuid != Guid.Empty
+        //        && WinnerVacancyApplicationGuid != Guid.Empty
+        //        && PretenderResearcherGuid != Guid.Empty
+        //        && PretenderVacancyApplicationGuid != Guid.Empty)
+        //    {
+        //        //TODO
+        //    }
+        //}
         public void WinnerAcceptOffer()
         {
             if (Status == VacancyStatus.OfferResponseAwaiting
