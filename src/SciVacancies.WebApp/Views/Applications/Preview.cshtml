@@ -88,7 +88,7 @@
 
     <br />
     <div class="ctr-buttons">
-        @if (Model.Status == VacancyApplicationStatus.Applied && !(Model.Vacancy.Status == VacancyStatus.InCommittee || Model.Vacancy.Status == VacancyStatus.Published))
+        @if (Model.Status == VacancyApplicationStatus.Applied && !(Model.Vacancy.Status == VacancyStatus.InProcess|| Model.Vacancy.Status == VacancyStatus.Published))
         {
 
             if (Model.Vacancy.WinnerResearcherGuid == Model.ResearcherGuid)
