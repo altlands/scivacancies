@@ -57,10 +57,11 @@
 <div class="b-tabs">
     <h4 class="mb10">Вакансии по областям науки</h4>
 
-    <ul class="nav nav-tabs" id="myTab">
-        @foreach (var item in Model.ResearchDirections[0].Childs)
+    <ul class="nav nav-tabs" id="tab">
+        @for (var i = 0; i < Model.ResearchDirections[0].Childs.Count; i++)
         {
-            <li>
+            var item = Model.ResearchDirections[0].Childs[i];
+            <li class="@(i==0? "active":string.Empty)">
                 <a href="#ResearchDirection_@item.Id">
                     @item.Title
                 </a>
