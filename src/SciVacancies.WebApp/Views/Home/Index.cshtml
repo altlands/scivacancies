@@ -54,70 +54,89 @@
     </div>
 </div>
 
-<div class="b-tabs">
-    <h4 class="mb10">Вакансии по областям науки</h4>
+<h4 class="mb10">Вакансии по областям науки</h4>
 
-    <ul class="nav nav-tabs" id="tab">
-        @for (var i = 0; i < Model.ResearchDirections[0].Childs.Count; i++)
-        {
-            var item = Model.ResearchDirections[0].Childs[i];
-            <li class="@(i==0? "active":string.Empty)">
-                <a href="#ResearchDirection_@item.Id">
-                    @item.Title
-                </a>
-            </li>
+<style>
+    a.big-link {
+        position: relative;
+    }
+
+        a.big-link:before {
+            position: absolute;
+            content: '';
+            top: -15px;
+            right: -15px;
+            left: -15px;
+            bottom: -15px;
         }
-    </ul>
+</style>
 
+<div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
 
-    <div class="tab-content tab-content-main-page">
-
-        @foreach (var item in Model.ResearchDirections[0].Childs.Where(c => c.Childs.Count > 0))
-        {
-            <text>
-            <div class="tab-pane active" id="ResearchDirection_@item.Id">
-
-                @*<div class="float-right">
-                        <input type="text" placeholder="Поиск по научным направлениям" />
-                    </div>*@
-
-                <h4>@item.Title</h4>
-
-                <ul class="tabs">
-                    @for (int i = 0; i < item.Childs.Count; i++)
-                    {
-                        var innerItem = item.Childs[i];
-                        <text>
-                        <li class="sub-research-directions @(i == 0 ? "active" : string.Empty)" data-tabname="list-sections-science_@innerItem.Id">
-                            <span>@innerItem.Title</span>
-                        </li>
-                        </text>
-                    }
-                </ul>
-
-                @for (int i = 0; i < item.Childs.Count; i++)
-                {
-                    var innerItem = item.Childs[i];
-                    <text>
-                    <ul class="list-sections-science" id="list-sections-science_@innerItem.Id" @(i != 0 ? @"style=display:none;" : string.Empty)>
-                        @foreach (var innerInnerItem in innerItem.Childs)
-                        {
-                            <li>
-                                <a href="#">@innerInnerItem.Title</a>
-                                <p>1256 вакансий</p>
-                                <p>Средняя заработная плата – 67000 руб.</p>
-                            </li>
-                        }
-                    </ul>
-                    </text>
-                }
+    @for (var i = 0; i < Model.ResearchDirections[0].Childs.Count; i++)
+    {
+        var child = Model.ResearchDirections[0].Childs[i];
+        <text>
+        <div class="panel panel-default">
+            <div class="panel-heading" role="tab" id="heading_@child.Id">
+                <h4 class="panel-title" style="margin-top: 0; margin-bottom: 0;">
+                    <a class="collapsed big-link" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapse_@child.Id" aria-expanded="false" aria-controls="collapse_@child.Id">
+                        @child.Title
+                    </a>
+                </h4>
             </div>
-            </text>
-        }
+            <div id="collapse_@child.Id" class="panel-collapse collapse" role="tabpanel" aria-labelledby="heading_@child.Id">
+                <div class="panel-body">
 
 
-    </div>
+                    <div class="tab-pane active" id="ResearchDirection_@child.Id">
+
+                        @*<div class="float-right">
+                                <input type="text" placeholder="Поиск по научным направлениям" />
+                            </div>*@
+
+                        @*<h4>@child.Title</h4>*@
+
+                        <ul class="tabs">
+                            @for (var j = 0; j < child.Childs.Count; j++)
+                            {
+                                var innerItem = child.Childs[j];
+                                <text>
+                                <li class="sub-research-directions @(j == 0 ? "active" : string.Empty)" data-tabname="list-sections-science_@innerItem.Id">
+                                    <span>@innerItem.Title</span>
+                                </li>
+                                </text>
+                            }
+                        </ul>
+
+                        @for (var j = 0; j < child.Childs.Count; j++)
+                        {
+                            var innerItem = child.Childs[j];
+                            <text>
+                            <ul class="list-sections-science" id="list-sections-science_@innerItem.Id" @(j != 0 ? @"style=display:none;" : string.Empty)>
+                                @foreach (var innerInnerItem in innerItem.Childs)
+                                {
+                                    <li>
+                                        <a href="#">@innerInnerItem.Title</a>
+                                        <p>1256 вакансий</p>
+                                        <p>Средняя заработная плата – 67000 руб.</p>
+                                    </li>
+                                }
+                            </ul>
+                            </text>
+                        }
+                    </div>
+
+
+                </div>
+            </div>
+        </div>
+        </text>
+    }
+
 </div>
+
+
 
 
 <div class="b-graphics">
