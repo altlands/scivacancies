@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Data.Entity.Core;
 using System.Linq;
 using AutoMapper;
@@ -157,6 +158,8 @@ namespace SciVacancies.WebApp.Controllers
 
             var model = Mapper.Map<VacancyApplicationDetailsViewModel>(preModel);
             model.Researcher = Mapper.Map<ResearcherDetailsViewModel>(_mediator.Send(new SingleResearcherQuery { ResearcherGuid = researcherGuid }));
+            model.Researcher.Publications = Mapper.Map<List<PublicationEditViewModel>>(_mediator.Send(new SelectResearcherPublicationsQuery { ResearcherGuid = researcherGuid }));
+            model.Researcher.Educations= Mapper.Map<List<EducationEditViewModel>>(_mediator.Send(new SelectResearcherEducationsQuery { ResearcherGuid = researcherGuid }));
             model.Vacancy = Mapper.Map<VacancyDetailsViewModel>(_mediator.Send(new SingleVacancyQuery { VacancyGuid = preModel.vacancy_guid }));
             //TODO: ntemnikov : показать Приложенные файлы
             //TODO: ntemnikov : показать Научные интересы
@@ -188,8 +191,11 @@ namespace SciVacancies.WebApp.Controllers
 
             var model = Mapper.Map<VacancyApplicationDetailsViewModel>(preModel);
             model.Researcher = Mapper.Map<ResearcherDetailsViewModel>(_mediator.Send(new SingleResearcherQuery { ResearcherGuid = preModel.researcher_guid }));
+            model.Researcher.Publications = Mapper.Map<List<PublicationEditViewModel>>(_mediator.Send(new SelectResearcherPublicationsQuery { ResearcherGuid = preModel.researcher_guid }));
+            model.Researcher.Educations = Mapper.Map<List<EducationEditViewModel>>(_mediator.Send(new SelectResearcherEducationsQuery { ResearcherGuid = preModel.researcher_guid }));
             model.Vacancy = Mapper.Map<VacancyDetailsViewModel>(vacancy);
-
+            //TODO: ntemnikov : показать Приложенные файлы
+            //TODO: ntemnikov : показать Научные интересы
             return View(model);
         }
 
@@ -366,6 +372,8 @@ namespace SciVacancies.WebApp.Controllers
 
             var model = Mapper.Map<VacancyApplicationDetailsViewModel>(preModel);
             model.Researcher = Mapper.Map<ResearcherDetailsViewModel>(_mediator.Send(new SingleResearcherQuery { ResearcherGuid = preModel.researcher_guid }));
+            model.Researcher.Publications = Mapper.Map<List<PublicationEditViewModel>>(_mediator.Send(new SelectResearcherPublicationsQuery { ResearcherGuid = preModel.researcher_guid }));
+            model.Researcher.Educations = Mapper.Map<List<EducationEditViewModel>>(_mediator.Send(new SelectResearcherEducationsQuery { ResearcherGuid = preModel.researcher_guid }));
             model.Vacancy = Mapper.Map<VacancyDetailsViewModel>(vacancy);
 
             return View(model);
