@@ -49,20 +49,21 @@
                 foreach (var item in Model.Researcher.Educations)
                 {
                     <text>
-                    <ul class="table-emulation">
-                        <li>
-                            <span class="w85 italic inline-block">Город</span> <span class="italic">@item.City</span>
-                        </li>
-                        <li>
-                            <span class="w85 italic inline-block">ВУЗ</span> <span class="italic">@item.UniversityShortName</span>
-                        </li>
-                        <li>
-                            <span class="w85 italic inline-block">Факультет</span> <span class="italic">@item.FacultyShortName</span>
-                        </li>
-                        <li>
-                            <span class="w85 italic inline-block">Год окончания</span> <span class="italic">@(item.GraduationYear)</span>
-                        </li>
-                    </ul>
+                        <ul class="table-emulation">
+                            <li>
+                                <span class="w85 italic inline-block">Город</span> <span class="italic">@item.City</span>
+                            </li>
+                            <li>
+                                <span class="w85 italic inline-block">ВУЗ</span> <span class="italic">@item.UniversityShortName</span>
+                            </li>
+                            <li>
+                                <span class="w85 italic inline-block">Факультет</span> <span class="italic">@item.FacultyShortName</span>
+                            </li>
+                            <li>
+                                <span class="w85 italic inline-block">Год окончания</span> <span class="italic">@(item.GraduationYear)</span>
+                            </li>
+                        </ul>
+                        <hr/>
                     </text>
                 }
             }

@@ -25,8 +25,8 @@ namespace SciVacancies.WebApp.ViewModels
         public string Phone { get; set; }
         public string ExtraPhone { get; set; }
 
-        public List<Education> Educations { get; set; }
-        public List<Publication> Publications { get; set; }
+        public List<EducationEditViewModel> Educations { get; set; }
+        public List<PublicationEditViewModel> Publications { get; set; }
 
         public string ResearchActivity { get; set; }
         public string TeachingActivity { get; set; }

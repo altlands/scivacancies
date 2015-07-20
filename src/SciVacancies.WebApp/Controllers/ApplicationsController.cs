@@ -64,8 +64,8 @@ namespace SciVacancies.WebApp.Controllers
                 Email = researcher.email,
                 Phone = researcher.phone,
                 ResearcherFullName = $"{researcher.secondname} {researcher.firstname} {researcher.patronymic}",
-                Educations = researcher.educations,
-                Publications = researcher.publications,
+                Educations = Mapper.Map<List<EducationEditViewModel>>(researcher.educations),
+                Publications = Mapper.Map<List<PublicationEditViewModel>>(researcher.publications),
                 ResearchActivity = researcher.research_activity,
                 TeachingActivity = researcher.teaching_activity,
                 OtherActivity = researcher.other_activity,
@@ -105,25 +105,23 @@ namespace SciVacancies.WebApp.Controllers
                 && appliedVacancyApplications.Items.Where(c => c.status == VacancyApplicationStatus.Applied).Select(c => c.researcher_guid).Distinct().ToList().Any(c => c == researcherGuid))
                 throw new Exception("Вы не можете подать повторную Заявку на Вакансию ");
 
-            //с формы мы не оплучам практически никакие данные, поэтоу заново наполняем ViewModel
+            //с формы мы не получаем практически никаких данных, поэтоу заново наполняем ViewModel
             var researcher = _mediator.Send(new SingleResearcherQuery { ResearcherGuid = researcherGuid });
             researcher.educations = _mediator.Send(new SelectResearcherEducationsQuery { ResearcherGuid = researcherGuid }).ToList();
             researcher.publications = _mediator.Send(new SelectResearcherPublicationsQuery { ResearcherGuid = researcherGuid }).ToList();
             model.Conferences = researcher.conferences;
-            model.Educations = researcher.educations;
+            model.Educations =Mapper.Map<List<EducationEditViewModel>>(researcher.educations);
             model.Email = researcher.email;
             model.ExtraEmail = researcher.extraemail;
             model.ExtraPhone = researcher.extraphone;
             model.OtherActivity = researcher.other_activity;
             model.Phone = researcher.phone;
-            model.Publications = researcher.publications;
+            model.Publications = Mapper.Map<List<PublicationEditViewModel>>(researcher.publications);
             model.PositionName = vacancyData.name;
             model.ResearchActivity = researcher.research_activity;
             model.ResearcherFullName = $"{researcher.secondname} {researcher.firstname} {researcher.patronymic}";
             model.ResearcherGuid = researcherGuid;
             model.Rewards = researcher.rewards;
-            model.Educations = researcher.educations;
-            model.Publications = researcher.publications;
             model.ScienceDegree = researcher.science_degree;
             model.ScienceRank = researcher.science_rank;
             model.TeachingActivity = researcher.teaching_activity;
