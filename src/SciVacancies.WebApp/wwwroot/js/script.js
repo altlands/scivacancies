@@ -193,7 +193,7 @@ $(document).ready(function () {
         var source = this;
         var parentContainer = $(source).parents('.cat-filter')[0];
         //plain checkbox list
-        $(parentContainer).find("span.checkbox:not(.checked)").parents("li)").hide(300, function () {
+        $(parentContainer).find("span.checkbox:not(.checked)").parents("li").hide(300, function () {
             $(source).hide();
             $(source).siblings("span.show-all-list").show();
         });

@@ -164,6 +164,12 @@ namespace SciVacancies.WebApp.Controllers
             return View(model);
         }
 
+        /// <summary>
+        /// организации рпосматривают присланные Заявки
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="organizationGuid"></param>
+        /// <returns></returns>
         [Authorize(Roles = ConstTerms.RequireRoleOrganizationAdmin)]
         [PageTitle("Детали заявки")]
         [BindOrganizationIdFromClaims]
@@ -185,7 +191,7 @@ namespace SciVacancies.WebApp.Controllers
 
             var vacancy = _mediator.Send(new SingleVacancyQuery { VacancyGuid = preModel.vacancy_guid });
             if (vacancy.organization_guid != organizationGuid)
-                throw new Exception("Вы не можете изменять Заявки, поданные на вакансии других организаций.");
+                throw new Exception("Вы не можете просматривать Заявки, поданные на вакансии других организаций.");
 
             var model = Mapper.Map<VacancyApplicationDetailsViewModel>(preModel);
             model.Researcher = Mapper.Map<ResearcherDetailsViewModel>(_mediator.Send(new SingleResearcherQuery { ResearcherGuid = preModel.researcher_guid }));

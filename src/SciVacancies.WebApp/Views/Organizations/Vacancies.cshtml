@@ -44,6 +44,14 @@
                     <!-- <img src="/images/icons/tab-head.png" class="va-middle"/> -->
                 </div>
                 <div class="inline-block ml6 va-middle">
+                    Заработная<br /> плата
+                </div>
+            </th>
+            <th>
+                <div class="inline-block">
+                    <!-- <img src="/images/icons/tab-head.png" class="va-middle"/> -->
+                </div>
+                <div class="inline-block ml6 va-middle">
                     Дата<br /> создания
                 </div>
             </th>
@@ -78,7 +86,10 @@
                 <tr>
                     <td>@item.guid.ToString().Substring(0, 4)...</td>
                     <td>ГНС600001</td>
-                    <td>@item.name</td>
+                    <td>
+                        @item.name
+                    </td>
+                    <td>@item.salary_from-@item.salary_to    руб.</td>
                     <!--TODO: проверить правильность информации-->
                     <td>@(item.creation_date.ToLocalVacancyString())</td>
                     <td>@(item.publish_date?.ToLocalVacancyString())</td>
@@ -98,10 +109,12 @@
                         }
                         @if (item.status == VacancyStatus.Published)
                         {
+                            <br />
                             <a asp-controller="vacancies" asp-action="startincommittee" asp-route-id="@item.guid" title="Перевести на рассмотрение">на рассмотрение</a>
                         }
                         @if (item.status == VacancyStatus.OfferAccepted || item.status == VacancyStatus.OfferRejected)
                         {
+                            <br />
                             <a asp-controller="vacancies" asp-action="close" asp-route-id="@item.guid" title="Выбрать победителя">Закрыть вакансию</a>
                         }
                     </td>

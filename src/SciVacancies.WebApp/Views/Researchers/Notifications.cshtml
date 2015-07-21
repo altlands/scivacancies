@@ -54,7 +54,7 @@
                 <td class="bold">@item.researcher_guid.ToString().Substring(0, 4)</td>
                 <td class="bold">@item.creation_date</td>
                 <td class="bold">
-                    <a asp-controller="vacancies" asp-action="card" asp-route-notificationguids="@item.vacancy_guid" class="view-td-icon">вакансия</a>
+                    <a asp-controller="vacancies" asp-action="card" asp-route-id="@item.vacancy_guid">Вакансия</a>
                 </td>
                 <td>
                     @*<a href="#" class="success-request-icon"><span class="italic bold">@item.Title</span></a>*@
