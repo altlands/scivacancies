@@ -147,7 +147,7 @@ namespace SciVacancies.WebApp.Controllers
             var preModel = _mediator.Send(new SingleVacancyApplicationQuery { VacancyApplicationGuid = id });
 
             if (preModel == null)
-                throw new ObjectNotFoundException($"Не найденая Заявка c идентификатором: {id}");
+                throw new ObjectNotFoundException($"Не найдена Заявка c идентификатором: {id}");
 
             if (researcherGuid != Guid.Empty
                 && User.IsInRole(ConstTerms.RequireRoleResearcher)
@@ -181,7 +181,7 @@ namespace SciVacancies.WebApp.Controllers
             var preModel = _mediator.Send(new SingleVacancyApplicationQuery { VacancyApplicationGuid = id });
 
             if (preModel == null)
-                throw new ObjectNotFoundException($"Не найденая Заявка c идентификатором: {id}");
+                throw new ObjectNotFoundException($"Не найдена Заявка c идентификатором: {id}");
 
             if (preModel.status == VacancyApplicationStatus.InProcess
                 || preModel.status == VacancyApplicationStatus.Cancelled
@@ -209,7 +209,7 @@ namespace SciVacancies.WebApp.Controllers
             var vacancyApplicaiton = _mediator.Send(new SingleVacancyApplicationQuery { VacancyApplicationGuid = vacancyApplicationGuid });
 
             if (vacancyApplicaiton == null)
-                throw new ObjectNotFoundException($"Не найденая Заявка c идентификатором: {vacancyApplicationGuid}");
+                throw new ObjectNotFoundException($"Не найдена Заявка c идентификатором: {vacancyApplicationGuid}");
 
             if (vacancyApplicaiton.status != VacancyApplicationStatus.Applied)
                 throw new Exception(
@@ -218,7 +218,7 @@ namespace SciVacancies.WebApp.Controllers
             vacancy = _mediator.Send(new SingleVacancyQuery { VacancyGuid = vacancyApplicaiton.vacancy_guid });
 
             if (vacancy == null)
-                throw new ObjectNotFoundException($"Не найденая Вакансия c идентификатором: {vacancyApplicaiton.vacancy_guid}");
+                throw new ObjectNotFoundException($"Не найдена Вакансия c идентификатором: {vacancyApplicaiton.vacancy_guid}");
 
             if (vacancy.organization_guid != organizationGuid)
                 throw new Exception("Вы не можете изменять Заявки, поданные на вакансии других организаций.");
@@ -362,7 +362,7 @@ namespace SciVacancies.WebApp.Controllers
             var preModel = _mediator.Send(new SingleVacancyApplicationQuery { VacancyApplicationGuid = id });
 
             if (preModel == null)
-                throw new ObjectNotFoundException($"Не найденая Заявка c идентификатором: {id}");
+                throw new ObjectNotFoundException($"Не найдена Заявка c идентификатором: {id}");
 
             if (preModel.status == VacancyApplicationStatus.InProcess
                 || preModel.status == VacancyApplicationStatus.Cancelled
@@ -388,7 +388,7 @@ namespace SciVacancies.WebApp.Controllers
             var vacancyApplicaiton = _mediator.Send(new SingleVacancyApplicationQuery { VacancyApplicationGuid = vacancyApplicationGuid });
 
             if (vacancyApplicaiton == null)
-                throw new ObjectNotFoundException($"Не найденая Заявка c идентификатором: {vacancyApplicationGuid}");
+                throw new ObjectNotFoundException($"Не найдена Заявка c идентификатором: {vacancyApplicationGuid}");
 
             if (isWinner && vacancyApplicaiton.status != VacancyApplicationStatus.Won)
                 throw new Exception($"Вы не можете зафиксировать принятие предложения от Победителя если Заявка имеет статус: {vacancyApplicaiton.status.GetDescription()}");
@@ -399,7 +399,7 @@ namespace SciVacancies.WebApp.Controllers
             var vacancy = _mediator.Send(new SingleVacancyQuery { VacancyGuid = vacancyApplicaiton.vacancy_guid });
 
             if (vacancy == null)
-                throw new ObjectNotFoundException($"Не найденая Вакансия c идентификатором: {vacancyApplicaiton.vacancy_guid}");
+                throw new ObjectNotFoundException($"Не найдена Вакансия c идентификатором: {vacancyApplicaiton.vacancy_guid}");
 
             if (vacancy.organization_guid != organizationGuid)
                 throw new Exception("Вы не можете изменять Заявки, поданные на вакансии других организаций.");
