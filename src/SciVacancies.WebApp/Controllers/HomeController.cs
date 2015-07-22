@@ -1,7 +1,6 @@
 ﻿using MediatR;
 using Microsoft.AspNet.Diagnostics;
 using Microsoft.AspNet.Mvc;
-using Microsoft.Framework.WebEncoders;
 using SciVacancies.ReadModel.Core;
 using SciVacancies.WebApp.Engine;
 using SciVacancies.WebApp.Queries;
@@ -62,7 +61,7 @@ namespace SciVacancies.WebApp.Controllers
         {
             return View();
         }
-
+       
        
     }
 }
