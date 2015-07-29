@@ -15,6 +15,9 @@ namespace SciVacancies.WebApp
         public IEnumerable<int> Values { get; set; }
         [HtmlAttributeName("property")]
         public string Property { get; set; }
+        /// <summary>
+        /// количество отображаемых значений для выбора (список ComboBox'ов), где (-1) - показывать все значения, (0) - значение по-умолчанию, (n) - показать минимум 'n'-значений, или все выбранные значения.
+        /// </summary>
         [HtmlAttributeName("showcount")]
         public int Showcount { get; set; }
         [HtmlAttributeName("labelforindex")]
@@ -38,7 +41,10 @@ namespace SciVacancies.WebApp
                 var valuesString = Values.Select(c => c.ToString());
 
                 var selectedCount = Items.Count(c => valuesString.Contains(c.Value));
-                Showcount = selectedCount > Showcount ? selectedCount : Showcount;
+
+                if (Showcount != -1) //если не указано "показывать все значения"
+                    Showcount = selectedCount > Showcount ? selectedCount : Showcount; //показать минимум Showcount значений, или все выбранные значения
+
                 foreach (var item in Items.Where(c => valuesString.Contains(c.Value)))
                 {
                     i++;

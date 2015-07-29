@@ -117,7 +117,7 @@
                                 @foreach (var innerInnerItem in innerItem.Childs)
                                 {
                                     <li>
-                                        <a href="#">@innerInnerItem.Title</a>
+                                        <a asp-controller="search" asp-action="index" asp-route-researchdirections="@innerInnerItem.Id" target="_blank">@innerInnerItem.Title</a>
                                         <p>1256 вакансий</p>
                                         <p>Средняя заработная плата – 67000 руб.</p>
                                     </li>
