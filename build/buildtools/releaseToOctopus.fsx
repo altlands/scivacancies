@@ -16,7 +16,7 @@ Target "Build" (fun _ ->
         info.FileName <- "buildtools\\build.bat" 
     )
     let result = octo (TimeSpan.FromMinutes 1.0)
-    if result <> 0 then failwithf "brrrr" 
+    if result <> 0 then printf "asdasd"//failwithf "brrrr" 
 
     //CopyDir (Path.Combine(artifactsDir, "AltLanDS.Beeline.IdentityServer.Database/up")) "AltLanDS.Beeline.IdentityServer.Database/up" (fun _ -> true)
 )
