@@ -22,7 +22,6 @@ namespace SciVacancies.WebApp.ViewModels
             OrganizationGuid = organizationGuid;
         }
 
-
         public DateTime? InCommitteeDate{ get; set; }
 
         [HiddenInput]

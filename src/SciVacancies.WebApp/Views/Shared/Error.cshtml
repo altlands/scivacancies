@@ -1,7 +1,10 @@
 ﻿@model string
+@{
+    ViewBag.Title = "Ошибка на сайте";
+}
 
 <h3 class="text-danger">Ошибка.</h3>
 <h2 class="">В процессе обработки произошла ошибка:</h2>
-<p class="text-danger" style="padding: 15px;">
+<p class="text-danger" style="padding: 15px; font-size: larger;">
     @Model
 </p>

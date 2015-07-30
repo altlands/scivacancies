@@ -27,14 +27,6 @@ namespace SciVacancies.WebApp
         {
             if (Items == null) return;
 
-            /*
-                <li>
-                    <span class="checkbox">
-                        <input type="checkbox" />
-                    </span><label>Владивосток (12)</label>
-                </li>
-            */
-
             var i = LabelForIndex;
             if (Values != null)
             {
