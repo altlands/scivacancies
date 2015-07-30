@@ -21,7 +21,7 @@
     <a href="@Context.Request.Path.Value" class="reload-table"><span class="italic">Обновить список</span></a>
 </div>
 
-<table class="table request-table">
+<table class="table request-table tbl-vac">
     <thead>
         <tr>
             <th>
@@ -37,15 +37,7 @@
                 <div class="inline-block ml6 va-middle">ID вакансии</div>
             </th>
             <th>
-                <div class="pl21 va-middle">Вакансия</div>
-            </th>
-            <th>
-                <div class="inline-block">
-                    <!-- <img src="/images/icons/tab-head.png" class="va-middle"/> -->
-                </div>
-                <div class="inline-block ml6 va-middle">
-                    Заработная<br /> плата
-                </div>
+                <div class="pl21 va-middle">Вакансия (заработная плата)</div>
             </th>
             <th>
                 <div class="inline-block">
@@ -71,7 +63,7 @@
                     Статус<br />вакансии
                 </div>
             </th>
-            <th>
+            <th width="200">
                 <div class="pl21 va-middle">Действия</div>
             </th>
         </tr>
@@ -88,8 +80,11 @@
                     <td>ГНС600001</td>
                     <td>
                         @item.name
+                        <br />
+                        <span style="color: lightgray;">
+                            @item.salary_from-@item.salary_to
+                        </span>
                     </td>
-                    <td>@item.salary_from-@item.salary_to    руб.</td>
                     <!--TODO: проверить правильность информации-->
                     <td>@(item.creation_date.ToLocalVacancyString())</td>
                     <td>@(item.publish_date?.ToLocalVacancyString())</td>
