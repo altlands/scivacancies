@@ -49,7 +49,7 @@ namespace SciVacancies.WebApp
             });
 
             services.AddMvc();
-            
+
             //TODO -  remove
             services.AddSingleton(c => Configuration);
 
@@ -79,9 +79,10 @@ namespace SciVacancies.WebApp
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerfactory)
         {
             app.UseCookieAuthentication(options =>
-                              {
-                                  options.AuthenticationScheme = DefaultAuthenticationTypes.ApplicationCookie;
-                              });
+            {
+                options.AutomaticAuthentication = true;
+                options.AuthenticationScheme = DefaultAuthenticationTypes.ApplicationCookie;
+            });
             //app.UseOpenIdConnectAuthentication();
 
             app.UseInMemorySession(configure: s => s.IdleTimeout = TimeSpan.FromMinutes(30));
@@ -131,7 +132,7 @@ namespace SciVacancies.WebApp
         public void OnException(ExceptionContext context)
         {
             var t = 5;
-            t = 5*t;
+            t = 5 * t;
         }
     }
 
