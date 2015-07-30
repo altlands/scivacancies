@@ -27,7 +27,7 @@ namespace SciVacancies.WebApp.Controllers
                     throw new ArgumentNullException(nameof(notificationGuids));
 
             if (researcherGuid == Guid.Empty && organizationGuid == Guid.Empty)
-                throw new Exception("Мы не смогли получить идентификатор Заявителя или Организации");
+                return View("Error", "Мы не смогли получить идентификатор Заявителя или Организации");
 
             var isResearcher = researcherGuid != Guid.Empty;
 
@@ -40,14 +40,14 @@ namespace SciVacancies.WebApp.Controllers
                 {
                     var userNotification = _mediator.Send(new SingleResearcherNotificationQuery { Guid = notificationGuid });
                     if (userNotification.researcher_guid != researcherGuid)
-                        throw new Exception(ExceptionTextRemoveOnlyMyNotifications);
+                        return View("Error", ExceptionTextRemoveOnlyMyNotifications);
                     _mediator.Send(new SwitchResearcherNotificationToReadCommand { NotificationGuid = notificationGuid });
                 }
                 else
                 {
                     var userNotification = _mediator.Send(new SingleOrganizationNotificationQuery { Guid = notificationGuid });
                     if (userNotification.organization_guid != organizationGuid)
-                        throw new Exception(ExceptionTextRemoveOnlyMyNotifications);
+                        return View("Error", ExceptionTextRemoveOnlyMyNotifications);
                     _mediator.Send(new SwitchOrganizationNotificationToReadCommand { NotificationGuid = notificationGuid });
                 }
 
@@ -67,7 +67,7 @@ namespace SciVacancies.WebApp.Controllers
                     throw new ArgumentNullException(nameof(notificationGuids));
 
             if (researcherGuid == Guid.Empty && organizationGuid == Guid.Empty)
-                throw new Exception("Мы не смогли получить идентификатор Заявителя или Организации");
+                return View("Error", "Мы не смогли получить идентификатор Заявителя или Организации");
 
             var isResearcher = researcherGuid != Guid.Empty;
 
@@ -80,14 +80,14 @@ namespace SciVacancies.WebApp.Controllers
                 {
                     var userNotification = _mediator.Send(new SingleResearcherNotificationQuery { Guid = notificationGuid });
                     if (userNotification.researcher_guid!= researcherGuid)
-                        throw new Exception(ExceptionTextRemoveOnlyMyNotifications);
+                        return View("Error", ExceptionTextRemoveOnlyMyNotifications);
                     _mediator.Send(new RemoveResearcherNotificationCommand { NotificationGuid = notificationGuid });
                 }
                 else
                 {
                     var userNotification = _mediator.Send(new SingleOrganizationNotificationQuery { Guid = notificationGuid });
                     if (userNotification.organization_guid!= organizationGuid)
-                        throw new Exception(ExceptionTextRemoveOnlyMyNotifications);
+                        return View("Error", ExceptionTextRemoveOnlyMyNotifications);
                     _mediator.Send(new RemoveOrganizationNotificationCommand { NotificationGuid = notificationGuid });
                 }
 

@@ -54,7 +54,7 @@ namespace SciVacancies.WebApp.Controllers
 
             if (appliedVacancyApplications.Items.Count > 0
                 && appliedVacancyApplications.Items.Where(c => c.status == VacancyApplicationStatus.Applied).Select(c => c.researcher_guid).Distinct().ToList().Any(c => c == researcherGuid))
-                throw new Exception("Вы не можете подать повторную Заявку на Вакансию ");
+                return View("Error", "Вы не можете подать повторную Заявку на Вакансию ");
 
             var model = new VacancyApplicationCreateViewModel
             {
@@ -89,7 +89,7 @@ namespace SciVacancies.WebApp.Controllers
             var vacancyData = _mediator.Send(new SingleVacancyQuery { VacancyGuid = model.VacancyGuid });
 
             if (vacancyData.status != VacancyStatus.Published)
-                throw new Exception($"Вы не можете подать Заявку на Вакансию в статусе: {vacancyData.status.GetDescription()}");
+                return View("Error", $"Вы не можете подать Заявку на Вакансию в статусе: {vacancyData.status.GetDescription()}");
 
             //TODO: оптимизировать запрос и его обработку
             var appliedVacancyApplications =
@@ -103,7 +103,7 @@ namespace SciVacancies.WebApp.Controllers
 
             if (appliedVacancyApplications.Items.Count > 0
                 && appliedVacancyApplications.Items.Where(c => c.status == VacancyApplicationStatus.Applied).Select(c => c.researcher_guid).Distinct().ToList().Any(c => c == researcherGuid))
-                throw new Exception("Вы не можете подать повторную Заявку на Вакансию ");
+                return View("Error", "Вы не можете подать повторную Заявку на Вакансию ");
 
             //с формы мы не получаем практически никаких данных, поэтоу заново наполняем ViewModel
             var researcher = _mediator.Send(new SingleResearcherQuery { ResearcherGuid = researcherGuid });
@@ -147,12 +147,12 @@ namespace SciVacancies.WebApp.Controllers
             var preModel = _mediator.Send(new SingleVacancyApplicationQuery { VacancyApplicationGuid = id });
 
             if (preModel == null)
-                throw new ObjectNotFoundException($"Не найдена Заявка c идентификатором: {id}");
+                return HttpNotFound(); //throw new ObjectNotFoundException($"Не найдена Заявка c идентификатором: {id}");
 
             if (researcherGuid != Guid.Empty
                 && User.IsInRole(ConstTerms.RequireRoleResearcher)
                 && preModel.researcher_guid != researcherGuid)
-                throw new Exception("Вы не можете просматривать Заявки других соискателей.");
+                return View("Error", "Вы не можете просматривать Заявки других соискателей.");
 
             var model = Mapper.Map<VacancyApplicationDetailsViewModel>(preModel);
             model.Researcher = Mapper.Map<ResearcherDetailsViewModel>(_mediator.Send(new SingleResearcherQuery { ResearcherGuid = researcherGuid }));
@@ -181,17 +181,17 @@ namespace SciVacancies.WebApp.Controllers
             var preModel = _mediator.Send(new SingleVacancyApplicationQuery { VacancyApplicationGuid = id });
 
             if (preModel == null)
-                throw new ObjectNotFoundException($"Не найдена Заявка c идентификатором: {id}");
+                return HttpNotFound(); //throw new ObjectNotFoundException($"Не найдена Заявка c идентификатором: {id}");
 
             if (preModel.status == VacancyApplicationStatus.InProcess
                 || preModel.status == VacancyApplicationStatus.Cancelled
                 || preModel.status == VacancyApplicationStatus.Lost
                 || preModel.status == VacancyApplicationStatus.Removed)
-                throw new Exception($"Вы не можете просматривать Заявку со статусом: {preModel.status.GetDescription()}");
+                return View("Error", $"Вы не можете просматривать Заявку со статусом: {preModel.status.GetDescription()}");
 
             var vacancy = _mediator.Send(new SingleVacancyQuery { VacancyGuid = preModel.vacancy_guid });
             if (vacancy.organization_guid != organizationGuid)
-                throw new Exception("Вы не можете просматривать Заявки, поданные на вакансии других организаций.");
+                return View("Error", "Вы не можете просматривать Заявки, поданные на вакансии других организаций.");
 
             var model = Mapper.Map<VacancyApplicationDetailsViewModel>(preModel);
             model.Researcher = Mapper.Map<ResearcherDetailsViewModel>(_mediator.Send(new SingleResearcherQuery { ResearcherGuid = preModel.researcher_guid }));
@@ -204,36 +204,37 @@ namespace SciVacancies.WebApp.Controllers
         }
 
 
-        private VacancyApplication SetWinnerPreValidation(Guid vacancyApplicationGuid, Guid organizationGuid, out Vacancy vacancy, bool isWinner)
+        private object SetWinnerPreValidation(Guid vacancyApplicationGuid, Guid organizationGuid, out Vacancy vacancy, bool isWinner)
         {
             var vacancyApplicaiton = _mediator.Send(new SingleVacancyApplicationQuery { VacancyApplicationGuid = vacancyApplicationGuid });
+            vacancy = null;
 
             if (vacancyApplicaiton == null)
-                throw new ObjectNotFoundException($"Не найдена Заявка c идентификатором: {vacancyApplicationGuid}");
+                return HttpNotFound(); //throw new ObjectNotFoundException($"Не найдена Заявка c идентификатором: {vacancyApplicationGuid}");
 
             if (vacancyApplicaiton.status != VacancyApplicationStatus.Applied)
-                throw new Exception(
+                return View("Error", 
                     $"Вы не можете выбрать в качестве одного из победителей Заявку со статусом: {vacancyApplicaiton.status.GetDescription()}");
 
             vacancy = _mediator.Send(new SingleVacancyQuery { VacancyGuid = vacancyApplicaiton.vacancy_guid });
 
             if (vacancy == null)
-                throw new ObjectNotFoundException($"Не найдена Вакансия c идентификатором: {vacancyApplicaiton.vacancy_guid}");
+                return HttpNotFound(); //throw new ObjectNotFoundException($"Не найдена Вакансия c идентификатором: {vacancyApplicaiton.vacancy_guid}");
 
             if (vacancy.organization_guid != organizationGuid)
-                throw new Exception("Вы не можете изменять Заявки, поданные на вакансии других организаций.");
+                return View("Error", "Вы не можете изменять Заявки, поданные на вакансии других организаций.");
 
             if (isWinner && vacancy.winner_researcher_guid != Guid.Empty)
-                throw new Exception("Для данной Вакансии уже выбран Победитель.");
+                return View("Error", "Для данной Вакансии уже выбран Победитель.");
 
             if (!isWinner && vacancy.winner_researcher_guid == Guid.Empty)
-                throw new Exception("Для данной Вакансии еще не выбран Победитель.");
+                return View("Error", "Для данной Вакансии еще не выбран Победитель.");
 
             if (vacancy.winner_researcher_guid != Guid.Empty && vacancy.pretender_researcher_guid != Guid.Empty)
-                throw new Exception("Для данной Вакансии уже выбраны Победитель и Претендент.");
+                return View("Error", "Для данной Вакансии уже выбраны Победитель и Претендент.");
 
             if (vacancy.status != VacancyStatus.InCommittee)
-                throw new Exception(
+                return View("Error", 
                     $"Вы не можете выбирать победителя для Заявки со статусом: {vacancy.status.GetDescription()}");
             return vacancyApplicaiton;
         }
@@ -249,7 +250,9 @@ namespace SciVacancies.WebApp.Controllers
                 throw new ArgumentNullException(nameof(organizationGuid));
 
             Vacancy vacancy;
-            var vacancyApplication = SetWinnerPreValidation(id, organizationGuid, out vacancy, isWinner);
+            var result = SetWinnerPreValidation(id, organizationGuid, out vacancy, isWinner);
+            if (result is HttpNotFoundResult) return (HttpNotFoundResult)result;
+            var vacancyApplication = (VacancyApplication)result;
 
             var model = Mapper.Map<VacancyApplicationSetWinnerViewModel>(vacancyApplication);
             model.Vacancy = Mapper.Map<VacancyDetailsViewModel>(vacancy);
@@ -271,7 +274,9 @@ namespace SciVacancies.WebApp.Controllers
                 throw new ArgumentNullException(nameof(organizationGuid));
 
             Vacancy vacancy;
-            var vacancyApplicaiton = SetWinnerPreValidation(model.Guid, organizationGuid, out vacancy, model.SetWinner);
+            var result = SetWinnerPreValidation(model.Guid, organizationGuid, out vacancy, model.SetWinner);
+            if (result is HttpNotFoundResult) return (HttpNotFoundResult) result;
+            var vacancyApplication = (VacancyApplication) result;
 
             if (ModelState.IsValid)
             {
@@ -295,9 +300,9 @@ namespace SciVacancies.WebApp.Controllers
                 return RedirectToAction("preview", "applications", new { id = model.Guid });
             }
 
-            model = Mapper.Map<VacancyApplicationSetWinnerViewModel>(vacancyApplicaiton);
+            model = Mapper.Map<VacancyApplicationSetWinnerViewModel>(vacancyApplication);
             model.Vacancy = Mapper.Map<VacancyDetailsViewModel>(vacancy);
-            model.Researcher = Mapper.Map<ResearcherDetailsViewModel>(_mediator.Send(new SingleResearcherQuery { ResearcherGuid = vacancyApplicaiton.researcher_guid }));
+            model.Researcher = Mapper.Map<ResearcherDetailsViewModel>(_mediator.Send(new SingleResearcherQuery { ResearcherGuid = vacancyApplication.researcher_guid }));
 
             return View(model);
         }
@@ -315,7 +320,7 @@ namespace SciVacancies.WebApp.Controllers
             var preModel = _mediator.Send(new SingleVacancyApplicationQuery { VacancyApplicationGuid = id });
 
             if (preModel.status != VacancyApplicationStatus.Applied)
-                throw new Exception($"Отменить заявку можно только в статусе: {VacancyApplicationStatus.InProcess.GetDescription()}.");
+                return View("Error", $"Отменить заявку можно только в статусе: {VacancyApplicationStatus.InProcess.GetDescription()}.");
 
             var model = Mapper.Map<VacancyApplicationDetailsViewModel>(preModel);
             model.Researcher = Mapper.Map<ResearcherDetailsViewModel>(_mediator.Send(new SingleResearcherQuery { ResearcherGuid = model.ResearcherGuid }));
@@ -337,7 +342,7 @@ namespace SciVacancies.WebApp.Controllers
             var preModel = _mediator.Send(new SingleVacancyApplicationQuery { VacancyApplicationGuid = id });
 
             if (preModel.status != VacancyApplicationStatus.Applied)
-                throw new Exception($"Отменить заявку можно только в статусе: {VacancyApplicationStatus.InProcess.GetDescription()}.");
+                return View("Error", $"Отменить заявку можно только в статусе: {VacancyApplicationStatus.InProcess.GetDescription()}.");
 
             if (!ModelState.IsValid)
             {
@@ -362,17 +367,17 @@ namespace SciVacancies.WebApp.Controllers
             var preModel = _mediator.Send(new SingleVacancyApplicationQuery { VacancyApplicationGuid = id });
 
             if (preModel == null)
-                throw new ObjectNotFoundException($"Не найдена Заявка c идентификатором: {id}");
+                return HttpNotFound(); //throw new ObjectNotFoundException($"Не найдена Заявка c идентификатором: {id}");
 
             if (preModel.status == VacancyApplicationStatus.InProcess
                 || preModel.status == VacancyApplicationStatus.Cancelled
                 || preModel.status == VacancyApplicationStatus.Lost
                 || preModel.status == VacancyApplicationStatus.Removed)
-                throw new Exception($"Вы не можете просматривать Заявку со статусом: {preModel.status.GetDescription()}");
+                return View("Error", $"Вы не можете просматривать Заявку со статусом: {preModel.status.GetDescription()}");
 
             var vacancy = _mediator.Send(new SingleVacancyQuery { VacancyGuid = preModel.vacancy_guid });
             if (vacancy.organization_guid != organizationGuid)
-                throw new Exception("Вы не можете изменять Заявки, поданные на вакансии других организаций.");
+                return View("Error", "Вы не можете изменять Заявки, поданные на вакансии других организаций.");
 
             var model = Mapper.Map<VacancyApplicationDetailsViewModel>(preModel);
             model.Researcher = Mapper.Map<ResearcherDetailsViewModel>(_mediator.Send(new SingleResearcherQuery { ResearcherGuid = preModel.researcher_guid }));
@@ -383,29 +388,29 @@ namespace SciVacancies.WebApp.Controllers
             return View(model);
         }
 
-        private Vacancy OfferAcceptionPreValidation(Guid vacancyApplicationGuid, Guid organizationGuid, bool isWinner)
+        private object OfferAcceptionPreValidation(Guid vacancyApplicationGuid, Guid organizationGuid, bool isWinner)
         {
             var vacancyApplicaiton = _mediator.Send(new SingleVacancyApplicationQuery { VacancyApplicationGuid = vacancyApplicationGuid });
 
             if (vacancyApplicaiton == null)
-                throw new ObjectNotFoundException($"Не найдена Заявка c идентификатором: {vacancyApplicationGuid}");
+                return HttpNotFound(); //throw new ObjectNotFoundException($"Не найдена Заявка c идентификатором: {vacancyApplicationGuid}");
 
             if (isWinner && vacancyApplicaiton.status != VacancyApplicationStatus.Won)
-                throw new Exception($"Вы не можете зафиксировать принятие предложения от Победителя если Заявка имеет статус: {vacancyApplicaiton.status.GetDescription()}");
+                return View("Error", $"Вы не можете зафиксировать принятие предложения от Победителя если Заявка имеет статус: {vacancyApplicaiton.status.GetDescription()}");
 
             if (!isWinner && vacancyApplicaiton.status != VacancyApplicationStatus.Pretended)
-                throw new Exception($"Вы не можете зафиксировать принятие предложения от Претендента если Заявка имеет статус: {vacancyApplicaiton.status.GetDescription()}");
+                return View("Error", $"Вы не можете зафиксировать принятие предложения от Претендента если Заявка имеет статус: {vacancyApplicaiton.status.GetDescription()}");
 
             var vacancy = _mediator.Send(new SingleVacancyQuery { VacancyGuid = vacancyApplicaiton.vacancy_guid });
 
             if (vacancy == null)
-                throw new ObjectNotFoundException($"Не найдена Вакансия c идентификатором: {vacancyApplicaiton.vacancy_guid}");
+                return HttpNotFound(); //throw new ObjectNotFoundException($"Не найдена Вакансия c идентификатором: {vacancyApplicaiton.vacancy_guid}");
 
             if (vacancy.organization_guid != organizationGuid)
-                throw new Exception("Вы не можете изменять Заявки, поданные на вакансии других организаций.");
+                return View("Error", "Вы не можете изменять Заявки, поданные на вакансии других организаций.");
 
             if (vacancy.status != VacancyStatus.OfferResponseAwaiting)
-                throw new Exception(
+                return View("Error", 
                     $"Вы не можете зафиксироватиьо принятие или отказ от предложения если Заявка имеет статус: {vacancy.status.GetDescription()}");
             return vacancy;
         }
@@ -419,7 +424,9 @@ namespace SciVacancies.WebApp.Controllers
             if (organizationGuid == Guid.Empty)
                 throw new ArgumentNullException(nameof(organizationGuid));
 
-            var vacancy = OfferAcceptionPreValidation(id, organizationGuid, isWinner);
+            var result = OfferAcceptionPreValidation(id, organizationGuid, isWinner);
+            if (result is HttpNotFoundResult) return (HttpNotFoundResult)result;
+            var vacancy= (Vacancy)result;
 
             if (isWinner)
                 if (hasAccepted)

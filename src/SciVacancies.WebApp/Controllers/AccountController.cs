@@ -196,9 +196,9 @@ namespace SciVacancies.WebApp.Controllers
 
                             var identity = _userManager.CreateIdentity(user, DefaultAuthenticationTypes.ApplicationCookie);
                             var cp = new ClaimsPrincipal(identity);
-                            //signing out...
+                            //at first, signing out...
                             Context.Response.SignOut(DefaultAuthenticationTypes.ApplicationCookie);
-                            //...before signing in
+                            //... and then, signing in
                             Context.Response.SignIn(DefaultAuthenticationTypes.ApplicationCookie, cp);
                         }
                         else
