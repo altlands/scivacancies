@@ -58,7 +58,9 @@ namespace SciVacancies.WebApp.Commands
             _userManager.AddToRole(user.Id, ConstTerms.RequireRoleResearcher);
 
             var registerSmtpNotificator = new RegisterSmtpNotificator();
-            registerSmtpNotificator.Send(researcherDataModel.FullName, message.Data.UserName, message.Data.Password);
+            registerSmtpNotificator.Send(researcherDataModel.FullName, message.Data.UserName, message.Data.Password, message.Data.Email);
+            if (!string.IsNullOrWhiteSpace(message.Data.ExtraEmail))
+                registerSmtpNotificator.Send(researcherDataModel.FullName, message.Data.UserName, message.Data.Password, message.Data.ExtraEmail);
 
             return user;
         }
@@ -83,7 +85,7 @@ namespace SciVacancies.WebApp.Commands
             var user = new SciVacUser
             {
                 UserName = message.Data.UserName,
-                Email=message.Data.Email
+                Email = message.Data.Email
             };
 
             var organizationDataModel = Mapper.Map<AccountOrganizationRegisterViewModel, OrganizationDataModel>(message.Data);

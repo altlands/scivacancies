@@ -4,10 +4,10 @@ namespace SciVacancies.WebApp.Engine.SmtpNotificators
 {
     internal class RegisterSmtpNotificator : SmtpNotificator
     {
-        public void Send(string researcherFullName, string login, string password)
+        public void Send(string researcherFullName, string login, string password, string mailTo)
         {
-
-            var domain = "localhost:59075";
+            //var domain = "localhost:59075";
+            var domain = "scivac.test.alt-lan.com";
 
             var body = $@"
 <div style=''>
@@ -29,7 +29,7 @@ namespace SciVacancies.WebApp.Engine.SmtpNotificators
     <a target='_blank' href='http://{domain}/researchers/account/'>личном кабинете</a>.
 </div>
 ";
-            var mailMessage = new MailMessage(from: "mailer@alt-lan.com", to: "mail@mail.ru", body: body, subject: "Вы зарегистрированы на портале вакансий")
+            var mailMessage = new MailMessage(from: "mailer@alt-lan.com", to: mailTo, body: body, subject: "Вы зарегистрированы на портале вакансий")
             {
                 IsBodyHtml = true
             };

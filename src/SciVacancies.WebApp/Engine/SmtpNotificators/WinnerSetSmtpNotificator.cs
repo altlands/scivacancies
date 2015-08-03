@@ -9,7 +9,8 @@ namespace SciVacancies.WebApp.Engine.SmtpNotificators
     {
         public void Send(SearchSubscription searchSubscription, Researcher researcher, List<SciVacancies.ReadModel.ElasticSearchModel.Model.Vacancy> vacancies)
         {
-            var domain = "localhost:59075";
+            //var domain = "localhost:59075";
+            var domain = "scivac.test.alt-lan.com";
             var researcherFullName = $"{researcher.secondname} {researcher.firstname} {researcher.patronymic}";
             var body = $@"
 <div style=''>
