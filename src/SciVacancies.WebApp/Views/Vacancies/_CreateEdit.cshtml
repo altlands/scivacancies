@@ -31,7 +31,7 @@
                     <label>Наименование:</label>
                 </div>
                 <div class="right-cell">
-                    <input asp-for="Name" class="big-input" data-setnewvalue="PositionType"/>
+                    <input asp-for="Name" class="big-input" data-setnewvalue="PositionType" />
                     <span asp-validation-for="Name"></span>
                 </div>
             </div>
@@ -129,35 +129,56 @@
                 </div>
                 <div class="right-cell">
 
+
+                    <div class="lnk-container">
+                        <span class="small-icon icon-hsm-eye">Показать все (@Model.Criterias.Count)</span>
+                        <span class="small-icon icon-sm-eye" style="display: none;">Скрыть все (@Model.Criterias.Count)</span>
+                    </div>
+
+
                     @for (int groupIndex = 0; groupIndex < Model.Criterias.Count; groupIndex++)
                     {
                         var @group = Model.Criterias[groupIndex];
-                        <div style="padding: 5px 0;">
-                            <span style="font-weight: bold; font-size: larger;">@(@group.Title) (@(@group.Items.Sum(c => c.Count)) шт.)</span>
+                        <div class="b-publication">
 
                             <input type="hidden" name="Criterias.Index" value="@groupIndex" />
                             <input type="hidden" asp-for="Criterias[groupIndex].Id" />
                             <input type="hidden" asp-for="Criterias[groupIndex].Title" />
-                            @for (int itemIndex = 0; itemIndex < @group.Items.Count; itemIndex++)
-                            {
-                                var item = @group.Items[itemIndex];
-                                <div>
-                                    <input type="hidden" name="Criterias[groupIndex].Items.Index" value="@itemIndex" />
-                                    <input type="hidden" asp-for="Criterias[groupIndex].Items[itemIndex].Id" />
-                                    <input type="hidden" asp-for="Criterias[groupIndex].Items[itemIndex].Title" />
-                                    &nbsp;&nbsp;&nbsp; <input type="number" asp-for="Criterias[groupIndex].Items[itemIndex].Count"/>
-                                    &nbsp; @item.Title
-                                </div>
-                            }
+
+                            <span class="name-section">@group.Title (@group.Items.Count)</span>
+                            <div class="list-fields">
+
+                                @for (int itemIndex = 0; itemIndex < @group.Items.Count; itemIndex++)
+                                {
+                                    var item = @group.Items[itemIndex];
+                                    <div>
+                                        <input type="hidden" name="Criterias[groupIndex].Items.Index" value="@itemIndex" />
+                                        <input type="hidden" asp-for="Criterias[groupIndex].Items[itemIndex].Id" />
+                                        <input type="hidden" asp-for="Criterias[groupIndex].Items[itemIndex].Title" />
+
+                                        <div class="field">
+                                            <input type="number" asp-for="Criterias[groupIndex].Items[itemIndex].Count" />
+                                            <span>@item.Title (шт.)</span>
+                                        </div>
+
+                                    </div>
+                                }
+                            </div>
 
                         </div>
                     }
 
+                    
                 </div>
             </div>
 
         </div>
     </div>
+
+
+
+
+
 
     <div class="row">
         <div class="bold row-title">Условия:</div>
@@ -354,7 +375,7 @@
     </div>
     <div class="content-popup" style="overflow: scroll;">
         <div>
-            @foreach (var item in Model.PositionTypes)
+            @foreach (var item in Model.PositionTypes.OrderBy(c => c.Text))
             {
                 <text>
                 <a href="#" onclick="javascript: return selectedItemFromModalDictionary('PositionTypeId', 'PositionType','@item.Value', '@item.Text');">
@@ -377,7 +398,7 @@
     </div>
     <div class="content-popup" style="overflow: scroll;">
         <div>
-            @foreach (var item in Model.ResearchDirections)
+            @foreach (var item in Model.ResearchDirections.OrderBy(c => c.Text))
             {
                 <text>
                 <a href="#" onclick="javascript: return selectedItemFromModalDictionary('ResearchDirectionId', 'ResearchDirection','@item.Value', '@item.Text');">

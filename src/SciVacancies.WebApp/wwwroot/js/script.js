@@ -172,7 +172,7 @@ $(document).ready(function () {
     });
 
     /*
-     * показать все элементы
+     * показать все элементы в группе значений в поиске
      */
     $("div.filter-contents span.show-all-list").click(function () {
         var source = this;
@@ -184,7 +184,7 @@ $(document).ready(function () {
         });
     });
     /*
-     * скрыть невыбранные элементы
+     * скрыть невыбранные элементы в группе значений в поиске
      */
     $("div.filter-contents span.hide-unselected").click(function () {
         var source = this;
@@ -228,10 +228,45 @@ $(document).ready(function () {
     /*
      * закрывать модальное окно при нажатии кнопки Отмены
      */
-    $('span.icon-close').click(function() {
+    $('span.icon-close').click(function () {
         var source = this;
         var parent = $(source).parents('.window-popup')[0];
         $(parent).find('span.close-popup').click();
+    });
+    /*
+     * редактирование Вакансии (развернуть/скрыть Критерии)
+     */
+    //b-publication open
+    $('span.name-section').click(function () {
+        var source = this;
+        var parent = null;
+        try {
+            parent = $(source).parents('.b-publication')[0];
+        } catch (e) {
+        }
+        if (parent != null) {
+            $(parent).toggleClass('open');
+        }
+    });
+    /*
+     * показать все элементы (Вакансии (развернуть/скрыть Критерии))
+     */
+    $("div.lnk-container span.icon-hsm-eye").click(function () {
+        var source = this;
+        var parentContainer = $(source).parents('.right-cell')[0];
+        $(parentContainer).find("div.b-publication").addClass('open');
+        $(source).hide();
+        $(source).siblings("span.icon-sm-eye").show();
+    });
+    /*
+     * скрыть все элементы (Вакансии (развернуть/скрыть Критерии))
+     */
+    $("div.lnk-container span.icon-sm-eye").click(function () {
+        var source = this;
+        var parentContainer = $(source).parents('.right-cell')[0];
+        $(parentContainer).find("div.b-publication").removeClass('open');
+        $(source).hide();
+        $(source).siblings("span.icon-hsm-eye").show();
     });
     /*
     end of the code
@@ -363,7 +398,7 @@ function collapsibleFilterClicked(event) {
 /**
   * добавить метку о том что поискаовый запрос нужно сохранить в качестве подписки
   */
-function isNullOrWhitespace( input ) {
+function isNullOrWhitespace(input) {
 
     if (typeof input === 'undefined' || input == null) return true;
 
