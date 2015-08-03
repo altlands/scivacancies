@@ -4,7 +4,7 @@ using SciVacancies.SmtpNotifications.Vendors;
 
 namespace SciVacancies.WebApp.Engine.SmtpNotificators
 {
-    public class SmtpNotificator
+    internal class SmtpNotificator
     {
         private readonly GmailEmailService _gmailEmailService;
 

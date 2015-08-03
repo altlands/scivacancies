@@ -13,6 +13,7 @@ using MediatR;
 using CommonDomain.Persistence;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
+using SciVacancies.WebApp.Engine.SmtpNotificators;
 
 namespace SciVacancies.WebApp.Commands
 {
@@ -41,7 +42,7 @@ namespace SciVacancies.WebApp.Commands
             var researcherDataModel = Mapper.Map<AccountResearcherRegisterViewModel, ResearcherDataModel>(message.Data);
             //researcherDataModel.UserId = user.Id;
 
-            Researcher researcher = new Researcher(Guid.NewGuid(), researcherDataModel);
+            var researcher = new Researcher(Guid.NewGuid(), researcherDataModel);
             _repository.Save(researcher, Guid.NewGuid(), null);
 
             var researcherGuid = researcher.Id;
@@ -55,6 +56,9 @@ namespace SciVacancies.WebApp.Commands
 
             _userManager.Create(user);
             _userManager.AddToRole(user.Id, ConstTerms.RequireRoleResearcher);
+
+            var registerSmtpNotificator = new RegisterSmtpNotificator();
+            registerSmtpNotificator.Send(researcherDataModel.FullName, message.Data.UserName, message.Data.Password);
 
             return user;
         }
@@ -85,7 +89,7 @@ namespace SciVacancies.WebApp.Commands
             var organizationDataModel = Mapper.Map<AccountOrganizationRegisterViewModel, OrganizationDataModel>(message.Data);
             //organizationDataModel.UserId = user.Id;
 
-            Organization organization = new Organization(Guid.NewGuid(), organizationDataModel);
+            var organization = new Organization(Guid.NewGuid(), organizationDataModel);
             _repository.Save(organization, Guid.NewGuid(), null);
 
             var organizationGuid = organization.Id;

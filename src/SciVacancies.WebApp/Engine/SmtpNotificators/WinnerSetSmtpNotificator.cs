@@ -5,7 +5,7 @@ using SciVacancies.ReadModel.Core;
 
 namespace SciVacancies.WebApp.Engine.SmtpNotificators
 {
-    public class WinnerSetSmtpNotificator : SmtpNotificator
+    internal class WinnerSetSmtpNotificator : SmtpNotificator
     {
         public void Send(SearchSubscription searchSubscription, Researcher researcher, List<SciVacancies.ReadModel.ElasticSearchModel.Model.Vacancy> vacancies)
         {

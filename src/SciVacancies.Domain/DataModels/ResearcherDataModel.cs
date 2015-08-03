@@ -22,8 +22,8 @@ namespace SciVacancies.Domain.DataModels
         public string Patronymic { get; set; }
         public string PatronymicEng { get; set; }
 
-        public string FullName { get { return SecondName + " " + FirstName + " " + Patronymic; } }
-        public string FullNameEng { get { return SecondNameEng + " " + FirstNameEng + " " + PatronymicEng; } }
+        public string FullName => SecondName + " " + FirstName + " " + Patronymic;
+        public string FullNameEng => SecondNameEng + " " + FirstNameEng + " " + PatronymicEng;
 
         public string PreviousSecondName { get; set; }
         public string PreviousSecondNameEng { get; set; }

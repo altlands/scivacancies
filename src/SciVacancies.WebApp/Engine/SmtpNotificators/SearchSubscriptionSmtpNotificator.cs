@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace SciVacancies.WebApp.Engine.SmtpNotificators
 {
-    public class SearchSubscriptionSmtpNotificator : SmtpNotificator
+    internal class SearchSubscriptionSmtpNotificator : SmtpNotificator
     {
         public void Send()
         {
