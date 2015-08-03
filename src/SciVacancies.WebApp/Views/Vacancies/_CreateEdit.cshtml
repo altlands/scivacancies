@@ -1,5 +1,4 @@
 ﻿@using System.Threading.Tasks
-@using Microsoft.CodeAnalysis.CSharp
 @using SciVacancies.WebApp.ViewModels
 @model VacancyCreateViewModel
 
@@ -130,46 +129,29 @@
                 </div>
                 <div class="right-cell">
 
-                    @foreach (var group in Model.Criterias)
+                    @for (int groupIndex = 0; groupIndex < Model.Criterias.Count; groupIndex++)
                     {
-                        <text>
-                        <div>
-                            @group.Title (@group.Items.Sum(c=>c.Count) шт.)
+                        var @group = Model.Criterias[groupIndex];
+                        <div style="padding: 5px 0;">
+                            <span style="font-weight: bold; font-size: larger;">@(@group.Title) (@(@group.Items.Sum(c => c.Count)) шт.)</span>
 
-                            @foreach (var item in group.Items)
+                            <input type="hidden" name="Criterias.Index" value="@groupIndex" />
+                            <input type="hidden" asp-for="Criterias[groupIndex].Id" />
+                            <input type="hidden" asp-for="Criterias[groupIndex].Title" />
+                            @for (int itemIndex = 0; itemIndex < @group.Items.Count; itemIndex++)
                             {
-                                <text>
+                                var item = @group.Items[itemIndex];
                                 <div>
-                                    &nbsp; &mdash; Запись: №@item.Id @item.Title (@item.Count шт.)
+                                    <input type="hidden" name="Criterias[groupIndex].Items.Index" value="@itemIndex" />
+                                    <input type="hidden" asp-for="Criterias[groupIndex].Items[itemIndex].Id" />
+                                    <input type="hidden" asp-for="Criterias[groupIndex].Items[itemIndex].Title" />
+                                    &nbsp;&nbsp;&nbsp; <input type="number" asp-for="Criterias[groupIndex].Items[itemIndex].Count"/>
+                                    &nbsp; @item.Title
                                 </div>
-                                </text>
                             }
 
                         </div>
-                        </text>
                     }
-
-                    <ul class="content-list has-removable-items" id="CriteriaInputs">
-                        <li>
-                            <input type="text" name="Criteria" />
-                            <div class="buttons">
-                                <span class="big-link-remove"></span>
-                            </div>
-                        </li>
-                        <li>
-                            <input type="text" name="Criteria" />
-                            <div class="buttons">
-                                <span class="big-link-remove"></span>
-                            </div>
-                        </li>
-                        <li style="display: none;">
-                            <input type="text" name="Criteria" />
-                            <div class="buttons">
-                                <span class="big-link-remove"></span>
-                            </div>
-                        </li>
-                    </ul>
-                    <span class="link-add lk-icon italic" onclick="addNewCriteriaItem('CriteriaInputs');" style="cursor: pointer;">Добавить критерий</span>
 
                 </div>
             </div>

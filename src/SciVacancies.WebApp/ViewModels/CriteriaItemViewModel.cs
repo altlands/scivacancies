@@ -12,10 +12,10 @@ namespace SciVacancies.WebApp.ViewModels
         /// Идентификатор критерия
         /// </summary>
         public int Id { get; set; }
-        ///// <summary>
-        ///// Идентификатор родительского критерия
-        ///// </summary>
-        //public int? ParentId { get; set; }
+        /// <summary>
+        /// Идентификатор родительского критерия
+        /// </summary>
+        public int? ParentId { get; set; }
 
         /// <summary>
         /// шт
@@ -26,6 +26,11 @@ namespace SciVacancies.WebApp.ViewModels
         /// Заголовок
         /// </summary>
         public string Title { get; set; }
+
+        /// <summary>
+        /// внутренние критерии
+        /// </summary>
+        public List<CriteriaItemViewModel> Items { get; set; } = new List<CriteriaItemViewModel>();
 
     }
 
