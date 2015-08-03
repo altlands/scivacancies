@@ -26,17 +26,17 @@
             <span class="block bold">Год рождения: @Model.Researcher.BirthDate.Year.ToString("0000")</span>
             <span class="block"><span class="bold">Индивидуальный номер ученого:</span> 00005444</span>
             @*<span class="block">
-                <span class="bold">Научные интересы (Государственный рубрикатор научно-технической информации):</span>
-                <span>
-                    @if (Model.Researcher.!= null)
-                    {
-                        foreach (var item in Model.Researcher.Publications)
+                    <span class="bold">Научные интересы (Государственный рубрикатор научно-технической информации):</span>
+                    <span>
+                        @if (Model.Researcher.!= null)
                         {
-                            @item.Title
+                            foreach (var item in Model.Researcher.Publications)
+                            {
+                                @item.Title
+                            }
                         }
-                    }
-                </span>
-            </span>*@
+                    </span>
+                </span>*@
             <span class="small-icon icon-sm-eye"><span>Показать все (23)</span></span>
         </div>
     </div>
@@ -49,26 +49,26 @@
                 foreach (var item in Model.Researcher.Educations)
                 {
                     <text>
-                        <ul class="table-emulation">
-                            <li>
-                                <span class="w85 italic inline-block">Город</span> <span class="italic">@item.City</span>
-                            </li>
-                            <li>
-                                <span class="w85 italic inline-block">ВУЗ</span> <span class="italic">@item.UniversityShortName</span>
-                            </li>
-                            <li>
-                                <span class="w85 italic inline-block">Факультет</span> <span class="italic">@item.FacultyShortName</span>
-                            </li>
-                            <li>
-                                <span class="w85 italic inline-block">Год окончания</span> <span class="italic">@(item.GraduationYear)</span>
-                            </li>
-                        </ul>
-                        <hr/>
+                    <ul class="table-emulation">
+                        <li>
+                            <span class="w85 italic inline-block">Город</span> <span class="italic">@item.City</span>
+                        </li>
+                        <li>
+                            <span class="w85 italic inline-block">ВУЗ</span> <span class="italic">@item.UniversityShortName</span>
+                        </li>
+                        <li>
+                            <span class="w85 italic inline-block">Факультет</span> <span class="italic">@item.FacultyShortName</span>
+                        </li>
+                        <li>
+                            <span class="w85 italic inline-block">Год окончания</span> <span class="italic">@(item.GraduationYear)</span>
+                        </li>
+                    </ul>
+                    <hr />
                     </text>
                 }
             }
-
         </div>
+
         <div class="list-item">
             <div class="bold">Публикации</div>
             <ol>
@@ -82,6 +82,27 @@
             </ol>
             @*<span class="small-icon icon-sm-eye"><span>Показать все (5)</span></span>*@
         </div>
+
+        <div class="list-item">
+            <div class="bold">Исследовательская деятельность</div>
+            <span aspfor="Researcher.ResearchActivity">
+            </span>
+        </div>
+
+
+        <div class="list-item">
+            <div class="bold">Преподавательская деятельность</div>
+            <span aspfor="Researcher.TeachingActivity">
+            </span>
+        </div>
+
+
+        <div class="list-item">
+            <div class="bold">Прочая деятельность</div>
+            <span aspfor="Researcher.OtherActivity">
+            </span>
+        </div>
+
         @*<div class="list-item">
                 <div class="bold"><del>Приложенные файлы</del> </div>
                 <ol>
