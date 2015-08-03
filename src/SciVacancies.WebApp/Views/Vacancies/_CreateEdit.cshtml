@@ -16,10 +16,22 @@
 
             <div class="table-row form-row">
                 <div class="left-cell">
+                    <label>Должность:</label>
+                </div>
+                <div class="right-cell">
+                    <input type="text" disabled asp-for="PositionType" clas="big-input" />
+                    <a onclick="javascript: return false;" class="link-add lk-icon italic open-popup" data-modal="PositionTypeId">Выбрать должность</a>
+                    <input type="hidden" asp-for="PositionTypeId" />
+                    <span asp-validation-for="PositionTypeId"></span>
+                </div>
+            </div>
+
+            <div class="table-row form-row">
+                <div class="left-cell">
                     <label>Наименование:</label>
                 </div>
                 <div class="right-cell">
-                    <input asp-for="Name" class="big-input" />
+                    <input asp-for="Name" class="big-input" data-setnewvalue="PositionType"/>
                     <span asp-validation-for="Name"></span>
                 </div>
             </div>
@@ -31,18 +43,6 @@
                 <div class="right-cell">
                     <textarea asp-for="FullName"></textarea>
                     <span asp-validation-for="FullName"></span>
-                </div>
-            </div>
-
-            <div class="table-row form-row">
-                <div class="left-cell">
-                    <label>Должность:</label>
-                </div>
-                <div class="right-cell">
-                    <input type="text" disabled asp-for="PositionType" clas="big-input" />
-                    <a onclick="javascript: return false;" class="link-add lk-icon italic open-popup" data-modal="PositionTypeId">Выбрать должность</a>
-                    <input type="hidden" asp-for="PositionTypeId" />
-                    <span asp-validation-for="PositionTypeId"></span>
                 </div>
             </div>
 

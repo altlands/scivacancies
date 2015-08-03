@@ -269,11 +269,12 @@ function updateQueryStringParameter(uri, key, value) {
     }
 }
 /*
- * Выбрать отрасли науки
+ * Выбрать значение из словаря
  */
 function selectedItemFromModalDictionary(hiddenInputName, textInput, newValue, displayText) {
     $("#" + hiddenInputName).val(newValue);
     $("#" + textInput).val(displayText);
+    $("[data-setnewvalue=\"" + textInput + "\"]").val(displayText);
     $("div[data-name=\"" + hiddenInputName + "\"]").find(".close-popup").click();
     return false;
 };
