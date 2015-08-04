@@ -55,7 +55,7 @@ namespace SciVacancies.WebApp.Controllers
 
             var preModel = _mediator.Send(new SingleResearcherQuery { ResearcherGuid = researcherGuid });
             if (preModel == null)
-                throw new ObjectNotFoundException();
+                return HttpNotFound(); //throw new ObjectNotFoundException();
 
             var model = Mapper.Map<ResearcherEditViewModel>(preModel);
             return View(model);
@@ -70,14 +70,14 @@ namespace SciVacancies.WebApp.Controllers
                 throw new ArgumentNullException(nameof(model), "Отсутствует идентификатор исследователя");
 
             if (authorizedUserGuid != model.Guid)
-                throw new Exception("Вы не можете изменять чужой профиль");
+                return View("Error", "Вы не можете изменять чужой профиль");
 
             if (ModelState.ErrorCount>0)
                 return View(model);
 
             var preModel = _mediator.Send(new SingleResearcherQuery { ResearcherGuid = authorizedUserGuid });
             if (preModel == null)
-                throw new ObjectNotFoundException();
+                return HttpNotFound(); //throw new ObjectNotFoundException();
 
             var data = Mapper.Map<ResearcherDataModel>(model);
             _mediator.Send(new UpdateResearcherCommand { Data = data, ResearcherGuid = authorizedUserGuid });
@@ -211,9 +211,9 @@ namespace SciVacancies.WebApp.Controllers
             //TODO: оптимизировать запрос и его обработку
             var favoritesVacancies = _mediator.Send(new SelectPagedFavoriteVacanciesByResearcherQuery { PageSize = 1000, PageIndex = 1, ResearcherGuid = researcherGuid, OrderBy = ConstTerms.OrderByDateAscending });
             if (favoritesVacancies == null)
-                throw new Exception("У вас нет избранных вакансий");
+                return View("Error", "У вас нет избранных вакансий");
             if (favoritesVacancies.Items.All(c => c.guid != vacancyGuid))
-                throw new Exception($"У вас нет избранной вакансии с идентификатором {vacancyGuid}");
+                return View("Error", $"У вас нет избранной вакансии с идентификатором {vacancyGuid}");
 
             var preModel = _mediator.Send(new SingleVacancyQuery { VacancyGuid = vacancyGuid });
             var model = Mapper.Map<VacancyDetailsViewModel>(preModel);
@@ -234,9 +234,9 @@ namespace SciVacancies.WebApp.Controllers
             //TODO: оптимизировать запрос и его обработку
             var favoritesVacancies = _mediator.Send(new SelectPagedFavoriteVacanciesByResearcherQuery { PageSize = 100, PageIndex = 1, ResearcherGuid = researcherGuid, OrderBy = ConstTerms.OrderByDateAscending });
             if (favoritesVacancies == null)
-                throw new Exception("У вас нет избранных вакансий");
+                return View("Error", "У вас нет избранных вакансий");
             if (favoritesVacancies.Items.All(c => c.guid != vacancyGuid))
-                throw new Exception($"У вас нет избранной вакансии с идентификатором {vacancyGuid}");
+                return View("Error", $"У вас нет избранной вакансии с идентификатором {vacancyGuid}");
 
             if (!ModelState.IsValid)
             {

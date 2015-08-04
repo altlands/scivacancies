@@ -1,7 +1,6 @@
 ﻿using MediatR;
 using Microsoft.AspNet.Diagnostics;
 using Microsoft.AspNet.Mvc;
-using Microsoft.Framework.WebEncoders;
 using SciVacancies.ReadModel.Core;
 using SciVacancies.WebApp.Engine;
 using SciVacancies.WebApp.Queries;
@@ -44,17 +43,7 @@ namespace SciVacancies.WebApp.Controllers
                 ResearchDirections = new VacanciesFilterSource(_mediator).ResearchDirections
             };
 
-
-
             return View(model);
-        }
-
-        [PageTitle("Error")]
-        public IActionResult Error()
-        {
-            var error = Context.GetFeature<IErrorHandlerFeature>();
-            //HtmlEncoder.Default.HtmlEncode(error.Error.Message);
-            return View("~/Views/Shared/Error.cshtml", error.Error.Message);
         }
 
         [PageTitle("Информация о системе")]
@@ -62,7 +51,7 @@ namespace SciVacancies.WebApp.Controllers
         {
             return View();
         }
-
+       
        
     }
 }

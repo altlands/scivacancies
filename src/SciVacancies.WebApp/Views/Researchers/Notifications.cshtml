@@ -22,7 +22,7 @@
     <a href="#" class="unmail-td-icon"></a><a href="#"><span class="italic">Оповещения включить</span></a>
 </div>
 
-<table class="table request-table">
+<table class="table request-table tbl-vac">
     <thead>
     <tr>
         <th>
@@ -41,8 +41,9 @@
             <div class="inline-block"><!-- <img src="/images/icons/tab-head.png" class="va-middle"/> -->
             </div>
             <div class="inline-block ml6 va-middle">Текст</div></th>
-        <th>
-            <div class="pl21 va-middle lh30">Действия</div></th>
+        <th width="200">
+            <div class="pl21 va-middle lh30">Действия</div>
+        </th>
     </tr>
     </thead>
     <tbody>
@@ -54,7 +55,7 @@
                 <td class="bold">@item.researcher_guid.ToString().Substring(0, 4)</td>
                 <td class="bold">@item.creation_date</td>
                 <td class="bold">
-                    <a asp-controller="vacancies" asp-action="card" asp-route-notificationguids="@item.vacancy_guid" class="view-td-icon">вакансия</a>
+                    <a asp-controller="vacancies" asp-action="card" asp-route-id="@item.vacancy_guid">Вакансия</a>
                 </td>
                 <td>
                     @*<a href="#" class="success-request-icon"><span class="italic bold">@item.Title</span></a>*@

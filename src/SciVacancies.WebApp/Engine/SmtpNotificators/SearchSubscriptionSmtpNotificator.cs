@@ -6,12 +6,12 @@ using System.Threading.Tasks;
 
 namespace SciVacancies.WebApp.Engine.SmtpNotificators
 {
-    public class SearchSubscriptionSmtpNotificator : SmtpNotificator
+    internal class SearchSubscriptionSmtpNotificator : SmtpNotificator
     {
         public void Send()
         {
-
-            var domain = "localhost:59075";
+            //var domain = "localhost:59075";
+            var domain = "scivac.test.alt-lan.com";
             var researcherFullName = "Фамилько Имён Отчествович";
             var applicationGuid = Guid.NewGuid();
             var vacancyGuid = Guid.NewGuid();

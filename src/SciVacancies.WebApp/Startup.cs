@@ -7,15 +7,14 @@ using Autofac.Features.Variance;
 using Microsoft.AspNet.Builder;
 using Microsoft.AspNet.Diagnostics;
 using Microsoft.AspNet.Hosting;
+using Microsoft.AspNet.Http;
 using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.Mvc;
 using Microsoft.Framework.ConfigurationModel;
 using Microsoft.Framework.DependencyInjection;
 using Microsoft.Framework.Logging;
-//using SciVacancies.ApplicationInfrastructure;
-using SciVacancies.WebApp.Commands;
-using SciVacancies.WebApp.Infrastructure;
-using Microsoft.AspNet.Http;
 using Microsoft.Framework.WebEncoders;
+using SciVacancies.WebApp.Infrastructure;
 
 namespace SciVacancies.WebApp
 {
@@ -26,7 +25,7 @@ namespace SciVacancies.WebApp
         public Startup(IHostingEnvironment env)
         {
             var vars = Environment.GetEnvironmentVariables();
-            devEnv = (string) vars.Cast<DictionaryEntry>().FirstOrDefault(e => e.Key.Equals("dev_env")).Value;
+            devEnv = (string)vars.Cast<DictionaryEntry>().FirstOrDefault(e => e.Key.Equals("dev_env")).Value;
             // Setup configuration sources.
             Configuration = new Configuration()
                 .AddJsonFile("config.json")
@@ -46,9 +45,11 @@ namespace SciVacancies.WebApp
 
             services.ConfigureCookieAuthentication(options =>
             {
-                options.AutomaticAuthentication = true;
+                options.AutomaticAuthentication = false;
             });
+
             services.AddMvc();
+
             //TODO -  remove
             services.AddSingleton(c => Configuration);
 
@@ -79,6 +80,7 @@ namespace SciVacancies.WebApp
         {
             app.UseCookieAuthentication(options =>
             {
+                options.AutomaticAuthentication = true;
                 options.AuthenticationScheme = DefaultAuthenticationTypes.ApplicationCookie;
             });
             //app.UseOpenIdConnectAuthentication();
@@ -90,11 +92,9 @@ namespace SciVacancies.WebApp
             loggerfactory.AddConsole();
 
             // Add the following to the request pipeline only in development environment.
-            if (env.IsEnvironment("Development") && devEnv!="ntemnikov")
+            if (env.IsEnvironment("Development"))
             {
-                //app.UseErrorPage(ErrorPageOptions.ShowAll);
-                var errorPageOptions = new ErrorPageOptions {ShowCookies = false};
-                app.UseErrorPage(errorPageOptions);
+                app.UseErrorPage(ErrorPageOptions.ShowAll);
             }
             else
             {
@@ -102,6 +102,10 @@ namespace SciVacancies.WebApp
                 // send the request to the following path or controller action.
                 app.UseErrorHandler("/Home/Error");
             }
+
+            app.UseStatusCodePagesWithReExecute("/StatusCodes/StatusCode{0}");
+            //app.UseMvcWithDefaultRoute();
+
 
             // Add static files to the request pipeline.
             app.UseStaticFiles();
@@ -122,4 +126,14 @@ namespace SciVacancies.WebApp
             //SearchSubscriptionService.Initialize(Configuration);
         }
     }
+
+    public class YourCustomFilter : ActionFilterAttribute, IExceptionFilter
+    {
+        public void OnException(ExceptionContext context)
+        {
+            var t = 5;
+            t = 5 * t;
+        }
+    }
+
 }

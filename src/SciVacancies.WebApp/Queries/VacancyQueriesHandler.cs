@@ -39,9 +39,9 @@ namespace SciVacancies.WebApp.Queries
             Page<Vacancy> vacancies =
                 message.PublishedOnly
                 ?
-                _db.Page<Vacancy>(message.PageIndex, message.PageSize, new Sql($"SELECT v.* FROM org_vacancies v WHERE v.status = @0 ORDER BY v.publish_date DESC", VacancyStatus.Published))
+                _db.Page<Vacancy>(message.PageIndex, message.PageSize, new Sql($"SELECT v.* FROM org_vacancies v WHERE v.status = @0 ORDER BY v.creation_date DESC", VacancyStatus.Published))
                 :
-                _db.Page<Vacancy>(message.PageIndex, message.PageSize, new Sql($"SELECT v.* FROM org_vacancies v WHERE v.status != @0 ORDER BY v.publish_date DESC", VacancyStatus.Removed))
+                _db.Page<Vacancy>(message.PageIndex, message.PageSize, new Sql($"SELECT v.* FROM org_vacancies v WHERE v.status != @0 ORDER BY v.creation_date DESC", VacancyStatus.Removed))
                 ;
 
             return vacancies;
@@ -50,7 +50,7 @@ namespace SciVacancies.WebApp.Queries
         {
             if (message.OrganizationGuid == Guid.Empty) throw new ArgumentNullException($"OrganizationGuid is empty: {message.OrganizationGuid}");
 
-            Page<Vacancy> vacancies = _db.Page<Vacancy>(message.PageIndex, message.PageSize, new Sql($"SELECT v.* FROM org_vacancies v WHERE v.organization_guid = @0 AND v.status != @1 ORDER BY v.guid DESC", message.OrganizationGuid, VacancyStatus.Removed));
+            Page<Vacancy> vacancies = _db.Page<Vacancy>(message.PageIndex, message.PageSize, new Sql($"SELECT v.* FROM org_vacancies v WHERE v.organization_guid = @0 AND v.status != @1 ORDER BY v.creation_date DESC", message.OrganizationGuid, VacancyStatus.Removed));
 
             return vacancies;
         }
@@ -74,7 +74,7 @@ namespace SciVacancies.WebApp.Queries
         {
             if (message.OrganizationGuid == Guid.Empty) throw new ArgumentNullException($"OrganizationGuid is empty: {message.OrganizationGuid}");
 
-            Page<Vacancy> vacancies = _db.Page<Vacancy>(message.PageIndex, message.PageSize, new Sql($"SELECT v.* FROM org_vacancies v  WHERE v.organization_guid = @0 AND v.status = @1 ORDER BY v.guid DESC", message.OrganizationGuid, VacancyStatus.Closed));
+            Page<Vacancy> vacancies = _db.Page<Vacancy>(message.PageIndex, message.PageSize, new Sql($"SELECT v.* FROM org_vacancies v  WHERE v.organization_guid = @0 AND v.status = @1 ORDER BY v.creation_date DESC", message.OrganizationGuid, VacancyStatus.Closed));
 
             return vacancies;
         }
@@ -82,7 +82,7 @@ namespace SciVacancies.WebApp.Queries
         {
             if (message.ResearcherGuid == Guid.Empty) throw new ArgumentNullException($"ResearcherGuid is empty: {message.ResearcherGuid}");
 
-            Page<Vacancy> favoriteVacancies = _db.Page<Vacancy>(message.PageIndex, message.PageSize, new Sql($"SELECT * FROM res_favoritevacancies fv, org_vacancies v WHERE fv.researcher_guid = @0 AND fv.vacancy_guid = v.guid", message.ResearcherGuid));
+            Page<Vacancy> favoriteVacancies = _db.Page<Vacancy>(message.PageIndex, message.PageSize, new Sql($"SELECT * FROM res_favoritevacancies fv, org_vacancies v WHERE fv.researcher_guid = @0 AND fv.vacancy_guid = v.guid ORDER BY v.creation_date DESC", message.ResearcherGuid));
 
             return favoriteVacancies;
         }

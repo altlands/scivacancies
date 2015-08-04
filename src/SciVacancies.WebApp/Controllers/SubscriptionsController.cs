@@ -54,7 +54,7 @@ namespace SciVacancies.WebApp.Controllers
             var searchSubscription = _mediator.Send(new SingleSearchSubscriptionQuery { SearchSubscriptionGuid = id });
 
             if (searchSubscription.researcher_guid != researcherGuid)
-                throw new Exception("Вы не можете просматривать чужие подписки");
+                return View("Error", "Вы не можете просматривать чужие подписки");
 
             var model = new VacanciesFilterModel();
             model.VacancyStates = JsonConvert.DeserializeObject<IEnumerable<int>>(searchSubscription.vacancy_statuses);

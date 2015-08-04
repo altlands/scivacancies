@@ -18,6 +18,7 @@ using System.IO;
 using SciVacancies.WebApp.Models.OAuth;
 using Microsoft.Framework.OptionsModel;
 using AutoMapper;
+using SciVacancies.WebApp.Engine;
 
 namespace SciVacancies.WebApp.Controllers
 {
@@ -61,6 +62,13 @@ namespace SciVacancies.WebApp.Controllers
             if (model.IsResearcher)
             {
                 //TODO - допилить авторизацию с картой науки
+
+                //TODO - это заглушка не проверяет пароль
+                var user = _userManager.FindByName(model.Login);
+                var identity = _userManager.CreateIdentity(user, DefaultAuthenticationTypes.ApplicationCookie);
+                var cp = new ClaimsPrincipal(identity);
+                Context.Response.SignIn(DefaultAuthenticationTypes.ApplicationCookie, cp);
+                return RedirectToHome();
             }
             else
             {
@@ -188,9 +196,9 @@ namespace SciVacancies.WebApp.Controllers
 
                             var identity = _userManager.CreateIdentity(user, DefaultAuthenticationTypes.ApplicationCookie);
                             var cp = new ClaimsPrincipal(identity);
-                            //signing out...
+                            //at first, signing out...
                             Context.Response.SignOut(DefaultAuthenticationTypes.ApplicationCookie);
-                            //...before signing in
+                            //... and then, signing in
                             Context.Response.SignIn(DefaultAuthenticationTypes.ApplicationCookie, cp);
                         }
                         else
@@ -236,11 +244,32 @@ namespace SciVacancies.WebApp.Controllers
                 return View(model);
             }
 
-            var command = new RegisterUserResearcherCommand
+
+            //var command = new RegisterUserResearcherCommand
+            //{
+            //    Data = model
+            //};
+            //var user = _mediator.Send(command);
+            //_userManager.AddToRole(user.Id, ConstTerms.RequireRoleResearcher);
+            var createUserResearcherCommand1 = new RegisterUserResearcherCommand
             {
-                Data = model
+                Data = new AccountResearcherRegisterViewModel
+                {
+                    Email = model.Email,
+                    Phone = model.Phone,
+                    UserName = model.UserName,
+                    FirstName = model.FirstName,
+                    SecondName = model.SecondName,
+                    Patronymic = model.Patronymic,
+                    FirstNameEng = model.FirstNameEng,
+                    SecondNameEng = model.SecondNameEng,
+                    PatronymicEng = model.PatronymicEng,
+                    BirthYear = model.BirthYear
+                }
             };
-            var user = _mediator.Send(command);
+            var user = _mediator.Send(createUserResearcherCommand1);
+            var researcherGuid1 = Guid.Parse(user.Claims.Single(s => s.ClaimType.Equals(ConstTerms.ClaimTypeResearcherId)).ClaimValue);
+
 
             var identity = _userManager.CreateIdentity(user, DefaultAuthenticationTypes.ApplicationCookie);
             var cp = new ClaimsPrincipal(identity);

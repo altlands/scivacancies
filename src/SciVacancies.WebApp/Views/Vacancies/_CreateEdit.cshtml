@@ -16,10 +16,22 @@
 
             <div class="table-row form-row">
                 <div class="left-cell">
+                    <label>Должность:</label>
+                </div>
+                <div class="right-cell">
+                    <input type="text" disabled asp-for="PositionType" clas="big-input" />
+                    <a onclick="javascript: return false;" class="link-add lk-icon italic open-popup" data-modal="PositionTypeId">Выбрать должность</a>
+                    <input type="hidden" asp-for="PositionTypeId" />
+                    <span asp-validation-for="PositionTypeId"></span>
+                </div>
+            </div>
+
+            <div class="table-row form-row">
+                <div class="left-cell">
                     <label>Наименование:</label>
                 </div>
                 <div class="right-cell">
-                    <input asp-for="Name" class="big-input" />
+                    <input asp-for="Name" class="big-input" data-setnewvalue="PositionType" />
                     <span asp-validation-for="Name"></span>
                 </div>
             </div>
@@ -31,18 +43,6 @@
                 <div class="right-cell">
                     <textarea asp-for="FullName"></textarea>
                     <span asp-validation-for="FullName"></span>
-                </div>
-            </div>
-
-            <div class="table-row form-row">
-                <div class="left-cell">
-                    <label>Должность:</label>
-                </div>
-                <div class="right-cell">
-                    <input type="text" disabled asp-for="PositionType" clas="big-input" />
-                    <a onclick="javascript: return false;" class="link-add lk-icon italic open-popup" data-modal="PositionTypeId">Выбрать должность</a>
-                    <input type="hidden" asp-for="PositionTypeId" />
-                    <span asp-validation-for="PositionTypeId"></span>
                 </div>
             </div>
 
@@ -89,9 +89,9 @@
                     <label>Регион:</label>
                 </div>
                 <div class="right-cell">
-                    <input type="text" disabled asp-for="Region" clas="big-input"/> 
+                    <input type="text" disabled asp-for="Region" clas="big-input" />
                     <a onclick="javascript: return false;" class="link-add lk-icon italic open-popup" data-modal="RegionId">Выбрать регион</a>
-                    <input type="hidden" asp-for="RegionId"/>
+                    <input type="hidden" asp-for="RegionId" />
                     <span asp-validation-for="RegionId"></span>
                 </div>
             </div>
@@ -110,7 +110,7 @@
     </div>
 
     <div class="row">
-        <div class="bold row-title">Задачи <!--и критерии-->:</div>
+        <div class="bold row-title">Задачи и критерии:</div>
         <div class="table-form">
             <div class="table-row form-row">
                 <div class="left-cell">
@@ -122,38 +122,63 @@
                 </div>
             </div>
 
-            <!--
-                <div class="table-row form-row">
-                    <div class="left-cell">
-                        <label>Критерии оценки:</label>
-                    </div>
-                    <div class="right-cell">
-                        <ul class="content-list has-removable-items" id="CriteriaInputs">
-                            <li>
-                                <input type="text" name="Criteria"/>
-                                <div class="buttons">
-                                    <span class="big-link-remove"></span>
-                                </div>
-                            </li>
-                            <li>
-                                <input type="text" name="Criteria"/>
-                                <div class="buttons">
-                                    <span class="big-link-remove"></span>
-                                </div>
-                            </li>
-                            <li style="display: none;">
-                                <input type="text" name="Criteria"/>
-                                <div class="buttons">
-                                    <span class="big-link-remove"></span>
-                                </div>
-                            </li>
-                        </ul>
-                        <span class="link-add lk-icon italic" onclick="addNewCriteriaItem('CriteriaInputs');" style="cursor: pointer;">Добавить критерий</span>
-                    </div>
+
+            <div class="table-row form-row">
+                <div class="left-cell">
+                    <label>Критерии оценки:</label>
                 </div>
-            -->
+                <div class="right-cell">
+
+
+                    <div class="lnk-container">
+                        <span class="small-icon icon-hsm-eye">Показать все (@Model.Criterias.Count)</span>
+                        <span class="small-icon icon-sm-eye" style="display: none;">Скрыть все (@Model.Criterias.Count)</span>
+                    </div>
+
+
+                    @for (int groupIndex = 0; groupIndex < Model.Criterias.Count; groupIndex++)
+                    {
+                        var @group = Model.Criterias[groupIndex];
+                        <div class="b-publication">
+
+                            <input type="hidden" name="Criterias.Index" value="@groupIndex" />
+                            <input type="hidden" asp-for="Criterias[groupIndex].Id" />
+                            <input type="hidden" asp-for="Criterias[groupIndex].Title" />
+
+                            <span class="name-section">@group.Title (@group.Items.Count)</span>
+                            <div class="list-fields">
+
+                                @for (int itemIndex = 0; itemIndex < @group.Items.Count; itemIndex++)
+                                {
+                                    var item = @group.Items[itemIndex];
+                                    <div>
+                                        <input type="hidden" name="Criterias[groupIndex].Items.Index" value="@itemIndex" />
+                                        <input type="hidden" asp-for="Criterias[groupIndex].Items[itemIndex].Id" />
+                                        <input type="hidden" asp-for="Criterias[groupIndex].Items[itemIndex].Title" />
+
+                                        <div class="field">
+                                            <input type="number" asp-for="Criterias[groupIndex].Items[itemIndex].Count" />
+                                            <span>@item.Title (шт.)</span>
+                                        </div>
+
+                                    </div>
+                                }
+                            </div>
+
+                        </div>
+                    }
+
+                    
+                </div>
+            </div>
+
         </div>
     </div>
+
+
+
+
+
 
     <div class="row">
         <div class="bold row-title">Условия:</div>
@@ -350,7 +375,7 @@
     </div>
     <div class="content-popup" style="overflow: scroll;">
         <div>
-            @foreach (var item in Model.PositionTypes)
+            @foreach (var item in Model.PositionTypes.OrderBy(c => c.Text))
             {
                 <text>
                 <a href="#" onclick="javascript: return selectedItemFromModalDictionary('PositionTypeId', 'PositionType','@item.Value', '@item.Text');">
@@ -373,7 +398,7 @@
     </div>
     <div class="content-popup" style="overflow: scroll;">
         <div>
-            @foreach (var item in Model.ResearchDirections)
+            @foreach (var item in Model.ResearchDirections.OrderBy(c => c.Text))
             {
                 <text>
                 <a href="#" onclick="javascript: return selectedItemFromModalDictionary('ResearchDirectionId', 'ResearchDirection','@item.Value', '@item.Text');">

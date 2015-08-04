@@ -154,9 +154,6 @@ $(document).ready(function () {
         }
     });
 
-    findRemovableCreateriaItem($(".has-removable-items").find("li"));
-    recountCriteriaItem();
-
     /*
         this code need for navigate by new pager or filter values
      */
@@ -175,7 +172,7 @@ $(document).ready(function () {
     });
 
     /*
-     * показать все элементы
+     * показать все элементы в группе значений в поиске
      */
     $("div.filter-contents span.show-all-list").click(function () {
         var source = this;
@@ -187,13 +184,13 @@ $(document).ready(function () {
         });
     });
     /*
-     * скрыть невыбранные элементы
+     * скрыть невыбранные элементы в группе значений в поиске
      */
     $("div.filter-contents span.hide-unselected").click(function () {
         var source = this;
         var parentContainer = $(source).parents('.cat-filter')[0];
         //plain checkbox list
-        $(parentContainer).find("span.checkbox:not(.checked)").parents("li)").hide(300, function () {
+        $(parentContainer).find("span.checkbox:not(.checked)").parents("li").hide(300, function () {
             $(source).hide();
             $(source).siblings("span.show-all-list").show();
         });
@@ -231,10 +228,45 @@ $(document).ready(function () {
     /*
      * закрывать модальное окно при нажатии кнопки Отмены
      */
-    $('span.icon-close').click(function() {
+    $('span.icon-close').click(function () {
         var source = this;
         var parent = $(source).parents('.window-popup')[0];
         $(parent).find('span.close-popup').click();
+    });
+    /*
+     * редактирование Вакансии (развернуть/скрыть Критерии)
+     */
+    //b-publication open
+    $('span.name-section').click(function () {
+        var source = this;
+        var parent = null;
+        try {
+            parent = $(source).parents('.b-publication')[0];
+        } catch (e) {
+        }
+        if (parent != null) {
+            $(parent).toggleClass('open');
+        }
+    });
+    /*
+     * показать все элементы (Вакансии (развернуть/скрыть Критерии))
+     */
+    $("div.lnk-container span.icon-hsm-eye").click(function () {
+        var source = this;
+        var parentContainer = $(source).parents('.right-cell')[0];
+        $(parentContainer).find("div.b-publication").addClass('open');
+        $(source).hide();
+        $(source).siblings("span.icon-sm-eye").show();
+    });
+    /*
+     * скрыть все элементы (Вакансии (развернуть/скрыть Критерии))
+     */
+    $("div.lnk-container span.icon-sm-eye").click(function () {
+        var source = this;
+        var parentContainer = $(source).parents('.right-cell')[0];
+        $(parentContainer).find("div.b-publication").removeClass('open');
+        $(source).hide();
+        $(source).siblings("span.icon-hsm-eye").show();
     });
     /*
     end of the code
@@ -258,29 +290,8 @@ function vacancySaveOptions(options) {
         $("form").find("input[type=\"hidden\"][name=\"ToPublish\"]").val(false);
         return true;
     }
-
+    return false;
 };
-
-function addNewCriteriaItem(ulName) {
-    var $ul = $("#" + ulName);
-    var newItem = $ul.find("li:hidden").clone().show();
-    findRemovableCreateriaItem(newItem);
-    $ul.append(newItem);
-    recountCriteriaItem();
-};
-function findRemovableCreateriaItem($lis) {
-    $lis.find("span.big-link-remove").click(function () {
-        var removeMe = $(this).parents("li")[0];
-        $(removeMe).remove();
-        recountCriteriaItem();
-    });
-};
-function recountCriteriaItem() {
-    var inputs = $("#CriteriaInputs").find("li:visible").find("input");
-    for (var i = 1; i <= inputs.length; i++) {
-        $(inputs[i - 1]).attr("id", "Criteria[" + i + "]");
-    }
-}
 
 function updateQueryStringParameter(uri, key, value) {
     var re = new RegExp("([?&])" + key + "=.*?(&|$)", "i");
@@ -293,11 +304,12 @@ function updateQueryStringParameter(uri, key, value) {
     }
 }
 /*
- * Выбрать отрасли науки
+ * Выбрать значение из словаря
  */
 function selectedItemFromModalDictionary(hiddenInputName, textInput, newValue, displayText) {
     $("#" + hiddenInputName).val(newValue);
     $("#" + textInput).val(displayText);
+    $("[data-setnewvalue=\"" + textInput + "\"]").val(displayText);
     $("div[data-name=\"" + hiddenInputName + "\"]").find(".close-popup").click();
     return false;
 };
@@ -386,7 +398,7 @@ function collapsibleFilterClicked(event) {
 /**
   * добавить метку о том что поискаовый запрос нужно сохранить в качестве подписки
   */
-function isNullOrWhitespace( input ) {
+function isNullOrWhitespace(input) {
 
     if (typeof input === 'undefined' || input == null) return true;
 

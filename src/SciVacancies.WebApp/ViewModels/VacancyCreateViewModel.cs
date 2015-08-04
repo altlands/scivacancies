@@ -22,8 +22,7 @@ namespace SciVacancies.WebApp.ViewModels
             OrganizationGuid = organizationGuid;
         }
 
-
-        public DateTime? InCommitteeDate{ get; set; }
+        public DateTime? InCommitteeDate { get; set; }
 
         [HiddenInput]
         public Guid OrganizationGuid { get; set; }
@@ -47,10 +46,9 @@ namespace SciVacancies.WebApp.ViewModels
                 throw new NullReferenceException($"Property {nameof(OrganizationGuid)} has Empty value");
 
 
-
             PositionTypes = mediator.Send(new SelectAllPositionTypesQuery()).Select(c => new SelectListItem { Text = c.title, Value = c.id.ToString() });
             ResearchDirections = mediator.Send(new SelectAllResearchDirectionsQuery()).Select(c => new SelectListItem { Text = c.title, Value = c.id.ToString() });
-            Regions= mediator.Send(new SelectAllRegionsQuery()).Select(c => new SelectListItem { Text = c.title, Value = c.id.ToString() });
+            Regions = mediator.Send(new SelectAllRegionsQuery()).Select(c => new SelectListItem { Text = c.title, Value = c.id.ToString() });
 
             if (PositionTypeId != 0)
                 PositionType = PositionTypes.Single(c => c.Value == PositionTypeId.ToString()).Text;
@@ -82,9 +80,77 @@ namespace SciVacancies.WebApp.ViewModels
                 OperatingScheduleType.Rotation
             }
                 .Select(c => new SelectListItem { Value = ((int)c).ToString(), Text = c.GetDescription() });
+
+            if (Criterias.Count == 0)
+            {
+                Criterias.Add(
+                  new CriteriaItemViewModel
+                  {
+                      Id = 1,
+                      Title = "Результаты и востребованность научных исследований",
+                      Items = new List<CriteriaItemViewModel>
+                      {
+                        new CriteriaItemViewModel { Id = 1, Count = 0, Title = "Web of Science"},
+                        new CriteriaItemViewModel { Id = 2, Count = 0, Title = "Scopus"},
+                        new CriteriaItemViewModel { Id = 3, Count = 0, Title = "Российский индекс научного цитирования"},
+                        new CriteriaItemViewModel { Id = 4, Count = 0, Title = "Google Scholar "},
+                        new CriteriaItemViewModel { Id = 5, Count = 0, Title = "ERIH (European Reference Index for the Humanities)" },
+                        new CriteriaItemViewModel { Id = 6, Count = 0, Title = "Специализированная информационно-аналитическая система" }
+                      }
+                  });
+                Criterias.Add(
+                    new CriteriaItemViewModel
+                    {
+                        Id = 7,
+                        Title = "Совокупная цитируемость публикаций",
+                        Items = new List<CriteriaItemViewModel>
+                            {
+                            new CriteriaItemViewModel { Id = 8, Count = 0, Title = "Web of Science"},
+                            new CriteriaItemViewModel { Id = 9, Count = 0, Title = "Scopus"},
+                            new CriteriaItemViewModel { Id =10, Count = 0, Title = "Google Scholar"},
+                            new CriteriaItemViewModel { Id =11, Count = 0, Title = "(Российский индекс научного цитирования)"}
+                            }
+                    });
+                Criterias.Add(
+                    new CriteriaItemViewModel
+                    {
+                        Id = 12,
+                        Title = "Совокупный импакт-фактор журналов",
+                        Items = new List<CriteriaItemViewModel>
+                            {
+                            new CriteriaItemViewModel { Id =13, Count = 0, Title = "(Значение)"},
+                            }
+                    });
+                Criterias.Add(
+                    new CriteriaItemViewModel
+                    {
+                        Id =14,
+                        Title = "Общее количество научных, конструкторских и технологических произведений",
+                        Items = new List<CriteriaItemViewModel>
+                            {
+                            new CriteriaItemViewModel { Id =15, Count = 0, Title = "опубликованных произведений"},
+                            new CriteriaItemViewModel { Id =16, Count = 0, Title = "опубликованных периодических изданий"},
+                            new CriteriaItemViewModel { Id =17, Count = 0, Title = "выпущенной конструкторской и технологической документации"},
+                            new CriteriaItemViewModel { Id =18, Count = 0, Title = "неопубликованных произведений науки"}
+                            }
+                    });
+                Criterias.Add(
+                    new CriteriaItemViewModel
+                    {
+                        Id =19,
+                        Title = "Количество созданных результатов интеллектуальной деятельности",
+                        Items = new List<CriteriaItemViewModel>
+                            {
+                            new CriteriaItemViewModel { Id =20, Count = 0, Title = "учтенных в государственных информационных системах"},
+                            new CriteriaItemViewModel { Id =21, Count = 0, Title = "имеющих государственную регистрацию и (или) правовую охрану в Российской Федерации"},
+                            new CriteriaItemViewModel { Id =22, Count = 0, Title = "имеющих правовую охрану за пределами Российской Федерации"}
+                            }
+                    });
+            }
+
         }
 
-        
+
         /// <summary>
         /// Guid должности из справочника
         /// </summary>
@@ -230,6 +296,9 @@ namespace SciVacancies.WebApp.ViewModels
 
         public string CityName { get; set; }
 
-        //public List<Criterias>
+        /// <summary>
+        /// Притерии
+        /// </summary>
+        public List<CriteriaItemViewModel> Criterias { get; set; } = new List<CriteriaItemViewModel>();
     }
 }

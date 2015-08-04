@@ -88,7 +88,7 @@
                                                     <checkboxing items="researchDirection.Childs[a].Childs[b].Items"
                                                                  values="Model.ResearchDirections"
                                                                  property="ResearchDirections"
-                                                                 showcount="0"
+                                                                 showcount="-1"
                                                                  labelforindex="@labelForIndex"></checkboxing>
                                                 </ul>
                                             </li>
@@ -134,6 +134,9 @@
                                      showcount="10"></checkboxing>
                     </ul>
                 </div>
+
+                <input type="submit" class="blue-btn-sm small-icon icon-sm-eye-wh " value="Применить"/>
+
             </div>
         </div>
 
@@ -214,7 +217,7 @@
                     <select asp-for="OrderBy"
                             asp-items="ViewBag.FilterSource.OrderBys"></select>
                 </div>
-                <input type="submit" class="blue-btn-sm small-icon icon-sm-eye-wh" value="Показать" />
+                <input type="submit" class="blue-btn-sm small-icon icon-sm-eye-wh" value="Обновить" />
             </div>
 
             <div class="list-results">

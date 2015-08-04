@@ -116,7 +116,7 @@
             <label>Пароль</label>
             <div class="b-r-form">
                 <div class="input">
-                    <input asp-for="Password" />
+                    <input type="password" asp-for="Password" />
                 </div>
                 <span asp-validation-for="Password"></span>
                 <div class="description">
@@ -131,7 +131,7 @@
             <label>Подтверждение пароля</label>
             <div class="b-r-form">
                 <div class="input">
-                    <input asp-for="ConfirmPassword" />
+                    <input type="password" asp-for="ConfirmPassword" />
                 </div>
                 <span asp-validation-for="ConfirmPassword"></span>
             </div>
@@ -156,7 +156,7 @@
         <div class="form-line">
             <div class="b-r-form">
                 <div class="agree mtop30">
-                    <span class="checkbox">
+                    <span class="checkbox @(Model.Agreement ? "checked" : string.Empty)">
                         <input asp-for="Agreement" />
                     </span>
                     <label for="Agreement">Я согласен на обработку моих персональных данных</label>
