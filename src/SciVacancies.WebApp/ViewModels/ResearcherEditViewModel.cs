@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNet.Http;
+using Newtonsoft.Json;
 using SciVacancies.ReadModel.Core;
 using SciVacancies.WebApp.ViewModels.Base;
 
@@ -8,6 +10,8 @@ namespace SciVacancies.WebApp.ViewModels
 {
     public class ResearcherEditViewModel: PageViewModelBase
     {
+        public IList<IFormFile> Files { get; set; }
+
         [Required(ErrorMessage = "Необходимо заполнить Имя")]
         public string FirstName { get; set; }
         [Required(ErrorMessage = "Необходимо заполнить Фамилию")]

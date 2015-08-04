@@ -18,7 +18,7 @@
 
     var years = Enumerable.Range(DateTime.Now.Year - 150, 150 + 1).OrderByDescending(c => c).Select(c => new SelectListItem { Text = c.ToString(), Value = c.ToString() }).ToList();
     var yearsZeroBased = Enumerable.Range(DateTime.Now.Year - 150, 150 + 1).OrderByDescending(c => c).Select(c => new SelectListItem { Text = c.ToString(), Value = c.ToString() }).ToList();
-    yearsZeroBased.Add(new SelectListItem {Text = "--", Value = "0"});
+    yearsZeroBased.Add(new SelectListItem { Text = "--", Value = "0" });
     var invisibleItemStyle = "display: none;";
     string useStyle;
 }
@@ -36,9 +36,9 @@
 
 <div asp-validation-summary="ValidationSummary.All"></div>
 
-<form asp-controller="researchers" asp-action="edit" method="POST" class="l-information e-information b-edit">
-<input type="hidden" asp-for="Guid"/>
-<div class="row">
+<form asp-controller="researchers" asp-action="edit" method="POST" class="l-information e-information b-edit" enctype="multipart/form-data">
+    <input type="hidden" asp-for="Guid" />
+    <div class="row">
         <div class="bold mb20">Общая информация</div>
         <a href="#" class="link-upload fs13">Загрузить данные из системы «Карта науки»</a>
         <span style="color: red;">не реализовано</span>
@@ -50,6 +50,7 @@
                         <span style="color: red;">не реализовано</span>
                     </label>
                     <a href="#" class="link-upload fs13">Загрузить фото</a>
+                    <input type="file" name="Files" id="Files" multiple />
                     <div class="description mt10">
                         Выберите изображение размером<br /> не более 500 кБ<br />Рекомендуемое соотношение сторон – 3:4
                     </div>
@@ -194,17 +195,18 @@
                 </div>
                 <div class="right-cell">
                     <del>
-                    <a href="#" class="italic link-add lk-icon link-add-field">Добавить из Государственного рубрикатора научно-технической информации</a>
-                        </del>
-                        <ul class="list-tags research-interests">
-                            <li>Автоматизация и автоматизированные системы в области науковедения <a href="#" class="link-remove lk-icon italic">Удалить</a></li>
-                            <li>Библиотечное дело, библиотековедение <a href="#" class="link-remove lk-icon italic">Удалить</a></li>
-                            <li>Информационная деятельность в области науковедения <a href="#" class="link-remove lk-icon italic">Удалить</a></li>
-                            <li>Научные и технические библиотеки и библиотечные сети <a href="#" class="link-remove lk-icon italic">Удалить</a></li>
-                            <li>Техническое оснащение библиотек <a href="#" class="link-remove lk-icon italic">Удалить</a></li>
-                            <li>Электронные библиотеки <a href="#" class="link-remove lk-icon italic">Удалить</a></li>                                          
-                        </ul>
-</div>
+                        <a href="#" class="italic link-add lk-icon link-add-field">Добавить из Государственного рубрикатора научно-технической информации</a>
+                    </del>
+                    <span style="color: red;">не реализовано</span>
+                    <ul class="list-tags research-interests">
+                        <li>Автоматизация и автоматизированные системы в области науковедения <a href="#" class="link-remove lk-icon italic">Удалить</a></li>
+                        <li>Библиотечное дело, библиотековедение <a href="#" class="link-remove lk-icon italic">Удалить</a></li>
+                        <li>Информационная деятельность в области науковедения <a href="#" class="link-remove lk-icon italic">Удалить</a></li>
+                        <li>Научные и технические библиотеки и библиотечные сети <a href="#" class="link-remove lk-icon italic">Удалить</a></li>
+                        <li>Техническое оснащение библиотек <a href="#" class="link-remove lk-icon italic">Удалить</a></li>
+                        <li>Электронные библиотеки <a href="#" class="link-remove lk-icon italic">Удалить</a></li>
+                    </ul>
+                </div>
             </div>
         </div>
     </div>
@@ -395,7 +397,7 @@
                                     <input asp-for="Publications[i].Title" />
                                     <div class="buttons">
                                         @*<span class="big-link-edit"></span>*@
-                                        <span class="big-link-remove"  onclick="return removeItemFromList(this);"></span>
+                                        <span class="big-link-remove" onclick="return removeItemFromList(this);"></span>
                                     </div>
                                 </li>
                                 </text>

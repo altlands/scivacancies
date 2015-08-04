@@ -1,11 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.Entity.Core;
+using System.IO;
 using System.Linq;
 using AutoMapper;
 using MediatR;
 using Microsoft.AspNet.Authorization;
+using Microsoft.AspNet.Http;
 using Microsoft.AspNet.Mvc;
+using Microsoft.Framework.Runtime;
+using Microsoft.Net.Http.Headers;
 using SciVacancies.Domain.DataModels;
 using SciVacancies.Domain.Enums;
 using SciVacancies.ReadModel.Core;
@@ -22,8 +26,12 @@ namespace SciVacancies.WebApp.Controllers
     public class ResearchersController : Controller
     {
         private readonly IMediator _mediator;
-
-        public ResearchersController(IMediator mediator) { _mediator = mediator; }
+        private readonly IApplicationEnvironment _hostingEnvironment;
+        public ResearchersController(IMediator mediator, IApplicationEnvironment hostingEnvironment)
+        {
+            _mediator = mediator;
+            _hostingEnvironment = hostingEnvironment;
+        }
 
         [ResponseCache(NoStore = true)]
         [SiblingPage]
@@ -34,13 +42,13 @@ namespace SciVacancies.WebApp.Controllers
             if (researcherGuid == Guid.Empty)
                 throw new ArgumentNullException(nameof(researcherGuid));
 
-            var preModel = _mediator.Send(new SingleResearcherQuery {ResearcherGuid = researcherGuid});
+            var preModel = _mediator.Send(new SingleResearcherQuery { ResearcherGuid = researcherGuid });
             if (preModel == null)
                 return RedirectToAction("logout", "account");
 
             var model = Mapper.Map<ResearcherDetailsViewModel>(preModel);
             model.Educations = Mapper.Map<List<EducationEditViewModel>>(_mediator.Send(new SelectResearcherEducationsQuery { ResearcherGuid = researcherGuid }));
-            model.Publications= Mapper.Map<List<PublicationEditViewModel>>(_mediator.Send(new SelectResearcherPublicationsQuery{ ResearcherGuid = researcherGuid }));
+            model.Publications = Mapper.Map<List<PublicationEditViewModel>>(_mediator.Send(new SelectResearcherPublicationsQuery { ResearcherGuid = researcherGuid }));
 
             return View(model);
         }
@@ -72,8 +80,36 @@ namespace SciVacancies.WebApp.Controllers
             if (authorizedUserGuid != model.Guid)
                 return View("Error", "Вы не можете изменять чужой профиль");
 
-            if (ModelState.ErrorCount>0)
+            if (ModelState.ErrorCount > 0)
                 return View(model);
+
+
+
+            //TODO: сохранение фото в БД (сделать)
+            //фотографии в byte
+            byte[] byteData;
+            using (var memoryStream = new MemoryStream())
+            {
+                foreach (var file in model.Files)
+                {
+
+                    //сценарий-А: сохранить фото на диск
+                    //var fileName = ContentDispositionHeaderValue
+                    //  .Parse(file.ContentDisposition)
+                    //  .FileName
+                    //  .Trim('"');
+                    //var filePath = _hostingEnvironment.ApplicationBasePath + "\\uploads\\" + DateTime.Now.ToString("yyyyddMHHmmss") + fileName;
+                    //file.SaveAs(filePath);
+
+                    //сценарий-Б: сохранить фото в БД
+                    var openReadStream = file.OpenReadStream();
+                    openReadStream.CopyTo(memoryStream);
+                    byteData = memoryStream.ToArray();
+                    memoryStream.SetLength(0);
+                }
+            }
+
+
 
             var preModel = _mediator.Send(new SingleResearcherQuery { ResearcherGuid = authorizedUserGuid });
             if (preModel == null)
@@ -117,7 +153,7 @@ namespace SciVacancies.WebApp.Controllers
                 });
                 model.Applications.Items.ForEach(
                     c =>
-                        c.Vacancy = Mapper.Map<VacancyDetailsViewModel>(innerObjects.Items.Single(d => d.guid== c.VacancyGuid)));
+                        c.Vacancy = Mapper.Map<VacancyDetailsViewModel>(innerObjects.Items.Single(d => d.guid == c.VacancyGuid)));
             }
 
             return View(model);
