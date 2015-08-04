@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data.Entity.Core;
 using System.IO;
 using System.Linq;
+using System.Net.Mime;
 using AutoMapper;
 using MediatR;
 using Microsoft.AspNet.Authorization;
@@ -18,6 +19,8 @@ using SciVacancies.WebApp.Engine;
 using SciVacancies.WebApp.Engine.CustomAttribute;
 using SciVacancies.WebApp.Queries;
 using SciVacancies.WebApp.ViewModels;
+//using System.Drawing;
+//using System.Drawing.Imaging;
 
 namespace SciVacancies.WebApp.Controllers
 {
@@ -101,11 +104,16 @@ namespace SciVacancies.WebApp.Controllers
                     //var filePath = _hostingEnvironment.ApplicationBasePath + "\\uploads\\" + DateTime.Now.ToString("yyyyddMHHmmss") + fileName;
                     //file.SaveAs(filePath);
 
-                    //сценарий-Б: сохранить фото в БД
-                    var openReadStream = file.OpenReadStream();
-                    openReadStream.CopyTo(memoryStream);
-                    byteData = memoryStream.ToArray();
-                    memoryStream.SetLength(0);
+                    ////сценарий-Б: сохранить фото в БД
+                    //var openReadStream = file.OpenReadStream();
+                    //var image = Image.FromStream(openReadStream);
+                    //var scale = (int)(500000 / file.Length);
+                    //var resizedImage = new Bitmap(image, new Size(image.Width * scale, image.Height * scale));
+
+                    //((Image)resizedImage).Save(memoryStream, ImageFormat.Jpeg);
+                    //byteData = memoryStream.ToArray();
+                    //memoryStream.SetLength(0);
+
                 }
             }
 
