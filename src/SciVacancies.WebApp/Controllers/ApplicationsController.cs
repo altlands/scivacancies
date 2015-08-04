@@ -307,54 +307,54 @@ namespace SciVacancies.WebApp.Controllers
             return View(model);
         }
 
-        [PageTitle("Удаление шаблона заявки")]
-        [Authorize(Roles = ConstTerms.RequireRoleResearcher)]
-        [BindResearcherIdFromClaims]
-        public IActionResult Delete(Guid id, Guid researcherGuid)
-        {
-            if (id == Guid.Empty)
-                throw new ArgumentNullException(nameof(id));
-            if (researcherGuid == Guid.Empty)
-                throw new ArgumentNullException(nameof(researcherGuid));
+        //[PageTitle("Удаление шаблона заявки")]
+        //[Authorize(Roles = ConstTerms.RequireRoleResearcher)]
+        //[BindResearcherIdFromClaims]
+        //public IActionResult Delete(Guid id, Guid researcherGuid)
+        //{
+        //    if (id == Guid.Empty)
+        //        throw new ArgumentNullException(nameof(id));
+        //    if (researcherGuid == Guid.Empty)
+        //        throw new ArgumentNullException(nameof(researcherGuid));
 
-            var preModel = _mediator.Send(new SingleVacancyApplicationQuery { VacancyApplicationGuid = id });
+        //    var preModel = _mediator.Send(new SingleVacancyApplicationQuery { VacancyApplicationGuid = id });
 
-            if (preModel.status != VacancyApplicationStatus.Applied)
-                return View("Error", $"Отменить заявку можно только в статусе: {VacancyApplicationStatus.InProcess.GetDescription()}.");
+        //    if (preModel.status != VacancyApplicationStatus.Applied)
+        //        return View("Error", $"Отменить заявку можно только в статусе: {VacancyApplicationStatus.InProcess.GetDescription()}.");
 
-            var model = Mapper.Map<VacancyApplicationDetailsViewModel>(preModel);
-            model.Researcher = Mapper.Map<ResearcherDetailsViewModel>(_mediator.Send(new SingleResearcherQuery { ResearcherGuid = model.ResearcherGuid }));
-            model.Vacancy = Mapper.Map<VacancyDetailsViewModel>(_mediator.Send(new SingleVacancyQuery { VacancyGuid = model.VacancyGuid }));
-            return View(model);
-        }
+        //    var model = Mapper.Map<VacancyApplicationDetailsViewModel>(preModel);
+        //    model.Researcher = Mapper.Map<ResearcherDetailsViewModel>(_mediator.Send(new SingleResearcherQuery { ResearcherGuid = model.ResearcherGuid }));
+        //    model.Vacancy = Mapper.Map<VacancyDetailsViewModel>(_mediator.Send(new SingleVacancyQuery { VacancyGuid = model.VacancyGuid }));
+        //    return View(model);
+        //}
 
-        [HttpPost]
-        [PageTitle("Удаление шаблона заявки")]
-        [Authorize(Roles = ConstTerms.RequireRoleResearcher)]
-        [BindResearcherIdFromClaims]
-        public IActionResult DeletePost(Guid id, Guid researcherGuid)
-        {
-            if (id == Guid.Empty)
-                throw new ArgumentNullException(nameof(id));
-            if (researcherGuid == Guid.Empty)
-                throw new ArgumentNullException(nameof(researcherGuid));
+        //[HttpPost]
+        //[PageTitle("Удаление шаблона заявки")]
+        //[Authorize(Roles = ConstTerms.RequireRoleResearcher)]
+        //[BindResearcherIdFromClaims]
+        //public IActionResult DeletePost(Guid id, Guid researcherGuid)
+        //{
+        //    if (id == Guid.Empty)
+        //        throw new ArgumentNullException(nameof(id));
+        //    if (researcherGuid == Guid.Empty)
+        //        throw new ArgumentNullException(nameof(researcherGuid));
 
-            var preModel = _mediator.Send(new SingleVacancyApplicationQuery { VacancyApplicationGuid = id });
+        //    var preModel = _mediator.Send(new SingleVacancyApplicationQuery { VacancyApplicationGuid = id });
 
-            if (preModel.status != VacancyApplicationStatus.Applied)
-                return View("Error", $"Отменить заявку можно только в статусе: {VacancyApplicationStatus.InProcess.GetDescription()}.");
+        //    if (preModel.status != VacancyApplicationStatus.Applied)
+        //        return View("Error", $"Отменить заявку можно только в статусе: {VacancyApplicationStatus.InProcess.GetDescription()}.");
 
-            if (!ModelState.IsValid)
-            {
-                var model = Mapper.Map<VacancyApplicationDetailsViewModel>(preModel);
-                model.Researcher = Mapper.Map<ResearcherDetailsViewModel>(_mediator.Send(new SingleResearcherQuery { ResearcherGuid = model.ResearcherGuid }));
-                model.Vacancy = Mapper.Map<VacancyDetailsViewModel>(_mediator.Send(new SingleVacancyQuery { VacancyGuid = model.VacancyGuid }));
-                return View("delete", model);
-            }
+        //    if (!ModelState.IsValid)
+        //    {
+        //        var model = Mapper.Map<VacancyApplicationDetailsViewModel>(preModel);
+        //        model.Researcher = Mapper.Map<ResearcherDetailsViewModel>(_mediator.Send(new SingleResearcherQuery { ResearcherGuid = model.ResearcherGuid }));
+        //        model.Vacancy = Mapper.Map<VacancyDetailsViewModel>(_mediator.Send(new SingleVacancyQuery { VacancyGuid = model.VacancyGuid }));
+        //        return View("delete", model);
+        //    }
 
-            _mediator.Send(new CancelVacancyApplicationCommand { ResearcherGuid = researcherGuid, VacancyApplicationGuid = id });
-            return RedirectToAction("applications", "researchers");
-        }
+        //    _mediator.Send(new CancelVacancyApplicationCommand { ResearcherGuid = researcherGuid, VacancyApplicationGuid = id });
+        //    return RedirectToAction("applications", "researchers");
+        //}
 
         [Authorize(Roles = ConstTerms.RequireRoleOrganizationAdmin)]
         [PageTitle("Детали заявки")]

@@ -73,12 +73,12 @@
                     <td><span class="status @item.Status.GetHtmlClass()">@item.Status.GetDescription()</span></td>
                     <td>
                         <a asp-controller="applications" asp-action="details" asp-route-id="@item.Guid" class="view-td-icon"></a>
-                        @if (item.Status == VacancyApplicationStatus.Applied)
+                        @*@if (item.Status == VacancyApplicationStatus.Applied)
                         {
                             <text>
                                 <a asp-controller="applications" asp-action="delete" asp-route-id="@item.Guid" class="close-td-icon"></a>
                             </text>
-                        }
+                        }*@
                     </td>
                 </tr>
             </text>
