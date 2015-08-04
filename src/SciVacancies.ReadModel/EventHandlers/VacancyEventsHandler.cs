@@ -41,7 +41,7 @@ namespace SciVacancies.ReadModel.EventHandlers
             using (var transaction = _db.GetTransaction())
             {
                 _db.Insert(vacancy);
-                if(vacancy.criterias!=null)
+                if (vacancy.criterias != null)
                 {
                     foreach (VacancyCriteria vc in vacancy.criterias)
                     {
@@ -50,7 +50,7 @@ namespace SciVacancies.ReadModel.EventHandlers
                         _db.Insert(vc);
                     }
                 }
-                if(vacancy.attachments!=null)
+                if (vacancy.attachments != null)
                 {
                     foreach (VacancyAttachment at in vacancy.attachments)
                     {
@@ -76,18 +76,18 @@ namespace SciVacancies.ReadModel.EventHandlers
                 //TODO - без удаления
                 _db.Execute(new Sql($"DELETE FROM org_vacancycriterias WHERE vacancy_guid = @0", msg.VacancyGuid));
                 _db.Execute(new Sql($"DELETE FROM org_vacancy_attachments WHERE vacancy_guid = @0", msg.VacancyGuid));
-                if(vacancy.criterias!=null)
+                if (updatedVacancy.criterias != null)
                 {
-                    foreach (VacancyCriteria vc in vacancy.criterias)
+                    foreach (VacancyCriteria vc in updatedVacancy.criterias)
                     {
                         if (vc.guid == Guid.Empty) vc.guid = Guid.NewGuid();
                         vc.vacancy_guid = vacancy.guid;
                         _db.Insert(vc);
                     }
                 }
-                if(vacancy.attachments!=null)
+                if (updatedVacancy.attachments != null)
                 {
-                    foreach (VacancyAttachment at in vacancy.attachments)
+                    foreach (VacancyAttachment at in updatedVacancy.attachments)
                     {
                         if (at.guid == Guid.Empty) at.guid = Guid.NewGuid();
                         at.vacancy_guid = vacancy.guid;

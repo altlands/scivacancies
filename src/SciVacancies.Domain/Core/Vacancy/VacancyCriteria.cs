@@ -10,8 +10,6 @@
 
         public string CriteriaCode { get; set; }
 
-        public long? From { get; set; }
-
-        public long? To { get; set; }
+        public long? Count { get; set; }
     }
 }

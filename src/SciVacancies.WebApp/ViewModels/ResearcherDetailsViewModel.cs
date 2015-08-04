@@ -47,6 +47,11 @@ namespace SciVacancies.WebApp.ViewModels
         public string Memberships { get; set; }
         public string Conferences { get; set; }
 
+        public string ImageName { get; set; }
+        public long? ImageSize { get; set; }
+        public string ImageExtension { get; set; }
+        public string ImageUrl { get; set; }
+
         public List<EducationEditViewModel> Educations { get; set; }
         public List<PublicationEditViewModel> Publications { get; set; }
 

@@ -33,7 +33,7 @@ namespace SciVacancies.ReadModel.EventHandlers
             using (var transaction = _db.GetTransaction())
             {
                 _db.Insert(vacancyApplication);
-                if(vacancyApplication.attachments!=null)
+                if (vacancyApplication.attachments != null)
                 {
                     foreach (VacancyApplicationAttachment at in vacancyApplication.attachments)
                     {
@@ -58,7 +58,7 @@ namespace SciVacancies.ReadModel.EventHandlers
                 _db.Update(updatedVacancyApplication);
                 //TODO - без удаления
                 _db.Execute(new Sql($"DELETE FROM res_vacancyapplication_attachments WHERE vacancyapplication_guid = @0", msg.VacancyApplicationGuid));
-                if(updatedVacancyApplication.attachments!=null)
+                if (updatedVacancyApplication.attachments != null)
                 {
                     foreach (VacancyApplicationAttachment at in updatedVacancyApplication.attachments)
                     {
