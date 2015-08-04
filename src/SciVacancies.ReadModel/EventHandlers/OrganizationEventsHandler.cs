@@ -29,7 +29,7 @@ namespace SciVacancies.ReadModel.EventHandlers
             using (var transaction = _db.GetTransaction())
             {
                 _db.Insert(organization);
-                if(organization.researchdirections!=null)
+                if (organization.researchdirections != null)
                 {
                     foreach (ResearchDirection rd in organization.researchdirections)
                     {
@@ -52,7 +52,7 @@ namespace SciVacancies.ReadModel.EventHandlers
                 _db.Update(updatedOrganization);
                 //TODO - без удаления надо
                 _db.Execute(new Sql($"DELETE FROM org_researchdirections WHERE organization_guid = @0", msg.OrganizationGuid));
-                if (organization.researchdirections != null)
+                if (updatedOrganization.researchdirections != null)
                 {
                     foreach (ResearchDirection rd in updatedOrganization.researchdirections)
                     {

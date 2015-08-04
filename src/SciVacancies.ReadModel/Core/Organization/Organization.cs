@@ -49,6 +49,14 @@ namespace SciVacancies.ReadModel.Core
         public string head_patronymic { get; set; }
 
         /// <summary>
+        /// Логотип организации
+        /// </summary>
+        public string image_name { get; set; }
+        public long? image_size { get; set; }
+        public string image_extension { get; set; }
+        public string image_url { get; set; }
+
+        /// <summary>
         /// ФОИВ
         /// </summary>
         public int foiv_id { get; set; }

@@ -11,7 +11,6 @@ namespace SciVacancies.ReadModel.Core
         public int criteria_id { get; set; }
         public Guid vacancy_guid { get; set; }
 
-        public long? from { get; set; }
-        public long? to { get; set; }
+        public long? count { get; set; }
     }
 }

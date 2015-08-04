@@ -74,6 +74,21 @@ namespace SciVacancies.WebApp.ViewModels
         public string OGRN { get; set; }
 
         /// <summary>
+        /// Руководитель
+        /// </summary>
+        public string HeadFirstName { get; set; }
+        public string HeadLastName { get; set; }
+        public string HeadPatronymic { get; set; } //HeadMiddleName
+
+        /// <summary>
+        /// Логотип организации
+        /// </summary>
+        public string ImageName { get; set; }
+        public long? ImageSize { get; set; }
+        public string ImageExtension { get; set; }
+        public string ImageUrl { get; set; }
+
+        /// <summary>
         /// Организационно-правовая форма организации
         /// </summary>
         public string OrgForm { get; set; }
@@ -104,13 +119,5 @@ namespace SciVacancies.WebApp.ViewModels
         /// Отрасли науки
         /// </summary>
         public List<int> ResearchDirections { get; set; }
-
-        /// <summary>
-        /// Руководитель
-        /// </summary>
-        public string HeadFirstName { get; set; }
-        public string HeadLastName { get; set; }
-        public string HeadPatronymic { get; set; } //HeadMiddleName
-        
     }
 }

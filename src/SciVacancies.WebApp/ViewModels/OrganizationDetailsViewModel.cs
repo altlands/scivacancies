@@ -60,6 +60,14 @@ namespace SciVacancies.WebApp.ViewModels
         /// </summary>
         public string HeadPatronymic { get; set; }
 
+        /// <summary>
+        /// Логотип организации
+        /// </summary>
+        public string ImageName { get; set; }
+        public long? ImageSize { get; set; }
+        public string ImageExtension { get; set; }
+        public string ImageUrl { get; set; }
+
         #endregion
 
         #region Dictionaries

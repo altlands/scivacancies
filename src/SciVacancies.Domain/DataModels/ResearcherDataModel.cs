@@ -48,6 +48,14 @@ namespace SciVacancies.Domain.DataModels
         public string Memberships { get; set; }
         public string Conferences { get; set; }
 
+        /// <summary>
+        /// Фотография исследователя
+        /// </summary>
+        public string ImageName { get; set; }
+        public long? ImageSize { get; set; }
+        public string ImageExtension { get; set; }
+        public string ImageUrl { get; set; }
+
         public List<Education> Educations { get; set; }
         public List<Publication> Publications { get; set; }
     }

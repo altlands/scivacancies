@@ -28,7 +28,7 @@ namespace SciVacancies.ReadModel.EventHandlers
             using (var transaction = _db.GetTransaction())
             {
                 _db.Insert(researcher);
-                if(researcher.educations!=null)
+                if (researcher.educations != null)
                 {
                     foreach (Education ed in researcher.educations)
                     {
@@ -73,7 +73,7 @@ namespace SciVacancies.ReadModel.EventHandlers
                         _db.Insert(ed);
                     }
                 }
-                if(updatedResearcher.publications!=null)
+                if (updatedResearcher.publications != null)
                 {
                     foreach (Publication pb in updatedResearcher.publications)
                     {
