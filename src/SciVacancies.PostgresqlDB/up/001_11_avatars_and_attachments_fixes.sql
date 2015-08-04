@@ -17,5 +17,5 @@ ALTER TABLE res_researchers ADD COLUMN image_size bigint;
 ALTER TABLE res_researchers ADD COLUMN image_extension text;
 ALTER TABLE res_researchers ADD COLUMN image_url text;
 
-ALTER TABLE org_vacancycriterias RENAME COLUMN from TO count;
-ALTER TABLE org_vacancycriterias DROP COLUMN to;
+ALTER TABLE org_vacancycriterias RENAME COLUMN "from" TO "count";
+ALTER TABLE org_vacancycriterias DROP COLUMN "to";
