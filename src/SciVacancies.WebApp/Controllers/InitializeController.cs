@@ -33,6 +33,8 @@ namespace SciVacancies.WebApp.Controllers
             if (user != null)
                 return;
 
+            //TODO: ntemnikov -> инициализировать БД бОльшим колчеством записей на основе предоставленных данных
+
             var rnd = new Random();
 
             _mediator.Send(new RemoveSearchIndexCommand());
