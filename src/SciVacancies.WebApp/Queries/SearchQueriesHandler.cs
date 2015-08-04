@@ -44,7 +44,7 @@ namespace SciVacancies.WebApp.Queries
         public SearchDescriptor<Vacancy> VacancySearchDescriptor(SearchQuery sq)
         {
             SearchDescriptor<Vacancy> sdescriptor = new SearchDescriptor<Vacancy>();
-
+            //TODO - вынести в конфиг
             sdescriptor.Index("scivacancies");
             if (sq.PageSize.HasValue && sq.CurrentPage.HasValue &&
                 sq.PageSize.Value != 0 && sq.CurrentPage.Value != 0)
