@@ -14,6 +14,8 @@ namespace SciVacancies.ReadModel.ElasticSearchModel.EventHandlers
         INotificationHandler<VacancyRemoved>,
         INotificationHandler<VacancyPublished>,
         INotificationHandler<VacancyInCommittee>,
+        //TODO
+        //INotificationHandler<VacancyInAwaitingOfferResponse>,
         INotificationHandler<VacancyPretenderSet>,
         INotificationHandler<VacancyClosed>,
         INotificationHandler<VacancyCancelled>
@@ -58,6 +60,15 @@ namespace SciVacancies.ReadModel.ElasticSearchModel.EventHandlers
 
             _elasticClient.Update<Vacancy>(u => u.IdFrom(vacancy).Doc(vacancy));
         }
+        //TODO
+        //public void Handle(VacancyInAwaitingOfferResponse msg)
+        //{
+        //    Vacancy vacancy = _elasticClient.Get<Vacancy>(msg.VacancyGuid.ToString()).Source;
+        //    vacancy.AwaitingDate = msg.TimeStamp;
+        //    vacancy.Status = VacancyStatus.OfferResponseAwaiting;
+
+        //    _elasticClient.Update<Vacancy>(u => u.IdFrom(vacancy).Doc(vacancy));
+        //}
         public void Handle(VacancyPretenderSet msg)
         {
             Vacancy vacancy = _elasticClient.Get<Vacancy>(msg.VacancyGuid.ToString()).Source;

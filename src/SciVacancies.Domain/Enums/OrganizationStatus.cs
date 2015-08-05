@@ -18,7 +18,6 @@ namespace SciVacancies.Domain.Enums
 
         /// <summary>
         /// Организация заблокирована (блокировка\разблокировка доступна только администратору)
-        /// //TODO - нужно ли это?
         /// </summary>
         [Description("Заблокирована")]
         Banned = 2

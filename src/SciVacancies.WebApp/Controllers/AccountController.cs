@@ -62,6 +62,8 @@ namespace SciVacancies.WebApp.Controllers
             if (model.IsResearcher)
             {
                 //TODO - допилить авторизацию с картой науки
+                //SetAuthorizationCookies();
+                //return Redirect(GetOAuthAuthorizationUrl(_oauthSettings.Options.Mapofscience));
 
                 //TODO - это заглушка не проверяет пароль
                 var user = _userManager.FindByName(model.Login);
@@ -72,10 +74,21 @@ namespace SciVacancies.WebApp.Controllers
             }
             else
             {
+                //SetAuthorizationCookies();
                 return Redirect(GetOAuthAuthorizationUrl(_oauthSettings.Options.Sciencemon));
             }
 
             return null;
+        }
+
+        private void SetAuthorizationCookies(string accountType, string authorizationType)
+        {
+            Response.Cookies.Append("account_type", accountType, new Microsoft.AspNet.Http.CookieOptions { Expires = DateTime.Now.AddMinutes(10) });
+            Response.Cookies.Append("authorization_type", authorizationType, new Microsoft.AspNet.Http.CookieOptions { Expires = DateTime.Now.AddMinutes(10) });
+        }
+        private Tuple<string, string> GetAuthorizationCookies()
+        {
+            return new Tuple<string, string>(Request.Cookies["account_type"], Request.Cookies["authorization_type"]);
         }
 
         #region OAuth
@@ -127,9 +140,9 @@ namespace SciVacancies.WebApp.Controllers
 
             return await client.RequestAuthorizationCodeAsync(code, oauth.RedirectUrl);
         }
-        private async Task<IEnumerable<Claim>> GetOAuthUserClaimsAsync(OAuthProviderSettings oauth, string accesToken)
+        private async Task<IEnumerable<Claim>> GetOAuthUserClaimsAsync(OAuthProviderSettings oauth, string accessToken)
         {
-            UserInfoClient client = new UserInfoClient(new Uri(oauth.UserEndpoint), accesToken);
+            UserInfoClient client = new UserInfoClient(new Uri(oauth.UserEndpoint), accessToken);
             UserInfoResponse userInfo = await client.GetAsync();
 
             List<Claim> claims = new List<Claim>();
@@ -179,7 +192,7 @@ namespace SciVacancies.WebApp.Controllers
                         claims.Add(new Claim("expires_in", DateTime.Now.AddSeconds(tokenResponse.ExpiresIn).ToString()));
                         if (!String.IsNullOrEmpty(tokenResponse.RefreshToken)) claims.Add(new Claim("refresh_token", tokenResponse.RefreshToken));
 
-                        OAuthOrgClaim orgClaim = JsonConvert.DeserializeObject<OAuthOrgClaim>(claims.Find(f=>f.Type.Equals("org")).Value);
+                        OAuthOrgClaim orgClaim = JsonConvert.DeserializeObject<OAuthOrgClaim>(claims.Find(f => f.Type.Equals("org")).Value);
 
                         var orgUser = _userManager.FindByName(orgClaim.Inn);
 

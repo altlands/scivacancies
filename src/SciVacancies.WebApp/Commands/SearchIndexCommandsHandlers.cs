@@ -1,20 +1,23 @@
 ﻿using Nest;
 using MediatR;
 using SciVacancies.ReadModel.ElasticSearchModel.Model;
+using Microsoft.Framework.OptionsModel;
 
 namespace SciVacancies.WebApp.Commands
 {
     public class CreateSearchIndexCommandHandler : RequestHandler<CreateSearchIndexCommand>
     {
         private readonly IElasticClient _elastic;
-        public CreateSearchIndexCommandHandler(IElasticClient elastic)
+        private readonly IOptions<ElasticSettings> _elasticSettings;
+
+        public CreateSearchIndexCommandHandler(IElasticClient elastic, IOptions<ElasticSettings> elasticSettings)
         {
             _elastic = elastic;
+            _elasticSettings = elasticSettings;
         }
         protected override void HandleCore(CreateSearchIndexCommand message)
         {
-            //TODO - имя индекса в конфиг
-            _elastic.CreateIndex("scivacancies", c => c
+            _elastic.CreateIndex(_elasticSettings.Options.DefaultIndex, c => c
                                 .AddMapping<Vacancy>(am => am
                                     .MapFromAttributes()
                                 )
@@ -27,22 +30,27 @@ namespace SciVacancies.WebApp.Commands
     public class RemoveSearchIndexCommandHandler : RequestHandler<RemoveSearchIndexCommand>
     {
         private readonly IElasticClient _elastic;
-        public RemoveSearchIndexCommandHandler(IElasticClient elastic)
+        private readonly IOptions<ElasticSettings> _elasticSettings;
+
+        public RemoveSearchIndexCommandHandler(IElasticClient elastic, IOptions<ElasticSettings> elasticSettings)
         {
             _elastic = elastic;
+            _elasticSettings = elasticSettings;
         }
         protected override void HandleCore(RemoveSearchIndexCommand message)
         {
-            //TODO - имя индекса в конфиг
-            _elastic.DeleteIndex(s => s.Index("scivacancies"));
+            _elastic.DeleteIndex(s => s.Index(_elasticSettings.Options.DefaultIndex));
         }
     }
     public class RestoreSearchIndexFromReadModelCommandHandler : RequestHandler<RestoreSearchIndexFromReadModelCommand>
     {
         private readonly IElasticClient _elastic;
-        public RestoreSearchIndexFromReadModelCommandHandler(IElasticClient elastic)
+        private readonly IOptions<ElasticSettings> _elasticSettings;
+
+        public RestoreSearchIndexFromReadModelCommandHandler(IElasticClient elastic, IOptions<ElasticSettings> elasticSettings)
         {
             _elastic = elastic;
+            _elasticSettings = elasticSettings;
         }
         protected override void HandleCore(RestoreSearchIndexFromReadModelCommand message)
         {
