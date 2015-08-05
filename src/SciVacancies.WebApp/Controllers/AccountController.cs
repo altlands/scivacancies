@@ -56,11 +56,17 @@ namespace SciVacancies.WebApp.Controllers
         [PageTitle("Вход")]
         [ResponseCache(NoStore = true)]
         [HttpPost]
+        [HttpGet]
         public ActionResult Login(AccountLoginViewModel model)
         {
             //TODO - uncomment to pin it down to any job
-            if (model.IsResearcher)
+
+            switch (model.User)
             {
+                case AuthorizeUserTypes.Researcher:
+                    switch (model.Resource)
+                    {
+                        case AuthorizeResourceTypes.OwnAuthorization:
                 //TODO - допилить авторизацию с картой науки
                 //SetAuthorizationCookies();
                 //return Redirect(GetOAuthAuthorizationUrl(_oauthSettings.Options.Mapofscience));
@@ -71,11 +77,15 @@ namespace SciVacancies.WebApp.Controllers
                 var cp = new ClaimsPrincipal(identity);
                 Context.Response.SignIn(DefaultAuthenticationTypes.ApplicationCookie, cp);
                 return RedirectToHome();
+                        case AuthorizeResourceTypes.ScienceMap:
+
+                            break;
             }
-            else
-            {
-                //SetAuthorizationCookies();
+                    break;
+                case AuthorizeUserTypes.Organization:
                 return Redirect(GetOAuthAuthorizationUrl(_oauthSettings.Options.Sciencemon));
+                default:
+                    break;
             }
 
             return null;

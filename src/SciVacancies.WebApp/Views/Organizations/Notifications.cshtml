@@ -73,7 +73,7 @@
                     <td>
                         @if (item.status != NotificationStatus.Read && item.status != NotificationStatus.Removed)
                         {
-                            <a asp-controller="notifications" asp-action="marknotificationread" asp-route-notificationguids="@item.guid" class="view-td-icon"></a>
+                            <a asp-controller="notifications" asp-action="marknotificationread" asp-route-notificationguids="@item.guid" class="view-td-icon" title="Пометить как прочитанное"></a>
                         }
 
                         @if (item.status != NotificationStatus.Removed)

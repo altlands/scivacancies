@@ -10,7 +10,7 @@ namespace SciVacancies.WebApp.ViewModels
 {
     public class ResearcherEditViewModel: PageViewModelBase
     {
-        public IList<IFormFile> Files { get; set; }
+        public IFormFile PhotoFile { get; set; }
 
         [Required(ErrorMessage = "Необходимо заполнить Имя")]
         public string FirstName { get; set; }

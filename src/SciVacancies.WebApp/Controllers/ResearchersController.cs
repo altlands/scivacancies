@@ -93,27 +93,48 @@ namespace SciVacancies.WebApp.Controllers
             byte[] byteData;
             using (var memoryStream = new MemoryStream())
             {
-                foreach (var file in model.Files)
+                if (model.PhotoFile != null)
                 {
+                    var file = model.PhotoFile;
+                    var fileName = ContentDispositionHeaderValue
+                      .Parse(file.ContentDisposition)
+                      .FileName
+                      .Trim('"');
+                    var fileExtension = fileName
+                        .Split('.')
+                        .Last()
+                        .ToUpper();
+                    
+                    //TODO: вынести в конфиг типы допустимых файлов
+                    var extensions = new List<string> { "JPG", "JPEG", "PNG" };
+                    if (!extensions.Contains(fileExtension))
+                        ModelState.AddModelError("PhotoFile", $"Можно добавить только изображение. Допустимые типы файлов: {string.Join(", ", extensions)}");
+                    
+                    //TODO: вынести в конфиг это магическое число
+                    if (file.Length > 500000)
+                        ModelState.AddModelError("PhotoFile", @"Размер изображения превышает 500кБ");
+
+
+                    if (ModelState.ErrorCount > 0)
+                        return View(model);
 
                     //сценарий-А: сохранить фото на диск
-                    //var fileName = ContentDispositionHeaderValue
-                    //  .Parse(file.ContentDisposition)
-                    //  .FileName
-                    //  .Trim('"');
                     //var filePath = _hostingEnvironment.ApplicationBasePath + "\\uploads\\" + DateTime.Now.ToString("yyyyddMHHmmss") + fileName;
                     //file.SaveAs(filePath);
 
-                    ////сценарий-Б: сохранить фото в БД
+                    //сценарий-Б: сохранить фото в БД
                     //var openReadStream = file.OpenReadStream();
-                    //var image = Image.FromStream(openReadStream);
                     //var scale = (int)(500000 / file.Length);
                     //var resizedImage = new Bitmap(image, new Size(image.Width * scale, image.Height * scale));
-
                     //((Image)resizedImage).Save(memoryStream, ImageFormat.Jpeg);
                     //byteData = memoryStream.ToArray();
                     //memoryStream.SetLength(0);
 
+                    //сценарий-В: сохранить фото в БД
+                    var openReadStream = file.OpenReadStream();
+                    openReadStream.CopyTo(memoryStream);
+                    byteData = memoryStream.ToArray();
+                    //memoryStream.SetLength(0);
                 }
             }
 

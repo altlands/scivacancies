@@ -3,7 +3,9 @@
 @using System.Linq
 @using System.Threading.Tasks
 @using Microsoft.AspNet.Mvc.Rendering
+@using SciVacancies.WebApp
 @using SciVacancies.WebApp.Controllers
+@using SciVacancies.WebApp.Engine
 @using SciVacancies.WebApp.ViewModels
 @model ResearcherEditViewModel
 
@@ -40,8 +42,10 @@
     <input type="hidden" asp-for="Guid" />
     <div class="row">
         <div class="bold mb20">Общая информация</div>
-        <a href="#" class="link-upload fs13">Загрузить данные из системы «Карта науки»</a>
+        
+        <a asp-controller="accountintegration" asp-action="UpdateResearcherAccountFromOutside" asp-route-datasource="@((int)AuthorizeResourceTypes.ScienceMap)" class="link-upload fs13">Загрузить данные из системы «@AuthorizeResourceTypes.ScienceMap.GetDescription()»</a>
         <span style="color: red;">не реализовано</span>
+        
         <div class="table-form">
             <div class="table-row mb15">
                 <div class="left-cell">
@@ -50,7 +54,7 @@
                         <span style="color: red;">не реализовано</span>
                     </label>
                     <a href="#" class="link-upload fs13">Загрузить фото</a>
-                    <input type="file" name="Files" id="Files" multiple />
+                    <input type="file" name="PhotoFile" id="PhotoFile"/>
                     <div class="description mt10">
                         Выберите изображение размером<br /> не более 500 кБ<br />Рекомендуемое соотношение сторон – 3:4
                     </div>
@@ -184,9 +188,9 @@
                     <label>Гражданство</label>
                 </div>
                 <div class="right-cell">
-                    <!--<select asp-for="Nationality"
+                    @*<select asp-for="Nationality"
                                 asp-items=""></select>
-                    <span asp-validation-for="Nationality"></span>-->
+                    <span asp-validation-for="Nationality"></span>*@
                 </div>
             </div>
             <div class="table-row form-row mt23">

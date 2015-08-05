@@ -1,11 +1,10 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using SciVacancies.WebApp.Engine;
 
 namespace SciVacancies.WebApp.ViewModels
 {
     public class AccountLoginViewModel
     {
-        [Required]
-        public bool IsResearcher { get; set; }
 
         [Required(ErrorMessage = "Требуется заполнить поле Логин (e-mail)")]
         public string Login { get; set; }
@@ -13,5 +12,8 @@ namespace SciVacancies.WebApp.ViewModels
         [Required]
         [DataType(DataType.Password)]
         public string Password { get; set; }
+
+        public AuthorizeUserTypes User { get; set; }
+        public AuthorizeResourceTypes Resource { get; set; }
     }
 }
