@@ -56,23 +56,34 @@ namespace SciVacancies.WebApp.Controllers
         [PageTitle("Вход")]
         [ResponseCache(NoStore = true)]
         [HttpPost]
+        [HttpGet]
         public ActionResult Login(AccountLoginViewModel model)
         {
             //TODO - uncomment to pin it down to any job
-            if (model.IsResearcher)
-            {
-                //TODO - допилить авторизацию с картой науки
 
-                //TODO - это заглушка не проверяет пароль
-                var user = _userManager.FindByName(model.Login);
-                var identity = _userManager.CreateIdentity(user, DefaultAuthenticationTypes.ApplicationCookie);
-                var cp = new ClaimsPrincipal(identity);
-                Context.Response.SignIn(DefaultAuthenticationTypes.ApplicationCookie, cp);
-                return RedirectToHome();
-            }
-            else
+            switch (model.User)
             {
-                return Redirect(GetOAuthAuthorizationUrl(_oauthSettings.Options.Sciencemon));
+                case AuthorizeUserTypes.Researcher:
+                    switch (model.Resource)
+                    {
+                        case AuthorizeResourceTypes.OwnAuthorization:
+                            //TODO - допилить авторизацию с картой науки
+
+                            //TODO - это заглушка не проверяет пароль
+                            var user = _userManager.FindByName(model.Login);
+                            var identity = _userManager.CreateIdentity(user, DefaultAuthenticationTypes.ApplicationCookie);
+                            var cp = new ClaimsPrincipal(identity);
+                            Context.Response.SignIn(DefaultAuthenticationTypes.ApplicationCookie, cp);
+                            return RedirectToHome();
+                        case AuthorizeResourceTypes.ScienceMap:
+
+                            break;
+                    }
+                    break;
+                case AuthorizeUserTypes.Organization:
+                    return Redirect(GetOAuthAuthorizationUrl(_oauthSettings.Options.Sciencemon));
+                default:
+                    break;
             }
 
             return null;
@@ -179,7 +190,7 @@ namespace SciVacancies.WebApp.Controllers
                         claims.Add(new Claim("expires_in", DateTime.Now.AddSeconds(tokenResponse.ExpiresIn).ToString()));
                         if (!String.IsNullOrEmpty(tokenResponse.RefreshToken)) claims.Add(new Claim("refresh_token", tokenResponse.RefreshToken));
 
-                        OAuthOrgClaim orgClaim = JsonConvert.DeserializeObject<OAuthOrgClaim>(claims.Find(f=>f.Type.Equals("org")).Value);
+                        OAuthOrgClaim orgClaim = JsonConvert.DeserializeObject<OAuthOrgClaim>(claims.Find(f => f.Type.Equals("org")).Value);
 
                         var orgUser = _userManager.FindByName(orgClaim.Inn);
 

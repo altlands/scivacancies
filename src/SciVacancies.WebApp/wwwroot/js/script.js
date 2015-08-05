@@ -275,10 +275,6 @@ $(document).ready(function () {
 });
 
 
-function setIsResearcher(value) {
-    $("form").find("input[type=\"hidden\"][name=\"IsResearcher\"]").val(value);
-};
-
 function vacancySaveOptions(options) {
 
     if (options.publish !== undefined && options.publish) {
