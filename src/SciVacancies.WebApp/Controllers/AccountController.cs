@@ -67,26 +67,38 @@ namespace SciVacancies.WebApp.Controllers
                     switch (model.Resource)
                     {
                         case AuthorizeResourceTypes.OwnAuthorization:
-                            //TODO - допилить авторизацию с картой науки
+                //TODO - допилить авторизацию с картой науки
+                //SetAuthorizationCookies();
+                //return Redirect(GetOAuthAuthorizationUrl(_oauthSettings.Options.Mapofscience));
 
-                            //TODO - это заглушка не проверяет пароль
-                            var user = _userManager.FindByName(model.Login);
-                            var identity = _userManager.CreateIdentity(user, DefaultAuthenticationTypes.ApplicationCookie);
-                            var cp = new ClaimsPrincipal(identity);
-                            Context.Response.SignIn(DefaultAuthenticationTypes.ApplicationCookie, cp);
-                            return RedirectToHome();
+                //TODO - это заглушка не проверяет пароль
+                var user = _userManager.FindByName(model.Login);
+                var identity = _userManager.CreateIdentity(user, DefaultAuthenticationTypes.ApplicationCookie);
+                var cp = new ClaimsPrincipal(identity);
+                Context.Response.SignIn(DefaultAuthenticationTypes.ApplicationCookie, cp);
+                return RedirectToHome();
                         case AuthorizeResourceTypes.ScienceMap:
 
                             break;
-                    }
+            }
                     break;
                 case AuthorizeUserTypes.Organization:
-                    return Redirect(GetOAuthAuthorizationUrl(_oauthSettings.Options.Sciencemon));
+                return Redirect(GetOAuthAuthorizationUrl(_oauthSettings.Options.Sciencemon));
                 default:
                     break;
             }
 
             return null;
+        }
+
+        private void SetAuthorizationCookies(string accountType, string authorizationType)
+        {
+            Response.Cookies.Append("account_type", accountType, new Microsoft.AspNet.Http.CookieOptions { Expires = DateTime.Now.AddMinutes(10) });
+            Response.Cookies.Append("authorization_type", authorizationType, new Microsoft.AspNet.Http.CookieOptions { Expires = DateTime.Now.AddMinutes(10) });
+        }
+        private Tuple<string, string> GetAuthorizationCookies()
+        {
+            return new Tuple<string, string>(Request.Cookies["account_type"], Request.Cookies["authorization_type"]);
         }
 
         #region OAuth
@@ -138,9 +150,9 @@ namespace SciVacancies.WebApp.Controllers
 
             return await client.RequestAuthorizationCodeAsync(code, oauth.RedirectUrl);
         }
-        private async Task<IEnumerable<Claim>> GetOAuthUserClaimsAsync(OAuthProviderSettings oauth, string accesToken)
+        private async Task<IEnumerable<Claim>> GetOAuthUserClaimsAsync(OAuthProviderSettings oauth, string accessToken)
         {
-            UserInfoClient client = new UserInfoClient(new Uri(oauth.UserEndpoint), accesToken);
+            UserInfoClient client = new UserInfoClient(new Uri(oauth.UserEndpoint), accessToken);
             UserInfoResponse userInfo = await client.GetAsync();
 
             List<Claim> claims = new List<Claim>();

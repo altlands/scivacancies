@@ -26,7 +26,6 @@ namespace SciVacancies.Domain.Events
 
     /// <summary>
     /// Профиль исследователя удалён (удаление доступно только администратору)
-    /// //TODO - нужно ли это?
     /// </summary>
     public class ResearcherRemoved : ResearcherEventBase
     {

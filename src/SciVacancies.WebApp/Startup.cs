@@ -42,6 +42,8 @@ namespace SciVacancies.WebApp
             services.Configure<DbSettings>(Configuration.GetSubKey("Data"));
             services.Configure<OAuthSettings>(Configuration.GetSubKey("OAuthSettings"));
             services.Configure<ApiSettings>(Configuration.GetSubKey("ApiSettings"));
+            services.Configure<ElasticSettings>(Configuration.GetSubKey("ElasticSettings"));
+            services.Configure<FileStorageSettings>(Configuration.GetSubKey("FileStorageSettings"));
 
             services.ConfigureCookieAuthentication(options =>
             {

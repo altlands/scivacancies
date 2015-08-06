@@ -27,7 +27,6 @@ namespace SciVacancies.Domain.Events
 
     /// <summary>
     /// Организация удалена (удаление доступно только администратору)
-    /// //TODO - нужно ли это?
     /// </summary>
     public class OrganizationRemoved : OrganizationEventBase
     {

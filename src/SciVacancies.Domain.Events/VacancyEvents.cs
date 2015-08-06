@@ -68,6 +68,10 @@ namespace SciVacancies.Domain.Events
         public string Reason { get; set; }
     }
 
+    public class VacancyInAwaitingOfferResponse : VacancyEventBase
+    {
+    }
+
     public class VacancyOfferAcceptedByWinner : VacancyEventBase
     {
     }

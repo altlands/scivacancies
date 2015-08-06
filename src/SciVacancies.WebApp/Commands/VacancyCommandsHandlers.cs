@@ -151,6 +151,27 @@ namespace SciVacancies.WebApp.Commands
         }
     }
 
+    //TODO
+    //public class SetVacancyToResponseAwaitingCommandHandler:RequestHandler<SetVacancyToResponseAwaitingCommand>
+    //{
+    //    private readonly IRepository _repository;
+
+    //    public SetVacancyToResponseAwaitingCommandHandler(IRepository repository)
+    //    {
+    //        _repository = repository;
+    //    }
+
+    //    protected override void HandleCore(SetVacancyToResponseAwaitingCommand msg)
+    //    {
+    //        if (msg.VacancyGuid == Guid.Empty) throw new ArgumentNullException($"VacancyGuid is empty: {msg.VacancyGuid}");
+
+    //        Vacancy vacancy = _repository.GetById<Vacancy>(msg.VacancyGuid);
+
+    //        vacancy.VacancyToResponseAwaiting();
+    //        _repository.Save(vacancy, Guid.NewGuid(), null);
+    //    }
+    //}
+
     public class SetWinnerAcceptOfferCommandHandler : RequestHandler<SetWinnerAcceptOfferCommand>
     {
         private readonly IRepository _repository;

@@ -2,10 +2,10 @@
 {
     public class ApiSettings
     {
-        public ApiProvideSettings Sciencemon { get; set; } = new ApiProvideSettings();
-        public ApiProvideSettings Mapofscience { get; set; } = new ApiProvideSettings();
+        public ApiProviderSettings Sciencemon { get; set; } = new ApiProviderSettings();
+        public ApiProviderSettings Mapofscience { get; set; } = new ApiProviderSettings();
     }
-    public class ApiProvideSettings
+    public class ApiProviderSettings
     {
         //TODO - 
     }
