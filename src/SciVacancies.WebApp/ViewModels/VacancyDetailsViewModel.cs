@@ -48,6 +48,7 @@ namespace SciVacancies.WebApp.ViewModels
         /// </summary>
         public string Tasks { get; set; }
 
+        //TODO: Vacancy.Criteria есть ли необходимость в этом свойстве
         /// <summary>
         /// Критерии оценки 
         /// </summary>

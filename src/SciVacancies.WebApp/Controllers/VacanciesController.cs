@@ -169,6 +169,9 @@ namespace SciVacancies.WebApp.Controllers
                 Mapper.Map<ResearcherDetailsViewModel>(_mediator.Send(new SingleResearcherQuery { ResearcherGuid = preModel.winner_researcher_guid }));
             model.Pretender =
                 Mapper.Map<ResearcherDetailsViewModel>(_mediator.Send(new SingleResearcherQuery { ResearcherGuid = preModel.pretender_researcher_guid }));
+            model.Criterias = _mediator.Send(new SelectVacancyCriteriasQuery { VacancyGuid = model.Guid });
+            model.CriteriasHierarchy =
+                    _mediator.Send(new SelectAllCriteriasQuery()).ToList().ToHierarchyCriteriaViewModelList(model.Criterias.ToList());
 
             return View(model);
         }
@@ -248,6 +251,9 @@ namespace SciVacancies.WebApp.Controllers
                 //если текущая вакансия есть в списке избранных
                 ViewBag.VacancyInFavorites = favoritesVacancies != null && favoritesVacancies.TotalItems != 0 && favoritesVacancies.Items.Select(c => c.guid).ToList().Contains(id);
             }
+            model.Criterias = _mediator.Send(new SelectVacancyCriteriasQuery { VacancyGuid = model.Guid });
+            model.CriteriasHierarchy =
+                    _mediator.Send(new SelectAllCriteriasQuery()).ToList().ToHierarchyCriteriaViewModelList(model.Criterias.ToList());
             return View(model);
         }
 

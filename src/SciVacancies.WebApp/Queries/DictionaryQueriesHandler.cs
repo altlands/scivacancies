@@ -201,5 +201,7 @@ namespace SciVacancies.WebApp.Queries
 
             return researchDirections;
         }
+
     }
+    
 }

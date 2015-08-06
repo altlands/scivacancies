@@ -14,6 +14,7 @@ namespace SciVacancies.WebApp.Queries
         IRequestHandler<SingleVacancyQuery, Vacancy>,
         IRequestHandler<SelectPagedVacanciesQuery, Page<Vacancy>>,
         IRequestHandler<SelectPagedVacanciesByOrganizationQuery, Page<Vacancy>>,
+        IRequestHandler<SelectVacancyCriteriasQuery, IEnumerable<VacancyCriteria>>,
         IRequestHandler<SelectVacanciesForAutocompleteQuery, IEnumerable<Vacancy>>,
         IRequestHandler<SelectPagedClosedVacanciesByOrganizationQuery, Page<Vacancy>>,
         IRequestHandler<SelectPagedFavoriteVacanciesByResearcherQuery, Page<Vacancy>>,

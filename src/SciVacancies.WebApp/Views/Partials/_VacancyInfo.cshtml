@@ -1,5 +1,6 @@
 ﻿@using System.Threading.Tasks
 @using SciVacancies.WebApp
+@using SciVacancies.WebApp.ViewModels
 @model  SciVacancies.WebApp.ViewModels.VacancyDetailsViewModel
 
 <div class="title-cat-inform">Специализация:</div>
@@ -27,8 +28,31 @@
         <span>Задачи:</span>@Model.Tasks
     </li>
     <li class="even">
-        <!-- TODO: показать критерии оценки -->
-        <del><span>Критерии оценки:</span>@Model.Criteria </del>(в разработке)
+        <span>Критерии оценки:</span>
+        <br />
+
+        @foreach (CriteriaItemViewModel group in Model.CriteriasHierarchy.Where(c=>c.Items.Sum(d=>d.Count)>0))
+        {
+            <div class="">
+                <span class="name-section">@(@group.Title) (@(@group.Items.Count(c=>c.Count>0)))</span>
+                <div class="list-fields">
+
+                    @foreach (CriteriaItemViewModel item in @group.Items.Where(c=>c.Count>0))
+                    {
+                        <div>
+                            <div class="field">
+                                &nbsp; &mdash; &nbsp;
+                                @item.Title:
+                                @item.Count шт.
+                            </div>
+                        </div>
+                    }
+                </div>
+
+            </div>
+        }
+
+
     </li>
 </ul>
 
