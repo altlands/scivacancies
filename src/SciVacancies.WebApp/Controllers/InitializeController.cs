@@ -33,7 +33,9 @@ namespace SciVacancies.WebApp.Controllers
             if (user != null)
                 return;
 
-            //TODO: ntemnikov -> инициализировать БД бОльшим колчеством записей на основе предоставленных данных
+            var positions = _mediator.Send(new SelectAllPositionTypesQuery()).ToList();
+            var researchDiretions = _mediator.Send(new SelectAllResearchDirectionsQuery()).ToList();
+
 
             var rnd = new Random();
 
@@ -135,9 +137,6 @@ namespace SciVacancies.WebApp.Controllers
                 Data = new SearchSubscriptionDataModel { Title = "Разведение лазерных акул", Query = "",OrderBy= "relevant" }
             });
 
-
-            var positions = _mediator.Send(new SelectAllPositionTypesQuery()).ToList();
-
             var vacancyGuid1 = _mediator.Send(new CreateVacancyCommand
             {
                 OrganizationGuid = organizationGuid0,
@@ -162,57 +161,290 @@ namespace SciVacancies.WebApp.Controllers
                     ResearchDirectionId = 3026
                 }
             });
-            _mediator.Send(new CreateVacancyCommand
+            _mediator.Send(new PublishVacancyCommand { VacancyGuid = vacancyGuid1 });
+
+            var vacancyGuid2 = _mediator.Send(new CreateVacancyCommand
             {
                 OrganizationGuid = organizationGuid0,
                 Data = new VacancyDataModel
                 {
-                    Name = "Настройщик лазеров",
-                    FullName = "Младший сотрудник по настройке лазеров",
-                    Tasks = "калибровка зеркал лазеров; быть живой мешенью",
-                    ContactName = "Доктор Зло",
-                    ContactEmail = "zlo@gmail.com",
-                    ContactPhone = "666-999",
-                    ContractType = ContractType.Permanent,
-                    EmploymentType = EmploymentType.Probation,
-                    OperatingScheduleType = OperatingScheduleType.Rotation,
-                    SocialPackage = false,
-                    Rent = false,
-                    OfficeAccomodation = true,
-                    TransportCompensation = true,
-                    PositionTypeId = positions.Skip(rnd.Next(positions.Count() - 1)).First().id,
-                    RegionId = 26,
+                    PositionTypeId = positions.First(c=>c.title.Contains("Младший научный сотрудник")).id,
+                    Name = "Младший научный сотрудник",
+                    FullName = "Младший научный сотрудник по разработке лазерных систем",
                     ResearchDirection = "Прикладная математика",
-                    ResearchDirectionId = 2999
+                    ResearchDirectionId = 2999,
+                    Tasks = "Исследование химического состава материалов для минилазеров",
+                    SalaryFrom = 45000,
+                    SalaryTo = 55000,
+                    ContractType = ContractType.Permanent,
+                    //ContractTime = null,
+                    SocialPackage = true,
+                    //Rent = false,
+                    TransportCompensation = true,
+                    //OfficeAccomodation = false,
+                    ContactName = "Сидоров Петр Иванович",
+                    ContactEmail = "info@vniilaz.ru",
+                    ContactPhone = "89665467233",
+                    EmploymentType = EmploymentType.Full,
+                    OperatingScheduleType = OperatingScheduleType.FullTime,
+                    RegionId = 27
+
                 }
             });
-            _mediator.Send(new PublishVacancyCommand { VacancyGuid = vacancyGuid1 });
+            _mediator.Send(new PublishVacancyCommand { VacancyGuid = vacancyGuid2 });
 
             var vacancyGuid3 = _mediator.Send(new CreateVacancyCommand
             {
                 OrganizationGuid = organizationGuid0,
                 Data = new VacancyDataModel
                 {
-                    Name = "Ремонтник всевидящего ока",
-                    FullName = "Младший сотрудник по калибровке фокусного зеркала",
-                    Tasks = "калибровка зеркала Саурона;",
-                    ContactName = "Саурон Сауронович",
-                    ContactEmail = "sauron@thering.com",
-                    ContactPhone = "900923-322",
+                    PositionTypeId = positions.First(c => c.title.Contains("Ведущий научный сотрудник")).id,
+                    Name = "Ведущий научный сотрудник",
+                    FullName = "Ведущий научный сотрудник по калибровке фокусного зеркала",
+                    ResearchDirection = "Прикладная математика",
+                    ResearchDirectionId = 2999,
+                    Tasks = "калибровка зеркала",
+                    //SalaryFrom = 0,
+                    //SalaryTo = 0,
                     ContractType = ContractType.FixedTerm,
-                    EmploymentType = EmploymentType.Full,
-                    OperatingScheduleType = OperatingScheduleType.FullTime,
+                    ContractTime = 0.9m,
                     SocialPackage = true,
                     Rent = true,
-                    OfficeAccomodation = true,
-                    TransportCompensation = false,
-                    PositionTypeId = positions.Skip(rnd.Next(positions.Count() - 1)).First().id,
-                    RegionId = 29,
-                    ResearchDirection = "Аналитическая химия",
-                    ResearchDirectionId = 3026
+                    //TransportCompensation = true,
+                    //OfficeAccomodation = true,
+                    ContactName = "",
+                    ContactEmail = "sauron@thering.com",
+                    ContactPhone = "900923-322",
+                    EmploymentType = EmploymentType.Full,
+                    OperatingScheduleType = OperatingScheduleType.FullTime,
+                    RegionId = 27
+
                 }
             });
             _mediator.Send(new PublishVacancyCommand { VacancyGuid = vacancyGuid3 });
+
+            var vacancyGuid4 = _mediator.Send(new CreateVacancyCommand
+            {
+                OrganizationGuid = organizationGuid0,
+                Data = new VacancyDataModel
+                {
+                    PositionTypeId = positions.First(c => c.title.Contains("начальник") && c.title.Contains("научно-") && c.title.Contains("лаборатории")).id,
+                    Name = "Начальник научно-исследовательской лаборатории",
+                    FullName = "Начальник научно-исследовательской лаборатории лазерных систем",
+                    ResearchDirection = researchDiretions.First(c=>c.title.Contains("системы")).title,
+                    ResearchDirectionId = researchDiretions.First(c => c.title.Contains("системы")).id,
+                    Tasks = "Исследование в области химических структур для лазерных систем",
+                    //SalaryFrom = 0,
+                    //SalaryTo = 0,
+                    ContractType = ContractType.Permanent,
+                    //ContractTime = 0.9m,
+                    SocialPackage = true,
+                    Rent = true,
+                    //TransportCompensation = true,
+                    //OfficeAccomodation = true,
+                    ContactName = "Сидоров Петр Иванович",
+                    ContactEmail = "info@vniilaz.ru",
+                    ContactPhone = "89665467233",
+                    EmploymentType = EmploymentType.Full,
+                    OperatingScheduleType = OperatingScheduleType.FullTime,
+                    RegionId = 27
+                }
+            });
+            _mediator.Send(new PublishVacancyCommand { VacancyGuid = vacancyGuid4 });
+
+            var vacancyGuid5 = _mediator.Send(new CreateVacancyCommand
+            {
+                OrganizationGuid = organizationGuid0,
+                Data = new VacancyDataModel
+                {
+                    PositionTypeId = positions.First(c => c.title.Contains("Младший научный сотрудник")).id,
+                    Name = "Младший научный сотрудник",
+                    FullName = "Младший научный сотрудник по разработке лазерных систем",
+                    ResearchDirection = "Прикладная математика",
+                    ResearchDirectionId = 2999,
+                    Tasks = "Исследование химического состава материалов для минилазеров",
+                    //SalaryFrom = 0,
+                    //SalaryTo = 0,
+                    ContractType = ContractType.Permanent,
+                    //ContractTime = null,
+                    //SocialPackage = true,
+                    //Rent = true,
+                    TransportCompensation = true,
+                    //OfficeAccomodation = false,
+                    ContactName = "Сидоров Петр Иванович",
+                    ContactEmail = "info@vniilaz.ru",
+                    ContactPhone = "89665467233",
+                    EmploymentType = EmploymentType.Full,
+                    OperatingScheduleType = OperatingScheduleType.FullTime,
+                    RegionId = 27
+
+                }
+            });
+            _mediator.Send(new PublishVacancyCommand { VacancyGuid = vacancyGuid5 });
+
+
+
+            var vacancyGuid6 = _mediator.Send(new CreateVacancyCommand
+            {
+                OrganizationGuid = organizationGuid0,
+                Data = new VacancyDataModel
+                {
+                    PositionTypeId = positions.First(c => c.title.Contains("инженер-исследователь")).id,
+                    Name = "Инженер-исследователь",
+                    FullName = "Инженер-исследователь лазерных систем (Младший научный сотрудник)",
+                    ResearchDirection = researchDiretions.First(c => c.title.Contains("системы")).title,
+                    ResearchDirectionId = researchDiretions.First(c => c.title.Contains("системы")).id,
+                    Tasks = "Исследование лазерных систем",
+                    //SalaryFrom = 0,
+                    //SalaryTo = 0,
+                    ContractType = ContractType.Permanent,
+                    //ContractTime = null,
+                    //SocialPackage = true,
+                    //Rent = true,
+                    TransportCompensation = true,
+                    //OfficeAccomodation = false,
+                    ContactName = "Ким Валерий Миронович",
+                    ContactEmail = "flashbrowser@gmail.com",
+                    ContactPhone = "666-999",
+                    EmploymentType = EmploymentType.Full,
+                    OperatingScheduleType = OperatingScheduleType.FullTime,
+                    RegionId = 27
+
+                }
+            });
+            _mediator.Send(new PublishVacancyCommand { VacancyGuid = vacancyGuid6 });
+
+
+
+            var vacancyGuid7 = _mediator.Send(new CreateVacancyCommand
+            {
+                OrganizationGuid = organizationGuid0,
+                Data = new VacancyDataModel
+                {
+                    PositionTypeId = positions.First(c => c.title.Contains("Ведущий научный сотрудник")).id,
+                    Name = "Ведущий научный сотрудник",
+                    FullName = "Ведущий научный сотрудник по калибровке",
+                    ResearchDirection = researchDiretions.First(c => c.title.Contains("системы")).title,
+                    ResearchDirectionId = researchDiretions.First(c => c.title.Contains("системы")).id,
+                    Tasks = "",
+                    SalaryFrom = 100000,
+                    SalaryTo = 120000,
+                    ContractType = ContractType.FixedTerm,
+                    ContractTime = 0.6m,
+                    SocialPackage = true,
+                    Rent = true,
+                    //TransportCompensation = true,
+                    //OfficeAccomodation = false,
+                    ContactName = "Саурон Сауронович",
+                    ContactEmail = "info@vniilaz.ru",
+                    ContactPhone = "900923-322",
+                    EmploymentType = EmploymentType.Full,
+                    OperatingScheduleType = OperatingScheduleType.FullTime,
+                    RegionId = 27
+
+                }
+            });
+            _mediator.Send(new PublishVacancyCommand { VacancyGuid = vacancyGuid7 });
+
+
+            var vacancyGuid8 = _mediator.Send(new CreateVacancyCommand
+            {
+                OrganizationGuid = organizationGuid0,
+                Data = new VacancyDataModel
+                {
+                    PositionTypeId = positions.First(c => c.title.Contains("инженер-исследователь")).id,
+                    Name = "Инженер-исследователь лазерных систем (Младший научный сотрудник)",
+                    FullName = "Инженер-исследователь лазерных систем (Младший научный сотрудник)",
+                    ResearchDirection = researchDiretions.First(c => c.title.Contains("системы")).title,
+                    ResearchDirectionId = researchDiretions.First(c => c.title.Contains("системы")).id,
+                    Tasks = "Исследование лазерных систем",
+                    SalaryFrom = 60000,
+                    SalaryTo = 85000,
+                    ContractType = ContractType.Permanent,
+                    //ContractTime = 0.6m,
+                    //SocialPackage = true,
+                    //Rent = true,
+                    TransportCompensation = true,
+                    //OfficeAccomodation = false,
+                    ContactName = "Ким Валерий Миронович",
+                    ContactEmail = "flashbrowser@gmail.com",
+                    ContactPhone = "666-999",
+                    EmploymentType = EmploymentType.Full,
+                    OperatingScheduleType = OperatingScheduleType.FullTime,
+                    RegionId = 27
+
+                }
+            });
+            _mediator.Send(new PublishVacancyCommand { VacancyGuid = vacancyGuid8 });
+
+
+            var vacancyGuid9 = _mediator.Send(new CreateVacancyCommand
+            {
+                OrganizationGuid = organizationGuid0,
+                Data = new VacancyDataModel
+                {
+                    PositionTypeId = positions.First(c => c.title.Contains("Заведующий") && c.title.Contains("отдела")).id,
+                    Name = "Заведующий отдела информационных технологий",
+                    FullName = "Заведующий отдела информационных технологий",
+                    ResearchDirection = researchDiretions.First(c => c.title.Contains("системы")).title,
+                    ResearchDirectionId = researchDiretions.First(c => c.title.Contains("системы")).id,
+                    Tasks = "",
+                    SalaryFrom = 80000,
+                    SalaryTo = 100000,
+                    ContractType = ContractType.Permanent,
+                    //ContractTime = 0.6m,
+                    SocialPackage = true,
+                    Rent = true,
+                    //TransportCompensation = true,
+                    //OfficeAccomodation = false,
+                    ContactName = "Алексей",
+                    ContactEmail = "n567@mail.com",
+                    ContactPhone = "89980012233",
+                    EmploymentType = EmploymentType.Full,
+                    OperatingScheduleType = OperatingScheduleType.FullTime,
+                    RegionId = 27
+
+                }
+            });
+            _mediator.Send(new PublishVacancyCommand { VacancyGuid = vacancyGuid9 });
+
+
+
+
+            var vacancyGuid10 = _mediator.Send(new CreateVacancyCommand
+            {
+                OrganizationGuid = organizationGuid0,
+                Data = new VacancyDataModel
+                {
+                    PositionTypeId = positions.First(c => c.title.Contains("Ведущий научный сотрудник")).id,
+                    Name = "Ведущий научный сотрудник",
+                    FullName = "Ведущий научный сотрудник информационных технологий",
+                    ResearchDirection = researchDiretions.First(c => c.title.Contains("системы")).title,
+                    ResearchDirectionId = researchDiretions.First(c => c.title.Contains("системы")).id,
+                    Tasks = "",
+                    SalaryFrom = 80000,
+                    SalaryTo = 100001,
+                    ContractType = ContractType.Permanent,
+                    //ContractTime = 0.6m,
+                    SocialPackage = true,
+                    Rent = true,
+                    //TransportCompensation = true,
+                    //OfficeAccomodation = false,
+                    ContactName = "Алексей",
+                    ContactEmail = "n567@mail.com",
+                    ContactPhone = "89980012234",
+                    EmploymentType = EmploymentType.Full,
+                    OperatingScheduleType = OperatingScheduleType.FullTime,
+                    RegionId = 27
+
+                }
+            });
+            _mediator.Send(new PublishVacancyCommand { VacancyGuid = vacancyGuid10 });
+
+
+
+
+
         }
     }
 }
