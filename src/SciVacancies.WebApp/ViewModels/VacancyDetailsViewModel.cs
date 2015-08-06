@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Nest;
 using NPoco;
 using SciVacancies.Domain.Enums;
+using SciVacancies.ReadModel.Core;
 using SciVacancies.ReadModel.Pager;
 using SciVacancies.WebApp.ViewModels.Base;
 
@@ -172,5 +173,7 @@ namespace SciVacancies.WebApp.ViewModels
         public DateTime? PretenderResponseDate { get; set; }
         public Guid PretenderVacancyApplicationGuid { get; set; }
 
+        public IEnumerable<VacancyCriteria> Criterias { get; set; }
+        public List<CriteriaItemViewModel> CriteriasHierarchy { get; set; }
     }
 }

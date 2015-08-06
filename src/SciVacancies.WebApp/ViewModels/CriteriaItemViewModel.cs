@@ -20,7 +20,7 @@ namespace SciVacancies.WebApp.ViewModels
         /// <summary>
         /// шт
         /// </summary>
-        public int Count { get; set; }
+        public long? Count { get; set; }
 
         /// <summary>
         /// Заголовок
@@ -31,6 +31,8 @@ namespace SciVacancies.WebApp.ViewModels
         /// внутренние критерии
         /// </summary>
         public List<CriteriaItemViewModel> Items { get; set; } = new List<CriteriaItemViewModel>();
+
+        public string Code { get; set; }
 
     }
 

@@ -214,6 +214,9 @@ namespace SciVacancies.WebApp.Controllers
                             Mapper.Map<ResearcherDetailsViewModel>(
                                 _mediator.Send(new SingleResearcherQuery { ResearcherGuid = c.ResearcherGuid })));
             }
+            model.Criterias = _mediator.Send(new SelectVacancyCriteriasQuery {VacancyGuid = model.Guid});
+            model.CriteriasHierarchy =
+                    _mediator.Send(new SelectAllCriteriasQuery()).ToList().ToHierarchyCriteriaViewModelList(model.Criterias.ToList());
 
             return View(model);
         }

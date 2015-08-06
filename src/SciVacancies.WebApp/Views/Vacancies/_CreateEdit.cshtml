@@ -131,19 +131,19 @@
 
 
                     <div class="lnk-container">
-                        <span class="small-icon icon-hsm-eye">Показать все (@Model.Criterias.Count)</span>
-                        <span class="small-icon icon-sm-eye" style="display: none;">Скрыть все (@Model.Criterias.Count)</span>
+                        <span class="small-icon icon-hsm-eye">Показать все (@Model.CriteriasHierarchy.Count)</span>
+                        <span class="small-icon icon-sm-eye" style="display: none;">Скрыть все (@Model.CriteriasHierarchy.Count)</span>
                     </div>
 
 
-                    @for (int groupIndex = 0; groupIndex < Model.Criterias.Count; groupIndex++)
+                    @for (int groupIndex = 0; groupIndex < Model.CriteriasHierarchy.Count; groupIndex++)
                     {
-                        var @group = Model.Criterias[groupIndex];
+                        var @group = Model.CriteriasHierarchy[groupIndex];
                         <div class="b-publication">
 
-                            <input type="hidden" name="Criterias.Index" value="@groupIndex" />
-                            <input type="hidden" asp-for="Criterias[groupIndex].Id" />
-                            <input type="hidden" asp-for="Criterias[groupIndex].Title" />
+                            <input type="hidden" name="CriteriasHierarchy.Index" value="@groupIndex" />
+                            <input type="hidden" asp-for="CriteriasHierarchy[groupIndex].Id" />
+                            <input type="hidden" asp-for="CriteriasHierarchy[groupIndex].Title" />
 
                             <span class="name-section">@group.Title (@group.Items.Count)</span>
                             <div class="list-fields">
@@ -152,12 +152,14 @@
                                 {
                                     var item = @group.Items[itemIndex];
                                     <div>
-                                        <input type="hidden" name="Criterias[groupIndex].Items.Index" value="@itemIndex" />
-                                        <input type="hidden" asp-for="Criterias[groupIndex].Items[itemIndex].Id" />
-                                        <input type="hidden" asp-for="Criterias[groupIndex].Items[itemIndex].Title" />
+                                        <input type="hidden" name="CriteriasHierarchy[groupIndex].Items.Index" value="@itemIndex" />
+                                        <input type="hidden" asp-for="CriteriasHierarchy[groupIndex].Items[itemIndex].Id" />
+                                        <input type="hidden" asp-for="CriteriasHierarchy[groupIndex].Items[itemIndex].ParentId" />
+                                        <input type="hidden" asp-for="CriteriasHierarchy[groupIndex].Items[itemIndex].Code" />
+                                        <input type="hidden" asp-for="CriteriasHierarchy[groupIndex].Items[itemIndex].Title" />
 
                                         <div class="field">
-                                            <input type="number" asp-for="Criterias[groupIndex].Items[itemIndex].Count" />
+                                            <input type="number" asp-for="CriteriasHierarchy[groupIndex].Items[itemIndex].Count" />
                                             <span>@item.Title (шт.)</span>
                                         </div>
 
@@ -168,7 +170,7 @@
                         </div>
                     }
 
-                    
+
                 </div>
             </div>
 
