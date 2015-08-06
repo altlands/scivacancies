@@ -16,7 +16,7 @@
     <div class="row">
         <div class="profile">
             <div class="photo inline-block">
-                <img src="/images/profile-photo.png" width="140" height="180" />
+                <img src="@(string.IsNullOrWhiteSpace(Model.ImageUrl) ? "/images/profile-photo.png" :  Model.ImageUrl)" width="140" height="180" />
             </div>
             <div class="info inline-block">
                 <h4>@Model.FullName</h4>

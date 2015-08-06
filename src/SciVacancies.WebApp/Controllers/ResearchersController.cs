@@ -104,12 +104,12 @@ namespace SciVacancies.WebApp.Controllers
                         .Split('.')
                         .Last()
                         .ToUpper();
-                    
+
                     //TODO: вынести в конфиг типы допустимых файлов
                     var extensions = new List<string> { "JPG", "JPEG", "PNG" };
                     if (!extensions.Contains(fileExtension))
                         ModelState.AddModelError("PhotoFile", $"Можно добавить только изображение. Допустимые типы файлов: {string.Join(", ", extensions)}");
-                    
+
                     //TODO: вынести в конфиг это магическое число
                     if (file.Length > 500000)
                         ModelState.AddModelError("PhotoFile", @"Размер изображения превышает 500кБ");
@@ -119,8 +119,17 @@ namespace SciVacancies.WebApp.Controllers
                         return View(model);
 
                     //сценарий-А: сохранить фото на диск
-                    //var filePath = _hostingEnvironment.ApplicationBasePath + "\\uploads\\" + DateTime.Now.ToString("yyyyddMHHmmss") + fileName;
-                    //file.SaveAs(filePath);
+                    try
+                    {
+                        var newFileName = $"{authorizedUserGuid}.{fileExtension}";
+                        var filePath = $"{_hostingEnvironment.ApplicationBasePath}\\wwwroot\\uploads\\{newFileName}" /*{DateTime.Now.ToString("yyyyddMHHmmss")}{fileName}*/ ;
+                        file.SaveAs(filePath);
+                        model.ImageName = newFileName;
+                        model.ImageSize = file.Length;
+                        model.ImageExtension = fileExtension;
+                        model.ImageUrl = $"\\uploads\\{newFileName}";
+                    }
+                    catch (Exception) { }
 
                     //сценарий-Б: сохранить фото в БД
                     //var openReadStream = file.OpenReadStream();
@@ -131,9 +140,9 @@ namespace SciVacancies.WebApp.Controllers
                     //memoryStream.SetLength(0);
 
                     //сценарий-В: сохранить фото в БД
-                    var openReadStream = file.OpenReadStream();
-                    openReadStream.CopyTo(memoryStream);
-                    byteData = memoryStream.ToArray();
+                    //var openReadStream = file.OpenReadStream();
+                    //openReadStream.CopyTo(memoryStream);
+                    //byteData = memoryStream.ToArray();
                     //memoryStream.SetLength(0);
                 }
             }

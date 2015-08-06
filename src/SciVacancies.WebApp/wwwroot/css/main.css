@@ -2968,3 +2968,11 @@ h4 + .b-vacancies {
 .icon-hsm-eye:before{
 	background:url(../images/sprite.png) no-repeat -183px -222px;
 }
+
+[data-selectorphoto=true]{
+	cursor:pointer;
+}
+input[type=file]{
+    display: none;
+    visibility: hidden;
+}

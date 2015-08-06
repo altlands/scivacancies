@@ -269,9 +269,17 @@ $(document).ready(function () {
         $(source).siblings("span.icon-hsm-eye").show();
     });
     /*
+     * дизайн для кнопки выбора Фотографии
+     */
+    var buttonFile = $('a[data-selectorphoto="true"]');
+    var file = $('input[data-selectphoto="true"]');
+    $(buttonFile).click(function () {
+        file.click();
+        return false;
+    });
+    /*
     end of the code
     */
-
 });
 
 

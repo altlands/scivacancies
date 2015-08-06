@@ -51,17 +51,16 @@
                 <div class="left-cell">
                     <label class="mb10">
                         Ваше фото
-                        <span style="color: red;">реализовано частично, без сохранения в БД</span>
                     </label>
-                    <a href="#" class="link-upload fs13">Загрузить фото</a>
-                    <input type="file" name="PhotoFile" id="PhotoFile"/>
+                    <a data-selectorphoto="true" asp-controller="researcher" asp-action="edit#" class="link-upload fs13" onclick="javascript: return false;">Загрузить фото</a>
+                    <input type="file" name="PhotoFile" id="PhotoFile" data-selectphoto="true"/>
                     <div class="description mt10">
                         Выберите изображение размером<br /> не более 500 кБ<br />Рекомендуемое соотношение сторон – 3:4
                     </div>
                 </div>
                 <div class="right-cell">
                     <div class="user-photo">
-                        <img src="/images/photo.jpg" />
+                        <img src="@(string.IsNullOrWhiteSpace(Model.ImageUrl) ? "/images/profile-photo.png" :  Model.ImageUrl)" width="140" height="180" />
                     </div>
                 </div>
             </div>
