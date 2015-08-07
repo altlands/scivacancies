@@ -53,14 +53,14 @@
                         Ваше фото
                     </label>
                     <a data-selectorphoto="true" asp-controller="researcher" asp-action="edit#" class="link-upload fs13" onclick="javascript: return false;">Загрузить фото</a>
-                    <input type="file" name="PhotoFile" id="PhotoFile" data-selectphoto="true"/>
+                    <input type="file" class="hide" name="PhotoFile" id="PhotoFile" data-selectphoto="true"/>
                     <div class="description mt10">
                         Выберите изображение размером<br /> не более 500 кБ<br />Рекомендуемое соотношение сторон – 3:4
                     </div>
                 </div>
                 <div class="right-cell">
                     <div class="user-photo">
-                        <img src="@(string.IsNullOrWhiteSpace(Model.ImageUrl) ? "/images/profile-photo.png" :  Model.ImageUrl)" width="140" height="180" />
+                        <img src="@(string.IsNullOrWhiteSpace(Model.ImageUrl) ? "/images/profile-photo.png" :  (ConstTerms.FolderResearcherPhoto + Model.ImageUrl) )" width="140" height="180" />
                     </div>
                 </div>
             </div>

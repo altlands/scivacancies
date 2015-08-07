@@ -1,5 +1,6 @@
 ﻿@using System.Threading.Tasks
 @using SciVacancies.WebApp
+@using SciVacancies.WebApp.Engine
 @model SciVacancies.WebApp.ViewModels.VacancyApplicationDetailsViewModel
 
 <div class="crumbs">
@@ -103,19 +104,20 @@
             </span>
         </div>
 
-        @*<div class="list-item">
-                <div class="bold"><del>Приложенные файлы</del> </div>
-                <ol>
+        <div class="list-item">
+            <div class="bold">Приложенные файлы</div>
+            <ol>
+                @foreach (var item in Model.Attachments)
+                {
+                    <text>
                     <li>
-                        Доклад по автоматизированным системам в области науковедения.doc<br/>
-                        <span class="small-icon icon-sm-download"><span>Скачать</span></span>
+                        @item.name<br />
+                        <span class="small-icon icon-sm-download"><a href="@(ConstTerms.FolderApplicationsAttachments + item.url)">Скачать</a></span>
                     </li>
-                    <li>
-                        Резюме на английском языке.pdf<br/>
-                        <span class="small-icon icon-sm-download"><span>Скачать</span></span>
-                    </li>
-                </ol>
-            </div>*@
+                    </text>
+                }
+            </ol>
+        </div>
     </div>
 
 

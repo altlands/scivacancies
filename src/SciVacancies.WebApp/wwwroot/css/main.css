@@ -2972,7 +2972,7 @@ h4 + .b-vacancies {
 [data-selectorphoto=true]{
 	cursor:pointer;
 }
-input[type=file]{
+input[type=file].hide{
     display: none;
     visibility: hidden;
 }

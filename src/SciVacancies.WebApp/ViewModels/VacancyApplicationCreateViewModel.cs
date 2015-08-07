@@ -1,8 +1,9 @@
 using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNet.Http;
+using Microsoft.AspNet.Http.Core.Collections;
 using Microsoft.AspNet.Mvc;
-using SciVacancies.ReadModel.Core;
+using SciVacancies.Domain.Core;
 using SciVacancies.WebApp.ViewModels.Base;
 
 namespace SciVacancies.WebApp.ViewModels
@@ -37,6 +38,8 @@ namespace SciVacancies.WebApp.ViewModels
         public string Rewards { get; set; }
         public string Memberships { get; set; }
         public string Conferences { get; set; }
+
+        public List<IFormFile> Attachments{ get; set; }
 
     }
 }

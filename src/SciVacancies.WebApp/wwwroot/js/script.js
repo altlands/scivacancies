@@ -337,9 +337,11 @@ function addNewItemToList(source, prefix) {
     //получаем текущий индекс количества строк
     var newIndex = parseInt($(parentDiv).attr("data-innercount")) + 1;
     var oldPrefixDash = prefix + "_0__",
-    oldPrefixBracket = prefix + "\\[0\\]",
-    newPrefixDash = prefix + "_" + newIndex + "__",
-        newPrefixBracket = prefix + "[" + newIndex + "]";
+        oldPrefixSharp = prefix + "##0##",
+        oldPrefixBracket = prefix + "\\[0\\]",
+        newPrefixDash = prefix + "_" + newIndex + "__",
+        newPrefixBracket = prefix + "[" + newIndex + "]",
+        newPrefixSharp= prefix + newIndex;
 
     //находим шаблон для добавления строк
     var templateDiv = $(parentDiv).find("[data-list-template=\"true\"]").clone();
@@ -347,7 +349,9 @@ function addNewItemToList(source, prefix) {
     var templateDivInnerHtml = templateDiv
         .html()
         .replace(new RegExp(oldPrefixBracket, 'g'), newPrefixBracket)
-        .replace(new RegExp(oldPrefixDash, 'g'), newPrefixDash);
+        .replace(new RegExp(oldPrefixDash, 'g'), newPrefixDash)
+        .replace(new RegExp(oldPrefixSharp, 'g'), newPrefixSharp)
+    ;
     //обновляем шаблон
     templateDiv.html(templateDivInnerHtml);
 

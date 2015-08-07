@@ -86,65 +86,63 @@ namespace SciVacancies.WebApp.Controllers
             if (ModelState.ErrorCount > 0)
                 return View(model);
 
-
-
-            //TODO: сохранение фото в БД (сделать)
-            //фотографии в byte
-            byte[] byteData;
-            using (var memoryStream = new MemoryStream())
+            if (model.PhotoFile != null)
             {
-                if (model.PhotoFile != null)
+                var file = model.PhotoFile;
+                var fileName = ContentDispositionHeaderValue
+                  .Parse(file.ContentDisposition)
+                  .FileName
+                  .Trim('"');
+                var fileExtension = fileName
+                    .Split('.')
+                    .Last()
+                    .ToUpper();
+
+                //TODO: вынести в конфиг типы допустимых файлов
+                var extensions = new List<string> { "JPG", "JPEG", "PNG" };
+                if (!extensions.Contains(fileExtension))
+                    ModelState.AddModelError("PhotoFile", $"Можно добавить только изображение. Допустимые типы файлов: {string.Join(", ", extensions)}");
+
+                //TODO: вынести в конфиг это магическое число
+                if (file.Length > 500000)
+                    ModelState.AddModelError("PhotoFile", @"Размер изображения превышает 500кБ");
+
+
+                if (ModelState.ErrorCount > 0)
+                    return View(model);
+
+                //сценарий-А: сохранить фото на диск
+                try
                 {
-                    var file = model.PhotoFile;
-                    var fileName = ContentDispositionHeaderValue
-                      .Parse(file.ContentDisposition)
-                      .FileName
-                      .Trim('"');
-                    var fileExtension = fileName
-                        .Split('.')
-                        .Last()
-                        .ToUpper();
-
-                    //TODO: вынести в конфиг типы допустимых файлов
-                    var extensions = new List<string> { "JPG", "JPEG", "PNG" };
-                    if (!extensions.Contains(fileExtension))
-                        ModelState.AddModelError("PhotoFile", $"Можно добавить только изображение. Допустимые типы файлов: {string.Join(", ", extensions)}");
-
-                    //TODO: вынести в конфиг это магическое число
-                    if (file.Length > 500000)
-                        ModelState.AddModelError("PhotoFile", @"Размер изображения превышает 500кБ");
-
-
-                    if (ModelState.ErrorCount > 0)
-                        return View(model);
-
-                    //сценарий-А: сохранить фото на диск
-                    try
-                    {
-                        var newFileName = $"{authorizedUserGuid}.{fileExtension}";
-                        var filePath = $"{_hostingEnvironment.ApplicationBasePath}\\wwwroot\\uploads\\{newFileName}" /*{DateTime.Now.ToString("yyyyddMHHmmss")}{fileName}*/ ;
-                        file.SaveAs(filePath);
-                        model.ImageName = newFileName;
-                        model.ImageSize = file.Length;
-                        model.ImageExtension = fileExtension;
-                        model.ImageUrl = $"\\uploads\\{newFileName}";
-                    }
-                    catch (Exception) { }
-
-                    //сценарий-Б: сохранить фото в БД
-                    //var openReadStream = file.OpenReadStream();
-                    //var scale = (int)(500000 / file.Length);
-                    //var resizedImage = new Bitmap(image, new Size(image.Width * scale, image.Height * scale));
-                    //((Image)resizedImage).Save(memoryStream, ImageFormat.Jpeg);
-                    //byteData = memoryStream.ToArray();
-                    //memoryStream.SetLength(0);
-
-                    //сценарий-В: сохранить фото в БД
-                    //var openReadStream = file.OpenReadStream();
-                    //openReadStream.CopyTo(memoryStream);
-                    //byteData = memoryStream.ToArray();
-                    //memoryStream.SetLength(0);
+                    var newFileName = $"{authorizedUserGuid}.{fileExtension}";
+                    var filePath = $"{_hostingEnvironment.ApplicationBasePath}\\wwwroot{ConstTerms.FolderResearcherPhoto}\\{newFileName}" /*{DateTime.Now.ToString("yyyyddMHHmmss")}{fileName}*/ ;
+                    file.SaveAs(filePath);
+                    model.ImageName = newFileName;
+                    model.ImageSize = file.Length;
+                    model.ImageExtension = fileExtension;
+                    model.ImageUrl = $"\\{newFileName}";
                 }
+                catch (Exception) { }
+
+                //TODO: сохранение фото в БД (сделать)
+                //using (var memoryStream = new MemoryStream())
+                //{
+                //    фотографии в byte
+                //    byte[] byteData;
+                //    //сценарий-Б: сохранить фото в БД
+                //    //var openReadStream = file.OpenReadStream();
+                //    //var scale = (int)(500000 / file.Length);
+                //    //var resizedImage = new Bitmap(image, new Size(image.Width * scale, image.Height * scale));
+                //    //((Image)resizedImage).Save(memoryStream, ImageFormat.Jpeg);
+                //    //byteData = memoryStream.ToArray();
+                //    //memoryStream.SetLength(0);
+
+                //    //сценарий-В: сохранить фото в БД
+                //    //var openReadStream = file.OpenReadStream();
+                //    //openReadStream.CopyTo(memoryStream);
+                //    //byteData = memoryStream.ToArray();
+                //    //memoryStream.SetLength(0);
+                //}
             }
 
 

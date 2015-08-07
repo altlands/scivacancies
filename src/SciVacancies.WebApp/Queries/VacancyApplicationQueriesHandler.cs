@@ -12,7 +12,8 @@ namespace SciVacancies.WebApp.Queries
     public class VacancyApplicationQueriesHandler :
         IRequestHandler<SingleVacancyApplicationQuery, VacancyApplication>,
         IRequestHandler<SelectPagedVacancyApplicationsByResearcherQuery, Page<VacancyApplication>>,
-        IRequestHandler<SelectPagedVacancyApplicationsByVacancyQuery, Page<VacancyApplication>>
+        IRequestHandler<SelectPagedVacancyApplicationsByVacancyQuery, Page<VacancyApplication>>,
+        IRequestHandler<SelectVacancyApplicationAttachmentsQuery, IEnumerable<VacancyApplicationAttachment>>
     {
         private readonly IDatabase _db;
 

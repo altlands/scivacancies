@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using SciVacancies.Domain.Enums;
+using SciVacancies.ReadModel.Core;
 using SciVacancies.WebApp.ViewModels.Base;
 
 namespace SciVacancies.WebApp.ViewModels
@@ -36,5 +38,9 @@ namespace SciVacancies.WebApp.ViewModels
         public DateTime CreationDate { get; set; }
         public DateTime? UpdateDate { get; set; }
         public DateTime? SentDate { get; set; }
+        /// <summary>
+        /// Прикрепленные файлы
+        /// </summary>
+        public IEnumerable<VacancyApplicationAttachment> Attachments { get; set; }
     }
 }

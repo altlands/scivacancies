@@ -5,6 +5,7 @@
 @{
     Model.Publications = Model.Publications ?? new List<PublicationEditViewModel>();
     Model.Publications.Insert(0, new PublicationEditViewModel());
+
     var invisibleItemStyle = "display: none;";
     string useStyle;
 }
@@ -21,7 +22,7 @@
 
 <div asp-validation-summary="ValidationSummary.All"></div>
 
-<form>
+<form enctype="multipart/form-data">
 
     <input asp-for="ResearcherGuid" />
     <input asp-for="VacancyGuid" />
@@ -102,7 +103,7 @@
 
         <div class="row">
             <div class="bold row-title">Образование:</div>
-            <hr/>
+            <hr />
             @if (Model.Educations != null)
             {
                 for (int index = 0; index < Model.Educations.Count; index++)
@@ -149,11 +150,11 @@
                                 <label>Год окончания:</label>
                             </div>
                             <div class="right-cell">
-                                <input type="text" asp-for="Educations[index].GraduationYear" class="disabled big-input"/>
+                                <input type="text" asp-for="Educations[index].GraduationYear" class="disabled big-input" />
                                 @*value="@(Model.Educations[index].GraduationYear.HasValue ? Model.Educations[index].GraduationYear.Value.ToString() : string.Empty)"*@
                             </div>
                         </div>
-                        <hr/>
+                        <hr />
                     </div>
                 }
             }
@@ -245,7 +246,6 @@
                                     </text>
                                 }
                             </ol>
-                            <a onclick="return addNewItemToList(this, 'Publications')" class="link-add lk-icon italic link-add-field" href="#">Добавить публикацию</a>
                         </div>
                     </div>
                 </div>
@@ -259,15 +259,20 @@
                         <label>Приложенные файлы:</label>
                     </div>
                     <div class="right-cell">
-                        <ul class="content-list">
-                            @*<li>
-                                    Rezume.doc
+                        <div class="property-list-container" data-innercount="0">
+                            <ul class="content-list">
+
+                                <li style="@invisibleItemStyle" class="property-list-item" data-list-template="true">
+                                    <input type="hidden" name="Attachments.Index"  value="0" />
+                                    <input type="file" id="Attachments##0##" name="Attachments"/>
                                     <div class="buttons">
-                                        <span class="big-link-remove"></span>
+                                        <span class="big-link-remove" onclick="return removeItemFromList(this);"></span>
                                     </div>
-                                </li>*@
-                        </ul>
-                        <a class="link-add lk-icon italic" href="#">Приложить файл</a>
+
+                                </li>
+                            </ul>
+                            <a onclick="return addNewItemToList(this, 'Attachments')" class="link-add lk-icon italic" href="#">Приложить файл</a>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -275,7 +280,7 @@
 
         <div class="row">
             <div class="ctr-buttons button-align mt26 mb5">
-                <input type="submit" class="create-btn middle-icon" value="Создать заявку" />
+                <input type="submit" class="create-btn middle-icon" onclick=" return beforeFormSubmit(this);" value="Создать заявку" />
                 <a asp-controller="vacancies" asp-action="card" asp-route-id="@Model.VacancyGuid">
                     <span class="blue-btn middle-icon icon-close">
                         Закрыть

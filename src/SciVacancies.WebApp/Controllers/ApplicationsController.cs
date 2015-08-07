@@ -1,11 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data.Entity.Core;
+using System.IO;
 using System.Linq;
 using AutoMapper;
 using MediatR;
 using Microsoft.AspNet.Authorization;
+using Microsoft.AspNet.Http;
 using Microsoft.AspNet.Mvc;
+using Microsoft.Framework.Runtime;
+using Microsoft.Net.Http.Headers;
 using SciVacancies.Domain.DataModels;
 using SciVacancies.Domain.Enums;
 using SciVacancies.ReadModel.Core;
@@ -21,10 +24,12 @@ namespace SciVacancies.WebApp.Controllers
     public class ApplicationsController : Controller
     {
         private readonly IMediator _mediator;
+        private readonly IApplicationEnvironment _hostingEnvironment;
 
-        public ApplicationsController(IMediator mediator)
+        public ApplicationsController(IMediator mediator, IApplicationEnvironment hostingEnvironment)
         {
             _mediator = mediator;
+            _hostingEnvironment = hostingEnvironment;
         }
 
         [Authorize(Roles = ConstTerms.RequireRoleResearcher)]
@@ -81,7 +86,7 @@ namespace SciVacancies.WebApp.Controllers
         [Authorize(Roles = ConstTerms.RequireRoleResearcher)]
         [HttpPost]
         [BindResearcherIdFromClaims]
-        public ActionResult Create(VacancyApplicationCreateViewModel model, Guid researcherGuid)
+        public IActionResult Create(VacancyApplicationCreateViewModel model, Guid researcherGuid)
         {
             if (model.VacancyGuid == Guid.Empty)
                 throw new ArgumentNullException(nameof(model.VacancyGuid), "Не указан идентификатор Вакансии");
@@ -103,37 +108,120 @@ namespace SciVacancies.WebApp.Controllers
 
             if (appliedVacancyApplications.Items.Count > 0
                 && appliedVacancyApplications.Items.Where(c => c.status == VacancyApplicationStatus.Applied).Select(c => c.researcher_guid).Distinct().ToList().Any(c => c == researcherGuid))
-                return View("Error", "Вы не можете подать повторную Заявку на Вакансию ");
+                return View("Error", "Вы не можете подать повторную Заявку на Вакансию");
 
-            //с формы мы не получаем практически никаких данных, поэтоу заново наполняем ViewModel
-            var researcher = _mediator.Send(new SingleResearcherQuery { ResearcherGuid = researcherGuid });
-            researcher.educations = _mediator.Send(new SelectResearcherEducationsQuery { ResearcherGuid = researcherGuid }).ToList();
-            researcher.publications = _mediator.Send(new SelectResearcherPublicationsQuery { ResearcherGuid = researcherGuid }).ToList();
-            model.Conferences = researcher.conferences;
-            model.Educations =Mapper.Map<List<EducationEditViewModel>>(researcher.educations);
-            model.Email = researcher.email;
-            model.ExtraEmail = researcher.extraemail;
-            model.ExtraPhone = researcher.extraphone;
-            model.OtherActivity = researcher.other_activity;
-            model.Phone = researcher.phone;
-            model.Publications = Mapper.Map<List<PublicationEditViewModel>>(researcher.publications);
-            model.PositionName = vacancyData.name;
-            model.ResearchActivity = researcher.research_activity;
-            model.ResearcherFullName = $"{researcher.secondname} {researcher.firstname} {researcher.patronymic}";
-            model.ResearcherGuid = researcherGuid;
-            model.Rewards = researcher.rewards;
-            model.ScienceDegree = researcher.science_degree;
-            model.ScienceRank = researcher.science_rank;
-            model.TeachingActivity = researcher.teaching_activity;
-            model.VacancyGuid = vacancyData.guid;
+            //TODO: Application -> Attachments : как проверять безопасность, прикрепляемых файлов
+            //TODO: Application -> Attachments : вынести в конфиг это магическое число
+            if (model.Attachments != null && model.Attachments.Any(c => c.Length > 100000))
+            {
+                ModelState.AddModelError("Attachments", @"Размер изображения превышает допустимый объём. Повторите создания Заявки ещё раз.");
+            }
 
             if (!ModelState.IsValid)
                 return View(model);
 
-            var data = Mapper.Map<VacancyApplicationDataModel>(model);
-            var vacancyApplicationGuid = _mediator.Send(new CreateAndApplyVacancyApplicationCommand { ResearcherGuid = model.ResearcherGuid, VacancyGuid = model.VacancyGuid, Data = data });
 
+            var attachmentsList = new List<SciVacancies.Domain.Core.VacancyApplicationAttachment>();
+            var newFolderName = Guid.NewGuid();
+            //save attachments
+            if (model.Attachments != null && model.Attachments.Any())
+            {
+                foreach (var file in model.Attachments)
+                {
+                    var fileName = ContentDispositionHeaderValue
+                        .Parse(file.ContentDisposition)
+                        .FileName
+                        .Trim('"');
+
+                    //сценарий-А: сохранить файл на диск
+                    try
+                    {
+                        //TODO: Application -> Attachments : что делать с Директорией при удалении(отмене, отклонении) Заявки
+                        //TODO: Application -> Attachments : как искать Текущую директорию при повторном добавлении(изменении текущего списка) файлов
+                        Directory.CreateDirectory($"{_hostingEnvironment.ApplicationBasePath}\\wwwroot{ConstTerms.FolderApplicationsAttachments}\\{newFolderName}\\");
+                        var filePath =
+                            $"{_hostingEnvironment.ApplicationBasePath}\\wwwroot{ConstTerms.FolderApplicationsAttachments}\\{newFolderName}\\{fileName}";
+                        file.SaveAs(filePath);
+                        attachmentsList.Add(new SciVacancies.Domain.Core.VacancyApplicationAttachment
+                        {
+                            Size = file.Length,
+                            Extension = fileName.Split('.')[1],
+                            Name = fileName,
+                            UploadDate = DateTime.Now,
+                            Url = $"\\{newFolderName}\\{fileName}"
+                        });
+
+                    }
+                    catch (Exception)
+                    {
+                        RemoveAttachmentDirectory(newFolderName);
+                        return View("Error", "Ошибка при сохранении прикреплённых файлов");
+                    }
+
+                    //TODO: сохранение файл в БД (сделать)
+                    //using (var memoryStream = new MemoryStream())
+                    //{
+                    //    файл в byte
+                    //    byte[] byteData;
+                    //    //сценарий-Б: сохранить файл в БД
+                    //    //var openReadStream = file.OpenReadStream();
+                    //    //var scale = (int)(500000 / file.Length);
+                    //    //var resizedImage = new Bitmap(image, new Size(image.Width * scale, image.Height * scale));
+                    //    //((Image)resizedImage).Save(memoryStream, ImageFormat.Jpeg);
+                    //    //byteData = memoryStream.ToArray();
+                    //    //memoryStream.SetLength(0);
+
+                    //    //сценарий-В: сохранить файл в БД
+                    //    //var openReadStream = file.OpenReadStream();
+                    //    //openReadStream.CopyTo(memoryStream);
+                    //    //byteData = memoryStream.ToArray();
+                    //    //memoryStream.SetLength(0);
+                    //}
+
+                }
+            }
+
+
+            Guid vacancyApplicationGuid;
+            try
+            {
+                //с формы мы не получаем практически никаких данных, поэтоу заново наполняем ViewModel
+                var researcher = _mediator.Send(new SingleResearcherQuery { ResearcherGuid = researcherGuid });
+                researcher.educations = _mediator.Send(new SelectResearcherEducationsQuery { ResearcherGuid = researcherGuid }).ToList();
+                researcher.publications = _mediator.Send(new SelectResearcherPublicationsQuery { ResearcherGuid = researcherGuid }).ToList();
+                model.Conferences = researcher.conferences;
+                model.Educations = Mapper.Map<List<EducationEditViewModel>>(researcher.educations);
+                model.Email = researcher.email;
+                model.ExtraEmail = researcher.extraemail;
+                model.ExtraPhone = researcher.extraphone;
+                model.OtherActivity = researcher.other_activity;
+                model.Phone = researcher.phone;
+                model.Publications = Mapper.Map<List<PublicationEditViewModel>>(researcher.publications);
+                model.PositionName = vacancyData.name;
+                model.ResearchActivity = researcher.research_activity;
+                model.ResearcherFullName = $"{researcher.secondname} {researcher.firstname} {researcher.patronymic}";
+                model.ResearcherGuid = researcherGuid;
+                model.Rewards = researcher.rewards;
+                model.ScienceDegree = researcher.science_degree;
+                model.ScienceRank = researcher.science_rank;
+                model.TeachingActivity = researcher.teaching_activity;
+                model.VacancyGuid = vacancyData.guid;
+                var data = Mapper.Map<VacancyApplicationDataModel>(model);
+                data.Attachments = attachmentsList;
+                vacancyApplicationGuid = _mediator.Send(new CreateAndApplyVacancyApplicationCommand { ResearcherGuid = model.ResearcherGuid, VacancyGuid = model.VacancyGuid, Data = data });
+            }
+            catch (Exception)
+            {
+                RemoveAttachmentDirectory(newFolderName);
+                return View("Error", "Что-то пошло не так при сохранении Заявки");
+            }
             return RedirectToAction("details", "applications", new { id = vacancyApplicationGuid });
+        }
+
+        private void RemoveAttachmentDirectory(Guid newFolderName)
+        {
+            Directory.Delete(
+                $"{_hostingEnvironment.ApplicationBasePath}\\wwwroot{ConstTerms.FolderApplicationsAttachments}\\{newFolderName}\\");
         }
 
         [Authorize(Roles = ConstTerms.RequireRoleResearcher)]
@@ -157,9 +245,9 @@ namespace SciVacancies.WebApp.Controllers
             var model = Mapper.Map<VacancyApplicationDetailsViewModel>(preModel);
             model.Researcher = Mapper.Map<ResearcherDetailsViewModel>(_mediator.Send(new SingleResearcherQuery { ResearcherGuid = researcherGuid }));
             model.Researcher.Publications = Mapper.Map<List<PublicationEditViewModel>>(_mediator.Send(new SelectResearcherPublicationsQuery { ResearcherGuid = researcherGuid }));
-            model.Researcher.Educations= Mapper.Map<List<EducationEditViewModel>>(_mediator.Send(new SelectResearcherEducationsQuery { ResearcherGuid = researcherGuid }));
+            model.Researcher.Educations = Mapper.Map<List<EducationEditViewModel>>(_mediator.Send(new SelectResearcherEducationsQuery { ResearcherGuid = researcherGuid }));
             model.Vacancy = Mapper.Map<VacancyDetailsViewModel>(_mediator.Send(new SingleVacancyQuery { VacancyGuid = preModel.vacancy_guid }));
-            //TODO: ntemnikov : показать Приложенные файлы
+            model.Attachments = _mediator.Send(new SelectVacancyApplicationAttachmentsQuery {VacancyApplicationGuid = id});
             //TODO: ntemnikov : показать Научные интересы
             return View(model);
         }
@@ -213,7 +301,7 @@ namespace SciVacancies.WebApp.Controllers
                 return HttpNotFound(); //throw new ObjectNotFoundException($"Не найдена Заявка c идентификатором: {vacancyApplicationGuid}");
 
             if (vacancyApplicaiton.status != VacancyApplicationStatus.Applied)
-                return View("Error", 
+                return View("Error",
                     $"Вы не можете выбрать в качестве одного из победителей Заявку со статусом: {vacancyApplicaiton.status.GetDescription()}");
 
             vacancy = _mediator.Send(new SingleVacancyQuery { VacancyGuid = vacancyApplicaiton.vacancy_guid });
@@ -234,7 +322,7 @@ namespace SciVacancies.WebApp.Controllers
                 return View("Error", "Для данной Вакансии уже выбраны Победитель и Претендент.");
 
             if (vacancy.status != VacancyStatus.InCommittee)
-                return View("Error", 
+                return View("Error",
                     $"Вы не можете выбирать победителя для Заявки со статусом: {vacancy.status.GetDescription()}");
             return vacancyApplicaiton;
         }
@@ -275,8 +363,8 @@ namespace SciVacancies.WebApp.Controllers
 
             Vacancy vacancy;
             var result = SetWinnerPreValidation(model.Guid, organizationGuid, out vacancy, model.SetWinner);
-            if (result is HttpNotFoundResult) return (HttpNotFoundResult) result;
-            var vacancyApplication = (VacancyApplication) result;
+            if (result is HttpNotFoundResult) return (HttpNotFoundResult)result;
+            var vacancyApplication = (VacancyApplication)result;
 
             if (ModelState.IsValid)
             {
@@ -410,7 +498,7 @@ namespace SciVacancies.WebApp.Controllers
                 return View("Error", "Вы не можете изменять Заявки, поданные на вакансии других организаций.");
 
             if (vacancy.status != VacancyStatus.OfferResponseAwaiting)
-                return View("Error", 
+                return View("Error",
                     $"Вы не можете зафиксироватиьо принятие или отказ от предложения если Заявка имеет статус: {vacancy.status.GetDescription()}");
             return vacancy;
         }
@@ -426,7 +514,7 @@ namespace SciVacancies.WebApp.Controllers
 
             var result = OfferAcceptionPreValidation(id, organizationGuid, isWinner);
             if (result is HttpNotFoundResult) return (HttpNotFoundResult)result;
-            var vacancy= (Vacancy)result;
+            var vacancy = (Vacancy)result;
 
             if (isWinner)
                 if (hasAccepted)
@@ -441,15 +529,15 @@ namespace SciVacancies.WebApp.Controllers
                     });
             else
                 if (hasAccepted)
-                    _mediator.Send(new SetPretenderAcceptOfferCommand
-                    {
-                        VacancyGuid = vacancy.guid
-                    });
-                else
-                    _mediator.Send(new SetPretenderRejectOfferCommand
-                    {
-                        VacancyGuid = vacancy.guid
-                    });
+                _mediator.Send(new SetPretenderAcceptOfferCommand
+                {
+                    VacancyGuid = vacancy.guid
+                });
+            else
+                _mediator.Send(new SetPretenderRejectOfferCommand
+                {
+                    VacancyGuid = vacancy.guid
+                });
 
             return RedirectToAction("preview", "applications", new { id });
 
