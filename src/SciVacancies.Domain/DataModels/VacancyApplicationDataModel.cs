@@ -5,13 +5,6 @@ namespace SciVacancies.Domain.DataModels
 {
     public class VacancyApplicationDataModel
     {
-        public VacancyApplicationDataModel()
-        {
-            this.Educations = new List<Education>();
-            this.Publications = new List<Publication>();
-            this.Attachments = new List<VacancyApplicationAttachment>();
-        }
-
         /// <summary>
         /// Полное имя исследователя
         /// </summary>
@@ -34,8 +27,8 @@ namespace SciVacancies.Domain.DataModels
         public string Memberships { get; set; }
         public string Conferences { get; set; }
 
-        public List<Education> Educations { get; set; }
-        public List<Publication> Publications { get; set; }
-        public List<VacancyApplicationAttachment> Attachments { get; set; }
+        public List<Education> Educations { get; set; } = new List<Education>();
+        public List<Publication> Publications { get; set; } = new List<Publication>();
+        public List<VacancyApplicationAttachment> Attachments { get; set; } = new List<VacancyApplicationAttachment>();
     }
 }

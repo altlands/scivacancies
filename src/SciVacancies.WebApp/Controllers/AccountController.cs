@@ -278,6 +278,7 @@ namespace SciVacancies.WebApp.Controllers
             {
                 Data = new AccountResearcherRegisterViewModel
                 {
+                    Agreement = model.Agreement,
                     Email = model.Email,
                     Phone = model.Phone,
                     UserName = model.UserName,
@@ -287,7 +288,9 @@ namespace SciVacancies.WebApp.Controllers
                     FirstNameEng = model.FirstNameEng,
                     SecondNameEng = model.SecondNameEng,
                     PatronymicEng = model.PatronymicEng,
-                    BirthYear = model.BirthYear
+                    BirthYear = model.BirthYear,
+                    Password = model.Password,
+                    ConfirmPassword = model.ConfirmPassword
                 }
             };
             var user = _mediator.Send(createUserResearcherCommand1);
