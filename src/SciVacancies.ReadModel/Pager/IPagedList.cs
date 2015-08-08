@@ -13,5 +13,7 @@ namespace SciVacancies.ReadModel.Pager
         int TotalPages { get; set; }
         int CurrentPage { get; set; }
         int PageSize { get; set; }
+        string SortField { get; set; }
+        string SortDirection { get; set; }
     }
 }

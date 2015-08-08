@@ -15,7 +15,8 @@ namespace SciVacancies.WebApp.Queries
 
         public long? PageSize { get; set; }
         public long? CurrentPage { get; set; }
-        public string OrderBy { get; set; }
+
+        public string OrderFieldByDirection { get; set; } 
 
         public DateTime? PublishDateFrom { get; set; }
 

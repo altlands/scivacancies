@@ -54,7 +54,8 @@ namespace SciVacancies.WebApp.Controllers
                     PageSize = 1000,
                     VacancyGuid = vacancyGuid,
                     PageIndex = 1,
-                    OrderBy = ConstTerms.OrderByDateAscending
+                    OrderBy = nameof(VacancyApplication.creation_date),
+                    OrderDirection = ConstTerms.OrderByDescending
                 });
 
             if (appliedVacancyApplications.Items.Count > 0
@@ -103,7 +104,8 @@ namespace SciVacancies.WebApp.Controllers
                     PageSize = 1000,
                     VacancyGuid = model.VacancyGuid,
                     PageIndex = 1,
-                    OrderBy = ConstTerms.OrderByDateAscending
+                    OrderBy = nameof(VacancyApplication.creation_date),
+                    OrderDirection = ConstTerms.OrderByDescending
                 });
 
             if (appliedVacancyApplications.Items.Count > 0

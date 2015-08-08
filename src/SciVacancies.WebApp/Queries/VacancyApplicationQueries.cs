@@ -20,7 +20,7 @@ namespace SciVacancies.WebApp.Queries
         public long PageIndex { get; set; }
         public string OrderBy { get; set; }
 
-        //TODO - добавить фильтр сортировки по колонкам
+        //TODO - добавить фильтр по колонкам
     }
     public class SelectPagedVacancyApplicationsByVacancyQuery : IRequest<Page<VacancyApplication>>
     {
@@ -29,8 +29,9 @@ namespace SciVacancies.WebApp.Queries
         public long PageSize { get; set; }
         public long PageIndex { get; set; }
         public string OrderBy { get; set; }
+        public string OrderDirection { get; set; }
 
-        //TODO - добавить фильтр сортировки по колонкам
+        //TODO - добавить фильтр по колонкам
     }
 
     public class SelectVacancyApplicationAttachmentsQuery:IRequest<IEnumerable<VacancyApplicationAttachment>>

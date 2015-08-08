@@ -28,7 +28,7 @@ namespace SciVacancies.WebApp.ViewModels
         {
             get
             {
-                _orderBy = string.IsNullOrWhiteSpace(_orderBy) ? ConstTerms.OrderByDateDescending : _orderBy.ToLower();
+                _orderBy = string.IsNullOrWhiteSpace(_orderBy) ? ConstTerms.OrderByFieldDate : _orderBy.ToLower();
                 return _orderBy;
             }
             set { _orderBy = value; }

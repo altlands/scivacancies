@@ -33,6 +33,7 @@ namespace SciVacancies.WebApp.Queries
         public long PageSize { get; set; }
         public long PageIndex { get; set; }
         public string OrderBy { get; set; }
+        public string OrderDirection { get; set; }
 
         //public string NameFilterValue { get; set; }
         //public string AddressFilterValue { get; set; }
@@ -49,6 +50,7 @@ namespace SciVacancies.WebApp.Queries
         public long PageSize { get; set; }
         public long PageIndex { get; set; }
         public string OrderBy { get; set; }
+        public string OrderDirection { get; set; }
 
         //public string NameFilterValue { get; set; }
         //public string AddressFilterValue { get; set; }
@@ -60,9 +62,14 @@ namespace SciVacancies.WebApp.Queries
         public long PageSize { get; set; }
         public long PageIndex { get; set; }
         public string OrderBy { get; set; }
+        public string OrderDirection { get; set; }
 
         //public string NameFilterValue { get; set; }
         //public string AddressFilterValue { get; set; }
+    }
+    public class SelectFavoriteVacancyGuidsByResearcherQuery : IRequest<IEnumerable<Guid>>
+    {
+        public Guid ResearcherGuid { get; set; }
     }
     public class SelectPagedVacanciesByGuidsQuery : IRequest<Page<Vacancy>>
     {

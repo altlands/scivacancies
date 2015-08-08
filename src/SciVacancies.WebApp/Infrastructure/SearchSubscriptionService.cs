@@ -112,12 +112,12 @@ namespace SciVacancies.WebApp.Infrastructure
                     searchDescriptor.Skip((int)((sq.CurrentPage - 1) * sq.PageSize));
                     searchDescriptor.Take((int)sq.PageSize);
                 }
-                switch (sq.OrderBy)
+                switch (sq.OrderFieldByDirection)
                 {
-                    case ConstTerms.OrderByDateDescending:
+                    case ConstTerms.SearchFilterOrderByDateDescending:
                         searchDescriptor.Sort(sort => sort.OnField(of => of.PublishDate).Descending());
                         break;
-                    case ConstTerms.OrderByDateAscending:
+                    case ConstTerms.SearchFilterOrderByDateAscending:
                         searchDescriptor.Sort(sort => sort.OnField(of => of.PublishDate).Ascending());
                         break;
                 }

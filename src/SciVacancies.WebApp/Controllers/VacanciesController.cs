@@ -179,7 +179,8 @@ namespace SciVacancies.WebApp.Controllers
         [Authorize(Roles = ConstTerms.RequireRoleOrganizationAdmin)]
         [PageTitle("Подробно о вакансии")]
         [BindOrganizationIdFromClaims]
-        public IActionResult Details(Guid id, Guid organizationGuid, int pageSize = 10, int currentPage = 1)
+        public IActionResult Details(Guid id, Guid organizationGuid, int pageSize = 10, int currentPage = 1,
+            string sortField = ConstTerms.OrderByFieldApplyDate, string sortDirection = ConstTerms.OrderByDescending)
         {
             if (id == Guid.Empty)
                 throw new ArgumentNullException(nameof(id));
@@ -204,7 +205,8 @@ namespace SciVacancies.WebApp.Controllers
                      PageSize = pageSize,
                      PageIndex = currentPage,
                      VacancyGuid = id,
-                     OrderBy = "Guid"
+                     OrderBy = new SortFilterHelper().GetSortField<VacancyApplication>(sortField),
+                     OrderDirection = sortDirection
                  }).MapToPagedList<VacancyApplication, VacancyApplicationDetailsViewModel>();
 
             if (model.Applications?.Items != null && model.Applications.Items.Count > 0)
@@ -245,11 +247,12 @@ namespace SciVacancies.WebApp.Controllers
             if (model.Status == VacancyStatus.Published
                 && researcherGuid != Guid.Empty)
             {
-                //TODO: оптимизировать запрос и его обработку
-                var favoritesVacancies = _mediator.Send(new SelectPagedFavoriteVacanciesByResearcherQuery { PageSize = 1000, PageIndex = 1, ResearcherGuid = researcherGuid, OrderBy = ConstTerms.OrderByDateAscending });
-
+                var favoritesVacancies = _mediator.Send(new SelectFavoriteVacancyGuidsByResearcherQuery
+                {
+                    ResearcherGuid = researcherGuid
+                }).ToList();
                 //если текущая вакансия есть в списке избранных
-                ViewBag.VacancyInFavorites = favoritesVacancies != null && favoritesVacancies.TotalItems != 0 && favoritesVacancies.Items.Select(c => c.guid).ToList().Contains(id);
+                ViewBag.VacancyInFavorites = favoritesVacancies.Any(c => c == id);
             }
             model.Criterias = _mediator.Send(new SelectVacancyCriteriasQuery { VacancyGuid = model.Guid });
             model.CriteriasHierarchy =
@@ -363,7 +366,7 @@ namespace SciVacancies.WebApp.Controllers
                 VacancyGuid = preModel.guid,
                 PageSize = 1000,
                 PageIndex = 1,
-                OrderBy = ConstTerms.OrderByDateDescending
+                OrderBy = ConstTerms.OrderByFieldDate
             });
 
             if (vacancyApplications.TotalItems == 0

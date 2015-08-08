@@ -31,27 +31,29 @@
         <span>Критерии оценки:</span>
         <br />
 
-        @foreach (CriteriaItemViewModel group in Model.CriteriasHierarchy.Where(c=>c.Items.Sum(d=>d.Count)>0))
+        @if (Model.CriteriasHierarchy != null)
         {
-            <div class="">
-                <span class="name-section">@(@group.Title) (@(@group.Items.Count(c=>c.Count>0)))</span>
-                <div class="list-fields">
+            foreach (CriteriaItemViewModel group in Model.CriteriasHierarchy.Where(c => c.Items.Sum(d => d.Count) > 0))
+            {
+                <div class="">
+                    <span class="name-section">@(@group.Title) (@(@group.Items.Count(c => c.Count > 0)))</span>
+                    <div class="list-fields">
 
-                    @foreach (CriteriaItemViewModel item in @group.Items.Where(c=>c.Count>0))
+                        @foreach (CriteriaItemViewModel item in @group.Items.Where(c => c.Count > 0))
                     {
-                        <div>
-                            <div class="field">
-                                &nbsp; &mdash; &nbsp;
-                                @item.Title:
-                                @item.Count шт.
+                            <div>
+                                <div class="field">
+                                    &nbsp; &mdash; &nbsp;
+                                    @item.Title:
+                                    @item.Count шт.
+                                </div>
                             </div>
-                        </div>
-                    }
+                        }
+                    </div>
+
                 </div>
-
-            </div>
+            }
         }
-
 
     </li>
 </ul>

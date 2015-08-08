@@ -2,6 +2,7 @@
 @using SciVacancies.Domain.Enums
 @using SciVacancies.WebApp
 @using SciVacancies.WebApp.Controllers
+@using SciVacancies.WebApp.Engine
 @model SciVacancies.WebApp.ViewModels.NotificationsInOrganizationIndexViewModel
 
 <div class="crumbs">
@@ -33,10 +34,14 @@
                 <div class="inline-block ml6 va-middle">№</div>
             </th>
             <th>
-                <div class="inline-block">
-                    <!-- <img src="/images/icons/tab-head.png" class="va-middle"/> -->
-                </div>
-                <div class="inline-block ml6 va-middle">Дата</div>
+                <a class="sort-order" href="@(Context.Request.Path.Value+"?"+Context.Request.ToQueryStringDictionary().SetDefaultOrInvertOrderParameter(ConstTerms.OrderByFieldCreationDate).CreateString())">
+                    <div class="inline-block">
+                        <img src="@Context.Request.GetOrderIcon()" class="va-middle" />
+                    </div>
+                    <div class="inline-block ml6 va-middle">
+                        Дата
+                    </div>
+                </a>
             </th>
             <th>
                 <div class="inline-block">

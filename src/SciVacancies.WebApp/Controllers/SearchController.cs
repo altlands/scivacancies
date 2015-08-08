@@ -92,7 +92,7 @@ namespace SciVacancies.WebApp.Controllers
 
                 PageSize = model.PageSize,
                 CurrentPage = model.CurrentPage,
-                OrderBy = model.OrderBy,
+                OrderFieldByDirection= model.OrderBy,
                 PositionTypeIds = model.PositionTypes,
                 //PublishDateFrom = DateTime.Now.AddDays(-10),
 

@@ -18,7 +18,9 @@ namespace SciVacancies.WebApp.Queries
         IRequestHandler<SelectVacanciesForAutocompleteQuery, IEnumerable<Vacancy>>,
         IRequestHandler<SelectPagedClosedVacanciesByOrganizationQuery, Page<Vacancy>>,
         IRequestHandler<SelectPagedFavoriteVacanciesByResearcherQuery, Page<Vacancy>>,
+        IRequestHandler<SelectFavoriteVacancyGuidsByResearcherQuery, IEnumerable<Guid>>,
         IRequestHandler<SelectPagedVacanciesByGuidsQuery, Page<Vacancy>>
+
     {
         private readonly IDatabase _db;
 
@@ -31,13 +33,13 @@ namespace SciVacancies.WebApp.Queries
         {
             if (message.VacancyGuid == Guid.Empty) throw new ArgumentNullException($"VacancyGuid is empty: {message.VacancyGuid}");
 
-            Vacancy vacancy = _db.SingleOrDefaultById<Vacancy>(message.VacancyGuid);
+            var vacancy = _db.SingleOrDefaultById<Vacancy>(message.VacancyGuid);
 
             return vacancy;
         }
         public Page<Vacancy> Handle(SelectPagedVacanciesQuery message)
         {
-            Page<Vacancy> vacancies =
+            var vacancies =
                 message.PublishedOnly
                 ?
                 _db.Page<Vacancy>(message.PageIndex, message.PageSize, new Sql($"SELECT v.* FROM org_vacancies v WHERE v.status = @0 ORDER BY v.creation_date DESC", VacancyStatus.Published))
@@ -50,8 +52,13 @@ namespace SciVacancies.WebApp.Queries
         public Page<Vacancy> Handle(SelectPagedVacanciesByOrganizationQuery message)
         {
             if (message.OrganizationGuid == Guid.Empty) throw new ArgumentNullException($"OrganizationGuid is empty: {message.OrganizationGuid}");
+            if (string.IsNullOrWhiteSpace(message.OrderDirection))
+                message.OrderDirection = "DESC";
+            if (string.IsNullOrWhiteSpace(message.OrderBy))
+                message.OrderBy = nameof(Vacancy.creation_date);
 
-            Page<Vacancy> vacancies = _db.Page<Vacancy>(message.PageIndex, message.PageSize, new Sql($"SELECT v.* FROM org_vacancies v WHERE v.organization_guid = @0 AND v.status != @1 ORDER BY v.creation_date DESC", message.OrganizationGuid, VacancyStatus.Removed));
+
+            var vacancies = _db.Page<Vacancy>(message.PageIndex, message.PageSize, new Sql($"SELECT v.* FROM org_vacancies v WHERE v.organization_guid = @0 AND v.status != @1 ORDER BY v.{message.OrderBy} {message.OrderDirection.ToUpper()}", message.OrganizationGuid, VacancyStatus.Removed));
 
             return vacancies;
         }
@@ -59,33 +66,43 @@ namespace SciVacancies.WebApp.Queries
         {
             if (String.IsNullOrEmpty(message.Query)) throw new ArgumentNullException($"Query is empty: {message.Query}");
 
-            IEnumerable<Vacancy> vacancies;
-            if (message.Take != 0)
-            {
-                vacancies = _db.FetchBy<Vacancy>(f => f.Where(w => w.name.Contains(message.Query) && w.status != VacancyStatus.Removed)).Take(message.Take);
-            }
-            else
-            {
-                vacancies = _db.FetchBy<Vacancy>(f => f.Where(w => w.name.Contains(message.Query) && w.status != VacancyStatus.Removed));
-            }
+            var vacancies = message.Take != 0 
+                ? _db.FetchBy<Vacancy>(f => f.Where(w => w.name.Contains(message.Query) && w.status != VacancyStatus.Removed)).Take(message.Take) 
+                : _db.FetchBy<Vacancy>(f => f.Where(w => w.name.Contains(message.Query) && w.status != VacancyStatus.Removed));
 
             return vacancies;
         }
         public Page<Vacancy> Handle(SelectPagedClosedVacanciesByOrganizationQuery message)
         {
             if (message.OrganizationGuid == Guid.Empty) throw new ArgumentNullException($"OrganizationGuid is empty: {message.OrganizationGuid}");
+            if (string.IsNullOrWhiteSpace(message.OrderDirection))
+                message.OrderDirection = "DESC";
+            if (string.IsNullOrWhiteSpace(message.OrderBy))
+                message.OrderBy = nameof(Vacancy.creation_date);
 
-            Page<Vacancy> vacancies = _db.Page<Vacancy>(message.PageIndex, message.PageSize, new Sql($"SELECT v.* FROM org_vacancies v  WHERE v.organization_guid = @0 AND v.status = @1 ORDER BY v.creation_date DESC", message.OrganizationGuid, VacancyStatus.Closed));
+            var vacancies = _db.Page<Vacancy>(message.PageIndex, message.PageSize, new Sql($"SELECT v.* FROM org_vacancies v  WHERE v.organization_guid = @0 AND v.status = @1 ORDER BY v.{message.OrderBy} {message.OrderDirection.ToUpper()}", message.OrganizationGuid, VacancyStatus.Closed));
 
             return vacancies;
         }
         public Page<Vacancy> Handle(SelectPagedFavoriteVacanciesByResearcherQuery message)
         {
             if (message.ResearcherGuid == Guid.Empty) throw new ArgumentNullException($"ResearcherGuid is empty: {message.ResearcherGuid}");
+            if (string.IsNullOrWhiteSpace(message.OrderDirection))
+                message.OrderDirection = "DESC";
+            if (string.IsNullOrWhiteSpace(message.OrderBy))
+                message.OrderBy= nameof(Vacancy.creation_date);
 
-            Page<Vacancy> favoriteVacancies = _db.Page<Vacancy>(message.PageIndex, message.PageSize, new Sql($"SELECT * FROM res_favoritevacancies fv, org_vacancies v WHERE fv.researcher_guid = @0 AND fv.vacancy_guid = v.guid ORDER BY v.creation_date DESC", message.ResearcherGuid));
+            var favoriteVacancies = _db.Page<Vacancy>(message.PageIndex, message.PageSize, new Sql($"SELECT * FROM res_favoritevacancies fv, org_vacancies v WHERE fv.researcher_guid = @0 AND fv.vacancy_guid = v.guid ORDER BY v.{message.OrderBy} {message.OrderDirection.ToUpper()}", message.ResearcherGuid));
 
             return favoriteVacancies;
+        }
+        public IEnumerable<Guid> Handle(SelectFavoriteVacancyGuidsByResearcherQuery message)
+        {
+            if (message.ResearcherGuid == Guid.Empty) throw new ArgumentNullException($"ResearcherGuid is empty: {message.ResearcherGuid}");
+
+            IEnumerable<Guid> favoriteVacancyGuids = _db.Fetch<Guid>(new Sql($"SELECT fv.vacancy_guid FROM res_favoritevacancies fv WHERE fv.researcher_guid = @0", message.ResearcherGuid));
+
+            return favoriteVacancyGuids;
         }
         public Page<Vacancy> Handle(SelectPagedVacanciesByGuidsQuery message)
         {

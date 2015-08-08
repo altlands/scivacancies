@@ -4,6 +4,7 @@ using AutoMapper;
 using MediatR;
 using Microsoft.AspNet.Authorization;
 using Microsoft.AspNet.Mvc;
+using SciVacancies.ReadModel.Core;
 using SciVacancies.WebApp.Engine;
 using SciVacancies.WebApp.Engine.CustomAttribute;
 using SciVacancies.WebApp.Queries;
@@ -66,7 +67,7 @@ namespace SciVacancies.WebApp.Controllers
         [SiblingPage]
         [PageTitle("Вакансии")]
         [BindOrganizationIdFromClaims]
-        public ViewResult Vacancies(Guid organizationGuid, int pageSize = 10, int currentPage = 1)
+        public ViewResult Vacancies(Guid organizationGuid, int pageSize = 10, int currentPage = 1, string sortField = ConstTerms.OrderByFieldPublishDate, string sortDirection = ConstTerms.OrderByDescending)
         {
             if (organizationGuid == Guid.Empty)
                 throw new ArgumentNullException(nameof(organizationGuid));
@@ -76,7 +77,14 @@ namespace SciVacancies.WebApp.Controllers
             var model = new VacanciesInOrganizationIndexViewModel
             {
                 OrganizationGuid = organizationGuid,
-                PagedVacancies = _mediator.Send(new SelectPagedVacanciesByOrganizationQuery { OrganizationGuid = organizationGuid, PageSize = pageSize, PageIndex = currentPage }).MapToPagedList(),
+                PagedVacancies = _mediator.Send(new SelectPagedVacanciesByOrganizationQuery
+                {
+                    OrganizationGuid = organizationGuid,
+                    PageSize = pageSize,
+                    PageIndex = currentPage,
+                    OrderBy = new SortFilterHelper().GetSortField<Vacancy>(sortField),
+                    OrderDirection = sortDirection
+                }).MapToPagedList(),
                 Name = preModel.name
             };
 
@@ -86,7 +94,8 @@ namespace SciVacancies.WebApp.Controllers
         [PageTitle("Закрытые вакансии")]
         [SiblingPage]
         [BindOrganizationIdFromClaims]
-        public ViewResult Closed(Guid organizationGuid, int pageSize = 10, int currentPage = 1)
+        public ViewResult Closed(Guid organizationGuid, int pageSize = 10, int currentPage = 1,
+            string sortField = ConstTerms.OrderByFieldClosedDate, string sortDirection = ConstTerms.OrderByDescending)
         {
             if (organizationGuid == Guid.Empty)
                 throw new ArgumentNullException(nameof(organizationGuid));
@@ -95,7 +104,12 @@ namespace SciVacancies.WebApp.Controllers
 
             var model = new VacanciesInOrganizationIndexViewModel
             {
-                PagedVacancies = _mediator.Send(new SelectPagedClosedVacanciesByOrganizationQuery { OrganizationGuid = organizationGuid, PageSize = pageSize, PageIndex = currentPage }).MapToPagedList(),
+                PagedVacancies = _mediator.Send(new SelectPagedClosedVacanciesByOrganizationQuery { OrganizationGuid = organizationGuid,
+                    PageSize = pageSize,
+                    PageIndex = currentPage,
+                    OrderBy = new SortFilterHelper().GetSortField<Vacancy>(sortField),
+                    OrderDirection = sortDirection
+                }).MapToPagedList(),
                 Name = preModel.name
             };
             return View(model);
@@ -104,7 +118,8 @@ namespace SciVacancies.WebApp.Controllers
         [SiblingPage]
         [PageTitle("Уведомления")]
         [BindOrganizationIdFromClaims]
-        public ViewResult Notifications(Guid organizationGuid, int pageSize = 10, int currentPage = 1)
+        public ViewResult Notifications(Guid organizationGuid, int pageSize = 10, int currentPage = 1,
+            string sortField = ConstTerms.OrderByFieldCreationDate, string sortDirection = ConstTerms.OrderByDescending)
         {
             if (organizationGuid == Guid.Empty)
                 throw new ArgumentNullException(nameof(organizationGuid));
@@ -117,7 +132,9 @@ namespace SciVacancies.WebApp.Controllers
                 {
                     OrganizationGuid = organizationGuid,
                     PageSize = pageSize,
-                    PageIndex = currentPage
+                    PageIndex = currentPage,
+                    OrderBy = new SortFilterHelper().GetSortField<OrganizationNotification>(sortField),
+                    OrderDirection = sortDirection
                 }).MapToPagedList(),
                 Name = preModel.name
             };

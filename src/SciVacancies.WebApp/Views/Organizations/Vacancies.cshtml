@@ -2,6 +2,7 @@
 @using SciVacancies.Domain.Enums
 @using SciVacancies.WebApp
 @using SciVacancies.WebApp.Controllers
+@using SciVacancies.WebApp.Engine
 @model SciVacancies.WebApp.ViewModels.VacanciesInOrganizationIndexViewModel
 
 <div class="crumbs">
@@ -40,28 +41,34 @@
                 <div class="pl21 va-middle">Вакансия (заработная плата)</div>
             </th>
             <th>
-                <div class="inline-block">
-                    <!-- <img src="/images/icons/tab-head.png" class="va-middle"/> -->
-                </div>
-                <div class="inline-block ml6 va-middle">
-                    Дата<br /> создания
-                </div>
+                <a class="sort-order" href="@(Context.Request.Path.Value+"?"+Context.Request.ToQueryStringDictionary().SetDefaultOrInvertOrderParameter(ConstTerms.OrderByFieldCreationDate).CreateString())">
+                    <div class="inline-block">
+                        <img src="@Context.Request.GetOrderIcon(ConstTerms.OrderByFieldCreationDate)" class="va-middle" />
+                    </div>
+                    <div class="inline-block ml6 va-middle">
+                        Дата<br /> публикация
+                    </div>
+                </a>
             </th>
             <th>
-                <div class="inline-block">
-                    <!-- <img src="/images/icons/tab-head.png" class="va-middle"/> -->
-                </div>
-                <div class="inline-block ml6 va-middle">
-                    Дата<br />публикации
-                </div>
+                <a class="sort-order" href="@(Context.Request.Path.Value+"?"+Context.Request.ToQueryStringDictionary().SetDefaultOrInvertOrderParameter(ConstTerms.OrderByFieldPublishDate).CreateString())">
+                    <div class="inline-block">
+                        <img src="@Context.Request.GetOrderIcon(ConstTerms.OrderByFieldPublishDate)" class="va-middle" />
+                    </div>
+                    <div class="inline-block ml6 va-middle">
+                        Дата<br /> публикации
+                    </div>
+                </a>
             </th>
             <th>
-                <div class="inline-block">
-                    <!-- <img src="/images/icons/tab-head.png" class="va-middle"/> -->
-                </div>
-                <div class="inline-block ml6 va-middle">
-                    Статус<br />вакансии
-                </div>
+                <a class="sort-order" href="@(Context.Request.Path.Value+"?"+Context.Request.ToQueryStringDictionary().SetDefaultOrInvertOrderParameter(ConstTerms.OrderByFieldVacancyStatus).CreateString())">
+                    <div class="inline-block">
+                        <img src="@Context.Request.GetOrderIcon(ConstTerms.OrderByFieldVacancyStatus)" class="va-middle" />
+                    </div>
+                    <div class="inline-block ml6 va-middle">
+                        Статус<br />вакансии
+                    </div>
+                </a>
             </th>
             <th width="200">
                 @*<div class="pl21 va-middle">Действия</div>*@

@@ -2,20 +2,37 @@
 {
     public class ConstTerms
     {
-        public const string OrderByRelevant= "relevant";
-        public const string OrderByDateDescending = "date";
-        public const string OrderByDateAscending = "date_ascending";
-        public const string OrderByDateStartDescending = "DateStart";
-        public const string OrderByDateStartAscending = "DateStart_ascending";
+        public const string OrderByAscending = "asc";
+        public const string OrderByDescending= "desc";
+
+        public const string OrderDirectionFieldName = "SortDirection";
+        public const string OrderFieldName = "SortField";
+
+
+
+        public const string OrderByFieldDate = "date";
+        public const string OrderByFieldApplyDate = "applydate";
+        public const string OrderByFieldFullName= "fullname";
+        public const string OrderByFieldPublishDate = "publishdate";
+        public const string OrderByFieldCreationDate = "creationdate";
+        public const string OrderByFieldClosedDate = "closeddate";
+        public const string OrderByFieldVacancyStatus= "vacancystatus";
+
+        public const string OrderByName= "name"; //?? это значение ещё востребовано
+        public const string OrderByCount= "count"; //?? это значение ещё востребовано
+
+
         public const string OrderByCreationDateDescending = "CreationDate";
+        public const string OrderByDateStartDescending = "DateStart";
+        //public const string OrderByDateStartAscending = "DateStart_ascending";
         public const string OrderByCreationDateAscending = "CreationDate_ascending";
 
         public const string OrderByVacancyCountDescending = "PublishedVacancies";
         public const string OrderByVacancyCountAscending = "PublishedVacancies_ascending";
-        public const string OrderByNameDescending = "name";
-        public const string OrderByNameAscending =  "name_ascending";
-        public const string OrderByCountDescending = "count";
-        public const string OrderByCountAscending =  "count_ascending";
+
+        public const string SearchFilterOrderByRelevant = "relevant";
+        public const string SearchFilterOrderByDateDescending = "date_descending";
+        public const string SearchFilterOrderByDateAscending = "date_ascanding";
 
         public const string RequireRoleOrganizationAdmin = "organization_admin";
         public const string RequireRoleResearcher = "researcher";

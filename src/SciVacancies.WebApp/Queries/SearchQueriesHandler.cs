@@ -52,12 +52,12 @@ namespace SciVacancies.WebApp.Queries
                 sdescriptor.Take((int)sq.PageSize);
             }
 
-            switch (sq.OrderBy)
+            switch (sq.OrderFieldByDirection)
             {
-                case ConstTerms.OrderByDateDescending:
+                case ConstTerms.SearchFilterOrderByDateDescending:
                     sdescriptor.Sort(sort => sort.OnField(of => of.PublishDate).Descending());
                     break;
-                case ConstTerms.OrderByDateAscending:
+                case ConstTerms.SearchFilterOrderByDateAscending:
                     sdescriptor.Sort(sort => sort.OnField(of => of.PublishDate).Ascending());
                     break;
             }

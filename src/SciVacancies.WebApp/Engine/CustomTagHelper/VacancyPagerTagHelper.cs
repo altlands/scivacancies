@@ -6,6 +6,7 @@ using Microsoft.AspNet.Http;
 using Microsoft.AspNet.Mvc.Rendering;
 using Microsoft.AspNet.Razor.Runtime.TagHelpers;
 using SciVacancies.ReadModel.Pager;
+using SciVacancies.WebApp.Engine;
 
 namespace SciVacancies.WebApp
 {
@@ -15,6 +16,8 @@ namespace SciVacancies.WebApp
         private IDictionary<string, string[]> _queryDictionary;
         private const string ParameterNamePageNumber = "CurrentPage";
         private const string ParameterNamePageSize= "PageSize";
+        private const string ParameterNameSortField= "SortField";
+        private const string ParameterNameSortDirection= "SortDirection";
 
         [HtmlAttributeName("request")]
         public HttpRequest Request { get; set; }
@@ -23,7 +26,7 @@ namespace SciVacancies.WebApp
 
         public override void Process(TagHelperContext context, TagHelperOutput output)
         {
-            _queryDictionary = Microsoft.AspNet.WebUtilities.QueryHelpers.ParseQuery(Request.QueryString.Value);
+            _queryDictionary = Request.ToQueryStringDictionary();//Microsoft.AspNet.WebUtilities.QueryHelpers.ParseQuery(Request.QueryString.Value);
 
             if (PagedList == null)
                 return;

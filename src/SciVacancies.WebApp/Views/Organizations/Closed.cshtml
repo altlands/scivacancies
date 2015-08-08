@@ -2,6 +2,7 @@
 @using SciVacancies.Domain.Enums
 @using SciVacancies.WebApp
 @using SciVacancies.WebApp.Controllers
+@using SciVacancies.WebApp.Engine
 @model SciVacancies.WebApp.ViewModels.VacanciesInOrganizationIndexViewModel
 
 <div class="crumbs">
@@ -25,7 +26,7 @@
     <thead>
     <tr>
         <th>
-            <div class="inline-block"><img src="/images/icons/arrow-bottom-tab.png" class="va-middle"/>
+            <div class="inline-block">@*<img src="/images/icons/arrow-bottom-tab.png" class="va-middle"/>*@
             </div>
             <div class="inline-block ml6 va-middle">№</div></th>
         <th>
@@ -35,9 +36,15 @@
         <th>
             <div class="pl21 va-middle">Вакансия</div></th>
         <th>
-            <div class="inline-block"> <!-- <img src="/images/icons/tab-head.png" class="va-middle"/>  -->
-            </div>
-            <div class="inline-block ml6 va-middle">Дата завершения</div></th>
+            <a class="sort-order" href="@(Context.Request.Path.Value+"?"+Context.Request.ToQueryStringDictionary().SetDefaultOrInvertOrderParameter(ConstTerms.OrderByFieldPublishDate).CreateString())">
+                <div class="inline-block">
+                    <img src="@Context.Request.GetOrderIcon()" class="va-middle" />
+                </div>
+                <div class="inline-block ml6 va-middle">
+                    Дата<br /> завершения
+                </div>
+            </a>
+        </th>
         <th class="view-col">
             <div class="pl21 va-middle"><span>Просмотр</span></div></th>
         <th>

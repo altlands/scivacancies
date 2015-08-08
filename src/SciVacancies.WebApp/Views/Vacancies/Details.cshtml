@@ -1,6 +1,7 @@
 ﻿@using System.Threading.Tasks
 @using SciVacancies.Domain.Enums
 @using SciVacancies.WebApp
+@using SciVacancies.WebApp.Engine
 @model SciVacancies.WebApp.ViewModels.VacancyDetailsViewModel
 
 <div class="crumbs">
@@ -57,13 +58,24 @@
                     </div>
                 </th>
                 <th>
-                    <div class="inline-block">
-                        @*<img src="/images/icons/tab-head.png" class="va-middle" />*@
-                    </div>
-                    <div class="inline-block ml6 va-middle">Дата подачи заявки</div>
+                    <a class="sort-order" href="@(Context.Request.Path.Value+"?"+Context.Request.ToQueryStringDictionary().SetDefaultOrInvertOrderParameter(ConstTerms.OrderByFieldApplyDate).CreateString())">
+                        <div class="inline-block">
+                            <img src="@Context.Request.GetOrderIcon(ConstTerms.OrderByFieldApplyDate)" class="va-middle" />
+                        </div>
+                        <div class="inline-block ml6 va-middle">
+                            Дата подачи заявки
+                        </div>
+                    </a>
                 </th>
                 <th>
-                    Фамилия, имя, отчество
+                    <a class="sort-order" href="@(Context.Request.Path.Value+"?"+Context.Request.ToQueryStringDictionary().SetDefaultOrInvertOrderParameter(ConstTerms.OrderByFieldFullName).CreateString())">
+                        <div class="inline-block">
+                            <img src="@Context.Request.GetOrderIcon(ConstTerms.OrderByFieldFullName)" class="va-middle" />
+                        </div>
+                        <div class="inline-block ml6 va-middle">
+                            Фамилия, имя, отчество
+                        </div>
+                    </a>
                 </th>
                 <th class="align-center">
                     Победители
@@ -81,7 +93,7 @@
                 {
                     <text>
                     <tr>
-                        <td>@(Model.Applications.Items.IndexOf(item)+1)</td>
+                        <td>@(Model.Applications.Items.IndexOf(item) + 1)</td>
                         <td>@(item.SentDate?.ToLocalVacancyString())</td>
                         <td class="pl0">@item.Researcher.FullName</td>
                         <td class="pl0 align-center">
