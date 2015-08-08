@@ -308,8 +308,13 @@ namespace SciVacancies.WebApp.Controllers
             return RedirectToHome();
         }
 
-        [PageTitle("Восстановление пароля")]
+        [PageTitle("Восстановление доступа к Системе")]
         public ViewResult ForgotPassword()
+        {
+            return View();
+        }
+        [PageTitle("Восстановление доступа к Системе")]
+        public ViewResult RestorePassword()
         {
             return View();
         }
