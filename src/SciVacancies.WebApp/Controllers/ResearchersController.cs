@@ -198,7 +198,7 @@ namespace SciVacancies.WebApp.Controllers
         [SiblingPage]
         [PageTitle("Избранные вакансии")]
         [BindResearcherIdFromClaims]
-        public ActionResult Favorities(Guid researcherGuid, int pageSize = 10, int currentPage = 1, string sortField = ConstTerms.OrderByFieldApplyDate, string sortDirection = ConstTerms.OrderByDescending)
+        public ActionResult Favorities(Guid researcherGuid, int pageSize = 10, int currentPage = 1, string sortField = ConstTerms.OrderByFieldPublishDate, string sortDirection = ConstTerms.OrderByDescending)
         {
             if (researcherGuid == Guid.Empty)
                 throw new ArgumentNullException(nameof(researcherGuid));
