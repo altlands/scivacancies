@@ -24,42 +24,50 @@
 
 <table class="table request-table">
     <thead>
-    <tr>
-        <th>
-            <div class="inline-block">
-            </div>
-            <div class="inline-block ml6 va-middle">№</div></th>
-        <th>
-            <div class="inline-block"> <!-- <img src="/images/icons/tab-head.png" class="va-middle"/>  -->
-            </div>
-            <div class="inline-block ml6 va-middle">ID вакансии</div></th>
-        <th>
-            <div class="pl21 va-middle">Вакансия</div></th>
-        <th>
-            <a class="sort-order" href="@(Context.Request.Path.Value+"?"+Context.Request.ToQueryStringDictionary().SetDefaultOrInvertOrderParameter(ConstTerms.OrderByFieldPublishDate).CreateString())">
+        <tr>
+            <th>
                 <div class="inline-block">
-                    <img src="@Context.Request.GetOrderIcon()" class="va-middle" />
                 </div>
-                <div class="inline-block ml6 va-middle">
-                    Дата<br /> завершения
+                <div class="inline-block ml6 va-middle">№</div>
+            </th>
+            <th>
+                <div class="inline-block">
+                    <!-- <img src="/images/icons/tab-head.png" class="va-middle"/>  -->
                 </div>
-            </a>
-        </th>
-        <th class="view-col">
-            <div class="pl21 va-middle"><span>Просмотр</span></div></th>
-        <th>
-            <div class="pl21 va-middle">Победитель</div></th>
-    </tr>
+                <div class="inline-block ml6 va-middle">ID вакансии</div>
+            </th>
+            <th>
+                <div class="pl21 va-middle">Вакансия</div>
+            </th>
+            <th>
+                <a class="sort-order" href="@(Context.Request.Path.Value+"?"+Context.Request.ToQueryStringDictionary().SetDefaultOrInvertOrderParameter(ConstTerms.OrderByFieldPublishDate).CreateString())">
+                    <div class="inline-block">
+                        <img src="@Context.Request.GetOrderIcon()" class="va-middle" />
+                    </div>
+                    <div class="inline-block ml6 va-middle">
+                        Дата<br /> завершения
+                    </div>
+                </a>
+            </th>
+            <th class="view-col">
+                <div class="pl21 va-middle"><span>Просмотр</span></div>
+            </th>
+            <th>
+                <div class="pl21 va-middle">Победитель</div>
+            </th>
+        </tr>
     </thead>
     <tbody>
 
-    @if (Model.PagedVacancies != null)
-    {
-        foreach (var item in Model.PagedVacancies.Items.Where(c=> c.status == VacancyStatus.Closed))
+        @if (Model.PagedVacancies != null)
         {
-            <text>
+            var i = Model.PagedVacancies.FirstRowIndexOnPage - 1;
+            foreach (var item in Model.PagedVacancies.Items.Where(c => c.status == VacancyStatus.Closed))
+            {
+                i += 1;
+                <text>
                 <tr>
-                    <td>@item.guid.ToString().Substring(0, 4)...</td>
+                    <td>@i</td>
                     <td><a asp-controller="vacancies" asp-action="details" asp-route-id="@item.guid" title="Просмотр вакансии">ГНС600001</a></td>
                     <td>@item.name</td>
                     <td>@(item.announcement_date?.ToLocalVacancyString()) <!--01-09-14, 16:04--></td>
@@ -68,9 +76,9 @@
                     </td>
                     <td><a asp-controller="applications" asp-action="preview" asp-route-id="@item.guid" class="success-request-icon"><span class="italic bold">Победитель</span></a></td>
                 </tr>
-            </text>
+                </text>
+            }
         }
-    }
 
     </tbody>
 </table>

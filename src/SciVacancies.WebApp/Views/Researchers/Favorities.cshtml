@@ -72,11 +72,13 @@
     <tbody>
         @if (Model.Vacancies != null)
         {
+            var i = Model.Vacancies.FirstRowIndexOnPage - 1;
             foreach (var item in Model.Vacancies.Items)
             {
+                i += 1;
                 <text>
                 <tr>
-                    <td>@item.guid.ToString().Substring(0, 4)...</td>
+                    <td>@i</td>
                     <td>
                         @item.name
                         <br />

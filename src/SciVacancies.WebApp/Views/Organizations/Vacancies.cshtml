@@ -31,35 +31,32 @@
                 <div class="inline-block ml6 va-middle">№</div>
             </th>
             <th>
-                <div class="inline-block">
-                    <!-- <img src="/images/icons/tab-head.png" class="va-middle"/> -->
-                </div>
-                <div class="inline-block ml6 va-middle">ID вакансии</div>
+                <div class="inline-block va-middle">ID вакансии</div>
             </th>
             <th>
                 <div class="pl21 va-middle">Вакансия (заработная плата)</div>
             </th>
-            <th>
+            <th width="130">
                 <a class="sort-order" href="@(Context.Request.Path.Value+"?"+Context.Request.ToQueryStringDictionary().SetDefaultOrInvertOrderParameter(ConstTerms.OrderByFieldCreationDate).CreateString())">
                     <div class="inline-block">
                         <img src="@Context.Request.GetOrderIcon(ConstTerms.OrderByFieldCreationDate)" class="va-middle" />
                     </div>
                     <div class="inline-block ml6 va-middle">
-                        Дата<br /> публикация
+                        Дата<br /> создания
                     </div>
                 </a>
             </th>
-            <th>
+            <th width="130">
                 <a class="sort-order" href="@(Context.Request.Path.Value+"?"+Context.Request.ToQueryStringDictionary().SetDefaultOrInvertOrderParameter(ConstTerms.OrderByFieldPublishDate).CreateString())">
                     <div class="inline-block">
                         <img src="@Context.Request.GetOrderIcon(ConstTerms.OrderByFieldPublishDate)" class="va-middle" />
                     </div>
                     <div class="inline-block ml6 va-middle">
-                        Дата<br /> публикации
+                        Дата<br />публикации
                     </div>
                 </a>
             </th>
-            <th>
+            <th width="110">
                 <a class="sort-order" href="@(Context.Request.Path.Value+"?"+Context.Request.ToQueryStringDictionary().SetDefaultOrInvertOrderParameter(ConstTerms.OrderByFieldVacancyStatus).CreateString())">
                     <div class="inline-block">
                         <img src="@Context.Request.GetOrderIcon(ConstTerms.OrderByFieldVacancyStatus)" class="va-middle" />
@@ -79,11 +76,13 @@
 
         @if (Model.PagedVacancies != null)
         {
+            var i = Model.PagedVacancies.FirstRowIndexOnPage-1;
             foreach (var item in Model.PagedVacancies.Items)
             {
+                i += 1;
                 <text>
                 <tr>
-                    <td>@item.guid.ToString().Substring(0, 4)...</td>
+                    <td>@i</td>
                     <td>ГНС600001</td>
                     <td>
                         @item.name

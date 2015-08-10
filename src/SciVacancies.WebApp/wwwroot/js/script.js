@@ -28,6 +28,14 @@ $(document).ready(function () {
     }
     cuSel(params);
 
+    //jquery datepicker
+    $(function () {
+        $.datepicker.setDefaults(
+			$.extend($.datepicker.regional["ru"])
+		);
+        $(".datepicker-vacancy").datepicker();
+    });
+
     // Checkbox
     $(".checkbox").not(".disabled").click(function () {
         if ($(this).parent().find("input").attr("checked")) {

@@ -20,8 +20,8 @@
 <div class="table-control">
     <!-- <a href="#" class="close-table"><span class="italic">Очистить фильтры</span></a> -->
     <a href="@Context.Request.Path.Value" class="reload-table"><span class="italic">Обновить список</span></a>
-    <a href="#" class="mail-td-icon"></a><a href="#"><span class="italic">Оповещения выключить</span></a>
-    <a href="#" class="unmail-td-icon"></a><a href="#"><span class="italic">Оповещения включить</span></a>
+    @*<a href="#" class="mail-td-icon"></a><a href="#"><span class="italic">Оповещения выключить</span></a>
+    <a href="#" class="unmail-td-icon"></a><a href="#"><span class="italic">Оповещения включить</span></a>*@
 </div>
 
 <table class="table request-table tbl-vac">
@@ -62,13 +62,14 @@
     <tbody>
         @if (Model.PagedItems != null)
         {
+            var i = Model.PagedItems.FirstRowIndexOnPage - 1;
             foreach (var item in Model.PagedItems.Items)
             {
+                i += 1;
                 var unreadClass = item.update_date.HasValue ? string.Empty : "bold";
                 <text>
                 <tr>
-
-                    <td class="@unreadClass">@item.guid.ToString().Substring(0, 4)...</td>
+                    <td class="@unreadClass">@i</td>
                     <td class="@unreadClass">@item.creation_date.ToLocalVacancyString()</td>
                     <td class="bold">
                         <a asp-controller="applications" asp-action="preview" asp-route-guid="@item.vacancyapplication_guid">заявка</a>
