@@ -17,6 +17,8 @@
         public const string OrderByFieldCreationDate = "creationdate";
         public const string OrderByFieldClosedDate = "closeddate";
         public const string OrderByFieldVacancyStatus= "vacancystatus";
+        public const string OrderByFieldSalary= "salary";
+        public const string OrderByFieldVacancyApplicationStatus= "vacancyapplicationstatus";
 
         public const string OrderByName= "name"; //?? это значение ещё востребовано
         public const string OrderByCount= "count"; //?? это значение ещё востребовано

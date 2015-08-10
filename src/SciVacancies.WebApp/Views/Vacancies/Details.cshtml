@@ -59,7 +59,7 @@
                 <th>
                     <a class="sort-order" href="@(Context.Request.Path.Value+"?"+Context.Request.ToQueryStringDictionary().SetDefaultOrInvertOrderParameter(ConstTerms.OrderByFieldApplyDate).CreateString())">
                         <div class="inline-block">
-                            <img src="@Context.Request.GetOrderIcon(ConstTerms.OrderByFieldApplyDate)" class="va-middle" />
+                            <img title="Сортировка" src="@Context.Request.GetOrderIcon(ConstTerms.OrderByFieldApplyDate)" class="va-middle" />
                         </div>
                         <div class="inline-block ml6 va-middle">
                             Дата подачи заявки
@@ -69,7 +69,7 @@
                 <th>
                     <a class="sort-order" href="@(Context.Request.Path.Value+"?"+Context.Request.ToQueryStringDictionary().SetDefaultOrInvertOrderParameter(ConstTerms.OrderByFieldFullName).CreateString())">
                         <div class="inline-block">
-                            <img src="@Context.Request.GetOrderIcon(ConstTerms.OrderByFieldFullName)" class="va-middle" />
+                            <img title="Сортировка" src="@Context.Request.GetOrderIcon(ConstTerms.OrderByFieldFullName)" class="va-middle" />
                         </div>
                         <div class="inline-block ml6 va-middle">
                             Фамилия, имя, отчество

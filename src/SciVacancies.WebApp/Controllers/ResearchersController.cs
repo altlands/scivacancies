@@ -160,7 +160,8 @@ namespace SciVacancies.WebApp.Controllers
         [SiblingPage]
         [PageTitle("Мои заявки")]
         [BindResearcherIdFromClaims]
-        public ViewResult Applications(Guid researcherGuid, int pageSize = 10, int currentPage = 1)
+        public ViewResult Applications(Guid researcherGuid, int pageSize = 10, int currentPage = 1,
+            string sortField = ConstTerms.OrderByFieldApplyDate, string sortDirection = ConstTerms.OrderByDescending)
         {
             if (researcherGuid == Guid.Empty)
                 throw new ArgumentNullException(nameof(researcherGuid));
@@ -170,8 +171,9 @@ namespace SciVacancies.WebApp.Controllers
                 {
                     PageSize = pageSize,
                     PageIndex = currentPage,
-                    OrderBy = ConstTerms.OrderByCreationDateDescending,
-                    ResearcherGuid = researcherGuid
+                    ResearcherGuid = researcherGuid,
+                    OrderBy = new SortFilterHelper().GetSortField<VacancyApplication>(sortField),
+                    OrderDirection = sortDirection
                 });
 
             var model = new VacancyApplicationsInResearcherIndexViewModel();

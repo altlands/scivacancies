@@ -24,6 +24,9 @@ namespace SciVacancies.WebApp.Engine
 
                 if (sortField == ConstTerms.OrderByFieldFullName)
                     return nameof(VacancyApplication.researcher_fullname);
+
+                if (sortField == ConstTerms.OrderByFieldVacancyApplicationStatus)
+                    return nameof(VacancyApplication.status);
             }
 
 

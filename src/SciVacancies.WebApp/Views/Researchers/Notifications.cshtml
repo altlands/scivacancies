@@ -67,18 +67,17 @@
                         <a asp-controller="vacancies" asp-action="card" asp-route-id="@item.vacancy_guid">Вакансия</a>
                     </td>
                     <td>
-                        @*<a href="#" class="success-request-icon"><span class="italic bold">@item.Title</span></a>*@
                         <span class="italic bold">@item.title</span>
                     </td>
                     <td>
                         @if (item.status != NotificationStatus.Read && item.status != NotificationStatus.Removed)
                         {
-                            <a asp-controller="notifications" asp-action="marknotificationread" asp-route-notificationguids="@item.guid" class="view-td-icon"></a>
+                            <a asp-controller="notifications" asp-action="marknotificationread" asp-route-notificationguids="@item.guid" class="view-td-icon" title="Пометить как прочитанное"></a>
                         }
 
                         @if (item.status != NotificationStatus.Removed)
                         {
-                            <a asp-controller="notifications" asp-action="delete" asp-route-notificationguids="@item.guid" class="close-td-icon" title="Удалить сообщение"></a>
+                            <a asp-controller="notifications" asp-action="delete" asp-route-notificationguids="@item.guid" class="-td-icon" title="Удалить сообщение"></a>
                         }
                     </td>
                 </tr>

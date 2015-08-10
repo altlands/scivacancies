@@ -67,7 +67,8 @@ namespace SciVacancies.WebApp.Controllers
         [SiblingPage]
         [PageTitle("Вакансии")]
         [BindOrganizationIdFromClaims]
-        public ViewResult Vacancies(Guid organizationGuid, int pageSize = 10, int currentPage = 1, string sortField = ConstTerms.OrderByFieldPublishDate, string sortDirection = ConstTerms.OrderByDescending)
+        public ViewResult Vacancies(Guid organizationGuid, int pageSize = 10, int currentPage = 1, 
+            string sortField = ConstTerms.OrderByFieldPublishDate, string sortDirection = ConstTerms.OrderByDescending)
         {
             if (organizationGuid == Guid.Empty)
                 throw new ArgumentNullException(nameof(organizationGuid));

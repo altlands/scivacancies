@@ -2,6 +2,7 @@
 @using SciVacancies.Domain.Enums
 @using SciVacancies.WebApp
 @using SciVacancies.WebApp.Controllers
+@using SciVacancies.WebApp.Engine
 @model SciVacancies.WebApp.ViewModels.VacancyApplicationsInResearcherIndexViewModel
 
 <div class="crumbs">
@@ -23,47 +24,59 @@
 
 <table class="table request-table tbl-vac">
     <thead>
-    <tr>
-        <th>
-            <div class="inline-block"><!-- <img src="/images/icons/tab-head.png" class="va-middle"/> -->
-            </div>
-            <div class="inline-block ml6 va-middle">ID вакансии</div></th>
-        <th>
-            <div class="inline-block">
-            </div>
-            <div class="inline-block ml6 va-middle">Должность</div></th>
-        <th>
-            <div class="inline-block"><!-- <img src="/images/icons/tab-head.png" class="va-middle"/> -->
-            </div>
-            <div class="inline-block ml6 va-middle">Заработная<br/> плата
-            </div></th>
-        <th>
-            <div class="inline-block"><!-- <img src="/images/icons/tab-head.png" class="va-middle"/> -->
-            </div>
-            <div class="inline-block ml6 va-middle">Дата<br/> отправки
-            </div></th>
-        <th>
-            <div class="inline-block"><!-- <img src="/images/icons/tab-head.png" class="va-middle"/> -->
-            </div>
-            <div class="inline-block ml6 va-middle">Статус<br/>вакансии
-            </div></th>
-        <th>
-            <div class="inline-block"><!-- <img src="/images/icons/tab-head.png" class="va-middle"/> -->
-            </div>
-            <div class="inline-block ml6 va-middle">Статус<br/>заявки
-            </div></th>
-        <th width="200">
-                @*<div class="pl21 va-middle">Действия</div>*@
+        <tr>
+            <th>
+                <div class="inline-block">
+                    <!-- <img src="/images/icons/tab-head.png" class="va-middle"/> -->
+                </div>
+                <div class="inline-block ml6 va-middle">ID вакансии</div>
+            </th>
+            <th>
+                <div class="inline-block">
+                </div>
+                <div class="inline-block ml6 va-middle">Должность</div>
+            </th>
+            <th width="130">
+                <div class="pl21 va-middle">
+                    Заработная<br />плата
+                </div>
+            </th>
+            <th width="130">
+                <a class="sort-order" href="@(Context.Request.Path.Value+"?"+Context.Request.ToQueryStringDictionary().SetDefaultOrInvertOrderParameter(ConstTerms.OrderByFieldApplyDate).CreateString())">
+                    <div class="inline-block">
+                        <img title="Сортировка" src="@Context.Request.GetOrderIcon(ConstTerms.OrderByFieldApplyDate)" class="va-middle" />
+                    </div>
+                    <div class="inline-block ml6 va-middle">
+                        Дата<br />отправки
+                    </div>
+                </a>
+            </th>
+            <th width="170">
+                <div class="pl21 va-middle">
+                    Статус вакансии
+                </div>
+            </th>
+            <th width="130">
+                <a class="sort-order" href="@(Context.Request.Path.Value+"?"+Context.Request.ToQueryStringDictionary().SetDefaultOrInvertOrderParameter(ConstTerms.OrderByFieldVacancyApplicationStatus).CreateString())">
+                    <div class="inline-block">
+                        <img title="Сортировка" src="@Context.Request.GetOrderIcon(ConstTerms.OrderByFieldVacancyApplicationStatus)" class="va-middle" />
+                    </div>
+                    <div class="inline-block ml6 va-middle">
+                        Статус заявки
+                    </div>
+                </a>
+            </th>
+            <th width="50">
                 <div class="va-middle">Действия</div>
-        </th>
-    </tr>
+            </th>
+        </tr>
     </thead>
     <tbody>
-    @if (Model.Applications != null)
-    {
-        foreach (var item in Model.Applications.Items)
+        @if (Model.Applications != null)
         {
-            <text>
+            foreach (var item in Model.Applications.Items)
+            {
+                <text>
                 <tr>
                     <td>ГНС600001</td>
                     <td>@item.PositionTypeName</td>
@@ -74,16 +87,16 @@
                     <td>
                         <a asp-controller="applications" asp-action="details" asp-route-id="@item.Guid" class="view-td-icon"></a>
                         @*@if (item.Status == VacancyApplicationStatus.Applied)
-                        {
-                            <text>
-                                <a asp-controller="applications" asp-action="delete" asp-route-id="@item.Guid" class="close-td-icon"></a>
-                            </text>
-                        }*@
+                            {
+                                <text>
+                                    <a asp-controller="applications" asp-action="delete" asp-route-id="@item.Guid" class="close-td-icon"></a>
+                                </text>
+                            }*@
                     </td>
                 </tr>
-            </text>
+                </text>
+            }
         }
-    }
     </tbody>
 </table>
 

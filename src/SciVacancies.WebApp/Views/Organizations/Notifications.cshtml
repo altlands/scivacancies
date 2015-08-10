@@ -21,7 +21,7 @@
     <!-- <a href="#" class="close-table"><span class="italic">Очистить фильтры</span></a> -->
     <a href="@Context.Request.Path.Value" class="reload-table"><span class="italic">Обновить список</span></a>
     @*<a href="#" class="mail-td-icon"></a><a href="#"><span class="italic">Оповещения выключить</span></a>
-    <a href="#" class="unmail-td-icon"></a><a href="#"><span class="italic">Оповещения включить</span></a>*@
+        <a href="#" class="unmail-td-icon"></a><a href="#"><span class="italic">Оповещения включить</span></a>*@
 </div>
 
 <table class="table request-table tbl-vac">
@@ -74,7 +74,9 @@
                     <td class="bold">
                         <a asp-controller="applications" asp-action="preview" asp-route-guid="@item.vacancyapplication_guid">заявка</a>
                     </td>
-                    <td class="@unreadClass"><a href="#" class="success-request-icon"><span class="italic bold">@item.title</span></a></td>
+                    <td class="@unreadClass">
+                        <span class="italic bold">@item.title</span>
+                    </td>
                     <td>
                         @if (item.status != NotificationStatus.Read && item.status != NotificationStatus.Removed)
                         {
@@ -83,7 +85,7 @@
 
                         @if (item.status != NotificationStatus.Removed)
                         {
-                            <a asp-controller="notifications" asp-action="delete" asp-route-notificationguids="@item.guid" class="close-td-icon" title="Удалить сообщение"></a>
+                            <a asp-controller="notifications" asp-action="delete" asp-route-notificationguids="@item.guid" class="-td-icon" title="Удалить сообщение"></a>
                         }
                     </td>
                 </tr>

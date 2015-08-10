@@ -19,6 +19,7 @@ namespace SciVacancies.WebApp.Queries
         public long PageSize { get; set; }
         public long PageIndex { get; set; }
         public string OrderBy { get; set; }
+        public string OrderDirection { get; set; }
 
         //TODO - добавить фильтр по колонкам
     }

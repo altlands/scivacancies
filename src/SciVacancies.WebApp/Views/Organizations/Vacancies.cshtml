@@ -39,7 +39,7 @@
             <th width="130">
                 <a class="sort-order" href="@(Context.Request.Path.Value+"?"+Context.Request.ToQueryStringDictionary().SetDefaultOrInvertOrderParameter(ConstTerms.OrderByFieldCreationDate).CreateString())">
                     <div class="inline-block">
-                        <img src="@Context.Request.GetOrderIcon(ConstTerms.OrderByFieldCreationDate)" class="va-middle" />
+                        <img title="Сортировка" src="@Context.Request.GetOrderIcon(ConstTerms.OrderByFieldCreationDate)" class="va-middle" />
                     </div>
                     <div class="inline-block ml6 va-middle">
                         Дата<br /> создания
@@ -49,7 +49,7 @@
             <th width="130">
                 <a class="sort-order" href="@(Context.Request.Path.Value+"?"+Context.Request.ToQueryStringDictionary().SetDefaultOrInvertOrderParameter(ConstTerms.OrderByFieldPublishDate).CreateString())">
                     <div class="inline-block">
-                        <img src="@Context.Request.GetOrderIcon(ConstTerms.OrderByFieldPublishDate)" class="va-middle" />
+                        <img title="Сортировка" src="@Context.Request.GetOrderIcon(ConstTerms.OrderByFieldPublishDate)" class="va-middle" />
                     </div>
                     <div class="inline-block ml6 va-middle">
                         Дата<br />публикации
@@ -59,7 +59,7 @@
             <th width="110">
                 <a class="sort-order" href="@(Context.Request.Path.Value+"?"+Context.Request.ToQueryStringDictionary().SetDefaultOrInvertOrderParameter(ConstTerms.OrderByFieldVacancyStatus).CreateString())">
                     <div class="inline-block">
-                        <img src="@Context.Request.GetOrderIcon(ConstTerms.OrderByFieldVacancyStatus)" class="va-middle" />
+                        <img title="Сортировка" src="@Context.Request.GetOrderIcon(ConstTerms.OrderByFieldVacancyStatus)" class="va-middle" />
                     </div>
                     <div class="inline-block ml6 va-middle">
                         Статус<br />вакансии
