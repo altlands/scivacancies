@@ -57,6 +57,7 @@ namespace SciVacancies.WebApp.Commands
             _userManager.Create(user);
             _userManager.AddToRole(user.Id, ConstTerms.RequireRoleResearcher);
 
+            //send email notification
             var registerSmtpNotificator = new RegisterSmtpNotificator();
             registerSmtpNotificator.Send(researcherDataModel.FullName, message.Data.UserName, message.Data.Password, message.Data.Email);
             if (!string.IsNullOrWhiteSpace(message.Data.ExtraEmail))

@@ -43,10 +43,7 @@
                 </a>
             </th>
             <th>
-                <div class="inline-block">
-                    <!-- <img src="/images/icons/tab-head.png" class="va-middle"/> -->
-                </div>
-                <div class="inline-block ml6 va-middle">Вакансия</div>
+                <div class="pl21 va-middle">Заявки</div>
             </th>
             <th>
                 <div class="inline-block">
@@ -72,7 +69,7 @@
                     <td class="@unreadClass">@i</td>
                     <td class="@unreadClass">@item.creation_date.ToLocalVacancyString()</td>
                     <td class="bold">
-                        <a asp-controller="applications" asp-action="preview" asp-route-guid="@item.vacancyapplication_guid">заявка</a>
+                        <a asp-controller="applications" asp-action="preview" asp-route-id="@item.vacancyapplication_guid">заявка</a>
                     </td>
                     <td class="@unreadClass">
                         <span class="italic bold">@item.title</span>

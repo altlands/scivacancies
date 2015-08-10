@@ -4,6 +4,7 @@ using System;
 
 using CommonDomain.Persistence;
 using MediatR;
+using SciVacancies.WebApp.Engine.SmtpNotificators;
 
 namespace SciVacancies.WebApp.Commands
 {
@@ -24,6 +25,11 @@ namespace SciVacancies.WebApp.Commands
             Researcher researcher = _repository.GetById<Researcher>(msg.ResearcherGuid);
             Guid vacancyApplicationGuid = researcher.CreateVacancyApplicationTemplate(msg.VacancyGuid, msg.Data);
             _repository.Save(researcher, Guid.NewGuid(), null);
+
+            //TODO: вынести в отдельный VacancyCreatedEventHandler
+            ////send email notification
+            //var vacancyStatusChangedSmtpNotificator = new VacancyStatusChangedSmtpNotificator();
+            //vacancyStatusChangedSmtpNotificator.Send(msg.Data.FullName, message.Data.UserName, message.Data.Password, message.Data.Email);
 
             return vacancyApplicationGuid;
         }

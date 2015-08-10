@@ -38,7 +38,7 @@ namespace SciVacancies.WebApp.Queries
             if (string.IsNullOrWhiteSpace(message.OrderBy))
                 message.OrderBy = nameof(VacancyApplication.creation_date);
 
-            var vacancyApplications = _db.Page<VacancyApplication>(message.PageIndex, message.PageSize, new Sql($"SELECT va.* FROM res_vacancyapplications va WHERE va.status != @0 AND va.researcher_guid=@1  ORDER BY va.creation_date DESC", VacancyApplicationStatus.Removed, message.ResearcherGuid));
+            var vacancyApplications = _db.Page<VacancyApplication>(message.PageIndex, message.PageSize, new Sql($"SELECT va.* FROM res_vacancyapplications va WHERE va.status != @0 AND va.researcher_guid=@1  ORDER BY va.{message.OrderBy} {message.OrderDirection.ToUpper()}", VacancyApplicationStatus.Removed, message.ResearcherGuid));
 
             return vacancyApplications;
         }
