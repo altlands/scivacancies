@@ -33,6 +33,8 @@ namespace SciVacancies.WebApp.ViewModels
         public string Memberships { get; set; }
         public string Conferences { get; set; }
 
+        public string CoveringLetter { get; set; }
+
         public VacancyApplicationStatus Status { get; set; }
 
         public DateTime CreationDate { get; set; }

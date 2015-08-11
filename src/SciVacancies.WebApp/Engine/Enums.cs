@@ -26,7 +26,7 @@ namespace SciVacancies.WebApp.Engine
         ScienceMap = 1,
 
         [Description("Информика")]
-        Informika = 2
+        Sciencemon = 2
     }
 
 }

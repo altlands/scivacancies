@@ -14,27 +14,31 @@
       "RedirectUrl": "http://localhost:59075/account/callback"
     },
     "Mapofscience": {
-      "AuthorizationEndpoint": "",
-      "TokenEndpoint": "",
-      "UserEndpoint": "",
+      "AuthorizationEndpoint": "http://scimap-sso.alt-lan.com/scimap-sso/oauth/authorize",
+      "TokenEndpoint": "http://scimap-sso.alt-lan.com/scimap-sso/oauth/token",
+      "UserEndpoint": "http://scimap-sso.alt-lan.com/scimap-sso/user/account",
       "ClientId": "",
       "ClientSecret": "",
       "Scope": "",
-      "RedirectUrl": ""
+      "RedirectUrl": "http://localhost:59075/account/callback"
     }
   },
   //TODO
   "ApiSettings": {
     "Sciencemon": {
-      //"Organization": "http://www.sciencemon.ru/ext-api/v1.0/org/",
+      //"OrganizationProfile": "http://www.sciencemon.ru/ext-api/v1.0/org/",
       //"BasicAuthorization": "dev:informika"
     },
     "Mapofscience": {
-
+      "ResearcherProfile": "http://scimap-sso.alt-lan.com/user/profile"
     }
   },
   "ElasticSettings": {
     "ConnectionUrl": "http://localhost:9200/",
     "DefaultIndex": "scivacancies"
+  },
+    "FileStorageSettings": {
+    "AttachmentsPath": "",
+    "ImagesPath": ""
   }
 }

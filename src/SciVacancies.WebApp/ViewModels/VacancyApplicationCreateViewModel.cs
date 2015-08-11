@@ -8,7 +8,7 @@ using SciVacancies.WebApp.ViewModels.Base;
 
 namespace SciVacancies.WebApp.ViewModels
 {
-    public class VacancyApplicationCreateViewModel: PageViewModelBase
+    public class VacancyApplicationCreateViewModel : PageViewModelBase
     {
 
         [HiddenInput]
@@ -39,7 +39,8 @@ namespace SciVacancies.WebApp.ViewModels
         public string Memberships { get; set; }
         public string Conferences { get; set; }
 
-        public List<IFormFile> Attachments{ get; set; }
+        public string CoveringLetter { get; set; }
 
+        public List<IFormFile> Attachments { get; set; }
     }
 }

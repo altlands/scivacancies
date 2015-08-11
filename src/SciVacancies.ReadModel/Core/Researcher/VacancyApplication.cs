@@ -29,6 +29,8 @@ namespace SciVacancies.ReadModel.Core
         public string memberships { get; set; }
         public string conferences { get; set; }
 
+        public string covering_letter { get; set; }
+
         public string educations { get; set; }
         public string publications { get; set; }
 
