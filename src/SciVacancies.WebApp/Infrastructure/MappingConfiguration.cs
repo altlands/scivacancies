@@ -32,7 +32,9 @@ namespace SciVacancies.WebApp.Infrastructure
 
             //researcher
             Mapper.CreateMap<AccountResearcherRegisterViewModel, ResearcherDataModel>()
-                .ForMember(dest => dest.BirthDate, src => src.MapFrom(c => new DateTime(c.BirthYear, 1, 1)));
+                .ForMember(dest => dest.BirthDate, src => src.MapFrom(c => new DateTime(c.BirthYear, 1, 1)))
+                .ForMember(dest => dest.Patronymic, src => src.MapFrom(c => c.Patronymic))
+                ;
             //organization
             Mapper.CreateMap<AccountOrganizationRegisterViewModel, OrganizationDataModel>()
                 .ForMember(d => d.Name, o => o.MapFrom(s => s.Name))
