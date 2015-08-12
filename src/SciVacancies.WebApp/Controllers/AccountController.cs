@@ -334,17 +334,6 @@ namespace SciVacancies.WebApp.Controllers
 
         [PageTitle("Регистрация")]
         public ViewResult Register() => View(new AccountResearcherRegisterViewModel());
-        [PageTitle("Регистрация")]
-        public ViewResult RegisterFilled() => View("register", new AccountResearcherRegisterViewModel
-        {
-            SecondName = "Фамилько",
-            FirstName = "Имён",
-            Patronymic = "Отчествович",
-            UserName = "researcher@mail.scivacancies.org",
-            Phone = "35413541",
-            BirthYear = DateTime.Now.AddYears(-40).Year,
-            Email = "researcher@mail.scivacancies.org"
-        });
 
         [PageTitle("Регистрация")]
         [HttpPost]
