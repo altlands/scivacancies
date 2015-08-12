@@ -12,9 +12,9 @@ namespace SciVacancies.WebApp.ViewModels
         [Required(ErrorMessage = "Требуется ввести логин")]
         public string UserName { get; set; }
 
-        [Required(ErrorMessage = "Требуется заоплнить поле Имя")]
+        [Required(ErrorMessage = "Требуется заполнить поле Имя")]
         public string FirstName { get; set; }
-        [Required(ErrorMessage = "Требуется заоплнить поле Фамилия")]
+        [Required(ErrorMessage = "Требуется заполнить поле Фамилия")]
         public string SecondName { get; set; }
         public string Patronymic { get; set; }
 

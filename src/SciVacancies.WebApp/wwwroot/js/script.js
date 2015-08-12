@@ -290,14 +290,50 @@ $(document).ready(function () {
     */
 });
 
+/*
+ * каптча
+ */
+function reloadImg(captchaImageFieldName) {
+    var d = new Date();
+    $('#' + captchaImageFieldName).attr("src", "/captcha/fetch?w=100&h=30" + d.getTime());
+}
 
+function beforeFormSubmitRegister(source, captchaImageFieldName, captchaInputFieldName, event) {
+    var form = $('#' + captchaImageFieldName).parents('form')[0];
+    if (!$(form).hasClass('validated')) {
+        event.preventDefault();
+
+
+        var validData = {
+            captchaText: $('#' + captchaInputFieldName).val()
+        };
+
+        $.ajax({
+            url: '/captcha/isvalid',
+            type: 'POST' /*'GET'*/,
+            data: validData,
+            success: function (isCaptureValid) {
+                if (isCaptureValid) {
+                    $(form).addClass('validated');
+                    $(form).submit();
+                } else {
+                    reloadImg(captchaImageFieldName);
+                    return false;
+                }
+            },
+            error: function (error) {
+                return false;
+            }
+        });
+    }
+};
+
+//
 function vacancySaveOptions(options) {
-
     if (options.publish !== undefined && options.publish) {
         $("form").find("input[type=\"hidden\"][name=\"ToPublish\"]").val(true);
         return true;
     }
-
     if (options.saveDraft !== undefined && options.saveDraft) {
         $("form").find("input[type=\"hidden\"][name=\"ToPublish\"]").val(false);
         return true;
@@ -349,7 +385,7 @@ function addNewItemToList(source, prefix) {
         oldPrefixBracket = prefix + "\\[0\\]",
         newPrefixDash = prefix + "_" + newIndex + "__",
         newPrefixBracket = prefix + "[" + newIndex + "]",
-        newPrefixSharp= prefix + newIndex;
+        newPrefixSharp = prefix + newIndex;
 
     //находим шаблон для добавления строк
     var templateDiv = $(parentDiv).find("[data-list-template=\"true\"]").clone();
