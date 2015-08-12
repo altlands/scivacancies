@@ -46,5 +46,6 @@
 
         public const string FolderApplicationsAttachments= "\\uploads\\applications\\attachments";
         public const string FolderResearcherPhoto = "\\uploads\\researcherphoto";
+        public const string PathToBlankImage = "/images/profile-photo.png";
     }
 }

@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.Entity.Core;
+using System.Drawing;
+using System.Drawing.Drawing2D;
+using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
 using System.Net.Mime;
@@ -90,9 +93,9 @@ namespace SciVacancies.WebApp.Controllers
             {
                 var file = model.PhotoFile;
                 var fileName = ContentDispositionHeaderValue
-                  .Parse(file.ContentDisposition)
-                  .FileName
-                  .Trim('"');
+                    .Parse(file.ContentDisposition)
+                    .FileName
+                    .Trim('"');
                 var fileExtension = fileName
                     .Split('.')
                     .Last()
@@ -101,48 +104,50 @@ namespace SciVacancies.WebApp.Controllers
                 //TODO: вынести в конфиг типы допустимых файлов
                 var extensions = new List<string> { "JPG", "JPEG", "PNG" };
                 if (!extensions.Contains(fileExtension))
-                    ModelState.AddModelError("PhotoFile", $"Можно добавить только изображение. Допустимые типы файлов: {string.Join(", ", extensions)}");
-
-                //TODO: вынести в конфиг это магическое число
-                if (file.Length > 500000)
-                    ModelState.AddModelError("PhotoFile", @"Размер изображения превышает 500кБ");
-
+                    ModelState.AddModelError("PhotoFile",
+                        $"Можно добавить только изображение. Допустимые типы файлов: {string.Join(", ", extensions)}");
 
                 if (ModelState.ErrorCount > 0)
                     return View(model);
 
-                //сценарий-А: сохранить фото на диск
-                try
+                //TODO: вынести в конфиг это магическое число
+                if (file.Length > 500000)
                 {
                     var newFileName = $"{authorizedUserGuid}.{fileExtension}";
-                    var filePath = $"{_hostingEnvironment.ApplicationBasePath}\\wwwroot{ConstTerms.FolderResearcherPhoto}\\{newFileName}" /*{DateTime.Now.ToString("yyyyddMHHmmss")}{fileName}*/ ;
-                    file.SaveAs(filePath);
-                    model.ImageName = newFileName;
-                    model.ImageSize = file.Length;
-                    model.ImageExtension = fileExtension;
-                    model.ImageUrl = $"\\{newFileName}";
+                    var filePath =
+                        $"{_hostingEnvironment.ApplicationBasePath}\\wwwroot{ConstTerms.FolderResearcherPhoto}\\{newFileName}";
+                    Directory.CreateDirectory(
+                        $"{_hostingEnvironment.ApplicationBasePath}\\wwwroot{ConstTerms.FolderResearcherPhoto}\\");
+
+                    var scale = (float)500000 / file.Length;
+                    using (var image = Image.FromStream(file.OpenReadStream()))
+                    {
+                        var newWidth = image.Width * scale;
+                        var newHeight = image.Height * scale;
+                        using (var newImage = ScaleImage(image, (int)newWidth, (int)newHeight))
+                        {
+                            //сценарий-А: сохранить фото на диск
+                            newImage.Save(filePath);
+                            model.ImageName = newFileName;
+                            model.ImageSize = file.Length;
+                            model.ImageExtension = fileExtension;
+                            model.ImageUrl = $"\\{newFileName}";
+
+                            ////TODO: сохранение фото в БД (сделать)
+                            //using (var memoryStream = new MemoryStream())
+                            //{
+                            //    //фотографии в byte
+                            //    byte[] byteData;
+
+                            //    //сценарий-Б: сохранить фото в БД
+                            //    ((Image)newImage).Save(memoryStream, ImageFormat.Jpeg);
+                            //    byteData = memoryStream.ToArray();
+                            //}
+
+                        }
+                    }
                 }
-                catch (Exception) { }
 
-                //TODO: сохранение фото в БД (сделать)
-                //using (var memoryStream = new MemoryStream())
-                //{
-                //    фотографии в byte
-                //    byte[] byteData;
-                //    //сценарий-Б: сохранить фото в БД
-                //    //var openReadStream = file.OpenReadStream();
-                //    //var scale = (int)(500000 / file.Length);
-                //    //var resizedImage = new Bitmap(image, new Size(image.Width * scale, image.Height * scale));
-                //    //((Image)resizedImage).Save(memoryStream, ImageFormat.Jpeg);
-                //    //byteData = memoryStream.ToArray();
-                //    //memoryStream.SetLength(0);
-
-                //    //сценарий-В: сохранить фото в БД
-                //    //var openReadStream = file.OpenReadStream();
-                //    //openReadStream.CopyTo(memoryStream);
-                //    //byteData = memoryStream.ToArray();
-                //    //memoryStream.SetLength(0);
-                //}
             }
 
 
@@ -152,9 +157,23 @@ namespace SciVacancies.WebApp.Controllers
                 return HttpNotFound(); //throw new ObjectNotFoundException();
 
             var data = Mapper.Map<ResearcherDataModel>(model);
-            _mediator.Send(new UpdateResearcherCommand { Data = data, ResearcherGuid = authorizedUserGuid });
+            _mediator.Send(new UpdateResearcherCommand
+            {
+                Data = data,
+                ResearcherGuid = authorizedUserGuid
+            });
 
             return RedirectToAction("account");
+        }
+
+        public static Image ScaleImage(Image image, int maxWidth, int maxHeight)
+        {
+            var newImage = new Bitmap(maxWidth, maxHeight);
+
+            using (var graphics = Graphics.FromImage(newImage))
+                graphics.DrawImage(image, 0, 0, maxWidth, maxHeight);
+
+            return newImage;
         }
 
         [SiblingPage]
@@ -206,7 +225,8 @@ namespace SciVacancies.WebApp.Controllers
                 throw new ArgumentNullException(nameof(researcherGuid));
             var model = new VacanciesFavoritiesInResearcherIndexViewModel
             {
-                Vacancies = _mediator.Send(new SelectPagedFavoriteVacanciesByResearcherQuery {
+                Vacancies = _mediator.Send(new SelectPagedFavoriteVacanciesByResearcherQuery
+                {
                     PageSize = pageSize,
                     PageIndex = currentPage,
                     ResearcherGuid = researcherGuid,

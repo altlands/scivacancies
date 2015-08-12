@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNet.Http;
 using Newtonsoft.Json;
 using SciVacancies.ReadModel.Core;
+using SciVacancies.WebApp.Engine;
 using SciVacancies.WebApp.ViewModels.Base;
 
 namespace SciVacancies.WebApp.ViewModels
@@ -63,6 +64,9 @@ namespace SciVacancies.WebApp.ViewModels
         public long? ImageSize { get; set; }
         public string ImageExtension { get; set; }
         public string ImageUrl { get; set; }
+        public string ImageUrlOrDefault => string.IsNullOrWhiteSpace(ImageUrl)
+            ? ConstTerms.PathToBlankImage
+            : (ConstTerms.FolderResearcherPhoto + ImageUrl);
 
         public List<EducationEditViewModel> Educations { get; set; }
         public List<PublicationEditViewModel> Publications { get; set; }
