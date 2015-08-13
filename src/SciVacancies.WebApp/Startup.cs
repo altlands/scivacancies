@@ -119,6 +119,23 @@ namespace SciVacancies.WebApp
                     name: "default",
                     template: "{controller=Home}/{action=Index}/{id?}");
 
+
+                routes.MapRoute("captchafetch", "captcha/fetch",
+               new
+               {
+                   controller = "AltLanDSCaptcha",
+                   action = "Fetch",
+                   //w = UrlParameter.Optional,
+                   //h = UrlParameter.Optional
+               });
+
+                routes.MapRoute("captchaisvalid", "captcha/isvalid",
+                    new
+                    {
+                        controller = "AltLanDSCaptcha",
+                        action = "IsValid"
+                    });
+
                 // Uncomment the following line to add a route for porting Web API 2 controllers.
                 // routes.MapWebApiRoute("DefaultApi", "api/{controller}/{id?}");
             });

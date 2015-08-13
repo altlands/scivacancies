@@ -40,12 +40,16 @@
 
 <form asp-controller="researchers" asp-action="edit" method="POST" class="l-information e-information b-edit" enctype="multipart/form-data">
     <input type="hidden" asp-for="Guid" />
+    <input type="hidden" asp-for="ImageUrl" />
+    <input type="hidden" asp-for="ImageExtension" />
+    <input type="hidden" asp-for="ImageName" />
+    <input type="hidden" asp-for="ImageSize" />
     <div class="row">
         <div class="bold mb20">Общая информация</div>
-        
+
         <a asp-controller="accountintegration" asp-action="UpdateResearcherAccountFromOutside" asp-route-datasource="@((int)AuthorizeResourceTypes.ScienceMap)" class="link-upload fs13">Загрузить данные из системы «@AuthorizeResourceTypes.ScienceMap.GetDescription()»</a>
         <span style="color: red;">не реализовано</span>
-        
+
         <div class="table-form">
             <div class="table-row mb15">
                 <div class="left-cell">
@@ -53,14 +57,14 @@
                         Ваше фото
                     </label>
                     <a data-selectorphoto="true" asp-controller="researcher" asp-action="edit#" class="link-upload fs13" onclick="javascript: return false;">Загрузить фото</a>
-                    <input type="file" class="hide" name="PhotoFile" id="PhotoFile" data-selectphoto="true"/>
+                    <input type="file" class="hide" name="PhotoFile" id="PhotoFile" data-selectphoto="true" />
                     <div class="description mt10">
                         Выберите изображение размером<br /> не более 500 кБ<br />Рекомендуемое соотношение сторон – 3:4
                     </div>
                 </div>
                 <div class="right-cell">
-                    <div class="user-photo">
-                        <img src="@(string.IsNullOrWhiteSpace(Model.ImageUrl) ? "/images/profile-photo.png" :  (ConstTerms.FolderResearcherPhoto + Model.ImageUrl) )" width="140" height="180" />
+                    <div class="user-photo" style="max-width: 140px; max-height: 180px;">
+                        <img src="@Model.ImageUrlOrDefault" style="max-width: 138px; max-height: 178px;" />
                     </div>
                 </div>
             </div>
@@ -188,8 +192,8 @@
                 </div>
                 <div class="right-cell">
                     @*<select asp-for="Nationality"
-                                asp-items=""></select>
-                    <span asp-validation-for="Nationality"></span>*@
+                                    asp-items=""></select>
+                        <span asp-validation-for="Nationality"></span>*@
                 </div>
             </div>
             <div class="table-row form-row mt23">

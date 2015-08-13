@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using NPoco;
 using SciVacancies.WebApp.ViewModels.Base;
 using SciVacancies.Domain.Enums;
+using SciVacancies.WebApp.Engine;
 
 namespace SciVacancies.WebApp.ViewModels
 {
@@ -51,6 +52,9 @@ namespace SciVacancies.WebApp.ViewModels
         public long? ImageSize { get; set; }
         public string ImageExtension { get; set; }
         public string ImageUrl { get; set; }
+        public string ImageUrlOrDefault => string.IsNullOrWhiteSpace(ImageUrl)
+            ? ConstTerms.PathToBlankImage
+            : (ConstTerms.FolderResearcherPhotoUtl + ImageUrl);
 
         public List<EducationEditViewModel> Educations { get; set; }
         public List<PublicationEditViewModel> Publications { get; set; }

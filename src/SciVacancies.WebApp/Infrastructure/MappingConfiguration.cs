@@ -33,7 +33,9 @@ namespace SciVacancies.WebApp.Infrastructure
             //researcher
             //TODO - дописать поля в модели
             Mapper.CreateMap<AccountResearcherRegisterViewModel, ResearcherDataModel>()
-                .ForMember(dest => dest.BirthDate, src => src.MapFrom(c => new DateTime(c.BirthYear, 1, 1)));
+                .ForMember(dest => dest.BirthDate, src => src.MapFrom(c => new DateTime(c.BirthYear, 1, 1)))
+                .ForMember(dest => dest.Patronymic, src => src.MapFrom(c => c.Patronymic))
+                ;
             //organization
             Mapper.CreateMap<AccountOrganizationRegisterViewModel, OrganizationDataModel>()
                 .ForMember(d => d.Name, o => o.MapFrom(s => s.Name))
@@ -389,7 +391,10 @@ namespace SciVacancies.WebApp.Infrastructure
             Mapper.CreateMap<Domain.Core.Publication, ReadModel.Core.Publication>()
                 .ForMember(d => d.title, o => o.MapFrom(s => s.Title));
 
-            Mapper.CreateMap<ResearcherEditViewModel, ResearcherDataModel>();
+            Mapper.CreateMap<ResearcherEditViewModel, ResearcherDataModel>()
+                //.ForSourceMember(src=> src.BirthDate, o=>o.Ignore())
+                .ForMember(dest => dest.BirthDate, src => src.MapFrom(c => new DateTime(c.BirthYear, 1, 1)))
+                ;
             Mapper.CreateMap<Researcher, ResearcherDetailsViewModel>()
                 .ForMember(d => d.Guid, o => o.MapFrom(s => s.guid))
                 .ForMember(d => d.FirstName, o => o.MapFrom(s => s.firstname))
@@ -433,7 +438,10 @@ namespace SciVacancies.WebApp.Infrastructure
                 .ForMember(d => d.PatronymicEng, o => o.MapFrom(s => s.patronymic_eng))
                 .ForMember(d => d.PreviousSecondName, o => o.MapFrom(s => s.previous_secondname))
                 .ForMember(d => d.PreviousSecondNameEng, o => o.MapFrom(s => s.previous_secondname_eng))
-                .ForMember(d => d.BirthDate, o => o.MapFrom(s => s.birthdate))
+                
+                //.ForMember(d => d.BirthDate, o => o.MapFrom(s => s.birthdate))
+                .ForMember(d => d.BirthYear, o => o.MapFrom(s => s.birthdate.Year))
+
                 .ForMember(d => d.Email, o => o.MapFrom(s => s.email))
                 .ForMember(d => d.ExtraEmail, o => o.MapFrom(s => s.extraemail))
                 .ForMember(d => d.Phone, o => o.MapFrom(s => s.phone))
