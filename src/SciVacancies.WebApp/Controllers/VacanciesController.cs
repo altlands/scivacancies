@@ -366,7 +366,9 @@ namespace SciVacancies.WebApp.Controllers
                 VacancyGuid = preModel.guid,
                 PageSize = 1000,
                 PageIndex = 1,
-                OrderBy = ConstTerms.OrderByFieldDate
+                OrderBy = new SortFilterHelper().GetSortField<VacancyApplication>(ConstTerms.OrderByFieldApplyDate),
+                OrderDirection = ConstTerms.OrderByDescending
+                
             });
 
             if (vacancyApplications.TotalItems == 0
