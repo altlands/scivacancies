@@ -15,5 +15,6 @@ namespace SciVacancies.WebApp.ViewModels
 
         public AuthorizeUserTypes User { get; set; }
         public AuthorizeResourceTypes Resource { get; set; }
+        public int UnreadNotificationCount { get; set; }
     }
 }

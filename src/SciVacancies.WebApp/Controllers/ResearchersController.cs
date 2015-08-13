@@ -239,7 +239,8 @@ namespace SciVacancies.WebApp.Controllers
                     ResearcherGuid = researcherGuid,
                     OrderBy = new SortFilterHelper().GetSortField<Vacancy>(sortField),
                     OrderDirection = sortDirection
-                }).MapToPagedList()
+                }).MapToPagedList(),
+                AppliedApplications = _mediator.Send(new SelectVacancyApplicationsByResearcherQuery { ResearcherGuid = researcherGuid }).Where(c => c.status != VacancyApplicationStatus.InProcess && c.status != VacancyApplicationStatus.Removed).ToList()
             };
             return View(model);
         }

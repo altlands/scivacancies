@@ -23,6 +23,10 @@ namespace SciVacancies.WebApp.Queries
 
         //TODO - добавить фильтр по колонкам
     }
+    public class SelectVacancyApplicationsByResearcherQuery : IRequest<IEnumerable<VacancyApplication>>
+    {
+        public Guid ResearcherGuid { get; set; }
+    }
     public class SelectPagedVacancyApplicationsByVacancyQuery : IRequest<Page<VacancyApplication>>
     {
         public Guid VacancyGuid { get; set; }

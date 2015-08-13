@@ -55,11 +55,11 @@
                     Статус<br />вакансии
                 </div>
             </th>
-            <th width="100">
+            <th width="120">
                 <div class="inline-block">
                     <!-- <img src="/images/icons/tab-head.png" class="va-middle"/> -->
                 </div>
-                <div class="inline-block ml6 va-middle">
+                <div class="inline-block pl21 va-middle">
                     Статус<br />заявки
                 </div>
             </th>
@@ -73,6 +73,7 @@
         @if (Model.Vacancies != null)
         {
             var i = Model.Vacancies.FirstRowIndexOnPage - 1;
+            var appliedAppliedVacanciesGuids = Model.AppliedApplications.Select(c => c.vacancy_guid).ToList();
             foreach (var item in Model.Vacancies.Items)
             {
                 i += 1;
@@ -94,12 +95,17 @@
                     </td>
                     <td>
                         @switch (item.status)
-                    {
-                        case VacancyStatus.Published:
-                                <text>
-                                <a asp-controller="applications" asp-action="create" asp-route-vacancyguid="@item.guid" class="send-request-icon" title="Подать заявку">
-                                </a>
-                                </text>
+                        {
+                            case VacancyStatus.Published:
+                                {
+                                    if (!appliedAppliedVacanciesGuids.Contains(item.guid))
+                                    {
+                                        <text>
+                                        <a asp-controller="applications" asp-action="create" asp-route-vacancyguid="@item.guid" class="send-request-icon" title="Подать заявку">
+                                        </a>
+                                        </text>
+                                    }
+                                }
                                 break;
                             case VacancyStatus.OfferAccepted:
                                 if (item.is_winner_accept.HasValue && item.is_winner_accept.Value && item.winner_researcher_guid == Model.Guid)
@@ -119,7 +125,16 @@
                                 }
                                 break;
                         }
-
+                        @if (appliedAppliedVacanciesGuids.Contains(item.guid))
+                        {
+                            var application = Model.AppliedApplications.Last(c => c.vacancy_guid == item.guid);
+                            if (application != null)
+                            {
+                                <text>
+                                <a asp-controller="applications" asp-action="details" asp-route-id="@application.guid">@application.status.GetDescription()</a>
+                                </text>
+                            }
+                        }
                     </td>
                     <td>
                         <a asp-controller="vacancies" asp-action="card" asp-route-id="@item.guid" target="_blank" class="view-td-icon" title="Просмотр вакансии"></a>

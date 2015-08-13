@@ -126,6 +126,8 @@ namespace SciVacancies.WebApp.Controllers
             var attachmentsList = new List<SciVacancies.Domain.Core.VacancyApplicationAttachment>();
             var newFolderName = Guid.NewGuid();
             //save attachments
+            var fullDirectoryPath = $"{_hostingEnvironment.WebRootPath}{ConstTerms.FolderApplicationsAttachments}\\{newFolderName}\\";
+
             if (model.Attachments != null && model.Attachments.Any())
             {
                 foreach (var file in model.Attachments)
@@ -141,7 +143,7 @@ namespace SciVacancies.WebApp.Controllers
                         //TODO: Application -> Attachments : что делать с Директорией при удалении(отмене, отклонении) Заявки
                         //TODO: Application -> Attachments : как искать Текущую директорию при повторном добавлении(изменении текущего списка) файлов
                         //TODO: Application -> Attachments : можно ли редактировать список файлов, или Заявки создаются разово и для каждой генеиртся новая папка с вложениями
-                        Directory.CreateDirectory($"{_hostingEnvironment.WebRootPath}{ConstTerms.FolderApplicationsAttachments}\\{newFolderName}\\");
+                        Directory.CreateDirectory(fullDirectoryPath);
                         var filePath =
                             $"{_hostingEnvironment.WebRootPath}{ConstTerms.FolderApplicationsAttachments}\\{newFolderName}\\{fileName}";
                         file.SaveAs(filePath);
@@ -157,7 +159,7 @@ namespace SciVacancies.WebApp.Controllers
                     }
                     catch (Exception)
                     {
-                        RemoveAttachmentDirectory(newFolderName);
+                        RemoveAttachmentDirectory(fullDirectoryPath);
                         return View("Error", "Ошибка при сохранении прикреплённых файлов");
                     }
 
@@ -215,16 +217,16 @@ namespace SciVacancies.WebApp.Controllers
             }
             catch (Exception)
             {
-                RemoveAttachmentDirectory(newFolderName);
+                RemoveAttachmentDirectory(fullDirectoryPath);
                 return View("Error", "Что-то пошло не так при сохранении Заявки");
             }
             return RedirectToAction("details", "applications", new { id = vacancyApplicationGuid });
         }
 
-        private void RemoveAttachmentDirectory(Guid newFolderName)
+        private void RemoveAttachmentDirectory(string fullpath)
         {
-            Directory.Delete(
-                $"{_hostingEnvironment.WebRootPath}{ConstTerms.FolderApplicationsAttachments}\\{newFolderName}\\");
+            if (Directory.Exists(fullpath))
+                Directory.Delete(fullpath);
         }
 
         [Authorize(Roles = ConstTerms.RequireRoleResearcher)]
@@ -250,7 +252,7 @@ namespace SciVacancies.WebApp.Controllers
             model.Researcher.Publications = Mapper.Map<List<PublicationEditViewModel>>(_mediator.Send(new SelectResearcherPublicationsQuery { ResearcherGuid = researcherGuid }));
             model.Researcher.Educations = Mapper.Map<List<EducationEditViewModel>>(_mediator.Send(new SelectResearcherEducationsQuery { ResearcherGuid = researcherGuid }));
             model.Vacancy = Mapper.Map<VacancyDetailsViewModel>(_mediator.Send(new SingleVacancyQuery { VacancyGuid = preModel.vacancy_guid }));
-            model.Attachments = _mediator.Send(new SelectVacancyApplicationAttachmentsQuery {VacancyApplicationGuid = id});
+            model.Attachments = _mediator.Send(new SelectVacancyApplicationAttachmentsQuery { VacancyApplicationGuid = id });
             //TODO: ntemnikov : показать Научные интересы
             return View(model);
         }

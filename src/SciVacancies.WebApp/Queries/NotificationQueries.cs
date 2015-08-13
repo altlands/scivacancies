@@ -20,6 +20,10 @@ namespace SciVacancies.WebApp.Queries
         public string OrderBy { get; set; }
         public string OrderDirection { get; set; }
     }
+    public class ResearcherNotificationsUnreadCountQuery : IRequest<int>
+    {
+        public Guid ResearcherGuid { get; set; }
+    }
 
     public class SingleOrganizationNotificationQuery : IRequest<OrganizationNotification>
     {
@@ -33,5 +37,9 @@ namespace SciVacancies.WebApp.Queries
         public long PageIndex { get; set; }
         public string OrderBy { get; set; }
         public string OrderDirection { get; set; }
+    }
+    public class OrganizationNotificationsUnreadCountQuery : IRequest<int>
+    {
+        public Guid OrganizationGuid { get; set; }
     }
 }

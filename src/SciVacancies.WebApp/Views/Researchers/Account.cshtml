@@ -17,8 +17,8 @@
     <div class="row">
         <div class="profile">
             <div class="photo inline-block" style="max-width: 140px; max-height: 180px;">
-                    <img src="@Model.ImageUrlOrDefault" style="max-width: 138px; max-height: 178px;" />
-                </div>
+                <img src="@Model.ImageUrlOrDefault" style="max-width: 138px; max-height: 178px;" />
+            </div>
             <div class="info inline-block">
                 <h4>@Model.FullName</h4>
                 <span>Год рождения: @Model.BirthDate.Year.ToString("0000")</span>
@@ -28,11 +28,11 @@
     <div class="row pt15 fs12">
         <div><span class="bold">Индивидуальный номер ученого:</span> 00005444<br /></div>
         <span class="bold">Научные интересы (Государственный рубрикатор научно-технической информации):</span><br />
-        @if (Model.Publications!= null)
+        @if (Model.Publications != null)
         {
             foreach (var item in Model.Publications)
             {
-                @item.Title; 
+                @item.Title;
             }
         }
     </div>

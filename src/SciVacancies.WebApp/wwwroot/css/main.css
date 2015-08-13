@@ -2593,7 +2593,7 @@ h4 + .b-vacancies {
 }
 
     .content-slide .profile .photo {
-        border: 1px solid #d1d1d1;
+        /*border: 1px solid #d1d1d1;*/
     }
 
     .content-slide .profile .info {

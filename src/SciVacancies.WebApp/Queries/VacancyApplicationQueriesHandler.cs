@@ -12,6 +12,7 @@ namespace SciVacancies.WebApp.Queries
     public class VacancyApplicationQueriesHandler :
         IRequestHandler<SingleVacancyApplicationQuery, VacancyApplication>,
         IRequestHandler<SelectPagedVacancyApplicationsByResearcherQuery, Page<VacancyApplication>>,
+        IRequestHandler<SelectVacancyApplicationsByResearcherQuery, IEnumerable<VacancyApplication>>,
         IRequestHandler<SelectPagedVacancyApplicationsByVacancyQuery, Page<VacancyApplication>>,
         IRequestHandler<SelectVacancyApplicationAttachmentsQuery, IEnumerable<VacancyApplicationAttachment>>
     {
@@ -39,6 +40,13 @@ namespace SciVacancies.WebApp.Queries
                 message.OrderBy = nameof(VacancyApplication.creation_date);
 
             var vacancyApplications = _db.Page<VacancyApplication>(message.PageIndex, message.PageSize, new Sql($"SELECT va.* FROM res_vacancyapplications va WHERE va.status != @0 AND va.researcher_guid=@1  ORDER BY va.{message.OrderBy} {message.OrderDirection.ToUpper()}", VacancyApplicationStatus.Removed, message.ResearcherGuid));
+
+            return vacancyApplications;
+        }
+        public IEnumerable<VacancyApplication> Handle(SelectVacancyApplicationsByResearcherQuery message)
+        {
+            if (message.ResearcherGuid == Guid.Empty) throw new ArgumentNullException($"ResearcherGuid is empty: {message.ResearcherGuid}");
+            var vacancyApplications = _db.Fetch<VacancyApplication>(new Sql($"SELECT va.* FROM res_vacancyapplications va WHERE va.status != @0 AND va.researcher_guid=@1", VacancyApplicationStatus.Removed, message.ResearcherGuid));
 
             return vacancyApplications;
         }

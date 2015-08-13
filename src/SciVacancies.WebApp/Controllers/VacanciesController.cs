@@ -219,7 +219,7 @@ namespace SciVacancies.WebApp.Controllers
                             Mapper.Map<ResearcherDetailsViewModel>(
                                 _mediator.Send(new SingleResearcherQuery { ResearcherGuid = c.ResearcherGuid })));
             }
-            model.Criterias = _mediator.Send(new SelectVacancyCriteriasQuery {VacancyGuid = model.Guid});
+            model.Criterias = _mediator.Send(new SelectVacancyCriteriasQuery { VacancyGuid = model.Guid });
             model.CriteriasHierarchy =
                     _mediator.Send(new SelectAllCriteriasQuery()).ToList().ToHierarchyCriteriaViewModelList(model.Criterias.ToList());
 
@@ -244,19 +244,29 @@ namespace SciVacancies.WebApp.Controllers
             ViewBag.VacancyInFavorites = false;
 
             //если Вакансия Опубликована или Принимает Заявки
-            if (model.Status == VacancyStatus.Published
+            if (model.Status != VacancyStatus.InProcess
+                && model.Status != VacancyStatus.Removed
                 && researcherGuid != Guid.Empty)
             {
-                var favoritesVacancies = _mediator.Send(new SelectFavoriteVacancyGuidsByResearcherQuery
+                //если текущая вакансия есть в списке избранных
+                ViewBag.VacancyInFavorites = _mediator.Send(new SelectFavoriteVacancyGuidsByResearcherQuery
                 {
                     ResearcherGuid = researcherGuid
-                }).ToList();
-                //если текущая вакансия есть в списке избранных
-                ViewBag.VacancyInFavorites = favoritesVacancies.Any(c => c == id);
+                }).Any(c => c == id);
+
+                //найти поданные заявки
+                model.AppliedByUserApplications =
+                    _mediator.Send(new SelectVacancyApplicationsByResearcherQuery { ResearcherGuid = researcherGuid })
+                        .Where(
+                            c =>
+                                c.status != VacancyApplicationStatus.InProcess &&
+                                c.status != VacancyApplicationStatus.Removed)
+                        .ToList();
             }
             model.Criterias = _mediator.Send(new SelectVacancyCriteriasQuery { VacancyGuid = model.Guid });
             model.CriteriasHierarchy =
                     _mediator.Send(new SelectAllCriteriasQuery()).ToList().ToHierarchyCriteriaViewModelList(model.Criterias.ToList());
+
             return View(model);
         }
 
@@ -368,7 +378,7 @@ namespace SciVacancies.WebApp.Controllers
                 PageIndex = 1,
                 OrderBy = new SortFilterHelper().GetSortField<VacancyApplication>(ConstTerms.OrderByFieldApplyDate),
                 OrderDirection = ConstTerms.OrderByDescending
-                
+
             });
 
             if (vacancyApplications.TotalItems == 0

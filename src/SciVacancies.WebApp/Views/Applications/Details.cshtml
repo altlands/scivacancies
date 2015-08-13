@@ -12,14 +12,18 @@
 
 <h3>Личная карточка пользователя</h3>
 
-<h4>@ViewBag.Title: заявка на ID МНС6000567 №001 от @Model.CreationDate.ToLocalVacancyDateString()</h4>
+<h4>
+    Заявка на вакансию <small><a asp-controller="vacancies" asp-action="card" asp-route-id="@Model.VacancyGuid">@Model.Vacancy.FullName</a></small>
+    от @Model.CreationDate.ToLocalVacancyDateString()
+</h4>
+<p>Cтатус заявки "@Model.Status.GetDescription()"</p>
 
-<h4> Вакансия: <a asp-controller="vacancies" asp-action="card" asp-route-id="@Model.VacancyGuid">@Model.Vacancy.FullName</a></h4>
+
 
 <div class="content-slide">
     <div class="profile">
-        <div class="photo inline-block">
-            <img width="140" height="180" src="/images/user-photo.jpg" />
+        <div class="photo inline-block" style="max-width: 140px; max-height: 180px;">
+            <img src="@Model.Researcher.ImageUrlOrDefault" style="max-width: 138px; max-height: 178px;" />
         </div>
         <div class="info info-view inline-block">
             <h4>@Model.Researcher.FullName</h4>
@@ -27,18 +31,18 @@
             <span class="block bold">Год рождения: @Model.Researcher.BirthDate.Year.ToString("0000")</span>
             <span class="block"><span class="bold">Индивидуальный номер ученого:</span> 00005444</span>
             @*<span class="block">
-                    <span class="bold">Научные интересы (Государственный рубрикатор научно-технической информации):</span>
-                    <span>
-                        @if (Model.Researcher.!= null)
-                        {
-                            foreach (var item in Model.Researcher.Publications)
-                            {
-                                @item.Title
-                            }
-                        }
-                    </span>
-                </span>*@
-            <span class="small-icon icon-sm-eye"><span>Показать все (23)</span></span>
+            <span class="bold">Научные интересы (Государственный рубрикатор научно-технической информации):</span>
+            <span>
+                @if (Model.Researcher.!= null)
+                {
+                    foreach (var item in Model.Researcher.Publications)
+                    {
+                        @item.Title
+                    }
+                }
+            </span>
+        </span>
+    <span class="small-icon icon-sm-eye"><span>Показать все (23)</span></span>*@
         </div>
     </div>
     <div class="list-info">
