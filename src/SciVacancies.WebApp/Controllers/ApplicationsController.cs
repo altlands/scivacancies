@@ -5,9 +5,9 @@ using System.Linq;
 using AutoMapper;
 using MediatR;
 using Microsoft.AspNet.Authorization;
+using Microsoft.AspNet.Hosting;
 using Microsoft.AspNet.Http;
 using Microsoft.AspNet.Mvc;
-using Microsoft.Framework.Runtime;
 using Microsoft.Net.Http.Headers;
 using SciVacancies.Domain.DataModels;
 using SciVacancies.Domain.Enums;
@@ -24,9 +24,9 @@ namespace SciVacancies.WebApp.Controllers
     public class ApplicationsController : Controller
     {
         private readonly IMediator _mediator;
-        private readonly IApplicationEnvironment _hostingEnvironment;
+        private readonly IHostingEnvironment _hostingEnvironment;
 
-        public ApplicationsController(IMediator mediator, IApplicationEnvironment hostingEnvironment)
+        public ApplicationsController(IMediator mediator, IHostingEnvironment hostingEnvironment)
         {
             _mediator = mediator;
             _hostingEnvironment = hostingEnvironment;
@@ -140,9 +140,10 @@ namespace SciVacancies.WebApp.Controllers
                     {
                         //TODO: Application -> Attachments : что делать с Директорией при удалении(отмене, отклонении) Заявки
                         //TODO: Application -> Attachments : как искать Текущую директорию при повторном добавлении(изменении текущего списка) файлов
-                        Directory.CreateDirectory($"{_hostingEnvironment.ApplicationBasePath}\\wwwroot{ConstTerms.FolderApplicationsAttachments}\\{newFolderName}\\");
+                        //TODO: Application -> Attachments : можно ли редактировать список файлов, или Заявки создаются разово и для каждой генеиртся новая папка с вложениями
+                        Directory.CreateDirectory($"{_hostingEnvironment.WebRootPath}{ConstTerms.FolderApplicationsAttachments}\\{newFolderName}\\");
                         var filePath =
-                            $"{_hostingEnvironment.ApplicationBasePath}\\wwwroot{ConstTerms.FolderApplicationsAttachments}\\{newFolderName}\\{fileName}";
+                            $"{_hostingEnvironment.WebRootPath}{ConstTerms.FolderApplicationsAttachments}\\{newFolderName}\\{fileName}";
                         file.SaveAs(filePath);
                         attachmentsList.Add(new SciVacancies.Domain.Core.VacancyApplicationAttachment
                         {
@@ -150,7 +151,7 @@ namespace SciVacancies.WebApp.Controllers
                             Extension = fileName.Split('.')[1],
                             Name = fileName,
                             UploadDate = DateTime.Now,
-                            Url = $"\\{newFolderName}\\{fileName}"
+                            Url = $"/{newFolderName}/{fileName}"
                         });
 
                     }
@@ -223,7 +224,7 @@ namespace SciVacancies.WebApp.Controllers
         private void RemoveAttachmentDirectory(Guid newFolderName)
         {
             Directory.Delete(
-                $"{_hostingEnvironment.ApplicationBasePath}\\wwwroot{ConstTerms.FolderApplicationsAttachments}\\{newFolderName}\\");
+                $"{_hostingEnvironment.WebRootPath}{ConstTerms.FolderApplicationsAttachments}\\{newFolderName}\\");
         }
 
         [Authorize(Roles = ConstTerms.RequireRoleResearcher)]

@@ -54,7 +54,7 @@ namespace SciVacancies.WebApp.ViewModels
         public string ImageUrl { get; set; }
         public string ImageUrlOrDefault => string.IsNullOrWhiteSpace(ImageUrl)
             ? ConstTerms.PathToBlankImage
-            : (ConstTerms.FolderResearcherPhoto + ImageUrl);
+            : (ConstTerms.FolderResearcherPhotoUtl + ImageUrl);
 
         public List<EducationEditViewModel> Educations { get; set; }
         public List<PublicationEditViewModel> Publications { get; set; }

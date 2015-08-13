@@ -31,7 +31,7 @@ namespace SciVacancies.WebApp.ViewModels
         ///// </summary>
         public string PreviousSecondNameEng { get; set; }
 
-        public DateTime BirthDate { get; set; }
+        //public DateTime BirthDate { get; set; }
         [Required(ErrorMessage = "Требуется выбрать год рождения")]
         public int BirthYear { get; set; }
 
@@ -66,7 +66,7 @@ namespace SciVacancies.WebApp.ViewModels
         public string ImageUrl { get; set; }
         public string ImageUrlOrDefault => string.IsNullOrWhiteSpace(ImageUrl)
             ? ConstTerms.PathToBlankImage
-            : (ConstTerms.FolderResearcherPhoto + ImageUrl);
+            : (ConstTerms.FolderResearcherPhotoUtl + ImageUrl);
 
         public List<EducationEditViewModel> Educations { get; set; }
         public List<PublicationEditViewModel> Publications { get; set; }

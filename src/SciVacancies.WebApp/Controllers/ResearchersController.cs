@@ -10,6 +10,7 @@ using System.Net.Mime;
 using AutoMapper;
 using MediatR;
 using Microsoft.AspNet.Authorization;
+using Microsoft.AspNet.Hosting;
 using Microsoft.AspNet.Http;
 using Microsoft.AspNet.Mvc;
 using Microsoft.Framework.Runtime;
@@ -32,8 +33,8 @@ namespace SciVacancies.WebApp.Controllers
     public class ResearchersController : Controller
     {
         private readonly IMediator _mediator;
-        private readonly IApplicationEnvironment _hostingEnvironment;
-        public ResearchersController(IMediator mediator, IApplicationEnvironment hostingEnvironment)
+        private readonly IHostingEnvironment _hostingEnvironment;
+        public ResearchersController(IMediator mediator, IHostingEnvironment hostingEnvironment)
         {
             _mediator = mediator;
             _hostingEnvironment = hostingEnvironment;
@@ -111,40 +112,46 @@ namespace SciVacancies.WebApp.Controllers
                     return View(model);
 
                 //TODO: вынести в конфиг это магическое число
-                if (file.Length > 500000)
+                if (file.Length > 0)
                 {
                     var newFileName = $"{authorizedUserGuid}.{fileExtension}";
                     var filePath =
-                        $"{_hostingEnvironment.ApplicationBasePath}\\wwwroot{ConstTerms.FolderResearcherPhoto}\\{newFileName}";
+                        $"{_hostingEnvironment.WebRootPath}{ConstTerms.FolderResearcherPhoto}\\{newFileName}";
                     Directory.CreateDirectory(
-                        $"{_hostingEnvironment.ApplicationBasePath}\\wwwroot{ConstTerms.FolderResearcherPhoto}\\");
+                        $"{_hostingEnvironment.WebRootPath}{ConstTerms.FolderResearcherPhoto}\\");
 
-                    var scale = (float)500000 / file.Length;
                     using (var image = Image.FromStream(file.OpenReadStream()))
                     {
-                        var newWidth = image.Width * scale;
-                        var newHeight = image.Height * scale;
-                        using (var newImage = ScaleImage(image, (int)newWidth, (int)newHeight))
+                        Image newImage = null;
+                        if (file.Length > 500000)
                         {
-                            //сценарий-А: сохранить фото на диск
-                            newImage.Save(filePath);
-                            model.ImageName = newFileName;
-                            model.ImageSize = file.Length;
-                            model.ImageExtension = fileExtension;
-                            model.ImageUrl = $"\\{newFileName}";
-
-                            ////TODO: сохранение фото в БД (сделать)
-                            //using (var memoryStream = new MemoryStream())
-                            //{
-                            //    //фотографии в byte
-                            //    byte[] byteData;
-
-                            //    //сценарий-Б: сохранить фото в БД
-                            //    ((Image)newImage).Save(memoryStream, ImageFormat.Jpeg);
-                            //    byteData = memoryStream.ToArray();
-                            //}
-
+                            var scale = ((float)500000 / file.Length);
+                            var newWidth = image.Width * scale;
+                            var newHeight = image.Height * scale;
+                            newImage = ScaleImage(image, (int)newWidth, (int)newHeight);
                         }
+                        else
+                            newImage = image;
+
+                        //сценарий-А: сохранить фото на диск
+                        newImage.Save(filePath);
+                        model.ImageName = newFileName;
+                        model.ImageSize = file.Length;
+                        model.ImageExtension = fileExtension;
+                        model.ImageUrl = $"/{newFileName}";
+
+                        ////TODO: сохранение фото в БД (сделать)
+                        //using (var memoryStream = new MemoryStream())
+                        //{
+                        //    //фотографии в byte
+                        //    byte[] byteData;
+
+                        //    //сценарий-Б: сохранить фото в БД
+                        //    ((Image)newImage).Save(memoryStream, ImageFormat.Jpeg);
+                        //    byteData = memoryStream.ToArray();
+                        //}
+
+                        newImage.Dispose();
                     }
                 }
 
@@ -166,7 +173,7 @@ namespace SciVacancies.WebApp.Controllers
             return RedirectToAction("account");
         }
 
-        public static Image ScaleImage(Image image, int maxWidth, int maxHeight)
+        private Image ScaleImage(Image image, int maxWidth, int maxHeight)
         {
             var newImage = new Bitmap(maxWidth, maxHeight);
 
