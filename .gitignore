@@ -31,5 +31,7 @@ project.lock.json
 .vs/
 */*.WebApp/wwwroot/lib
 */*.WebApp/wwwroot/uploads
+*/*.WebApp/wwwroot/uploads/*
+*/*.WebApp/wwwroot/uploads/*.*
 */*.WebApp/wwwroot/_reference.js
 build/
