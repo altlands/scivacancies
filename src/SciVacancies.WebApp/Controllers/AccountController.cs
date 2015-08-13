@@ -59,8 +59,6 @@ namespace SciVacancies.WebApp.Controllers
         [HttpGet]
         public ActionResult Login(AccountLoginViewModel model)
         {
-            //TODO - uncomment to pin it down to any job
-
             switch (model.User)
             {
                 case AuthorizeUserTypes.Researcher:
@@ -176,6 +174,7 @@ namespace SciVacancies.WebApp.Controllers
         //общаемся с информикой
         private string GetOrganizationInfo(string inn)
         {
+            //TODO url move to config
             WebRequest req = WebRequest.Create(@"http://www.sciencemon.ru/ext-api/v1.0/org/" + inn);
             req.Method = "GET";
             req.Headers["Authorization"] = "Basic " + Convert.ToBase64String(Encoding.Default.GetBytes("dev:informika"));
@@ -191,7 +190,17 @@ namespace SciVacancies.WebApp.Controllers
         //общаемся с картой науки
         private string GetResearcherProfile(string accessToken)
         {
-            return "stub";
+            //TODO url move to config
+            WebRequest req = WebRequest.Create(@"http://scimap-sso.alt-lan.com/scimap-sso/user/profile" + "?access_token=" + accessToken);
+            req.Method = "GET";
+            HttpWebResponse response = req.GetResponse() as HttpWebResponse;
+            string responseString = "";
+            using (Stream stream = response.GetResponseStream())
+            {
+                StreamReader reader = new StreamReader(stream, Encoding.UTF8);
+                responseString = reader.ReadToEnd();
+            }
+            return responseString;
         }
 
         #endregion
@@ -230,12 +239,21 @@ namespace SciVacancies.WebApp.Controllers
 
                                         OAuthOrgClaim orgClaim = JsonConvert.DeserializeObject<OAuthOrgClaim>(claims.Find(f => f.Type.Equals("org")).Value);
 
-                                        var orgUser = _userManager.FindByName(orgClaim.Inn);
+                                        //var orgUser = _userManager.FindByName(orgClaim.Inn);
+                                        var orgUser = _userManager.FindByEmail(claims.Find(f => f.Type.Equals("email")).Value);
 
                                         if (orgUser == null)
                                         {
                                             OAuthOrgInformation organizationInformation = JsonConvert.DeserializeObject<OAuthOrgInformation>(GetOrganizationInfo(orgClaim.Inn));
                                             AccountOrganizationRegisterViewModel orgModel = Mapper.Map<AccountOrganizationRegisterViewModel>(organizationInformation);
+
+                                            orgModel.UserName = claims.Find(f => f.Type.Equals("username")).Value;
+                                            
+                                            orgModel.Claims = claims.Where(w => w.Type.Equals("lastname")
+                                                                            && w.Type.Equals("firstname")
+                                                                            && w.Type.Equals("access_token")
+                                                                            && w.Type.Equals("expires_in")
+                                                                            && w.Type.Equals("refresh_token")).ToList();
 
                                             var command = new RegisterUserOrganizationCommand
                                             {
@@ -275,13 +293,13 @@ namespace SciVacancies.WebApp.Controllers
                             {
                                 if (!String.IsNullOrEmpty(GetCodeFromQuery()))
                                 {
-                                    TokenResponse tokenResponse = await GetOAuthTokensAsync(_oauthSettings.Options.Sciencemon, GetCodeFromQuery());
+                                    TokenResponse tokenResponse = await GetOAuthTokensAsync(_oauthSettings.Options.Mapofscience, GetCodeFromQuery());
 
                                     if (!String.IsNullOrEmpty(tokenResponse.AccessToken))
                                     {
                                         List<Claim> claims = new List<Claim>();
 
-                                        claims.AddRange(await GetOAuthUserClaimsAsync(_oauthSettings.Options.Sciencemon, tokenResponse.AccessToken));
+                                        claims.AddRange(await GetOAuthUserClaimsAsync(_oauthSettings.Options.Mapofscience, tokenResponse.AccessToken));
 
                                         claims.Add(new Claim("access_token", tokenResponse.AccessToken));
                                         claims.Add(new Claim("expires_in", DateTime.Now.AddSeconds(tokenResponse.ExpiresIn).ToString()));
@@ -293,6 +311,16 @@ namespace SciVacancies.WebApp.Controllers
                                         {
                                             OAuthResProfile researcherProfile = JsonConvert.DeserializeObject<OAuthResProfile>(GetResearcherProfile(tokenResponse.AccessToken));
                                             AccountResearcherRegisterViewModel resModel = Mapper.Map<AccountResearcherRegisterViewModel>(researcherProfile);
+
+                                            resModel.UserName = claims.Find(f => f.Type.Equals("login")).Value;
+
+
+                                            resModel.Claims = claims.Where(w => w.Type.Equals("lastName")
+                                                                            && w.Type.Equals("firstName")
+                                                                            && w.Type.Equals("patronymic")
+                                                                            && w.Type.Equals("access_token")
+                                                                            && w.Type.Equals("expires_in")
+                                                                            && w.Type.Equals("refresh_token")).ToList();
 
                                             var command = new RegisterUserResearcherCommand
                                             {

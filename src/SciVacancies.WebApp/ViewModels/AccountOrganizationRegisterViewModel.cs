@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Security.Claims;
 using System.ComponentModel.DataAnnotations;
 
 namespace SciVacancies.WebApp.ViewModels
@@ -119,5 +120,10 @@ namespace SciVacancies.WebApp.ViewModels
         /// Отрасли науки
         /// </summary>
         public List<int> ResearchDirections { get; set; }
+
+        /// <summary>
+        /// Сюда пишутся access_token и прочее
+        /// </summary>
+        public List<Claim> Claims { get; set; }
     }
 }

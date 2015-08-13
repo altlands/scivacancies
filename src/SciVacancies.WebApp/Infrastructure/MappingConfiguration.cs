@@ -31,6 +31,7 @@ namespace SciVacancies.WebApp.Infrastructure
             #region Account
 
             //researcher
+            //TODO - дописать поля в модели
             Mapper.CreateMap<AccountResearcherRegisterViewModel, ResearcherDataModel>()
                 .ForMember(dest => dest.BirthDate, src => src.MapFrom(c => new DateTime(c.BirthYear, 1, 1)));
             //organization
@@ -55,7 +56,7 @@ namespace SciVacancies.WebApp.Infrastructure
                 .ForMember(d => d.ResearchDirections, o => o.Ignore());
 
             Mapper.CreateMap<OAuthOrgInformation, AccountOrganizationRegisterViewModel>()
-                .ForMember(d => d.UserName, o => o.MapFrom(s => s.inn))
+                //.ForMember(d => d.UserName, o => o.MapFrom(s => s.inn))
                 .ForMember(d => d.Email, o => o.MapFrom(s => s.email))
                 .ForMember(d => d.Foiv, o => o.MapFrom(s => s.foiv.title))
                 .ForMember(d => d.FoivId, o => o.MapFrom(s => s.foiv.id))
@@ -70,6 +71,7 @@ namespace SciVacancies.WebApp.Infrastructure
                 .ForMember(d => d.ResearchDirections, o => o.MapFrom(s => s.researchDirections.Select(ss => Int32.Parse(ss.id))))
                 .ForMember(d => d.ShortName, o => o.MapFrom(s => s.shortTitle))
                 .ForMember(d => d.Name, o => o.MapFrom(s => s.title));
+
             //TODO - добавить нужные маппинги и допилить структуру моделей
             //Mapper.CreateMap<OAuthResProfile, AccountResearcherRegisterViewModel>()
             //            .ForMember(d => d, o => o.MapFrom(s => s.id))

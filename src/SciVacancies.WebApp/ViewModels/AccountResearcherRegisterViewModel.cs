@@ -1,6 +1,8 @@
 ﻿using System;
 using System.ComponentModel;
+using System.Security.Claims;
 using System.ComponentModel.DataAnnotations;
+using System.Collections.Generic;
 
 namespace SciVacancies.WebApp.ViewModels
 {
@@ -52,5 +54,10 @@ namespace SciVacancies.WebApp.ViewModels
         /// временное поле для Образования, пока не перейдем на List[Education]
         /// </summary>
         public string Education { get; set; }
+
+        /// <summary>
+        /// Сюда пишутся access_token  и прочее, если OAuth авторизация
+        /// </summary>
+        public List<Claim> Claims { get; set; }
     }
 }
