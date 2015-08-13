@@ -14,6 +14,7 @@ using CommonDomain.Persistence;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using SciVacancies.WebApp.Engine.SmtpNotificators;
+using System.Security.Claims;
 
 namespace SciVacancies.WebApp.Commands
 {
@@ -36,7 +37,9 @@ namespace SciVacancies.WebApp.Commands
 
             var user = new SciVacUser
             {
-                UserName = message.Data.UserName
+                UserName = message.Data.UserName,
+                Email = message.Data.Email,
+                PhoneNumber = message.Data.Phone
             };
 
             var researcherDataModel = Mapper.Map<AccountResearcherRegisterViewModel, ResearcherDataModel>(message.Data);
@@ -54,9 +57,20 @@ namespace SciVacancies.WebApp.Commands
                 UserId = user.Id
             });
 
+            foreach (Claim claim in message.Data.Claims)
+            {
+                user.Claims.Add(new IdentityUserClaim
+                {
+                    ClaimType = claim.Type,
+                    ClaimValue = claim.Value,
+                    UserId = user.Id
+                });
+            }
+
             _userManager.Create(user);
             _userManager.AddToRole(user.Id, ConstTerms.RequireRoleResearcher);
 
+            //TODO - вынести в хэндлер
             //send email notification
             var registerSmtpNotificator = new RegisterSmtpNotificator();
             registerSmtpNotificator.Send(researcherDataModel.FullName, message.Data.UserName, message.Data.Password, message.Data.Email);
@@ -103,6 +117,16 @@ namespace SciVacancies.WebApp.Commands
                 ClaimValue = organizationGuid.ToString(),
                 UserId = user.Id
             });
+
+            foreach (Claim claim in message.Data.Claims)
+            {
+                user.Claims.Add(new IdentityUserClaim
+                {
+                    ClaimType = claim.Type,
+                    ClaimValue = claim.Value,
+                    UserId = user.Id
+                });
+            }
 
             //_userManager.CreateAsync(user).Wait();
             var identity = _userManager.Create(user);

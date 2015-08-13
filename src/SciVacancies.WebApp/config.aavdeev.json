@@ -17,8 +17,8 @@
       "AuthorizationEndpoint": "http://scimap-sso.alt-lan.com/scimap-sso/oauth/authorize",
       "TokenEndpoint": "http://scimap-sso.alt-lan.com/scimap-sso/oauth/token",
       "UserEndpoint": "http://scimap-sso.alt-lan.com/scimap-sso/user/account",
-      "ClientId": "",
-      "ClientSecret": "",
+      "ClientId": "my-trusted-client",
+      "ClientSecret": "secret",
       "Scope": "",
       "RedirectUrl": "http://localhost:59075/account/callback"
     }

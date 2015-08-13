@@ -1,4 +1,4 @@
-﻿{
+{
   "version": "1.0.0-*",
   "description": "",
   "authors": [ "" ],
@@ -7,21 +7,22 @@
   "licenseUrl": "",
 
   "dependencies": {
+    "Quartz": "2.3.3",
+    "NPoco": "2.9.103",
+    "Npgsql.EntityFramework": "2.2.5",
+    "NEST": "1.5.1",
+    "SciVacancies.ReadModel": "1.0.0-*",
+    "SciVacancies.ReadModel.ElasticSearchModel": "1.0.0-*"
   },
 
   "commands": {
-    "SciVacancies.SearchSubscriptionsService" : "SciVacancies.SearchSubscriptionsService"
+    "SciVacancies.SearchSubscriptionsService": "SciVacancies.SearchSubscriptionsService"
   },
 
-  "frameworks" : {
-    "dnx451": { },
-    "dnxcore50" : {
-      "dependencies": {
-        "System.Console": "4.0.0-beta-22816",
-        "System.Collections": "4.0.10-beta-22816",
-        "System.Linq": "4.0.0-beta-22816",
-        "System.Threading": "4.0.10-beta-22816",
-        "Microsoft.CSharp": "4.0.0-beta-22816"
+  "frameworks": {
+    "dnx451": {
+      "frameworkAssemblies": {
+        "System.Data": "4.0.0.0"
       }
     }
   }
