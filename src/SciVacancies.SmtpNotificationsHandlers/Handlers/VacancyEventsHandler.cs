@@ -2,6 +2,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using MediatR;
 using NPoco;
 using SciVacancies.Domain.Events;
@@ -72,11 +73,15 @@ namespace SciVacancies.SmtpNotificationsHandlers.Handlers
         private void VacancyStatusChangedSmtpNotification(Guid vacancyGuid)
         {
             var vacancy = _db.SingleOrDefaultById<Vacancy>(vacancyGuid);
+            if (vacancy == null) return;
             var researcherGuids =
                 _db.Fetch<Guid>(new Sql(
                     $"SELECT va.researcher_guid FROM res_vacancyapplications va WHERE va.vacancy_guid = @0", vacancyGuid));
+            if (!researcherGuids.Any()) return;
             var researchers =
-                _db.Fetch<Researcher>(new Sql($"SELECT * FROM res_researchers r WHERE r.guid IN (@0)", researcherGuids));
+                _db.Fetch<Researcher>(new Sql($"SELECT * FROM res_researchers r WHERE r.guid IN (@0)",
+                    researcherGuids));
+            if (!researchers.Any()) return;
 
             var smtpNotificatorVacancyStatusChanged = new SmtpNotificatorVacancyStatusChanged();
             foreach (var researcher in researchers)

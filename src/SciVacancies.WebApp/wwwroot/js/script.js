@@ -129,7 +129,7 @@ $(document).ready(function () {
             return $("#lk-popover").html();
         }
     });
-    //tabs
+    //закладки в личном кабинете
     $(".nav-tabs li:first a, #tab.nav-tabs li:first a").tab("show");
     $(".nav-tabs a").click(function (e) {
         e.preventDefault();
@@ -163,7 +163,7 @@ $(document).ready(function () {
     });
 
     /*
-        this code need for navigate by new pager or filter values
+     *  this code need for navigate by new pager values
      */
     // changeaction
     $("input[changeaction=true]").keypress(function (e) {
@@ -212,11 +212,28 @@ $(document).ready(function () {
         return false;
     });
     /*
-     *
+     * развернуть/свернуть список значений в фильтре
      */
-    $('.collapsible-filter-header').click(collapsibleFilterClicked);
+    $('.collapsible-filter-header').click(function (event) {
+        event.stopPropagation();
+        var source = this;
+        if ($(source).hasClass('open')) {
+            $(source).children('ul').hide();
+            $(source).removeClass('open');
+        }
+        else {
+            $(source).addClass('open');
+            $(source).children('ul').show();
+        }
+    });
     /*
-     * Управление внутренними вклалками в Областях науки
+     * исправление распространения событий для списка фильтров при поиске
+     */
+    $('li.li-checkbox').click(function (event) {
+        event.stopPropagation();
+    });
+    /*
+     * Управление внутренними вклаlками в Областях науки
      */
     $('.sub-research-directions').click(function () {
         var source = this;
@@ -226,12 +243,6 @@ $(document).ready(function () {
         var parentContainer = $(source).parents('ul.tabs')[0];
         $(parentContainer).siblings('ul.list-sections-science').hide();
         $(parentContainer).siblings('ul.list-sections-science[id="' + $(source).attr('data-tabname') + '"]').show();
-    });
-    /*
-     * исправление распространения событий для списка фильтров при поиске
-     */
-    $('li.li-checkbox').click(function (event) {
-        event.stopPropagation();
     });
     /*
      * закрывать модальное окно при нажатии кнопки Отмены
@@ -257,7 +268,7 @@ $(document).ready(function () {
         }
     });
     /*
-     * показать все элементы (Вакансии (развернуть/скрыть Критерии))
+     * показать все элементы (в Вакансии развернуть/скрыть Критерии)
      */
     $("div.lnk-container span.icon-hsm-eye").click(function () {
         var source = this;
@@ -267,7 +278,7 @@ $(document).ready(function () {
         $(source).siblings("span.icon-sm-eye").show();
     });
     /*
-     * скрыть все элементы (Вакансии (развернуть/скрыть Критерии))
+     * скрыть все элементы (в Вакансии развернуть/скрыть Критерии)
      */
     $("div.lnk-container span.icon-sm-eye").click(function () {
         var source = this;
@@ -297,7 +308,9 @@ function reloadImg(captchaImageFieldName) {
     var d = new Date();
     $('#' + captchaImageFieldName).attr("src", "/captcha/fetch?w=100&h=30" + d.getTime());
 }
-
+/*
+ * сделать некоторую обработку перед отправкой формы Регистрации
+ */
 function beforeFormSubmitRegister(source, captchaImageFieldName, captchaInputFieldName, event) {
     var form = $('#' + captchaImageFieldName).parents('form')[0];
     if (!$(form).hasClass('validated')) {
@@ -327,8 +340,9 @@ function beforeFormSubmitRegister(source, captchaImageFieldName, captchaInputFie
         });
     }
 };
-
-//
+/*
+ * на форме Регистрации регистрации нажатие по кнопке "Согласие на обработку персональным данных"
+ */
 function vacancySaveOptions(options) {
     if (options.publish !== undefined && options.publish) {
         $("form").find("input[type=\"hidden\"][name=\"ToPublish\"]").val(true);
@@ -433,19 +447,6 @@ function removeItemFromList(source) {
         return false;
     }
     return false;
-};
-
-function collapsibleFilterClicked(event) {
-    event.stopPropagation();
-    var source = this;
-    if ($(source).hasClass('open')) {
-        $(source).children('ul').hide();
-        $(source).removeClass('open');
-    }
-    else {
-        $(source).addClass('open');
-        $(source).children('ul').show();
-    }
 };
 /**
   * добавить метку о том что поискаовый запрос нужно сохранить в качестве подписки

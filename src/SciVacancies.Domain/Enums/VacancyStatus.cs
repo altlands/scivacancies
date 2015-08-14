@@ -27,7 +27,7 @@ namespace SciVacancies.Domain.Enums
         /// Ожидается решение победителя (будет подписывать контракт или нет).
         /// Если победитель отказался, то ожидается решение претендента
         /// </summary>
-        [Description("Предложение контракта")]
+        [Description("Финал")]
         OfferResponseAwaiting = 3,
 
         /// <summary>
