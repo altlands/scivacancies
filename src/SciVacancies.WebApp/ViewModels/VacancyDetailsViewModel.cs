@@ -11,6 +11,7 @@ namespace SciVacancies.WebApp.ViewModels
 {
     public class VacancyDetailsViewModel: ViewModelBase
     {
+        public List<VacancyApplication> AppliedByUserApplications { get; set; } = new List<VacancyApplication>();
 
         /// <summary>
         /// Идентификатор организации
@@ -176,5 +177,6 @@ namespace SciVacancies.WebApp.ViewModels
 
         public IEnumerable<VacancyCriteria> Criterias { get; set; }
         public List<CriteriaItemViewModel> CriteriasHierarchy { get; set; }
+
     }
 }

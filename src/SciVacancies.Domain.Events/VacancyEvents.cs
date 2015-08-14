@@ -96,7 +96,7 @@ namespace SciVacancies.Domain.Events
 
         public Guid PretenderResearcherGuid { get; set; }
         public Guid PretenderVacancyApplicationGuid { get; set; }
-        public bool IsPretenderAccept { get; set; }
+        public bool? IsPretenderAccept { get; set; }
     }
 
     /// <summary>

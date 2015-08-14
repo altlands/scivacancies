@@ -11,10 +11,8 @@ using Microsoft.AspNet.Identity.EntityFramework;
 using AutoMapper;
 using MediatR;
 using CommonDomain.Persistence;
-using System.Threading.Tasks;
-using Newtonsoft.Json;
-using SciVacancies.WebApp.Engine.SmtpNotificators;
 using System.Security.Claims;
+using SciVacancies.SmtpNotificationsHandlers.SmtpNotificators;
 
 namespace SciVacancies.WebApp.Commands
 {
@@ -57,17 +55,17 @@ namespace SciVacancies.WebApp.Commands
                 UserId = user.Id
             });
 
-            if (message.Data.Claims != null)
+            if (message.Data.Claims!=null)
             {
-                foreach (Claim claim in message.Data.Claims)
+            foreach (Claim claim in message.Data.Claims)
+            {
+                user.Claims.Add(new IdentityUserClaim
                 {
-                    user.Claims.Add(new IdentityUserClaim
-                    {
-                        ClaimType = claim.Type,
-                        ClaimValue = claim.Value,
-                        UserId = user.Id
-                    });
-                }
+                    ClaimType = claim.Type,
+                    ClaimValue = claim.Value,
+                    UserId = user.Id
+                });
+            }
             }
 
             var identity = _userManager.Create(user);
@@ -77,7 +75,7 @@ namespace SciVacancies.WebApp.Commands
 
             //TODO - вынести в хэндлер
             //send email notification
-            var registerSmtpNotificator = new RegisterSmtpNotificator();
+            var registerSmtpNotificator = new SmtpNotificatorUserRegistered();
             registerSmtpNotificator.Send(researcherDataModel.FullName, message.Data.UserName, message.Data.Password, message.Data.Email);
             if (!string.IsNullOrWhiteSpace(message.Data.ExtraEmail))
                 registerSmtpNotificator.Send(researcherDataModel.FullName, message.Data.UserName, message.Data.Password, message.Data.ExtraEmail);
@@ -123,17 +121,17 @@ namespace SciVacancies.WebApp.Commands
                 UserId = user.Id
             });
 
-            if (message.Data.Claims != null)
+            if (message.Data.Claims!=null)
             {
-                foreach (Claim claim in message.Data.Claims)
+            foreach (Claim claim in message.Data.Claims)
+            {
+                user.Claims.Add(new IdentityUserClaim
                 {
-                    user.Claims.Add(new IdentityUserClaim
-                    {
-                        ClaimType = claim.Type,
-                        ClaimValue = claim.Value,
-                        UserId = user.Id
-                    });
-                }
+                    ClaimType = claim.Type,
+                    ClaimValue = claim.Value,
+                    UserId = user.Id
+                });
+            }
             }
 
             //_userManager.CreateAsync(user).Wait();

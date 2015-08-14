@@ -1,12 +1,51 @@
-﻿using Microsoft.AspNet.Mvc;
+﻿using System;
+using System.ComponentModel;
+using System.Security.Claims;
+using MediatR;
+using Microsoft.AspNet.Mvc;
+using Quartz.Util;
+using SciVacancies.WebApp.Controllers;
+using SciVacancies.WebApp.Queries;
+using System.Linq;
+using Autofac;
+using SciVacancies.WebApp.Engine;
+using SciVacancies.WebApp.ViewModels;
 
 namespace SciVacancies.WebApp.ViewComponents
 {
-    public class Login: ViewComponent
+    public class Login : ViewComponent
     {
+        private readonly IMediator _mediator;
+
+        public Login(IMediator mediator)
+        {
+            _mediator = mediator;
+        }
+
+        [BindResearcherIdFromClaims]
         public IViewComponentResult Invoke()
         {
-            return View("/Views/Partials/_Login");
+            var model = new AccountLoginViewModel();
+            if (User.IsInRole(ConstTerms.RequireRoleResearcher))
+            {
+                var idClaim = ((ClaimsPrincipal)User).Claims.FirstOrDefault(c => c.Type == ConstTerms.ClaimTypeResearcherId);
+                if (idClaim != null)
+                {
+                    var userGuid = (Guid)TypeDescriptor.GetConverter(typeof(Guid)).ConvertFrom(idClaim.Value);
+                    model.UnreadNotificationCount = _mediator.Send(new ResearcherNotificationsUnreadCountQuery { ResearcherGuid = userGuid });
+                }
+            }
+            else if (User.IsInRole(ConstTerms.RequireRoleOrganizationAdmin))
+            {
+                var idClaim = ((ClaimsPrincipal)User).Claims.FirstOrDefault(c => c.Type == ConstTerms.ClaimTypeOrganizationId);
+                if (idClaim != null)
+                {
+                    var userGuid = (Guid)TypeDescriptor.GetConverter(typeof(Guid)).ConvertFrom(idClaim.Value);
+                    model.UnreadNotificationCount = _mediator.Send(new OrganizationNotificationsUnreadCountQuery { OrganizationGuid = userGuid });
+                }
+            }
+
+            return View("/Views/Partials/_Login", model);
         }
     }
 }

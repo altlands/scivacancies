@@ -3,11 +3,14 @@ using System.Net.Mail;
 using SciVacancies.SmtpNotifications;
 using SciVacancies.SmtpNotifications.Vendors;
 
-namespace SciVacancies.WebApp.Engine.SmtpNotificators
+namespace SciVacancies.SmtpNotificationsHandlers.SmtpNotificators
 {
-    internal class SmtpNotificator
+    public class SmtpNotificator
     {
         private readonly SmtpEmailService _smtpEmailService;
+        //protected string Domain = "localhost:59075";
+        protected string Domain = "scivac.test.alt-lan.com";
+
 
         public SmtpNotificator()
         {

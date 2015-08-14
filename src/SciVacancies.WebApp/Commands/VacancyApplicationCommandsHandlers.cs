@@ -4,7 +4,6 @@ using System;
 
 using CommonDomain.Persistence;
 using MediatR;
-using SciVacancies.WebApp.Engine.SmtpNotificators;
 
 namespace SciVacancies.WebApp.Commands
 {

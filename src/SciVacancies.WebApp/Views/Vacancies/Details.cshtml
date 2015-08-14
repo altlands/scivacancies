@@ -192,9 +192,13 @@
     {
         <a asp-controller="vacancies" asp-action="startincommittee" asp-route-id="@Model.Guid" class="btn btn-success" title="Перевести на рассмотрение">Перевести на рассмотрение</a>
     }
-    @if (Model.Status == VacancyStatus.OfferAccepted || Model.Status == VacancyStatus.OfferRejected)
+    @if (Model.Status == VacancyStatus.OfferAccepted)
     {
-        <a asp-controller="vacancies" asp-action="close" asp-route-id="@Model.Guid" class="btn btn-success" title="Выбрать победителя">Выбрать победителя</a>
+        <a asp-controller="vacancies" asp-action="close" asp-route-id="@Model.Guid" class="btn btn-success" title="Выбрать победителя">Контракт подписан. Закрыть вакансию</a>
+    }
+    @if ( Model.Status == VacancyStatus.OfferRejected)
+    {
+        <a asp-controller="vacancies" asp-action="close" asp-route-id="@Model.Guid" class="btn btn-warning" title="Выбрать победителя">Контракт не подписан. Закрыть вакансию</a>
     }
 
 </div>

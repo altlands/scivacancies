@@ -206,7 +206,7 @@ namespace SciVacancies.Domain.Aggregates
                     IsWinnerAccept = this.IsWinnerAccept.Value,
                     PretenderResearcherGuid = this.PretenderResearcherGuid,
                     PretenderVacancyApplicationGuid = this.PretenderVacancyApplicationGuid,
-                    IsPretenderAccept = this.IsPretenderAccept.Value
+                    IsPretenderAccept = this.IsPretenderAccept
                 });
             }
         }

@@ -26,30 +26,42 @@
 @if (User.IsInRole(ConstTerms.RequireRoleResearcher))
 {
 
-    if (Model.Status == VacancyStatus.Published)
+    if (!Model.AppliedByUserApplications.Select(c => c.vacancy_guid).Contains(Model.Guid))
+    {
+        if (Model.Status == VacancyStatus.Published)
+        {
+            <text>
+            <a asp-controller="applications" asp-action="create" asp-route-vacancyguid="@Model.Guid" class="green-btn middle-icon" target="_blank">Подать заявку</a>
+            <br />
+            <br />
+            </text>
+        }
+    }
+    else
     {
         <text>
-        <a asp-controller="applications" asp-action="create" asp-route-vacancyguid="@Model.Guid" class="green-btn middle-icon" target="_blank">Подать заявку</a>
+        <a asp-controller="applications" asp-action="details" asp-route-id="@Model.AppliedByUserApplications.Last(c => c.vacancy_guid == Model.Guid).guid" target="_blank">Последняя заявка, поданная на вакансию</a>
         <br />
         <br />
         </text>
     }
+
     if (bool.Parse(ViewData["VacancyInFavorites"].ToString()))
     {
         <text>
-            <a asp-controller="researchers" asp-action="favorities" class="success-btn middle-icon" target="_blank">В избранном</a>
-            &nbsp;
-            <a asp-controller="researchers" asp-action="removefavorite" asp-route-vacancyguid="@Model.Guid"> Убрать из избранных</a>
-            <br/>
-            <br/>
+        <a asp-controller="researchers" asp-action="favorities" class="success-btn middle-icon" target="_blank">В избранном</a>
+        &nbsp;
+        <a asp-controller="researchers" asp-action="removefavorite" asp-route-vacancyguid="@Model.Guid"> Убрать из избранных</a>
+        <br />
+        <br />
         </text>
     }
     else
     {
         <text>
-            <a asp-controller="researchers" asp-action="addtofavorite" asp-route-vacancyguid="@Model.Guid" class="success-btn middle-icon">Добавить в избранное</a>
-            <br/>
-            <br/>
+        <a asp-controller="researchers" asp-action="addtofavorite" asp-route-vacancyguid="@Model.Guid" class="success-btn middle-icon">Добавить в избранное</a>
+        <br />
+        <br />
         </text>
     }
 }

@@ -15,8 +15,8 @@
 
 <div class="content-slide">
     <div class="profile">
-        <div class="photo inline-block">
-            <img width="140" height="180" src="/images/user-photo.jpg" />
+        <div class="photo inline-block" style="max-width: 140px; max-height: 180px;">
+            <img src="@Model.Researcher.ImageUrlOrDefault" style="max-width: 138px; max-height: 178px;" />
         </div>
         <div class="info info-view inline-block">
             <h4>@Model.Researcher.FullName</h4>
@@ -94,18 +94,18 @@
 
 
         @*<div class="list-item">
-            <div class="bold">Приложенные файлы</div>
-            <ol>
-                <li>
-                    Доклад по автоматизированным системам в области науковедения.doc<br />
-                    <span class="small-icon icon-sm-download"><span>Скачать</span></span>
-                </li>
-                <li>
-                    Резюме на английском языке.pdf<br />
-                    <span class="small-icon icon-sm-download"><span>Скачать</span></span>
-                </li>
-            </ol>
-        </div>*@
+                <div class="bold">Приложенные файлы</div>
+                <ol>
+                    <li>
+                        Доклад по автоматизированным системам в области науковедения.doc<br />
+                        <span class="small-icon icon-sm-download"><span>Скачать</span></span>
+                    </li>
+                    <li>
+                        Резюме на английском языке.pdf<br />
+                        <span class="small-icon icon-sm-download"><span>Скачать</span></span>
+                    </li>
+                </ol>
+            </div>*@
     </div>
 
     <br />
@@ -162,7 +162,7 @@
         }
         else
         {
-            if (Model.Vacancy.Status == VacancyStatus.OfferResponseAwaiting)
+            @*if (Model.Vacancy.Status == VacancyStatus.OfferResponseAwaiting)
             {
                 if (Model.Status == VacancyApplicationStatus.Won && !Model.Vacancy.IsWinnerAccept.HasValue)
                 {
@@ -184,7 +184,8 @@
                         </text>
                     }
                 }
-            }
+            }*@
+
             if (Model.Vacancy.IsWinnerAccept.HasValue && Model.Guid == Model.Vacancy.WinnerVacancyApplicationGuid)
             {
                 <text>

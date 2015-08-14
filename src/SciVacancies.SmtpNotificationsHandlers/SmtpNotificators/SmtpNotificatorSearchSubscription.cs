@@ -3,9 +3,9 @@ using System.Linq;
 using System.Net.Mail;
 using SciVacancies.ReadModel.Core;
 
-namespace SciVacancies.WebApp.Engine.SmtpNotificators
+namespace SciVacancies.SmtpNotificationsHandlers.SmtpNotificators
 {
-    internal class WinnerSetSmtpNotificator : SmtpNotificator
+    public class SmtpNotificatorSearchSubscription : SmtpNotificator
     {
         public void Send(SearchSubscription searchSubscription, Researcher researcher, List<SciVacancies.ReadModel.ElasticSearchModel.Model.Vacancy> vacancies)
         {
@@ -32,7 +32,7 @@ namespace SciVacancies.WebApp.Engine.SmtpNotificators
 </div>
 ";
 
-            var mailMessage = new MailMessage(from: "mailer@alt-lan.com", to: researcher.email, body: body, subject: "Уведомление с портала вакансий")
+            var mailMessage = new MailMessage(@from: "mailer@alt-lan.com", to: researcher.email, body: body, subject: "Уведомление с портала вакансий")
             {
                 IsBodyHtml = true,
             };
@@ -40,7 +40,7 @@ namespace SciVacancies.WebApp.Engine.SmtpNotificators
             Send(mailMessage);
             if (!string.IsNullOrWhiteSpace(researcher.extraemail))
             {
-                mailMessage = new MailMessage(from: "mailer@alt-lan.com", to: researcher.extraemail, body: body, subject: "Уведомление с портала вакансий")
+                mailMessage = new MailMessage(@from: "mailer@alt-lan.com", to: researcher.extraemail, body: body, subject: "Уведомление с портала вакансий")
                 {
                     IsBodyHtml = true,
                 };
@@ -48,5 +48,6 @@ namespace SciVacancies.WebApp.Engine.SmtpNotificators
                 Send(mailMessage);
             }
         }
+     
     }
 }
