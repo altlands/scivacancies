@@ -247,8 +247,11 @@ namespace SciVacancies.WebApp.Controllers
                                             OAuthOrgInformation organizationInformation = JsonConvert.DeserializeObject<OAuthOrgInformation>(GetOrganizationInfo(orgClaim.Inn));
                                             AccountOrganizationRegisterViewModel orgModel = Mapper.Map<AccountOrganizationRegisterViewModel>(organizationInformation);
 
-                                            orgModel.UserName = claims.Find(f => f.Type.Equals("username")).Value;
-                                            
+                                            //TODO - сделать всё в маппинге
+                                            //orgModel.UserName = claims.Find(f => f.Type.Equals("username")).Value;
+                                            //TODO - мыло в username не пролезает, спецсимволы мешают
+                                            orgModel.UserName = orgClaim.Inn;
+
                                             orgModel.Claims = claims.Where(w => w.Type.Equals("lastname")
                                                                             && w.Type.Equals("firstname")
                                                                             && w.Type.Equals("access_token")

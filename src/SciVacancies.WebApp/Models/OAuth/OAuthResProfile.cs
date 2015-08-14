@@ -9,7 +9,7 @@ namespace SciVacancies.WebApp.Models.OAuth
     {
         public string birthday { get; set; }
         public List<string> degrees { get; set; }
-        public OAuthResEducation education { get; set; }
+        public List<OAuthResEducation> education { get; set; }
         public string email { get; set; }
         public List<OAuthResEntity> entities { get; set; }
         public string firstName { get; set; }

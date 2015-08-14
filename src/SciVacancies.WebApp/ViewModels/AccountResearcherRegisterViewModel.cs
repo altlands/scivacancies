@@ -59,5 +59,19 @@ namespace SciVacancies.WebApp.ViewModels
         /// Сюда пишутся access_token  и прочее, если OAuth авторизация
         /// </summary>
         public List<Claim> Claims { get; set; }
+
+        //public string PreviousSecondName { get; set; }
+        //public string PreviousSecondNameEng { get; set; }
+        //public string Nationality { get; set; }
+        //public string ResearchActivity { get; set; }
+        //public string TeachingActivity { get; set; }
+        //public string OtherActivity { get; set; }
+        //public string ScienceDegree { get; set; }
+        //public string ScienceRank { get; set; }
+        //public string Rewards { get; set; }
+        //public string Memberships { get; set; }
+        //public string Conferences { get; set; }
+        //public string Educations { get; set; }
+        //public string Publications { get; set; }
     }
 }

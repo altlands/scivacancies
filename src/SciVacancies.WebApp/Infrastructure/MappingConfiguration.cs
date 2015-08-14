@@ -57,6 +57,7 @@ namespace SciVacancies.WebApp.Infrastructure
                 .ForMember(d => d.OrgFormId, o => o.MapFrom(s => s.OrgFormId))
                 .ForMember(d => d.ResearchDirections, o => o.Ignore());
 
+            //TODO - часть этого маппинга лежит в accountController!!!
             Mapper.CreateMap<OAuthOrgInformation, AccountOrganizationRegisterViewModel>()
                 //.ForMember(d => d.UserName, o => o.MapFrom(s => s.inn))
                 .ForMember(d => d.Email, o => o.MapFrom(s => s.email))
@@ -75,51 +76,40 @@ namespace SciVacancies.WebApp.Infrastructure
                 .ForMember(d => d.Name, o => o.MapFrom(s => s.title));
 
             //TODO - добавить нужные маппинги и допилить структуру моделей
-            //Mapper.CreateMap<OAuthResProfile, AccountResearcherRegisterViewModel>()
-            //            .ForMember(d => d, o => o.MapFrom(s => s.id))
-            //            .ForMember(d => d, o => o.MapFrom(s => s.login))
-
-            //            .ForMember(d => d.FirstName, o => o.MapFrom(s => s.firstName))
-            //            .ForMember(d => d.FirstNameEng, o => o.MapFrom(s => s.firstNameEn))
-
-            //            .ForMember(d => d, o => o.MapFrom(s => s.middleName))
-            //            .ForMember(d => d, o => o.MapFrom(s => s.middleNameEn))
-
-            //            .ForMember(d => d.SecondName, o => o.MapFrom(s => s.lastName))
-            //            .ForMember(d => d.SecondNameEng, o => o.MapFrom(s => s.lastNameEn))
-
-            //            //.ForMember(d => d.Patronymic, o => o.MapFrom(s => s.))
-            //            //.ForMember(d => d.PatronymicEng, o => o.MapFrom(s => s.))
-
-            //            .ForMember(d => d, o => o.MapFrom(s => s.lastNameOld))
-            //            .ForMember(d => d, o => o.MapFrom(s => s.lastNameEnOld))
-
-            //            .ForMember(d => d.Email, o => o.MapFrom(s => s.email))
-            //            //.ForMember(d => d.ExtraEmail, o => o.MapFrom(s => s.))
-
-            //            .ForMember(d => d.Phone, o => o.MapFrom(s => s.phone))
-            //            //.ForMember(d => d.ExtraPhone, o => o.MapFrom(s => s.))
-
-            //            .ForMember(d => d, o => o.MapFrom(s => s.nationality))
-
-            //            //.ForMember(d => d.ResearchActivity, o => o.MapFrom(s => s.))
-            //            //.ForMember(d => d.TeachingActivity, o => o.MapFrom(s => s.))
-            //            //.ForMember(d => d.OtherActivity, o => o.MapFrom(s => s.))
-
-            //            .ForMember(d => d, o => o.MapFrom(s => s.degrees))
-            //            .ForMember(d => d, o => o.MapFrom(s => s.ranks))
-            //            .ForMember(d => d, o => o.MapFrom(s => s.honors))
-            //            .ForMember(d => d, o => o.MapFrom(s => s.members))
-            //            //.ForMember(d => d.Conferences, o => o.MapFrom(s => s.))
-
-            //            .ForMember(d => d, o => o.MapFrom(s => s.entities))
-            //            .ForMember(d => d, o => o.MapFrom(s => s.interests))
-            //            .ForMember(d => d, o => o.MapFrom(s => s.photo))
-            //            .ForMember(d => d, o => o.MapFrom(s => s.sAbstracts))
-
-            //            .ForMember(d => d, o => o.MapFrom(s => s.education))
-            //            //.ForMember(d => d.Publications, o => o.MapFrom(s => s.))
-            //            .ForMember(d => d.BirthYear, o => o.MapFrom(s => s.birthday));
+            Mapper.CreateMap<OAuthResProfile, AccountResearcherRegisterViewModel>()
+                        //.ForMember(d => d, o => o.MapFrom(s => s.id))
+                        //.ForMember(d => d, o => o.MapFrom(s => s.login))
+                        .ForMember(d => d.FirstName, o => o.MapFrom(s => s.firstName))
+                        .ForMember(d => d.FirstNameEng, o => o.MapFrom(s => s.firstNameEn))
+                        //.ForMember(d => d, o => o.MapFrom(s => s.middleName))
+                        //.ForMember(d => d, o => o.MapFrom(s => s.middleNameEn))
+                        .ForMember(d => d.SecondName, o => o.MapFrom(s => s.lastName))
+                        .ForMember(d => d.SecondNameEng, o => o.MapFrom(s => s.lastNameEn))
+                        //TODO - здесь псевдоним, а не отчество
+                        .ForMember(d => d.Patronymic, o => o.MapFrom(s => s.middleName))
+                        .ForMember(d => d.PatronymicEng, o => o.MapFrom(s => s.middleNameEn))
+                        //.ForMember(d => d, o => o.MapFrom(s => s.lastNameOld))
+                        //.ForMember(d => d, o => o.MapFrom(s => s.lastNameEnOld))
+                        .ForMember(d => d.Email, o => o.MapFrom(s => s.email))
+                        //.ForMember(d => d.ExtraEmail, o => o.MapFrom(s => s.))
+                        .ForMember(d => d.Phone, o => o.MapFrom(s => s.phone))
+                        //.ForMember(d => d.ExtraPhone, o => o.MapFrom(s => s.))
+                        //.ForMember(d => d, o => o.MapFrom(s => s.nationality))
+                        //.ForMember(d => d.ResearchActivity, o => o.MapFrom(s => s.))
+                        //.ForMember(d => d.TeachingActivity, o => o.MapFrom(s => s.))
+                        //.ForMember(d => d.OtherActivity, o => o.MapFrom(s => s.))
+                        //.ForMember(d => d, o => o.MapFrom(s => s.degrees))
+                        //.ForMember(d => d, o => o.MapFrom(s => s.ranks))
+                        //.ForMember(d => d, o => o.MapFrom(s => s.honors))
+                        //.ForMember(d => d, o => o.MapFrom(s => s.members))
+                        //.ForMember(d => d.Conferences, o => o.MapFrom(s => s.))
+                        //.ForMember(d => d, o => o.MapFrom(s => s.entities))
+                        //.ForMember(d => d, o => o.MapFrom(s => s.interests))
+                        //.ForMember(d => d, o => o.MapFrom(s => s.photo))
+                        //.ForMember(d => d, o => o.MapFrom(s => s.sAbstracts))
+                        //.ForMember(d => d, o => o.MapFrom(s => s.education))
+                        //.ForMember(d => d.Publications, o => o.MapFrom(s => s.))
+                        .ForMember(d => d.BirthYear, o => o.MapFrom(s => DateTime.Parse(s.birthday).Year));
 
             #endregion
 
@@ -438,7 +428,7 @@ namespace SciVacancies.WebApp.Infrastructure
                 .ForMember(d => d.PatronymicEng, o => o.MapFrom(s => s.patronymic_eng))
                 .ForMember(d => d.PreviousSecondName, o => o.MapFrom(s => s.previous_secondname))
                 .ForMember(d => d.PreviousSecondNameEng, o => o.MapFrom(s => s.previous_secondname_eng))
-                
+
                 //.ForMember(d => d.BirthDate, o => o.MapFrom(s => s.birthdate))
                 .ForMember(d => d.BirthYear, o => o.MapFrom(s => s.birthdate.Year))
 
