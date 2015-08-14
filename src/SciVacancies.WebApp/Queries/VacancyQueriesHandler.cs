@@ -7,6 +7,8 @@ using System.Linq;
 
 using NPoco;
 using MediatR;
+using SciVacancies.ReadModel;
+using SciVacancies.WebApp.Engine;
 
 namespace SciVacancies.WebApp.Queries
 {
@@ -34,7 +36,6 @@ namespace SciVacancies.WebApp.Queries
             if (message.VacancyGuid == Guid.Empty) throw new ArgumentNullException($"VacancyGuid is empty: {message.VacancyGuid}");
 
             var vacancy = _db.SingleOrDefaultById<Vacancy>(message.VacancyGuid);
-
             return vacancy;
         }
         public Page<Vacancy> Handle(SelectPagedVacanciesQuery message)

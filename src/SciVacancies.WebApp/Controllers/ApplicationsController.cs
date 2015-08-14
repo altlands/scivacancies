@@ -11,6 +11,7 @@ using Microsoft.AspNet.Mvc;
 using Microsoft.Net.Http.Headers;
 using SciVacancies.Domain.DataModels;
 using SciVacancies.Domain.Enums;
+using SciVacancies.ReadModel;
 using SciVacancies.ReadModel.Core;
 using SciVacancies.WebApp.Commands;
 using SciVacancies.WebApp.Engine;

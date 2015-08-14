@@ -1,28 +1,12 @@
 ﻿using System;
 using System.ComponentModel;
-using System.Reflection;
 using SciVacancies.Domain.Enums;
 
-namespace SciVacancies.WebApp
+namespace SciVacancies.WebApp.Engine
 {
 
     public static class EnumExtenions
     {
-        public static string GetDescription(this Enum value)
-        {
-            var type = value.GetType();
-            var name = Enum.GetName(type, value);
-
-            if (name == null) return null;
-
-            var field = type.GetField(name);
-
-            if (field == null) return null;
-
-            var attr = Attribute.GetCustomAttribute(field, typeof(DescriptionAttribute)) as DescriptionAttribute;
-
-            return attr?.Description;
-        }
 
         public static string GetHtmlClass(this VacancyStatus value)
         {

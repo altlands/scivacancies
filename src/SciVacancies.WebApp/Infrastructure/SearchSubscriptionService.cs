@@ -11,9 +11,9 @@ using Quartz.Impl;
 using Newtonsoft.Json;
 using Npgsql;
 using SciVacancies.WebApp.Engine;
-using SciVacancies.WebApp.Engine.SmtpNotificators;
 using SciVacancies.ReadModel.ElasticSearchModel.Model;
 using Microsoft.Framework.ConfigurationModel;
+using SciVacancies.SmtpNotificationsHandlers.SmtpNotificators;
 
 namespace SciVacancies.WebApp.Infrastructure
 {
@@ -65,7 +65,7 @@ namespace SciVacancies.WebApp.Infrastructure
                 var elasticClient = new ElasticClient(new ConnectionSettings(new Uri("http://localhost:9200/"), defaultIndex: "scivacancies"));
                 IEnumerable<SciVacancies.ReadModel.Core.SearchSubscription> searchsubscriptions = dataBase.Fetch<SciVacancies.ReadModel.Core.SearchSubscription>(new Sql($"SELECT * FROM res_searchsubscriptions ss WHERE ss.status = @0", SearchSubscriptionStatus.Active));
 
-                var winnerSetSmtpNotificator = new WinnerSetSmtpNotificator();
+                var searchSubscriptionSmtpNotificator = new SmtpNotificatorSearchSubscription();
                 
                 foreach (SciVacancies.ReadModel.Core.SearchSubscription searchSubscription in searchsubscriptions)
                 {
@@ -95,7 +95,7 @@ namespace SciVacancies.WebApp.Infrastructure
                         }
 
                         var researcher = dataBase.SingleOrDefaultById<SciVacancies.ReadModel.Core.Researcher>(searchSubscription.researcher_guid);
-                        winnerSetSmtpNotificator.Send(searchSubscription,researcher, vacanciesList);
+                        searchSubscriptionSmtpNotificator.Send(searchSubscription,researcher, vacanciesList);
 
                     }
                 }

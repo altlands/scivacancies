@@ -1,0 +1,19 @@
+﻿{
+  "version": "1.0.0-*",
+    "description": "",
+    "authors": [ "" ],
+    "tags": [ "" ],
+    "projectUrl": "",
+    "licenseUrl": "",
+
+    "dependencies": {
+        "SciVacancies.Domain.Events": "1.0.0-*",
+        "SciVacancies.ReadModel": "1.0.0-*",
+        "SciVacancies.SmtpNotifications": "1.0.0-*",
+        "SciVacancies.ReadModel.ElasticSearchModel": "1.0.0-*"
+    },
+
+    "frameworks": {
+        "dnx451": { }
+    }
+}
