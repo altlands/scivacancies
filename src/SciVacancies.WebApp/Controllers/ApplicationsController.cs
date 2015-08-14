@@ -481,7 +481,7 @@ namespace SciVacancies.WebApp.Controllers
             return View(model);
         }
 
-        private object OfferAcceptionPreValidation(Guid vacancyApplicationGuid, Guid organizationGuid, bool isWinner)
+        private object OfferAcceptionPreValidation(Guid vacancyApplicationGuid, Guid researcherGuid, bool isWinner)
         {
             var vacancyApplicaiton = _mediator.Send(new SingleVacancyApplicationQuery { VacancyApplicationGuid = vacancyApplicationGuid });
 
@@ -499,8 +499,10 @@ namespace SciVacancies.WebApp.Controllers
             if (vacancy == null)
                 return HttpNotFound(); //throw new ObjectNotFoundException($"Не найдена Вакансия c идентификатором: {vacancyApplicaiton.vacancy_guid}");
 
-            if (vacancy.organization_guid != organizationGuid)
-                return View("Error", "Вы не можете изменять Заявки, поданные на вакансии других организаций.");
+            if (isWinner && vacancy.winner_researcher_guid!= researcherGuid)
+                return View("Error", "Вы не можете принять или отказаться от предложения, сделанного для другого заявителя.");
+            if (!isWinner && vacancy.pretender_researcher_guid!= researcherGuid)
+                return View("Error", "Вы не можете принять или отказаться от предложения, сделанного для другого заявителя.");
 
             if (vacancy.status != VacancyStatus.OfferResponseAwaiting)
                 return View("Error",
@@ -508,16 +510,16 @@ namespace SciVacancies.WebApp.Controllers
             return vacancy;
         }
 
-        [Authorize(Roles = ConstTerms.RequireRoleOrganizationAdmin)]
-        [BindOrganizationIdFromClaims]
-        public IActionResult OfferAcception(Guid id, Guid organizationGuid, bool isWinner, bool hasAccepted)
+        [Authorize(Roles = ConstTerms.RequireRoleResearcher)]
+        [BindResearcherIdFromClaims]
+        public IActionResult OfferAcception(Guid id, Guid researcherGuid, bool isWinner, bool hasAccepted)
         {
             if (id == Guid.Empty)
                 throw new ArgumentNullException(nameof(id));
-            if (organizationGuid == Guid.Empty)
-                throw new ArgumentNullException(nameof(organizationGuid));
+            if (researcherGuid == Guid.Empty)
+                throw new ArgumentNullException(nameof(researcherGuid));
 
-            var result = OfferAcceptionPreValidation(id, organizationGuid, isWinner);
+            var result = OfferAcceptionPreValidation(id, researcherGuid, isWinner);
             if (result is HttpNotFoundResult) return (HttpNotFoundResult)result;
             var vacancy = (Vacancy)result;
 
@@ -544,7 +546,7 @@ namespace SciVacancies.WebApp.Controllers
                     VacancyGuid = vacancy.guid
                 });
 
-            return RedirectToAction("preview", "applications", new { id });
+            return RedirectToAction("details", "applications", new { id });
 
         }
 

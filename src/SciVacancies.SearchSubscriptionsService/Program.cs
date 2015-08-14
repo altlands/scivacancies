@@ -15,31 +15,31 @@ namespace SciVacancies.SearchSubscriptionsService
 
         public void Main(string[] args)
         {
-            try
-            {
-                IScheduler scheduler = StdSchedulerFactory.GetDefaultScheduler();
+            //try
+            //{
+            //    IScheduler scheduler = StdSchedulerFactory.GetDefaultScheduler();
 
-                scheduler.Start();
+            //    scheduler.Start();
 
-                IJobDetail job = JobBuilder.Create<SearchSubscriptionJob>()
-                    .WithIdentity("SciVacancies.SearchSubscriptionService", "SciVacancies")
-                    .Build();
+            //    IJobDetail job = JobBuilder.Create<SearchSubscriptionJob>()
+            //        .WithIdentity("SciVacancies.SearchSubscriptionService", "SciVacancies")
+            //        .Build();
 
-                ITrigger trigger = TriggerBuilder.Create()
-                    .WithIdentity("SciVacancies.SearchSubscriptionJobTrigger", "SciVacancies")
-                    .WithDailyTimeIntervalSchedule(s => s
-                        .WithIntervalInHours(HOUR_INTERVAL)
-                        .OnEveryDay()
-                        .StartingDailyAt(TimeOfDay.HourAndMinuteOfDay(HOUR_RUN, MINUTE_RUN))
-                    )
-                    .Build();
+            //    ITrigger trigger = TriggerBuilder.Create()
+            //        .WithIdentity("SciVacancies.SearchSubscriptionJobTrigger", "SciVacancies")
+            //        .WithDailyTimeIntervalSchedule(s => s
+            //            .WithIntervalInHours(HOUR_INTERVAL)
+            //            .OnEveryDay()
+            //            .StartingDailyAt(TimeOfDay.HourAndMinuteOfDay(HOUR_RUN, MINUTE_RUN))
+            //        )
+            //        .Build();
 
-                scheduler.ScheduleJob(job, trigger);
-            }
-            catch (SchedulerException e)
-            {
-                throw;
-            }
+            //    scheduler.ScheduleJob(job, trigger);
+            //}
+            //catch (SchedulerException e)
+            //{
+            //    throw;
+            //}
         }
     }
 }

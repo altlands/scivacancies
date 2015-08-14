@@ -162,7 +162,7 @@
         }
         else
         {
-            if (Model.Vacancy.Status == VacancyStatus.OfferResponseAwaiting)
+            @*if (Model.Vacancy.Status == VacancyStatus.OfferResponseAwaiting)
             {
                 if (Model.Status == VacancyApplicationStatus.Won && !Model.Vacancy.IsWinnerAccept.HasValue)
                 {
@@ -184,7 +184,8 @@
                         </text>
                     }
                 }
-            }
+            }*@
+
             if (Model.Vacancy.IsWinnerAccept.HasValue && Model.Guid == Model.Vacancy.WinnerVacancyApplicationGuid)
             {
                 <text>
