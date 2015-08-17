@@ -1,6 +1,7 @@
 ﻿@using System.Threading.Tasks
 @using SciVacancies.Domain.Enums
 @using SciVacancies.WebApp
+@using SciVacancies.WebApp.Engine
 @model SciVacancies.WebApp.ViewModels.VacancyApplicationDetailsViewModel
 
 <div class="crumbs">
@@ -33,25 +34,26 @@
     <div class="list-info">
         <div class="list-item">
             <div class="bold">Образование</div>
-            @if (Model.Researcher.Educations != null)
+            @if (Model.Educations != null)
             {
-                foreach (var item in Model.Researcher.Educations)
+                foreach (var item in Model.Educations)
                 {
                     <text>
                     <ul class="table-emulation">
                         <li>
-                            <span class="w85 italic inline-block">Город</span> <span class="italic">@item.City</span>
+                            <span class="w85 italic inline-block">Город</span> <span class="italic">@item.city</span>
                         </li>
                         <li>
-                            <span class="w85 italic inline-block">ВУЗ</span> <span class="italic">@item.UniversityShortName</span>
+                            <span class="w85 italic inline-block">ВУЗ</span> <span class="italic">@item.university_shortname</span>
                         </li>
                         <li>
-                            <span class="w85 italic inline-block">Факультет</span> <span class="italic">@item.FacultyShortName</span>
+                            <span class="w85 italic inline-block">Факультет</span> <span class="italic">@item.faculty_shortname</span>
                         </li>
                         <li>
-                            <span class="w85 italic inline-block">Год окончания</span> <span class="italic">@(item.GraduationYear)</span>
+                            <span class="w85 italic inline-block">Год окончания</span> <span class="italic">@(item.graduation_date)</span>
                         </li>
                     </ul>
+                    <hr />
                     </text>
                 }
             }
@@ -61,11 +63,13 @@
         <div class="list-item">
             <div class="bold">Публикации</div>
             <ol>
-                @if (Model.Researcher.Publications != null)
+                @if (Model.Publications != null)
                 {
-                    foreach (var item in Model.Researcher.Publications)
+                    foreach (var item in Model.Publications)
                     {
-                        <li>@item.Title</li>
+                        <text>
+                        <li>@item.title</li>
+                        </text>
                     }
                 }
             </ol>
@@ -74,38 +78,41 @@
 
         <div class="list-item">
             <div class="bold">Исследовательская деятельность</div>
-            <span aspfor="Researcher.ResearchActivity">
-            </span>
+            <span>@Model.ResearchActivity</span>
         </div>
 
 
         <div class="list-item">
             <div class="bold">Преподавательская деятельность</div>
-            <span aspfor="Researcher.TeachingActivity">
-            </span>
+            <span>@Model.TeachingActivity</span>
         </div>
 
 
         <div class="list-item">
             <div class="bold">Прочая деятельность</div>
-            <span aspfor="Researcher.OtherActivity">
-            </span>
+            <span>@Model.OtherActivity</span>
         </div>
 
+        <div class="list-item">
+            <div class="bold">Приложенные файлы</div>
+            <ol>
+                @foreach (var item in Model.Attachments)
+                {
+                    <text>
+                    <li>
+                        @item.name<br />
+                        <span class="small-icon icon-sm-download"><a href="@(ConstTerms.FolderApplicationsAttachmentsUrl + item.url)">Скачать</a></span>
+                    </li>
+                    </text>
+                }
+            </ol>
+        </div>
 
-        @*<div class="list-item">
-                <div class="bold">Приложенные файлы</div>
-                <ol>
-                    <li>
-                        Доклад по автоматизированным системам в области науковедения.doc<br />
-                        <span class="small-icon icon-sm-download"><span>Скачать</span></span>
-                    </li>
-                    <li>
-                        Резюме на английском языке.pdf<br />
-                        <span class="small-icon icon-sm-download"><span>Скачать</span></span>
-                    </li>
-                </ol>
-            </div>*@
+        <div class="list-item">
+            <div class="bold">Сопроводительное письмо</div>
+            <span>@Model.CoveringLetter</span>
+        </div>
+
     </div>
 
     <br />
@@ -151,58 +158,36 @@
                             <a asp-controller="applications" asp-action="setwinner" asp-route-id="@Model.Guid" asp-route-iswinner="false" class="green-btn middle-icon">Выбрать претендентом</a>
                             </text>
                         }
-                        else
-                        {
-                            //у вакансии есть победитель и претендент
-                        }
                     }
                 }
             }
 
         }
-        else
-        {
-            @*if (Model.Vacancy.Status == VacancyStatus.OfferResponseAwaiting)
-            {
-                if (Model.Status == VacancyApplicationStatus.Won && !Model.Vacancy.IsWinnerAccept.HasValue)
-                {
-                    if (Model.Vacancy.WinnerResearcherGuid == Model.ResearcherGuid)
-                    {
-                        <text>
-                        <a asp-controller="applications" asp-action="offeracception" asp-route-id="@Model.Guid" asp-route-iswinner="true" asp-route-hasaccepted="true" class="btn btn-success">Победитель принял предложение</a>
-                        <a asp-controller="applications" asp-action="offeracception" asp-route-id="@Model.Guid" asp-route-iswinner="true" asp-route-hasaccepted="false" class="btn btn-danger">Победитель отказался от предложения</a>
-                        </text>
-                    }
-                }
-                if (Model.Status == VacancyApplicationStatus.Pretended && !Model.Vacancy.IsPretenderAccept.HasValue)
-                {
-                    if (Model.Vacancy.PretenderResearcherGuid == Model.ResearcherGuid)
-                    {
-                        <text>
-                        <a asp-controller="applications" asp-action="offeracception" asp-route-id="@Model.Guid" asp-route-iswinner="false" asp-route-hasaccepted="true" class="btn btn-success">Претендент принял предложение</a>
-                        <a asp-controller="applications" asp-action="offeracception" asp-route-id="@Model.Guid" asp-route-iswinner="false" asp-route-hasaccepted="false" class="btn btn-danger">Претендент отказался от предложения</a>
-                        </text>
-                    }
-                }
-            }*@
 
+        @if (Model.Vacancy.Status == VacancyStatus.OfferResponseAwaiting
+                           || Model.Vacancy.Status == VacancyStatus.OfferAccepted
+                           || Model.Vacancy.Status == VacancyStatus.OfferRejected
+                           || Model.Vacancy.Status == VacancyStatus.Cancelled
+                           || Model.Vacancy.Status == VacancyStatus.Closed)
+        {
             if (Model.Vacancy.IsWinnerAccept.HasValue && Model.Guid == Model.Vacancy.WinnerVacancyApplicationGuid)
             {
                 <text>
-                <div class="alert @(Model.Vacancy.IsWinnerAccept.Value ? "alert-success" :"alert-danger")" style="padding: 15px;">
+                <div class="alert @(Model.Vacancy.IsWinnerAccept.Value ? "alert-success" : "alert-danger")" style="padding: 15px;">
                     Победитель в конкурсе на <a asp-controller="vacancies" asp-action="details" asp-route-id="@Model.VacancyGuid">вакансию</a> @(Model.Vacancy.IsWinnerAccept.Value ? "принял предложение" : "отказался от предложения")
                 </div>
                 </text>
             }
-            if (Model.Vacancy.IsPretenderAccept.HasValue && Model.Guid == Model.Vacancy.PretenderVacancyApplicationGuid)
+            else if (Model.Vacancy.IsPretenderAccept.HasValue && Model.Guid == Model.Vacancy.PretenderVacancyApplicationGuid)
             {
                 <text>
-                <div class="alert @(Model.Vacancy.IsPretenderAccept.Value ? "alert-success" :"alert-danger")" style="padding: 15px;">
+                <div class="alert @(Model.Vacancy.IsPretenderAccept.Value ? "alert-success" : "alert-danger")" style="padding: 15px;">
                     Претендент на <a asp-controller="vacancies" asp-action="details" asp-route-id="@Model.VacancyGuid">вакансию</a> @(Model.Vacancy.IsPretenderAccept.Value ? "принял предложение" : "отказался от предложения")
                 </div>
                 </text>
             }
         }
+
     </div>
 
 

@@ -238,9 +238,9 @@
                                     var item = Model.Publications[i];
                                     <text>
                                     <li style="@useStyle" class="property-list-item" data-list-template="@(i == 0 ? "true" : "false")">
-                                        <input type="hidden" asp-for="Publications[i].ResearcherGuid" />
+                                        @*<input type="hidden" asp-for="Publications[i].ResearcherGuid" />
                                         <input type="hidden" asp-for="Publications[i].Guid" />
-                                        <input type="hidden" name="Publications.Index" value="@i" />
+                                        <input type="hidden" name="Publications.Index" value="@i" />*@
                                         @item.Title
                                     </li>
                                     </text>
@@ -254,6 +254,7 @@
 
         <div class="row">
             <div class="table-form">
+
                 <div class="table-row">
                     <div class="left-cell">
                         <label>Приложенные файлы:</label>
@@ -263,7 +264,7 @@
                             <ul class="content-list">
 
                                 <li style="@invisibleItemStyle" class="property-list-item" data-list-template="true">
-                                    <input type="hidden" name="Attachments.Index"  value="0" />
+                                    <input type="hidden" name="Attachments.Index" value="0"/>
                                     <input type="file" id="Attachments##0##" name="Attachments"/>
                                     <div class="buttons">
                                         <span class="big-link-remove" onclick="return removeItemFromList(this);"></span>
@@ -275,6 +276,17 @@
                         </div>
                     </div>
                 </div>
+
+
+                <div class="table-row form-row">
+                    <div class="left-cell">
+                        <label>Сопроводительное письмо:</label>
+                    </div>
+                    <div class="right-cell">
+                        <textarea asp-for="CoveringLetter"></textarea>
+                    </div>
+                </div>
+
             </div>
         </div>
 

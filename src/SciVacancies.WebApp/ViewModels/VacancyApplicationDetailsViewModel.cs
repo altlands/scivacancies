@@ -33,7 +33,6 @@ namespace SciVacancies.WebApp.ViewModels
         public string Memberships { get; set; }
         public string Conferences { get; set; }
 
-        public string CoveringLetter { get; set; }
 
         public VacancyApplicationStatus Status { get; set; }
 
@@ -44,5 +43,16 @@ namespace SciVacancies.WebApp.ViewModels
         /// Прикрепленные файлы
         /// </summary>
         public IEnumerable<VacancyApplicationAttachment> Attachments { get; set; }
+
+        public string CoveringLetter { get; set; }
+
+        /// <summary>
+        /// Образование
+        /// </summary>
+        public List<Education> Educations { get; set; }
+        /// <summary>
+        /// Публикации
+        /// </summary>
+        public List<Publication> Publications { get; set; }
     }
 }

@@ -12,7 +12,6 @@ using AutoMapper;
 using MediatR;
 using CommonDomain.Persistence;
 using System.Security.Claims;
-using SciVacancies.SmtpNotificationsHandlers.SmtpNotificators;
 
 namespace SciVacancies.WebApp.Commands
 {
@@ -72,13 +71,6 @@ namespace SciVacancies.WebApp.Commands
             if (!identity.Succeeded) throw new ArgumentException("UserManager failed to create identity");
 
             _userManager.AddToRole(user.Id, ConstTerms.RequireRoleResearcher);
-
-            //TODO - вынести в хэндлер
-            //send email notification
-            var registerSmtpNotificator = new SmtpNotificatorUserRegistered();
-            registerSmtpNotificator.Send(researcherDataModel.FullName, message.Data.UserName, message.Data.Password, message.Data.Email);
-            if (!string.IsNullOrWhiteSpace(message.Data.ExtraEmail))
-                registerSmtpNotificator.Send(researcherDataModel.FullName, message.Data.UserName, message.Data.Password, message.Data.ExtraEmail);
 
             return user;
         }

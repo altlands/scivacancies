@@ -33,6 +33,29 @@ namespace SciVacancies.WebApp.Controllers
             _hostingEnvironment = hostingEnvironment;
         }
 
+        #region private CreateVacancyApplicationCreateViewModel
+        private VacancyApplicationCreateViewModel CreateVacancyApplicationCreateViewModel(Guid researcherGuid, Vacancy vacancy, VacancyApplicationCreateViewModel model)
+        {
+            var researcher = _mediator.Send(new SingleResearcherQuery { ResearcherGuid = researcherGuid });
+            model = model ?? new VacancyApplicationCreateViewModel();
+            model.ResearcherGuid = researcherGuid;
+            model.VacancyGuid = vacancy.guid;
+            model.PositionName = vacancy.name;
+            model.Email = researcher.email;
+            model.Phone = researcher.phone;
+            model.ResearcherFullName = $"{researcher.secondname} {researcher.firstname} {researcher.patronymic}";
+            model.Educations = Mapper.Map<List<EducationEditViewModel>>(_mediator.Send(new SelectResearcherEducationsQuery { ResearcherGuid = researcherGuid }).ToList());
+            model.Publications = Mapper.Map<List<PublicationEditViewModel>>(_mediator.Send(new SelectResearcherPublicationsQuery { ResearcherGuid = researcherGuid }).ToList());
+            model.ResearchActivity = researcher.research_activity;
+            model.TeachingActivity = researcher.teaching_activity;
+            model.OtherActivity = researcher.other_activity;
+            model.ScienceDegree = researcher.science_degree;
+            model.ScienceRank = researcher.science_rank;
+            model.Rewards = researcher.rewards;
+            return model;
+        }
+        #endregion
+
         [Authorize(Roles = ConstTerms.RequireRoleResearcher)]
         [PageTitle("Новая заявка")]
         [BindResearcherIdFromClaims]
@@ -43,10 +66,9 @@ namespace SciVacancies.WebApp.Controllers
             if (vacancyGuid == Guid.Empty)
                 throw new ArgumentNullException(nameof(vacancyGuid));
 
-            var researcher = _mediator.Send(new SingleResearcherQuery { ResearcherGuid = researcherGuid });
-            researcher.educations = _mediator.Send(new SelectResearcherEducationsQuery { ResearcherGuid = researcherGuid }).ToList();
-            researcher.publications = _mediator.Send(new SelectResearcherPublicationsQuery { ResearcherGuid = researcherGuid }).ToList();
             var vacancy = _mediator.Send(new SingleVacancyQuery { VacancyGuid = vacancyGuid });
+            if (vacancy.status != VacancyStatus.Published)
+                return View("Error", $"Вы не можете подать Заявку на Вакансию в статусе: {vacancy.status.GetDescription()}");
 
             //TODO: оптимизировать запрос и его обработку
             var appliedVacancyApplications =
@@ -63,26 +85,11 @@ namespace SciVacancies.WebApp.Controllers
                 && appliedVacancyApplications.Items.Where(c => c.status == VacancyApplicationStatus.Applied).Select(c => c.researcher_guid).Distinct().ToList().Any(c => c == researcherGuid))
                 return View("Error", "Вы не можете подать повторную Заявку на Вакансию ");
 
-            var model = new VacancyApplicationCreateViewModel
-            {
-                ResearcherGuid = researcherGuid,
-                VacancyGuid = vacancyGuid,
-                PositionName = vacancy.name,
-                Email = researcher.email,
-                Phone = researcher.phone,
-                ResearcherFullName = $"{researcher.secondname} {researcher.firstname} {researcher.patronymic}",
-                Educations = Mapper.Map<List<EducationEditViewModel>>(researcher.educations),
-                Publications = Mapper.Map<List<PublicationEditViewModel>>(researcher.publications),
-                ResearchActivity = researcher.research_activity,
-                TeachingActivity = researcher.teaching_activity,
-                OtherActivity = researcher.other_activity,
-                ScienceDegree = researcher.science_degree,
-                ScienceRank = researcher.science_rank,
-                Rewards = researcher.rewards
-            };
+            var model = CreateVacancyApplicationCreateViewModel(researcherGuid, vacancy, null);
             //TODO: Applications -> Create : вернуть добавление дополнительнительных публикаций
             return View(model);
         }
+
 
 
         [Authorize(Roles = ConstTerms.RequireRoleResearcher)]
@@ -93,10 +100,9 @@ namespace SciVacancies.WebApp.Controllers
             if (model.VacancyGuid == Guid.Empty)
                 throw new ArgumentNullException(nameof(model.VacancyGuid), "Не указан идентификатор Вакансии");
 
-            var vacancyData = _mediator.Send(new SingleVacancyQuery { VacancyGuid = model.VacancyGuid });
-
-            if (vacancyData.status != VacancyStatus.Published)
-                return View("Error", $"Вы не можете подать Заявку на Вакансию в статусе: {vacancyData.status.GetDescription()}");
+            var vacancy = _mediator.Send(new SingleVacancyQuery { VacancyGuid = model.VacancyGuid });
+            if (vacancy.status != VacancyStatus.Published)
+                return View("Error", $"Вы не можете подать Заявку на Вакансию в статусе: {vacancy.status.GetDescription()}");
 
             //TODO: оптимизировать запрос и его обработку
             var appliedVacancyApplications =
@@ -120,9 +126,11 @@ namespace SciVacancies.WebApp.Controllers
                 ModelState.AddModelError("Attachments", @"Размер изображения превышает допустимый объём. Повторите создания Заявки ещё раз.");
             }
 
+            //с формы мы не получаем практически никаких данных, поэтому заново наполняем ViewModel
+            model = CreateVacancyApplicationCreateViewModel(researcherGuid, vacancy, model);
+
             if (!ModelState.IsValid)
                 return View(model);
-
 
             var attachmentsList = new List<SciVacancies.Domain.Core.VacancyApplicationAttachment>();
             var newFolderName = Guid.NewGuid();
@@ -191,35 +199,14 @@ namespace SciVacancies.WebApp.Controllers
             Guid vacancyApplicationGuid;
             try
             {
-                //с формы мы не получаем практически никаких данных, поэтоу заново наполняем ViewModel
-                var researcher = _mediator.Send(new SingleResearcherQuery { ResearcherGuid = researcherGuid });
-                researcher.educations = _mediator.Send(new SelectResearcherEducationsQuery { ResearcherGuid = researcherGuid }).ToList();
-                researcher.publications = _mediator.Send(new SelectResearcherPublicationsQuery { ResearcherGuid = researcherGuid }).ToList();
-                model.Conferences = researcher.conferences;
-                model.Educations = Mapper.Map<List<EducationEditViewModel>>(researcher.educations);
-                model.Email = researcher.email;
-                model.ExtraEmail = researcher.extraemail;
-                model.ExtraPhone = researcher.extraphone;
-                model.OtherActivity = researcher.other_activity;
-                model.Phone = researcher.phone;
-                model.Publications = Mapper.Map<List<PublicationEditViewModel>>(researcher.publications);
-                model.PositionName = vacancyData.name;
-                model.ResearchActivity = researcher.research_activity;
-                model.ResearcherFullName = $"{researcher.secondname} {researcher.firstname} {researcher.patronymic}";
-                model.ResearcherGuid = researcherGuid;
-                model.Rewards = researcher.rewards;
-                model.ScienceDegree = researcher.science_degree;
-                model.ScienceRank = researcher.science_rank;
-                model.TeachingActivity = researcher.teaching_activity;
-                model.VacancyGuid = vacancyData.guid;
                 var data = Mapper.Map<VacancyApplicationDataModel>(model);
                 data.Attachments = attachmentsList;
                 vacancyApplicationGuid = _mediator.Send(new CreateAndApplyVacancyApplicationCommand { ResearcherGuid = model.ResearcherGuid, VacancyGuid = model.VacancyGuid, Data = data });
             }
-            catch (Exception)
+            catch (Exception e)
             {
                 RemoveAttachmentDirectory(fullDirectoryPath);
-                return View("Error", "Что-то пошло не так при сохранении Заявки");
+                return View("Error", $"Что-то пошло не так при сохранении Заявки: {e.Message}");
             }
             return RedirectToAction("details", "applications", new { id = vacancyApplicationGuid });
         }
@@ -250,8 +237,6 @@ namespace SciVacancies.WebApp.Controllers
 
             var model = Mapper.Map<VacancyApplicationDetailsViewModel>(preModel);
             model.Researcher = Mapper.Map<ResearcherDetailsViewModel>(_mediator.Send(new SingleResearcherQuery { ResearcherGuid = researcherGuid }));
-            model.Researcher.Publications = Mapper.Map<List<PublicationEditViewModel>>(_mediator.Send(new SelectResearcherPublicationsQuery { ResearcherGuid = researcherGuid }));
-            model.Researcher.Educations = Mapper.Map<List<EducationEditViewModel>>(_mediator.Send(new SelectResearcherEducationsQuery { ResearcherGuid = researcherGuid }));
             model.Vacancy = Mapper.Map<VacancyDetailsViewModel>(_mediator.Send(new SingleVacancyQuery { VacancyGuid = preModel.vacancy_guid }));
             model.Attachments = _mediator.Send(new SelectVacancyApplicationAttachmentsQuery { VacancyApplicationGuid = id });
             //TODO: ntemnikov : показать Научные интересы
@@ -289,9 +274,8 @@ namespace SciVacancies.WebApp.Controllers
 
             var model = Mapper.Map<VacancyApplicationDetailsViewModel>(preModel);
             model.Researcher = Mapper.Map<ResearcherDetailsViewModel>(_mediator.Send(new SingleResearcherQuery { ResearcherGuid = preModel.researcher_guid }));
-            model.Researcher.Publications = Mapper.Map<List<PublicationEditViewModel>>(_mediator.Send(new SelectResearcherPublicationsQuery { ResearcherGuid = preModel.researcher_guid }));
-            model.Researcher.Educations = Mapper.Map<List<EducationEditViewModel>>(_mediator.Send(new SelectResearcherEducationsQuery { ResearcherGuid = preModel.researcher_guid }));
             model.Vacancy = Mapper.Map<VacancyDetailsViewModel>(vacancy);
+            model.Attachments = _mediator.Send(new SelectVacancyApplicationAttachmentsQuery { VacancyApplicationGuid = id });
             //TODO: ntemnikov : показать Приложенные файлы
             //TODO: ntemnikov : показать Научные интересы
             return View(model);
@@ -475,10 +459,8 @@ namespace SciVacancies.WebApp.Controllers
 
             var model = Mapper.Map<VacancyApplicationDetailsViewModel>(preModel);
             model.Researcher = Mapper.Map<ResearcherDetailsViewModel>(_mediator.Send(new SingleResearcherQuery { ResearcherGuid = preModel.researcher_guid }));
-            model.Researcher.Publications = Mapper.Map<List<PublicationEditViewModel>>(_mediator.Send(new SelectResearcherPublicationsQuery { ResearcherGuid = preModel.researcher_guid }));
-            model.Researcher.Educations = Mapper.Map<List<EducationEditViewModel>>(_mediator.Send(new SelectResearcherEducationsQuery { ResearcherGuid = preModel.researcher_guid }));
             model.Vacancy = Mapper.Map<VacancyDetailsViewModel>(vacancy);
-
+            model.Attachments = _mediator.Send(new SelectVacancyApplicationAttachmentsQuery { VacancyApplicationGuid = id });
             return View(model);
         }
 
@@ -500,9 +482,9 @@ namespace SciVacancies.WebApp.Controllers
             if (vacancy == null)
                 return HttpNotFound(); //throw new ObjectNotFoundException($"Не найдена Вакансия c идентификатором: {vacancyApplicaiton.vacancy_guid}");
 
-            if (isWinner && vacancy.winner_researcher_guid!= researcherGuid)
+            if (isWinner && vacancy.winner_researcher_guid != researcherGuid)
                 return View("Error", "Вы не можете принять или отказаться от предложения, сделанного для другого заявителя.");
-            if (!isWinner && vacancy.pretender_researcher_guid!= researcherGuid)
+            if (!isWinner && vacancy.pretender_researcher_guid != researcherGuid)
                 return View("Error", "Вы не можете принять или отказаться от предложения, сделанного для другого заявителя.");
 
             if (vacancy.status != VacancyStatus.OfferResponseAwaiting)

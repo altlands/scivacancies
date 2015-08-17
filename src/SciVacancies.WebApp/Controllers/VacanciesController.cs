@@ -391,7 +391,7 @@ namespace SciVacancies.WebApp.Controllers
                 VacancyGuid = id
             });
 
-            return RedirectToAction("vacancies", "organizations");
+            return RedirectToAction("details", "vacancies", id);
         }
 
         private object VacancyClosePrevalidation(Guid id, Guid organizationGuid)
