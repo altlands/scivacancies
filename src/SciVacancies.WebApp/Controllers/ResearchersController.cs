@@ -11,9 +11,7 @@ using AutoMapper;
 using MediatR;
 using Microsoft.AspNet.Authorization;
 using Microsoft.AspNet.Hosting;
-using Microsoft.AspNet.Http;
 using Microsoft.AspNet.Mvc;
-using Microsoft.Framework.Runtime;
 using Microsoft.Net.Http.Headers;
 using SciVacancies.Domain.DataModels;
 using SciVacancies.Domain.Enums;
@@ -23,8 +21,6 @@ using SciVacancies.WebApp.Engine;
 using SciVacancies.WebApp.Engine.CustomAttribute;
 using SciVacancies.WebApp.Queries;
 using SciVacancies.WebApp.ViewModels;
-//using System.Drawing;
-//using System.Drawing.Imaging;
 
 namespace SciVacancies.WebApp.Controllers
 {
@@ -322,9 +318,9 @@ namespace SciVacancies.WebApp.Controllers
                 ResearcherGuid = researcherGuid
             }).ToList();
             if (!favoritesVacancies.Any())
-                return RedireToCardAction(vacancyGuid);
+                return RedirectToVacancyCardAction(vacancyGuid);
             if (favoritesVacancies.All(c => c != vacancyGuid))
-                return RedireToCardAction(vacancyGuid);
+                return RedirectToVacancyCardAction(vacancyGuid);
 
             var preModel = _mediator.Send(new SingleVacancyQuery { VacancyGuid = vacancyGuid });
             var model = Mapper.Map<VacancyDetailsViewModel>(preModel);
@@ -347,9 +343,9 @@ namespace SciVacancies.WebApp.Controllers
                 ResearcherGuid = researcherGuid
             }).ToList();
             if (!favoritesVacancies.Any())
-                return RedireToCardAction(vacancyGuid);
+                return RedirectToVacancyCardAction(vacancyGuid);
             if (favoritesVacancies.All(c => c != vacancyGuid))
-                return RedireToCardAction(vacancyGuid);
+                return RedirectToVacancyCardAction(vacancyGuid);
 
             if (!ModelState.IsValid)
             {
@@ -359,10 +355,10 @@ namespace SciVacancies.WebApp.Controllers
             }
 
             _mediator.Send(new RemoveVacancyFromFavoritesCommand { ResearcherGuid = researcherGuid, VacancyGuid = vacancyGuid });
-            return RedireToCardAction(vacancyGuid);
+            return RedirectToVacancyCardAction(vacancyGuid);
         }
 
-        private IActionResult RedireToCardAction(Guid vacancyGuid)
+        private IActionResult RedirectToVacancyCardAction(Guid vacancyGuid)
         {
             return RedirectToAction("card", "vacancies", new { id = vacancyGuid });
         }

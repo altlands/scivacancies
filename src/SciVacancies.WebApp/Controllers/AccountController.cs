@@ -3,7 +3,6 @@ using System.Security.Claims;
 using MediatR;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Mvc;
-using Microsoft.Framework.ConfigurationModel;
 using SciVacancies.WebApp.Commands;
 using SciVacancies.WebApp.Infrastructure.Identity;
 using SciVacancies.WebApp.ViewModels;
@@ -85,11 +84,7 @@ namespace SciVacancies.WebApp.Controllers
                             SetAuthorizationCookies(AuthorizeUserTypes.Organization, AuthorizeResourceTypes.Sciencemon);
 
                             return Redirect(GetOAuthAuthorizationUrl(_oauthSettings.Options.Sciencemon));
-                        default:
-                            break;
                     }
-                    break;
-                default:
                     break;
             }
 
@@ -103,17 +98,17 @@ namespace SciVacancies.WebApp.Controllers
         }
         private Tuple<AuthorizeUserTypes, AuthorizeResourceTypes> GetAuthorizationCookies()
         {
-            AuthorizeUserTypes accountType = (AuthorizeUserTypes)Enum.Parse(typeof(AuthorizeUserTypes), Request.Cookies["account_type"]);
-            AuthorizeResourceTypes authorizationType = (AuthorizeResourceTypes)Enum.Parse(typeof(AuthorizeResourceTypes), Request.Cookies["authorization_type"]);
+            var authorizeUserTypes = (AuthorizeUserTypes)Enum.Parse(typeof(AuthorizeUserTypes), Request.Cookies["account_type"]);
+            var authorizeResourceTypes = (AuthorizeResourceTypes)Enum.Parse(typeof(AuthorizeResourceTypes), Request.Cookies["authorization_type"]);
 
-            return new Tuple<AuthorizeUserTypes, AuthorizeResourceTypes>(accountType, authorizationType);
+            return new Tuple<AuthorizeUserTypes, AuthorizeResourceTypes>(authorizeUserTypes, authorizeResourceTypes);
         }
 
         #region OAuth
 
         private string SetStateCookie()
         {
-            string state = Guid.NewGuid().ToString("N");
+            var state = Guid.NewGuid().ToString("N");
             Response.Cookies.Append("state", state, new Microsoft.AspNet.Http.CookieOptions { Expires = DateTime.Now.AddMinutes(10) });
 
             return state;
@@ -148,9 +143,9 @@ namespace SciVacancies.WebApp.Controllers
 
         private string GetOAuthAuthorizationUrl(OAuthProviderSettings oauth)
         {
-            OAuth2Client client = new OAuth2Client(new Uri(oauth.AuthorizationEndpoint));
+            var oAuth2Client = new OAuth2Client(new Uri(oauth.AuthorizationEndpoint));
 
-            return client.CreateCodeFlowUrl(oauth.ClientId, oauth.Scope, oauth.RedirectUrl, SetStateCookie(), SetNonceCookie());
+            return oAuth2Client.CreateCodeFlowUrl(oauth.ClientId, oauth.Scope, oauth.RedirectUrl, SetStateCookie(), SetNonceCookie());
         }
         private async Task<TokenResponse> GetOAuthTokensAsync(OAuthProviderSettings oauth, string code)
         {
@@ -160,13 +155,13 @@ namespace SciVacancies.WebApp.Controllers
         }
         private async Task<IEnumerable<Claim>> GetOAuthUserClaimsAsync(OAuthProviderSettings oauth, string accessToken)
         {
-            UserInfoClient client = new UserInfoClient(new Uri(oauth.UserEndpoint), accessToken);
-            UserInfoResponse userInfo = await client.GetAsync();
+            var userInfoClient = new UserInfoClient(new Uri(oauth.UserEndpoint), accessToken);
+            var userInfoResponse = await userInfoClient.GetAsync();
 
-            List<Claim> claims = new List<Claim>();
-            userInfo.Claims.ToList().ForEach(f => claims.Add(new Claim(f.Item1, f.Item2)));
+            var claimsList = new List<Claim>();
+            userInfoResponse.Claims.ToList().ForEach(f => claimsList.Add(new Claim(f.Item1, f.Item2)));
 
-            return claims;
+            return claimsList;
         }
 
         #endregion
@@ -175,15 +170,15 @@ namespace SciVacancies.WebApp.Controllers
         private string GetOrganizationInfo(string inn)
         {
             //TODO url move to config
-            WebRequest req = WebRequest.Create(@"http://www.sciencemon.ru/ext-api/v1.0/org/" + inn);
-            req.Method = "GET";
-            req.Headers["Authorization"] = "Basic " + Convert.ToBase64String(Encoding.Default.GetBytes("dev:informika"));
-            HttpWebResponse response = req.GetResponse() as HttpWebResponse;
+            var webRequest = WebRequest.Create(@"http://www.sciencemon.ru/ext-api/v1.0/org/" + inn);
+            webRequest.Method = "GET";
+            webRequest.Headers["Authorization"] = "Basic " + Convert.ToBase64String(Encoding.Default.GetBytes("dev:informika"));
+            var httpWebResponse = webRequest.GetResponse() as HttpWebResponse;
             string responseString = "";
-            using (Stream stream = response.GetResponseStream())
+            using (var stream = httpWebResponse.GetResponseStream())
             {
-                StreamReader reader = new StreamReader(stream, Encoding.UTF8);
-                responseString = reader.ReadToEnd();
+                var streamReader = new StreamReader(stream, Encoding.UTF8);
+                responseString = streamReader.ReadToEnd();
             }
             return responseString;
         }
@@ -191,14 +186,14 @@ namespace SciVacancies.WebApp.Controllers
         private string GetResearcherProfile(string accessToken)
         {
             //TODO url move to config
-            WebRequest req = WebRequest.Create(@"http://scimap-sso.alt-lan.com/scimap-sso/user/profile" + "?access_token=" + accessToken);
-            req.Method = "GET";
-            HttpWebResponse response = req.GetResponse() as HttpWebResponse;
+            var webRequest= WebRequest.Create(@"http://scimap-sso.alt-lan.com/scimap-sso/user/profile" + "?access_token=" + accessToken);
+            webRequest.Method = "GET";
+            var httpWebResponse= webRequest.GetResponse() as HttpWebResponse;
             string responseString = "";
-            using (Stream stream = response.GetResponseStream())
+            using (var stream = httpWebResponse.GetResponseStream())
             {
-                StreamReader reader = new StreamReader(stream, Encoding.UTF8);
-                responseString = reader.ReadToEnd();
+                var streamReader= new StreamReader(stream, Encoding.UTF8);
+                responseString = streamReader.ReadToEnd();
             }
             return responseString;
         }
@@ -221,13 +216,13 @@ namespace SciVacancies.WebApp.Controllers
                     switch (authorizationCookies.Item2)
                     {
                         case AuthorizeResourceTypes.Sciencemon:
-                            if (!String.IsNullOrEmpty(GetStateFromQuery()) && !String.IsNullOrEmpty(GetStateCookie()) && GetStateFromQuery().Equals(GetStateCookie()))
+                            if (!string.IsNullOrEmpty(GetStateFromQuery()) && !string.IsNullOrEmpty(GetStateCookie()) && GetStateFromQuery().Equals(GetStateCookie()))
                             {
-                                if (!String.IsNullOrEmpty(GetCodeFromQuery()))
+                                if (!string.IsNullOrEmpty(GetCodeFromQuery()))
                                 {
-                                    TokenResponse tokenResponse = await GetOAuthTokensAsync(_oauthSettings.Options.Sciencemon, GetCodeFromQuery());
+                                    var tokenResponse = await GetOAuthTokensAsync(_oauthSettings.Options.Sciencemon, GetCodeFromQuery());
 
-                                    if (!String.IsNullOrEmpty(tokenResponse.AccessToken))
+                                    if (!string.IsNullOrEmpty(tokenResponse.AccessToken))
                                     {
                                         List<Claim> claims = new List<Claim>();
 
@@ -235,7 +230,7 @@ namespace SciVacancies.WebApp.Controllers
 
                                         claims.Add(new Claim("access_token", tokenResponse.AccessToken));
                                         claims.Add(new Claim("expires_in", DateTime.Now.AddSeconds(tokenResponse.ExpiresIn).ToString()));
-                                        if (!String.IsNullOrEmpty(tokenResponse.RefreshToken)) claims.Add(new Claim("refresh_token", tokenResponse.RefreshToken));
+                                        if (!string.IsNullOrEmpty(tokenResponse.RefreshToken)) claims.Add(new Claim("refresh_token", tokenResponse.RefreshToken));
 
                                         OAuthOrgClaim orgClaim = JsonConvert.DeserializeObject<OAuthOrgClaim>(claims.Find(f => f.Type.Equals("org")).Value);
 
@@ -284,21 +279,19 @@ namespace SciVacancies.WebApp.Controllers
                             }
                             else throw new ArgumentException("Oauth state mismatch");
                             break;
-                        default:
-                            break;
                     }
                     break;
                 case AuthorizeUserTypes.Researcher:
                     switch (authorizationCookies.Item2)
                     {
                         case AuthorizeResourceTypes.ScienceMap:
-                            if (!String.IsNullOrEmpty(GetStateFromQuery()) && !String.IsNullOrEmpty(GetStateCookie()) && GetStateFromQuery().Equals(GetStateCookie()))
+                            if (!string.IsNullOrEmpty(GetStateFromQuery()) && !string.IsNullOrEmpty(GetStateCookie()) && GetStateFromQuery().Equals(GetStateCookie()))
                             {
-                                if (!String.IsNullOrEmpty(GetCodeFromQuery()))
+                                if (!string.IsNullOrEmpty(GetCodeFromQuery()))
                                 {
                                     TokenResponse tokenResponse = await GetOAuthTokensAsync(_oauthSettings.Options.Mapofscience, GetCodeFromQuery());
 
-                                    if (!String.IsNullOrEmpty(tokenResponse.AccessToken))
+                                    if (!string.IsNullOrEmpty(tokenResponse.AccessToken))
                                     {
                                         List<Claim> claims = new List<Claim>();
 
@@ -306,19 +299,19 @@ namespace SciVacancies.WebApp.Controllers
 
                                         claims.Add(new Claim("access_token", tokenResponse.AccessToken));
                                         claims.Add(new Claim("expires_in", DateTime.Now.AddSeconds(tokenResponse.ExpiresIn).ToString()));
-                                        if (!String.IsNullOrEmpty(tokenResponse.RefreshToken)) claims.Add(new Claim("refresh_token", tokenResponse.RefreshToken));
+                                        if (!string.IsNullOrEmpty(tokenResponse.RefreshToken)) claims.Add(new Claim("refresh_token", tokenResponse.RefreshToken));
 
                                         var resUser = _userManager.FindByEmail(claims.Find(f => f.Type.Equals("email")).Value);
 
                                         if (resUser == null)
                                         {
                                             OAuthResProfile researcherProfile = JsonConvert.DeserializeObject<OAuthResProfile>(GetResearcherProfile(tokenResponse.AccessToken));
-                                            AccountResearcherRegisterViewModel resModel = Mapper.Map<AccountResearcherRegisterViewModel>(researcherProfile);
+                                            AccountResearcherRegisterViewModel accountResearcherRegisterViewModel = Mapper.Map<AccountResearcherRegisterViewModel>(researcherProfile);
 
-                                            resModel.UserName = claims.Find(f => f.Type.Equals("login")).Value;
+                                            accountResearcherRegisterViewModel.UserName = claims.Find(f => f.Type.Equals("login")).Value;
 
 
-                                            resModel.Claims = claims.Where(w => w.Type.Equals("lastName")
+                                            accountResearcherRegisterViewModel.Claims = claims.Where(w => w.Type.Equals("lastName")
                                                                             && w.Type.Equals("firstName")
                                                                             && w.Type.Equals("patronymic")
                                                                             && w.Type.Equals("access_token")
@@ -327,7 +320,7 @@ namespace SciVacancies.WebApp.Controllers
 
                                             var command = new RegisterUserResearcherCommand
                                             {
-                                                Data = resModel
+                                                Data = accountResearcherRegisterViewModel
                                             };
 
                                             var user = _mediator.Send(command);
@@ -352,11 +345,7 @@ namespace SciVacancies.WebApp.Controllers
                             }
                             else throw new ArgumentException("Oauth state mismatch");
                             break;
-                        default:
-                            break;
                     }
-                    break;
-                default:
                     break;
             }
 
