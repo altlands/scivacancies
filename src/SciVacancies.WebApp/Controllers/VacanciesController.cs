@@ -30,7 +30,6 @@ namespace SciVacancies.WebApp.Controllers
             _mediator = mediator;
         }
 
-
         [PageTitle("Новая вакансия")]
         [BindOrganizationIdFromClaims]
         [Authorize(Roles = ConstTerms.RequireRoleOrganizationAdmin)]
@@ -41,10 +40,11 @@ namespace SciVacancies.WebApp.Controllers
 
             var model = new VacancyCreateViewModel(organizationGuid);
             model.InitDictionaries(_mediator);
+            //TODO: вынести в конфиг
+            model.InCommitteeDate = DateTime.Now.AddDays(20);
             //TODO: ntemnikov: Vacancies -> Create : вернуть редактирование Критериев во View
             return View(model);
         }
-
 
         [PageTitle("Новая вакансия")]
         [HttpPost]
@@ -391,7 +391,7 @@ namespace SciVacancies.WebApp.Controllers
                 VacancyGuid = id
             });
 
-            return RedirectToAction("details", "vacancies", id);
+            return RedirectToAction("details", new { id = id});
         }
 
         private object VacancyClosePrevalidation(Guid id, Guid organizationGuid)

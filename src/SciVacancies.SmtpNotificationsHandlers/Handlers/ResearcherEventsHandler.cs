@@ -22,7 +22,7 @@ namespace SciVacancies.SmtpNotificationsHandlers.Handlers
 
         public void Handle(ResearcherCreated msg)
         {
-            var researcher = _db.SingleById<Researcher>(msg.ResearcherGuid);
+            var researcher = _db.SingleOrDefaultById<Researcher>(msg.ResearcherGuid);
             if (researcher == null) return;
 
             //send email notification
