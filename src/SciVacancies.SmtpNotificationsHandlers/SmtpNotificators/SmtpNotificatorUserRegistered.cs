@@ -4,18 +4,13 @@ namespace SciVacancies.SmtpNotificationsHandlers.SmtpNotificators
 {
     public class SmtpNotificatorUserRegistered : SmtpNotificator
     {
-        public void Send(string researcherFullName, string login, string password, string mailTo)
+        public void Send(string fullName, string mailTo, string extraMailTo)
         {
-            //var domain = "localhost:59075";
-            var domain = "scivac.test.alt-lan.com";
-
-            var body = $@"
+            var body =
+                $@"
 <div style=''>
-    Уважаемый(-ая), {researcherFullName}, Вы зарегистрированы на портале Вакансий.
+    Уважаемый(-ая), {fullName}, Вы зарегистрированы на портале Вакансий.
     <br/>
-    Ваш логин для входа в систему: {login}
-    <br/>
-    Пароль: {password}
 </div>
 
 <br/>
@@ -24,13 +19,17 @@ namespace SciVacancies.SmtpNotificationsHandlers.SmtpNotificators
 
 <div style='color: lightgray; font-size: smaller;'>
     Это письмо создано автоматически с 
-    <a target='_blank' href='http://{domain}'>Портала вакансий</a>.
+    <a target='_blank' href='http://{Domain}'>Портала вакансий</a>.
     Чтобы не получать такие уведомления отключите их или смените email в 
-    <a target='_blank' href='http://{domain}/researchers/account/'>личном кабинете</a>.
+    <a target='_blank' href='http://{Domain}/researchers/account/'>личном кабинете</a>.
 </div>
 ";
-            var mailMessage = new MailMessage(@from: "mailer@alt-lan.com", to: mailTo, body: body, subject: "Вы зарегистрированы на портале вакансий")
+            var mailToAddress = string.IsNullOrWhiteSpace(extraMailTo) ? new MailAddress(mailTo) : new MailAddress(mailTo, extraMailTo);
+
+            var mailMessage = new MailMessage(from: new MailAddress("mailer@alt-lan.com"), to: mailToAddress)
             {
+                Body = body,
+                Subject = "Вы зарегистрированы на портале вакансий",
                 IsBodyHtml = true
             };
 

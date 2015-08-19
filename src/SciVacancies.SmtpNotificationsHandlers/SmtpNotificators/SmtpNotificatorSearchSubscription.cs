@@ -9,15 +9,13 @@ namespace SciVacancies.SmtpNotificationsHandlers.SmtpNotificators
     {
         public void Send(SearchSubscription searchSubscription, Researcher researcher, List<SciVacancies.ReadModel.ElasticSearchModel.Model.Vacancy> vacancies)
         {
-            //var domain = "localhost:59075";
-            var domain = "scivac.test.alt-lan.com";
             var researcherFullName = $"{researcher.secondname} {researcher.firstname} {researcher.patronymic}";
             var body = $@"
 <div style=''>
     Уважаемый(-ая), {researcherFullName}, по одной из ваших
-    <a target='_blank' href='http://{domain}/researcher/subscriptions/'>подписок</a>
+    <a target='_blank' href='http://{Domain}/researcher/subscriptions/'>подписок</a>
      ('{searchSubscription.title}') подобраны следующие вакансии: <br/>
-    {vacancies.Aggregate(string.Empty, (current, vacancy) => current + $"<a target='_blank' href='http://{domain}/vacancies/card/{vacancy.Id}'>{vacancy.FullName}</a> <br/>")}
+    {vacancies.Aggregate(string.Empty, (current, vacancy) => current + $"<a target='_blank' href='http://{Domain}/vacancies/card/{vacancy.Id}'>{vacancy.FullName}</a> <br/>")}
 </div>
 
 <br/>
@@ -26,27 +24,22 @@ namespace SciVacancies.SmtpNotificationsHandlers.SmtpNotificators
 
 <div style='color: lightgray; font-size: smaller;'>
     Это письмо создано автоматически с 
-    <a target='_blank' href='http://{domain}'>Портала вакансий</a>.
+    <a target='_blank' href='http://{Domain}'>Портала вакансий</a>.
     Чтобы не получать такие уведомления отключите их или смените email в 
-    <a target='_blank' href='http://{domain}/researchers/account/'>личном кабинете</a>.
+    <a target='_blank' href='http://{Domain}/researchers/account/'>личном кабинете</a>.
 </div>
 ";
 
-            var mailMessage = new MailMessage(@from: "mailer@alt-lan.com", to: researcher.email, body: body, subject: "Уведомление с портала вакансий")
+            var mailToAddress = string.IsNullOrWhiteSpace(researcher.extraemail) ? new MailAddress(researcher.email) : new MailAddress(researcher.email, researcher.extraemail);
+
+            var mailMessage = new MailMessage(from: new MailAddress("mailer@alt-lan.com"), to: mailToAddress)
             {
-                IsBodyHtml = true,
+                Body = body,
+                Subject = "Вы зарегистрированы на портале вакансий",
+                IsBodyHtml = true
             };
 
             Send(mailMessage);
-            if (!string.IsNullOrWhiteSpace(researcher.extraemail))
-            {
-                mailMessage = new MailMessage(@from: "mailer@alt-lan.com", to: researcher.extraemail, body: body, subject: "Уведомление с портала вакансий")
-                {
-                    IsBodyHtml = true,
-                };
-
-                Send(mailMessage);
-            }
         }
      
     }

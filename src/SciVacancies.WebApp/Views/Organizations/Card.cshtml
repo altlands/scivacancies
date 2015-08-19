@@ -1,10 +1,10 @@
 ﻿@using System.Threading.Tasks
-@using SciVacancies.Domain.Enums
 @using SciVacancies
+@using SciVacancies.Domain.Enums
 @using SciVacancies.WebApp
 @using SciVacancies.WebApp.Engine
 @using SciVacancies.WebApp.ViewModels
-@model OrganizationDetailsViewModel
+@model SciVacancies.WebApp.ViewModels.OrganizationDetailsViewModel
 
 
 <div class="crumbs">
@@ -101,7 +101,7 @@
                         <td>ГНС600001</td>
                         <td>@item.name</td>
                         <td>@(item.publish_date?.ToLocalVacancyString())</td>
-                        <td><span class="status @item.status.GetHtmlClass()">@item.status.GetDescription()</span></td>
+                        <td><span class="status @item.status.GetHtmlClass()">@item.status.GetDescriptionByResearcher()</span></td>
                         <td>
                             <a asp-controller="vacancies" asp-action="card" asp-route-id="@item.guid" class="view-td-icon" title="Просмотр вакансии"></a>
                         </td>

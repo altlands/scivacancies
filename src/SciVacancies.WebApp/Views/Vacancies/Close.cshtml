@@ -5,7 +5,7 @@
     <a href="/">Главная</a><span class="separator">/</span>
     <a asp-controller="organizations" asp-action="account">Карточка организации</a><span class="separator">/</span>
     <a asp-controller="organizations" asp-action="vacancies">Вакансии</a><span class="separator">/</span>
-    <a asp-controller="vacancies" asp-action="details" asp-route-id="@Model.Guid">Model.Name</a><span class="separator">/</span>
+    <a asp-controller="vacancies" asp-action="details" asp-route-id="@Model.Guid">@Model.Name</a><span class="separator">/</span>
     @ViewBag.Title
 </div>
 

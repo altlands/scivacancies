@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNet.Mvc;
 using SciVacancies.Domain.Enums;
+using SciVacancies.ReadModel.Core;
 using SciVacancies.WebApp.ViewModels.Base;
 
 namespace SciVacancies.WebApp.ViewModels
@@ -22,6 +24,16 @@ namespace SciVacancies.WebApp.ViewModels
         [Required]
         public Guid ResearcherGuid { get; set; }
         public ResearcherDetailsViewModel Researcher { get; set; }
+        /// <summary>
+        /// Образование
+        /// </summary>
+        public List<Education> Educations { get; set; }
+        /// <summary>
+        /// Публикации
+        /// </summary>
+        public List<Publication> Publications { get; set; }
+
+
 
         public int PositionTypeId { get; set; }
         public string PositionTypeName { get; set; }

@@ -17,7 +17,7 @@
 @if (User.IsInRole(ConstTerms.RequireRoleOrganizationAdmin))
 {
     <text>
-    <a asp-controller="vacancies" asp-action="details" asp-route-id="@Model.Guid" class="green-btn middle-icon" target="_blank">Подробнее</a>
+    <a asp-controller="vacancies" asp-action="details" asp-route-id="@Model.Guid" class="green-btn middle-icon">Подробнее</a>
     <br />
     <br />
     </text>
@@ -31,7 +31,7 @@
         if (Model.Status == VacancyStatus.Published)
         {
             <text>
-            <a asp-controller="applications" asp-action="create" asp-route-vacancyguid="@Model.Guid" class="green-btn middle-icon" target="_blank">Подать заявку</a>
+            <a asp-controller="applications" asp-action="create" asp-route-vacancyguid="@Model.Guid" class="green-btn middle-icon">Подать заявку</a>
             <br />
             <br />
             </text>
@@ -49,7 +49,7 @@
     if (bool.Parse(ViewData["VacancyInFavorites"].ToString()))
     {
         <text>
-        <a asp-controller="researchers" asp-action="favorities" class="success-btn middle-icon" target="_blank">В избранном</a>
+        <a asp-controller="researchers" asp-action="favorities" class="success-btn middle-icon">В избранном</a>
         &nbsp;
         <a asp-controller="researchers" asp-action="removefavorite" asp-route-vacancyguid="@Model.Guid"> Убрать из избранных</a>
         <br />

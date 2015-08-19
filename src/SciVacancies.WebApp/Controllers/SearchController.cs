@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
+using System.Web;
 using MediatR;
 using Microsoft.AspNet.Mvc;
 using Newtonsoft.Json;
@@ -86,9 +88,12 @@ namespace SciVacancies.WebApp.Controllers
             if (model.VacancyStates == null)
                 model.VacancyStates = filterSource.VacancyStates.Select(c => int.Parse(c.Value));
 
+            //проебразовать поисковую фразу в utf8, для его передачи по сети
+            var query = string.IsNullOrWhiteSpace(model.Search) ? string.Empty : HttpUtility.UrlEncode(model.Search);
+
             model.Items = _mediator.Send(new SearchQuery
             {
-                Query = model.Search,
+                Query = query,
 
                 PageSize = model.PageSize,
                 CurrentPage = model.CurrentPage,

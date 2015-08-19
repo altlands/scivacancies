@@ -26,16 +26,16 @@ namespace SciVacancies.ReadModel.EventHandlers
         {
             _db = db;
         }
-        public void Handle(VacancyApplicationCreated msg)
+        public void Handle(VacancyApplicationCreated message)
         {
-            VacancyApplication vacancyApplication = Mapper.Map<VacancyApplication>(msg);
+            var vacancyApplication = Mapper.Map<VacancyApplication>(message);
 
             using (var transaction = _db.GetTransaction())
             {
                 _db.Insert(vacancyApplication);
                 if (vacancyApplication.attachments != null)
                 {
-                    foreach (VacancyApplicationAttachment at in vacancyApplication.attachments)
+                    foreach (var at in vacancyApplication.attachments)
                     {
                         if (at.guid == Guid.Empty) at.guid = Guid.NewGuid();
                         at.vacancyapplication_guid = vacancyApplication.guid;
@@ -46,21 +46,21 @@ namespace SciVacancies.ReadModel.EventHandlers
                 transaction.Complete();
             }
         }
-        public void Handle(VacancyApplicationUpdated msg)
+        public void Handle(VacancyApplicationUpdated message)
         {
-            VacancyApplication vacancyApplication = _db.SingleById<VacancyApplication>(msg.VacancyApplicationGuid);
+            var vacancyApplication = _db.SingleById<VacancyApplication>(message.VacancyApplicationGuid);
 
-            VacancyApplication updatedVacancyApplication = Mapper.Map<VacancyApplication>(msg);
+            var updatedVacancyApplication = Mapper.Map<VacancyApplication>(message);
             updatedVacancyApplication.creation_date = vacancyApplication.creation_date;
 
             using (var transaction = _db.GetTransaction())
             {
                 _db.Update(updatedVacancyApplication);
                 //TODO - без удаления
-                _db.Execute(new Sql($"DELETE FROM res_vacancyapplication_attachments WHERE vacancyapplication_guid = @0", msg.VacancyApplicationGuid));
+                _db.Execute(new Sql($"DELETE FROM res_vacancyapplication_attachments WHERE vacancyapplication_guid = @0", message.VacancyApplicationGuid));
                 if (updatedVacancyApplication.attachments != null)
                 {
-                    foreach (VacancyApplicationAttachment at in updatedVacancyApplication.attachments)
+                    foreach (var at in updatedVacancyApplication.attachments)
                     {
                         if (at.guid == Guid.Empty) at.guid = Guid.NewGuid();
                         at.vacancyapplication_guid = vacancyApplication.guid;
@@ -71,51 +71,51 @@ namespace SciVacancies.ReadModel.EventHandlers
                 transaction.Complete();
             }
         }
-        public void Handle(VacancyApplicationRemoved msg)
+        public void Handle(VacancyApplicationRemoved message)
         {
             using (var transaction = _db.GetTransaction())
             {
-                _db.Execute(new Sql($"UPDATE res_vacancyapplications SET status = @0, update_date = @1 WHERE guid = @2", VacancyApplicationStatus.Removed, msg.TimeStamp, msg.VacancyApplicationGuid));
+                _db.Execute(new Sql($"UPDATE res_vacancyapplications SET status = @0, update_date = @1 WHERE guid = @2", VacancyApplicationStatus.Removed, message.TimeStamp, message.VacancyApplicationGuid));
                 transaction.Complete();
             }
         }
-        public void Handle(VacancyApplicationApplied msg)
+        public void Handle(VacancyApplicationApplied message)
         {
             using (var transaction = _db.GetTransaction())
             {
-                _db.Execute(new Sql($"UPDATE res_vacancyapplications SET apply_date = @0, status = @1, update_date = @2 WHERE guid = @3", msg.TimeStamp, VacancyApplicationStatus.Applied, msg.TimeStamp, msg.VacancyApplicationGuid));
+                _db.Execute(new Sql($"UPDATE res_vacancyapplications SET apply_date = @0, status = @1, update_date = @2 WHERE guid = @3", message.TimeStamp, VacancyApplicationStatus.Applied, message.TimeStamp, message.VacancyApplicationGuid));
                 transaction.Complete();
             }
         }
-        public void Handle(VacancyApplicationCancelled msg)
+        public void Handle(VacancyApplicationCancelled message)
         {
             using (var transaction = _db.GetTransaction())
             {
-                _db.Execute(new Sql($"UPDATE res_vacancyapplications SET status = @0, update_date = @1 WHERE guid = @2", VacancyApplicationStatus.Cancelled, msg.TimeStamp, msg.VacancyApplicationGuid));
+                _db.Execute(new Sql($"UPDATE res_vacancyapplications SET status = @0, update_date = @1 WHERE guid = @2", VacancyApplicationStatus.Cancelled, message.TimeStamp, message.VacancyApplicationGuid));
                 transaction.Complete();
             }
         }
-        public void Handle(VacancyApplicationWon msg)
+        public void Handle(VacancyApplicationWon message)
         {
             using (var transaction = _db.GetTransaction())
             {
-                _db.Execute(new Sql($"UPDATE res_vacancyapplications SET status = @0, update_date = @1 WHERE guid = @2", VacancyApplicationStatus.Won, msg.TimeStamp, msg.VacancyApplicationGuid));
+                _db.Execute(new Sql($"UPDATE res_vacancyapplications SET status = @0, update_date = @1 WHERE guid = @2", VacancyApplicationStatus.Won, message.TimeStamp, message.VacancyApplicationGuid));
                 transaction.Complete();
             }
         }
-        public void Handle(VacancyApplicationPretended msg)
+        public void Handle(VacancyApplicationPretended message)
         {
             using (var transaction = _db.GetTransaction())
             {
-                _db.Execute(new Sql($"UPDATE res_vacancyapplications SET status = @0, update_date = @1 WHERE guid = @2", VacancyApplicationStatus.Pretended, msg.TimeStamp, msg.VacancyApplicationGuid));
+                _db.Execute(new Sql($"UPDATE res_vacancyapplications SET status = @0, update_date = @1 WHERE guid = @2", VacancyApplicationStatus.Pretended, message.TimeStamp, message.VacancyApplicationGuid));
                 transaction.Complete();
             }
         }
-        public void Handle(VacancyApplicationLost msg)
+        public void Handle(VacancyApplicationLost message)
         {
             using (var transaction = _db.GetTransaction())
             {
-                _db.Execute(new Sql($"UPDATE res_vacancyapplications SET status = @0, update_date = @1 WHERE guid = @2", VacancyApplicationStatus.Lost, msg.TimeStamp, msg.VacancyApplicationGuid));
+                _db.Execute(new Sql($"UPDATE res_vacancyapplications SET status = @0, update_date = @1 WHERE guid = @2", VacancyApplicationStatus.Lost, message.TimeStamp, message.VacancyApplicationGuid));
                 transaction.Complete();
             }
         }

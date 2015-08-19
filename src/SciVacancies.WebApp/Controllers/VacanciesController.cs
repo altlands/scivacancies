@@ -30,7 +30,6 @@ namespace SciVacancies.WebApp.Controllers
             _mediator = mediator;
         }
 
-
         [PageTitle("Новая вакансия")]
         [BindOrganizationIdFromClaims]
         [Authorize(Roles = ConstTerms.RequireRoleOrganizationAdmin)]
@@ -41,10 +40,11 @@ namespace SciVacancies.WebApp.Controllers
 
             var model = new VacancyCreateViewModel(organizationGuid);
             model.InitDictionaries(_mediator);
+            //TODO: вынести в конфиг
+            model.InCommitteeDate = DateTime.Now.AddDays(20);
             //TODO: ntemnikov: Vacancies -> Create : вернуть редактирование Критериев во View
             return View(model);
         }
-
 
         [PageTitle("Новая вакансия")]
         [HttpPost]
@@ -391,7 +391,7 @@ namespace SciVacancies.WebApp.Controllers
                 VacancyGuid = id
             });
 
-            return RedirectToAction("vacancies", "organizations");
+            return RedirectToAction("details", new { id = id });
         }
 
         private object VacancyClosePrevalidation(Guid id, Guid organizationGuid)
@@ -504,47 +504,46 @@ namespace SciVacancies.WebApp.Controllers
             return Create(model);
         }
 
-        [Authorize(Roles = ConstTerms.RequireRoleOrganizationAdmin)]
-        [BindOrganizationIdFromClaims]
-        public IActionResult WinnerDecision(Guid id, bool decision, Guid organizationGuid, bool isWinner)
-        {
-            if (id == Guid.Empty)
-                throw new ArgumentNullException(nameof(id));
-            if (organizationGuid == Guid.Empty)
-                throw new ArgumentNullException(nameof(organizationGuid));
+        ////Победитель и претендент сами выбирают Принять или Отказаться от Предложения
+        //[Authorize(Roles = ConstTerms.RequireRoleOrganizationAdmin)]
+        //[BindOrganizationIdFromClaims]
+        //public IActionResult WinnerDecision(Guid id, bool decision, Guid organizationGuid, bool isWinner)
+        //{
+        //    if (id == Guid.Empty)
+        //        throw new ArgumentNullException(nameof(id));
+        //    if (organizationGuid == Guid.Empty)
+        //        throw new ArgumentNullException(nameof(organizationGuid));
 
-            var preModel = _mediator.Send(new SingleVacancyQuery { VacancyGuid = id });
+        //    var preModel = _mediator.Send(new SingleVacancyQuery { VacancyGuid = id });
 
-            if (preModel == null)
-                return HttpNotFound(); //throw new ObjectNotFoundException($"Не найдена вакансия с идентификатором: {id}");
+        //    if (preModel == null)
+        //        return HttpNotFound(); //throw new ObjectNotFoundException($"Не найдена вакансия с идентификатором: {id}");
 
-            if (preModel.organization_guid != organizationGuid)
-                return View("Error", "Вы не можете изменять вакансии других организаций");
+        //    if (preModel.organization_guid != organizationGuid)
+        //        return View("Error", "Вы не можете изменять вакансии других организаций");
 
-            if (preModel.status != VacancyStatus.InCommittee)
-                return View("Error", $"Вы не можете изменить вакансию с текущим статусом: {preModel.status.GetDescription()}");
+        //    if (preModel.status != VacancyStatus.InCommittee)
+        //        return View("Error", $"Вы не можете изменить вакансию с текущим статусом: {preModel.status.GetDescription()}");
 
-            var model = Mapper.Map<VacancyCreateViewModel>(preModel);
-            model.InitDictionaries(_mediator);
+        //    var model = Mapper.Map<VacancyCreateViewModel>(preModel);
+        //    model.InitDictionaries(_mediator);
 
-            if (isWinner)
-                if (decision)
-                    _mediator.Send(new SetWinnerAcceptOfferCommand { VacancyGuid = id });
-                else
-                    _mediator.Send(new SetWinnerRejectOfferCommand { VacancyGuid = id });
-            else
-            {
-                if (decision)
-                {
-                    _mediator.Send(new SetPretenderAcceptOfferCommand { VacancyGuid = id });
-                }
-                else
-                    _mediator.Send(new SetPretenderRejectOfferCommand { VacancyGuid = id });
-            }
-
-            return RedirectToAction("vacancies", "organizations");
-
-        }
+        //    if (isWinner)
+        //        if (decision)
+        //            _mediator.Send(new SetWinnerAcceptOfferCommand { VacancyGuid = id });
+        //        else
+        //            _mediator.Send(new SetWinnerRejectOfferCommand { VacancyGuid = id });
+        //    else
+        //    {
+        //        if (decision)
+        //        {
+        //            _mediator.Send(new SetPretenderAcceptOfferCommand { VacancyGuid = id });
+        //        }
+        //        else
+        //            _mediator.Send(new SetPretenderRejectOfferCommand { VacancyGuid = id });
+        //    }
+        //    return RedirectToAction("vacancies", "organizations");
+        //}
 
         [Authorize(Roles = ConstTerms.RequireRoleOrganizationAdmin)]
         [PageTitle("Подробно о вакансии")]
