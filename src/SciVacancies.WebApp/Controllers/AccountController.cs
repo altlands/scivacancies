@@ -163,6 +163,12 @@ namespace SciVacancies.WebApp.Controllers
 
             return claimsList;
         }
+        private async Task<TokenResponse> GetOAuthRefreshedToken(OAuthProviderSettings oauth, string refreshToken)
+        {
+            var client = new OAuth2Client(new Uri(oauth.TokenEndpoint), oauth.ClientId, oauth.ClientSecret);
+
+            return await client.RequestRefreshTokenAsync(refreshToken);
+        }
 
         #endregion
         #region API
