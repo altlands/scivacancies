@@ -1,9 +1,7 @@
 ﻿@using System.Threading.Tasks
-@using SciVacancies.Domain.Enums
-@using SciVacancies.ReadModel
 @using SciVacancies
+@using SciVacancies.Domain.Enums
 @using SciVacancies.WebApp
-@using SciVacancies.WebApp.Engine
 @model SciVacancies.WebApp.ViewModels.VacancyApplicationDetailsViewModel
 
 <div class="crumbs">
@@ -19,7 +17,7 @@
     Заявка на вакансию <small><a asp-controller="vacancies" asp-action="card" asp-route-id="@Model.VacancyGuid">@Model.Vacancy.FullName</a></small>
     от @Model.CreationDate.ToLocalVacancyDateString()
 </h4>
-<p>Cтатус заявки "@Model.Status.GetDescription()"</p>
+<p>Cтатус заявки "@Model.StatusDescription"</p>
 
 
 

@@ -1,6 +1,6 @@
 ﻿@using System.Threading.Tasks
-@using SciVacancies.Domain.Enums
 @using SciVacancies
+@using SciVacancies.Domain.Enums
 @using SciVacancies.WebApp
 @using SciVacancies.WebApp.Controllers
 @using SciVacancies.WebApp.Engine
@@ -57,7 +57,7 @@
                     </div>
                 </a>
             </th>
-            <th width="110">
+            <th width="150">
                 <a class="sort-order" href="@(Context.Request.Path.Value+"?"+Context.Request.ToQueryStringDictionary().SetDefaultOrInvertOrderParameter(ConstTerms.OrderByFieldVacancyStatus).CreateString())">
                     <div class="inline-block">
                         <img title="Сортировка" src="@Context.Request.GetOrderIcon(ConstTerms.OrderByFieldVacancyStatus)" class="va-middle" />
@@ -67,7 +67,7 @@
                     </div>
                 </a>
             </th>
-            <th width="200">
+            <th width="150">
                 @*<div class="pl21 va-middle">Действия</div>*@
                 <div class="va-middle">Действия</div>
             </th>
@@ -77,7 +77,7 @@
 
         @if (Model.PagedVacancies != null)
         {
-            var i = Model.PagedVacancies.FirstRowIndexOnPage-1;
+            var i = Model.PagedVacancies.FirstRowIndexOnPage - 1;
             foreach (var item in Model.PagedVacancies.Items)
             {
                 i += 1;
@@ -96,8 +96,31 @@
                     <td>@(item.creation_date.ToLocalVacancyString())</td>
                     <td>@(item.publish_date?.ToLocalVacancyString())</td>
                     <td>
-                        <span class="status @item.status.GetHtmlClass()">@item.status.GetDescription() </span>
-                        <i style="font-style: italic !important;">@item.status.GetDescriptionExtended()</i>
+                        <span class="status @item.status.GetHtmlClass()">
+                            @if (item.status == VacancyStatus.Closed)
+                            {
+                                if (item.is_winner_accept.Value
+                                    || item.is_pretender_accept.Value)
+                                {
+                                    <text>
+                                    Контракт подписан
+                                    </text>
+                                }
+                                else
+                                {
+                                    <text>
+                                    Контракт отклонен
+                                    </text>
+                                }
+                            }
+                            else
+                            {
+                                <text>
+                                @item.status.GetDescription()
+                                </text>
+                            }
+                        </span>
+                        <i style="font-style: italic !important;">@item.status.GetDescriptionRecommendation()</i>
                     </td>
                     <td>
                         <a asp-controller="vacancies" asp-action="details" asp-route-id="@item.guid" class="view-td-icon" title="Просмотр вакансии"></a>

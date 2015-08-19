@@ -90,7 +90,7 @@
                     <td>@(item.publish_date?.ToLocalVacancyString())</td>
                     <td>
                         <span class="status @item.status.GetHtmlClass()">
-                            @item.status.GetDescription()
+                            @item.status.GetDescriptionByResearcher()
                         </span>
                     </td>
                     <td>

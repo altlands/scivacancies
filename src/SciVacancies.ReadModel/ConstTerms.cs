@@ -1,4 +1,4 @@
-﻿namespace SciVacancies.WebApp.Engine
+﻿namespace SciVacancies
 {
     public class ConstTerms
     {

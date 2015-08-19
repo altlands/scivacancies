@@ -9,7 +9,7 @@ using SciVacancies.WebApp.ViewModels.Base;
 
 namespace SciVacancies.WebApp.ViewModels
 {
-    public class VacancyDetailsViewModel: ViewModelBase
+    public class VacancyDetailsViewModel: ViewModelBase, IVacancyWinnerPretenderInfo
     {
         public List<VacancyApplication> AppliedByUserApplications { get; set; } = new List<VacancyApplication>();
 

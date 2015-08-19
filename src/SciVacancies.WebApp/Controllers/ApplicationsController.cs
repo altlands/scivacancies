@@ -68,7 +68,7 @@ namespace SciVacancies.WebApp.Controllers
 
             var vacancy = _mediator.Send(new SingleVacancyQuery { VacancyGuid = vacancyGuid });
             if (vacancy.status != VacancyStatus.Published)
-                return View("Error", $"Вы не можете подать Заявку на Вакансию в статусе: {vacancy.status.GetDescription()}");
+                return View("Error", $"Вы не можете подать Заявку на Вакансию в статусе: {vacancy.status.GetDescriptionByResearcher()}");
 
             //TODO: оптимизировать запрос и его обработку
             var appliedVacancyApplications =
@@ -102,7 +102,7 @@ namespace SciVacancies.WebApp.Controllers
 
             var vacancy = _mediator.Send(new SingleVacancyQuery { VacancyGuid = model.VacancyGuid });
             if (vacancy.status != VacancyStatus.Published)
-                return View("Error", $"Вы не можете подать Заявку на Вакансию в статусе: {vacancy.status.GetDescription()}");
+                return View("Error", $"Вы не можете подать Заявку на Вакансию в статусе: {vacancy.status.GetDescriptionByResearcher()}");
 
             //TODO: оптимизировать запрос и его обработку
             var appliedVacancyApplications =
@@ -472,10 +472,10 @@ namespace SciVacancies.WebApp.Controllers
                 return HttpNotFound(); //throw new ObjectNotFoundException($"Не найдена Заявка c идентификатором: {vacancyApplicationGuid}");
 
             if (isWinner && vacancyApplicaiton.status != VacancyApplicationStatus.Won)
-                return View("Error", $"Вы не можете зафиксировать принятие предложения от Победителя если Заявка имеет статус: {vacancyApplicaiton.status.GetDescription()}");
+                return View("Error", "Вы не можете принять предложение если Вы не Победитель");
 
             if (!isWinner && vacancyApplicaiton.status != VacancyApplicationStatus.Pretended)
-                return View("Error", $"Вы не можете зафиксировать принятие предложения от Претендента если Заявка имеет статус: {vacancyApplicaiton.status.GetDescription()}");
+                return View("Error", "Вы не можете принять предложение если Вы не Победитель");
 
             var vacancy = _mediator.Send(new SingleVacancyQuery { VacancyGuid = vacancyApplicaiton.vacancy_guid });
 
@@ -488,8 +488,7 @@ namespace SciVacancies.WebApp.Controllers
                 return View("Error", "Вы не можете принять или отказаться от предложения, сделанного для другого заявителя.");
 
             if (vacancy.status != VacancyStatus.OfferResponseAwaiting)
-                return View("Error",
-                    $"Вы не можете зафиксироватиьо принятие или отказ от предложения если Заявка имеет статус: {vacancy.status.GetDescription()}");
+                return View("Error", $"Вы не можете принять предложение или отказаться от него если Вакансия имеет статус: {vacancy.status.GetDescriptionByResearcher()}");
             return vacancy;
         }
 

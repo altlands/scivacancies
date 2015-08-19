@@ -1,4 +1,5 @@
 ﻿using System.Net.Mail;
+using SciVacancies.ReadModel;
 using SciVacancies.ReadModel.Core;
 
 namespace SciVacancies.SmtpNotificationsHandlers.SmtpNotificators
@@ -10,7 +11,7 @@ namespace SciVacancies.SmtpNotificationsHandlers.SmtpNotificators
             var body = $@"
 <div style=''>
     Уважаемый(-ая), {researcher.secondname} {researcher.firstname}, сообщаем, что вакансия
-    <a target='_blank' href='http://{Domain}/vacancies/card/{vacancy.guid}'>{vacancy.fullname}</a> получила новый статус: {vacancy.status.GetDescription()}
+    <a target='_blank' href='http://{Domain}/vacancies/card/{vacancy.guid}'>{vacancy.fullname}</a> получила новый статус: {vacancy.status.GetDescriptionByResearcher()}
 </div>
 
 <br/>
