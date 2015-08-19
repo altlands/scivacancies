@@ -5,7 +5,7 @@ using SciVacancies.Domain.Enums;
 namespace SciVacancies.WebApp.Engine
 {
 
-    public static class EnumExtenions
+    public static class GetHtmlClassEnumHelper
     {
 
         public static string GetHtmlClass(this VacancyStatus value)

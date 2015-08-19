@@ -1,0 +1,16 @@
+﻿@model string
+
+<h3>@ViewBag.Title</h3>
+
+<span style="color: red;">в разработке</span>
+<br/>
+
+<p class="text-danger" style="padding: 15px; font-size: larger;">
+    @Model
+</p>
+
+<form>
+    <input type="hidden" asp-anti-forgery="true" />
+    <input type="submit" value="Продолжить"/>
+    
+</form>
