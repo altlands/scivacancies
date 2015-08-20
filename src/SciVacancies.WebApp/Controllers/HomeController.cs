@@ -1,4 +1,5 @@
-﻿using MediatR;
+﻿using System.Linq;
+using MediatR;
 using Microsoft.AspNet.Diagnostics;
 using Microsoft.AspNet.Mvc;
 using SciVacancies.ReadModel.Core;
@@ -42,6 +43,18 @@ namespace SciVacancies.WebApp.Controllers
                         .MapToPagedList<Organization, OrganizationDetailsViewModel>(),
                 ResearchDirections = new VacanciesFilterSource(_mediator).ResearchDirections
             };
+
+            //заполнить названия организаций
+            var organizationGuids = model.VacanciesList.Items.Select(c => c.OrganizationGuid).Distinct().ToList();
+            var organizations=  _mediator.Send(new SelectOrganizationsByGuidsQuery {OrganizationGuids = organizationGuids});
+            model.VacanciesList.Items.ForEach(c =>
+            {
+                var organization = organizations.SingleOrDefault(d => d.guid == c.OrganizationGuid);
+                if (organization != null)
+                {
+                    c.OrganizationName = organization.name;
+                }
+            });
 
             return View(model);
         }

@@ -226,6 +226,7 @@ $(document).ready(function () {
             $(source).children('ul').show();
         }
     });
+    $('li.collapsible-filter-header.open').children('ul').show(); //показать вложенные элементы если добавлен класс .open
     /*
      * исправление распространения событий для списка фильтров при поиске
      */

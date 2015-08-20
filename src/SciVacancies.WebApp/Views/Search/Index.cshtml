@@ -1,7 +1,6 @@
 ﻿@using System.Linq
 @using System.Threading.Tasks
 @using SciVacancies.WebApp
-@using SciVacancies.WebApp.Engine
 @using SciVacancies.WebApp.ViewModels
 @model VacanciesFilterModel
 
@@ -26,8 +25,6 @@
                     <span class="small-icon icon-sm-close">Очистить фильтр</span>
                 </div>
 
-
-
                 <div class="cat-filter">
                     <div class="title"><span>Регион</span></div>
                     <ul class="list-checkboxes">
@@ -49,8 +46,9 @@
                             {
                                 if (foivs[a].Childs.Any())
                                 {
+                                    var open= foivs[a].Childs.Count(level => Model.Foivs.Contains(level.Id)) > 0 ? "open" : string.Empty;
                                     <text>
-                                    <li class="collapsible-filter-header">
+                                    <li class="collapsible-filter-header @open">
                                         <span>@foivs[a].Title (@foivs[a].Childs.Count())</span>
                                         <ul class="list-checkboxes" style="display: none;">
                                             <checkboxing items="foivs[a].Items"
@@ -75,14 +73,16 @@
                             labelForIndex = 0;
                             for (a = 0; a < researchDirection.Childs.Count; a++)
                             {
+                                var openFirst = researchDirection.Childs[a].Childs.Sum(second => second.Childs.Count(third => Model.ResearchDirections.Contains(third.Id))) > 0 ? "open" : string.Empty;
                                 <text>
-                                <li class="collapsible-filter-header">
+                                <li class="collapsible-filter-header @openFirst">
                                     <span>@researchDirection.Childs[a].Title (@researchDirection.Childs[a].Childs.Count)</span>
                                     <ul class="sub-cat level-1" style="display: none;">
                                         @for (b = 0; b < researchDirection.Childs[a].Childs.Count; b++)
                                         {
+                                            var openSecond = researchDirection.Childs[a].Childs[b].Childs.Count(third => Model.ResearchDirections.Contains(third.Id)) > 0 ? "open" : string.Empty;
                                             <text>
-                                            <li class="collapsible-filter-header">
+                                            <li class="collapsible-filter-header @openSecond">
                                                 <span>@researchDirection.Childs[a].Childs[b].Title (@researchDirection.Childs[a].Childs[b].Childs.Count)</span>
                                                 <ul class="list-checkboxes" style="display: none;">
                                                     <checkboxing items="researchDirection.Childs[a].Childs[b].Items"
@@ -135,7 +135,7 @@
                     </ul>
                 </div>
 
-                <input type="submit" class="blue-btn-sm small-icon icon-sm-eye-wh " value="Применить"/>
+                <input type="submit" class="blue-btn-sm small-icon icon-sm-eye-wh " value="Применить" />
 
             </div>
         </div>
@@ -169,7 +169,7 @@
                         <div class="content-popup">
                             <p class="fs14 arial">Подписываясь на запрос, вы сможете быстро перейти к соответствующим результатам из Личного кабинета, а также будете получать электронные уведомления обо всех обновлениях по теме данного запроса</p>
                             <div class="form-line">
-                                <input type="text" asp-for="NewSubscriptionTitle" style="width: 340px;" placeholder="Название запроса"/>
+                                <input type="text" asp-for="NewSubscriptionTitle" style="width: 340px;" placeholder="Название запроса" />
                             </div>
 
                             @*<div class="form-line">
@@ -178,13 +178,13 @@
 
                             <div class="form-line mt25">
                                 <span class="checkbox ">
-                                    <input type="checkbox"  asp-for="NewSubscriptionNotifyByEmail"/>
+                                    <input type="checkbox" asp-for="NewSubscriptionNotifyByEmail" />
                                 </span>
                                 <label asp-for="NewSubscriptionNotifyByEmail">Получать уведомления по электронной почте</label>
                             </div>
 
                             <div class="ctr-buttons mt40">
-                                <input type="submit" class="green-btn middle-icon icon-arr-right" onclick="javascript: return addNewSubscription(this);" value="Подписаться"/>
+                                <input type="submit" class="green-btn middle-icon icon-arr-right" onclick="javascript: return addNewSubscription(this);" value="Подписаться" />
                                 <span class="blue-btn middle-icon icon-close" onclick="javqascript: return false;">Отмена</span>
                             </div>
                         </div>
@@ -192,7 +192,7 @@
                     <div class="bg-window" style="display: none;"></div>
                     </text>
                 }
-                if (Model.SubscriptionInfo!=null && Model.SubscriptionInfo.NewJustAdded)
+                if (Model.SubscriptionInfo != null && Model.SubscriptionInfo.NewJustAdded)
                 {
                     <div class="ctr-buttons" style="margin-top: 20px;">
                         <a asp-controller="researchers" asp-action="subscriptions" class="white-btn middle-icon icon-lgr-ok" id="subscribed" rel="tooltip" target="_blank">Подписка оформлена</a>

@@ -56,6 +56,9 @@ namespace SciVacancies
         {
             switch (value)
             {
+                case VacancyStatus.Cancelled:
+                    return VacancyStatus.Cancelled.GetDescription();
+
                 case VacancyStatus.Published:
                     return VacancyStatus.Published.GetDescription();
 

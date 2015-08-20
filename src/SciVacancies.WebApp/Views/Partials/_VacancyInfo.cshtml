@@ -4,7 +4,7 @@
 @model  SciVacancies.WebApp.ViewModels.VacancyDetailsViewModel
 
 <div class="title-cat-inform">Специализация:</div>
-<ul class="list-information">
+<ul class="list-information layout-inform">
     <li class="even">
         <span>Статус:</span>@Model.Status.GetDescription(User) 
     </li>
@@ -23,43 +23,42 @@
 </ul>
 
 <div class="title-cat-inform">Задачи и критерии:</div>
-<ul class="list-information">
+<ul class="list-information layout-inform">
     <li class="odd">
         <span>Задачи:</span>@Model.Tasks
     </li>
     <li class="even">
         <span>Критерии оценки:</span>
-        <br />
-
-        @if (Model.CriteriasHierarchy != null)
-        {
-            foreach (CriteriaItemViewModel group in Model.CriteriasHierarchy.Where(c => c.Items.Sum(d => d.Count) > 0))
+        <div>
+            @if (Model.CriteriasHierarchy != null)
             {
-                <div class="">
-                    <span class="name-section">@(@group.Title) (@(@group.Items.Count(c => c.Count > 0)))</span>
-                    <div class="list-fields">
+                foreach (CriteriaItemViewModel group in Model.CriteriasHierarchy.Where(c => c.Items.Sum(d => d.Count) > 0))
+                {
+                    <div class="section-eval">
+                        <span class="name-section">@(@group.Title) (@(@group.Items.Count(c => c.Count > 0)))</span>
+                        <div class="list-fields">
 
-                        @foreach (CriteriaItemViewModel item in @group.Items.Where(c => c.Count > 0))
+                            @foreach (CriteriaItemViewModel item in @group.Items.Where(c => c.Count > 0))
                     {
-                            <div>
-                                <div class="field">
-                                    &nbsp; &mdash; &nbsp;
-                                    @item.Title:
-                                    @item.Count шт.
+                                <div>
+                                    <div class="field">
+                                        &nbsp; &mdash; &nbsp;
+                                        @item.Title:
+                                        @item.Count шт.
+                                    </div>
                                 </div>
-                            </div>
-                        }
+                            }
+                        </div>
+
                     </div>
-
-                </div>
+                }
             }
-        }
-
+        </div>
     </li>
 </ul>
 
 <div class="title-cat-inform">Условия:</div>
-<ul class="list-information">
+<ul class="list-information layout-inform">
     <li class="odd">
         <span>Заработная плата:</span>@Model.SalaryFrom - @Model.SalaryTo рублей/месяц
     </li>
@@ -81,14 +80,14 @@
 </ul>
 
 <div class="title-cat-inform">Лицо для получения дополнительных справок:</div>
-<ul class="list-information">
+<ul class="list-information layout-inform">
     <li class="odd">
         <span>Фамилия, имя, отчество:</span>@Model.ContactName
     </li>
     <li class="even">
         <span>E-mail:</span>@Model.ContactEmail
     </li>
-    <li class="even">
+    <li class="odd">
         <span>Телефон:</span>@Model.ContactPhone
     </li>
 </ul>

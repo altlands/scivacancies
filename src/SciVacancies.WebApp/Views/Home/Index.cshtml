@@ -37,20 +37,27 @@
                 <text>
                 <a asp-controller="vacancies" asp-action="card" asp-route-id="@item.Guid" class="row-4">
                     <div class="iblock-middle">
-                        <div class="title-vac">@item.Name</div>
+                        <div class="title-vac">
+                            <span style="
+    white-space: -moz-pre-wrap; /* Mozilla */
+    white-space: -o-pre-wrap; /* Opera 7 */
+    white-space: -hp-pre-wrap; /* HP printers */
+    white-space: -pre-wrap; /* Opera 4-6 */
+    white-space: pre-wrap; /* CSS 2.1 */
+    white-space: pre-line; /* CSS 3 (and 2.1 as well, actually) */
+    word-wrap: break-word; /* IE */
+    word-break: break-all;">@item.Name.Substring(0, Math.Min(item.Name.Length, 45))@(item.Name.Length > 45 ? "..." : null)</span>
+                        </div>
                         <div class="sal-vac">@item.SalaryFrom – @item.SalaryTo руб.</div>
                         <p>@item.OrganizationName</p>
-                        <p>
-                            (статус вакансии: @item.Status.GetDescriptionByResearcher().ToLower())
-                        </p>
                     </div>
                 </a>
                 </text>
             }
         </div>
         <a asp-controller="search" asp-route-order="">
-                <span class="small-icon icon-sm-eye inline-block ml9 mt13"><span>Показать все</span></span>
-            </a>
+            <span class="small-icon icon-sm-eye inline-block ml9 mt13"><span>Показать все</span></span>
+        </a>
     </div>
 </div>
 

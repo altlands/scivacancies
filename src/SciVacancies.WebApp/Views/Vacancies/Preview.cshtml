@@ -19,53 +19,58 @@
 }
 
 <h3>@ViewBag.Title</h3>
-<div class="title-cat-inform">Информация о вакансии:</div>
-<ul class="list-information">
-    <li class="odd">
-        <span>Номер ваканасии:</span>@Model.Guid.ToString().Substring(0, 4)
-    </li>
-    <li class="even">
-        <span>Статус:</span><span class="status @Model.Status.GetHtmlClass()">@Model.Status.GetDescriptionByResearcher()</span>
 
-        @if (Model.Status == VacancyStatus.Closed)
-        {
-            <del><span class="dashed-link float-right">Протокол решения конкурсной комиссии</span></del>
-            <span style="color: red;">в разработке</span>
-        }
+<div class="content-popup">
 
-    </li>
-    @if (Model.Status == VacancyStatus.Closed)
-    {
+    <div class="title-cat-inform">Информация о вакансии:</div>
+    <ul class="list-information">
         <li class="odd">
-            <span>Первое место (победитель):</span>@Model.Winner.FullName
+            <span>Номер ваканасии:</span>@Model.Guid.ToString().Substring(0, 4)
         </li>
         <li class="even">
-            <span>Второе место:</span>@Model.Pretender.FullName
+            <span>Статус:</span><span class="status @Model.Status.GetHtmlClass()">@Model.Status.GetDescriptionByResearcher()</span>
+
+            @if (Model.Status == VacancyStatus.Closed)
+            {
+                <del><span class="dashed-link float-right">Протокол решения конкурсной комиссии</span></del>
+                <span style="color: red;">в разработке</span>
+            }
+
         </li>
+        @if (Model.Status == VacancyStatus.Closed)
+        {
+            <li class="odd">
+                <span>Первое место (победитель):</span>@Model.Winner.FullName
+            </li>
+            <li class="even">
+                <span>Второе место:</span>@Model.Pretender.FullName
+            </li>
+        }
+    </ul>
+
+    <div class="title-cat-inform">Дополнительная информация:</div>
+    <ul class="list-information">
+        <li class="odd">
+            <span>Научное направление:</span>@Model.ResearchDirection
+        </li>
+        <li class="even">
+            <span>Профессия (должность):</span>@Model.FullName
+        </li>
+        <li class="odd">
+            <span>Режим работы:</span> @Model.OperatingScheduleType.GetDescription()
+        </li>
+        <li class="even">
+            <span>Тип занятости:</span> @Model.EmploymentType.GetDescription()
+        </li>
+    </ul>
+
+    @if (!string.IsNullOrWhiteSpace(referer))
+    {
+        <text>
+        <div class="b-bottom-nav">
+            <a href="@referer.ToLower()" class="small-icon icon-prev">Назад</a>
+        </div>
+        </text>
     }
-</ul>
 
-<div class="title-cat-inform">Дополнительная информация:</div>
-<ul class="list-information">
-    <li class="odd">
-        <span>Научное направление:</span>@Model.ResearchDirection
-    </li>
-    <li class="even">
-        <span>Профессия (должность):</span>@Model.FullName
-    </li>
-    <li class="odd">
-        <span>Режим работы:</span> @Model.OperatingScheduleType.GetDescription()
-    </li>
-    <li class="even">
-        <span>Тип занятости:</span> @Model.EmploymentType.GetDescription()
-    </li>
-</ul>
-
-@if (!string.IsNullOrWhiteSpace(referer))
-{
-    <text>
-    <div class="b-bottom-nav">
-        <a href="@referer.ToLower()" class="small-icon icon-prev">Назад</a>
-    </div>
-    </text>
-}
+</div>

@@ -14,13 +14,14 @@
 
 <h3>@ViewBag.Title </h3>
 <div class="title-popup">
-    <h4>Вакансия ID @Model.Guid.ToString().Substring(0, 4)
-    @if (Model.Status.GetDescriptionRecommendation()!=null)
-    {
-        <text>
-        <small class="label-info" style="padding: 5px;">@Model.Status.GetDescriptionRecommendation()</small> 
-        </text>
-    }
+    <h4>
+        Вакансия ID @Model.Guid.ToString().Substring(0, 4)
+        @if (Model.Status.GetDescriptionRecommendation() != null)
+        {
+            <text>
+            <small class="label-info" style="padding: 5px;">@Model.Status.GetDescriptionRecommendation()</small>
+            </text>
+        }
     </h4>
 </div>
 
@@ -162,64 +163,64 @@
     <a asp-controller="vacancies" asp-action="print" asp-route-id="@Model.Guid" class="blue-btn middle-icon icon-print-button" style="margin-right: 15px;" rel="tooltip" target="_blank" title="Распечатать все заявки">Распечатать все заявки</a>
 }
 
-@* Победитель и претендент сами выбирают Принять или Отказаться от Предложения 
-    @if (Model.Status == VacancyStatus.OfferResponseAwaiting)
-{
-    if (Model.WinnerRequestDate.HasValue)
-    {
-        //ожидаем ответ от победителя
-        if (!Model.WinnerResponseDate.HasValue)
+    @* Победитель и претендент сами выбирают Принять или Отказаться от Предложения
+            @if (Model.Status == VacancyStatus.OfferResponseAwaiting)
         {
-            <a asp-controller="vacancies" asp-action="winnerdecision" asp-route-id="@Model.Guid" asp-route-iswinner="true" asp-route-decision="true" title="Победитель принял">Победитель принял</a>
-            <a asp-controller="vacancies" asp-action="winnerdecision" asp-route-id="@Model.Guid" asp-route-iswinner="true" asp-route-decision="false" title="Победитель отказался">Победитель отказался</a>
-        }
-        else //ожидаем ответ от претендента
-        {
-            if (Model.IsWinnerAccept.HasValue && !Model.IsWinnerAccept.Value)
+            if (Model.WinnerRequestDate.HasValue)
             {
-                <a asp-controller="vacancies" asp-action="winnerdecision" asp-route-id="@Model.Guid" asp-route-iswinner="false" asp-route-decision="true" title="Претендент принял">Претендент принял</a>
-                <a asp-controller="vacancies" asp-action="winnerdecision" asp-route-id="@Model.Guid" asp-route-iswinner="false" asp-route-decision="false" title="Претендент отказался">Претендент отказался</a>
+                //ожидаем ответ от победителя
+                if (!Model.WinnerResponseDate.HasValue)
+                {
+                    <a asp-controller="vacancies" asp-action="winnerdecision" asp-route-id="@Model.Guid" asp-route-iswinner="true" asp-route-decision="true" title="Победитель принял">Победитель принял</a>
+                    <a asp-controller="vacancies" asp-action="winnerdecision" asp-route-id="@Model.Guid" asp-route-iswinner="true" asp-route-decision="false" title="Победитель отказался">Победитель отказался</a>
+                }
+                else //ожидаем ответ от претендента
+                {
+                    if (Model.IsWinnerAccept.HasValue && !Model.IsWinnerAccept.Value)
+                    {
+                        <a asp-controller="vacancies" asp-action="winnerdecision" asp-route-id="@Model.Guid" asp-route-iswinner="false" asp-route-decision="true" title="Претендент принял">Претендент принял</a>
+                        <a asp-controller="vacancies" asp-action="winnerdecision" asp-route-id="@Model.Guid" asp-route-iswinner="false" asp-route-decision="false" title="Претендент отказался">Претендент отказался</a>
 
+                    }
+                }
             }
+        }*@
+
+    <br />
+    <br />
+    <br />
+
+    <div class="ctr-buttons">
+
+        @if (Model.Status == VacancyStatus.InProcess)
+        {
+            <a asp-controller="vacancies" asp-action="edit" asp-route-id="@Model.Guid" class="btn btn-default " title="Изменить">Изменить</a>
+            <a asp-controller="vacancies" asp-action="delete" asp-route-id="@Model.Guid" onclick="javascript: return confirm('Вы уверены что хотите удалить вакансию?');" class="btn btn-danger " title="Удалить">Удалить</a>
+            <a asp-controller="vacancies" asp-action="publish" asp-route-id="@Model.Guid" class="btn btn-success" title="Опубликовать">Опубликовать</a>
         }
-    }
-}*@
+        @if (Model.Status == VacancyStatus.Published || Model.Status == VacancyStatus.InCommittee || Model.Status == VacancyStatus.OfferResponseAwaiting || Model.Status == VacancyStatus.OfferRejected)
+        {
+            <a asp-controller="vacancies" asp-action="cancel" asp-route-id="@Model.Guid" onclick="javascript: return confirm('Вы уверены что хотите отменить вакансию?');" class="btn btn-warning" title="Отменить вакансию">Отменить вакансию</a>
+        }
+        @if (Model.Status == VacancyStatus.Published)
+        {
+            <a asp-controller="vacancies" asp-action="startincommittee" asp-route-id="@Model.Guid" class="btn btn-success" title="Перевести на рассмотрение">Перевести на рассмотрение</a>
+        }
+        @if (Model.Status == VacancyStatus.OfferAccepted)
+        {
+            <a asp-controller="vacancies" asp-action="close" asp-route-id="@Model.Guid" class="btn btn-success" title="Выбрать победителя">Контракт подписан. Закрыть вакансию</a>
+        }
+        @if (Model.Status == VacancyStatus.OfferRejected)
+        {
+            <a asp-controller="vacancies" asp-action="close" asp-route-id="@Model.Guid" class="btn btn-warning" title="Выбрать победителя">Контракт не подписан. Закрыть вакансию</a>
+        }
 
-<br />
-<br />
-<br />
+    </div>
 
-<div class="ctr-buttons">
+    <br />
 
-    @if (Model.Status == VacancyStatus.InProcess)
-    {
-        <a asp-controller="vacancies" asp-action="edit" asp-route-id="@Model.Guid" class="btn btn-default " title="Изменить">Изменить</a>
-        <a asp-controller="vacancies" asp-action="delete" asp-route-id="@Model.Guid" onclick="javascript: return confirm('Вы уверены что хотите удалить вакансию?');" class="btn btn-danger " title="Удалить">Удалить</a>
-        <a asp-controller="vacancies" asp-action="publish" asp-route-id="@Model.Guid" class="btn btn-success" title="Опубликовать">Опубликовать</a>
-    }
-    @if (Model.Status == VacancyStatus.Published || Model.Status == VacancyStatus.InCommittee || Model.Status == VacancyStatus.OfferResponseAwaiting || Model.Status == VacancyStatus.OfferRejected)
-    {
-        <a asp-controller="vacancies" asp-action="cancel" asp-route-id="@Model.Guid" onclick="javascript: return confirm('Вы уверены что хотите отменить вакансию?');" class="btn btn-warning" title="Отменить вакансию">Отменить вакансию</a>
-    }
-    @if (Model.Status == VacancyStatus.Published)
-    {
-        <a asp-controller="vacancies" asp-action="startincommittee" asp-route-id="@Model.Guid" class="btn btn-success" title="Перевести на рассмотрение">Перевести на рассмотрение</a>
-    }
-    @if (Model.Status == VacancyStatus.OfferAccepted)
-    {
-        <a asp-controller="vacancies" asp-action="close" asp-route-id="@Model.Guid" class="btn btn-success" title="Выбрать победителя">Контракт подписан. Закрыть вакансию</a>
-    }
-    @if (Model.Status == VacancyStatus.OfferRejected)
-    {
-        <a asp-controller="vacancies" asp-action="close" asp-route-id="@Model.Guid" class="btn btn-warning" title="Выбрать победителя">Контракт не подписан. Закрыть вакансию</a>
-    }
-
-</div>
-
-<br />
-
-<div class="b-bottom-nav">
-    <a href="/" class="small-icon icon-prev">Главная</a>
-    <a asp-controller="organizations" asp-action="account" class="small-icon icon-prev">Карточка организации</a>
-    <a asp-controller="organizations" asp-action="vacancies" class="small-icon icon-prev">Вакансии</a>
-</div>
+    <div class="b-bottom-nav">
+        <a href="/" class="small-icon icon-prev">Главная</a>
+        <a asp-controller="organizations" asp-action="account" class="small-icon icon-prev">Карточка организации</a>
+        <a asp-controller="organizations" asp-action="vacancies" class="small-icon icon-prev">Вакансии</a>
+    </div>
