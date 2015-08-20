@@ -5,6 +5,7 @@ using NPoco;
 using SciVacancies.Domain.Enums;
 using SciVacancies.ReadModel.Core;
 using SciVacancies.ReadModel.Pager;
+using SciVacancies.WebApp.Interfaces;
 using SciVacancies.WebApp.ViewModels.Base;
 
 namespace SciVacancies.WebApp.ViewModels
