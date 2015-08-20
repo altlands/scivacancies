@@ -3,6 +3,7 @@ using MediatR;
 using Microsoft.AspNet.Authorization;
 using Microsoft.AspNet.Mvc;
 using SciVacancies.WebApp.Engine;
+using SciVacancies.WebApp.Commands;
 
 namespace SciVacancies.WebApp.Controllers
 {
@@ -19,21 +20,6 @@ namespace SciVacancies.WebApp.Controllers
         /// <summary>
         /// Обновить профиль ислледователя
         /// </summary>
-        /// <param name="researcherGuid"></param>
-        /// <param name="dataSource"></param>
-        /// <returns></returns>
-        [Authorize(Roles = ConstTerms.RequireRoleResearcher)]
-        [BindResearcherIdFromClaims]
-        [PageTitle("Обновление данных профиля")]
-        public ViewResult UpdateResearcherAccountFromOutside(Guid researcherGuid, AuthorizeResourceTypes dataSource)
-        {
-            var model = "Подтвердите обновление данных профиля с внешнего ресурса";
-            return View(model: model);
-        }
-
-        /// <summary>
-        /// Обновить профиль ислледователя
-        /// </summary>
         /// <returns></returns>
         [Authorize(Roles = ConstTerms.RequireRoleResearcher)]
         [BindResearcherIdFromClaims]
@@ -43,6 +29,12 @@ namespace SciVacancies.WebApp.Controllers
         public ViewResult UpdateResearcherAccountFromOutside()
         {
             var model = "Подтвердите обновление данных профиля с внешнего ресурса";
+            //TODO
+            //1-проверка access token expires in
+            //2-если надо, обновляем access token
+            //3-отправляем запрос к api
+            //4 - mapping
+            //5 - отправляем команду через медиатор
             return View(model: model);
         }
 
@@ -61,22 +53,5 @@ namespace SciVacancies.WebApp.Controllers
             var model = "Подтвердите обновление данных профиля с внешнего ресурса";
             return View(model: model);
         }
-
-        /// <summary>
-        /// Обновить профиль организации
-        /// </summary>
-        /// <returns></returns>
-        [Authorize(Roles = ConstTerms.RequireRoleResearcher)]
-        [BindResearcherIdFromClaims]
-        [PageTitle("Обновление данных профиля")]
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ViewResult UpdateOrganizationAccountFromOutside()
-        {
-            var model = "Подтвердите обновление данных профиля с внешнего ресурса";
-            return View(model: model);
-        }
-
-
     }
 }
