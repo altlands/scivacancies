@@ -13,23 +13,23 @@ namespace SciVacancies.WebApp.Engine
             switch (value)
             {
                 case VacancyStatus.InProcess:
-                    return "draft";
+                    return "draft"; //grey
                 case VacancyStatus.Published:
-                    return "executed";
+                    return "executed"; //green
                 case VacancyStatus.InCommittee:
-                    return "work";
+                    return "work"; //orange
                 case VacancyStatus.Closed:
-                    return "failed";
+                    return "closed"; //light-grey
                 case VacancyStatus.Cancelled:
-                    return "work";
+                    return "work"; //orange
                 case VacancyStatus.OfferResponseAwaiting:
-                    return "work";
+                    return "work"; //orange
                 case VacancyStatus.OfferAccepted:
-                    return "work";
+                    return "work"; //orange
                 case VacancyStatus.OfferRejected:
-                    return "failed";
+                    return "failed"; //red
                 case VacancyStatus.Removed:
-                    return "failed";
+                    return "failed"; //red
                 default:  return null;
             }
         }
@@ -39,19 +39,19 @@ namespace SciVacancies.WebApp.Engine
             switch (value)
             {
                 case VacancyApplicationStatus.InProcess:
-                    return "draft";
+                    return "draft"; //grey
                 case VacancyApplicationStatus.Cancelled:
-                    return "failed";
+                    return "failed"; //red
                 case VacancyApplicationStatus.Removed:
-                    return "failed";
+                    return "failed"; //red
                 case VacancyApplicationStatus.Applied:
-                    return "work";
+                    return "work"; //orange
                 case VacancyApplicationStatus.Won:
-                    return "executed";
+                    return "executed"; //green
                 case VacancyApplicationStatus.Pretended:
-                    return "executed";
+                    return "executed"; //green
                 case VacancyApplicationStatus.Lost:
-                    return "failed";
+                    return "failed"; //red
                 default:
                     return null;
             }

@@ -189,7 +189,7 @@ namespace SciVacancies.WebApp.Controllers
             return responseString;
         }
         //общаемся с картой науки
-        private string GetResearcherProfile(string accessToken)
+        protected string GetResearcherProfile(string accessToken)
         {
             //TODO url move to config
             var webRequest= WebRequest.Create(@"http://scimap-sso.alt-lan.com/scimap-sso/user/profile" + "?access_token=" + accessToken);
@@ -254,10 +254,10 @@ namespace SciVacancies.WebApp.Controllers
                                             orgModel.UserName = orgClaim.Inn;
 
                                             orgModel.Claims = claims.Where(w => w.Type.Equals("lastname")
-                                                                            && w.Type.Equals("firstname")
-                                                                            && w.Type.Equals("access_token")
-                                                                            && w.Type.Equals("expires_in")
-                                                                            && w.Type.Equals("refresh_token")).ToList();
+                                                                            || w.Type.Equals("firstname")
+                                                                            || w.Type.Equals("access_token")
+                                                                            || w.Type.Equals("expires_in")
+                                                                            || w.Type.Equals("refresh_token")).ToList();
 
                                             var command = new RegisterUserOrganizationCommand
                                             {
@@ -305,7 +305,9 @@ namespace SciVacancies.WebApp.Controllers
 
                                         claims.Add(new Claim("access_token", tokenResponse.AccessToken));
                                         claims.Add(new Claim("expires_in", DateTime.Now.AddSeconds(tokenResponse.ExpiresIn).ToString()));
-                                        if (!string.IsNullOrEmpty(tokenResponse.RefreshToken)) claims.Add(new Claim("refresh_token", tokenResponse.RefreshToken));
+
+                                        if (!string.IsNullOrEmpty(tokenResponse.RefreshToken))
+                                            claims.Add(new Claim("refresh_token", tokenResponse.RefreshToken));
 
                                         var resUser = _userManager.FindByEmail(claims.Find(f => f.Type.Equals("email")).Value);
 
@@ -318,11 +320,11 @@ namespace SciVacancies.WebApp.Controllers
 
 
                                             accountResearcherRegisterViewModel.Claims = claims.Where(w => w.Type.Equals("lastName")
-                                                                            && w.Type.Equals("firstName")
-                                                                            && w.Type.Equals("patronymic")
-                                                                            && w.Type.Equals("access_token")
-                                                                            && w.Type.Equals("expires_in")
-                                                                            && w.Type.Equals("refresh_token")).ToList();
+                                                                            || w.Type.Equals("firstName")
+                                                                            || w.Type.Equals("patronymic")
+                                                                            || w.Type.Equals("access_token")
+                                                                            || w.Type.Equals("expires_in")
+                                                                            || w.Type.Equals("refresh_token")).ToList();
 
                                             var command = new RegisterUserResearcherCommand
                                             {

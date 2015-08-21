@@ -46,15 +46,19 @@ namespace SciVacancies.WebApp.Controllers
 
             //заполнить названия организаций
             var organizationGuids = model.VacanciesList.Items.Select(c => c.OrganizationGuid).Distinct().ToList();
-            var organizations=  _mediator.Send(new SelectOrganizationsByGuidsQuery {OrganizationGuids = organizationGuids});
-            model.VacanciesList.Items.ForEach(c =>
+            if (organizationGuids.Any())
             {
-                var organization = organizations.SingleOrDefault(d => d.guid == c.OrganizationGuid);
-                if (organization != null)
+                var organizations =
+                    _mediator.Send(new SelectOrganizationsByGuidsQuery { OrganizationGuids = organizationGuids });
+                model.VacanciesList.Items.ForEach(c =>
                 {
-                    c.OrganizationName = organization.name;
-                }
-            });
+                    var organization = organizations.SingleOrDefault(d => d.guid == c.OrganizationGuid);
+                    if (organization != null)
+                    {
+                        c.OrganizationName = organization.name;
+                    }
+                });
+            }
 
             return View(model);
         }
@@ -64,7 +68,7 @@ namespace SciVacancies.WebApp.Controllers
         {
             return View();
         }
-       
-       
+
+
     }
 }
