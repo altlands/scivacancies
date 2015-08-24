@@ -13,23 +13,20 @@ namespace SciVacancies.WebApp.Engine
             switch (value)
             {
                 case VacancyStatus.InProcess:
-                    return "draft"; //grey
                 case VacancyStatus.Published:
-                    return "executed"; //green
                 case VacancyStatus.InCommittee:
                     return "work"; //orange
-                case VacancyStatus.Closed:
-                    return "closed"; //light-grey
-                case VacancyStatus.Cancelled:
-                    return "work"; //orange
                 case VacancyStatus.OfferResponseAwaiting:
-                    return "work"; //orange
                 case VacancyStatus.OfferAccepted:
-                    return "work"; //orange
+                    return "executed"; //green
                 case VacancyStatus.OfferRejected:
                     return "failed"; //red
+
+                case VacancyStatus.Closed:
+                case VacancyStatus.Cancelled:
+                    return "draft"; //orange
                 case VacancyStatus.Removed:
-                    return "failed"; //red
+                    return "closed"; //light-grey
                 default:  return null;
             }
         }
@@ -39,19 +36,15 @@ namespace SciVacancies.WebApp.Engine
             switch (value)
             {
                 case VacancyApplicationStatus.InProcess:
-                    return "draft"; //grey
-                case VacancyApplicationStatus.Cancelled:
-                    return "failed"; //red
-                case VacancyApplicationStatus.Removed:
-                    return "failed"; //red
                 case VacancyApplicationStatus.Applied:
                     return "work"; //orange
                 case VacancyApplicationStatus.Won:
-                    return "executed"; //green
                 case VacancyApplicationStatus.Pretended:
                     return "executed"; //green
                 case VacancyApplicationStatus.Lost:
-                    return "failed"; //red
+                case VacancyApplicationStatus.Removed:
+                case VacancyApplicationStatus.Cancelled:
+                    return "draft"; //grey
                 default:
                     return null;
             }
