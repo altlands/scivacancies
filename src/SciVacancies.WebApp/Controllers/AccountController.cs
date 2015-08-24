@@ -334,6 +334,9 @@ namespace SciVacancies.WebApp.Controllers
                                             var user = _mediator.Send(command);
 
                                             var identity = _userManager.CreateIdentity(user, DefaultAuthenticationTypes.ApplicationCookie);
+
+
+
                                             var cp = new ClaimsPrincipal(identity);
                                             //at first, signing out...
                                             Context.Response.SignOut(DefaultAuthenticationTypes.ApplicationCookie);

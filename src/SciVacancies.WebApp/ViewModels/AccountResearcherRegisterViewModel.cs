@@ -3,10 +3,14 @@ using System.ComponentModel;
 using System.Security.Claims;
 using System.ComponentModel.DataAnnotations;
 using System.Collections.Generic;
+using SciVacancies.Domain.Core;
 
 namespace SciVacancies.WebApp.ViewModels
 {
-    public class AccountResearcherRegisterViewModel
+    /// <summary>
+    /// класс для регистрации Исследователя (содержит описание Исследователя); он же используоется для обновления информации об исследователе
+    /// </summary>
+    public class AccountResearcherUpdateViewModel
     {
         [Required]
         [DefaultValue(false)]
@@ -39,26 +43,24 @@ namespace SciVacancies.WebApp.ViewModels
         [Phone(ErrorMessage = "Поле Добавить телефон содержит не допустимый номер телефона.")]
         public string ExtraPhone { get; set; }
 
-        [Required(ErrorMessage = "Требуется ввести пароль")]
-        //[PasswordPropertyText]
-        public string Password { get; set; }
-        [Required(ErrorMessage = "Требуется повторить пароль")]
-        //[PasswordPropertyText]
-        [Compare("Password", ErrorMessage = "Пароли отличаются")]
-        public string ConfirmPassword { get; set; }
-
-        [Required(ErrorMessage = "Требуется ввести код скартинки")]
-        public string Captcha { get; set; }
+        /// <summary>
+        /// научные интересы
+        /// </summary>
+        public string Interests { get; set; }
 
         /// <summary>
         /// временное поле для Образования, пока не перейдем на List[Education]
         /// </summary>
         public string Education { get; set; }
 
+        public List<Publication> Publications { get; set; }
+
         /// <summary>
-        /// Сюда пишутся access_token  и прочее, если OAuth авторизация
+        /// награды
         /// </summary>
-        public List<Claim> Claims { get; set; }
+        public string Rewards { get; set; }
+
+        public string Memberships { get; set; }
 
         //public string PreviousSecondName { get; set; }
         //public string PreviousSecondNameEng { get; set; }
@@ -68,10 +70,8 @@ namespace SciVacancies.WebApp.ViewModels
         //public string OtherActivity { get; set; }
         //public string ScienceDegree { get; set; }
         //public string ScienceRank { get; set; }
-        //public string Rewards { get; set; }
         //public string Memberships { get; set; }
         //public string Conferences { get; set; }
         //public string Educations { get; set; }
-        //public string Publications { get; set; }
     }
 }

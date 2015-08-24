@@ -6,17 +6,21 @@ using System.Net;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
+using AutoMapper;
+using MediatR;
 using Microsoft.AspNet.Authorization;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.AspNet.Mvc;
 using Microsoft.Framework.OptionsModel;
 using Newtonsoft.Json;
+using SciVacancies.WebApp.Commands;
 using Thinktecture.IdentityModel.Client;
 using SciVacancies.WebApp.Engine;
 using SciVacancies.WebApp.Infrastructure.Identity;
 using SciVacancies.WebApp.Models.OAuth;
 using SciVacancies.WebApp.Queries;
+using SciVacancies.WebApp.ViewModels;
 
 namespace SciVacancies.WebApp.Controllers
 {
@@ -25,11 +29,13 @@ namespace SciVacancies.WebApp.Controllers
 
         private readonly IOptions<OAuthSettings> _oauthSettings;
         private readonly SciVacUserManager _userManager;
+        private readonly IMediator _mediator;
 
-        public AccountIntegrationController(SciVacUserManager userManager, IOptions<OAuthSettings> oAuthSettings)
+        public AccountIntegrationController(SciVacUserManager userManager, IOptions<OAuthSettings> oAuthSettings, IMediator mediator)
         {
             _userManager = userManager;
             _oauthSettings = oAuthSettings;
+            _mediator = mediator;
         }
 
         /// <summary>
@@ -91,8 +97,9 @@ namespace SciVacancies.WebApp.Controllers
             OAuthResProfile researcherProfile = JsonConvert.DeserializeObject<OAuthResProfile>(GetResearcherProfile(accessToken));
             var tests = researcherProfile.birthday;
             //4 - mapping
-
+            var accountResearcherUpdateViewModel = Mapper.Map<AccountResearcherUpdateViewModel>(researcherProfile);
             //5 - отправляем команду через медиатор
+            //_mediator.Send(new UpdateResearcherCommand {ResearcherGuid = researcherGuid, accountResearcherUpdateViewModel });
 
             return View(model: model);
         }

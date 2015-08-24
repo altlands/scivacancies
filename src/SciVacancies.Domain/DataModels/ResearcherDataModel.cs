@@ -7,12 +7,6 @@ namespace SciVacancies.Domain.DataModels
 {
     public class ResearcherDataModel
     {
-        public ResearcherDataModel()
-        {
-            this.Educations = new List<Education>();
-            this.Publications = new List<Publication>();
-        }
-
         public string FirstName { get; set; }
         public string FirstNameEng { get; set; }
 
@@ -36,6 +30,7 @@ namespace SciVacancies.Domain.DataModels
         public string Phone { get; set; }
         public string ExtraPhone { get; set; }
 
+        [Obsolete("this property is unnecessary")]
         public string Nationality { get; set; }
 
         public string ResearchActivity { get; set; }
@@ -44,6 +39,12 @@ namespace SciVacancies.Domain.DataModels
 
         public string ScienceDegree { get; set; }
         public string ScienceRank { get; set; }
+
+        /// <summary>
+        /// научные интересы
+        /// </summary>
+        public string Interests { get; set; }
+
         public string Rewards { get; set; }
         public string Memberships { get; set; }
         public string Conferences { get; set; }
@@ -56,7 +57,7 @@ namespace SciVacancies.Domain.DataModels
         public string ImageExtension { get; set; }
         public string ImageUrl { get; set; }
 
-        public List<Education> Educations { get; set; }
-        public List<Publication> Publications { get; set; }
+        public List<Education> Educations { get; set; } = new List<Education>();
+        public List<Publication> Publications { get; set; } = new List<Publication>();
     }
 }
