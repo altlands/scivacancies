@@ -1,5 +1,8 @@
-﻿@using System.Linq
+﻿@using System
+@using System.Collections.Generic
+@using System.Linq
 @using System.Threading.Tasks
+@using Microsoft.AspNet.Mvc.Rendering
 @using SciVacancies
 @using SciVacancies.WebApp.Controllers
 @using SciVacancies.WebApp.Engine
@@ -12,6 +15,10 @@
     Model.Educations.Insert(0, new EducationEditViewModel());
     Model.Publications = Model.Publications ?? new List<PublicationEditViewModel>();
     Model.Publications.Insert(0, new PublicationEditViewModel());
+    Model.Rewards = Model.Rewards ?? new List<RewardEditViewModel>();
+    Model.Rewards.Insert(0, new RewardEditViewModel());
+    Model.Memberships = Model.Memberships ?? new List<MembershipEditViewModel>();
+    Model.Memberships.Insert(0, new MembershipEditViewModel());
     Model.Interests = Model.Interests ?? new List<string>();
     Model.Interests.Insert(0, string.Empty);
 
@@ -328,9 +335,7 @@
                     <label></label>
                 </div>
                 <div class="right-cell">
-                    <del>
-                        <a href="#" class="link-add lk-icon italic link-add-field">Добавить Опыт работы</a>
-                    </del>
+                        <a href="#" class="link-add lk-icon italic link-add-field">Добавить Опыт работы <span style="color: red;">в разработке</span> </a>
                 </div>
             </div>
         </div>
@@ -361,8 +366,40 @@
                     <label>Награды:</label>
                 </div>
                 <div class="right-cell">
-                    <input asp-for="Rewards" class="big-input" />
-                    <span asp-validation-for="Rewards"></span>
+                    <div class="property-list-container" data-innercount="@(Model.Rewards.Count-1)">
+
+                        <ol class="list-Rewards content-list">
+                            @for (var i = 0; i < Model.Rewards.Count; i++)
+                            {
+                                useStyle = i == 0 ? invisibleItemStyle : string.Empty;
+                                <text>
+                                <li style="@useStyle" class="property-list-item" data-list-template="@(i == 0 ? "true" : "false")">
+                                    <input type="hidden" name="Rewards.Index" value="@i" />
+
+                                    <br/>
+
+                                    <input asp-for="Rewards[i].title"/>
+                                    <span>Название</span>
+
+                                    <br/>
+
+                                    <input asp-for="Rewards[i].year" />
+                                    <span>Год вручения</span>
+
+                                    <br />
+
+                                    <input asp-for="Rewards[i].org" />
+                                    <span>Вручившая организация</span>
+
+                                    <div class="buttons">
+                                        <span class="big-link-remove" onclick="return removeItemFromList(this);"></span>
+                                    </div>
+                                </li>
+                                </text>
+                            }
+                        </ol>
+                        <a onclick="return addNewItemToList(this, 'Rewards')" class="link-add lk-icon italic link-add-field" href="#">Добавить награду</a>
+                    </div>
                 </div>
             </div>
             <div class="table-row form-row">
@@ -370,8 +407,42 @@
                     <label>Членство в профессиональных сообществах:</label>
                 </div>
                 <div class="right-cell">
-                    <textarea asp-for="Memberships"></textarea>
-                    <span asp-validation-for="Memberships"></span>
+                    <div class="property-list-container" data-innercount="@(Model.Memberships.Count-1)">
+
+                        <ol class="list-Memberships content-list">
+                            @for (var i = 0; i < Model.Memberships.Count; i++)
+                            {
+                                useStyle = i == 0 ? invisibleItemStyle : string.Empty;
+                                <text>
+                                <li style="@useStyle" class="property-list-item" data-list-template="@(i == 0 ? "true" : "false")">
+                                    <input type="hidden" name="Memberships.Index" value="@i" />
+
+                                    <br />
+
+                                    <input asp-for="Memberships[i].org" />
+                                    <span>Организация</span>
+
+                                    <br />
+
+                                    <input asp-for="Memberships[i].position" />
+                                    <span>Позиция</span>
+
+                                    <br />
+
+                                    <span>С </span>
+                                    <input asp-for="Memberships[i].year_from" class="small-input" />
+                                    <span> по </span>
+                                    <input asp-for="Memberships[i].year_to" class="small-input" />
+
+                                    <div class="buttons">
+                                        <span class="big-link-remove" onclick="return removeItemFromList(this);"></span>
+                                    </div>
+                                </li>
+                                </text>
+                            }
+                        </ol>
+                        <a onclick="return addNewItemToList(this, 'Memberships')" class="link-add lk-icon italic link-add-field" href="#">Добавить запись</a>
+                    </div>
                 </div>
             </div>
             <div class="table-row form-row">

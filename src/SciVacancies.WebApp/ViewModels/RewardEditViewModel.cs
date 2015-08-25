@@ -3,9 +3,9 @@
 namespace SciVacancies.WebApp.ViewModels
 {
     /// <summary>
-    /// награда
+    /// награды
     /// </summary>
-    public class RewardDetailsViewModel
+    public class RewardEditViewModel
     {
         //public string agent { get; set; }
         //public int deleted { get; set; }

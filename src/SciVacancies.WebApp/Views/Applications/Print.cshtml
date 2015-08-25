@@ -58,7 +58,7 @@
             <ol>
                 @if (Model.Rewards != null)
                 {
-                    foreach (var item in Model.Rewards.Where(c => c.deleted != 1).OrderBy(c => c.year))
+                    foreach (var item in Model.Rewards.OrderBy(c => c.year))
                     {
                         <text>
                         <li>(@item.year) @item.title @item.org</li>
