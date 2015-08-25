@@ -1,18 +1,16 @@
 ﻿using System;
 using AutoMapper;
-using NPoco;
 using Newtonsoft.Json;
 using SciVacancies.Domain.DataModels;
 using SciVacancies.Domain.Events;
 using SciVacancies.ReadModel.Core;
 using SciVacancies.WebApp.ViewModels;
-using SciVacancies.WebApp.Models.OAuth;
 using System.Linq;
 using System.Collections.Generic;
 
 namespace SciVacancies.WebApp.Infrastructure
 {
-    public static partial class MappingConfiguration
+    public static class MappingConfigurationResearcher
     {
         public static void InitializeResearcher()
         {
@@ -89,6 +87,9 @@ namespace SciVacancies.WebApp.Infrastructure
             Mapper.CreateMap<ResearcherEditViewModel, ResearcherDataModel>()
                 //.ForSourceMember(src=> src.BirthDate, o=>o.Ignore())
                 .ForMember(dest => dest.BirthDate, src => src.MapFrom(c => new DateTime(c.BirthYear, 1, 1)))
+                .ForMember(dest => dest.Rewards, src => src.MapFrom(c => JsonConvert.SerializeObject(c.Rewards)))
+                .ForMember(dest => dest.Memberships, src => src.MapFrom(c => JsonConvert.SerializeObject(c.Memberships)))
+
                 ;
             Mapper.CreateMap<Researcher, ResearcherDetailsViewModel>()
                 .ForMember(d => d.Guid, o => o.MapFrom(s => s.guid))
@@ -111,7 +112,7 @@ namespace SciVacancies.WebApp.Infrastructure
                 .ForMember(d => d.OtherActivity, o => o.MapFrom(s => s.other_activity))
                 .ForMember(d => d.ScienceDegree, o => o.MapFrom(s => s.science_degree))
                 .ForMember(d => d.ScienceRank, o => o.MapFrom(s => s.science_rank))
-                .ForMember(d => d.Rewards, o => o.MapFrom(s => !string.IsNullOrWhiteSpace(s.rewards) ? JsonConvert.DeserializeObject<List<RewardDetailsViewModel>>(s.rewards) : new List<RewardDetailsViewModel>()))
+                .ForMember(d => d.Rewards, o => o.MapFrom(s => !string.IsNullOrWhiteSpace(s.rewards) ? (JsonConvert.DeserializeObject<List<RewardDetailsViewModel>>(s.rewards)).Where(c=>c.deleted!=1).ToList() : new List<RewardDetailsViewModel>()))
                 .ForMember(d => d.Memberships, o => o.MapFrom(s => !string.IsNullOrWhiteSpace(s.memberships) ? JsonConvert.DeserializeObject<List<MembershipDetailsViewModel>>(s.memberships) : new List<MembershipDetailsViewModel>() ))
                 .ForMember(d => d.Conferences, o => o.MapFrom(s => s.conferences))
                 .ForMember(d => d.ImageName, o => o.MapFrom(s => s.image_name))
@@ -147,8 +148,8 @@ namespace SciVacancies.WebApp.Infrastructure
                 .ForMember(d => d.OtherActivity, o => o.MapFrom(s => s.other_activity))
                 .ForMember(d => d.ScienceDegree, o => o.MapFrom(s => s.science_degree))
                 .ForMember(d => d.ScienceRank, o => o.MapFrom(s => s.science_rank))
-                .ForMember(d => d.Rewards, o => o.MapFrom(s => s.rewards))
-                .ForMember(d => d.Memberships, o => o.MapFrom(s => s.memberships))
+                .ForMember(d => d.Rewards, o => o.MapFrom(s => !string.IsNullOrWhiteSpace(s.rewards) ? JsonConvert.DeserializeObject<List<RewardEditViewModel>>(s.rewards) : new List<RewardEditViewModel>()))
+                .ForMember(d => d.Memberships, o => o.MapFrom(s => !string.IsNullOrWhiteSpace(s.memberships) ? JsonConvert.DeserializeObject<List<MembershipEditViewModel>>(s.memberships) : new List<MembershipEditViewModel>()))
                 .ForMember(d => d.Conferences, o => o.MapFrom(s => s.conferences))
                 .ForMember(d => d.ImageName, o => o.MapFrom(s => s.image_name))
                 .ForMember(d => d.ImageSize, o => o.MapFrom(s => s.image_size))

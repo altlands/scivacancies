@@ -1,6 +1,5 @@
 ﻿using System;
 using AutoMapper;
-using NPoco;
 using Newtonsoft.Json;
 using SciVacancies.Domain.DataModels;
 using SciVacancies.Domain.Events;
@@ -8,22 +7,21 @@ using SciVacancies.ReadModel.Core;
 using SciVacancies.WebApp.ViewModels;
 using SciVacancies.WebApp.Models.OAuth;
 using System.Linq;
-using System.Collections.Generic;
 
 namespace SciVacancies.WebApp.Infrastructure
 {
-    public static partial class MappingConfiguration
+    public static class MappingConfiguration
     {
         public static void Initialize()
         {
             InitializePagers();
             InitializeAccount();
-            InitializeOrganization();
+            MappingConfigurationOrganization.InitializeOrganization();
             InitializeElastic();
-            InitializeResearcher();
-            InitializeSearchSubscription();
-            InitializeVacancy();
-            InitializeVacancyApplication();
+            MappingConfigurationResearcher.InitializeResearcher();
+            MappingConfigurationResearcher.InitializeSearchSubscription();
+            MappingConfigurationOrganization.InitializeVacancy();
+            MappingConfigurationResearcher.InitializeVacancyApplication();
             InitializeDictionaries();
         }
 

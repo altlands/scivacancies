@@ -1,18 +1,13 @@
-﻿using System;
-using AutoMapper;
-using NPoco;
-using Newtonsoft.Json;
+﻿using AutoMapper;
 using SciVacancies.Domain.DataModels;
 using SciVacancies.Domain.Events;
 using SciVacancies.ReadModel.Core;
 using SciVacancies.WebApp.ViewModels;
-using SciVacancies.WebApp.Models.OAuth;
 using System.Linq;
-using System.Collections.Generic;
 
 namespace SciVacancies.WebApp.Infrastructure
 {
-    public static partial class MappingConfiguration
+    public static class MappingConfigurationOrganization
     {
         public static void InitializeOrganization()
         {

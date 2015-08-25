@@ -5,7 +5,7 @@ namespace SciVacancies.WebApp.ViewModels
     /// <summary>
     /// членство в профессиональных сообществах
     /// </summary>
-    public class MembershipDetailsViewModel
+    public class MembershipEditViewModel
     {
         public string org { get; set; }
         public string position { get; set; }
