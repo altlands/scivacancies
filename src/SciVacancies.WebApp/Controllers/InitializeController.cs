@@ -80,6 +80,25 @@ namespace SciVacancies.WebApp.Controllers
             var user2 = _mediator.Send(createUserResearcherCommand2);
             var researcherGuid2 = Guid.Parse(user2.Claims.Single(s => s.ClaimType.Equals(ConstTerms.ClaimTypeResearcherId)).ClaimValue);
 
+            var createUserResearcherCommand3 = new RegisterUserResearcherCommand
+            {
+                Data = new AccountResearcherRegisterViewModel
+                {
+                    Email = $"researcher{rnd.Next(999)}@mailer.org",
+                    Phone = "8-954-12-54",
+                    UserName = "researcher3",
+                    FirstName = "Ангелина",
+                    SecondName = "Юрьевна",
+                    Patronymic = "Орехова",
+                    FirstNameEng = "Angelina",
+                    SecondNameEng = "Yrjevna",
+                    PatronymicEng = "Orehova",
+                    BirthYear = DateTime.Now.AddYears(-50).Year
+                }
+            };
+            var user3 = _mediator.Send(createUserResearcherCommand3);
+            var researcherGuid3 = Guid.Parse(user3.Claims.Single(s => s.ClaimType.Equals(ConstTerms.ClaimTypeResearcherId)).ClaimValue);
+
 
 
             var createUserOrganizationCommand0 = new RegisterUserOrganizationCommand

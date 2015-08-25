@@ -37,7 +37,20 @@ namespace SciVacancies.WebApp.Controllers
 
         public IActionResult LoginUser(string id)
         {
-            var user = id == "user1" ? _userManager.FindByName("researcher1") : _userManager.FindByName("researcher2");
+            SciVacUser user = null;
+            switch (id)
+            {
+
+                case "user1":
+                    user = _userManager.FindByName("researcher1");
+                    break;
+                case "user2":
+                    user = _userManager.FindByName("researcher2");
+                    break;
+                default: //user3
+                    user = _userManager.FindByName("researcher3");
+                    break;
+            }
             var identity = _userManager.CreateIdentity(user, DefaultAuthenticationTypes.ApplicationCookie);
             var cp = new ClaimsPrincipal(identity);
             Context.Response.SignIn(DefaultAuthenticationTypes.ApplicationCookie, cp);
