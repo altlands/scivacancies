@@ -20,17 +20,25 @@ namespace SciVacancies.WebApp.ViewModels
 
         [Required(ErrorMessage = "Требуется заполнить поле Имя")]
         public string FirstName { get; set; }
+        //TODO: переименовать в MiddleName/SecondName
+        public string Patronymic { get; set; }
+        //TODO: переименовать SecondName в LastName
         [Required(ErrorMessage = "Требуется заполнить поле Фамилия")]
         public string SecondName { get; set; }
-        public string Patronymic { get; set; }
+        //TODO: переименовать PreviousSecondName в PreviousLastName
+        public string PreviousSecondName { get; set; }
 
         public string FirstNameEng { get; set; }
-        public string SecondNameEng { get; set; }
+        //TODO: переименовать в MiddleNameEng/SecondNameEng
         public string PatronymicEng { get; set; }
+        //TODO: переименовать SecondNameEng в LastNameEng
+        public string SecondNameEng { get; set; }
+        //TODO: переименовать PreviousSecondNameEng в PreviousLastNameEng
+        public string PreviousSecondNameEng { get; set; }
 
         [Required(ErrorMessage = "Требуется выбрать год рождения")]
         public int BirthYear { get; set; }
-        //public DateTime BirthDate { get; set; }
+        public DateTime? BirthDate { get; set; }
 
         [Required(ErrorMessage = "Требуется указать адрес электронной почты")]
         [EmailAddress(ErrorMessage = "Поле E-mail содержит не допустимый адрес электронной почты.")]
@@ -62,8 +70,7 @@ namespace SciVacancies.WebApp.ViewModels
 
         public string Memberships { get; set; }
 
-        //public string PreviousSecondName { get; set; }
-        //public string PreviousSecondNameEng { get; set; }
+
         //public string Nationality { get; set; }
         //public string ResearchActivity { get; set; }
         //public string TeachingActivity { get; set; }
