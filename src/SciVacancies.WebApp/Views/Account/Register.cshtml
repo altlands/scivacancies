@@ -2,6 +2,7 @@
 @using System.Linq
 @using System.Threading.Tasks
 @using Microsoft.AspNet.Mvc.Rendering
+@using SciVacancies.WebApp.Engine
 @model SciVacancies.WebApp.ViewModels.AccountResearcherRegisterViewModel
 @{
     var years = Enumerable.Range(DateTime.Now.Year - 150, 150).OrderByDescending(c => c).Select(c => new SelectListItem { Text = c.ToString(), Value = c.ToString() });
@@ -18,7 +19,11 @@
     <p><a href="#">Организациям</a> и их представителям заполнять регистрационную форму не нужно - для входа в Личный кабинет необходимо использовать<br /> логин и пароль, полученные на сайте <a href="#">Федеральной системы мониторинга результативности деятельности научных организаций</a>(ФСМНО).</p>
 </div>
 
-<a href="#" class="middle-icon icon-download lk-icon"><span>Загрузить данные из системы «Карта науки»</span></a>
+<a href="/account/login?user=@((int) AuthorizeUserTypes.Researcher)&resource=@((int) AuthorizeResourceTypes.ScienceMap)" class="middle-icon icon-download lk-icon">
+    <span>
+        Загрузить данные из системы «Карта науки»
+    </span>
+</a>
 
 <div class="b-form">
     <form asp-controller="Account" asp-action="Register" method="post" role="form">

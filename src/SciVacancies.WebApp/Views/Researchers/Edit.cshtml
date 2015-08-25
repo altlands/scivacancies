@@ -45,7 +45,7 @@
         <div class="bold mb20">Общая информация</div>
 
         <a asp-controller="accountintegration" asp-action="UpdateResearcherAccountFromOutside" class="link-upload fs13">Загрузить данные из системы «@AuthorizeResourceTypes.ScienceMap.GetDescription()»</a>
-        <span style="color: red;">в разработке</span>
+        <span style="color: red;">в разработке. В текущей реализации не авторизует через Карту Наук, если в email, загружаемого Пользователя, содержится дефис "-".</span>
 
         <div class="table-form">
             <div class="table-row mb15">
@@ -60,7 +60,8 @@
                     </div>
                 </div>
                 <div class="right-cell">
-                    <div class="user-photo" style="max-width: 140px; max-height: 180px;">
+                    @*<div class="user-photo" style="max-width: 140px; max-height: 180px;">*@
+                    <div style="max-width: 140px; max-height: 180px;">
                         <img src="@Model.ImageUrlOrDefault" style="max-width: 138px; max-height: 178px;" />
                     </div>
                 </div>
