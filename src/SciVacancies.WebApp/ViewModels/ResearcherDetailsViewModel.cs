@@ -44,8 +44,8 @@ namespace SciVacancies.WebApp.ViewModels
 
         public string ScienceDegree { get; set; }
         public string ScienceRank { get; set; }
-        public string Rewards { get; set; }
-        public string Memberships { get; set; }
+        public List<RewardDetailsViewModel> Rewards { get; set; } 
+        public List<MembershipDetailsViewModel> Memberships { get; set; } 
         public string Conferences { get; set; }
 
         public string ImageName { get; set; }

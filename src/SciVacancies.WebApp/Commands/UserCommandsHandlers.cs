@@ -52,17 +52,17 @@ namespace SciVacancies.WebApp.Commands
                 UserId = user.Id
             });
 
-            if (message.Data.Claims!=null)
+            if (message.Data.Claims != null)
             {
-            foreach (Claim claim in message.Data.Claims)
-            {
-                user.Claims.Add(new IdentityUserClaim
+                foreach (Claim claim in message.Data.Claims)
                 {
-                    ClaimType = claim.Type,
-                    ClaimValue = claim.Value,
-                    UserId = user.Id
-                });
-            }
+                    user.Claims.Add(new IdentityUserClaim
+                    {
+                        ClaimType = claim.Type,
+                        ClaimValue = claim.Value,
+                        UserId = user.Id
+                    });
+                }
             }
 
             var identity = _userManager.Create(user);
@@ -111,17 +111,17 @@ namespace SciVacancies.WebApp.Commands
                 UserId = user.Id
             });
 
-            if (message.Data.Claims!=null)
+            if (message.Data.Claims != null)
             {
-            foreach (Claim claim in message.Data.Claims)
-            {
-                user.Claims.Add(new IdentityUserClaim
+                foreach (Claim claim in message.Data.Claims)
                 {
-                    ClaimType = claim.Type,
-                    ClaimValue = claim.Value,
-                    UserId = user.Id
-                });
-            }
+                    user.Claims.Add(new IdentityUserClaim
+                    {
+                        ClaimType = claim.Type,
+                        ClaimValue = claim.Value,
+                        UserId = user.Id
+                    });
+                }
             }
 
             //_userManager.CreateAsync(user).Wait();

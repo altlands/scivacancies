@@ -59,6 +59,37 @@
 
 
         </div>
+
+        <div class="list-item">
+            <div class="bold">Награды</div>
+            <ol>
+                @if (Model.Rewards != null)
+                {
+                    foreach (var item in Model.Rewards.Where(c => c.deleted != 1).OrderBy(c => c.year))
+                    {
+                        <text>
+                        <li>(@item.year) @item.title @item.org</li>
+                        </text>
+                    }
+                }
+            </ol>
+        </div>
+
+        <div class="list-item">
+            <div class="bold">Членство в профессиональных сообществах</div>
+            <ol>
+                @if (Model.Memberships != null)
+                {
+                    foreach (var item in Model.Memberships)
+                    {
+                        <text>
+                            <li>@item.org - @item.position с @item.year_from по @item.year_to</li>
+                        </text>
+                    }
+                }
+            </ol>
+        </div>
+
         <div class="list-item">
             <div class="bold">Публикации</div>
             <ol>

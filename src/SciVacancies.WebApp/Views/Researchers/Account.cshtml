@@ -73,13 +73,31 @@
     <div class="row">
         <span class="bold">Награды</span>
         <span class="italic">
-            @Model.Rewards
+            @if (Model.Rewards!= null)
+            {
+                foreach (var item in Model.Rewards.Where(c=>c.deleted!=1).OrderBy(c=>c.year))
+                {
+                    <br />
+                    <span>
+                        (@item.year) @item.title @item.org
+                    </span>
+                }
+            }
         </span>
     </div>
     <div class="row">
         <span class="bold">Членство в профессиональных сообществах</span><br />
         <span class="italic">
-            @Model.Memberships
+            @if (Model.Memberships != null)
+            {
+                foreach (var item in Model.Memberships)
+                {
+                    <br />
+                    <span>
+                        @item.org - @item.position с @item.year_from по @item.year_to
+                    </span>
+                }
+            }
         </span>
     </div>
     <div class="row">
@@ -96,7 +114,7 @@
             {
                 <br />
                 <span>
-                    @item.Title;
+                    @item.Title
                 </span>
             }
         }

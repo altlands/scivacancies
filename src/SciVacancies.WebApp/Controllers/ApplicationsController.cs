@@ -52,6 +52,7 @@ namespace SciVacancies.WebApp.Controllers
             model.ScienceDegree = researcher.science_degree;
             model.ScienceRank = researcher.science_rank;
             model.Rewards = researcher.rewards;
+            model.Memberships= researcher.memberships;
             return model;
         }
         #endregion
