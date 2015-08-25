@@ -1,47 +1,47 @@
 ﻿{
-  "AppSettings": {
-    "SiteTitle": "Портал вакансий"
-  },
-  "Data": {
-    "ReadModelDb": "Server=alt-dev002;Database=scivacancies;User Id=postgres;Password=postgres",
-    "EventStoreDb": "Server=alt-dev002;Database=scivacancies;User Id=postgres;Password=postgres"
-  },
-  "OAuthSettings": {
-    "Sciencemon": {
-      "AuthorizationEndpoint": "http://www.sciencemon.ru/oauth/v2/auth",
-      "TokenEndpoint": "http://www.sciencemon.ru/oauth/v2/token",
-      "UserEndpoint": "http://www.sciencemon.ru/api/user",
-      "ClientId": "1_ikniwc909y8kog4k4sc00oogg0g8scc8o4k0wocgw4cg84k00",
-      "ClientSecret": "67sq61c6xekgw0wgkosg04gwo488osk48ogks4og40cgws8ook",
-      "Scope": "",
-      "RedirectUrl": "http://scivac.test.alt-lan.com/account/callback"
+    "AppSettings": {
+        "SiteTitle": "Портал вакансий"
     },
-    "Mapofscience": {
-      "AuthorizationEndpoint": "",
-      "TokenEndpoint": "",
-      "UserEndpoint": "",
-      "ClientId": "",
-      "ClientSecret": "",
-      "Scope": "",
-      "RedirectUrl": ""
-    }
-  },
-  //TODO
-  "ApiSettings": {
-    "Sciencemon": {
-      //"Organization": "http://www.sciencemon.ru/ext-api/v1.0/org/",
-      //"BasicAuthorization": "dev:informika"
+    "Data": {
+        "ReadModelDb": "Server=alt-dev002;Database=scivacancies;User Id=postgres;Password=postgres",
+        "EventStoreDb": "Server=alt-dev002;Database=scivacancies;User Id=postgres;Password=postgres"
     },
-    "Mapofscience": {
-
+    "OAuthSettings": {
+        "Sciencemon": {
+            "AuthorizationEndpoint": "http://www.sciencemon.ru/oauth/v2/auth",
+            "TokenEndpoint": "http://www.sciencemon.ru/oauth/v2/token",
+            "UserEndpoint": "http://www.sciencemon.ru/api/user",
+            "ClientId": "1_ikniwc909y8kog4k4sc00oogg0g8scc8o4k0wocgw4cg84k00",
+            "ClientSecret": "67sq61c6xekgw0wgkosg04gwo488osk48ogks4og40cgws8ook",
+            "Scope": "",
+            "RedirectUrl": "http://scivac.test.alt-lan.com/account/callback"
+        },
+        "Mapofscience": {
+            "AuthorizationEndpoint": "http://scimap-sso.alt-lan.com/scimap-sso/oauth/authorize",
+            "TokenEndpoint": "http://scimap-sso.alt-lan.com/scimap-sso/oauth/token",
+            "UserEndpoint": "http://scimap-sso.alt-lan.com/scimap-sso/user/account",
+            "ClientId": "my-trusted-client",
+            "ClientSecret": "secret",
+            "Scope": "",
+            "RedirectUrl": "http://scivac.test.alt-lan.com/account/callback"
+        }
+    },
+    //TODO
+    "ApiSettings": {
+        "Sciencemon": {
+            //"Organization": "http://www.sciencemon.ru/ext-api/v1.0/org/",
+            //"BasicAuthorization": "dev:informika"
+        },
+        "Mapofscience": {
+            "ResearcherProfile": "http://scimap-sso.alt-lan.com/user/profile"
+        }
+    },
+    "ElasticSettings": {
+        "ConnectionUrl": "http://alt-dev002:9200/",
+        "DefaultIndex": "scivacancies"
+    },
+    "FileStorageSettings": {
+        "AttachmentsPath": "",
+        "ImagesPath": ""
     }
-  },
-  "ElasticSettings": {
-    "ConnectionUrl": "http://alt-dev002:9200/",
-    "DefaultIndex": "scivacancies"
-  },
-  "FileStorageSettings": {
-    "AttachmentsPath": "",
-    "ImagesPath": ""
-  }
 }
