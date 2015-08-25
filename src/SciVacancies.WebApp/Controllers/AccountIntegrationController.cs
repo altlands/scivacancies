@@ -47,8 +47,6 @@ namespace SciVacancies.WebApp.Controllers
         [BindResearcherIdFromClaims]
         public async Task<ViewResult> UpdateResearcherAccountFromOutside(Guid researcherGuid)
         {
-            var model = "Подтвердите обновление данных профиля с внешнего ресурса";
-            //TODO
             var accessTokenTemp = User.Claims.SingleOrDefault(c => c.Type.Equals("access_token"));
             if (accessTokenTemp == null)
                 return View(model: "Отсутствует AccessToken");
@@ -92,14 +90,17 @@ namespace SciVacancies.WebApp.Controllers
                 }
             }
 
+            
             //3-отправляем запрос к api
             //TODO url move to config
             OAuthResProfile researcherProfile = JsonConvert.DeserializeObject<OAuthResProfile>(GetResearcherProfile(accessToken));
-            var tests = researcherProfile.birthday;
             //4 - mapping
             var accountResearcherUpdateViewModel = Mapper.Map<AccountResearcherUpdateViewModel>(researcherProfile);
             //5 - отправляем команду через медиатор
+            //TODO: finish mapping and updating
             //_mediator.Send(new UpdateResearcherCommand {ResearcherGuid = researcherGuid, accountResearcherUpdateViewModel });
+
+            var model = "Данные получены, но их применение сейчас находится в разработке";
 
             return View(model: model);
         }
