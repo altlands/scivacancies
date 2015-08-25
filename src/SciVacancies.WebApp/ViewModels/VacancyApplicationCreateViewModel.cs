@@ -1,9 +1,8 @@
 using System;
 using System.Collections.Generic;
 using Microsoft.AspNet.Http;
-using Microsoft.AspNet.Http.Core.Collections;
 using Microsoft.AspNet.Mvc;
-using SciVacancies.Domain.Core;
+using Newtonsoft.Json;
 using SciVacancies.WebApp.ViewModels.Base;
 
 namespace SciVacancies.WebApp.ViewModels
@@ -36,7 +35,14 @@ namespace SciVacancies.WebApp.ViewModels
         public string ScienceDegree { get; set; }
         public string ScienceRank { get; set; }
         public string Rewards { get; set; }
+        public List<RewardDetailsViewModel> RewardsDeserialized => !string.IsNullOrWhiteSpace(Rewards)
+            ? JsonConvert.DeserializeObject<List<RewardDetailsViewModel>>(Rewards)
+            : new List<RewardDetailsViewModel>();
+
         public string Memberships { get; set; }
+        public List<MembershipDetailsViewModel> MembershipsDeserialized => !string.IsNullOrWhiteSpace(Memberships)
+            ? JsonConvert.DeserializeObject<List<MembershipDetailsViewModel>>(Memberships)
+            : new List<MembershipDetailsViewModel>();
         public string Conferences { get; set; }
 
         public string CoveringLetter { get; set; }

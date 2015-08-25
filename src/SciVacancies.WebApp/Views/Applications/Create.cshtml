@@ -220,7 +220,37 @@
                         <label>Награды:</label>
                     </div>
                     <div class="right-cell">
-                        <input asp-for="Rewards" disabled class="disabled big-input" />
+                        <div class="property-list-container">
+                            <ol class="content-list">
+                                @foreach (var item in Model.RewardsDeserialized.Where(c => c.deleted != 1).OrderBy(c => c.year))
+                                {
+                                    <text>
+                                    <li class="property-list-item">
+                                        (@item.year) @item.title @item.org
+                                    </li>
+                                    </text>
+                                }
+                            </ol>
+                        </div>
+                    </div>
+                </div>
+                <div class="table-row form-row">
+                    <div class="left-cell">
+                        <label>Членство в профессиональных сообществах:</label>
+                    </div>
+                    <div class="right-cell">
+                        <div class="property-list-container">
+                            <ol class="content-list">
+                                @foreach (var item in Model.MembershipsDeserialized)
+                                {
+                                    <text>
+                                    <li class="property-list-item">
+                                        @item.org - @item.position с @item.year_from по @item.year_to
+                                    </li>
+                                    </text>
+                                }
+                            </ol>
+                        </div>
                     </div>
                 </div>
 
@@ -233,14 +263,10 @@
                             <ol class="content-list">
                                 @for (var i = 0; i < Model.Publications.Count; i++)
                                 {
-
                                     useStyle = i == 0 ? invisibleItemStyle : string.Empty;
                                     var item = Model.Publications[i];
                                     <text>
                                     <li style="@useStyle" class="property-list-item" data-list-template="@(i == 0 ? "true" : "false")">
-                                        @*<input type="hidden" asp-for="Publications[i].ResearcherGuid" />
-                                        <input type="hidden" asp-for="Publications[i].Guid" />
-                                        <input type="hidden" name="Publications.Index" value="@i" />*@
                                         @item.Title
                                     </li>
                                     </text>
@@ -264,8 +290,8 @@
                             <ul class="content-list">
 
                                 <li style="@invisibleItemStyle" class="property-list-item" data-list-template="true">
-                                    <input type="hidden" name="Attachments.Index" value="0"/>
-                                    <input type="file" id="Attachments##0##" name="Attachments"/>
+                                    <input type="hidden" name="Attachments.Index" value="0" />
+                                    <input type="file" id="Attachments##0##" name="Attachments" />
                                     <div class="buttons">
                                         <span class="big-link-remove" onclick="return removeItemFromList(this);"></span>
                                     </div>

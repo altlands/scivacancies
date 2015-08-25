@@ -65,6 +65,11 @@ namespace SciVacancies.Domain.DataModels
         /// </summary>
         public string ContactDetails { get; set; }
 
+        /// <summary>
+        /// Дато окончания приёма заявок
+        /// </summary>
+        public DateTime InCommitteeDate { get; set; }
+
         #endregion
 
         #region Conditions

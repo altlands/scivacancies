@@ -37,7 +37,20 @@ namespace SciVacancies.WebApp.Controllers
 
         public IActionResult LoginUser(string id)
         {
-            var user = id == "user1" ? _userManager.FindByName("researcher1") : _userManager.FindByName("researcher2");
+            SciVacUser user = null;
+            switch (id)
+            {
+
+                case "user1":
+                    user = _userManager.FindByName("researcher1");
+                    break;
+                case "user2":
+                    user = _userManager.FindByName("researcher2");
+                    break;
+                default: //user3
+                    user = _userManager.FindByName("researcher3");
+                    break;
+            }
             var identity = _userManager.CreateIdentity(user, DefaultAuthenticationTypes.ApplicationCookie);
             var cp = new ClaimsPrincipal(identity);
             Context.Response.SignIn(DefaultAuthenticationTypes.ApplicationCookie, cp);
@@ -189,7 +202,7 @@ namespace SciVacancies.WebApp.Controllers
             return responseString;
         }
         //общаемся с картой науки
-        private string GetResearcherProfile(string accessToken)
+        protected string GetResearcherProfile(string accessToken)
         {
             //TODO url move to config
             var webRequest= WebRequest.Create(@"http://scimap-sso.alt-lan.com/scimap-sso/user/profile" + "?access_token=" + accessToken);
@@ -254,10 +267,10 @@ namespace SciVacancies.WebApp.Controllers
                                             orgModel.UserName = orgClaim.Inn;
 
                                             orgModel.Claims = claims.Where(w => w.Type.Equals("lastname")
-                                                                            && w.Type.Equals("firstname")
-                                                                            && w.Type.Equals("access_token")
-                                                                            && w.Type.Equals("expires_in")
-                                                                            && w.Type.Equals("refresh_token")).ToList();
+                                                                            || w.Type.Equals("firstname")
+                                                                            || w.Type.Equals("access_token")
+                                                                            || w.Type.Equals("expires_in")
+                                                                            || w.Type.Equals("refresh_token")).ToList();
 
                                             var command = new RegisterUserOrganizationCommand
                                             {
@@ -305,7 +318,9 @@ namespace SciVacancies.WebApp.Controllers
 
                                         claims.Add(new Claim("access_token", tokenResponse.AccessToken));
                                         claims.Add(new Claim("expires_in", DateTime.Now.AddSeconds(tokenResponse.ExpiresIn).ToString()));
-                                        if (!string.IsNullOrEmpty(tokenResponse.RefreshToken)) claims.Add(new Claim("refresh_token", tokenResponse.RefreshToken));
+
+                                        if (!string.IsNullOrEmpty(tokenResponse.RefreshToken))
+                                            claims.Add(new Claim("refresh_token", tokenResponse.RefreshToken));
 
                                         var resUser = _userManager.FindByEmail(claims.Find(f => f.Type.Equals("email")).Value);
 
@@ -318,11 +333,11 @@ namespace SciVacancies.WebApp.Controllers
 
 
                                             accountResearcherRegisterViewModel.Claims = claims.Where(w => w.Type.Equals("lastName")
-                                                                            && w.Type.Equals("firstName")
-                                                                            && w.Type.Equals("patronymic")
-                                                                            && w.Type.Equals("access_token")
-                                                                            && w.Type.Equals("expires_in")
-                                                                            && w.Type.Equals("refresh_token")).ToList();
+                                                                            || w.Type.Equals("firstName")
+                                                                            || w.Type.Equals("patronymic")
+                                                                            || w.Type.Equals("access_token")
+                                                                            || w.Type.Equals("expires_in")
+                                                                            || w.Type.Equals("refresh_token")).ToList();
 
                                             var command = new RegisterUserResearcherCommand
                                             {
@@ -332,6 +347,9 @@ namespace SciVacancies.WebApp.Controllers
                                             var user = _mediator.Send(command);
 
                                             var identity = _userManager.CreateIdentity(user, DefaultAuthenticationTypes.ApplicationCookie);
+
+
+
                                             var cp = new ClaimsPrincipal(identity);
                                             //at first, signing out...
                                             Context.Response.SignOut(DefaultAuthenticationTypes.ApplicationCookie);

@@ -55,7 +55,6 @@ namespace SciVacancies.WebApp.Controllers
                     FirstNameEng = "Genrih",
                     SecondNameEng = "Pupkin",
                     PatronymicEng = "Ivanovich",
-                    Education = "Получено высшее образование с 2000 по 2005гг.",
                     BirthYear = DateTime.Now.AddYears(-50).Year
                 }
             };
@@ -75,12 +74,30 @@ namespace SciVacancies.WebApp.Controllers
                     FirstNameEng = "Anfisa",
                     SecondNameEng = "Ivanova",
                     PatronymicEng = "Pavlovna",
-                    Education = "Получено высшее образование с 2004 по 2009гг.",
                     BirthYear = DateTime.Now.AddYears(-29).Year
                 }
             };
             var user2 = _mediator.Send(createUserResearcherCommand2);
             var researcherGuid2 = Guid.Parse(user2.Claims.Single(s => s.ClaimType.Equals(ConstTerms.ClaimTypeResearcherId)).ClaimValue);
+
+            var createUserResearcherCommand3 = new RegisterUserResearcherCommand
+            {
+                Data = new AccountResearcherRegisterViewModel
+                {
+                    Email = $"researcher{rnd.Next(999)}@mailer.org",
+                    Phone = "8-954-12-54",
+                    UserName = "researcher3",
+                    FirstName = "Ангелина",
+                    SecondName = "Юрьевна",
+                    Patronymic = "Орехова",
+                    FirstNameEng = "Angelina",
+                    SecondNameEng = "Yrjevna",
+                    PatronymicEng = "Orehova",
+                    BirthYear = DateTime.Now.AddYears(-50).Year
+                }
+            };
+            var user3 = _mediator.Send(createUserResearcherCommand3);
+            var researcherGuid3 = Guid.Parse(user3.Claims.Single(s => s.ClaimType.Equals(ConstTerms.ClaimTypeResearcherId)).ClaimValue);
 
 
 

@@ -13,5 +13,16 @@ namespace SciVacancies.Domain.Core
         /// Название публикации
         /// </summary>
         public string Title { get; set; }
+
+        /// <summary>
+        /// авторы
+        /// </summary>
+        public string Authors { get; set; }
+
+        public string ExtId { get; set; }
+
+        public string Type { get; set; }
+
+        public DateTime Updated { get; set; }
     }
 }
