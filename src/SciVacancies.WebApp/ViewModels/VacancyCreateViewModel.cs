@@ -26,7 +26,8 @@ namespace SciVacancies.WebApp.ViewModels
             OrganizationGuid = organizationGuid;
         }
 
-        public DateTime? InCommitteeDate { get; set; }
+        [Required(ErrorMessage = "Укажите Дату окончания приёма заявок")]
+        public DateTime InCommitteeDate { get; set; }
 
         [HiddenInput]
         public Guid OrganizationGuid { get; set; }

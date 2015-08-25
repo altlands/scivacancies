@@ -137,18 +137,35 @@ namespace SciVacancies.WebApp.Controllers
                 if (vacancy.status != VacancyStatus.InProcess)
                     return View("Error", $"Вы не можете изменить вакансию с текущим статусом: {vacancy.status.GetDescription()}");
 
+                if (model.ToPublish)
+                {
+                    if (vacancy.status != VacancyStatus.InProcess)
+                        ModelState.AddModelError("Status", $"Вы не можете публиковать вакансии в статусе {vacancy.status.GetDescription()}");
+
+                    //TODO: вынести в конфиг количество дней
+                    const int daysCountLimit = 60;
+                    if ((DateTime.Now - model.InCommitteeDate).Days < daysCountLimit)
+                        ModelState.AddModelError("InCommitteeDate", $"Вы не можете начать перевести вакансию на рассмотрение комиссии раньше чем через {daysCountLimit} дн.");
+                }
+
+                if (ModelState.ErrorCount > 0)
+                {
+                    model.InitDictionaries(_mediator);
+                    return View(model);
+                }
+
                 var vacancyDataModel = Mapper.Map<VacancyDataModel>(model);
                 var vacancyGuid = _mediator.Send(new UpdateVacancyCommand { VacancyGuid = model.Guid, Data = vacancyDataModel });
 
-                if (!model.ToPublish)
-                    return RedirectToAction("details", new { id = model.Guid });
+                if (model.ToPublish)
+                    _mediator.Send(new PublishVacancyCommand
+                    {
+                        VacancyGuid = model.Guid
+                    });
 
-                _mediator.Send(new PublishVacancyCommand
-                {
-                    VacancyGuid = model.Guid
-                });
                 return RedirectToAction("details", new { id = vacancyGuid });
             }
+
             model.InitDictionaries(_mediator);
             return View(model);
         }
