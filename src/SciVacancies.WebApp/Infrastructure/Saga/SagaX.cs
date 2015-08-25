@@ -4,11 +4,6 @@ using SciVacancies.Domain.Events;
 
 namespace SciVacancies.WebApp.Infrastructure.Saga
 {
-    //Автофак неправильно резолвит евенты. Вместо ReadModel хэндлера он кидает диспатчить евент сюда. Здесь диспатча не происходит. Приложение валится по StackOverflow
-
-
-
-
     //public class SagaX : SagaBase, ISagaMessageHandler<VacancyApplicationCreated>
     //{
     //    public void Handle(VacancyApplicationCreated notification)
@@ -28,12 +23,12 @@ namespace SciVacancies.WebApp.Infrastructure.Saga
 
     //    public void Handle(VacancyApplicationCreated notification)
     //    {
-    //        var saga = _repository.GetById<SagaX>("","");
+    //        var saga = _repository.GetById<SagaX>("", "");
     //        saga.Transition<VacancyApplicationCreated>(notification);
-    //        _repository.Save("", saga,Guid.NewGuid(), null);
+    //        _repository.Save("", saga, Guid.NewGuid(), null);
     //    }
     //}
 
 
-   
+
 }

@@ -8,6 +8,7 @@ using MediatR;
 using SciVacancies.Domain.Events;
 using SciVacancies.ReadModel.EventHandlers;
 using SciVacancies.WebApp.Commands;
+using SciVacancies.WebApp.Infrastructure.Saga;
 using Module = Autofac.Module;
 using OrganizationEventsHandler = SciVacancies.ReadModel.ElasticSearchModel.EventHandlers.OrganizationEventsHandler;
 
@@ -34,6 +35,12 @@ namespace SciVacancies.WebApp.Infrastructure
                 .AsClosedTypesOf(typeof(INotificationHandler<>))
                 .AsImplementedInterfaces();
 
+            //builder.RegisterAssemblyTypes(new Assembly[]
+            //{
+            //    Assembly.Load("SciVacancies.WebApp")
+            //})
+            //    .AsClosedTypesOf(typeof(ISagaMessageHandler<>))
+            //    .AsImplementedInterfaces();
 
             builder.RegisterAssemblyTypes(new Assembly[]
             {
@@ -59,7 +66,7 @@ namespace SciVacancies.WebApp.Infrastructure
                     .Cast<Service>())
               .SingleInstance();
 
-           // builder.RegisterType<CreatePositionCommandHandler>().Named<IRequestHandler<CreatePositionCommand, Guid>>("implementation");
+            // builder.RegisterType<CreatePositionCommandHandler>().Named<IRequestHandler<CreatePositionCommand, Guid>>("implementation");
 
             builder.RegisterGenericDecorator(
                 typeof(ValidatorHandler<,>),
