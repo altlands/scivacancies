@@ -174,5 +174,7 @@ namespace SciVacancies.WebApp.ViewModels
         /// Публикации
         /// </summary>
         public List<Publication> Publications { get; set; }
+
+        public string FolderApplicationsAttachmentsUrl { get; set; }
     }
 }

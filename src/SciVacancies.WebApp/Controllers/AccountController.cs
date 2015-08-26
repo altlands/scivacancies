@@ -193,7 +193,7 @@ namespace SciVacancies.WebApp.Controllers
             webRequest.Method = "GET";
             webRequest.Headers["Authorization"] = "Basic " + Convert.ToBase64String(Encoding.Default.GetBytes("dev:informika"));
             var httpWebResponse = webRequest.GetResponse() as HttpWebResponse;
-            string responseString = "";
+            string responseString;
             using (var stream = httpWebResponse.GetResponseStream())
             {
                 var streamReader = new StreamReader(stream, Encoding.UTF8);
@@ -263,7 +263,6 @@ namespace SciVacancies.WebApp.Controllers
 
                                             //TODO - сделать всё в маппинге
                                             //orgModel.UserName = claims.Find(f => f.Type.Equals("username")).Value;
-                                            //TODO - мыло в username не пролезает, спецсимволы мешают
                                             orgModel.UserName = orgClaim.Inn;
 
                                             orgModel.Claims = claims.Where(w => w.Type.Equals("lastname")

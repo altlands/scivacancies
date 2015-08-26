@@ -1,6 +1,5 @@
 ﻿@using System.Threading.Tasks
 @using SciVacancies.WebApp.Controllers
-@using SciVacancies.WebApp.Engine
 @model SciVacancies.WebApp.ViewModels.ResearcherDetailsViewModel
 
 <div class="crumbs">
@@ -16,8 +15,12 @@
 <div class="l-information">
     <div class="row">
         <div class="profile">
-            <div class="photo inline-block" style="max-width: 140px; max-height: 180px;">
-                <img src="@Model.ImageUrlOrDefault" style="max-width: 138px; max-height: 178px;" />
+            <div class="inline-block">
+                @Component.Invoke("AvatarImage", Model.ImageUrl)
+                <br/>
+                <a asp-controller="researchers" asp-action="editphoto" style="background: 70%; background-color: white; left: 3px; top: -30px; position: relative; padding: 3px;">
+                    Изменить
+                </a>
             </div>
             <div class="info inline-block">
                 <h4>@Model.FullName</h4>

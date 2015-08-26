@@ -40,8 +40,37 @@
         "ConnectionUrl": "http://alt-dev002:9200/",
         "DefaultIndex": "scivacancies"
     },
-    "FileStorageSettings": {
-        "AttachmentsPath": "",
-        "ImagesPath": ""
+    "AttachmentSettings": {
+        "VacancyApplication": {
+            "MaxItemSize": 100000,
+            "MaxTotalSize": 1000000,
+            "PhisicalPathPart": "\\uploads\\applications\\attachments",
+            "UrlPathPart": "/uploads/applications/attachments",
+            "AllowExtensions": ""
+        },
+        "Vacancy": {
+            "MaxItemSize": 100000,
+            "MaxTotalSize": 1000000,
+            "PhisicalPathPart": "",
+            "UrlPathPart": "",
+            "AllowExtensions": ""
+        },
+        "Researcher": {
+            "MaxItemSize": 500000,
+            "MaxTotalSize": 500000,
+            "PhisicalPathPart": "\\uploads\\researcherphoto",
+            "UrlPathPart": "/uploads/researcherphoto",
+            "AllowExtensions": "JPG,JPEG,PNG"
+        }
+    },
+    "SiteFileSettings": {
+        "FavIconName": "",
+        "PathToBlankAvatar": "/images/profile-photo.png"
+    },
+    "VacancyLifeCycleSettings": {
+        "DeltaFromPublishToInCommitteeMinDays": 60
+    },
+    "CaptchaSettings": {
+        "CaptchaDurationSeconds": 180
     }
 }

@@ -89,8 +89,41 @@ namespace SciVacancies.WebApp.Infrastructure
                 .ForMember(dest => dest.BirthDate, src => src.MapFrom(c => new DateTime(c.BirthYear, 1, 1)))
                 .ForMember(dest => dest.Rewards, src => src.MapFrom(c => JsonConvert.SerializeObject(c.Rewards)))
                 .ForMember(dest => dest.Memberships, src => src.MapFrom(c => JsonConvert.SerializeObject(c.Memberships)))
-
                 ;
+            Mapper.CreateMap<ResearcherEditPhotoViewModel, ResearcherDataModel>()
+                ;
+
+            Mapper.CreateMap<Researcher, ResearcherDataModel>()
+                .ForMember(d => d.FirstName, o => o.MapFrom(s => s.firstname))
+                .ForMember(d => d.FirstNameEng, o => o.MapFrom(s => s.firstname_eng))
+                .ForMember(d => d.SecondName, o => o.MapFrom(s => s.secondname))
+                .ForMember(d => d.SecondNameEng, o => o.MapFrom(s => s.secondname_eng))
+                .ForMember(d => d.Patronymic, o => o.MapFrom(s => s.patronymic))
+                .ForMember(d => d.PatronymicEng, o => o.MapFrom(s => s.patronymic_eng))
+                .ForMember(d => d.PreviousSecondName, o => o.MapFrom(s => s.previous_secondname))
+                .ForMember(d => d.PreviousSecondNameEng, o => o.MapFrom(s => s.previous_secondname_eng))
+                .ForMember(d => d.BirthDate, o => o.MapFrom(s => s.birthdate))
+                .ForMember(d => d.Email, o => o.MapFrom(s => s.email))
+                .ForMember(d => d.ExtraEmail, o => o.MapFrom(s => s.extraemail))
+                .ForMember(d => d.Phone, o => o.MapFrom(s => s.phone))
+                .ForMember(d => d.ExtraPhone, o => o.MapFrom(s => s.extraphone))
+                .ForMember(d => d.Nationality, o => o.MapFrom(s => s.nationality))
+                .ForMember(d => d.ResearchActivity, o => o.MapFrom(s => s.research_activity))
+                .ForMember(d => d.TeachingActivity, o => o.MapFrom(s => s.teaching_activity))
+                .ForMember(d => d.OtherActivity, o => o.MapFrom(s => s.other_activity))
+                .ForMember(d => d.ScienceDegree, o => o.MapFrom(s => s.science_degree))
+                .ForMember(d => d.ScienceRank, o => o.MapFrom(s => s.science_rank))
+                .ForMember(d => d.Rewards, o => o.MapFrom(s => s.rewards) )
+                .ForMember(d => d.Memberships, o => o.MapFrom(s => s.memberships))
+                .ForMember(d => d.Conferences, o => o.MapFrom(s => s.conferences))
+                .ForMember(d => d.ImageName, o => o.MapFrom(s => s.image_name))
+                .ForMember(d => d.ImageSize, o => o.MapFrom(s => s.image_size))
+                .ForMember(d => d.ImageExtension, o => o.MapFrom(s => s.image_extension))
+                .ForMember(d => d.ImageUrl, o => o.MapFrom(s => s.image_url))
+                .ForMember(d => d.Educations, o => o.MapFrom(s => s.educations))
+                .ForMember(d => d.Publications, o => o.MapFrom(s => s.publications))
+            ;
+
             Mapper.CreateMap<Researcher, ResearcherDetailsViewModel>()
                 .ForMember(d => d.Guid, o => o.MapFrom(s => s.guid))
                 .ForMember(d => d.FirstName, o => o.MapFrom(s => s.firstname))
@@ -151,12 +184,15 @@ namespace SciVacancies.WebApp.Infrastructure
                 .ForMember(d => d.Rewards, o => o.MapFrom(s => !string.IsNullOrWhiteSpace(s.rewards) ? JsonConvert.DeserializeObject<List<RewardEditViewModel>>(s.rewards) : new List<RewardEditViewModel>()))
                 .ForMember(d => d.Memberships, o => o.MapFrom(s => !string.IsNullOrWhiteSpace(s.memberships) ? JsonConvert.DeserializeObject<List<MembershipEditViewModel>>(s.memberships) : new List<MembershipEditViewModel>()))
                 .ForMember(d => d.Conferences, o => o.MapFrom(s => s.conferences))
+                .ForMember(d => d.Educations, o => o.MapFrom(s => s.educations))
+                .ForMember(d => d.Publications, o => o.MapFrom(s => s.publications));
+            Mapper.CreateMap<Researcher, ResearcherEditPhotoViewModel>()
+                .ForMember(d => d.Guid, o => o.MapFrom(s => s.guid))
                 .ForMember(d => d.ImageName, o => o.MapFrom(s => s.image_name))
                 .ForMember(d => d.ImageSize, o => o.MapFrom(s => s.image_size))
                 .ForMember(d => d.ImageExtension, o => o.MapFrom(s => s.image_extension))
                 .ForMember(d => d.ImageUrl, o => o.MapFrom(s => s.image_url))
-                .ForMember(d => d.Educations, o => o.MapFrom(s => s.educations))
-                .ForMember(d => d.Publications, o => o.MapFrom(s => s.publications));
+                ;
 
             //education
 

@@ -3053,14 +3053,13 @@ h4 + .b-vacancies {
     background: url(../images/sprite.png) no-repeat -183px -222px;
 }
 
-[data-selectorphoto=true] {
+/*[data-selectorphoto=true] {
     cursor: pointer;
 }
-
 input[type=file] {
     display: none;
     visibility: hidden;
-}
+}*/
 
 table.table.request-table a.sort-order {
     font: inherit;

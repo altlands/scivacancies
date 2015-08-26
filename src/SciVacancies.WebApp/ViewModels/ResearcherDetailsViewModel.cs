@@ -9,6 +9,7 @@ namespace SciVacancies.WebApp.ViewModels
 {
     public class ResearcherDetailsViewModel : PageViewModelBase
     {
+
         public ResearcherDetailsViewModel()
         {
             Title = "Личная карточка пользователя";
@@ -51,10 +52,13 @@ namespace SciVacancies.WebApp.ViewModels
         public string ImageName { get; set; }
         public long? ImageSize { get; set; }
         public string ImageExtension { get; set; }
-        public string ImageUrl { get; set; }
-        public string ImageUrlOrDefault => string.IsNullOrWhiteSpace(ImageUrl)
-            ? ConstTerms.PathToBlankImage
-            : (ConstTerms.FolderResearcherPhotoUtl + ImageUrl);
+
+        private string _imageUrl;
+        public string ImageUrl
+        {
+            get { return _imageUrl ?? string.Empty; }
+            set { _imageUrl = value; }
+        }
 
         public List<EducationEditViewModel> Educations { get; set; }
         public List<PublicationEditViewModel> Publications { get; set; }

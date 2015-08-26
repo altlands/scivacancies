@@ -1,0 +1,65 @@
+﻿@using System.Threading.Tasks
+@using SciVacancies
+@using SciVacancies.WebApp.Controllers
+@using SciVacancies.WebApp.Engine
+@using SciVacancies.WebApp.ViewModels
+@model ResearcherEditPhotoViewModel
+
+<div class="crumbs">
+    <a href="/">Главная</a><span class="separator">/</span>
+    <a asp-controller="researchers" asp-action="account">Личная карточка</a><span class="separator">/</span>
+    @ViewBag.Title
+</div>
+
+<h3>Личная карточка пользователя</h3>
+
+@Component.Invoke("AccountTabs", typeof(ResearchersController))
+
+<h4>@ViewBag.Title</h4>
+
+<div asp-validation-summary="ValidationSummary.All"></div>
+
+<form asp-controller="researchers" asp-action="editphoto" method="POST" class="l-information e-information b-edit" enctype="multipart/form-data">
+    <input type="hidden" asp-for="Guid" />
+    <input type="hidden" asp-for="ImageUrl" />
+    <input type="hidden" asp-for="ImageExtension" />
+    <input type="hidden" asp-for="ImageName" />
+    <input type="hidden" asp-for="ImageSize" />
+    <div class="row">
+        <div class="bold mb20">Общая информация</div>
+
+        <a asp-controller="accountintegration" asp-action="UpdateResearcherAccountFromOutside" class="link-upload fs13">Загрузить данные из системы «@AuthorizeResourceTypes.ScienceMap.GetDescription()»</a>
+        <span style="color: red;">в разработке</span>
+
+        <div class="table-form">
+            <div class="table-row mb15">
+                <div class="left-cell">
+                    <label class="mb10">
+                        Ваше фото
+                    </label>
+                    @Component.Invoke("AvatarImage", Model.ImageUrl)
+                </div>
+                <div class="right-cell">
+                    <div class="description mt10">
+                        Выберите изображение размером<br /> не более 500 кБ<br />Рекомендуемое соотношение сторон – 3:4
+                        <input type="file" asp-for="PhotoFile" />
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <div class="row">
+        <div class="ctr-buttons button-align mt12 mb5">
+            <input type="submit" class="save-button" onclick=" return beforeFormSubmit(this);" value="Сохранить изменения" />
+            <a asp-controller="researchers" asp-action="account" class="close-button">Закрыть</a>
+        </div>
+    </div>
+</form>
+
+
+
+<div class="b-bottom-nav">
+    <a href="/">Главная</a>
+    <a asp-controller="researchers" asp-action="account" class="small-icon icon-prev">Личная карточка</a>
+</div>

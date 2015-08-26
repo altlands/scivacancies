@@ -15,9 +15,7 @@
 
 <div class="content-slide">
     <div class="profile">
-        <div class="photo inline-block" style="max-width: 140px; max-height: 180px;">
-            <img src="@Model.Researcher.ImageUrlOrDefault" style="max-width: 138px; max-height: 178px;" />
-        </div>
+        @Component.Invoke("AvatarImage", Model.Researcher.ImageUrl)
         <div class="info info-view inline-block">
             <h4>@Model.Researcher.FullName</h4>
             <span class="int-name">@Model.Researcher.FullNameEng</span>
@@ -83,7 +81,7 @@
                     foreach (var item in Model.Memberships)
                     {
                         <text>
-                            <li>@item.org - @item.position с @item.year_from по @item.year_to</li>
+                        <li>@item.org - @item.position с @item.year_from по @item.year_to</li>
                         </text>
                     }
                 }
@@ -131,7 +129,7 @@
                     <text>
                     <li>
                         @item.name<br />
-                        <span class="small-icon icon-sm-download"><a href="@(ConstTerms.FolderApplicationsAttachmentsUrl + item.url)">Скачать</a></span>
+                        <span class="small-icon icon-sm-download"><a href="@(Model.FolderApplicationsAttachmentsUrl + item.url)">Скачать</a></span>
                     </li>
                     </text>
                 }
@@ -195,10 +193,10 @@
         }
 
         @if (Model.Vacancy.Status == VacancyStatus.OfferResponseAwaiting
-                           || Model.Vacancy.Status == VacancyStatus.OfferAccepted
-                           || Model.Vacancy.Status == VacancyStatus.OfferRejected
-                           || Model.Vacancy.Status == VacancyStatus.Cancelled
-                           || Model.Vacancy.Status == VacancyStatus.Closed)
+                               || Model.Vacancy.Status == VacancyStatus.OfferAccepted
+                               || Model.Vacancy.Status == VacancyStatus.OfferRejected
+                               || Model.Vacancy.Status == VacancyStatus.Cancelled
+                               || Model.Vacancy.Status == VacancyStatus.Closed)
         {
             if (Model.Vacancy.IsWinnerAccept.HasValue && Model.Guid == Model.Vacancy.WinnerVacancyApplicationGuid)
             {

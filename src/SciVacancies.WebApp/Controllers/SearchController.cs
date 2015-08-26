@@ -10,13 +10,14 @@ using SciVacancies.Domain.DataModels;
 using SciVacancies.Domain.Enums;
 using SciVacancies.ReadModel.ElasticSearchModel.Model;
 using SciVacancies.WebApp.Commands;
+using SciVacancies.WebApp.Models;
 using SciVacancies.WebApp.Queries;
 using SciVacancies.WebApp.ViewModels;
 
 namespace SciVacancies.WebApp.Controllers
 {
 
-        [ResponseCache(NoStore = true)]
+    [ResponseCache(NoStore = true)]
     public class SearchController : Controller
     {
         private readonly IMediator _mediator;
@@ -26,6 +27,19 @@ namespace SciVacancies.WebApp.Controllers
             _mediator = mediator;
         }
 
+        public IActionResult TestConvert(string id)
+        {
+            string result;
+            try
+            {
+                result = HttpUtility.UrlEncode(id);
+            }
+            catch (Exception e)
+            {
+                result = e.Message;
+            }
+            return Content(result);
+        }
 
         /// <summary>
         /// фильтрация, страницы, сортировка 
@@ -80,7 +94,7 @@ namespace SciVacancies.WebApp.Controllers
                 return RedirectToAction("index");
             }
 
-            //dicitonaries
+            //dictionaries
             var filterSource = new VacanciesFilterSource(_mediator);
             ViewBag.FilterSource = filterSource;
 
@@ -97,7 +111,7 @@ namespace SciVacancies.WebApp.Controllers
 
                 PageSize = model.PageSize,
                 CurrentPage = model.CurrentPage,
-                OrderFieldByDirection= model.OrderBy,
+                OrderFieldByDirection = model.OrderBy,
                 PositionTypeIds = model.PositionTypes,
                 //PublishDateFrom = DateTime.Now.AddDays(-10),
 

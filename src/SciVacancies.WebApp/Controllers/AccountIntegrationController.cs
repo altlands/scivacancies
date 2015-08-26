@@ -14,6 +14,7 @@ using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.AspNet.Mvc;
 using Microsoft.Framework.OptionsModel;
 using Newtonsoft.Json;
+using SciVacancies.Domain.DataModels;
 using SciVacancies.WebApp.Commands;
 using Thinktecture.IdentityModel.Client;
 using SciVacancies.WebApp.Engine;
@@ -95,12 +96,12 @@ namespace SciVacancies.WebApp.Controllers
             //TODO url move to config
             OAuthResProfile researcherProfile = JsonConvert.DeserializeObject<OAuthResProfile>(GetResearcherProfile(accessToken));
             //4 - mapping
-            var accountResearcherUpdateViewModel = Mapper.Map<AccountResearcherUpdateViewModel>(researcherProfile);
+            var accountResearcherUpdateViewModel = Mapper.Map<ProfileResearcherUpdateDataModel>(researcherProfile);
+            //var researcherDataModel = Mapper.Map<ResearcherDataModel>(accountResearcherUpdateViewModel);
             //5 - отправляем команду через медиатор
-            //TODO: finish mapping and updating
-            //_mediator.Send(new UpdateResearcherCommand {ResearcherGuid = researcherGuid, accountResearcherUpdateViewModel });
+            //_mediator.Send(new UpdateResearcherCommand {ResearcherGuid = researcherGuid, Data = researcherDataModel});
 
-            var model = "Данные получены, но их применение сейчас находится в разработке";
+            var model = "Данные получены, но их обработка сейчас находится в разработке";
 
             return View(model: model);
         }

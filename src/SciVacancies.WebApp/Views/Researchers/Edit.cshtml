@@ -1,8 +1,5 @@
-﻿@using System
-@using System.Collections.Generic
-@using System.Linq
+﻿@using System.Linq
 @using System.Threading.Tasks
-@using Microsoft.AspNet.Mvc.Rendering
 @using SciVacancies
 @using SciVacancies.WebApp.Controllers
 @using SciVacancies.WebApp.Engine
@@ -44,10 +41,6 @@
 
 <form asp-controller="researchers" asp-action="edit" method="POST" class="l-information e-information b-edit" enctype="multipart/form-data">
     <input type="hidden" asp-for="Guid" />
-    <input type="hidden" asp-for="ImageUrl" />
-    <input type="hidden" asp-for="ImageExtension" />
-    <input type="hidden" asp-for="ImageName" />
-    <input type="hidden" asp-for="ImageSize" />
     <div class="row">
         <div class="bold mb20">Общая информация</div>
 
@@ -55,24 +48,6 @@
         <span style="color: red;">в разработке</span>
 
         <div class="table-form">
-            <div class="table-row mb15">
-                <div class="left-cell">
-                    <label class="mb10">
-                        Ваше фото
-                    </label>
-                    <a data-selectorphoto="true" asp-controller="researcher" asp-action="edit#" class="link-upload fs13" onclick="javascript: return false;">Загрузить фото</a>
-                    <input type="file" class="hide" name="PhotoFile" id="PhotoFile" data-selectphoto="true" />
-                    <div class="description mt10">
-                        Выберите изображение размером<br /> не более 500 кБ<br />Рекомендуемое соотношение сторон – 3:4
-                    </div>
-                </div>
-                <div class="right-cell">
-                    @*<div class="user-photo" style="max-width: 140px; max-height: 180px;">*@
-                    <div style="max-width: 140px; max-height: 180px;">
-                        <img src="@Model.ImageUrlOrDefault" style="max-width: 138px; max-height: 178px;" />
-                    </div>
-                </div>
-            </div>
             <div class="table-row form-row">
                 <div class="left-cell">
                     <label>Фамилия</label>

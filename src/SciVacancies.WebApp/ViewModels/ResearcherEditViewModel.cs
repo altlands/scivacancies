@@ -1,18 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNet.Http;
-using Newtonsoft.Json;
-using SciVacancies.ReadModel.Core;
-using SciVacancies.WebApp.Engine;
 using SciVacancies.WebApp.ViewModels.Base;
 
 namespace SciVacancies.WebApp.ViewModels
 {
     public class ResearcherEditViewModel: PageViewModelBase
     {
-        public IFormFile PhotoFile { get; set; }
-
         [Required(ErrorMessage = "Необходимо заполнить Имя")]
         public string FirstName { get; set; }
         [Required(ErrorMessage = "Необходимо заполнить Фамилию")]
@@ -59,14 +53,6 @@ namespace SciVacancies.WebApp.ViewModels
         public List<RewardEditViewModel> Rewards { get; set; }
         public List<MembershipEditViewModel> Memberships { get; set; }
         public string Conferences { get; set; }
-
-        public string ImageName { get; set; }
-        public long? ImageSize { get; set; }
-        public string ImageExtension { get; set; }
-        public string ImageUrl { get; set; }
-        public string ImageUrlOrDefault => string.IsNullOrWhiteSpace(ImageUrl)
-            ? ConstTerms.PathToBlankImage
-            : (ConstTerms.FolderResearcherPhotoUtl + ImageUrl);
 
         public List<EducationEditViewModel> Educations { get; set; }
         public List<PublicationEditViewModel> Publications { get; set; }

@@ -1,13 +1,12 @@
 ﻿using System;
-using System.Data.Entity.Core;
 using System.Linq;
 using AutoMapper;
 using MediatR;
 using Microsoft.AspNet.Authorization;
 using Microsoft.AspNet.Mvc;
+using Microsoft.Framework.OptionsModel;
 using SciVacancies.Domain.DataModels;
 using SciVacancies.Domain.Enums;
-using SciVacancies.ReadModel;
 using SciVacancies.ReadModel.Core;
 using SciVacancies.WebApp.Commands;
 using SciVacancies.WebApp.Engine;
@@ -24,10 +23,12 @@ namespace SciVacancies.WebApp.Controllers
     public class VacanciesController : Controller
     {
         private readonly IMediator _mediator;
+        private readonly IOptions<VacancyLifeCycleSettings> _vacancyLifeCycleSettings;
 
-        public VacanciesController(IMediator mediator)
+        public VacanciesController(IMediator mediator, IOptions<VacancyLifeCycleSettings> vacancyLifeCycleSettings)
         {
             _mediator = mediator;
+            _vacancyLifeCycleSettings = vacancyLifeCycleSettings;
         }
 
         [PageTitle("Новая вакансия")]
@@ -40,9 +41,7 @@ namespace SciVacancies.WebApp.Controllers
 
             var model = new VacancyCreateViewModel(organizationGuid);
             model.InitDictionaries(_mediator);
-            //TODO: вынести в конфиг
-            model.InCommitteeDate = DateTime.Now.AddDays(20);
-            //TODO: ntemnikov: Vacancies -> Create : вернуть редактирование Критериев во View
+            model.InCommitteeDate = DateTime.Now.AddDays(_vacancyLifeCycleSettings.Options.DeltaFromPublishToInCommitteeMinDays);
             return View(model);
         }
 
@@ -142,10 +141,8 @@ namespace SciVacancies.WebApp.Controllers
                     if (vacancy.status != VacancyStatus.InProcess)
                         ModelState.AddModelError("Status", $"Вы не можете публиковать вакансии в статусе {vacancy.status.GetDescription()}");
 
-                    //TODO: вынести в конфиг количество дней
-                    const int daysCountLimit = 60;
-                    if ((DateTime.Now - model.InCommitteeDate).Days < daysCountLimit)
-                        ModelState.AddModelError("InCommitteeDate", $"Вы не можете начать перевести вакансию на рассмотрение комиссии раньше чем через {daysCountLimit} дн.");
+                    if ((DateTime.Now - model.InCommitteeDate).Days < _vacancyLifeCycleSettings.Options.DeltaFromPublishToInCommitteeMinDays)
+                        ModelState.AddModelError("InCommitteeDate", $"Вы не можете начать перевести вакансию на рассмотрение комиссии раньше чем через {_vacancyLifeCycleSettings.Options.DeltaFromPublishToInCommitteeMinDays} дн.");
                 }
 
                 if (ModelState.ErrorCount > 0)
@@ -392,7 +389,7 @@ namespace SciVacancies.WebApp.Controllers
             var vacancyApplications = _mediator.Send(new SelectPagedVacancyApplicationsByVacancyQuery
             {
                 VacancyGuid = preModel.guid,
-                PageSize = 1000,
+                PageSize = 3,
                 PageIndex = 1,
                 OrderBy = new SortFilterHelper().GetSortField<VacancyApplication>(ConstTerms.OrderByFieldApplyDate),
                 OrderDirection = ConstTerms.OrderByDescending

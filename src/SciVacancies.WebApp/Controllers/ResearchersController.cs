@@ -8,6 +8,7 @@ using MediatR;
 using Microsoft.AspNet.Authorization;
 using Microsoft.AspNet.Hosting;
 using Microsoft.AspNet.Mvc;
+using Microsoft.Framework.OptionsModel;
 using Microsoft.Net.Http.Headers;
 using SciVacancies.Domain.DataModels;
 using SciVacancies.Domain.Enums;
@@ -26,10 +27,13 @@ namespace SciVacancies.WebApp.Controllers
     {
         private readonly IMediator _mediator;
         private readonly IHostingEnvironment _hostingEnvironment;
-        public ResearchersController(IMediator mediator, IHostingEnvironment hostingEnvironment)
+        private readonly IOptions<AttachmentSettings> _attachmentSettings;
+
+        public ResearchersController(IMediator mediator, IHostingEnvironment hostingEnvironment, IOptions<AttachmentSettings> attachmentSettings)
         {
             _mediator = mediator;
             _hostingEnvironment = hostingEnvironment;
+            _attachmentSettings = attachmentSettings;
         }
 
         [ResponseCache(NoStore = true)]
@@ -82,6 +86,52 @@ namespace SciVacancies.WebApp.Controllers
             if (ModelState.ErrorCount > 0)
                 return View(model);
 
+            var preModel = _mediator.Send(new SingleResearcherQuery { ResearcherGuid = authorizedUserGuid });
+            if (preModel == null)
+                return HttpNotFound(); //throw new ObjectNotFoundException();
+
+            var dataModel = Mapper.Map<ResearcherDataModel>(preModel);
+            var data = Mapper.Map(model, dataModel);
+            _mediator.Send(new UpdateResearcherCommand
+            {
+                Data = data,
+                ResearcherGuid = authorizedUserGuid
+            });
+
+            return RedirectToAction("account");
+        }
+
+
+        [ResponseCache(NoStore = true)]
+        [PageTitle("Изменить данные")]
+        [BindResearcherIdFromClaims]
+        public IActionResult EditPhoto(Guid researcherGuid)
+        {
+            if (researcherGuid == Guid.Empty)
+                throw new ArgumentNullException(nameof(researcherGuid));
+
+            var preModel = _mediator.Send(new SingleResearcherQuery { ResearcherGuid = researcherGuid });
+            if (preModel == null)
+                return HttpNotFound(); //throw new ObjectNotFoundException();
+
+            var model = Mapper.Map<ResearcherEditPhotoViewModel>(preModel);
+            return View(model);
+        }
+        [HttpPut]
+        [HttpPost]
+        [PageTitle("Редактирование информации пользователя")]
+        [BindResearcherIdFromClaims("authorizedUserGuid")]
+        public IActionResult EditPhoto(ResearcherEditPhotoViewModel model, Guid authorizedUserGuid)
+        {
+            if (model.Guid == Guid.Empty)
+                throw new ArgumentNullException(nameof(model), "Отсутствует идентификатор исследователя");
+
+            if (authorizedUserGuid != model.Guid)
+                return View("Error", "Вы не можете изменять чужой профиль");
+
+            if (ModelState.ErrorCount > 0)
+                return View(model);
+
             if (model.PhotoFile != null)
             {
                 var file = model.PhotoFile;
@@ -94,30 +144,27 @@ namespace SciVacancies.WebApp.Controllers
                     .Last()
                     .ToUpper();
 
-                //TODO: вынести в конфиг типы допустимых файлов
-                var extensions = new List<string> { "JPG", "JPEG", "PNG" };
-                if (!extensions.Contains(fileExtension))
+                if (!_attachmentSettings.Options.Researcher.AllowExtensions.ToUpper().Contains(fileExtension.ToUpper()))
                     ModelState.AddModelError("PhotoFile",
-                        $"Можно добавить только изображение. Допустимые типы файлов: {string.Join(", ", extensions)}");
+                        $"Можно добавить только изображение. Допустимые типы файлов: {_attachmentSettings.Options.Researcher.AllowExtensions}");
 
                 if (ModelState.ErrorCount > 0)
                     return View(model);
 
-                //TODO: вынести в конфиг это магическое число
                 if (file.Length > 0)
                 {
                     var newFileName = $"{authorizedUserGuid}.{fileExtension}";
                     var filePath =
-                        $"{_hostingEnvironment.WebRootPath}{ConstTerms.FolderResearcherPhoto}\\{newFileName}";
+                        $"{_hostingEnvironment.WebRootPath}{_attachmentSettings.Options.Researcher.PhisicalPathPart}\\{newFileName}";
                     Directory.CreateDirectory(
-                        $"{_hostingEnvironment.WebRootPath}{ConstTerms.FolderResearcherPhoto}\\");
+                        $"{_hostingEnvironment.WebRootPath}{_attachmentSettings.Options.Researcher.PhisicalPathPart}\\");
 
                     using (var image = Image.FromStream(file.OpenReadStream()))
                     {
                         Image newImage = null;
-                        if (file.Length > 500000)
+                        if (file.Length > _attachmentSettings.Options.Researcher.MaxItemSize)
                         {
-                            var scale = ((float)500000 / file.Length);
+                            var scale = ((float)_attachmentSettings.Options.Researcher.MaxItemSize / file.Length);
                             var newWidth = image.Width * scale;
                             var newHeight = image.Height * scale;
                             newImage = ScaleImage(image, (int)newWidth, (int)newHeight);
@@ -155,7 +202,8 @@ namespace SciVacancies.WebApp.Controllers
             if (preModel == null)
                 return HttpNotFound(); //throw new ObjectNotFoundException();
 
-            var data = Mapper.Map<ResearcherDataModel>(model);
+            var dataModel = Mapper.Map<ResearcherDataModel>(preModel);
+            var data = Mapper.Map(model, dataModel);
             _mediator.Send(new UpdateResearcherCommand
             {
                 Data = data,

@@ -4,7 +4,7 @@ namespace SciVacancies.WebApp.Models.OAuth
 {
     public class OAuthResProfile
     {
-        //TODO: стаж работы и тд
+        //TODO: рабочий и другие стажи
         //TODO: номер ученого
 
         public string birthday { get; set; }
