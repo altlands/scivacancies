@@ -110,7 +110,7 @@ namespace SciVacancies.WebApp.Infrastructure
                 //.ForMember(d => d.OtherActivity, o => o.MapFrom(s => s.))
                 //.ForMember(d => d, o => o.MapFrom(s => s.degrees))
                 //.ForMember(d => d, o => o.MapFrom(s => s.ranks))
-                .ForMember(d => d.Rewards, o => o.MapFrom(s => s.honors != null && s.honors.Any() ? JsonConvert.SerializeObject(s.honors) : string.Empty))
+                .ForMember(d => d.Rewards, o => o.MapFrom(s => s.honors != null && s.honors.Any() ? JsonConvert.SerializeObject(s.honors.Where(d=>d.deleted!="1").ToList()) : string.Empty))
                 .ForMember(d => d.Memberships, o => o.MapFrom(s => s.members != null && s.members.Any() ? JsonConvert.SerializeObject(s.members) : string.Empty))
                 //.ForMember(d => d.Conferences, o => o.MapFrom(s => s.sAbstracts))
                 .ForMember(d => d.Publications, o => o.MapFrom(s => s.entities))
