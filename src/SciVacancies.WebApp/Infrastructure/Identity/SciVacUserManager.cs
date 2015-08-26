@@ -6,6 +6,10 @@ namespace SciVacancies.WebApp.Infrastructure.Identity
     {
         public SciVacUserManager(IUserStore<SciVacUser> store) : base(store)
         {
+            this.UserValidator = new UserValidator<SciVacUser>(this)
+            {
+                AllowOnlyAlphanumericUserNames = false
+            };
         }
     }
 }
