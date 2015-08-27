@@ -65,13 +65,26 @@ namespace SciVacancies.WebApp.Controllers
                 var vacancyDataModel = Mapper.Map<VacancyDataModel>(model);
                 var vacancyGuid = _mediator.Send(new CreateVacancyCommand { OrganizationGuid = model.OrganizationGuid, Data = vacancyDataModel });
 
-                if (!model.ToPublish)
-                    return RedirectToAction("details", new { id = vacancyGuid });
-
-                _mediator.Send(new PublishVacancyCommand
+                var vacancy = _mediator.Send(new SingleVacancyQuery { VacancyGuid = vacancyGuid });
+                if (model.ToPublish)
                 {
-                    VacancyGuid = vacancyGuid
-                });
+                    if (vacancy.status != VacancyStatus.InProcess)
+                        ModelState.AddModelError("Status", $"Вы не можете публиковать вакансии в статусе {vacancy.status.GetDescription()}");
+
+                    if ((DateTime.Now - model.InCommitteeDate).Days < _vacancyLifeCycleSettings.Options.DeltaFromPublishToInCommitteeMinDays)
+                        ModelState.AddModelError("InCommitteeDate", $"Вы не можете начать перевести вакансию на рассмотрение комиссии раньше чем через {_vacancyLifeCycleSettings.Options.DeltaFromPublishToInCommitteeMinDays} дн.");
+                }
+                if (ModelState.ErrorCount > 0)
+                {
+                    model.InitDictionaries(_mediator);
+                    return View(model);
+                }
+
+                if (model.ToPublish)
+                    _mediator.Send(new PublishVacancyCommand
+                    {
+                        VacancyGuid = vacancyGuid
+                    });
 
                 return RedirectToAction("details", new { id = vacancyGuid });
             }
@@ -384,6 +397,10 @@ namespace SciVacancies.WebApp.Controllers
 
             if (preModel.status != VacancyStatus.Published)
                 return View("Error", $"Вы не можете Вакансию на рассмотрение комиссии со статусом: {preModel.status.GetDescription()}");
+
+            //TODO: Saga -> реализовать эту проверку при замуске Саг с таймерами
+            //if ((DateTime.Now - preModel.committee_date).Days < _vacancyLifeCycleSettings.Options.DeltaFromPublishToInCommitteeMinDays)
+            //    return View("Error", $"Вы не можете начать перевести вакансию на рассмотрение комиссии раньше чем через {_vacancyLifeCycleSettings.Options.DeltaFromPublishToInCommitteeMinDays} дн.");
 
             //TODO: оптимизировать запрос и его обработку
             var vacancyApplications = _mediator.Send(new SelectPagedVacancyApplicationsByVacancyQuery
