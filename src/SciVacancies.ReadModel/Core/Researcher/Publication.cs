@@ -8,8 +8,17 @@ namespace SciVacancies.ReadModel.Core
     [PrimaryKey("guid", AutoIncrement = false)]
     public class Publication : BaseEntity
     {
-        public string title { get; set; }
+        public string name { get; set; }
 
         public Guid researcher_guid { get; set; }
+
+        public string type { get; set; }
+
+        public string ext_id { get; set; }
+
+        public string authors { get; set; }
+
+        public DateTime? updated { get; set; }
+
     }
 }

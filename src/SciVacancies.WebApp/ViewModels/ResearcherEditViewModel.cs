@@ -7,6 +7,8 @@ namespace SciVacancies.WebApp.ViewModels
 {
     public class ResearcherEditViewModel: PageViewModelBase
     {
+        public int ExtNumber { get; set; }
+
         [Required(ErrorMessage = "Необходимо заполнить Имя")]
         public string FirstName { get; set; }
         [Required(ErrorMessage = "Необходимо заполнить Фамилию")]
@@ -56,6 +58,6 @@ namespace SciVacancies.WebApp.ViewModels
 
         public List<EducationEditViewModel> Educations { get; set; }
         public List<PublicationEditViewModel> Publications { get; set; }
-        public List<string> Interests { get; set; } 
+        public List<InterestEditViewModel> Interests { get; set; }
     }
 }

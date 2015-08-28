@@ -79,6 +79,9 @@ namespace SciVacancies.WebApp.Controllers
                         case AuthorizeResourceTypes.OwnAuthorization:
                             //TODO - это заглушка не проверяет пароль
                             var user = _userManager.FindByName(model.Login);
+                            if (user == null)
+                                return View("Error", model: "Пользователь не найден");
+
                             var identity = _userManager.CreateIdentity(user, DefaultAuthenticationTypes.ApplicationCookie);
                             var cp = new ClaimsPrincipal(identity);
                             Context.Response.SignIn(DefaultAuthenticationTypes.ApplicationCookie, cp);
@@ -342,13 +345,8 @@ namespace SciVacancies.WebApp.Controllers
                                             {
                                                 Data = accountResearcherRegisterViewModel
                                             };
-
                                             var user = _mediator.Send(command);
-
                                             var identity = _userManager.CreateIdentity(user, DefaultAuthenticationTypes.ApplicationCookie);
-
-
-
                                             var cp = new ClaimsPrincipal(identity);
                                             //at first, signing out...
                                             Context.Response.SignOut(DefaultAuthenticationTypes.ApplicationCookie);

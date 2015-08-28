@@ -38,7 +38,7 @@
                 <a asp-controller="vacancies" asp-action="card" asp-route-id="@item.Guid" class="row-4">
                     <div class="iblock-middle">
                         <div class="title-vac">
-                            <span>@item.Name.Substring(0, Math.Min(item.Name.Length, 45))@(item.Name.Length > 45 ? "..." : null)</span>
+                            <span>@item.Name.Substring(0, Math.Min(item.Name.Length, 25))@(item.Name.Length > 25 ? "..." : null)</span>
                         </div>
                         <div class="sal-vac">@item.SalaryFrom – @item.SalaryTo руб.</div>
                         <p>@item.OrganizationName</p>

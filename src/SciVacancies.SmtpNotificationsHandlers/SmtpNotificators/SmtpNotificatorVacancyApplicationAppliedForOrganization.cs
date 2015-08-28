@@ -1,16 +1,15 @@
-﻿using System.Net.Mail;
-using SciVacancies.ReadModel.Core;
+﻿using SciVacancies.ReadModel.Core;
 
 namespace SciVacancies.SmtpNotificationsHandlers.SmtpNotificators
 {
-    public class SmtpNotificatorVacancyApplicationApplied : SmtpNotificator
+    public class SmtpNotificatorVacancyApplicationAppliedForOrganization : SmtpNotificator
     {
         public void Send(Organization organization, Vacancy vacancy, VacancyApplication vacancyApplication)
         {
             var body = $@"
 <div style=''>
     Cообщаем, что на вакансию <a target='_blank' href='http://{Domain}/vacancies/details/{vacancy.guid}'>{vacancy.fullname}</a> 
-    подана новая <a target='_blank' href='http://{Domain}/vacancies/preview/{vacancyApplication.guid}'>заявка</a> 
+    подана новая <a target='_blank' href='http://{Domain}/applications/preview/{vacancyApplication.guid}'>заявка</a> 
 </div>
 
 <br/>
@@ -21,15 +20,10 @@ namespace SciVacancies.SmtpNotificationsHandlers.SmtpNotificators
     Это письмо создано автоматически с 
     <a target='_blank' href='http://{Domain}'>Портала вакансий</a>.
     Чтобы не получать такие уведомления отключите их или смените email в 
-    <a target='_blank' href='http://{Domain}/researchers/account/'>личном кабинете</a>.
+    <a target='_blank' href='http://{Domain}/organizations/account/'>личном кабинете</a>.
 </div>
 ";
-            var mailMessage = new MailMessage(@from: "mailer@alt-lan.com", to: organization.email, body: body, subject: "Уведомление с портала вакансий")
-            {
-                IsBodyHtml = true
-            };
-
-            Send(mailMessage);
+            Send(new SciVacMailMessage(organization.email, "Уведомление с портала вакансий", body));
         }
     }
 }

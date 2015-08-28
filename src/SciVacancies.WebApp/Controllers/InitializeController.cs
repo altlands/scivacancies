@@ -27,11 +27,11 @@ namespace SciVacancies.WebApp.Controllers
             _mediator = mediator;
         }
 
-        public void Index()
+        public IActionResult Index()
         {
             var user = _userManager.FindByName("researcher1");
             if (user != null)
-                return;
+                return Content("инициализация уже проходила");
 
             var positions = _mediator.Send(new SelectAllPositionTypesQuery()).ToList();
             var researchDiretions = _mediator.Send(new SelectAllResearchDirectionsQuery()).ToList();
@@ -460,8 +460,7 @@ namespace SciVacancies.WebApp.Controllers
 
 
 
-
-
+            return Content("инициализация успешно завершена");
         }
     }
 }

@@ -53,6 +53,15 @@ namespace SciVacancies.ReadModel.Core
         public string image_extension { get; set; }
         public string image_url { get; set; }
 
+        /// <summary>
+        /// научные инетересы
+        /// </summary>
+        public string interests { get; set; }
+
+        /// <summary>
+        /// Индивидуальный номер учёного
+        /// </summary>
+        public int ext_number { get; set; }
         #endregion
 
         [Ignore]

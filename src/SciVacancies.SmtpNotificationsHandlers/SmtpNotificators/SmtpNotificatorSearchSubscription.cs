@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using System.Net.Mail;
 using SciVacancies.ReadModel.Core;
 
 namespace SciVacancies.SmtpNotificationsHandlers.SmtpNotificators
@@ -30,16 +29,7 @@ namespace SciVacancies.SmtpNotificationsHandlers.SmtpNotificators
 </div>
 ";
 
-            var mailToAddress = string.IsNullOrWhiteSpace(researcher.extraemail) ? new MailAddress(researcher.email) : new MailAddress(researcher.email, researcher.extraemail);
-
-            var mailMessage = new MailMessage(from: new MailAddress("mailer@alt-lan.com"), to: mailToAddress)
-            {
-                Body = body,
-                Subject = "Вы зарегистрированы на портале вакансий",
-                IsBodyHtml = true
-            };
-
-            Send(mailMessage);
+            Send(new SciVacMailMessage(researcher.email, researcher.extraemail, "Уведомление с портала вакансий", body));
         }
      
     }

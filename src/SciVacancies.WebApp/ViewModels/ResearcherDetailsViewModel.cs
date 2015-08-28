@@ -35,8 +35,9 @@ namespace SciVacancies.WebApp.ViewModels
         public string ExtraEmail { get; set; }
 
         public string Phone { get; set; }
-        public string ExtraPhone { get; set; }
+        public string ExtraPhone { get; set;}
 
+        [Obsolete("гражданство планируется убрать")]
         public string Nationality { get; set; }
 
         public string ResearchActivity { get; set; }
@@ -59,9 +60,14 @@ namespace SciVacancies.WebApp.ViewModels
             get { return _imageUrl ?? string.Empty; }
             set { _imageUrl = value; }
         }
+        /// <summary>
+        /// Индивидуальный номер учёного
+        /// </summary>
+        public int ExtNumber { get; set; }
 
         public List<EducationEditViewModel> Educations { get; set; }
         public List<PublicationEditViewModel> Publications { get; set; }
+        public List<InterestDetailsViewModel> Interests { get; set; }
 
         public ResearcherStatus Status { get; set; }
 
@@ -70,5 +76,6 @@ namespace SciVacancies.WebApp.ViewModels
 
         public string FullName => $"{SecondName} {FirstName} {Patronymic}";
         public string FullNameEng => $"{FirstNameEng} {PatronymicEng} {SecondNameEng}";
+
     }
 }

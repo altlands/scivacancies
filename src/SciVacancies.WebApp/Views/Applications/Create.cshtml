@@ -267,7 +267,7 @@
                                     var item = Model.Publications[i];
                                     <text>
                                     <li style="@useStyle" class="property-list-item" data-list-template="@(i == 0 ? "true" : "false")">
-                                        @item.Title
+                                        @item.Name (авторы: @item.Authors)
                                     </li>
                                     </text>
                                 }

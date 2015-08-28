@@ -12,7 +12,7 @@ namespace SciVacancies.Domain.Core
         /// <summary>
         /// Название публикации
         /// </summary>
-        public string Title { get; set; }
+        public string Name { get; set; }
 
         /// <summary>
         /// авторы
@@ -23,6 +23,6 @@ namespace SciVacancies.Domain.Core
 
         public string Type { get; set; }
 
-        public DateTime Updated { get; set; }
+        public DateTime? Updated { get; set; }
     }
 }

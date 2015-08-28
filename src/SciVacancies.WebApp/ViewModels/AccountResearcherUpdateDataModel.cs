@@ -12,6 +12,9 @@ namespace SciVacancies.WebApp.ViewModels
     /// </summary>
     public class ProfileResearcherUpdateDataModel
     {
+
+        public int ExtNumber { get; set; }
+
         [Required(ErrorMessage = "Требуется ввести логин")]
         public string UserName { get; set; }
 

@@ -40,12 +40,12 @@ namespace SciVacancies.WebApp.Infrastructure
             //researcher
 
 
+            //TODO - дописать поля в модели
             Mapper.CreateMap<ProfileResearcherUpdateDataModel, ResearcherDataModel>()
                 .Include<AccountResearcherRegisterViewModel, ResearcherDataModel>()
                 .ForMember(dest => dest.BirthDate, src => src.MapFrom(c => c.BirthDate ?? new DateTime(c.BirthYear, 1, 1)))
                 .ForMember(dest => dest.Patronymic, src => src.MapFrom(c => c.Patronymic))
                 ;
-            //TODO - дописать поля в модели
             Mapper.CreateMap<AccountResearcherRegisterViewModel, ResearcherDataModel>()
                 ;
 
@@ -94,6 +94,7 @@ namespace SciVacancies.WebApp.Infrastructure
                 //.ForMember(d => d, o => o.MapFrom(s => s.id))
                 //.ForMember(d => d, o => o.MapFrom(s => s.login))
                 .ForMember(d => d.FirstName, o => o.MapFrom(s => s.firstName))
+                .ForMember(d => d.ExtNumber, o => o.MapFrom(s => s.identityNumberSc!=null ? s.identityNumberSc.scimap : 0))
                 .ForMember(d => d.FirstNameEng, o => o.MapFrom(s => s.firstNameEn))
                 .ForMember(d => d.SecondName, o => o.MapFrom(s => s.lastName))
                 .ForMember(d => d.SecondNameEng, o => o.MapFrom(s => s.lastNameEn))
@@ -125,7 +126,7 @@ namespace SciVacancies.WebApp.Infrastructure
             Mapper.CreateMap<OAuthResEntity, Domain.Core.Publication>()
                 .ForMember(d => d.Authors, opt => opt.MapFrom(src => src.authors ?? string.Empty))
                 .ForMember(d => d.ExtId, opt => opt.MapFrom(src => src.ext_id ?? string.Empty))
-                .ForMember(d => d.Title, opt => opt.MapFrom(src => src.name ?? string.Empty))
+                .ForMember(d => d.Name, opt => opt.MapFrom(src => src.name ?? string.Empty))
                 .ForMember(d => d.Type, opt => opt.MapFrom(src => src.type ?? string.Empty))
                 .ForMember(d => d.Updated, opt => opt.MapFrom(src => src.updated))
                 ;

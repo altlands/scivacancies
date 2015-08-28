@@ -16,8 +16,8 @@
     Model.Rewards.Insert(0, new RewardEditViewModel());
     Model.Memberships = Model.Memberships ?? new List<MembershipEditViewModel>();
     Model.Memberships.Insert(0, new MembershipEditViewModel());
-    Model.Interests = Model.Interests ?? new List<string>();
-    Model.Interests.Insert(0, string.Empty);
+    Model.Interests = Model.Interests ?? new List<InterestEditViewModel>();
+    Model.Interests.Insert(0, new InterestEditViewModel());
 
     var years = Enumerable.Range(DateTime.Now.Year - 150, 150 + 1).OrderByDescending(c => c).Select(c => new SelectListItem { Text = c.ToString(), Value = c.ToString() }).ToList();
     var yearsZeroBased = Enumerable.Range(DateTime.Now.Year - 150, 150 + 1).OrderByDescending(c => c).Select(c => new SelectListItem { Text = c.ToString(), Value = c.ToString() }).ToList();
@@ -122,6 +122,15 @@
             </div>
             <div class="table-row form-row">
                 <div class="left-cell">
+                    <label>Индивидуальный номер учёного</label>
+                </div>
+                <div class="right-cell">
+                    <input asp-for="ExtNumber" />
+                    <span asp-validation-for="ExtNumber"></span>
+                </div>
+            </div>
+            <div class="table-row form-row">
+                <div class="left-cell">
                     <label>Год рождения</label>
                 </div>
                 <div class="right-cell b-r-form w120">
@@ -178,21 +187,45 @@
             </div>
             <div class="table-row form-row mt23">
                 <div class="left-cell">
-                    <del><label>Научные интересы</label></del>
+                    <label>Научные интересы</label>
                 </div>
                 <div class="right-cell">
-                    <del>
-                        <a href="#" class="italic link-add lk-icon link-add-field">Добавить из Государственного рубрикатора научно-технической информации</a>
-                    </del>
-                    <span style="color: red;">не реализовано обновление в БД, и получение данных от третьей системы</span>
-                    <ul class="list-tags research-interests">
-                        <li>Автоматизация и автоматизированные системы в области науковедения <a href="#" class="link-remove lk-icon italic">Удалить</a></li>
-                        <li>Библиотечное дело, библиотековедение <a href="#" class="link-remove lk-icon italic">Удалить</a></li>
-                        <li>Информационная деятельность в области науковедения <a href="#" class="link-remove lk-icon italic">Удалить</a></li>
-                        <li>Научные и технические библиотеки и библиотечные сети <a href="#" class="link-remove lk-icon italic">Удалить</a></li>
-                        <li>Техническое оснащение библиотек <a href="#" class="link-remove lk-icon italic">Удалить</a></li>
-                        <li>Электронные библиотеки <a href="#" class="link-remove lk-icon italic">Удалить</a></li>
-                    </ul>
+
+                    <a href="#" class="italic link-add lk-icon link-add-field">Добавить из Государственного рубрикатора научно-технической информации <span style="color: red;">в разработке</span></a>
+
+                    <br />
+
+                    <div class="property-list-container" data-innercount="@(Model.Interests.Count - 1)">
+                        <ul class="list-Interests content-list">
+                            @for (var i = 0; i < Model.Interests.Count; i++)
+                            {
+                                useStyle = i == 0 ? invisibleItemStyle : string.Empty;
+                                <text>
+                                <li style="@useStyle" class="property-list-item" data-list-template="@(i == 0 ? "true" : "false")">
+                                    <input type="hidden" name="Interests.Index" value="@i" />
+
+                                    <input asp-for="Interests[i].IntName" />
+                                    <span>Русское название</span>
+
+                                    <br />
+
+                                    <input asp-for="Interests[i].IntNameEn" />
+                                    <span>Английское название</span>
+
+                                    <br />
+
+                                    <div class="buttons">
+                                        <span class="big-link-remove" onclick="return removeItemFromList(this);"></span>
+                                    </div>
+
+                                </li>
+                                </text>
+                            }
+                        </ul>
+                        <a onclick="return addNewItemToList(this, 'Interests')" class="link-add lk-icon italic link-add-field" href="#">Добавить Научный интерес</a>
+                    </div>
+
+
                 </div>
             </div>
         </div>
@@ -310,7 +343,7 @@
                     <label></label>
                 </div>
                 <div class="right-cell">
-                        <a href="#" class="link-add lk-icon italic link-add-field">Добавить Опыт работы <span style="color: red;">в разработке</span> </a>
+                    <a href="#" class="link-add lk-icon italic link-add-field">Добавить Опыт работы <span style="color: red;">в разработке</span> </a>
                 </div>
             </div>
         </div>
@@ -351,12 +384,12 @@
                                 <li style="@useStyle" class="property-list-item" data-list-template="@(i == 0 ? "true" : "false")">
                                     <input type="hidden" name="Rewards.Index" value="@i" />
 
-                                    <br/>
+                                    <br />
 
-                                    <input asp-for="Rewards[i].title"/>
+                                    <input asp-for="Rewards[i].title" />
                                     <span>Название</span>
 
-                                    <br/>
+                                    <br />
 
                                     <input asp-for="Rewards[i].year" />
                                     <span>Год вручения</span>
@@ -442,10 +475,24 @@
                                 useStyle = i == 0 ? invisibleItemStyle : string.Empty;
                                 <text>
                                 <li style="@useStyle" class="property-list-item" data-list-template="@(i == 0 ? "true" : "false")">
-                                    <input type="hidden" asp-for="Publications[i].ResearcherGuid" />
                                     <input type="hidden" asp-for="Publications[i].Guid" />
+                                    <input type="hidden" asp-for="Publications[i].ResearcherGuid" />
+                                    <input type="hidden" asp-for="Publications[i].Type" />
+                                    <input type="hidden" asp-for="Publications[i].ExtId" />
+                                    <input type="hidden" asp-for="Publications[i].Updated" />
                                     <input type="hidden" name="Publications.Index" value="@i" />
-                                    <input asp-for="Publications[i].Title" />
+
+                                    <br />
+
+                                    <input asp-for="Publications[i].Name" />
+                                    <span>Название</span>
+
+                                    <br />
+
+                                    <input asp-for="Publications[i].Authors" />
+                                    <span>Авторы</span>
+
+
                                     <div class="buttons">
                                         @*<span class="big-link-edit"></span>*@
                                         <span class="big-link-remove" onclick="return removeItemFromList(this);"></span>

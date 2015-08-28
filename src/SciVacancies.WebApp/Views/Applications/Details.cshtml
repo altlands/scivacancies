@@ -28,20 +28,22 @@
             <h4>@Model.Researcher.FullName</h4>
             <span class="int-name">@Model.Researcher.FirstNameEng</span>
             <span class="block bold">Год рождения: @Model.Researcher.BirthDate.Year.ToString("0000")</span>
-            <span class="block"><span class="bold">Индивидуальный номер ученого:</span> 00005444</span>
-            @*<span class="block">
-            <span class="bold">Научные интересы (Государственный рубрикатор научно-технической информации):</span>
-            <span>
-                @if (Model.Interests!= null)
-                {
-                    foreach (var item in Model.Interests)
+            <span class="block"><span class="bold">Индивидуальный номер ученого:</span> @Model.Researcher.ExtNumber</span>
+            <span class="block">
+                <span class="bold">Научные интересы (Государственный рубрикатор научно-технической информации):</span>
+                <span>
+                    @if (Model.Researcher.Interests != null)
                     {
-                        @item.Title
+                        foreach (var item in Model.Researcher.Interests)
+                        {
+                            <text>
+                            @item.IntName (En: @item.IntNameEn);
+                            </text>
+                        }
                     }
-                }
+                </span>
             </span>
-        </span>
-    <span class="small-icon icon-sm-eye"><span>Показать все (23)</span></span>*@
+            @*<span class="small-icon icon-sm-eye"><span>Показать все (23)</span></span>*@
         </div>
     </div>
     <div class="list-info">
@@ -72,7 +74,7 @@
                 }
             }
         </div>
-        
+
         <div class="list-item">
             <div class="bold">Награды</div>
             <ol>
@@ -81,7 +83,7 @@
                     foreach (var item in Model.Rewards.OrderBy(c => c.year))
                     {
                         <text>
-                            <li>(@item.year) @item.title @item.org</li>
+                        <li>(@item.year) @item.title @item.org</li>
                         </text>
                     }
                 }
@@ -91,7 +93,7 @@
         <div class="list-item">
             <div class="bold">Членство в профессиональных сообществах</div>
             <ol>
-                @if (Model.Memberships!= null)
+                @if (Model.Memberships != null)
                 {
                     foreach (var item in Model.Memberships)
                     {
@@ -102,7 +104,7 @@
                 }
             </ol>
         </div>
-        
+
 
         <div class="list-item">
             <div class="bold">Публикации</div>
@@ -112,7 +114,7 @@
                     foreach (var item in Model.Publications)
                     {
                         <text>
-                        <li>@item.title</li>
+                        <li>@item.name (авторы: @item.authors)</li>
                         </text>
                     }
                 }
@@ -189,10 +191,10 @@
         }
 
         @if (Model.Vacancy.Status == VacancyStatus.OfferResponseAwaiting
-                || Model.Vacancy.Status == VacancyStatus.OfferAccepted
-                || Model.Vacancy.Status == VacancyStatus.OfferRejected
-                || Model.Vacancy.Status == VacancyStatus.Cancelled
-                || Model.Vacancy.Status == VacancyStatus.Closed)
+                        || Model.Vacancy.Status == VacancyStatus.OfferAccepted
+                        || Model.Vacancy.Status == VacancyStatus.OfferRejected
+                        || Model.Vacancy.Status == VacancyStatus.Cancelled
+                        || Model.Vacancy.Status == VacancyStatus.Closed)
         {
             if (Model.Vacancy.IsWinnerAccept.HasValue && Model.Guid == Model.Vacancy.WinnerVacancyApplicationGuid)
             {
