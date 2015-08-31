@@ -1,13 +1,27 @@
-﻿@model string
+﻿@using System.Threading.Tasks
+@using SciVacancies.WebApp.ViewModels
+@model ResearcherProfileCompareModel
 
 <h3>@ViewBag.Title</h3>
 
 <span style="color: red;">в разработке</span>
 <br />
 
-<p class="text-success" style="padding: 15px; font-size: larger;">
-    @Model
-</p>
+@if (Model.HasError)
+{
+    <p class="text-danger" style="padding: 15px; font-size: larger;">
+        @Model.Error
+    </p>
+}
+else
+{
+    <text>
+
+    <p class="text-success" style="padding: 15px; font-size: larger;">
+        @Model
+    </p>
+    </text>
+}
 
 <form>
     <input type="hidden" asp-anti-forgery="true" />

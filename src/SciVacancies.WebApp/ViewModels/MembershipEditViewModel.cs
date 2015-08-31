@@ -1,4 +1,5 @@
 using System;
+using SciVacancies.WebApp.ViewModels.Base;
 
 namespace SciVacancies.WebApp.ViewModels
 {

@@ -7,6 +7,7 @@ using SciVacancies.ReadModel.Core;
 using SciVacancies.WebApp.ViewModels;
 using System.Linq;
 using System.Collections.Generic;
+using SciVacancies.WebApp.Models;
 
 namespace SciVacancies.WebApp.Infrastructure
 {
@@ -199,9 +200,9 @@ namespace SciVacancies.WebApp.Infrastructure
                 .ForMember(d => d.ScienceRank, o => o.MapFrom(s => s.science_rank))
                 .ForMember(d => d.Rewards, o => o.MapFrom(s => !string.IsNullOrWhiteSpace(s.rewards) ? JsonConvert.DeserializeObject<List<RewardEditViewModel>>(s.rewards) : new List<RewardEditViewModel>()))
                 .ForMember(d => d.Memberships, o => o.MapFrom(s => !string.IsNullOrWhiteSpace(s.memberships) ? JsonConvert.DeserializeObject<List<MembershipEditViewModel>>(s.memberships) : new List<MembershipEditViewModel>()))
+                .ForMember(d => d.Interests, o => o.MapFrom(s => !string.IsNullOrWhiteSpace(s.interests) ? JsonConvert.DeserializeObject<List<InterestEditViewModel>>(s.interests) : new List<InterestEditViewModel>()))
                 .ForMember(d => d.Conferences, o => o.MapFrom(s => s.conferences))
                 .ForMember(d => d.Educations, o => o.MapFrom(s => s.educations))
-                .ForMember(d => d.Interests, o => o.MapFrom(s => !string.IsNullOrWhiteSpace(s.interests) ? JsonConvert.DeserializeObject<List<InterestEditViewModel>>(s.interests) : new List<InterestEditViewModel>()))
                 .ForMember(d => d.Publications, o => o.MapFrom(s => s.publications));
             Mapper.CreateMap<Researcher, ResearcherEditPhotoViewModel>()
                 .ForMember(d => d.Guid, o => o.MapFrom(s => s.guid))
@@ -209,6 +210,35 @@ namespace SciVacancies.WebApp.Infrastructure
                 .ForMember(d => d.ImageSize, o => o.MapFrom(s => s.image_size))
                 .ForMember(d => d.ImageExtension, o => o.MapFrom(s => s.image_extension))
                 .ForMember(d => d.ImageUrl, o => o.MapFrom(s => s.image_url))
+                ;
+
+
+            Mapper.CreateMap<ResearcherDataModel, ResearcherProfileCompareModelItem>()
+                .ForMember(d => d.FirstName, o => o.MapFrom(s => s.FirstName))
+                .ForMember(d => d.MiddleName, o => o.MapFrom(s => s.Patronymic))
+                .ForMember(d => d.LastName, o => o.MapFrom(s => s.SecondName))
+                .ForMember(d => d.PreviousLastName, o => o.MapFrom(s => s.PreviousSecondName))
+                .ForMember(d => d.FirstNameEng, o => o.MapFrom(s => s.FirstNameEng))
+                .ForMember(d => d.MiddleNameEng, o => o.MapFrom(s => s.PatronymicEng))
+                .ForMember(d => d.LastNameEng, o => o.MapFrom(s => s.SecondNameEng))
+                .ForMember(d => d.PreviousLastNameEng, o => o.MapFrom(s => s.PreviousSecondNameEng))
+                .ForMember(d => d.Educations, o => o.MapFrom(s => s.Educations.Select(c => new CheckableListItem<EducationEditViewModel> { This = Mapper.Map<EducationEditViewModel>(c) })))
+                .ForMember(d => d.Publications, o => o.MapFrom(s => s.Publications.Select(c => new CheckableListItem<PublicationEditViewModel> { This = Mapper.Map<PublicationEditViewModel>(c) })))
+                .ForMember(d => d.Rewards, o => o.MapFrom(s =>
+                    !string.IsNullOrWhiteSpace(s.Rewards)
+                    ? JsonConvert.DeserializeObject<List<RewardEditViewModel>>(s.Rewards).Select(c => new CheckableListItem<RewardEditViewModel> { This = c })
+                    : new CheckableItemsList<RewardEditViewModel>()
+                    ))
+                .ForMember(d => d.Memberships, o => o.MapFrom(s =>
+                    !string.IsNullOrWhiteSpace(s.Memberships)
+                    ? JsonConvert.DeserializeObject<List<MembershipEditViewModel>>(s.Memberships).Select(c => new CheckableListItem<MembershipEditViewModel> { This = c })
+                    : new CheckableItemsList<MembershipEditViewModel>()
+                    ))
+                .ForMember(d => d.Interests, o => o.MapFrom(s =>
+                    !string.IsNullOrWhiteSpace(s.Interests)
+                    ? JsonConvert.DeserializeObject<List<InterestEditViewModel>>(s.Interests).Select(c => new CheckableListItem<InterestEditViewModel> { This = c })
+                    : new CheckableItemsList<InterestEditViewModel>()
+                    ))
                 ;
 
             //education
@@ -243,6 +273,8 @@ namespace SciVacancies.WebApp.Infrastructure
                 .ForMember(d => d.Updated, o => o.MapFrom(s => s.updated))
                 ;
             Mapper.CreateMap<PublicationEditViewModel, SciVacancies.Domain.Core.Publication>()
+                ;
+            Mapper.CreateMap<SciVacancies.Domain.Core.Publication, PublicationEditViewModel>()
                 ;
         }
         public static void InitializeSearchSubscription()

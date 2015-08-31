@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -10,15 +11,14 @@ using AutoMapper;
 using MediatR;
 using Microsoft.AspNet.Authorization;
 using Microsoft.AspNet.Identity;
-using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.AspNet.Mvc;
 using Microsoft.Framework.OptionsModel;
 using Newtonsoft.Json;
 using SciVacancies.Domain.DataModels;
-using SciVacancies.WebApp.Commands;
 using Thinktecture.IdentityModel.Client;
 using SciVacancies.WebApp.Engine;
 using SciVacancies.WebApp.Infrastructure.Identity;
+using SciVacancies.WebApp.Infrastructure.WebAuthorize;
 using SciVacancies.WebApp.Models.OAuth;
 using SciVacancies.WebApp.Queries;
 using SciVacancies.WebApp.ViewModels;
@@ -31,12 +31,14 @@ namespace SciVacancies.WebApp.Controllers
         private readonly IOptions<OAuthSettings> _oauthSettings;
         private readonly SciVacUserManager _userManager;
         private readonly IMediator _mediator;
+        private readonly IAuthorizeService _authorizeService;
 
-        public AccountIntegrationController(SciVacUserManager userManager, IOptions<OAuthSettings> oAuthSettings, IMediator mediator)
+        public AccountIntegrationController(SciVacUserManager userManager, IOptions<OAuthSettings> oAuthSettings, IMediator mediator, IAuthorizeService authorizeService)
         {
             _userManager = userManager;
             _oauthSettings = oAuthSettings;
             _mediator = mediator;
+            _authorizeService = authorizeService;
         }
 
         /// <summary>
@@ -48,62 +50,62 @@ namespace SciVacancies.WebApp.Controllers
         [BindResearcherIdFromClaims]
         public async Task<ViewResult> UpdateResearcherAccountFromOutside(Guid researcherGuid)
         {
-            var accessTokenTemp = User.Claims.SingleOrDefault(c => c.Type.Equals("access_token"));
-            if (accessTokenTemp == null)
-                return View(model: "Отсутствует AccessToken");
+            var model = new ResearcherProfileCompareModel();
+            _authorizeService.Initialize(User, Request, Response);
 
-            var accessToken = accessTokenTemp.Value;
+            if (User.Claims.SingleOrDefault(c => c.Type.Equals("access_token")) == null)
+            {
+                model.Error = "Отсутствует AccessToken";
+                return View(model);
+            }
+
+            //TODO: как обновлять профили пользователей, изначально зарегистрировавшихся через наш портал, а не через Карту Науки.
+
             //1-проверка access token expires in
             if (!User.Claims.Any(c => c.Type.Equals("expires_in"))
                 || DateTime.Parse(User.Claims.Single(c => c.Type.Equals("expires_in")).Value) < DateTime.Now)
             {
                 //2-если надо, обновляем access token
                 if (!User.Claims.Any(c => c.Type.Equals("refresh_token")))
-                    return View(model: "Отсутствует RefreshToken");
-
+                {
+                    model.Error = "Отсутствует RefreshToken";
+                    return View(model);
+                }
                 var refreshToken = User.Claims.Single(c => c.Type.Equals("refresh_token")).Value;
+                
                 //получили новые данные - и обновляем их у себя
-                var tokenResponse = await GetOAuthRefreshedToken(_oauthSettings.Options.Mapofscience, refreshToken);
+                var tokenResponse = await _authorizeService.GetOAuthRefreshedTokenAsync(_oauthSettings.Options.Mapofscience, refreshToken);
 
-                var tUser = _userManager.FindByEmail(User.Identity.Name); //email
-                var identity = _userManager.CreateIdentity(tUser, DefaultAuthenticationTypes.ApplicationCookie);
-
-                if (tokenResponse.AccessToken != accessToken)
+                var claims = new List<Claim>
                 {
-                    _userManager.RemoveClaim(tUser.Id, identity.Claims.FirstOrDefault(f => f.Type.Equals("access_token")));
-                    _userManager.AddClaim(tUser.Id, new Claim("access_token", tokenResponse.AccessToken));
-                    accessToken = tokenResponse.AccessToken;
-                }
-
-                if (DateTime.Now.AddSeconds(tokenResponse.ExpiresIn) != DateTime.Parse(identity.Claims.Single(c => c.Type.Equals("expires_in")).Value))
-                {
-                    _userManager.RemoveClaim(tUser.Id, identity.Claims.FirstOrDefault(f => f.Type.Equals("expires_in")));
-                    _userManager.AddClaim(tUser.Id, new Claim("expires_in", DateTime.Now.AddSeconds(tokenResponse.ExpiresIn).ToString()));
-                }
-                if (!string.IsNullOrEmpty(tokenResponse.RefreshToken))
-                {
-                    if (tokenResponse.RefreshToken != refreshToken)
-                    {
-                        _userManager.RemoveClaim(tUser.Id, identity.Claims.FirstOrDefault(f => f.Type.Equals("refresh_token")));
-                        _userManager.AddClaim(tUser.Id, new Claim("refresh_token", tokenResponse.RefreshToken));
-                        refreshToken = tokenResponse.RefreshToken;
-                    }
-                }
+                    new Claim("access_token", tokenResponse.AccessToken),
+                    new Claim("expires_in", DateTime.Now.AddSeconds(tokenResponse.ExpiresIn).ToString(CultureInfo.InvariantCulture)),
+                    new Claim("refresh_token", tokenResponse.RefreshToken)
+                };
+                _authorizeService.RefreshClaimsTokens(_userManager.FindByEmail(User.Identity.Name), claims);
             }
 
-            
             //3-отправляем запрос к api
-            //TODO url move to config
-            OAuthResProfile researcherProfile = JsonConvert.DeserializeObject<OAuthResProfile>(GetResearcherProfile(accessToken));
+            var profileAsString =
+                _authorizeService.GetResearcherProfile(User.Claims.Single(c => c.Type.Equals("access_token")).Value);
+
+            OAuthResProfile oAuthResProfile = JsonConvert.DeserializeObject<OAuthResProfile>(profileAsString);
             //4 - mapping
-            var accountResearcherUpdateViewModel = Mapper.Map<ProfileResearcherUpdateDataModel>(researcherProfile);
-            //var researcherDataModel = Mapper.Map<ResearcherDataModel>(accountResearcherUpdateViewModel);
+            var accountResearcherUpdateViewModel = Mapper.Map<ProfileResearcherUpdateDataModel>(oAuthResProfile);
+            var researcherDataModel = Mapper.Map<ResearcherDataModel>(accountResearcherUpdateViewModel);
+            var newResearcherProfileEditModel = Mapper.Map<ResearcherProfileCompareModelItem>(researcherDataModel);
+
+            //get current profile
+            var oldResearcherReadModel = _mediator.Send(new SingleResearcherQuery { ResearcherGuid = researcherGuid });
+            var oldResearcherDataModel = Mapper.Map<ResearcherDataModel>(oldResearcherReadModel);
+            var researcherProfileEditModel = Mapper.Map<ResearcherProfileCompareModelItem>(oldResearcherDataModel);
+
+            model.New = newResearcherProfileEditModel;
+            model.Original = researcherProfileEditModel;
+            return View(model);
+
             //5 - отправляем команду через медиатор
             //_mediator.Send(new UpdateResearcherCommand {ResearcherGuid = researcherGuid, Data = researcherDataModel});
-
-            var model = "Данные получены, но их обработка сейчас находится в разработке";
-
-            return View(model: model);
         }
 
 
@@ -126,29 +128,7 @@ namespace SciVacancies.WebApp.Controllers
 
 
 
-        //общаемся с картой науки
-        protected string GetResearcherProfile(string accessToken)
-        {
-            //TODO url move to config
-            var webRequest = WebRequest.Create(@"http://scimap-sso.alt-lan.com/scimap-sso/user/profile" + "?access_token=" + accessToken);
-            webRequest.Method = "GET";
-            var httpWebResponse = webRequest.GetResponse() as HttpWebResponse;
-            string responseString = "";
-            using (var stream = httpWebResponse.GetResponseStream())
-            {
-                var streamReader = new StreamReader(stream, Encoding.UTF8);
-                responseString = streamReader.ReadToEnd();
-            }
-            return responseString;
-        }
 
-
-        private async Task<TokenResponse> GetOAuthRefreshedToken(OAuthProviderSettings oauth, string refreshToken)
-        {
-            var client = new OAuth2Client(new Uri(oauth.TokenEndpoint), oauth.ClientId, oauth.ClientSecret);
-
-            return await client.RequestRefreshTokenAsync(refreshToken);
-        }
 
     }
 }
