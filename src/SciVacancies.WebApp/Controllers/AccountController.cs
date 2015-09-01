@@ -8,7 +8,6 @@ using SciVacancies.WebApp.Infrastructure.Identity;
 using SciVacancies.WebApp.ViewModels;
 using Thinktecture.IdentityModel.Client;
 using System.Threading.Tasks;
-using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using Newtonsoft.Json;
@@ -193,7 +192,7 @@ namespace SciVacancies.WebApp.Controllers
         //Сюда редиректит после OAuth авторизации
         public async Task<ActionResult> Callback()
         {
-            _authorizeService.Initialize(User, Request, Response);
+            _authorizeService.Initialize(Request, Response);
             Tuple<AuthorizeUserTypes, AuthorizeResourceTypes> authorizationCookies = GetAuthorizationCookies();
 
             switch (authorizationCookies.Item1)
@@ -209,11 +208,11 @@ namespace SciVacancies.WebApp.Controllers
                             {
                                 if (!string.IsNullOrEmpty(GetCodeFromQuery()))
                                 {
-                                    var tokenResponse = await _authorizeService.GetOAuthTokensAsync(_oauthSettings.Options.Sciencemon, GetCodeFromQuery());
+                                    var tokenResponse = await _authorizeService.GetOAuthAuthorizeTokenAsync(_oauthSettings.Options.Sciencemon, GetCodeFromQuery());
 
                                     if (!string.IsNullOrEmpty(tokenResponse.AccessToken))
                                     {
-                                        var claims = await _authorizeService.GetTokensClaimsList(tokenResponse, _oauthSettings.Options.Sciencemon);
+                                        var claims = await _authorizeService.GetOAuthUserAndTokensClaimsAsync(_oauthSettings.Options.Sciencemon, tokenResponse);
 
                                         OAuthOrgClaim orgClaim = JsonConvert.DeserializeObject<OAuthOrgClaim>(claims.Find(f => f.Type.Equals("org")).Value);
 
@@ -246,8 +245,7 @@ namespace SciVacancies.WebApp.Controllers
                                         }
                                         else
                                         {
-                                            _authorizeService.RefreshClaimsTokens(orgUser, claims);
-                                            _authorizeService.LogOutAndLogInUser(_userManager.CreateIdentity(orgUser, DefaultAuthenticationTypes.ApplicationCookie));
+                                            _authorizeService.RefreshUserClaimTokensAndReauthorize(orgUser, claims);
                                         }
                                     }
                                     else throw new ArgumentNullException("Token response is null");
@@ -266,11 +264,11 @@ namespace SciVacancies.WebApp.Controllers
                             {
                                 if (!string.IsNullOrEmpty(GetCodeFromQuery()))
                                 {
-                                    var tokenResponse = await _authorizeService.GetOAuthTokensAsync(_oauthSettings.Options.Mapofscience, GetCodeFromQuery());
+                                    var tokenResponse = await _authorizeService.GetOAuthAuthorizeTokenAsync(_oauthSettings.Options.Mapofscience, GetCodeFromQuery());
 
                                     if (!string.IsNullOrEmpty(tokenResponse.AccessToken))
                                     {
-                                        var claims = await _authorizeService.GetTokensClaimsList(tokenResponse, _oauthSettings.Options.Mapofscience);
+                                        var claims = await _authorizeService.GetOAuthUserAndTokensClaimsAsync(_oauthSettings.Options.Mapofscience, tokenResponse);
 
                                         var resUser = _userManager.FindByEmail(claims.Find(f => f.Type.Equals("email")).Value);
 
@@ -300,8 +298,7 @@ namespace SciVacancies.WebApp.Controllers
                                         }
                                         else
                                         {
-                                            _authorizeService.RefreshClaimsTokens(resUser, claims);
-                                            _authorizeService.LogOutAndLogInUser(_userManager.CreateIdentity(resUser, DefaultAuthenticationTypes.ApplicationCookie));
+                                            _authorizeService.RefreshUserClaimTokensAndReauthorize(resUser, claims);
                                         }
                                     }
                                     else throw new ArgumentNullException("Token response is null");
@@ -379,6 +376,15 @@ namespace SciVacancies.WebApp.Controllers
         {
             return View();
         }
+        [PageTitle("Восстановление доступа к Системе")]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ViewResult ForgotPassword(string userName)
+        {
+            return View();
+        }
+
+
         [PageTitle("Восстановление доступа к Системе")]
         public ViewResult RestorePassword()
         {

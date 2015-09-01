@@ -15,7 +15,6 @@ namespace SciVacancies.WebApp.ViewModels
             Title = "Личная карточка пользователя";
         }
 
-        [Ignore]
         public string Login { get; set; }
 
         public string FirstName { get; set; }

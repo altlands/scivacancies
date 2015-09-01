@@ -1,4 +1,5 @@
-﻿using SciVacancies.WebApp.Models;
+﻿using System.ComponentModel.DataAnnotations;
+using SciVacancies.WebApp.Models;
 
 namespace SciVacancies.WebApp.ViewModels
 {

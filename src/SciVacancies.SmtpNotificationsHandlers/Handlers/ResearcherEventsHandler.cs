@@ -18,8 +18,8 @@ namespace SciVacancies.SmtpNotificationsHandlers.Handlers
 
         public void Handle(ResearcherCreated msg)
         {
-            var researcher = _db.SingleOrDefaultById<Researcher>(msg.ResearcherGuid);
-            if (researcher == null) return;
+            //var researcher = _db.SingleOrDefaultById<Researcher>(msg.ResearcherGuid);
+            //if (researcher == null) return;
 
             //send email notification
             new SmtpNotificatorUserRegistered().Send(msg.Data.FullName, msg.Data.Email, msg.Data.ExtraEmail);

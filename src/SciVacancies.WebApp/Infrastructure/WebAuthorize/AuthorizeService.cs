@@ -20,21 +20,17 @@ namespace SciVacancies.WebApp.Infrastructure.WebAuthorize
     /// </summary>
     public class AuthorizeService : IAuthorizeService
     {
-        private readonly IMediator _mediator;
         private readonly SciVacUserManager _userManager;
-        private ClaimsPrincipal _user;
         private HttpRequest _request;
         private HttpResponse _response;
 
-        public AuthorizeService(SciVacUserManager userManager, IMediator mediator)
+        public AuthorizeService(SciVacUserManager userManager)
         {
             _userManager = userManager;
-            _mediator = mediator;
         }
 
-        public void Initialize(ClaimsPrincipal user, HttpRequest request, HttpResponse response)
+        public void Initialize(HttpRequest request, HttpResponse response)
         {
-            _user = user;
             _request = request;
             _response = response;
         }
@@ -62,25 +58,20 @@ namespace SciVacancies.WebApp.Infrastructure.WebAuthorize
             _response.SignOut(DefaultAuthenticationTypes.ApplicationCookie);
             _response.SignIn(DefaultAuthenticationTypes.ApplicationCookie, cp);
         }
-        public void LogInUser(ClaimsIdentity identity)
-        {
-            var cp = new ClaimsPrincipal(identity);
-            _response.SignIn(DefaultAuthenticationTypes.ApplicationCookie, cp);
-        }
-        public async Task<TokenResponse> GetOAuthTokensAsync(OAuthProviderSettings oauth, string code)
+        public async Task<TokenResponse> GetOAuthAuthorizeTokenAsync(OAuthProviderSettings oauth, string code)
         {
             var client = new OAuth2Client(new Uri(oauth.TokenEndpoint), oauth.ClientId, oauth.ClientSecret);
 
             return await client.RequestAuthorizationCodeAsync(code, oauth.RedirectUrl);
         }
-        public async Task<TokenResponse> GetOAuthRefreshedTokenAsync(OAuthProviderSettings oauth, string refreshToken)
+        public async Task<TokenResponse> GetOAuthRefreshTokenAsync(OAuthProviderSettings oauth, string refreshToken)
         {
             var client = new OAuth2Client(new Uri(oauth.TokenEndpoint), oauth.ClientId, oauth.ClientSecret);
             return await client.RequestRefreshTokenAsync(refreshToken);
         }
-        public async Task<IEnumerable<Claim>> GetOAuthUserClaimsAsync(OAuthProviderSettings oauth, string accessToken)
+        public async Task<List<Claim>> GetOAuthUserClaimsAsync(OAuthProviderSettings oAuthProviderSettings, string accessToken)
         {
-            var userInfoClient = new UserInfoClient(new Uri(oauth.UserEndpoint), accessToken);
+            var userInfoClient = new UserInfoClient(new Uri(oAuthProviderSettings.UserEndpoint), accessToken);
             var userInfoResponse = await userInfoClient.GetAsync();
 
             var claimsList = new List<Claim>();
@@ -88,7 +79,7 @@ namespace SciVacancies.WebApp.Infrastructure.WebAuthorize
 
             return claimsList;
         }
-        public async Task<List<Claim>> GetTokensClaimsList(TokenResponse tokenResponse, OAuthProviderSettings oAuthProviderSettings)
+        public async Task<List<Claim>> GetOAuthUserAndTokensClaimsAsync(OAuthProviderSettings oAuthProviderSettings, TokenResponse tokenResponse)
         {
             var claims = new List<Claim>();
             claims.AddRange(
@@ -100,41 +91,34 @@ namespace SciVacancies.WebApp.Infrastructure.WebAuthorize
                 claims.Add(new Claim("refresh_token", tokenResponse.RefreshToken));
             return claims;
         }
-
-        public void RefreshClaimsTokens(SciVacUser sciVacUser, List<Claim> claims)
+        public void RefreshUserClaimTokensAndReauthorize(SciVacUser sciVacUser, List<Claim> claims)
         {
-            if (claims == null || !claims.Any())
-                return;
+            var identity = RefreshClaimsTokens(sciVacUser, claims);
+            LogOutAndLogInUser(identity);
+        }
 
+        public ClaimsIdentity RefreshClaimsTokens(SciVacUser sciVacUser, List<Claim> claims)
+        {
             var identity = _userManager.CreateIdentity(sciVacUser, DefaultAuthenticationTypes.ApplicationCookie);
             var userId = identity.GetUserId();
 
-            var tokenType = "access_token";
-            if (claims.Any(f => f.Type.Equals(tokenType)))
-            {
-                if (identity.Claims.Any(f => f.Type.Equals(tokenType)))
-                    _userManager.RemoveClaim(userId, identity.Claims.FirstOrDefault(f => f.Type.Equals(tokenType)));
-                _userManager.AddClaim(userId, claims.First(f => f.Type.Equals(tokenType)));
-            }
+            if (claims == null || !claims.Any())
+                return identity;
 
-            tokenType = "expires_in";
-            if (claims.Any(f => f.Type.Equals(tokenType)))
+            var tokenTypes = new List<string> { "access_token", "expires_in", "refresh_token" };
+            tokenTypes.ForEach(tokenType =>
             {
-                if (identity.Claims.Any(f => f.Type.Equals(tokenType)))
+                if (claims.Any(f => f.Type.Equals(tokenType)))
                 {
                     if (identity.Claims.Any(f => f.Type.Equals(tokenType)))
                         _userManager.RemoveClaim(userId, identity.Claims.FirstOrDefault(f => f.Type.Equals(tokenType)));
                     _userManager.AddClaim(userId, claims.First(f => f.Type.Equals(tokenType)));
                 }
-            }
+            });
 
-            tokenType = "refresh_token";
-            if (claims.Any(f => f.Type.Equals(tokenType)))
-            {
-                if (identity.Claims.Any(f => f.Type.Equals(tokenType)))
-                    _userManager.RemoveClaim(userId, identity.Claims.FirstOrDefault(f => f.Type.Equals(tokenType)));
-                _userManager.AddClaim(userId, claims.First(f => f.Type.Equals(tokenType)));
-            }
+            identity = _userManager.CreateIdentity(sciVacUser, DefaultAuthenticationTypes.ApplicationCookie);
+
+            return identity;
         }
 
     }
@@ -144,10 +128,10 @@ namespace SciVacancies.WebApp.Infrastructure.WebAuthorize
     /// </summary>
     public interface IAuthorizeService
     {
-        void Initialize(ClaimsPrincipal user, HttpRequest request, HttpResponse response);
+        void Initialize(HttpRequest request, HttpResponse response);
 
-        Task<TokenResponse> GetOAuthTokensAsync(OAuthProviderSettings oauth, string code);
-        Task<TokenResponse> GetOAuthRefreshedTokenAsync(OAuthProviderSettings oauth, string refreshToken);
+        Task<TokenResponse> GetOAuthAuthorizeTokenAsync(OAuthProviderSettings oauth, string code);
+        Task<TokenResponse> GetOAuthRefreshTokenAsync(OAuthProviderSettings oauth, string refreshToken);
         /// <summary>
         /// общаемся с картой науки
         /// </summary>
@@ -160,21 +144,24 @@ namespace SciVacancies.WebApp.Infrastructure.WebAuthorize
         /// </summary>
         void LogOutAndLogInUser(ClaimsIdentity identity);
 
-        /// <summary>
-        /// выполнить авторизацию пользователя
-        /// </summary>
-        void LogInUser(ClaimsIdentity identity);
 
+        Task<List<Claim>> GetOAuthUserClaimsAsync(OAuthProviderSettings oAuthProviderSettings, string accessToken);
 
-        Task<IEnumerable<Claim>> GetOAuthUserClaimsAsync(OAuthProviderSettings oauth, string accessToken);
-
-        Task<List<Claim>> GetTokensClaimsList(TokenResponse tokenResponse, OAuthProviderSettings oAuthProviderSettings);
+        Task<List<Claim>> GetOAuthUserAndTokensClaimsAsync(OAuthProviderSettings oAuthProviderSettings, TokenResponse tokenResponse);
 
         /// <summary>
-        /// refresh token values in user claims. НОВЫЕ ТОКЕНЫ вступят в силу ПОСЛЕ переавторизации
+        /// refresh token values in user claims. NEW TOKENS will apply after LogOut and LogIn
         /// </summary>
         /// <param name="claims"></param>
         /// <param name="user"></param>
-        void RefreshClaimsTokens(SciVacUser user, List<Claim> claims);
+        ClaimsIdentity RefreshClaimsTokens(SciVacUser user, List<Claim> claims);
+
+
+        /// <summary>
+        /// refresh token values in user claims4 then LogOut and LogIn user
+        /// </summary>
+        /// <param name="claims"></param>
+        /// <param name="user"></param>
+        void RefreshUserClaimTokensAndReauthorize(SciVacUser user, List<Claim> claims);
     }
 }

@@ -15,7 +15,7 @@ using Microsoft.AspNet.Mvc;
 using Microsoft.Framework.OptionsModel;
 using Newtonsoft.Json;
 using SciVacancies.Domain.DataModels;
-using Thinktecture.IdentityModel.Client;
+using SciVacancies.ReadModel.Core;
 using SciVacancies.WebApp.Engine;
 using SciVacancies.WebApp.Infrastructure.Identity;
 using SciVacancies.WebApp.Infrastructure.WebAuthorize;
@@ -51,7 +51,7 @@ namespace SciVacancies.WebApp.Controllers
         public async Task<ViewResult> UpdateResearcherAccountFromOutside(Guid researcherGuid)
         {
             var model = new ResearcherProfileCompareModel();
-            _authorizeService.Initialize(User, Request, Response);
+            _authorizeService.Initialize(Request, Response);
 
             if (User.Claims.SingleOrDefault(c => c.Type.Equals("access_token")) == null)
             {
@@ -72,17 +72,26 @@ namespace SciVacancies.WebApp.Controllers
                     return View(model);
                 }
                 var refreshToken = User.Claims.Single(c => c.Type.Equals("refresh_token")).Value;
-                
+
                 //получили новые данные - и обновляем их у себя
-                var tokenResponse = await _authorizeService.GetOAuthRefreshedTokenAsync(_oauthSettings.Options.Mapofscience, refreshToken);
+                var tokenResponse = await _authorizeService.GetOAuthRefreshTokenAsync(_oauthSettings.Options.Mapofscience, refreshToken);
+
+                if (tokenResponse.IsError)
+                {
+                    model.Error = "Произошла ошибка при попытке получить данные. Попробуйте выйти и авторизоваться ещё раз. Затем повторите Загрузку данных.";
+                    return View(model);
+                }
 
                 var claims = new List<Claim>
                 {
                     new Claim("access_token", tokenResponse.AccessToken),
-                    new Claim("expires_in", DateTime.Now.AddSeconds(tokenResponse.ExpiresIn).ToString(CultureInfo.InvariantCulture)),
-                    new Claim("refresh_token", tokenResponse.RefreshToken)
+                    new Claim("expires_in", DateTime.Now.AddSeconds(tokenResponse.ExpiresIn).ToString())
                 };
-                _authorizeService.RefreshClaimsTokens(_userManager.FindByEmail(User.Identity.Name), claims);
+                if (!string.IsNullOrEmpty(tokenResponse.RefreshToken))
+                    claims.Add(new Claim("refresh_token", tokenResponse.RefreshToken));
+
+                _authorizeService.RefreshUserClaimTokensAndReauthorize(_userManager.FindByEmail(User.Identity.Name), claims);
+
             }
 
             //3-отправляем запрос к api
@@ -97,6 +106,8 @@ namespace SciVacancies.WebApp.Controllers
 
             //get current profile
             var oldResearcherReadModel = _mediator.Send(new SingleResearcherQuery { ResearcherGuid = researcherGuid });
+            oldResearcherReadModel.educations = Mapper.Map<List<Education>>(_mediator.Send(new SelectResearcherEducationsQuery { ResearcherGuid = researcherGuid }));
+            oldResearcherReadModel.publications = Mapper.Map<List<Publication>>(_mediator.Send(new SelectResearcherPublicationsQuery { ResearcherGuid = researcherGuid }));
             var oldResearcherDataModel = Mapper.Map<ResearcherDataModel>(oldResearcherReadModel);
             var researcherProfileEditModel = Mapper.Map<ResearcherProfileCompareModelItem>(oldResearcherDataModel);
 
@@ -104,6 +115,7 @@ namespace SciVacancies.WebApp.Controllers
             model.Original = researcherProfileEditModel;
             return View(model);
 
+            //TODO: продолжтиь обработку в отдельном Action
             //5 - отправляем команду через медиатор
             //_mediator.Send(new UpdateResearcherCommand {ResearcherGuid = researcherGuid, Data = researcherDataModel});
         }

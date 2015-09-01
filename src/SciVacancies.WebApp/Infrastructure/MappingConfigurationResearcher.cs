@@ -222,7 +222,8 @@ namespace SciVacancies.WebApp.Infrastructure
                 .ForMember(d => d.MiddleNameEng, o => o.MapFrom(s => s.PatronymicEng))
                 .ForMember(d => d.LastNameEng, o => o.MapFrom(s => s.SecondNameEng))
                 .ForMember(d => d.PreviousLastNameEng, o => o.MapFrom(s => s.PreviousSecondNameEng))
-                .ForMember(d => d.Educations, o => o.MapFrom(s => s.Educations.Select(c => new CheckableListItem<EducationEditViewModel> { This = Mapper.Map<EducationEditViewModel>(c) })))
+                .ForMember(d => d.Educations, o => o.MapFrom(s => 
+                    s.Educations.Select(c => new CheckableListItem<EducationEditViewModel> { This = Mapper.Map<EducationEditViewModel>(c) })))
                 .ForMember(d => d.Publications, o => o.MapFrom(s => s.Publications.Select(c => new CheckableListItem<PublicationEditViewModel> { This = Mapper.Map<PublicationEditViewModel>(c) })))
                 .ForMember(d => d.Rewards, o => o.MapFrom(s =>
                     !string.IsNullOrWhiteSpace(s.Rewards)
@@ -251,6 +252,12 @@ namespace SciVacancies.WebApp.Infrastructure
                 .ForMember(d => d.FacultyShortName, o => o.MapFrom(s => s.faculty_shortname))
                 .ForMember(dest => dest.GraduationYear, src => src.MapFrom(c => c.graduation_date.HasValue ? c.graduation_date.Value.Year : 0))
                 .ForMember(d => d.Degree, o => o.MapFrom(s => s.degree));
+            Mapper.CreateMap<SciVacancies.Domain.Core.Education, EducationEditViewModel>()
+                .ForMember(d => d.City, o => o.MapFrom(s => s.City))
+                .ForMember(d => d.UniversityShortName, o => o.MapFrom(s => s.UniversityShortName))
+                .ForMember(d => d.FacultyShortName, o => o.MapFrom(s => s.FacultyShortName))
+                .ForMember(dest => dest.GraduationYear, src => src.MapFrom(c => c.GraduationYear.HasValue ? c.GraduationYear.Value.Year : 0))
+                .ForMember(d => d.Degree, o => o.MapFrom(s => s.Degree));
             Mapper.CreateMap<EducationEditViewModel, SciVacancies.Domain.Core.Education>()
                 .ForMember(dest => dest.GraduationYear, src => src.MapFrom(c => (c.GraduationYear.HasValue && c.GraduationYear.Value != 0) ? new DateTime(c.GraduationYear.Value, 1, 1) : default(DateTime)));
 
