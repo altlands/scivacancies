@@ -17,6 +17,7 @@ using SciVacancies.WebApp.Models.OAuth;
 using Microsoft.Framework.OptionsModel;
 using AutoMapper;
 using SciVacancies.WebApp.Engine;
+using SciVacancies.WebApp.Infrastructure;
 using SciVacancies.WebApp.Infrastructure.WebAuthorize;
 
 namespace SciVacancies.WebApp.Controllers
@@ -28,13 +29,15 @@ namespace SciVacancies.WebApp.Controllers
         private readonly SciVacUserManager _userManager;
         private readonly IOptions<OAuthSettings> _oauthSettings;
         private readonly IAuthorizeService _authorizeService;
+        private readonly IRecoveryPasswordService _recoveryPasswordService;
 
-        public AccountController(SciVacUserManager userManager, IMediator mediator, IOptions<OAuthSettings> oAuthSettings, IAuthorizeService authorizeService)
+        public AccountController(SciVacUserManager userManager, IMediator mediator, IOptions<OAuthSettings> oAuthSettings, IAuthorizeService authorizeService, IRecoveryPasswordService recoveryPasswordService)
         {
             _mediator = mediator;
             _userManager = userManager;
             _oauthSettings = oAuthSettings;
             _authorizeService = authorizeService;
+            _recoveryPasswordService = recoveryPasswordService;
         }
 
         public IActionResult LoginUser(string id)
@@ -241,7 +244,7 @@ namespace SciVacancies.WebApp.Controllers
 
                                             var user = _mediator.Send(new RegisterUserOrganizationCommand { Data = orgModel });
 
-                                            _authorizeService.LogOutAndLogInUser(_userManager.CreateIdentity(user,DefaultAuthenticationTypes.ApplicationCookie));
+                                            _authorizeService.LogOutAndLogInUser(_userManager.CreateIdentity(user, DefaultAuthenticationTypes.ApplicationCookie));
                                         }
                                         else
                                         {
@@ -292,6 +295,8 @@ namespace SciVacancies.WebApp.Controllers
                                                                   || w.Type.Equals("expires_in")
                                                                   || w.Type.Equals("refresh_token")).ToList();
 
+                                            //TODO: сохранять ID пользователя из внешней системы, чтобы не терять его если он сменит логин и почту
+
                                             var user = _mediator.Send(new RegisterUserResearcherCommand { Data = accountResearcherRegisterViewModel });
 
                                             _authorizeService.LogOutAndLogInUser(_userManager.CreateIdentity(user, DefaultAuthenticationTypes.ApplicationCookie));
@@ -319,17 +324,41 @@ namespace SciVacancies.WebApp.Controllers
 
         [PageTitle("Регистрация")]
         [HttpPost]
-        public IActionResult Register(AccountResearcherRegisterViewModel model)
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Register(AccountResearcherRegisterViewModel model)
         {
             if (!ModelState.IsValid)
                 return View(model);
 
+            /* Validation start */
             if (!model.Agreement)
-            {
                 ModelState.AddModelError("Agreement", "Нет согласия на обработку персональных данных");
-                return View(model);
+
+            var existingUser = await _userManager.FindByEmailAsync(model.Email);
+            if (existingUser != null)
+                //TODO: что делать если пользователь еще не подтвердил email (удалить его)
+                ModelState.AddModelError("Email", "Пользователь с таким Email уже существует");
+
+            if (!string.IsNullOrWhiteSpace(model.ExtraEmail))
+            {
+                existingUser = await _userManager.FindByEmailAsync(model.ExtraEmail);
+                if (existingUser != null)
+                    ModelState.AddModelError("ExtraEmail", "Пользователь с таким Email уже существует");
             }
 
+            existingUser = await _userManager.FindByNameAsync(model.UserName);
+            if (existingUser != null)
+                ModelState.AddModelError("UserName", "Пользователь с таким Email уже существует");
+
+            if (ModelState.ErrorCount > 0)
+            {
+                ModelState.AddModelError("Password", "Введите еще раз пароль");
+                ModelState.AddModelError("ConfirmPassword", "Повторите ввод пароля");
+                model.Captcha = null;
+                ModelState.AddModelError("Captcha", "Введите код");
+                return View(model);
+            }
+            /* Validation end */
 
             //var command = new RegisterUserResearcherCommand
             //{
@@ -359,18 +388,15 @@ namespace SciVacancies.WebApp.Controllers
             var user = _mediator.Send(createUserResearcherCommand1);
             var researcherGuid1 = Guid.Parse(user.Claims.Single(s => s.ClaimType.Equals(ConstTerms.ClaimTypeResearcherId)).ClaimValue);
 
-
-            var identity = _userManager.CreateIdentity(user, DefaultAuthenticationTypes.ApplicationCookie);
-            var cp = new ClaimsPrincipal(identity);
-
-            //signing out...
-            Context.Response.SignOut(DefaultAuthenticationTypes.ApplicationCookie);
-            //...before signing in
-            Context.Response.SignIn(DefaultAuthenticationTypes.ApplicationCookie, cp);
+            _authorizeService.LogOutAndLogInUser(_userManager.CreateIdentity(user, DefaultAuthenticationTypes.ApplicationCookie));
 
             return RedirectToAccount();
         }
 
+        /// <summary>
+        /// пользователь запрашивает сброс пароля
+        /// </summary>
+        /// <returns></returns>
         [PageTitle("Восстановление доступа к Системе")]
         public ViewResult ForgotPassword()
         {
@@ -381,12 +407,49 @@ namespace SciVacancies.WebApp.Controllers
         [ValidateAntiForgeryToken]
         public ViewResult ForgotPassword(string userName)
         {
+            //1 существует ли пользователь
+            //_recoveryPasswordService.UserExists()
+
+            //1-1 проверить, что у пользователя подтверждён email. (что делать если он ен подтверждён)
+
+            //2 не превышено ли число запросов на восстановление, без запроса капчи
+            //DateTime lastSendDateTime; //время отправки последнего кода
+            // получить количество последних сгенерированных кодов
+            //var unUsedRecoveryCount = _recoveryPasswordService.UnsuccessfullRecoveryAttempts(userName, out lastSendDateTime, out attemptCount)
+
+            //2-1 получить капчу, если unUsedRecoveryCount > x
+
+            //3 сгенерировать новый код, если unUsedRecoveryCount < x
+            //4 записать новый код и время его получения в БД (и удалить старые коды, старше определенного периода)
+            //var newCode = _recoveryPasswordService.GenerateNewCode()
+
+            //5 отправить письмо с новым кодом
+            //(вызвать событие(? или другим способом), которе вызовет отправку письма)
+
             return View();
         }
 
-
+        /// <summary>
+        /// пользователь вводит новые пароли
+        /// </summary>
+        /// <returns></returns>
         [PageTitle("Восстановление доступа к Системе")]
-        public ViewResult RestorePassword()
+        public ViewResult RestorePassword(string code)
+        {
+            //1 проверить, что код еще не испольвался
+
+            //2 найти пользователя по коду
+
+
+            return View();
+        }
+
+        /// <summary>
+        /// пользователь вводит новые пароли
+        /// </summary>
+        /// <returns></returns>
+        [PageTitle("Восстановление доступа к Системе")]
+        public ViewResult RestorePassword(string userName, string password, string passwordConfirm)
         {
             return View();
         }
