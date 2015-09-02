@@ -27,6 +27,8 @@
 
 <div class="b-form">
     <form asp-controller="Account" asp-action="Register" method="post" role="form">
+        <input type="hidden" asp-anti-forgery="true" />
+
         <div class="form-line form-row">
             <label>Фамилия</label>
             <div class="b-r-form">
@@ -148,11 +150,12 @@
                     <img id="captchaImage" src="/captcha/fetch?w=100&h=30" onclick="javascript: reloadImg('captchaImage');" />
                 </div>
                 <div class="form-line">
-                    <span class="small-icon icon-update"><span>Обновить</span></span>
+                    <span class="small-icon icon-update" onclick="javascript: reloadImg('captchaImage');"><span>Обновить</span></span>
                 </div>
                 <div class="form-line">
                     <input type="text" asp-for="Captcha" class="middle-input" />
                 </div>
+                <span asp-validation-for="Captcha"></span>
             </div>
         </div>
 
