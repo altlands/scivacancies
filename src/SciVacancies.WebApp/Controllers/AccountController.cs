@@ -303,6 +303,8 @@ namespace SciVacancies.WebApp.Controllers
                                         }
                                         else
                                         {
+                                            //TODO: что делать если у нас есть пользователь с таким же логином и/или паролем
+
                                             _authorizeService.RefreshUserClaimTokensAndReauthorize(resUser, claims);
                                         }
                                     }
