@@ -7,6 +7,7 @@ using SciVacancies.ReadModel.Core;
 using SciVacancies.WebApp.ViewModels;
 using SciVacancies.WebApp.Models.OAuth;
 using System.Linq;
+using SciVacancies.WebApp.Models.DataModels;
 
 namespace SciVacancies.WebApp.Infrastructure
 {
@@ -41,12 +42,13 @@ namespace SciVacancies.WebApp.Infrastructure
 
 
             //TODO - дописать поля в модели
-            Mapper.CreateMap<ProfileResearcherUpdateDataModel, ResearcherDataModel>()
-                .Include<AccountResearcherRegisterViewModel, ResearcherDataModel>()
-                .ForMember(dest => dest.BirthDate, src => src.MapFrom(c => c.BirthDate ?? new DateTime(c.BirthYear, 1, 1)))
-                .ForMember(dest => dest.Patronymic, src => src.MapFrom(c => c.Patronymic))
+            Mapper.CreateMap<AccountResearcherRegisterViewModel, ResearcherRegisterDataModel>()
                 ;
-            Mapper.CreateMap<AccountResearcherRegisterViewModel, ResearcherDataModel>()
+            Mapper.CreateMap<ResearcherUpdateDataModel, ResearcherDataModel>()
+                .Include<ResearcherRegisterDataModel, ResearcherDataModel>()
+                .ForMember(dest => dest.BirthDate, src => src.MapFrom(c => c.BirthDate ?? new DateTime(c.BirthYear, 1, 1)))
+                ;
+            Mapper.CreateMap<ResearcherRegisterDataModel, ResearcherDataModel>()
                 ;
 
             //organization
@@ -89,12 +91,12 @@ namespace SciVacancies.WebApp.Infrastructure
                 .ForMember(d => d.Name, o => o.MapFrom(s => s.title));
 
             //TODO - добавить нужные маппинги и допилить структуру моделей
-            Mapper.CreateMap<OAuthResProfile, ProfileResearcherUpdateDataModel>()
-                .Include<OAuthResProfile, AccountResearcherRegisterViewModel>()
+            Mapper.CreateMap<OAuthResProfile, ResearcherUpdateDataModel>()
+                .Include<OAuthResProfile, ResearcherRegisterDataModel>()
                 //.ForMember(d => d, o => o.MapFrom(s => s.id))
                 //.ForMember(d => d, o => o.MapFrom(s => s.login))
                 .ForMember(d => d.FirstName, o => o.MapFrom(s => s.firstName))
-                .ForMember(d => d.ExtNumber, o => o.MapFrom(s => s.identityNumberSc!=null ? s.identityNumberSc.scimap : 0))
+                .ForMember(d => d.ExtNumber, o => o.MapFrom(s => s.identityNumberSc != null ? s.identityNumberSc.scimap : 0))
                 .ForMember(d => d.FirstNameEng, o => o.MapFrom(s => s.firstNameEn))
                 .ForMember(d => d.SecondName, o => o.MapFrom(s => s.lastName))
                 .ForMember(d => d.SecondNameEng, o => o.MapFrom(s => s.lastNameEn))
@@ -120,8 +122,13 @@ namespace SciVacancies.WebApp.Infrastructure
                 //.ForMember(d => d, o => o.MapFrom(s => s.photo))
                 .ForMember(d => d.Education, o => o.MapFrom(s => s.education != null && s.education.Any() ? JsonConvert.SerializeObject(s.education) : string.Empty))
                 .ForMember(d => d.BirthDate, o => o.MapFrom(s => DateTime.Parse(s.birthday)));
-
-            Mapper.CreateMap<OAuthResProfile, AccountResearcherRegisterViewModel>();
+            Mapper.CreateMap<ResearcherUpdateDataModel, ResearcherRegisterDataModel>()
+                ;
+            Mapper.CreateMap<OAuthResProfile, ResearcherRegisterDataModel>()
+                .ForMember(d => d.Password, o => o.Ignore())
+                .ForMember(d => d.ConfirmPassword, o => o.Ignore())
+                .ForMember(d => d.Claims, o => o.Ignore())
+                ;
 
             Mapper.CreateMap<OAuthResEntity, Domain.Core.Publication>()
                 .ForMember(d => d.Authors, opt => opt.MapFrom(src => src.authors ?? string.Empty))

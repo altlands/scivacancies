@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Collections.Generic;
+using System.Data.Entity.Core;
 using System.Globalization;
 using System.IO;
 using System.Net;
@@ -52,11 +53,21 @@ namespace SciVacancies.WebApp.Infrastructure.WebAuthorize
             }
             return responseString;
         }
-        public void LogOutAndLogInUser(ClaimsIdentity identity)
+        public ClaimsPrincipal LogOutAndLogInUser(ClaimsIdentity identity)
+        {
+            if (_response == null)
+                throw new ObjectNotFoundException($"Параметр {nameof(_response)} не инициализирован");
+
+            return LogOutAndLogInUser(_response, identity);
+        }
+        public ClaimsPrincipal LogOutAndLogInUser(HttpResponse response, ClaimsIdentity identity)
         {
             var cp = new ClaimsPrincipal(identity);
-            _response.SignOut(DefaultAuthenticationTypes.ApplicationCookie);
-            _response.SignIn(DefaultAuthenticationTypes.ApplicationCookie, cp);
+            
+            response.SignOut(DefaultAuthenticationTypes.ApplicationCookie);
+            response.SignIn(DefaultAuthenticationTypes.ApplicationCookie, cp);
+
+            return cp;
         }
         public async Task<TokenResponse> GetOAuthAuthorizeTokenAsync(OAuthProviderSettings oauth, string code)
         {
@@ -91,10 +102,10 @@ namespace SciVacancies.WebApp.Infrastructure.WebAuthorize
                 claims.Add(new Claim("refresh_token", tokenResponse.RefreshToken));
             return claims;
         }
-        public void RefreshUserClaimTokensAndReauthorize(SciVacUser sciVacUser, List<Claim> claims)
+        public ClaimsPrincipal RefreshUserClaimTokensAndReauthorize(SciVacUser sciVacUser, List<Claim> claims)
         {
             var identity = RefreshClaimsTokens(sciVacUser, claims);
-            LogOutAndLogInUser(identity);
+            return LogOutAndLogInUser(identity);
         }
 
         public ClaimsIdentity RefreshClaimsTokens(SciVacUser sciVacUser, List<Claim> claims)
@@ -142,7 +153,12 @@ namespace SciVacancies.WebApp.Infrastructure.WebAuthorize
         /// <summary>
         /// выполнить переавторизацию пользователя (выйти и войти снова)
         /// </summary>
-        void LogOutAndLogInUser(ClaimsIdentity identity);
+        ClaimsPrincipal LogOutAndLogInUser(HttpResponse response, ClaimsIdentity identity);
+
+        /// <summary>
+        /// выполнить переавторизацию пользователя (выйти и войти снова)
+        /// </summary>
+        ClaimsPrincipal LogOutAndLogInUser(ClaimsIdentity identity);
 
 
         Task<List<Claim>> GetOAuthUserClaimsAsync(OAuthProviderSettings oAuthProviderSettings, string accessToken);
@@ -162,6 +178,6 @@ namespace SciVacancies.WebApp.Infrastructure.WebAuthorize
         /// </summary>
         /// <param name="claims"></param>
         /// <param name="user"></param>
-        void RefreshUserClaimTokensAndReauthorize(SciVacUser user, List<Claim> claims);
+        ClaimsPrincipal RefreshUserClaimTokensAndReauthorize(SciVacUser user, List<Claim> claims);
     }
 }

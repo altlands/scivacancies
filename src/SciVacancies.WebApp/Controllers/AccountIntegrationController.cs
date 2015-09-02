@@ -19,6 +19,7 @@ using SciVacancies.ReadModel.Core;
 using SciVacancies.WebApp.Engine;
 using SciVacancies.WebApp.Infrastructure.Identity;
 using SciVacancies.WebApp.Infrastructure.WebAuthorize;
+using SciVacancies.WebApp.Models.DataModels;
 using SciVacancies.WebApp.Models.OAuth;
 using SciVacancies.WebApp.Queries;
 using SciVacancies.WebApp.ViewModels;
@@ -100,7 +101,7 @@ namespace SciVacancies.WebApp.Controllers
 
             OAuthResProfile oAuthResProfile = JsonConvert.DeserializeObject<OAuthResProfile>(profileAsString);
             //4 - mapping
-            var accountResearcherUpdateViewModel = Mapper.Map<ProfileResearcherUpdateDataModel>(oAuthResProfile);
+            var accountResearcherUpdateViewModel = Mapper.Map<ResearcherUpdateDataModel>(oAuthResProfile);
             var researcherDataModel = Mapper.Map<ResearcherDataModel>(accountResearcherUpdateViewModel);
             var newResearcherProfileEditModel = Mapper.Map<ResearcherProfileCompareModelItem>(researcherDataModel);
 
