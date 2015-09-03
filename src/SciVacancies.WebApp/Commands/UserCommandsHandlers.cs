@@ -73,6 +73,7 @@ namespace SciVacancies.WebApp.Commands
 
             if (!string.IsNullOrWhiteSpace(message.Data.SciMapNumber))
             {
+                //todo: для внешних пользователей пометить Email как подтвержденный?
                 _userManager.AddLogin(user.Id, new UserLoginInfo("ScienceMap", message.Data.SciMapNumber));
             }
 
