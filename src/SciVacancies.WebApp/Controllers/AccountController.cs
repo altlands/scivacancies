@@ -16,10 +16,13 @@ using System.IO;
 using SciVacancies.WebApp.Models.OAuth;
 using Microsoft.Framework.OptionsModel;
 using AutoMapper;
+using Microsoft.AspNet.Authorization;
+using SciVacancies.SmtpNotificationsHandlers.SmtpNotificators;
 using SciVacancies.WebApp.Engine;
 using SciVacancies.WebApp.Infrastructure;
 using SciVacancies.WebApp.Infrastructure.WebAuthorize;
 using SciVacancies.WebApp.Models.DataModels;
+using SciVacancies.WebApp.Queries;
 
 namespace SciVacancies.WebApp.Controllers
 {
@@ -289,6 +292,11 @@ namespace SciVacancies.WebApp.Controllers
                                             var accountResearcherRegisterDataModel =
                                                 Mapper.Map<ResearcherRegisterDataModel>(researcherProfile);
 
+                                            if (!string.IsNullOrWhiteSpace(accountResearcherRegisterDataModel.SciMapNumber))
+                                            {
+                                                //TODO: если пользователь у нас есть пользователь с таким же идентификатором Карты Наук, то для него сделать обновление данных
+                                            }
+
                                             accountResearcherRegisterDataModel.UserName =
                                                 claims.Find(f => f.Type.Equals("login")).Value;
 
@@ -308,7 +316,18 @@ namespace SciVacancies.WebApp.Controllers
                                         }
                                         else
                                         {
-                                            //TODO: что делать если у нас есть пользователь с таким же логином и/или паролем
+                                            //TODO: что делать если у нас есть пользователь с таким же логином
+
+                                            //TODO: что делать если кто-то в нашей системе прописал email (такой же как у авторизованного пользователя)
+                                            if (!resUser.EmailConfirmed)
+                                            {
+                                                //удалить "нашего" пользователя
+                                            }
+                                            else
+                                            {
+                                                //выполнить слияние с "нашим" пользователем
+                                            }
+
 
                                             claimsPrincipal = _authorizeService.RefreshUserClaimTokensAndReauthorize(resUser, claims);
                                         }
@@ -410,31 +429,35 @@ namespace SciVacancies.WebApp.Controllers
         [PageTitle("Восстановление доступа к Системе")]
         public ViewResult ForgotPassword()
         {
+            //TODO: дописать форму и протестировать валидации
             return View();
         }
         [PageTitle("Восстановление доступа к Системе")]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ViewResult ForgotPassword(string userName)
+        public async Task<IActionResult> ForgotPassword(string userName)
         {
+            SciVacUser user = await _userManager.FindByNameAsync(userName);
+
+            if (user == null)
+                user = await _userManager.FindByEmailAsync(userName);
+
             //1 существует ли пользователь
-            //_recoveryPasswordService.UserExists()
+            if (user == null)
+                throw new Exception("");//TODO: обработать без Исключения
 
             //1-1 проверить, что у пользователя подтверждён email. (что делать если он ен подтверждён)
 
-            //2 не превышено ли число запросов на восстановление, без запроса капчи
+            //2 TODO: не превышено ли число запросов на восстановление, без запроса капчи
             //DateTime lastSendDateTime; //время отправки последнего кода
-            // получить количество последних сгенерированных кодов
+            //TODO: получить количество последних сгенерированных кодов
             //var unUsedRecoveryCount = _recoveryPasswordService.UnsuccessfullRecoveryAttempts(userName, out lastSendDateTime, out attemptCount)
 
-            //2-1 получить капчу, если unUsedRecoveryCount > x
+            //2-1 TODO:получить капчу, если unUsedRecoveryCount > x
 
-            //3 сгенерировать новый код, если unUsedRecoveryCount < x
-            //4 записать новый код и время его получения в БД (и удалить старые коды, старше определенного периода)
-            //var newCode = _recoveryPasswordService.GenerateNewCode()
+            //3 TODO: сгенерировать новый код, если unUsedRecoveryCount < x
 
-            //5 отправить письмо с новым кодом
-            //(вызвать событие(? или другим способом), которе вызовет отправку письма)
+            //4 TODO: отправить письмо с новым кодом на восстановление пароля
 
             return View();
         }
@@ -444,13 +467,68 @@ namespace SciVacancies.WebApp.Controllers
         /// </summary>
         /// <returns></returns>
         [PageTitle("Восстановление доступа к Системе")]
-        public ViewResult RestorePassword(string code)
+        public ViewResult RestorePassword(string token)
         {
-            //1 проверить, что код еще не испольвался
+            //1 TODO: проверить, что код еще не использовался
 
-            //2 найти пользователя по коду
+            //2 TODO: найти пользователя по коду
 
             return View();
+        }
+
+        /// <summary>
+        /// запросить подтверждение email
+        /// </summary>
+        /// <returns></returns>
+        [PageTitle("Запрос на подтверждение Email")]
+        [Authorize(Roles = ConstTerms.RequireRoleResearcher)]
+        [BindResearcherIdFromClaims]
+        public async Task<IActionResult> RequestEmailConfirmation(Guid researcherGuid)
+        {
+            var user = await _userManager.FindByIdAsync(User.Identity.GetUserId());
+            if (user == null)
+                return View("Error", model: "Мы не нашли пользователя");
+            
+            var logins = await _userManager.GetLoginsAsync(user.Id);
+            //проверяем, что пользователь ЧУЖОЙ (и нам Не нужно подтверждать его Email)
+            if (logins != null && logins.Any())
+            {
+                return View(model: "Ваш электронныйадрес не нуждается в подтверждении");
+            }
+
+            var researcher = _mediator.Send(new SingleResearcherQuery { ResearcherGuid = researcherGuid });
+            if (researcher == null)
+                return View("Error", model: "Мы не нашли исследователя");
+
+            var newEmailConfirmationToken = await _userManager.GenerateEmailConfirmationTokenAsync(user.Id);
+
+            var smtpNotificatorEmailConfirmation = new SmtpNotificatorEmailConfirmation();
+            smtpNotificatorEmailConfirmation.Send(researcher, user.Email, newEmailConfirmationToken);
+
+            return View(model: "Письмо с запросом на подтверждение отправлено на указанный в профиле email. Пожалуйста, проверьте свою почту.");
+        }
+
+        /// <summary>
+        /// подтверждение email
+        /// </summary>
+        /// <returns></returns>
+        [PageTitle("Проверка подтверждения Email")]
+        [Authorize(Roles = ConstTerms.RequireRoleResearcher)]
+        [BindResearcherIdFromClaims]
+        public async Task<IActionResult> ConfirmEmail(Guid researcherGuid, string token)
+        {
+            var researcher = _mediator.Send(new SingleResearcherQuery { ResearcherGuid = researcherGuid });
+            if (researcher == null)
+                return View("Error", model: "Мы не нашли исследователя");
+
+            var user = await _userManager.FindByEmailAsync(researcher.email);
+
+            if (user == null)
+                return View("Error", model: "Мы не нашли пользователя");
+
+            IdentityResult result = await _userManager.ConfirmEmailAsync(user.Id, token);
+
+            return View(result);
         }
 
         /// <summary>

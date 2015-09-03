@@ -93,8 +93,6 @@ namespace SciVacancies.WebApp.Infrastructure
             //TODO - добавить нужные маппинги и допилить структуру моделей
             Mapper.CreateMap<OAuthResProfile, ResearcherUpdateDataModel>()
                 .Include<OAuthResProfile, ResearcherRegisterDataModel>()
-                //.ForMember(d => d, o => o.MapFrom(s => s.id))
-                //.ForMember(d => d, o => o.MapFrom(s => s.login))
                 .ForMember(d => d.FirstName, o => o.MapFrom(s => s.firstName))
                 .ForMember(d => d.ExtNumber, o => o.MapFrom(s => s.identityNumberSc != null ? s.identityNumberSc.scimap : 0))
                 .ForMember(d => d.FirstNameEng, o => o.MapFrom(s => s.firstNameEn))
@@ -125,6 +123,9 @@ namespace SciVacancies.WebApp.Infrastructure
             Mapper.CreateMap<ResearcherUpdateDataModel, ResearcherRegisterDataModel>()
                 ;
             Mapper.CreateMap<OAuthResProfile, ResearcherRegisterDataModel>()
+                //TODO: какой номер (или какое значение) использовать для заполнения НомерПользователяКартыНаук
+                .ForMember(d => d.SciMapNumber, o => o.MapFrom(s => s.id))
+                //.ForMember(d => d, o => o.MapFrom(s => s.login))
                 .ForMember(d => d.Password, o => o.Ignore())
                 .ForMember(d => d.ConfirmPassword, o => o.Ignore())
                 .ForMember(d => d.Claims, o => o.Ignore())

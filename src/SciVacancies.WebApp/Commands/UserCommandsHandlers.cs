@@ -71,6 +71,11 @@ namespace SciVacancies.WebApp.Commands
 
             _userManager.AddToRole(user.Id, ConstTerms.RequireRoleResearcher);
 
+            if (!string.IsNullOrWhiteSpace(message.Data.SciMapNumber))
+            {
+                _userManager.AddLogin(user.Id, new UserLoginInfo("ScienceMap", message.Data.SciMapNumber));
+            }
+
             return user;
         }
     }

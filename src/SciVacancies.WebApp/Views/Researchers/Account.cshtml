@@ -29,6 +29,39 @@
         </div>
     </div>
     <div class="row pt15 fs12">
+        <div class="profile-description profile-description-place">
+            <div>
+                Email:
+                <span class="bold">
+                    @Model.Email 
+                </span>
+                @Component.Invoke("CallEmailConfirm")
+                <br />
+            </div>
+            <div>
+                Email (доп.):
+                <span class="bold">
+                    @Model.ExtraEmail
+                </span>
+                <br />
+            </div>
+            <div>
+                Телефон:
+                <span class="bold">
+                    @Model.Phone
+                </span>
+                <br />
+            </div>
+            <div>
+                Телефон (доп.):
+                <span class="bold">
+                    @Model.ExtraPhone
+                </span>
+                <br />
+            </div>
+        </div>
+    </div>
+    <div class="row pt15 fs12">
         <div><span class="bold">Индивидуальный номер ученого:</span> @Model.ExtNumber<br /></div>
         <span class="bold">Научные интересы (Государственный рубрикатор научно-технической информации):</span><br />
         @if (Model.Publications != null)
@@ -37,7 +70,7 @@
             {
                 <text>
                 <span>
-                    @item.IntName (Engl: @item.IntNameEn); 
+                    @item.IntName (Engl: @item.IntNameEn);
                 </span>
                 </text>
 

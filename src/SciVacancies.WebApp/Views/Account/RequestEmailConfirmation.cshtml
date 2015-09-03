@@ -1,0 +1,17 @@
+﻿@using System.Threading.Tasks
+@model string
+
+<div class="crumbs">
+    <a href="/">Главная</a><span class="separator">/</span>
+    <a asp-controller="researchers" asp-action="account">Личная карточка</a><span class="separator">/</span>
+    @ViewBag.Title
+</div>
+
+<h3>Личная карточка пользователя</h3>
+
+@Model
+
+<div class="b-bottom-nav">
+    <a htef="/" class="small-icon icon-prev">Главная</a>
+    <a asp-controller="researchers" asp-action="account" class="small-icon icon-prev">Личная карточка</a>
+</div>

@@ -8,6 +8,11 @@ namespace SciVacancies.WebApp.Models.DataModels
     /// </summary>
     public class ResearcherRegisterDataModel : ResearcherUpdateDataModel
     {
+        /// <summary>
+        /// Идентификатор учёного в системе Карты Науки
+        /// </summary>
+        public string SciMapNumber { get; set; }
+
         public string Password { get; set; }
         public string ConfirmPassword { get; set; }
 

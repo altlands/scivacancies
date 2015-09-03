@@ -1,4 +1,5 @@
 ﻿using Autofac;
+using Microsoft.AspNet.DataProtection;
 using Microsoft.AspNet.Identity;
 using SciVacancies.WebApp.Infrastructure.Identity;
 using SciVacancies.WebApp.Infrastructure.WebAuthorize;

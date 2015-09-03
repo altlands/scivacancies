@@ -1,5 +1,4 @@
 ﻿using SciVacancies.Domain.Core;
-
 using System;
 using System.Collections.Generic;
 
@@ -7,6 +6,14 @@ namespace SciVacancies.Domain.DataModels
 {
     public class ResearcherDataModel
     {
+        /// <summary>
+        /// Идентификатор учёного в системе Карты Науки
+        /// </summary>
+        public string SciMapNumber { get; set; }
+
+        /// <summary>
+        /// Идентификационный номер Учёного
+        /// </summary>
         public int ExtNumber { get; set; }
 
         public string FirstName { get; set; }

@@ -5,6 +5,7 @@ using Autofac;
 using Autofac.Dnx;
 using Autofac.Features.Variance;
 using Microsoft.AspNet.Builder;
+using Microsoft.AspNet.DataProtection;
 using Microsoft.AspNet.Diagnostics;
 using Microsoft.AspNet.Hosting;
 using Microsoft.AspNet.Identity;
@@ -144,15 +145,6 @@ namespace SciVacancies.WebApp
             MappingConfiguration.Initialize();
 
             //SearchSubscriptionService.Initialize(Configuration);
-        }
-    }
-
-    public class YourCustomFilter : ActionFilterAttribute, IExceptionFilter
-    {
-        public void OnException(ExceptionContext context)
-        {
-            var t = 5;
-            t = 5 * t;
         }
     }
 
