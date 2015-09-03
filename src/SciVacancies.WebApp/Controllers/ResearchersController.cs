@@ -41,7 +41,7 @@ namespace SciVacancies.WebApp.Controllers
         [Authorize]
         [PageTitle("Информация")]
         [BindResearcherIdFromClaims]
-        [UnactivatedUser]
+        [NonActivatedUser]
         public IActionResult Account(Guid researcherGuid)
         {
             if (researcherGuid == Guid.Empty)

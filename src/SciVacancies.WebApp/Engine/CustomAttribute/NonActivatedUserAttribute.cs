@@ -6,7 +6,7 @@ namespace SciVacancies.WebApp.Controllers
     /// <summary>
     /// если пользователь не активирован, то отправить его на страницу запроса активации
     /// </summary>
-    public class UnactivatedUserAttribute : ActionFilterAttribute
+    public class NonActivatedUserAttribute : ActionFilterAttribute
     {
         protected string Key;
         protected string ArguName;
