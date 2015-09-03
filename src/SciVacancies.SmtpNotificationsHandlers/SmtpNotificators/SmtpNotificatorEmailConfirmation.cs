@@ -5,16 +5,15 @@ namespace SciVacancies.SmtpNotificationsHandlers.SmtpNotificators
 {
     public class SmtpNotificatorEmailConfirmation : SmtpNotificator
     {
-        public void Send(Researcher researcher, string mailTo, string token)
+        public void Send(Researcher researcher, string username, string mailTo, string token)
         {
             var researcherFullName = $"{researcher.secondname} {researcher.firstname} {researcher.patronymic}";
             var body = $@"
 <div style=''>
     Уважаемый(-ая), {researcherFullName}, 
     <br/>
-    для подтверждения указанной электронной почты ({mailTo}) предлагаем перейти по <a target='_blank' href='http://{Domain}/account/confirmemail/?token={token}'> ссылке</a>.
+    для активации вашей учётной записи перейдите, пожалуйста, по <a target='_blank' href='http://{Domain}/account/activateaccount/?username={username}&token={token}'> ссылке</a>.
     <br/>
-    (Чтобы подтвеждение Email прошло успешно, вы должны быть авторизованы (выполнить вход) на <a target='_blank' href='http://{Domain}'>портале вакансий</a>)
 </div>
 <br/>
 <div style='color: red;'>

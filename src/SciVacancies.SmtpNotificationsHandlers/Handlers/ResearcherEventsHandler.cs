@@ -1,7 +1,6 @@
 ﻿using MediatR;
 using NPoco;
 using SciVacancies.Domain.Events;
-using SciVacancies.ReadModel.Core;
 using SciVacancies.SmtpNotificationsHandlers.SmtpNotificators;
 
 namespace SciVacancies.SmtpNotificationsHandlers.Handlers
@@ -22,7 +21,8 @@ namespace SciVacancies.SmtpNotificationsHandlers.Handlers
             //if (researcher == null) return;
 
             //send email notification
-            new SmtpNotificatorUserRegistered().Send(msg.Data.FullName, msg.Data.Email, msg.Data.ExtraEmail);
+            //new SmtpNotificatorUserRegistered().Send(msg.Data.FullName, msg.Data.Email, msg.Data.ExtraEmail);
+            new SmtpNotificatorUserRegistered().Send(msg.Data.FullName, msg.Data.Email);
         }
     }
 }

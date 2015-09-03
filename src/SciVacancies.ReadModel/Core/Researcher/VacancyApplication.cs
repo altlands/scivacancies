@@ -15,6 +15,7 @@ namespace SciVacancies.ReadModel.Core
         public string position_name { get; set; }
 
         public string email { get; set; }
+        [Obsolete("неопределено назначение этого свойства. планируется его удаление")]
         public string extraemail { get; set; }
         public string phone { get; set; }
         public string extraphone { get; set; }

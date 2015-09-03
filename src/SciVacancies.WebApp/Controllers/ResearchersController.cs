@@ -22,7 +22,7 @@ using SciVacancies.WebApp.ViewModels;
 namespace SciVacancies.WebApp.Controllers
 {
     [ResponseCache(NoStore = true)]
-    [Authorize(Roles = ConstTerms.RequireRoleResearcher)]
+    [Authorize]
     public class ResearchersController : Controller
     {
         private readonly IMediator _mediator;
@@ -38,8 +38,10 @@ namespace SciVacancies.WebApp.Controllers
 
         [ResponseCache(NoStore = true)]
         [SiblingPage]
+        [Authorize]
         [PageTitle("Информация")]
         [BindResearcherIdFromClaims]
+        [UnactivatedUser]
         public IActionResult Account(Guid researcherGuid)
         {
             if (researcherGuid == Guid.Empty)
@@ -56,6 +58,7 @@ namespace SciVacancies.WebApp.Controllers
             return View(model);
         }
 
+        [Authorize(Roles = ConstTerms.RequireRoleResearcher)]
         [ResponseCache(NoStore = true)]
         [PageTitle("Изменить данные")]
         [BindResearcherIdFromClaims]
@@ -74,7 +77,7 @@ namespace SciVacancies.WebApp.Controllers
 
             return View(model);
         }
-        [HttpPut]
+        [Authorize(Roles = ConstTerms.RequireRoleResearcher)]
         [HttpPost]
         [PageTitle("Редактирование информации пользователя")]
         [BindResearcherIdFromClaims("authorizedUserGuid")]
@@ -104,7 +107,7 @@ namespace SciVacancies.WebApp.Controllers
             return RedirectToAction("account");
         }
 
-
+        [Authorize(Roles = ConstTerms.RequireRoleResearcher)]
         [ResponseCache(NoStore = true)]
         [PageTitle("Изменить данные")]
         [BindResearcherIdFromClaims]
@@ -120,7 +123,7 @@ namespace SciVacancies.WebApp.Controllers
             var model = Mapper.Map<ResearcherEditPhotoViewModel>(preModel);
             return View(model);
         }
-        [HttpPut]
+        [Authorize(Roles = ConstTerms.RequireRoleResearcher)]
         [HttpPost]
         [PageTitle("Редактирование информации пользователя")]
         [BindResearcherIdFromClaims("authorizedUserGuid")]
@@ -226,6 +229,7 @@ namespace SciVacancies.WebApp.Controllers
             return newImage;
         }
 
+        [Authorize(Roles = ConstTerms.RequireRoleResearcher)]
         [SiblingPage]
         [PageTitle("Мои заявки")]
         [BindResearcherIdFromClaims]
@@ -266,6 +270,7 @@ namespace SciVacancies.WebApp.Controllers
             return View(model);
         }
 
+        [Authorize(Roles = ConstTerms.RequireRoleResearcher)]
         [SiblingPage]
         [PageTitle("Избранные вакансии")]
         [BindResearcherIdFromClaims]
@@ -288,6 +293,7 @@ namespace SciVacancies.WebApp.Controllers
             return View(model);
         }
 
+        [Authorize(Roles = ConstTerms.RequireRoleResearcher)]
         [SiblingPage]
         [PageTitle("Подписки")]
         [BindResearcherIdFromClaims]
@@ -306,6 +312,7 @@ namespace SciVacancies.WebApp.Controllers
         }
 
 
+        [Authorize(Roles = ConstTerms.RequireRoleResearcher)]
         [SiblingPage]
         [PageTitle("Уведомления")]
         [BindResearcherIdFromClaims]
@@ -326,6 +333,7 @@ namespace SciVacancies.WebApp.Controllers
             return View(model);
         }
 
+        [Authorize(Roles = ConstTerms.RequireRoleResearcher)]
         [BindResearcherIdFromClaims]
         public ActionResult AddToFavorite(Guid researcherGuid, Guid vacancyGuid)
         {
@@ -351,6 +359,7 @@ namespace SciVacancies.WebApp.Controllers
             return Redirect(Context.Request.Headers["referer"]);
         }
 
+        [Authorize(Roles = ConstTerms.RequireRoleResearcher)]
         [BindResearcherIdFromClaims]
         [PageTitle("Избранная вакансия")]
         public IActionResult RemoveFavorite(Guid vacancyGuid, Guid researcherGuid)
@@ -374,6 +383,7 @@ namespace SciVacancies.WebApp.Controllers
             return View(model);
         }
 
+        [Authorize(Roles = ConstTerms.RequireRoleResearcher)]
         [HttpPost]
         [ValidateAntiForgeryToken]
         [BindResearcherIdFromClaims]

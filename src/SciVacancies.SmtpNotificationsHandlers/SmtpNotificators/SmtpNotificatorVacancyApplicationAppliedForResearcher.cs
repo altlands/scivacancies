@@ -23,7 +23,7 @@ namespace SciVacancies.SmtpNotificationsHandlers.SmtpNotificators
     <a target='_blank' href='http://{Domain}/researchers/account/'>личном кабинете</a>.
 </div>
 ";
-            Send(new SciVacMailMessage(researcher.email, researcher.extraemail, "Уведомление с портала вакансий", body));
+            Send(new SciVacMailMessage(researcher.email, /*researcher.extraemail,*/ "Уведомление с портала вакансий", body));
         }
     }
 }

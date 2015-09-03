@@ -18,7 +18,7 @@
 {
     <text>
     <p class="text-success" style="padding: 15px; font-size: larger;">
-        Ваш email подтверждён.
+        Учётная запись активирована. Можете продолжить работу в личном кабинете.
     </p>
     </text>
 }
@@ -26,7 +26,7 @@ else
 {
     <text>
     <p class="text-danger" style="padding: 15px; font-size: larger;">
-        При подтверждении почты возникли ошибки
+        При активации учетной записи возникли ошибки
     </p>
     </text>
     if (Model.Errors != null && Model.Errors.Any())
@@ -45,8 +45,15 @@ else
             </ul>
         </p>
         </text>
-
     }
+
+    <text>
+    <p class="text-success" style="padding: 15px; font-size: larger;">
+        <a asp-controller="account" asp-action="activationrequest">
+            Повторить активацию
+        </a>
+    </p>
+    </text>
 }
 <div class="b-bottom-nav">
     <a htef="/" class="small-icon icon-prev">Главная</a>

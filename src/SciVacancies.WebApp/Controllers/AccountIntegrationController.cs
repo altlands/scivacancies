@@ -91,7 +91,7 @@ namespace SciVacancies.WebApp.Controllers
                 if (!string.IsNullOrEmpty(tokenResponse.RefreshToken))
                     claims.Add(new Claim("refresh_token", tokenResponse.RefreshToken));
 
-                _authorizeService.RefreshUserClaimTokensAndReauthorize(_userManager.FindByEmail(User.Identity.Name), claims);
+                _authorizeService.RefreshUserClaimTokensAndReauthorize(_userManager.FindByEmail(User.Identity.Name), claims, Response);
 
             }
 

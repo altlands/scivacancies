@@ -1,12 +1,10 @@
-﻿using SciVacancies.Domain.Enums;
-using SciVacancies.Domain.Events;
-using SciVacancies.ReadModel.Core;
-
-using System;
-
+﻿using AutoMapper;
 using MediatR;
 using NPoco;
-using AutoMapper;
+using SciVacancies.Domain.Enums;
+using SciVacancies.Domain.Events;
+using SciVacancies.ReadModel.Core;
+using System;
 
 namespace SciVacancies.ReadModel.EventHandlers
 {

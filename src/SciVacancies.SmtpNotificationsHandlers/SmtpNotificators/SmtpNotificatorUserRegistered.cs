@@ -6,7 +6,7 @@ namespace SciVacancies.SmtpNotificationsHandlers.SmtpNotificators
     /// </summary>
     public class SmtpNotificatorUserRegistered : SmtpNotificator
     {
-        public void Send(string fullName, string mailTo, string extraMailTo)
+        public void Send(string fullName, string mailTo/*, string extraMailTo*/)
         {
             var body =
                 $@"
@@ -27,7 +27,7 @@ namespace SciVacancies.SmtpNotificationsHandlers.SmtpNotificators
 </div>
 ";
 
-            Send(new SciVacMailMessage(mailTo, extraMailTo, "Вы зарегистрированы на портале вакансий", body));
+            Send(new SciVacMailMessage(mailTo, /*extraMailTo,*/ "Вы зарегистрированы на портале вакансий", body));
         }
     }
 }

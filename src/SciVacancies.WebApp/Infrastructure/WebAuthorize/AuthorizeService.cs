@@ -1,17 +1,20 @@
 ﻿using System;
 using System.Linq;
 using System.Collections.Generic;
-using System.Data.Entity.Core;
-using System.Globalization;
 using System.IO;
 using System.Net;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
-using MediatR;
+using Microsoft.AspNet.Authorization;
 using Microsoft.AspNet.Http;
 using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.Mvc;
+using SciVacancies.ReadModel.Core;
+using SciVacancies.SmtpNotificationsHandlers.SmtpNotificators;
+using SciVacancies.WebApp.Controllers;
 using SciVacancies.WebApp.Infrastructure.Identity;
+using SciVacancies.WebApp.Queries;
 using Thinktecture.IdentityModel.Client;
 
 namespace SciVacancies.WebApp.Infrastructure.WebAuthorize
@@ -53,13 +56,13 @@ namespace SciVacancies.WebApp.Infrastructure.WebAuthorize
             }
             return responseString;
         }
-        public ClaimsPrincipal LogOutAndLogInUser(ClaimsIdentity identity)
-        {
-            if (_response == null)
-                throw new ObjectNotFoundException($"Параметр {nameof(_response)} не инициализирован");
+        //public ClaimsPrincipal LogOutAndLogInUser(ClaimsIdentity identity)
+        //{
+        //    if (_response == null)
+        //        throw new ObjectNotFoundException($"Параметр {nameof(_response)} не инициализирован");
 
-            return LogOutAndLogInUser(_response, identity);
-        }
+        //    return LogOutAndLogInUser(_response, identity);
+        //}
         public ClaimsPrincipal LogOutAndLogInUser(HttpResponse response, ClaimsIdentity identity)
         {
             var cp = new ClaimsPrincipal(identity);
@@ -102,12 +105,12 @@ namespace SciVacancies.WebApp.Infrastructure.WebAuthorize
                 claims.Add(new Claim("refresh_token", tokenResponse.RefreshToken));
             return claims;
         }
-        public ClaimsPrincipal RefreshUserClaimTokensAndReauthorize(SciVacUser sciVacUser, List<Claim> claims)
+
+        public ClaimsPrincipal RefreshUserClaimTokensAndReauthorize(SciVacUser sciVacUser, List<Claim> claims, HttpResponse response)
         {
             var identity = RefreshClaimsTokens(sciVacUser, claims);
-            return LogOutAndLogInUser(identity);
+            return LogOutAndLogInUser(response ,identity);
         }
-
         public ClaimsIdentity RefreshClaimsTokens(SciVacUser sciVacUser, List<Claim> claims)
         {
             var identity = _userManager.CreateIdentity(sciVacUser, DefaultAuthenticationTypes.ApplicationCookie);
@@ -130,6 +133,22 @@ namespace SciVacancies.WebApp.Infrastructure.WebAuthorize
             identity = _userManager.CreateIdentity(sciVacUser, DefaultAuthenticationTypes.ApplicationCookie);
 
             return identity;
+        }
+
+
+
+        /// <summary>
+        /// запросить подтверждение email
+        /// </summary>
+        /// <returns></returns>
+        [PageTitle("Запрос на подтверждение Email")]
+        [Authorize(Roles = ConstTerms.RequireRoleResearcher)]
+        [BindResearcherIdFromClaims]
+        public async Task CallUserActivationAsync(SciVacUser sciVacUser, Researcher researcher)
+        {
+            var newEmailConfirmationToken = await _userManager.GenerateEmailConfirmationTokenAsync(sciVacUser.Id);
+            var smtpNotificatorEmailConfirmation = new SmtpNotificatorEmailConfirmation();
+            smtpNotificatorEmailConfirmation.Send(researcher, sciVacUser.UserName, sciVacUser.Email, newEmailConfirmationToken);
         }
 
     }
@@ -155,12 +174,6 @@ namespace SciVacancies.WebApp.Infrastructure.WebAuthorize
         /// </summary>
         ClaimsPrincipal LogOutAndLogInUser(HttpResponse response, ClaimsIdentity identity);
 
-        /// <summary>
-        /// выполнить переавторизацию пользователя (выйти и войти снова)
-        /// </summary>
-        ClaimsPrincipal LogOutAndLogInUser(ClaimsIdentity identity);
-
-
         Task<List<Claim>> GetOAuthUserClaimsAsync(OAuthProviderSettings oAuthProviderSettings, string accessToken);
 
         Task<List<Claim>> GetOAuthUserAndTokensClaimsAsync(OAuthProviderSettings oAuthProviderSettings, TokenResponse tokenResponse);
@@ -178,6 +191,14 @@ namespace SciVacancies.WebApp.Infrastructure.WebAuthorize
         /// </summary>
         /// <param name="claims"></param>
         /// <param name="user"></param>
-        ClaimsPrincipal RefreshUserClaimTokensAndReauthorize(SciVacUser user, List<Claim> claims);
+        ClaimsPrincipal RefreshUserClaimTokensAndReauthorize(SciVacUser user, List<Claim> claims, HttpResponse response);
+
+        /// <summary>
+        /// отправить письмо для активации пользователя
+        /// </summary>
+        /// <param name="user"></param>
+        /// <param name="researcher"></param>
+        /// <returns></returns>
+        Task CallUserActivationAsync(SciVacUser user, Researcher researcher);
     }
 }

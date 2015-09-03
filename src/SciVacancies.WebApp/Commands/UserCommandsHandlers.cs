@@ -69,12 +69,21 @@ namespace SciVacancies.WebApp.Commands
 
             if (!identity.Succeeded) throw new ArgumentException("UserManager failed to create identity");
 
-            _userManager.AddToRole(user.Id, ConstTerms.RequireRoleResearcher);
 
             if (!string.IsNullOrWhiteSpace(message.Data.SciMapNumber))
             {
                 //todo: для внешних пользователей пометить Email как подтвержденный?
-                _userManager.AddLogin(user.Id, new UserLoginInfo("ScienceMap", message.Data.SciMapNumber));
+                _userManager.AddLogin(user.Id, new UserLoginInfo(ConstTerms.LoginProvider, message.Data.SciMapNumber));
+                
+                //отметить пользователя как прошедшего активацию
+                _userManager.AddClaim(user.Id, new Claim(ConstTerms.ClaimTypeUserActivated, "true"));
+                
+                _userManager.AddToRole(user.Id, ConstTerms.RequireRoleResearcher);
+            }
+            else
+            {
+                //отметить пользователя как ождидающего активацию
+                _userManager.AddClaim(user.Id, new Claim(ConstTerms.ClaimTypeUserActivated, "false"));
             }
 
             return user;
