@@ -21,7 +21,7 @@ namespace SciVacancies.WebApp.Infrastructure.Identity
             }
             set
             {
-                PasswordRequests  = value.Any() ? JsonConvert.SerializeObject(value.Select(c=>c.ToUniversalTime()).ToList()) : string.Empty;
+                PasswordRequests  = (value==null || !value.Any()) ? string.Empty : JsonConvert.SerializeObject(value.Select(c=>c.ToUniversalTime()).ToList());
             }
         }
 

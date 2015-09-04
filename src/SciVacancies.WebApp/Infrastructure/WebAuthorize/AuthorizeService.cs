@@ -135,20 +135,18 @@ namespace SciVacancies.WebApp.Infrastructure.WebAuthorize
             return identity;
         }
 
-
-
-        /// <summary>
-        /// запросить подтверждение email
-        /// </summary>
-        /// <returns></returns>
-        [PageTitle("Запрос на подтверждение Email")]
-        [Authorize(Roles = ConstTerms.RequireRoleResearcher)]
-        [BindResearcherIdFromClaims]
         public async Task CallUserActivationAsync(SciVacUser sciVacUser, Researcher researcher)
         {
-            var newEmailConfirmationToken = await _userManager.GenerateEmailConfirmationTokenAsync(sciVacUser.Id);
-            var smtpNotificatorEmailConfirmation = new SmtpNotificatorEmailConfirmation();
-            smtpNotificatorEmailConfirmation.Send(researcher, sciVacUser.UserName, sciVacUser.Email, newEmailConfirmationToken);
+            var token = await _userManager.GenerateEmailConfirmationTokenAsync(sciVacUser.Id);
+            var smtpNotificatorEmailConfirmation = new SmtpNotificatorUserActivation();
+            smtpNotificatorEmailConfirmation.Send(researcher, sciVacUser.UserName, sciVacUser.Email, token);
+        }
+        
+        public async Task CallPasswordResetAsync(SciVacUser sciVacUser, Researcher researcher)
+        {
+            var token = await _userManager.GenerateUserTokenAsync("ChangePa$$bord", sciVacUser.Id);
+            var smtpNotificatorPasswordRestore = new SmtpNotificatorPasswordRestore();
+            smtpNotificatorPasswordRestore.Send(researcher, sciVacUser.UserName, sciVacUser.Email, token);
         }
 
     }
@@ -200,5 +198,10 @@ namespace SciVacancies.WebApp.Infrastructure.WebAuthorize
         /// <param name="researcher"></param>
         /// <returns></returns>
         Task CallUserActivationAsync(SciVacUser user, Researcher researcher);
+
+        /// <summary>
+        /// отправить письмо для сброса пароля пользователя
+        /// </summary>
+        Task CallPasswordResetAsync(SciVacUser user, Researcher researcher);
     }
 }

@@ -423,9 +423,14 @@ namespace SciVacancies.WebApp.Controllers
         /// </summary>
         /// <returns></returns>
         [PageTitle("Восстановление доступа к Системе")]
-        public ViewResult ForgotPassword()
+        [AllowAnonymous]
+        public async Task<IActionResult> ForgotPassword()
         {
-            return View();
+            var userName = string.Empty;
+            if (User.Identity.IsAuthenticated)
+                userName = User.Identity.Name;
+
+            return View(model: userName);
         }
 
         /// <summary>
@@ -433,6 +438,7 @@ namespace SciVacancies.WebApp.Controllers
         /// </summary>
         /// <returns></returns>
         [PageTitle("Восстановление доступа к Системе")]
+        [AllowAnonymous]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> ForgotPassword(string username)
@@ -440,38 +446,94 @@ namespace SciVacancies.WebApp.Controllers
             // !!! Восстанавливаем пароль даже на неактивированную учётную запись !!!
 
             #region validation
+
             var user = await _userManager.FindByNameAsync(username);
             if (user == null)
                 return View("Error", model: "Мы не нашли пользователя");
-            
+
             //проверяем, что пользователь ЧУЖОЙ (и нам Не нужно подтверждать его Email)
             var logins = await _userManager.GetLoginsAsync(user.Id);
             if (logins != null && logins.Any())
             {
-                return View("Error", model: $"Для восстановления пароля восползуйтесь порталом (или сайтом), через который Вы выполнили авторизацию ({string.Join(", ", logins.Select(c => c.LoginProvider).ToList())}).");
+                return View("Error",
+                    model:
+                        $"Для восстановления пароля воспользуйтесь порталом (или сайтом), через который Вы выполнили авторизацию ({string.Join(", ", logins.Select(c => c.LoginProvider).ToList())}).");
             }
 
-            //todo: проверить что пользователь уже не заблокирован
-
-            //проверяем последние запросы на сброс пароля
-            var lastRequests = user.LastRequests;
-
-                lastRequests.Add(DateTime.Now.ToUniversalTime());
-            user.LastRequests = lastRequests;
-
-            _userManager.Update(user);
             #endregion
 
-            //TODO: сгенерировать каптчу, если PasswordRecoveryPeriod > x
-            //TODO: заблокировать учётку, если PasswordRecoveryCount > y
+            var lastRequests = user.LastRequests;
+            lastRequests.Sort((x, y) => y.CompareTo(x));
 
+            //если пользователь заблокирован
+            var lockoutEndDate = _userManager.GetLockoutEndDate(user.Id);
+            var lockoutEnabled = _userManager.GetLockoutEnabled(user.Id);
+            if (lockoutEnabled
+                && lockoutEndDate > DateTime.UtcNow)
+            {
+                return View("Error",
+                    model:
+                        $"Ваш пользователь временно заблокирован. Повторите попытку через {Math.Round((lockoutEndDate - DateTime.UtcNow).TotalMinutes, 0)} минут");
+            }
+            
+            //сбросить блокировки
+            await _userManager.SetLockoutEnabledAsync(user.Id, false);
+            await _userManager.SetLockoutEndDateAsync(user.Id, DateTimeOffset.Now.AddSeconds(-1));
 
-            //TODO: сгенерировать новый код
-            //_userManager.GeneratePasswordResetTokenAsync();
-            //TODO: отправить письмо с новым кодом на восстановление пароля
-            //_authorizeService.....
+            //if (lastRequests.Any())
+            //{
+            //    //todo: вынести все параметры в конфиг
 
-            return View();
+            //    var afterLastRequestPeriod = new TimeSpan(0, 10, 0); //10 min
+            //    //если последний запрос на сброс пароля был менее, чем afterLastRequestPeriod (минут/секунд) назад, то показывать капчу.
+            //    if ((DateTime.UtcNow - lastRequests.Max()) < afterLastRequestPeriod)
+            //    {
+            //        //todo: показывать капчу
+            //    }
+
+            //    var nLastRequestsCount = 3; //последние n-запросов
+            //    var nLastRequestsPeriod = new TimeSpan(0, 60, 0);
+            //    //период, в котором не должно быть запросов пароля, чтобы не заблокировать пользователя
+            //    var tBlockPeriod = new TimeSpan(0, 90, 0); //90 min
+            //    //если последние n-запрос на сброс пароля были менее, в течение nLastRequestsCountPeriod (минут/секунд), то временно заблокировать пользователя на t-период.
+            //    if (lastRequests.Count >= nLastRequestsCount
+            //        && (DateTime.UtcNow - lastRequests.Take(nLastRequestsCount).Min()) < nLastRequestsPeriod)
+            //    {
+            //        //блокируем пользователя на t-период
+            //        await _userManager.SetLockoutEnabledAsync(user.Id, true);
+            //        await
+            //            _userManager.SetLockoutEndDateAsync(user.Id,
+            //                new DateTimeOffset(DateTime.UtcNow.Add(tBlockPeriod)));
+
+            //        return View("Error", model: "Ваш пользователь временно заблокирован.");
+            //    }
+
+            //}
+
+            //фиксируем текущий запрос на сброс пароля
+            lastRequests.Add(DateTime.UtcNow);
+            user.LastRequests = lastRequests;
+            _userManager.Update(user);
+
+            var userClaims = _userManager.GetClaimsAsync(user.Id);
+            if (userClaims != null)
+            {
+                var researcherClaim = user.Claims.SingleOrDefault(c => c.ClaimType == ConstTerms.ClaimTypeResearcherId);
+                if (researcherClaim != null)
+                {
+                    var researcher =
+                        _mediator.Send(new SingleResearcherQuery
+                        {
+                            ResearcherGuid = Guid.Parse(researcherClaim.ClaimValue)
+                        });
+
+                    //отправить письмо с новым кодом на восстановление пароля
+                    await _authorizeService.CallPasswordResetAsync(user, researcher);
+                    return View("Success", model: "Для восстановления доступа к Порталу мы отправили вам письмо на электронную почту, указанную при регистрации.");
+                }
+            }
+
+            return View("Error", model: "Мы не нашли ваш профиль, чтобы сгенерирвать вам письмо.");
         }
 
         /// <summary>
@@ -479,13 +541,39 @@ namespace SciVacancies.WebApp.Controllers
         /// </summary>
         /// <returns></returns>
         [PageTitle("Восстановление доступа к Системе")]
-        public ViewResult RestorePassword(string token)
+        public async Task<IActionResult> RestorePassword(string userName, string token)
         {
-            //1 TODO: проверить, что код еще не использовался
+            #region validation
+            var user = await _userManager.FindByNameAsync(userName);
+            if (user == null)
+                return View("Error", model: "Мы не нашли пользователя");
 
-            //2 TODO: найти пользователя по коду
+            //проверяем, что пользователь ЧУЖОЙ (и нам Не нужно подтверждать его Email)
+            var logins = await _userManager.GetLoginsAsync(user.Id);
+            if (logins != null && logins.Any())
+            {
+                return View("Error",
+                    model:
+                        $"Для восстановления пароля воспользуйтесь порталом (или сайтом), через который Вы выполнили авторизацию ({string.Join(", ", logins.Select(c => c.LoginProvider).ToList())}).");
+            }
+            #endregion
 
-            return View();
+            if (await _userManager.VerifyUserTokenAsync(user.Id, "ChangePa$$bord", token))
+            {
+                var model = new RestorePasswordViewModel
+                {
+                    ResetToken = await _userManager.GeneratePasswordResetTokenAsync(user.Id),
+                    UserName = user.UserName
+                };
+
+                //удалить данные о времени запроса сброса пароля
+                user.LastRequests =null;
+                _userManager.Update(user);
+
+                return View(model);
+            }
+
+            return View("Error", model: "Неверные данные для сброса пароля");
         }
 
         /// <summary>
@@ -493,9 +581,33 @@ namespace SciVacancies.WebApp.Controllers
         /// </summary>
         /// <returns></returns>
         [PageTitle("Восстановление доступа к Системе")]
-        public ViewResult RestorePasswordConfirm(string userName, string password, string passwordConfirm)
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> RestorePasswordConfirm(RestorePasswordViewModel model)
         {
-            return View();
+            #region validation
+            var user = await _userManager.FindByNameAsync(model.UserName);
+            if (user == null)
+                return View("Error", model: "Мы не нашли пользователя");
+
+            //проверяем, что пользователь ЧУЖОЙ (и нам Не нужно подтверждать его Email)
+            var logins = await _userManager.GetLoginsAsync(user.Id);
+            if (logins != null && logins.Any())
+            {
+                return View("Error",
+                    model:
+                        $"Для восстановления пароля воспользуйтесь порталом (или сайтом), через который Вы выполнили авторизацию ({string.Join(", ", logins.Select(c => c.LoginProvider).ToList())}).");
+            }
+            #endregion
+
+            //обновить ключ перед сменой пароля, чтобы куки авторизации в браузерах перестали быть валидными
+            var identityResult = await _userManager.ResetPasswordAsync(user.Id, model.ResetToken, model.Password);
+            await _userManager.UpdateSecurityStampAsync(user.Id);
+
+            if (identityResult.Succeeded)
+                _authorizeService.LogOutAndLogInUser(Response, _userManager.CreateIdentity(user, DefaultAuthenticationTypes.ApplicationCookie));
+
+            return View(identityResult);
         }
         #endregion
 

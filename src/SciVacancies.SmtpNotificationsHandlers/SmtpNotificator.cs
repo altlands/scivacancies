@@ -8,8 +8,8 @@ namespace SciVacancies.SmtpNotificationsHandlers.SmtpNotificators
     public class SmtpNotificator
     {
         private readonly SmtpEmailService _smtpEmailService;
-        //protected string Domain = "localhost:59075";
-        protected string Domain = "scivac.test.alt-lan.com";
+        protected string Domain = "localhost:59075";
+        //protected string Domain = "scivac.test.alt-lan.com";
 
 
         public SmtpNotificator()

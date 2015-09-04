@@ -3,7 +3,7 @@ using SciVacancies.ReadModel.Core;
 
 namespace SciVacancies.SmtpNotificationsHandlers.SmtpNotificators
 {
-    public class SmtpNotificatorEmailConfirmation : SmtpNotificator
+    public class SmtpNotificatorPasswordRestore : SmtpNotificator
     {
         public void Send(Researcher researcher, string username, string mailTo, string token)
         {
@@ -12,12 +12,12 @@ namespace SciVacancies.SmtpNotificationsHandlers.SmtpNotificators
 <div style=''>
     Уважаемый(-ая), {researcherFullName}, 
     <br/>
-    для активации вашей учётной записи перейдите, пожалуйста, по <a target='_blank' href='http://{Domain}/account/activateaccount/?username={username}&token={token}'> ссылке</a>.
+    для сброса пароля перейдите, пожалуйста, по <a target='_blank' href='http://{Domain}/account/restorepassword/?username={username}&token={token}'> ссылке</a>.
     <br/>
 </div>
 <br/>
 <div style='color: red;'>
-    Если вы не отправляли запрос на подтверждение своей электронной почты, то не открывайте указанные ссылки.
+    Если вы не отправляли запрос на сброс пароля, то не открывайте указанные ссылки.
 </div>
 
 <br/>
@@ -32,7 +32,7 @@ namespace SciVacancies.SmtpNotificationsHandlers.SmtpNotificators
 </div>
 ";
 
-            Send(new SciVacMailMessage(mailTo, "Подтверждение с портала вакансий", body));
+            Send(new SciVacMailMessage(mailTo, "Сброс пароля для портала вакансий", body));
         }
     }
 }
