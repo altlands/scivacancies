@@ -585,6 +585,8 @@ namespace SciVacancies.WebApp.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> RestorePasswordConfirm(RestorePasswordViewModel model)
         {
+            if(!ModelState.IsValid)
+                return View("RestorePassword", model) ;
             #region validation
             var user = await _userManager.FindByNameAsync(model.UserName);
             if (user == null)
