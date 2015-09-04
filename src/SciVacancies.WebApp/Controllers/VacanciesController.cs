@@ -414,9 +414,13 @@ namespace SciVacancies.WebApp.Controllers
 
             });
 
-            if (vacancyApplications.TotalItems == 0
-                || vacancyApplications.Items.Count(c => c.status == VacancyApplicationStatus.Applied) < 2)
-                return View("Error", "Подано недостаточно Заявок для перевода Вакансии на рассмотрение комиссии");
+            //если нет заявок, то закрыть вакансию
+            if (vacancyApplications.Items.Count(c => c.status == VacancyApplicationStatus.Applied) ==0)
+            {
+
+                _mediator.Send(new CloseVacancyCommand {VacancyGuid = preModel.guid});
+                //return View("Error", "Подано недостаточно Заявок для перевода Вакансии на рассмотрение комиссии");
+            }
 
             _mediator.Send(new SwitchVacancyInCommitteeCommand
             {
