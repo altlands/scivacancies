@@ -3,12 +3,9 @@ using System.ComponentModel;
 using System.Security.Claims;
 using MediatR;
 using Microsoft.AspNet.Mvc;
-using Quartz.Util;
 using SciVacancies.WebApp.Controllers;
 using SciVacancies.WebApp.Queries;
 using System.Linq;
-using Autofac;
-using SciVacancies.WebApp.Engine;
 using SciVacancies.WebApp.ViewModels;
 
 namespace SciVacancies.WebApp.ViewComponents

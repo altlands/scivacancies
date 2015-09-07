@@ -50,20 +50,11 @@ namespace SciVacancies.WebApp.ViewModels
         /// </summary>
         public string Tasks { get; set; }
 
-        //TODO: Vacancy.Criteria есть ли необходимость в этом свойстве
-        /// <summary>
-        /// Критерии оценки 
-        /// </summary>
-        [Ignore]
-        [ElasticProperty(OptOut = true)]
-        public KeyValuePair<int, int> Criteria { get; set; } //<CriteriaId, Amount>
-
         /// <summary>
         /// Зарплата в месяц
         /// </summary>
         public int SalaryFrom { get; set; }
         public int SalaryTo { get; set; }
-        //public Currency SalaryCurrency { get; set; }
 
         /// <summary>
         /// Стимулирующие выплаты

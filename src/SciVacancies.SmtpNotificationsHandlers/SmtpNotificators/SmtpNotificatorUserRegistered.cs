@@ -1,10 +1,12 @@
-﻿using System.Net.Mail;
-
+﻿
 namespace SciVacancies.SmtpNotificationsHandlers.SmtpNotificators
 {
+    /// <summary>
+    /// регистрация пользователя на протале
+    /// </summary>
     public class SmtpNotificatorUserRegistered : SmtpNotificator
     {
-        public void Send(string fullName, string mailTo, string extraMailTo)
+        public void Send(string fullName, string mailTo/*, string extraMailTo*/)
         {
             var body =
                 $@"
@@ -24,16 +26,8 @@ namespace SciVacancies.SmtpNotificationsHandlers.SmtpNotificators
     <a target='_blank' href='http://{Domain}/researchers/account/'>личном кабинете</a>.
 </div>
 ";
-            var mailToAddress = string.IsNullOrWhiteSpace(extraMailTo) ? new MailAddress(mailTo) : new MailAddress(mailTo, extraMailTo);
 
-            var mailMessage = new MailMessage(from: new MailAddress("mailer@alt-lan.com"), to: mailToAddress)
-            {
-                Body = body,
-                Subject = "Вы зарегистрированы на портале вакансий",
-                IsBodyHtml = true
-            };
-
-            Send(mailMessage);
+            Send(new SciVacMailMessage(mailTo, /*extraMailTo,*/ "Вы зарегистрированы на портале вакансий", body));
         }
     }
 }

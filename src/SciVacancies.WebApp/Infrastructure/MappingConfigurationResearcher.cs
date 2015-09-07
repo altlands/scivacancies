@@ -1,24 +1,24 @@
 ﻿using System;
 using AutoMapper;
-using NPoco;
 using Newtonsoft.Json;
 using SciVacancies.Domain.DataModels;
 using SciVacancies.Domain.Events;
 using SciVacancies.ReadModel.Core;
 using SciVacancies.WebApp.ViewModels;
-using SciVacancies.WebApp.Models.OAuth;
 using System.Linq;
 using System.Collections.Generic;
+using SciVacancies.WebApp.Models;
 
 namespace SciVacancies.WebApp.Infrastructure
 {
-    public static partial class MappingConfiguration
+    public static class MappingConfigurationResearcher
     {
         public static void InitializeResearcher()
         {
             //Создание исследователя
             Mapper.CreateMap<ResearcherCreated, Researcher>()
                 .ForMember(d => d.guid, o => o.MapFrom(s => s.ResearcherGuid))
+                .ForMember(d => d.ext_number, o => o.MapFrom(s => s.Data.ExtNumber))
                 .ForMember(d => d.firstname, o => o.MapFrom(s => s.Data.FirstName))
                 .ForMember(d => d.firstname_eng, o => o.MapFrom(s => s.Data.FirstNameEng))
                 .ForMember(d => d.secondname, o => o.MapFrom(s => s.Data.SecondName))
@@ -44,11 +44,13 @@ namespace SciVacancies.WebApp.Infrastructure
                 .ForMember(d => d.image_extension, o => o.MapFrom(s => s.Data.ImageExtension))
                 .ForMember(d => d.image_url, o => o.MapFrom(s => s.Data.ImageUrl))
                 .ForMember(d => d.educations, o => o.MapFrom(s => s.Data.Educations))
+                .ForMember(d => d.interests, o => o.MapFrom(s => s.Data.Interests))
                 .ForMember(d => d.publications, o => o.MapFrom(s => s.Data.Publications))
                 .ForMember(d => d.creation_date, o => o.MapFrom(s => s.TimeStamp));
             //Обновление исследователя
             Mapper.CreateMap<ResearcherUpdated, Researcher>()
                 .ForMember(d => d.guid, o => o.MapFrom(s => s.ResearcherGuid))
+                .ForMember(d => d.ext_number, o => o.MapFrom(s => s.Data.ExtNumber))
                 .ForMember(d => d.firstname, o => o.MapFrom(s => s.Data.FirstName))
                 .ForMember(d => d.firstname_eng, o => o.MapFrom(s => s.Data.FirstNameEng))
                 .ForMember(d => d.secondname, o => o.MapFrom(s => s.Data.SecondName))
@@ -75,6 +77,7 @@ namespace SciVacancies.WebApp.Infrastructure
                 .ForMember(d => d.image_url, o => o.MapFrom(s => s.Data.ImageUrl))
                 .ForMember(d => d.educations, o => o.MapFrom(s => s.Data.Educations))
                 .ForMember(d => d.publications, o => o.MapFrom(s => s.Data.Publications))
+                .ForMember(d => d.interests, o => o.MapFrom(s => s.Data.Interests))
                 .ForMember(d => d.update_date, o => o.MapFrom(s => s.TimeStamp));
 
             Mapper.CreateMap<Domain.Core.Education, ReadModel.Core.Education>()
@@ -84,14 +87,27 @@ namespace SciVacancies.WebApp.Infrastructure
                 .ForMember(d => d.graduation_date, o => o.MapFrom(s => s.GraduationYear))
                 .ForMember(d => d.degree, o => o.MapFrom(s => s.Degree));
             Mapper.CreateMap<Domain.Core.Publication, ReadModel.Core.Publication>()
-                .ForMember(d => d.title, o => o.MapFrom(s => s.Title));
+                .ForMember(d => d.name, o => o.MapFrom(s => s.Name))
+                .ForMember(d => d.guid, o => o.MapFrom(s => s.Guid))
+                .ForMember(d => d.authors, o => o.MapFrom(s => s.Authors))
+                .ForMember(d => d.ext_id, o => o.MapFrom(s => s.ExtId))
+                .ForMember(d => d.name, o => o.MapFrom(s => s.Name))
+                .ForMember(d => d.type, o => o.MapFrom(s => s.Type))
+                .ForMember(d => d.updated, o => o.MapFrom(s => s.Updated))
+                ;
 
             Mapper.CreateMap<ResearcherEditViewModel, ResearcherDataModel>()
                 //.ForSourceMember(src=> src.BirthDate, o=>o.Ignore())
                 .ForMember(dest => dest.BirthDate, src => src.MapFrom(c => new DateTime(c.BirthYear, 1, 1)))
+                .ForMember(dest => dest.Rewards, src => src.MapFrom(c => JsonConvert.SerializeObject(c.Rewards)))
+                .ForMember(dest => dest.Memberships, src => src.MapFrom(c => JsonConvert.SerializeObject(c.Memberships)))
+                .ForMember(dest => dest.Interests, src => src.MapFrom(c => JsonConvert.SerializeObject(c.Interests)))
                 ;
-            Mapper.CreateMap<Researcher, ResearcherDetailsViewModel>()
-                .ForMember(d => d.Guid, o => o.MapFrom(s => s.guid))
+            Mapper.CreateMap<ResearcherEditPhotoViewModel, ResearcherDataModel>()
+                ;
+
+            Mapper.CreateMap<Researcher, ResearcherDataModel>()
+                .ForMember(d => d.ExtNumber, o => o.MapFrom(s => s.ext_number))
                 .ForMember(d => d.FirstName, o => o.MapFrom(s => s.firstname))
                 .ForMember(d => d.FirstNameEng, o => o.MapFrom(s => s.firstname_eng))
                 .ForMember(d => d.SecondName, o => o.MapFrom(s => s.secondname))
@@ -111,20 +127,21 @@ namespace SciVacancies.WebApp.Infrastructure
                 .ForMember(d => d.OtherActivity, o => o.MapFrom(s => s.other_activity))
                 .ForMember(d => d.ScienceDegree, o => o.MapFrom(s => s.science_degree))
                 .ForMember(d => d.ScienceRank, o => o.MapFrom(s => s.science_rank))
-                .ForMember(d => d.Rewards, o => o.MapFrom(s => !string.IsNullOrWhiteSpace(s.rewards) ? JsonConvert.DeserializeObject<List<RewardDetailsViewModel>>(s.rewards) : new List<RewardDetailsViewModel>()))
-                .ForMember(d => d.Memberships, o => o.MapFrom(s => !string.IsNullOrWhiteSpace(s.memberships) ? JsonConvert.DeserializeObject<List<MembershipDetailsViewModel>>(s.memberships) : new List<MembershipDetailsViewModel>() ))
+                .ForMember(d => d.Rewards, o => o.MapFrom(s => s.rewards))
+                .ForMember(d => d.Memberships, o => o.MapFrom(s => s.memberships))
                 .ForMember(d => d.Conferences, o => o.MapFrom(s => s.conferences))
                 .ForMember(d => d.ImageName, o => o.MapFrom(s => s.image_name))
                 .ForMember(d => d.ImageSize, o => o.MapFrom(s => s.image_size))
                 .ForMember(d => d.ImageExtension, o => o.MapFrom(s => s.image_extension))
                 .ForMember(d => d.ImageUrl, o => o.MapFrom(s => s.image_url))
                 .ForMember(d => d.Educations, o => o.MapFrom(s => s.educations))
+                .ForMember(d => d.Interests, o => o.MapFrom(s => s.interests))
                 .ForMember(d => d.Publications, o => o.MapFrom(s => s.publications))
-                .ForMember(d => d.Status, o => o.MapFrom(s => s.status))
-                .ForMember(d => d.CreationDate, o => o.MapFrom(s => s.creation_date))
-                .ForMember(d => d.UpdateDate, o => o.MapFrom(s => s.update_date));
-            Mapper.CreateMap<Researcher, ResearcherEditViewModel>()
+            ;
+
+            Mapper.CreateMap<Researcher, ResearcherDetailsViewModel>()
                 .ForMember(d => d.Guid, o => o.MapFrom(s => s.guid))
+                .ForMember(d => d.ExtNumber, o => o.MapFrom(s => s.ext_number))
                 .ForMember(d => d.FirstName, o => o.MapFrom(s => s.firstname))
                 .ForMember(d => d.FirstNameEng, o => o.MapFrom(s => s.firstname_eng))
                 .ForMember(d => d.SecondName, o => o.MapFrom(s => s.secondname))
@@ -133,10 +150,44 @@ namespace SciVacancies.WebApp.Infrastructure
                 .ForMember(d => d.PatronymicEng, o => o.MapFrom(s => s.patronymic_eng))
                 .ForMember(d => d.PreviousSecondName, o => o.MapFrom(s => s.previous_secondname))
                 .ForMember(d => d.PreviousSecondNameEng, o => o.MapFrom(s => s.previous_secondname_eng))
-
+                .ForMember(d => d.BirthDate, o => o.MapFrom(s => s.birthdate))
+                .ForMember(d => d.Email, o => o.MapFrom(s => s.email))
+                .ForMember(d => d.ExtraEmail, o => o.MapFrom(s => s.extraemail))
+                .ForMember(d => d.Phone, o => o.MapFrom(s => s.phone))
+                .ForMember(d => d.ExtraPhone, o => o.MapFrom(s => s.extraphone))
+                .ForMember(d => d.Nationality, o => o.MapFrom(s => s.nationality))
+                .ForMember(d => d.ResearchActivity, o => o.MapFrom(s => s.research_activity))
+                .ForMember(d => d.TeachingActivity, o => o.MapFrom(s => s.teaching_activity))
+                .ForMember(d => d.OtherActivity, o => o.MapFrom(s => s.other_activity))
+                .ForMember(d => d.ExtNumber, o => o.MapFrom(s => s.ext_number))
+                .ForMember(d => d.ScienceDegree, o => o.MapFrom(s => s.science_degree))
+                .ForMember(d => d.ScienceRank, o => o.MapFrom(s => s.science_rank))
+                .ForMember(d => d.Rewards, o => o.MapFrom(s => !string.IsNullOrWhiteSpace(s.rewards) ? JsonConvert.DeserializeObject<List<RewardDetailsViewModel>>(s.rewards) : new List<RewardDetailsViewModel>()))
+                .ForMember(d => d.Memberships, o => o.MapFrom(s => !string.IsNullOrWhiteSpace(s.memberships) ? JsonConvert.DeserializeObject<List<MembershipDetailsViewModel>>(s.memberships) : new List<MembershipDetailsViewModel>()))
+                .ForMember(d => d.Conferences, o => o.MapFrom(s => s.conferences))
+                .ForMember(d => d.ImageName, o => o.MapFrom(s => s.image_name))
+                .ForMember(d => d.ImageSize, o => o.MapFrom(s => s.image_size))
+                .ForMember(d => d.ImageExtension, o => o.MapFrom(s => s.image_extension))
+                .ForMember(d => d.ImageUrl, o => o.MapFrom(s => s.image_url))
+                .ForMember(d => d.Educations, o => o.MapFrom(s => s.educations))
+                .ForMember(d => d.Interests, o => o.MapFrom(s => !string.IsNullOrWhiteSpace(s.interests) ? JsonConvert.DeserializeObject<List<InterestDetailsViewModel>>(s.interests) : new List<InterestDetailsViewModel>()))
+                .ForMember(d => d.Publications, o => o.MapFrom(s => s.publications))
+                .ForMember(d => d.Status, o => o.MapFrom(s => s.status))
+                .ForMember(d => d.CreationDate, o => o.MapFrom(s => s.creation_date))
+                .ForMember(d => d.UpdateDate, o => o.MapFrom(s => s.update_date));
+            Mapper.CreateMap<Researcher, ResearcherEditViewModel>()
+                .ForMember(d => d.Guid, o => o.MapFrom(s => s.guid))
+                .ForMember(d => d.ExtNumber, o => o.MapFrom(s => s.ext_number))
+                .ForMember(d => d.FirstName, o => o.MapFrom(s => s.firstname))
+                .ForMember(d => d.FirstNameEng, o => o.MapFrom(s => s.firstname_eng))
+                .ForMember(d => d.SecondName, o => o.MapFrom(s => s.secondname))
+                .ForMember(d => d.SecondNameEng, o => o.MapFrom(s => s.secondname_eng))
+                .ForMember(d => d.Patronymic, o => o.MapFrom(s => s.patronymic))
+                .ForMember(d => d.PatronymicEng, o => o.MapFrom(s => s.patronymic_eng))
+                .ForMember(d => d.PreviousSecondName, o => o.MapFrom(s => s.previous_secondname))
+                .ForMember(d => d.PreviousSecondNameEng, o => o.MapFrom(s => s.previous_secondname_eng))
                 //.ForMember(d => d.BirthDate, o => o.MapFrom(s => s.birthdate))
                 .ForMember(d => d.BirthYear, o => o.MapFrom(s => s.birthdate.Year))
-
                 .ForMember(d => d.Email, o => o.MapFrom(s => s.email))
                 .ForMember(d => d.ExtraEmail, o => o.MapFrom(s => s.extraemail))
                 .ForMember(d => d.Phone, o => o.MapFrom(s => s.phone))
@@ -147,15 +198,49 @@ namespace SciVacancies.WebApp.Infrastructure
                 .ForMember(d => d.OtherActivity, o => o.MapFrom(s => s.other_activity))
                 .ForMember(d => d.ScienceDegree, o => o.MapFrom(s => s.science_degree))
                 .ForMember(d => d.ScienceRank, o => o.MapFrom(s => s.science_rank))
-                .ForMember(d => d.Rewards, o => o.MapFrom(s => s.rewards))
-                .ForMember(d => d.Memberships, o => o.MapFrom(s => s.memberships))
+                .ForMember(d => d.Rewards, o => o.MapFrom(s => !string.IsNullOrWhiteSpace(s.rewards) ? JsonConvert.DeserializeObject<List<RewardEditViewModel>>(s.rewards) : new List<RewardEditViewModel>()))
+                .ForMember(d => d.Memberships, o => o.MapFrom(s => !string.IsNullOrWhiteSpace(s.memberships) ? JsonConvert.DeserializeObject<List<MembershipEditViewModel>>(s.memberships) : new List<MembershipEditViewModel>()))
+                .ForMember(d => d.Interests, o => o.MapFrom(s => !string.IsNullOrWhiteSpace(s.interests) ? JsonConvert.DeserializeObject<List<InterestEditViewModel>>(s.interests) : new List<InterestEditViewModel>()))
                 .ForMember(d => d.Conferences, o => o.MapFrom(s => s.conferences))
+                .ForMember(d => d.Educations, o => o.MapFrom(s => s.educations))
+                .ForMember(d => d.Publications, o => o.MapFrom(s => s.publications));
+            Mapper.CreateMap<Researcher, ResearcherEditPhotoViewModel>()
+                .ForMember(d => d.Guid, o => o.MapFrom(s => s.guid))
                 .ForMember(d => d.ImageName, o => o.MapFrom(s => s.image_name))
                 .ForMember(d => d.ImageSize, o => o.MapFrom(s => s.image_size))
                 .ForMember(d => d.ImageExtension, o => o.MapFrom(s => s.image_extension))
                 .ForMember(d => d.ImageUrl, o => o.MapFrom(s => s.image_url))
-                .ForMember(d => d.Educations, o => o.MapFrom(s => s.educations))
-                .ForMember(d => d.Publications, o => o.MapFrom(s => s.publications));
+                ;
+
+
+            Mapper.CreateMap<ResearcherDataModel, ResearcherProfileCompareModelItem>()
+                .ForMember(d => d.FirstName, o => o.MapFrom(s => s.FirstName))
+                .ForMember(d => d.MiddleName, o => o.MapFrom(s => s.Patronymic))
+                .ForMember(d => d.LastName, o => o.MapFrom(s => s.SecondName))
+                .ForMember(d => d.PreviousLastName, o => o.MapFrom(s => s.PreviousSecondName))
+                .ForMember(d => d.FirstNameEng, o => o.MapFrom(s => s.FirstNameEng))
+                .ForMember(d => d.MiddleNameEng, o => o.MapFrom(s => s.PatronymicEng))
+                .ForMember(d => d.LastNameEng, o => o.MapFrom(s => s.SecondNameEng))
+                .ForMember(d => d.PreviousLastNameEng, o => o.MapFrom(s => s.PreviousSecondNameEng))
+                .ForMember(d => d.Educations, o => o.MapFrom(s => 
+                    s.Educations.Select(c => new CheckableListItem<EducationEditViewModel> { This = Mapper.Map<EducationEditViewModel>(c) })))
+                .ForMember(d => d.Publications, o => o.MapFrom(s => s.Publications.Select(c => new CheckableListItem<PublicationEditViewModel> { This = Mapper.Map<PublicationEditViewModel>(c) })))
+                .ForMember(d => d.Rewards, o => o.MapFrom(s =>
+                    !string.IsNullOrWhiteSpace(s.Rewards)
+                    ? JsonConvert.DeserializeObject<List<RewardEditViewModel>>(s.Rewards).Select(c => new CheckableListItem<RewardEditViewModel> { This = c })
+                    : new CheckableItemsList<RewardEditViewModel>()
+                    ))
+                .ForMember(d => d.Memberships, o => o.MapFrom(s =>
+                    !string.IsNullOrWhiteSpace(s.Memberships)
+                    ? JsonConvert.DeserializeObject<List<MembershipEditViewModel>>(s.Memberships).Select(c => new CheckableListItem<MembershipEditViewModel> { This = c })
+                    : new CheckableItemsList<MembershipEditViewModel>()
+                    ))
+                .ForMember(d => d.Interests, o => o.MapFrom(s =>
+                    !string.IsNullOrWhiteSpace(s.Interests)
+                    ? JsonConvert.DeserializeObject<List<InterestEditViewModel>>(s.Interests).Select(c => new CheckableListItem<InterestEditViewModel> { This = c })
+                    : new CheckableItemsList<InterestEditViewModel>()
+                    ))
+                ;
 
             //education
 
@@ -167,16 +252,37 @@ namespace SciVacancies.WebApp.Infrastructure
                 .ForMember(d => d.FacultyShortName, o => o.MapFrom(s => s.faculty_shortname))
                 .ForMember(dest => dest.GraduationYear, src => src.MapFrom(c => c.graduation_date.HasValue ? c.graduation_date.Value.Year : 0))
                 .ForMember(d => d.Degree, o => o.MapFrom(s => s.degree));
+            Mapper.CreateMap<SciVacancies.Domain.Core.Education, EducationEditViewModel>()
+                .ForMember(d => d.City, o => o.MapFrom(s => s.City))
+                .ForMember(d => d.UniversityShortName, o => o.MapFrom(s => s.UniversityShortName))
+                .ForMember(d => d.FacultyShortName, o => o.MapFrom(s => s.FacultyShortName))
+                .ForMember(dest => dest.GraduationYear, src => src.MapFrom(c => c.GraduationYear.HasValue ? c.GraduationYear.Value.Year : 0))
+                .ForMember(d => d.Degree, o => o.MapFrom(s => s.Degree));
             Mapper.CreateMap<EducationEditViewModel, SciVacancies.Domain.Core.Education>()
                 .ForMember(dest => dest.GraduationYear, src => src.MapFrom(c => (c.GraduationYear.HasValue && c.GraduationYear.Value != 0) ? new DateTime(c.GraduationYear.Value, 1, 1) : default(DateTime)));
 
             //piblication
-            Mapper.CreateMap<Publication, SciVacancies.Domain.Core.Publication>();
+            Mapper.CreateMap<Publication, SciVacancies.Domain.Core.Publication>()
+                .ForMember(d => d.Guid, o => o.MapFrom(s => s.guid))
+                .ForMember(d => d.Authors, o => o.MapFrom(s => s.authors))
+                .ForMember(d => d.ExtId, o => o.MapFrom(s => s.ext_id))
+                .ForMember(d => d.Name, o => o.MapFrom(s => s.name))
+                .ForMember(d => d.Type, o => o.MapFrom(s => s.type))
+                .ForMember(d => d.Updated, o => o.MapFrom(s => s.updated))
+                ;
             Mapper.CreateMap<Publication, PublicationEditViewModel>()
                 .ForMember(d => d.Guid, o => o.MapFrom(s => s.guid))
                 .ForMember(d => d.ResearcherGuid, o => o.MapFrom(s => s.researcher_guid))
-                .ForMember(d => d.Title, o => o.MapFrom(s => s.title));
-            Mapper.CreateMap<PublicationEditViewModel, SciVacancies.Domain.Core.Publication>();
+                .ForMember(d => d.Authors, o => o.MapFrom(s => s.authors))
+                .ForMember(d => d.ExtId, o => o.MapFrom(s => s.ext_id))
+                .ForMember(d => d.Name, o => o.MapFrom(s => s.name))
+                .ForMember(d => d.Type, o => o.MapFrom(s => s.type))
+                .ForMember(d => d.Updated, o => o.MapFrom(s => s.updated))
+                ;
+            Mapper.CreateMap<PublicationEditViewModel, SciVacancies.Domain.Core.Publication>()
+                ;
+            Mapper.CreateMap<SciVacancies.Domain.Core.Publication, PublicationEditViewModel>()
+                ;
         }
         public static void InitializeSearchSubscription()
         {

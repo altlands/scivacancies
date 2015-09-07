@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Security.Claims;
 using MediatR;
 using Microsoft.AspNet.Identity;
@@ -8,7 +9,6 @@ using SciVacancies.WebApp.Infrastructure.Identity;
 using SciVacancies.WebApp.ViewModels;
 using Thinktecture.IdentityModel.Client;
 using System.Threading.Tasks;
-using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using Newtonsoft.Json;
@@ -17,7 +17,13 @@ using System.IO;
 using SciVacancies.WebApp.Models.OAuth;
 using Microsoft.Framework.OptionsModel;
 using AutoMapper;
+using Microsoft.AspNet.Authorization;
+using SciVacancies.SmtpNotificationsHandlers.SmtpNotificators;
 using SciVacancies.WebApp.Engine;
+using SciVacancies.WebApp.Infrastructure;
+using SciVacancies.WebApp.Infrastructure.WebAuthorize;
+using SciVacancies.WebApp.Models.DataModels;
+using SciVacancies.WebApp.Queries;
 
 namespace SciVacancies.WebApp.Controllers
 {
@@ -27,12 +33,16 @@ namespace SciVacancies.WebApp.Controllers
         private readonly IMediator _mediator;
         private readonly SciVacUserManager _userManager;
         private readonly IOptions<OAuthSettings> _oauthSettings;
+        private readonly IAuthorizeService _authorizeService;
+        private readonly IRecoveryPasswordService _recoveryPasswordService;
 
-        public AccountController(SciVacUserManager userManager, IMediator mediator, IOptions<OAuthSettings> oAuthSettings)
+        public AccountController(SciVacUserManager userManager, IMediator mediator, IOptions<OAuthSettings> oAuthSettings, IAuthorizeService authorizeService, IRecoveryPasswordService recoveryPasswordService)
         {
             _mediator = mediator;
             _userManager = userManager;
             _oauthSettings = oAuthSettings;
+            _authorizeService = authorizeService;
+            _recoveryPasswordService = recoveryPasswordService;
         }
 
         public IActionResult LoginUser(string id)
@@ -51,25 +61,22 @@ namespace SciVacancies.WebApp.Controllers
                     user = _userManager.FindByName("researcher3");
                     break;
             }
-            var identity = _userManager.CreateIdentity(user, DefaultAuthenticationTypes.ApplicationCookie);
-            var cp = new ClaimsPrincipal(identity);
-            Context.Response.SignIn(DefaultAuthenticationTypes.ApplicationCookie, cp);
-            return RedirectToHome();
+
+            var cp = _authorizeService.LogOutAndLogInUser(Response, _userManager.CreateIdentity(user, DefaultAuthenticationTypes.ApplicationCookie));
+            return RedirectToAccount(cp);
         }
         public IActionResult LoginOrganization()
         {
             var user = _userManager.FindByName("organization1");
-            var identity = _userManager.CreateIdentity(user, DefaultAuthenticationTypes.ApplicationCookie);
-            var cp = new ClaimsPrincipal(identity);
-            Context.Response.SignIn(DefaultAuthenticationTypes.ApplicationCookie, cp);
-            return RedirectToHome();
+
+            var cp = _authorizeService.LogOutAndLogInUser(Response, _userManager.CreateIdentity(user, DefaultAuthenticationTypes.ApplicationCookie));
+            return RedirectToAccount(cp);
         }
 
         [PageTitle("Вход")]
-        [ResponseCache(NoStore = true)]
         [HttpPost]
         [HttpGet]
-        public ActionResult Login(AccountLoginViewModel model)
+        public async Task<IActionResult> Login(AccountLoginViewModel model)
         {
             switch (model.User)
             {
@@ -77,16 +84,28 @@ namespace SciVacancies.WebApp.Controllers
                     switch (model.Resource)
                     {
                         case AuthorizeResourceTypes.OwnAuthorization:
-                            //TODO - это заглушка не проверяет пароль
-                            var user = _userManager.FindByName(model.Login);
-                            var identity = _userManager.CreateIdentity(user, DefaultAuthenticationTypes.ApplicationCookie);
-                            var cp = new ClaimsPrincipal(identity);
-                            Context.Response.SignIn(DefaultAuthenticationTypes.ApplicationCookie, cp);
+                            //ищем учётку по логину и паролю
+                            var user = await _userManager.FindAsync(model.Login, model.Password);
 
-                            return RedirectToHome();
+                            if (user == null)
+                            {
+                                //проверим, что учётка не найдена, т.к. пароль был введен неправильно
+                                var userWithoutPassword = await _userManager.FindByNameAsync(model.Login);
+                                if (userWithoutPassword != null)
+                                {
+                                    //TODO: отреагировать на превышение количества попыток входа
+                                    //if (userWithoutPassword.AccessFailedCount) { ...; }
+
+                                    await _userManager.AccessFailedAsync(userWithoutPassword.Id);
+                                    return View("Error", model: "Вы ввели неверный пароль");
+                                }
+
+                                return View("Error", model: "Пользователь не найден");
+                            }
+                            var cp = _authorizeService.LogOutAndLogInUser(Response, _userManager.CreateIdentity(user, DefaultAuthenticationTypes.ApplicationCookie));
+                            return RedirectToAccount(cp);
                         case AuthorizeResourceTypes.ScienceMap:
                             SetAuthorizationCookies(AuthorizeUserTypes.Researcher, AuthorizeResourceTypes.ScienceMap);
-
                             return Redirect(GetOAuthAuthorizationUrl(_oauthSettings.Options.Mapofscience));
                     }
                     break;
@@ -160,28 +179,6 @@ namespace SciVacancies.WebApp.Controllers
 
             return oAuth2Client.CreateCodeFlowUrl(oauth.ClientId, oauth.Scope, oauth.RedirectUrl, SetStateCookie(), SetNonceCookie());
         }
-        private async Task<TokenResponse> GetOAuthTokensAsync(OAuthProviderSettings oauth, string code)
-        {
-            var client = new OAuth2Client(new Uri(oauth.TokenEndpoint), oauth.ClientId, oauth.ClientSecret);
-
-            return await client.RequestAuthorizationCodeAsync(code, oauth.RedirectUrl);
-        }
-        private async Task<IEnumerable<Claim>> GetOAuthUserClaimsAsync(OAuthProviderSettings oauth, string accessToken)
-        {
-            var userInfoClient = new UserInfoClient(new Uri(oauth.UserEndpoint), accessToken);
-            var userInfoResponse = await userInfoClient.GetAsync();
-
-            var claimsList = new List<Claim>();
-            userInfoResponse.Claims.ToList().ForEach(f => claimsList.Add(new Claim(f.Item1, f.Item2)));
-
-            return claimsList;
-        }
-        private async Task<TokenResponse> GetOAuthRefreshedToken(OAuthProviderSettings oauth, string refreshToken)
-        {
-            var client = new OAuth2Client(new Uri(oauth.TokenEndpoint), oauth.ClientId, oauth.ClientSecret);
-
-            return await client.RequestRefreshTokenAsync(refreshToken);
-        }
 
         #endregion
         #region API
@@ -193,25 +190,10 @@ namespace SciVacancies.WebApp.Controllers
             webRequest.Method = "GET";
             webRequest.Headers["Authorization"] = "Basic " + Convert.ToBase64String(Encoding.Default.GetBytes("dev:informika"));
             var httpWebResponse = webRequest.GetResponse() as HttpWebResponse;
-            string responseString = "";
+            string responseString;
             using (var stream = httpWebResponse.GetResponseStream())
             {
                 var streamReader = new StreamReader(stream, Encoding.UTF8);
-                responseString = streamReader.ReadToEnd();
-            }
-            return responseString;
-        }
-        //общаемся с картой науки
-        protected string GetResearcherProfile(string accessToken)
-        {
-            //TODO url move to config
-            var webRequest= WebRequest.Create(@"http://scimap-sso.alt-lan.com/scimap-sso/user/profile" + "?access_token=" + accessToken);
-            webRequest.Method = "GET";
-            var httpWebResponse= webRequest.GetResponse() as HttpWebResponse;
-            string responseString = "";
-            using (var stream = httpWebResponse.GetResponseStream())
-            {
-                var streamReader= new StreamReader(stream, Encoding.UTF8);
                 responseString = streamReader.ReadToEnd();
             }
             return responseString;
@@ -224,8 +206,9 @@ namespace SciVacancies.WebApp.Controllers
         //Сюда редиректит после OAuth авторизации
         public async Task<ActionResult> Callback()
         {
+            _authorizeService.Initialize(Request, Response);
             Tuple<AuthorizeUserTypes, AuthorizeResourceTypes> authorizationCookies = GetAuthorizationCookies();
-
+            ClaimsPrincipal claimsPrincipal = null;
             switch (authorizationCookies.Item1)
             {
                 case AuthorizeUserTypes.Admin:
@@ -239,17 +222,11 @@ namespace SciVacancies.WebApp.Controllers
                             {
                                 if (!string.IsNullOrEmpty(GetCodeFromQuery()))
                                 {
-                                    var tokenResponse = await GetOAuthTokensAsync(_oauthSettings.Options.Sciencemon, GetCodeFromQuery());
+                                    var tokenResponse = await _authorizeService.GetOAuthAuthorizeTokenAsync(_oauthSettings.Options.Sciencemon, GetCodeFromQuery());
 
                                     if (!string.IsNullOrEmpty(tokenResponse.AccessToken))
                                     {
-                                        List<Claim> claims = new List<Claim>();
-
-                                        claims.AddRange(await GetOAuthUserClaimsAsync(_oauthSettings.Options.Sciencemon, tokenResponse.AccessToken));
-
-                                        claims.Add(new Claim("access_token", tokenResponse.AccessToken));
-                                        claims.Add(new Claim("expires_in", DateTime.Now.AddSeconds(tokenResponse.ExpiresIn).ToString()));
-                                        if (!string.IsNullOrEmpty(tokenResponse.RefreshToken)) claims.Add(new Claim("refresh_token", tokenResponse.RefreshToken));
+                                        var claims = await _authorizeService.GetOAuthUserAndTokensClaimsAsync(_oauthSettings.Options.Sciencemon, tokenResponse);
 
                                         OAuthOrgClaim orgClaim = JsonConvert.DeserializeObject<OAuthOrgClaim>(claims.Find(f => f.Type.Equals("org")).Value);
 
@@ -258,38 +235,31 @@ namespace SciVacancies.WebApp.Controllers
 
                                         if (orgUser == null)
                                         {
-                                            OAuthOrgInformation organizationInformation = JsonConvert.DeserializeObject<OAuthOrgInformation>(GetOrganizationInfo(orgClaim.Inn));
-                                            AccountOrganizationRegisterViewModel orgModel = Mapper.Map<AccountOrganizationRegisterViewModel>(organizationInformation);
+                                            OAuthOrgInformation organizationInformation =
+                                                JsonConvert.DeserializeObject<OAuthOrgInformation>(
+                                                    GetOrganizationInfo(orgClaim.Inn));
+                                            AccountOrganizationRegisterViewModel orgModel =
+                                                Mapper.Map<AccountOrganizationRegisterViewModel>(organizationInformation);
 
                                             //TODO - сделать всё в маппинге
                                             //orgModel.UserName = claims.Find(f => f.Type.Equals("username")).Value;
-                                            //TODO - мыло в username не пролезает, спецсимволы мешают
                                             orgModel.UserName = orgClaim.Inn;
 
                                             orgModel.Claims = claims.Where(w => w.Type.Equals("lastname")
-                                                                            || w.Type.Equals("firstname")
-                                                                            || w.Type.Equals("access_token")
-                                                                            || w.Type.Equals("expires_in")
-                                                                            || w.Type.Equals("refresh_token")).ToList();
+                                                                                || w.Type.Equals("firstname")
+                                                                                || w.Type.Equals("access_token")
+                                                                                || w.Type.Equals("expires_in")
+                                                                                || w.Type.Equals("refresh_token"))
+                                                .ToList();
 
-                                            var command = new RegisterUserOrganizationCommand
-                                            {
-                                                Data = orgModel
-                                            };
-                                            var user = _mediator.Send(command);
 
-                                            var identity = _userManager.CreateIdentity(user, DefaultAuthenticationTypes.ApplicationCookie);
-                                            var cp = new ClaimsPrincipal(identity);
-                                            //at first, signing out...
-                                            Context.Response.SignOut(DefaultAuthenticationTypes.ApplicationCookie);
-                                            //... and then, signing in
-                                            Context.Response.SignIn(DefaultAuthenticationTypes.ApplicationCookie, cp);
+                                            var user = _mediator.Send(new RegisterUserOrganizationCommand { Data = orgModel });
+
+                                            claimsPrincipal = _authorizeService.LogOutAndLogInUser(Response, _userManager.CreateIdentity(user, DefaultAuthenticationTypes.ApplicationCookie));
                                         }
                                         else
                                         {
-                                            var identity = _userManager.CreateIdentity(orgUser, DefaultAuthenticationTypes.ApplicationCookie);
-                                            var cp = new ClaimsPrincipal(identity);
-                                            Context.Response.SignIn(DefaultAuthenticationTypes.ApplicationCookie, cp);
+                                            claimsPrincipal = _authorizeService.RefreshUserClaimTokensAndReauthorize(orgUser, claims, Response);
                                         }
                                     }
                                     else throw new ArgumentNullException("Token response is null");
@@ -308,59 +278,59 @@ namespace SciVacancies.WebApp.Controllers
                             {
                                 if (!string.IsNullOrEmpty(GetCodeFromQuery()))
                                 {
-                                    TokenResponse tokenResponse = await GetOAuthTokensAsync(_oauthSettings.Options.Mapofscience, GetCodeFromQuery());
+                                    var tokenResponse = await _authorizeService.GetOAuthAuthorizeTokenAsync(_oauthSettings.Options.Mapofscience, GetCodeFromQuery());
 
                                     if (!string.IsNullOrEmpty(tokenResponse.AccessToken))
                                     {
-                                        List<Claim> claims = new List<Claim>();
-
-                                        claims.AddRange(await GetOAuthUserClaimsAsync(_oauthSettings.Options.Mapofscience, tokenResponse.AccessToken));
-
-                                        claims.Add(new Claim("access_token", tokenResponse.AccessToken));
-                                        claims.Add(new Claim("expires_in", DateTime.Now.AddSeconds(tokenResponse.ExpiresIn).ToString()));
-
-                                        if (!string.IsNullOrEmpty(tokenResponse.RefreshToken))
-                                            claims.Add(new Claim("refresh_token", tokenResponse.RefreshToken));
+                                        var claims = await _authorizeService.GetOAuthUserAndTokensClaimsAsync(_oauthSettings.Options.Mapofscience, tokenResponse);
 
                                         var resUser = _userManager.FindByEmail(claims.Find(f => f.Type.Equals("email")).Value);
 
                                         if (resUser == null)
                                         {
-                                            OAuthResProfile researcherProfile = JsonConvert.DeserializeObject<OAuthResProfile>(GetResearcherProfile(tokenResponse.AccessToken));
-                                            AccountResearcherRegisterViewModel accountResearcherRegisterViewModel = Mapper.Map<AccountResearcherRegisterViewModel>(researcherProfile);
+                                            OAuthResProfile researcherProfile = JsonConvert.DeserializeObject<OAuthResProfile>(_authorizeService.GetResearcherProfile(tokenResponse.AccessToken));
 
-                                            accountResearcherRegisterViewModel.UserName = claims.Find(f => f.Type.Equals("login")).Value;
+                                            var accountResearcherRegisterDataModel =
+                                                Mapper.Map<ResearcherRegisterDataModel>(researcherProfile);
 
-
-                                            accountResearcherRegisterViewModel.Claims = claims.Where(w => w.Type.Equals("lastName")
-                                                                            || w.Type.Equals("firstName")
-                                                                            || w.Type.Equals("patronymic")
-                                                                            || w.Type.Equals("access_token")
-                                                                            || w.Type.Equals("expires_in")
-                                                                            || w.Type.Equals("refresh_token")).ToList();
-
-                                            var command = new RegisterUserResearcherCommand
+                                            if (!string.IsNullOrWhiteSpace(accountResearcherRegisterDataModel.SciMapNumber))
                                             {
-                                                Data = accountResearcherRegisterViewModel
-                                            };
+                                                //TODO: если пользователь у нас есть пользователь с таким же идентификатором Карты Наук, то для него сделать обновление данных
+                                            }
 
-                                            var user = _mediator.Send(command);
+                                            accountResearcherRegisterDataModel.UserName =
+                                                claims.Find(f => f.Type.Equals("login")).Value;
 
-                                            var identity = _userManager.CreateIdentity(user, DefaultAuthenticationTypes.ApplicationCookie);
+                                            accountResearcherRegisterDataModel.Claims =
+                                                claims.Where(w => w.Type.Equals("lastName")
+                                                                  || w.Type.Equals("firstName")
+                                                                  || w.Type.Equals("patronymic")
+                                                                  || w.Type.Equals("access_token")
+                                                                  || w.Type.Equals("expires_in")
+                                                                  || w.Type.Equals("refresh_token")).ToList();
 
+                                            //TODO: сохранять ID пользователя из внешней системы, чтобы не терять его если он сменит логин и почту
 
+                                            var user = _mediator.Send(new RegisterUserResearcherCommand { Data = accountResearcherRegisterDataModel });
 
-                                            var cp = new ClaimsPrincipal(identity);
-                                            //at first, signing out...
-                                            Context.Response.SignOut(DefaultAuthenticationTypes.ApplicationCookie);
-                                            //... and then, signing in
-                                            Context.Response.SignIn(DefaultAuthenticationTypes.ApplicationCookie, cp);
+                                            claimsPrincipal = _authorizeService.LogOutAndLogInUser(Response, _userManager.CreateIdentity(user, DefaultAuthenticationTypes.ApplicationCookie));
                                         }
                                         else
                                         {
-                                            var identity = _userManager.CreateIdentity(resUser, DefaultAuthenticationTypes.ApplicationCookie);
-                                            var cp = new ClaimsPrincipal(identity);
-                                            Context.Response.SignIn(DefaultAuthenticationTypes.ApplicationCookie, cp);
+                                            //TODO: что делать если у нас есть пользователь с таким же логином
+
+                                            //TODO: что делать если кто-то в нашей системе прописал email (такой же как у авторизованного пользователя)
+                                            if (!resUser.EmailConfirmed)
+                                            {
+                                                //удалить "нашего" пользователя
+                                            }
+                                            else
+                                            {
+                                                //выполнить слияние с "нашим" пользователем
+                                            }
+
+
+                                            claimsPrincipal = _authorizeService.RefreshUserClaimTokensAndReauthorize(resUser, claims, Response);
                                         }
                                     }
                                     else throw new ArgumentNullException("Token response is null");
@@ -373,7 +343,10 @@ namespace SciVacancies.WebApp.Controllers
                     break;
             }
 
-            return RedirectToHome();
+            if (claimsPrincipal != null)
+                return RedirectToAccount(claimsPrincipal);
+
+            return RedirectToAccount(User);
         }
 
         [PageTitle("Регистрация")]
@@ -381,29 +354,41 @@ namespace SciVacancies.WebApp.Controllers
 
         [PageTitle("Регистрация")]
         [HttpPost]
-        public IActionResult Register(AccountResearcherRegisterViewModel model)
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Register(AccountResearcherRegisterViewModel model)
         {
             if (!ModelState.IsValid)
                 return View(model);
 
+            /* Validation start */
             if (!model.Agreement)
-            {
                 ModelState.AddModelError("Agreement", "Нет согласия на обработку персональных данных");
+
+            SciVacUser existingUser = null;
+            existingUser = await _userManager.FindByNameAsync(model.UserName);
+            if (existingUser != null)
+                ModelState.AddModelError("UserName", "Пользователь с таким логином уже существует");
+
+            //existingUser = await _userManager.FindByEmailAsync(model.Email);
+            //if (existingUser != null)
+            //    //TODO: что делать если пользователь еще не подтвердил email (удалить его?)
+            //    ModelState.AddModelError("Email", "Пользователь с таким Email уже существует");
+
+            if (ModelState.ErrorCount > 0)
+            {
+                ModelState.AddModelError("Password", "Введите еще раз пароль");
+                ModelState.AddModelError("ConfirmPassword", "Повторите ввод пароля");
+                model.Captcha = null;
+                ModelState.AddModelError("Captcha", "Введите код");
                 return View(model);
             }
+            /* Validation end */
 
-
-            //var command = new RegisterUserResearcherCommand
-            //{
-            //    Data = model
-            //};
-            //var user = _mediator.Send(command);
-            //_userManager.AddToRole(user.Id, ConstTerms.RequireRoleResearcher);
+            //создаем Исследователя
             var createUserResearcherCommand1 = new RegisterUserResearcherCommand
             {
-                Data = new AccountResearcherRegisterViewModel
+                Data = new ResearcherRegisterDataModel
                 {
-                    Agreement = model.Agreement,
                     Email = model.Email,
                     Phone = model.Phone,
                     UserName = model.UserName,
@@ -421,38 +406,341 @@ namespace SciVacancies.WebApp.Controllers
             var user = _mediator.Send(createUserResearcherCommand1);
             var researcherGuid1 = Guid.Parse(user.Claims.Single(s => s.ClaimType.Equals(ConstTerms.ClaimTypeResearcherId)).ClaimValue);
 
-
+            //выходим и входим заново
             var identity = _userManager.CreateIdentity(user, DefaultAuthenticationTypes.ApplicationCookie);
-            var cp = new ClaimsPrincipal(identity);
+            var claimsPrincipal = _authorizeService.LogOutAndLogInUser(Response, identity);
 
-            //signing out...
-            Context.Response.SignOut(DefaultAuthenticationTypes.ApplicationCookie);
-            //...before signing in
-            Context.Response.SignIn(DefaultAuthenticationTypes.ApplicationCookie, cp);
+            //запускаем процедуру активации аккаунта
+            var researcher = _mediator.Send(new SingleResearcherQuery { ResearcherGuid = researcherGuid1 });
+            await _authorizeService.CallUserActivationAsync(user, researcher);
 
-            return RedirectToHome();
+            return RedirectToAccount(claimsPrincipal);
         }
 
+        #region restore password
+        /// <summary>
+        /// т.к. мы проверяем уникальность Логинов, то по нему ищем почту и запускаем процесс восстановления пароля
+        /// </summary>
+        /// <returns></returns>
         [PageTitle("Восстановление доступа к Системе")]
-        public ViewResult ForgotPassword()
+        [AllowAnonymous]
+        public async Task<IActionResult> ForgotPassword()
         {
+            var userName = string.Empty;
+            if (User.Identity.IsAuthenticated)
+                userName = User.Identity.Name;
+
+            return View(model: userName);
+        }
+
+        /// <summary>
+        /// т.к. мы проверяем уникальность Логинов, то по нему ищем почту и запускаем процесс восстановления пароля
+        /// </summary>
+        /// <returns></returns>
+        [PageTitle("Восстановление доступа к Системе")]
+        [AllowAnonymous]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ForgotPassword(string username)
+        {
+            // !!! Восстанавливаем пароль даже на неактивированную учётную запись !!!
+
+            #region validation
+
+            var user = await _userManager.FindByNameAsync(username);
+            if (user == null)
+                return View("Error", model: "Мы не нашли пользователя");
+
+            //проверяем, что пользователь ЧУЖОЙ (и нам Не нужно подтверждать его Email)
+            var logins = await _userManager.GetLoginsAsync(user.Id);
+            if (logins != null && logins.Any())
+            {
+                return View("Error",
+                    model:
+                        $"Для восстановления пароля воспользуйтесь порталом (или сайтом), через который Вы выполнили авторизацию ({string.Join(", ", logins.Select(c => c.LoginProvider).ToList())}).");
+            }
+
+            #endregion
+
+            var lastRequests = user.LastRequests;
+            lastRequests.Sort((x, y) => y.CompareTo(x));
+
+            //если пользователь заблокирован
+            var lockoutEndDate = _userManager.GetLockoutEndDate(user.Id);
+            var lockoutEnabled = _userManager.GetLockoutEnabled(user.Id);
+            if (lockoutEnabled
+                && lockoutEndDate > DateTime.UtcNow)
+            {
+                return View("Error",
+                    model:
+                        $"Ваш пользователь временно заблокирован. Повторите попытку через {Math.Round((lockoutEndDate - DateTime.UtcNow).TotalMinutes, 0)} минут");
+            }
+            
+            //сбросить блокировки
+            await _userManager.SetLockoutEnabledAsync(user.Id, false);
+            await _userManager.SetLockoutEndDateAsync(user.Id, DateTimeOffset.Now.AddSeconds(-1));
+
+            //if (lastRequests.Any())
+            //{
+            //    //todo: вынести все параметры в конфиг
+
+            //    var afterLastRequestPeriod = new TimeSpan(0, 10, 0); //10 min
+            //    //если последний запрос на сброс пароля был менее, чем afterLastRequestPeriod (минут/секунд) назад, то показывать капчу.
+            //    if ((DateTime.UtcNow - lastRequests.Max()) < afterLastRequestPeriod)
+            //    {
+            //        //todo: показывать капчу
+            //    }
+
+            //    var nLastRequestsCount = 3; //последние n-запросов
+            //    var nLastRequestsPeriod = new TimeSpan(0, 60, 0);
+            //    //период, в котором не должно быть запросов пароля, чтобы не заблокировать пользователя
+            //    var tBlockPeriod = new TimeSpan(0, 90, 0); //90 min
+            //    //если последние n-запрос на сброс пароля были менее, в течение nLastRequestsCountPeriod (минут/секунд), то временно заблокировать пользователя на t-период.
+            //    if (lastRequests.Count >= nLastRequestsCount
+            //        && (DateTime.UtcNow - lastRequests.Take(nLastRequestsCount).Min()) < nLastRequestsPeriod)
+            //    {
+            //        //блокируем пользователя на t-период
+            //        await _userManager.SetLockoutEnabledAsync(user.Id, true);
+            //        await
+            //            _userManager.SetLockoutEndDateAsync(user.Id,
+            //                new DateTimeOffset(DateTime.UtcNow.Add(tBlockPeriod)));
+
+            //        return View("Error", model: "Ваш пользователь временно заблокирован.");
+            //    }
+
+            //}
+
+            //фиксируем текущий запрос на сброс пароля
+            lastRequests.Add(DateTime.UtcNow);
+            user.LastRequests = lastRequests;
+            _userManager.Update(user);
+
+            var userClaims = _userManager.GetClaimsAsync(user.Id);
+            if (userClaims != null)
+            {
+                var researcherClaim = user.Claims.SingleOrDefault(c => c.ClaimType == ConstTerms.ClaimTypeResearcherId);
+                if (researcherClaim != null)
+                {
+                    var researcher =
+                        _mediator.Send(new SingleResearcherQuery
+                        {
+                            ResearcherGuid = Guid.Parse(researcherClaim.ClaimValue)
+                        });
+
+                    //отправить письмо с новым кодом на восстановление пароля
+                    await _authorizeService.CallPasswordResetAsync(user, researcher);
+                    return View("Success", model: "Для восстановления доступа к Порталу мы отправили вам письмо на электронную почту, указанную при регистрации.");
+                }
+            }
+
+            return View("Error", model: "Мы не нашли ваш профиль, чтобы сгенерирвать вам письмо.");
+        }
+
+        /// <summary>
+        /// пользователь вводит новые пароли
+        /// </summary>
+        /// <returns></returns>
+        [PageTitle("Восстановление доступа к Системе")]
+        public async Task<IActionResult> RestorePassword(string userName, string token)
+        {
+            #region validation
+            var user = await _userManager.FindByNameAsync(userName);
+            if (user == null)
+                return View("Error", model: "Мы не нашли пользователя");
+
+            //проверяем, что пользователь ЧУЖОЙ (и нам Не нужно подтверждать его Email)
+            var logins = await _userManager.GetLoginsAsync(user.Id);
+            if (logins != null && logins.Any())
+            {
+                return View("Error",
+                    model:
+                        $"Для восстановления пароля воспользуйтесь порталом (или сайтом), через который Вы выполнили авторизацию ({string.Join(", ", logins.Select(c => c.LoginProvider).ToList())}).");
+            }
+            #endregion
+
+            if (await _userManager.VerifyUserTokenAsync(user.Id, "ChangePa$$bord", token))
+            {
+                var model = new RestorePasswordViewModel
+                {
+                    ResetToken = await _userManager.GeneratePasswordResetTokenAsync(user.Id),
+                    UserName = user.UserName
+                };
+
+                //удалить данные о времени запроса сброса пароля
+                user.LastRequests =null;
+                _userManager.Update(user);
+
+                return View(model);
+            }
+
+            return View("Error", model: "Неверные данные для сброса пароля");
+        }
+
+        /// <summary>
+        /// пользователь ввёл новые пароли
+        /// </summary>
+        /// <returns></returns>
+        [PageTitle("Восстановление доступа к Системе")]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> RestorePasswordConfirm(RestorePasswordViewModel model)
+        {
+            if(!ModelState.IsValid)
+                return View("RestorePassword", model) ;
+            #region validation
+            var user = await _userManager.FindByNameAsync(model.UserName);
+            if (user == null)
+                return View("Error", model: "Мы не нашли пользователя");
+
+            //проверяем, что пользователь ЧУЖОЙ (и нам Не нужно подтверждать его Email)
+            var logins = await _userManager.GetLoginsAsync(user.Id);
+            if (logins != null && logins.Any())
+            {
+                return View("Error",
+                    model:
+                        $"Для восстановления пароля воспользуйтесь порталом (или сайтом), через который Вы выполнили авторизацию ({string.Join(", ", logins.Select(c => c.LoginProvider).ToList())}).");
+            }
+            #endregion
+
+            //обновить ключ перед сменой пароля, чтобы куки авторизации в браузерах перестали быть валидными
+            var identityResult = await _userManager.ResetPasswordAsync(user.Id, model.ResetToken, model.Password);
+            await _userManager.UpdateSecurityStampAsync(user.Id);
+
+            if (identityResult.Succeeded)
+                _authorizeService.LogOutAndLogInUser(Response, _userManager.CreateIdentity(user, DefaultAuthenticationTypes.ApplicationCookie));
+
+            return View(identityResult);
+        }
+        #endregion
+
+        #region account activation
+        /// <summary>
+        /// запросить письмо для активации учётной записи
+        /// </summary>
+        /// <returns></returns>
+        [Authorize]
+        [PageTitle("Запрос письма для активации учетной записи")]
+        [BindResearcherIdFromClaims]
+        public async Task<IActionResult> ActivationRequest(Guid researcherGuid)
+        {
+            #region validation
+            //если пользователь имеет роль Исследователя, то он активирован
+            if (User.IsInRole(ConstTerms.RequireRoleResearcher))
+            {
+                return RedirectToAction("account", "researchers");
+            }
+
+            var user = await _userManager.FindByIdAsync(User.Identity.GetUserId());
+            if (user == null)
+                return View("Error", model: "Мы не нашли пользователя");
+
+            var logins = await _userManager.GetLoginsAsync(user.Id);
+            //проверяем, что пользователь ЧУЖОЙ (и нам Не нужно подтверждать его Email)
+            if (logins != null && logins.Any())
+            {
+                return View("Error", model: "Ваша учётная запись должна была активироваться автоматически");
+            }
+            #endregion
+
             return View();
         }
-        [PageTitle("Восстановление доступа к Системе")]
-        public ViewResult RestorePassword()
+
+        /// <summary>
+        /// отправлено письмо для активации учётной записи
+        /// </summary>
+        /// <returns></returns>
+        [Authorize]
+        [PageTitle("Запрошено письмо для активации учетной записи")]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [BindResearcherIdFromClaims]
+        public async Task<IActionResult> ActivationRequestPost(Guid researcherGuid)
         {
-            return View();
+            #region validation
+            //если пользователь имеет роль Исследователя, то он активирован
+            if (User.IsInRole(ConstTerms.RequireRoleResearcher))
+            {
+                return RedirectToAction("account", "researchers");
+            }
+
+            var user = await _userManager.FindByIdAsync(User.Identity.GetUserId());
+            if (user == null)
+                return View("Error", model: "Мы не нашли пользователя");
+
+            var logins = await _userManager.GetLoginsAsync(user.Id);
+            //проверяем, что пользователь ЧУЖОЙ (и нам Не нужно подтверждать его Email)
+            if (logins != null && logins.Any())
+            {
+                return View("Error", model: "Ваша учётная запись должна была активироваться автоматически");
+            }
+            #endregion
+
+            var researcher = _mediator.Send(new SingleResearcherQuery { ResearcherGuid = researcherGuid });
+            if (researcher == null)
+                return View("Error", model: "Мы не нашли исследователя");
+
+            await _authorizeService.CallUserActivationAsync(user, researcher);
+
+            return View(model: "На указанный в профиле email отправлено письмо, для активации учётной записи. Пожалуйста, проверьте свою почту.");
         }
+
+        /// <summary>
+        /// подтверждение email и активация учётной записи
+        /// </summary>
+        /// <returns></returns>
+        [PageTitle("Проверка подтверждения Email")]
+        public async Task<IActionResult> ActivateAccount(string userName, string token)
+        {
+            #region validation
+            //если пользователь имеет роль Исследователя, то он активирован
+            if (User.IsInRole(ConstTerms.RequireRoleResearcher))
+            {
+                return RedirectToAction("account", "researchers");
+            }
+
+            var user = await _userManager.FindByIdAsync(User.Identity.GetUserId());
+            if (user == null)
+                return View("Error", model: "Мы не нашли пользователя");
+
+            var logins = await _userManager.GetLoginsAsync(user.Id);
+            //проверяем, что пользователь ЧУЖОЙ (и нам Не нужно подтверждать его Email)
+            if (logins != null && logins.Any())
+            {
+                return View("Error", model: "Ваша учётная запись должна была активироваться автоматически");
+            }
+            #endregion
+
+            var identityResult = await _userManager.ConfirmEmailAsync(user.Id, token);
+
+            if (identityResult.Succeeded)
+            {
+                _userManager.AddToRole(user.Id, ConstTerms.RequireRoleResearcher);
+                _authorizeService.LogOutAndLogInUser(Response, _userManager.CreateIdentity(user, DefaultAuthenticationTypes.ApplicationCookie));
+            }
+
+            return View(identityResult);
+        }
+        #endregion
 
         [PageTitle("Выход")]
-        [ResponseCache(NoStore = true)]
         public ActionResult Logout()
         {
             Context.Response.SignOut(DefaultAuthenticationTypes.ApplicationCookie);
             return RedirectToHome();
         }
 
-        [ResponseCache(NoStore = true)]
+
+        private RedirectToActionResult RedirectToAccount(ClaimsPrincipal claimsPrincipal)
+        {
+            if (claimsPrincipal.IsInRole(ConstTerms.RequireRoleResearcher))
+                return RedirectToAction("account", "researchers");
+
+            if (claimsPrincipal.IsInRole(ConstTerms.RequireRoleOrganizationAdmin))
+                return RedirectToAction("account", "organizations");
+
+            return RedirectToAction("index", "home");
+        }
+
         private RedirectToActionResult RedirectToHome()
         {
             return RedirectToAction("index", "home");

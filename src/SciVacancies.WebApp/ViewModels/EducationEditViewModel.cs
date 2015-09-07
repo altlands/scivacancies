@@ -14,7 +14,7 @@ namespace SciVacancies.WebApp.ViewModels
         [Required(ErrorMessage = "Укажите название университета")]
         public string UniversityShortName { get; set; }
 
-        [Required(ErrorMessage = "Укажите название университета")]
+        [Required(ErrorMessage = "Укажите название факультета")]
         public string FacultyShortName { get; set; }
 
         [Required(ErrorMessage = "Укажите год выпуска")]

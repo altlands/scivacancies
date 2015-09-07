@@ -1,6 +1,5 @@
 ﻿using System;
 using AutoMapper;
-using NPoco;
 using Newtonsoft.Json;
 using SciVacancies.Domain.DataModels;
 using SciVacancies.Domain.Events;
@@ -8,22 +7,22 @@ using SciVacancies.ReadModel.Core;
 using SciVacancies.WebApp.ViewModels;
 using SciVacancies.WebApp.Models.OAuth;
 using System.Linq;
-using System.Collections.Generic;
+using SciVacancies.WebApp.Models.DataModels;
 
 namespace SciVacancies.WebApp.Infrastructure
 {
-    public static partial class MappingConfiguration
+    public static class MappingConfiguration
     {
         public static void Initialize()
         {
             InitializePagers();
             InitializeAccount();
-            InitializeOrganization();
+            MappingConfigurationOrganization.InitializeOrganization();
             InitializeElastic();
-            InitializeResearcher();
-            InitializeSearchSubscription();
-            InitializeVacancy();
-            InitializeVacancyApplication();
+            MappingConfigurationResearcher.InitializeResearcher();
+            MappingConfigurationResearcher.InitializeSearchSubscription();
+            MappingConfigurationOrganization.InitializeVacancy();
+            MappingConfigurationResearcher.InitializeVacancyApplication();
             InitializeDictionaries();
         }
 
@@ -42,14 +41,16 @@ namespace SciVacancies.WebApp.Infrastructure
             //researcher
 
 
-            Mapper.CreateMap<AccountResearcherUpdateViewModel, ResearcherDataModel>()
-                .Include<AccountResearcherRegisterViewModel, ResearcherDataModel>()
-                .ForMember(dest => dest.BirthDate, src => src.MapFrom(c => c.BirthDate ?? new DateTime(c.BirthYear, 1, 1)))
-                .ForMember(dest => dest.Patronymic, src => src.MapFrom(c => c.Patronymic))
-                ;
             //TODO - дописать поля в модели
-            Mapper.CreateMap<AccountResearcherRegisterViewModel, ResearcherDataModel>()
+            Mapper.CreateMap<AccountResearcherRegisterViewModel, ResearcherRegisterDataModel>()
                 ;
+            Mapper.CreateMap<ResearcherUpdateDataModel, ResearcherDataModel>()
+                .Include<ResearcherRegisterDataModel, ResearcherDataModel>()
+                .ForMember(dest => dest.BirthDate, src => src.MapFrom(c => c.BirthDate ?? new DateTime(c.BirthYear, 1, 1)))
+                ;
+            Mapper.CreateMap<ResearcherRegisterDataModel, ResearcherDataModel>()
+                ;
+
             //organization
             Mapper.CreateMap<AccountOrganizationRegisterViewModel, OrganizationDataModel>()
                 .ForMember(d => d.Name, o => o.MapFrom(s => s.Name))
@@ -64,7 +65,7 @@ namespace SciVacancies.WebApp.Infrastructure
                 .ForMember(d => d.ImageName, o => o.MapFrom(s => s.ImageName))
                 .ForMember(d => d.ImageSize, o => o.MapFrom(s => s.ImageSize))
                 .ForMember(d => d.ImageExtension, o => o.MapFrom(s => s.ImageExtension))
-                .ForMember(d => d.ImageUrl, o => o.MapFrom(s => s.ImageUrl))
+                .ForMember(d => d.ImageUrl, o => o.MapFrom(s => s.ImageUrl ?? string.Empty))
                 .ForMember(d => d.Foiv, o => o.MapFrom(s => s.Foiv))
                 .ForMember(d => d.FoivId, o => o.MapFrom(s => s.FoivId))
                 .ForMember(d => d.OrgForm, o => o.MapFrom(s => s.OrgForm))
@@ -90,11 +91,10 @@ namespace SciVacancies.WebApp.Infrastructure
                 .ForMember(d => d.Name, o => o.MapFrom(s => s.title));
 
             //TODO - добавить нужные маппинги и допилить структуру моделей
-            Mapper.CreateMap<OAuthResProfile, AccountResearcherUpdateViewModel>()
-                .Include<OAuthResProfile, AccountResearcherRegisterViewModel>()
-                //.ForMember(d => d, o => o.MapFrom(s => s.id))
-                //.ForMember(d => d, o => o.MapFrom(s => s.login))
+            Mapper.CreateMap<OAuthResProfile, ResearcherUpdateDataModel>()
+                .Include<OAuthResProfile, ResearcherRegisterDataModel>()
                 .ForMember(d => d.FirstName, o => o.MapFrom(s => s.firstName))
+                .ForMember(d => d.ExtNumber, o => o.MapFrom(s => s.identityNumberSc != null ? s.identityNumberSc.scimap : 0))
                 .ForMember(d => d.FirstNameEng, o => o.MapFrom(s => s.firstNameEn))
                 .ForMember(d => d.SecondName, o => o.MapFrom(s => s.lastName))
                 .ForMember(d => d.SecondNameEng, o => o.MapFrom(s => s.lastNameEn))
@@ -112,7 +112,7 @@ namespace SciVacancies.WebApp.Infrastructure
                 //.ForMember(d => d.OtherActivity, o => o.MapFrom(s => s.))
                 //.ForMember(d => d, o => o.MapFrom(s => s.degrees))
                 //.ForMember(d => d, o => o.MapFrom(s => s.ranks))
-                .ForMember(d => d.Rewards, o => o.MapFrom(s => s.honors != null && s.honors.Any() ? JsonConvert.SerializeObject(s.honors) : string.Empty))
+                .ForMember(d => d.Rewards, o => o.MapFrom(s => s.honors != null && s.honors.Any() ? JsonConvert.SerializeObject(s.honors.Where(d => d.deleted != "1").ToList()) : string.Empty))
                 .ForMember(d => d.Memberships, o => o.MapFrom(s => s.members != null && s.members.Any() ? JsonConvert.SerializeObject(s.members) : string.Empty))
                 //.ForMember(d => d.Conferences, o => o.MapFrom(s => s.sAbstracts))
                 .ForMember(d => d.Publications, o => o.MapFrom(s => s.entities))
@@ -120,13 +120,21 @@ namespace SciVacancies.WebApp.Infrastructure
                 //.ForMember(d => d, o => o.MapFrom(s => s.photo))
                 .ForMember(d => d.Education, o => o.MapFrom(s => s.education != null && s.education.Any() ? JsonConvert.SerializeObject(s.education) : string.Empty))
                 .ForMember(d => d.BirthDate, o => o.MapFrom(s => DateTime.Parse(s.birthday)));
-
-            Mapper.CreateMap<OAuthResProfile, AccountResearcherRegisterViewModel>();
+            Mapper.CreateMap<ResearcherUpdateDataModel, ResearcherRegisterDataModel>()
+                ;
+            Mapper.CreateMap<OAuthResProfile, ResearcherRegisterDataModel>()
+                //TODO: какой номер (или какое значение) использовать для заполнения НомерПользователяКартыНаук
+                .ForMember(d => d.SciMapNumber, o => o.MapFrom(s => s.id))
+                //.ForMember(d => d, o => o.MapFrom(s => s.login))
+                .ForMember(d => d.Password, o => o.Ignore())
+                .ForMember(d => d.ConfirmPassword, o => o.Ignore())
+                .ForMember(d => d.Claims, o => o.Ignore())
+                ;
 
             Mapper.CreateMap<OAuthResEntity, Domain.Core.Publication>()
                 .ForMember(d => d.Authors, opt => opt.MapFrom(src => src.authors ?? string.Empty))
                 .ForMember(d => d.ExtId, opt => opt.MapFrom(src => src.ext_id ?? string.Empty))
-                .ForMember(d => d.Title, opt => opt.MapFrom(src => src.name ?? string.Empty))
+                .ForMember(d => d.Name, opt => opt.MapFrom(src => src.name ?? string.Empty))
                 .ForMember(d => d.Type, opt => opt.MapFrom(src => src.type ?? string.Empty))
                 .ForMember(d => d.Updated, opt => opt.MapFrom(src => src.updated))
                 ;

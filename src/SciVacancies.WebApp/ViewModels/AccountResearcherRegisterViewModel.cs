@@ -1,20 +1,30 @@
 ﻿using System;
-using System.ComponentModel;
-using System.Security.Claims;
 using System.ComponentModel.DataAnnotations;
-using System.Collections.Generic;
-using SciVacancies.Domain.Core;
+using System.ComponentModel;
 
 namespace SciVacancies.WebApp.ViewModels
 {
     /// <summary>
-    /// класс для регистрации Исследователя (содержит описание Исследователя); он же используоется для обновления информации об исследователе
+    /// класс для регистрации пользователя
     /// </summary>
-    public class AccountResearcherUpdateViewModel
+    public class AccountResearcherRegisterViewModel
     {
         [Required]
         [DefaultValue(false)]
         public bool Agreement { get; set; }
+
+        [Required(ErrorMessage = "Требуется ввести пароль")]
+        //[PasswordPropertyText]
+        public string Password { get; set; }
+        [Required(ErrorMessage = "Требуется повторить пароль")]
+        //[PasswordPropertyText]
+        [Compare("Password", ErrorMessage = "Пароли отличаются")]
+        public string ConfirmPassword { get; set; }
+
+        [Required(ErrorMessage = "Требуется ввести код скартинки")]
+        public string Captcha { get; set; }
+
+
         [Required(ErrorMessage = "Требуется ввести логин")]
         public string UserName { get; set; }
 
@@ -44,6 +54,7 @@ namespace SciVacancies.WebApp.ViewModels
         [EmailAddress(ErrorMessage = "Поле E-mail содержит не допустимый адрес электронной почты.")]
         public string Email { get; set; }
         [EmailAddress(ErrorMessage = "Поле Добавить E-mail содержит не допустимый адрес электронной почты.")]
+        [Obsolete("неопределено назначение этого свойства. планируется его удаление")]
         public string ExtraEmail { get; set; }
         [Required(ErrorMessage = "Требуется заполнить поле Телефон")]
         [Phone(ErrorMessage = "Поле Телефон содержит не допустимый номер телефона.")]
@@ -51,34 +62,10 @@ namespace SciVacancies.WebApp.ViewModels
         [Phone(ErrorMessage = "Поле Добавить телефон содержит не допустимый номер телефона.")]
         public string ExtraPhone { get; set; }
 
-        /// <summary>
-        /// научные интересы
-        /// </summary>
-        public string Interests { get; set; }
 
-        /// <summary>
-        /// временное поле для Образования, пока не перейдем на List[Education]
-        /// </summary>
-        public string Education { get; set; }
-
-        public List<Publication> Publications { get; set; }
-
-        /// <summary>
-        /// награды
-        /// </summary>
-        public string Rewards { get; set; }
-
-        public string Memberships { get; set; }
-
-
-        //public string Nationality { get; set; }
-        //public string ResearchActivity { get; set; }
-        //public string TeachingActivity { get; set; }
-        //public string OtherActivity { get; set; }
-        //public string ScienceDegree { get; set; }
-        //public string ScienceRank { get; set; }
-        //public string Memberships { get; set; }
-        //public string Conferences { get; set; }
-        //public string Educations { get; set; }
+        ///// <summary>
+        ///// Сюда пишутся access_token  и прочее, если OAuth авторизация
+        ///// </summary>
+        //public List<Claim> Claims { get; set; }
     }
 }

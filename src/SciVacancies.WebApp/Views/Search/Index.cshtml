@@ -46,7 +46,7 @@
                             {
                                 if (foivs[a].Childs.Any())
                                 {
-                                    var open= foivs[a].Childs.Count(level => Model.Foivs.Contains(level.Id)) > 0 ? "open" : string.Empty;
+                                    var open= foivs[a].Childs.Count(level => (Model.Foivs !=null && Model.Foivs.Contains(level.Id))) > 0 ? "open" : string.Empty;
                                     <text>
                                     <li class="collapsible-filter-header @open">
                                         <span>@foivs[a].Title (@foivs[a].Childs.Count())</span>
@@ -73,14 +73,14 @@
                             labelForIndex = 0;
                             for (a = 0; a < researchDirection.Childs.Count; a++)
                             {
-                                var openFirst = researchDirection.Childs[a].Childs.Sum(second => second.Childs.Count(third => Model.ResearchDirections.Contains(third.Id))) > 0 ? "open" : string.Empty;
+                                var openFirst = researchDirection.Childs[a].Childs.Sum(second => second.Childs.Count(third => (Model.ResearchDirections!=null && Model.ResearchDirections.Contains(third.Id)))) > 0 ? "open" : string.Empty;
                                 <text>
                                 <li class="collapsible-filter-header @openFirst">
                                     <span>@researchDirection.Childs[a].Title (@researchDirection.Childs[a].Childs.Count)</span>
                                     <ul class="sub-cat level-1" style="display: none;">
                                         @for (b = 0; b < researchDirection.Childs[a].Childs.Count; b++)
                                         {
-                                            var openSecond = researchDirection.Childs[a].Childs[b].Childs.Count(third => Model.ResearchDirections.Contains(third.Id)) > 0 ? "open" : string.Empty;
+                                            var openSecond = researchDirection.Childs[a].Childs[b].Childs.Count(third => (Model.ResearchDirections!=null && Model.ResearchDirections.Contains(third.Id)) )> 0 ? "open" : string.Empty;
                                             <text>
                                             <li class="collapsible-filter-header @openSecond">
                                                 <span>@researchDirection.Childs[a].Childs[b].Title (@researchDirection.Childs[a].Childs[b].Childs.Count)</span>

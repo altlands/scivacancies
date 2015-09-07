@@ -15,16 +15,22 @@ namespace SciVacancies.SmtpNotificationsHandlers.Handlers
         {
             _db = db;
         }
+
         public void Handle(VacancyApplicationApplied msg)
         {
             var vacancyapplication = _db.SingleOrDefaultById<VacancyApplication>(msg.VacancyApplicationGuid);
             if (vacancyapplication == null) return;
             var vacancy = _db.SingleOrDefaultById<Vacancy>(msg.VacancyGuid);
             if (vacancy == null) return;
+            var researcher = _db.SingleOrDefaultById<Researcher>(vacancyapplication.researcher_guid);
+            if (researcher == null) return;
             var organization = _db.SingleOrDefaultById<Organization>(vacancy.organization_guid);
             if (organization == null) return;
-            var smtpNotificatorVacancyApplicationApplied = new SmtpNotificatorVacancyApplicationApplied();
-            smtpNotificatorVacancyApplicationApplied.Send(organization, vacancy, vacancyapplication);
+
+            new SmtpNotificatorVacancyApplicationAppliedForOrganization().Send(organization, vacancy, vacancyapplication);
+            new SmtpNotificatorVacancyApplicationAppliedForResearcher().Send(researcher, vacancy, vacancyapplication);
         }
+
+
     }
 }

@@ -10,6 +10,7 @@ using SciVacancies.WebApp.Infrastructure.Identity;
 using SciVacancies.WebApp.Queries;
 using SciVacancies.WebApp.ViewModels;
 using Microsoft.AspNet.Identity;
+using SciVacancies.WebApp.Models.DataModels;
 
 // For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -27,11 +28,11 @@ namespace SciVacancies.WebApp.Controllers
             _mediator = mediator;
         }
 
-        public void Index()
+        public IActionResult Index()
         {
             var user = _userManager.FindByName("researcher1");
             if (user != null)
-                return;
+                return Content("инициализация уже проходила");
 
             var positions = _mediator.Send(new SelectAllPositionTypesQuery()).ToList();
             var researchDiretions = _mediator.Send(new SelectAllResearchDirectionsQuery()).ToList();
@@ -44,7 +45,7 @@ namespace SciVacancies.WebApp.Controllers
 
             var createUserResearcherCommand1 = new RegisterUserResearcherCommand
             {
-                Data = new AccountResearcherRegisterViewModel
+                Data = new ResearcherRegisterDataModel
                 {
                     Email = $"researcher{rnd.Next(999)}@mailer.org",
                     Phone = "8-333-22-22",
@@ -63,7 +64,7 @@ namespace SciVacancies.WebApp.Controllers
 
             var createUserResearcherCommand2 = new RegisterUserResearcherCommand
             {
-                Data = new AccountResearcherRegisterViewModel
+                Data = new ResearcherRegisterDataModel
                 {
                     Email = $"researcher{rnd.Next(999)}@mailer.org",
                     Phone = "8-333-22-22",
@@ -82,7 +83,7 @@ namespace SciVacancies.WebApp.Controllers
 
             var createUserResearcherCommand3 = new RegisterUserResearcherCommand
             {
-                Data = new AccountResearcherRegisterViewModel
+                Data = new ResearcherRegisterDataModel
                 {
                     Email = $"researcher{rnd.Next(999)}@mailer.org",
                     Phone = "8-954-12-54",
@@ -460,8 +461,7 @@ namespace SciVacancies.WebApp.Controllers
 
 
 
-
-
+            return Content("инициализация успешно завершена");
         }
     }
 }

@@ -2,16 +2,13 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNet.Http;
-using Newtonsoft.Json;
-using SciVacancies.ReadModel.Core;
-using SciVacancies.WebApp.Engine;
 using SciVacancies.WebApp.ViewModels.Base;
 
 namespace SciVacancies.WebApp.ViewModels
 {
     public class ResearcherEditViewModel: PageViewModelBase
     {
-        public IFormFile PhotoFile { get; set; }
+        public int ExtNumber { get; set; }
 
         [Required(ErrorMessage = "Необходимо заполнить Имя")]
         public string FirstName { get; set; }
@@ -40,6 +37,7 @@ namespace SciVacancies.WebApp.ViewModels
         [EmailAddress(ErrorMessage = "Поле E-mail содержит не допустимый адрес электронной почты.")]
         public string Email { get; set; }
         [EmailAddress(ErrorMessage = "Поле E-mail содержит не допустимый адрес электронной почты.")]
+        [Obsolete("неопределено назначение этого свойства. планируется его удаление")]
         public string ExtraEmail { get; set; }
 
         [Required(ErrorMessage = "Укажите номер телефона")]
@@ -56,20 +54,12 @@ namespace SciVacancies.WebApp.ViewModels
 
         public string ScienceDegree { get; set; }
         public string ScienceRank { get; set; }
-        public string Rewards { get; set; }
-        public string Memberships { get; set; }
+        public List<RewardEditViewModel> Rewards { get; set; }
+        public List<MembershipEditViewModel> Memberships { get; set; }
         public string Conferences { get; set; }
-
-        public string ImageName { get; set; }
-        public long? ImageSize { get; set; }
-        public string ImageExtension { get; set; }
-        public string ImageUrl { get; set; }
-        public string ImageUrlOrDefault => string.IsNullOrWhiteSpace(ImageUrl)
-            ? ConstTerms.PathToBlankImage
-            : (ConstTerms.FolderResearcherPhotoUtl + ImageUrl);
 
         public List<EducationEditViewModel> Educations { get; set; }
         public List<PublicationEditViewModel> Publications { get; set; }
-        public List<string> Interests { get; set; } 
+        public List<InterestEditViewModel> Interests { get; set; }
     }
 }

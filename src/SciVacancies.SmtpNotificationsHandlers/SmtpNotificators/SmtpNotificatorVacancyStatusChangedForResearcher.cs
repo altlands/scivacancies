@@ -1,10 +1,8 @@
-﻿using System.Net.Mail;
-using SciVacancies.ReadModel;
-using SciVacancies.ReadModel.Core;
+﻿using SciVacancies.ReadModel.Core;
 
 namespace SciVacancies.SmtpNotificationsHandlers.SmtpNotificators
 {
-    public class SmtpNotificatorVacancyStatusChanged : SmtpNotificator
+    public class SmtpNotificatorVacancyStatusChangedForResearcher : SmtpNotificator
     {
         public void Send(Vacancy vacancy, Researcher researcher)
         {
@@ -25,12 +23,8 @@ namespace SciVacancies.SmtpNotificationsHandlers.SmtpNotificators
     <a target='_blank' href='http://{Domain}/researchers/account/'>личном кабинете</a>.
 </div>
 ";
-            var mailMessage = new MailMessage(@from: "mailer@alt-lan.com", to: researcher.email, body: body, subject: "Уведомление с портала вакансий")
-            {
-                IsBodyHtml = true
-            };
 
-            Send(mailMessage);
+            Send(new SciVacMailMessage(researcher.email, /*researcher.extraemail, */"Уведомление с портала вакансий", body));
         }
     }
 }

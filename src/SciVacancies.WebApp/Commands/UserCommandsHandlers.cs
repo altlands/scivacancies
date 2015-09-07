@@ -1,16 +1,14 @@
-﻿using SciVacancies.Domain.DataModels;
-using SciVacancies.WebApp.Engine;
-using SciVacancies.WebApp.Infrastructure.Identity;
-using SciVacancies.WebApp.ViewModels;
-using SciVacancies.Domain.Aggregates;
-
-using System;
+﻿using AutoMapper;
+using CommonDomain.Persistence;
+using MediatR;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
-
-using AutoMapper;
-using MediatR;
-using CommonDomain.Persistence;
+using SciVacancies.Domain.Aggregates;
+using SciVacancies.Domain.DataModels;
+using SciVacancies.WebApp.Infrastructure.Identity;
+using SciVacancies.WebApp.Models.DataModels;
+using SciVacancies.WebApp.ViewModels;
+using System;
 using System.Security.Claims;
 
 namespace SciVacancies.WebApp.Commands
@@ -18,13 +16,11 @@ namespace SciVacancies.WebApp.Commands
     public class RegisterUserResearcherCommandHandler : IRequestHandler<RegisterUserResearcherCommand, SciVacUser>
     {
         private readonly SciVacUserManager _userManager;
-        private readonly IMediator _mediator;
         private readonly IRepository _repository;
 
-        public RegisterUserResearcherCommandHandler(SciVacUserManager userManager, IMediator mediator, IRepository repository)
+        public RegisterUserResearcherCommandHandler(SciVacUserManager userManager, IRepository repository)
         {
             _userManager = userManager;
-            _mediator = mediator;
             _repository = repository;
         }
 
@@ -39,7 +35,7 @@ namespace SciVacancies.WebApp.Commands
                 PhoneNumber = message.Data.Phone
             };
 
-            var researcherDataModel = Mapper.Map<AccountResearcherRegisterViewModel, ResearcherDataModel>(message.Data);
+            var researcherDataModel = Mapper.Map<ResearcherRegisterDataModel, ResearcherDataModel>(message.Data);
             //researcherDataModel.UserId = user.Id;
 
             var researcher = new Researcher(Guid.NewGuid(), researcherDataModel);
@@ -65,10 +61,30 @@ namespace SciVacancies.WebApp.Commands
                 }
             }
 
-            var identity = _userManager.Create(user);
+            IdentityResult identity =
+                string.IsNullOrWhiteSpace(message.Data.Password)
+                ? _userManager.Create(user)
+                : _userManager.Create(user, message.Data.Password)
+                ;
+
             if (!identity.Succeeded) throw new ArgumentException("UserManager failed to create identity");
 
-            _userManager.AddToRole(user.Id, ConstTerms.RequireRoleResearcher);
+
+            if (!string.IsNullOrWhiteSpace(message.Data.SciMapNumber))
+            {
+                //todo: для внешних пользователей пометить Email как подтвержденный?
+                _userManager.AddLogin(user.Id, new UserLoginInfo(ConstTerms.LoginProvider, message.Data.SciMapNumber));
+                
+                //отметить пользователя как прошедшего активацию
+                _userManager.AddClaim(user.Id, new Claim(ConstTerms.ClaimTypeUserActivated, "true"));
+                
+                _userManager.AddToRole(user.Id, ConstTerms.RequireRoleResearcher);
+            }
+            else
+            {
+                //отметить пользователя как ождидающего активацию
+                _userManager.AddClaim(user.Id, new Claim(ConstTerms.ClaimTypeUserActivated, "false"));
+            }
 
             return user;
         }
@@ -76,13 +92,11 @@ namespace SciVacancies.WebApp.Commands
     public class RegisterUserOrganizationCommandHandler : IRequestHandler<RegisterUserOrganizationCommand, SciVacUser>
     {
         private readonly SciVacUserManager _userManager;
-        private readonly IMediator _mediator;
         private readonly IRepository _repository;
 
-        public RegisterUserOrganizationCommandHandler(SciVacUserManager userManager, IMediator mediator, IRepository repository)
+        public RegisterUserOrganizationCommandHandler(SciVacUserManager userManager, IRepository repository)
         {
             _userManager = userManager;
-            _mediator = mediator;
             _repository = repository;
         }
 

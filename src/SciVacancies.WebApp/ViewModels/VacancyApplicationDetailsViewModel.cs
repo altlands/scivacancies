@@ -20,6 +20,7 @@ namespace SciVacancies.WebApp.ViewModels
 
         public string FullName { get; set; }
         public string Email { get; set; }
+        [Obsolete("неопределено назначение этого свойства. планируется его удаление")]
         public string ExtraEmail { get; set; }
         public string Phone { get; set; }
         public string ExtraPhone { get; set; }
@@ -174,5 +175,7 @@ namespace SciVacancies.WebApp.ViewModels
         /// Публикации
         /// </summary>
         public List<Publication> Publications { get; set; }
+
+        public string FolderApplicationsAttachmentsUrl { get; set; }
     }
 }

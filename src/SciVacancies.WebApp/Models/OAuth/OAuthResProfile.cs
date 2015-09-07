@@ -4,8 +4,9 @@ namespace SciVacancies.WebApp.Models.OAuth
 {
     public class OAuthResProfile
     {
-        //TODO: стаж работы и тд
-        //TODO: номер ученого
+        //TODO: рабочий и другие стажи
+
+        public IdentityNumberSc identityNumberSc { get; set; } = new IdentityNumberSc();
 
         public string birthday { get; set; }
         /// <summary>
@@ -124,5 +125,10 @@ namespace SciVacancies.WebApp.Models.OAuth
         public string title { get; set; }
         public string updated { get; set; }
         public int year { get; set; }
+    }
+
+    public class IdentityNumberSc
+    {
+        public int scimap { get; set; }
     }
 }

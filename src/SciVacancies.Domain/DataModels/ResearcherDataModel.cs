@@ -1,5 +1,4 @@
 ﻿using SciVacancies.Domain.Core;
-
 using System;
 using System.Collections.Generic;
 
@@ -7,6 +6,16 @@ namespace SciVacancies.Domain.DataModels
 {
     public class ResearcherDataModel
     {
+        /// <summary>
+        /// Идентификатор учёного в системе Карты Науки
+        /// </summary>
+        public string SciMapNumber { get; set; }
+
+        /// <summary>
+        /// Идентификационный номер Учёного
+        /// </summary>
+        public int ExtNumber { get; set; }
+
         public string FirstName { get; set; }
         public string FirstNameEng { get; set; }
 
@@ -25,6 +34,7 @@ namespace SciVacancies.Domain.DataModels
         public DateTime BirthDate { get; set; }
 
         public string Email { get; set; }
+        [Obsolete("неопределено назначение этого свойства. планируется его удаление")]
         public string ExtraEmail { get; set; }
 
         public string Phone { get; set; }

@@ -21,8 +21,12 @@
             </div>
             <div class="info info-view inline-block">
                 <h4>@Model.Name</h4>
-                <del><span><a href="#" class="big-link-compare lk-icon bold">Добавить в сравнение</a></span></del> <span style="color: red;">в разработке</span>
-
+                @*<del>
+                    <span>
+                        <a href="#" class="big-link-compare lk-icon bold">Добавить в сравнение</a>
+                    </span>
+                </del>
+                <span style="color: red;">в разработке</span>*@
                 <div class="profile-description">
                     <div>Сокращенное наименование: <span class="bold">@Model.ShortName</span></div>
                 </div>
@@ -31,10 +35,7 @@
     </div>
     <div class="row pt15 fs12">
         <div class="profile-description profile-description-place">
-            @*<div>Населенный пункт: <span class="bold">@Model.CityName</span></div>*@
-
-            <div>Веб-сайт: <a href="#"><span class="bold">@Model.Email</span></a></div>
-
+            <div>Email: <a href="mailto:@(Model.Email)"><span class="bold">@Model.Email</span></a></div>
             <div>Почтовый адрес: <span class="bold">@Model.Address</span><br /></div>
         </div>
     </div>

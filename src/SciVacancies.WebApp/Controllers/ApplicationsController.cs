@@ -8,13 +8,12 @@ using Microsoft.AspNet.Authorization;
 using Microsoft.AspNet.Hosting;
 using Microsoft.AspNet.Http;
 using Microsoft.AspNet.Mvc;
+using Microsoft.Framework.OptionsModel;
 using Microsoft.Net.Http.Headers;
 using SciVacancies.Domain.DataModels;
 using SciVacancies.Domain.Enums;
-using SciVacancies.ReadModel;
 using SciVacancies.ReadModel.Core;
 using SciVacancies.WebApp.Commands;
-using SciVacancies.WebApp.Engine;
 using SciVacancies.WebApp.Queries;
 using SciVacancies.WebApp.ViewModels;
 
@@ -26,11 +25,13 @@ namespace SciVacancies.WebApp.Controllers
     {
         private readonly IMediator _mediator;
         private readonly IHostingEnvironment _hostingEnvironment;
+        private readonly IOptions<AttachmentSettings> _attachmentSettings;
 
-        public ApplicationsController(IMediator mediator, IHostingEnvironment hostingEnvironment)
+        public ApplicationsController(IMediator mediator, IHostingEnvironment hostingEnvironment, IOptions<AttachmentSettings> attachmentSettings)
         {
             _mediator = mediator;
             _hostingEnvironment = hostingEnvironment;
+            _attachmentSettings = attachmentSettings;
         }
 
         #region private CreateVacancyApplicationCreateViewModel
@@ -121,8 +122,7 @@ namespace SciVacancies.WebApp.Controllers
                 return View("Error", "Вы не можете подать повторную Заявку на Вакансию");
 
             //TODO: Application -> Attachments : как проверять безопасность, прикрепляемых файлов
-            //TODO: Application -> Attachments : вынести в конфиг это магическое число
-            if (model.Attachments != null && model.Attachments.Any(c => c.Length > 100000))
+            if (model.Attachments != null && model.Attachments.Any(c => c.Length > _attachmentSettings.Options.VacancyApplication.MaxItemSize))
             {
                 ModelState.AddModelError("Attachments", @"Размер изображения превышает допустимый объём. Повторите создания Заявки ещё раз.");
             }
@@ -136,7 +136,7 @@ namespace SciVacancies.WebApp.Controllers
             var attachmentsList = new List<SciVacancies.Domain.Core.VacancyApplicationAttachment>();
             var newFolderName = Guid.NewGuid();
             //save attachments
-            var fullDirectoryPath = $"{_hostingEnvironment.WebRootPath}{ConstTerms.FolderApplicationsAttachments}\\{newFolderName}\\";
+            var fullDirectoryPath = $"{_hostingEnvironment.WebRootPath}{_attachmentSettings.Options.VacancyApplication.PhisicalPathPart}\\{newFolderName}\\";
 
             if (model.Attachments != null && model.Attachments.Any())
             {
@@ -155,7 +155,7 @@ namespace SciVacancies.WebApp.Controllers
                         //TODO: Application -> Attachments : можно ли редактировать список файлов, или Заявки создаются разово и для каждой генеиртся новая папка с вложениями
                         Directory.CreateDirectory(fullDirectoryPath);
                         var filePath =
-                            $"{_hostingEnvironment.WebRootPath}{ConstTerms.FolderApplicationsAttachments}\\{newFolderName}\\{fileName}";
+                            $"{_hostingEnvironment.WebRootPath}{_attachmentSettings.Options.VacancyApplication.PhisicalPathPart}\\{newFolderName}\\{fileName}";
                         file.SaveAs(filePath);
                         attachmentsList.Add(new SciVacancies.Domain.Core.VacancyApplicationAttachment
                         {
@@ -172,7 +172,7 @@ namespace SciVacancies.WebApp.Controllers
                         RemoveAttachmentDirectory(fullDirectoryPath);
                         return View("Error", "Ошибка при сохранении прикреплённых файлов");
                     }
-
+                    
                     //TODO: сохранение файл в БД (сделать)
                     //using (var memoryStream = new MemoryStream())
                     //{
@@ -240,6 +240,7 @@ namespace SciVacancies.WebApp.Controllers
             model.Researcher = Mapper.Map<ResearcherDetailsViewModel>(_mediator.Send(new SingleResearcherQuery { ResearcherGuid = researcherGuid }));
             model.Vacancy = Mapper.Map<VacancyDetailsViewModel>(_mediator.Send(new SingleVacancyQuery { VacancyGuid = preModel.vacancy_guid }));
             model.Attachments = _mediator.Send(new SelectVacancyApplicationAttachmentsQuery { VacancyApplicationGuid = id });
+            model.FolderApplicationsAttachmentsUrl = _attachmentSettings.Options.VacancyApplication.UrlPathPart;
             //TODO: ntemnikov : показать Научные интересы
             return View(model);
         }
@@ -277,7 +278,7 @@ namespace SciVacancies.WebApp.Controllers
             model.Researcher = Mapper.Map<ResearcherDetailsViewModel>(_mediator.Send(new SingleResearcherQuery { ResearcherGuid = preModel.researcher_guid }));
             model.Vacancy = Mapper.Map<VacancyDetailsViewModel>(vacancy);
             model.Attachments = _mediator.Send(new SelectVacancyApplicationAttachmentsQuery { VacancyApplicationGuid = id });
-            //TODO: ntemnikov : показать Приложенные файлы
+            model.FolderApplicationsAttachmentsUrl = _attachmentSettings.Options.VacancyApplication.UrlPathPart;
             //TODO: ntemnikov : показать Научные интересы
             return View(model);
         }
@@ -462,6 +463,7 @@ namespace SciVacancies.WebApp.Controllers
             model.Researcher = Mapper.Map<ResearcherDetailsViewModel>(_mediator.Send(new SingleResearcherQuery { ResearcherGuid = preModel.researcher_guid }));
             model.Vacancy = Mapper.Map<VacancyDetailsViewModel>(vacancy);
             model.Attachments = _mediator.Send(new SelectVacancyApplicationAttachmentsQuery { VacancyApplicationGuid = id });
+            model.FolderApplicationsAttachmentsUrl = _attachmentSettings.Options.VacancyApplication.UrlPathPart;
             return View(model);
         }
 

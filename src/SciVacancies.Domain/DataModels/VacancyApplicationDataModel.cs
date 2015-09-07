@@ -1,4 +1,5 @@
-﻿using SciVacancies.Domain.Core;
+﻿using System;
+using SciVacancies.Domain.Core;
 using System.Collections.Generic;
 
 namespace SciVacancies.Domain.DataModels
@@ -12,6 +13,7 @@ namespace SciVacancies.Domain.DataModels
         public string PositionName { get; set; }
 
         public string Email { get; set; }
+        [Obsolete("неопределено назначение этого свойства. планируется его удаление")]
         public string ExtraEmail { get; set; }
 
         public string Phone { get; set; }

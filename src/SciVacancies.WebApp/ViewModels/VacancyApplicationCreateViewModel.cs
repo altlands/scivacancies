@@ -20,6 +20,7 @@ namespace SciVacancies.WebApp.ViewModels
         public string ResearcherFullName { get; set; }
 
         public string Email { get; set; }
+        [Obsolete("неопределено назначение этого свойства. планируется его удаление")]
         public string ExtraEmail { get; set; }
 
         public string Phone { get; set; }

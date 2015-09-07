@@ -4,6 +4,7 @@ using System.Linq;
 using System.Management.Instrumentation;
 using Microsoft.AspNet.Http;
 using Microsoft.AspNet.Mvc;
+using Microsoft.Framework.OptionsModel;
 using SciVacancies.Captcha;
 
 namespace SciVacancies.WebApp.Controllers
@@ -11,6 +12,12 @@ namespace SciVacancies.WebApp.Controllers
 
     public class AltLanDSCaptchaController : Controller
     {
+        private readonly IOptions<CaptchaSettings> _captchaSettings;
+
+        public AltLanDSCaptchaController(IOptions<CaptchaSettings> captchaSettings)
+        {
+            _captchaSettings = captchaSettings;
+        }
 
         /// <summary>
         /// Сгенерировать изображение с кодом
@@ -52,7 +59,7 @@ namespace SciVacancies.WebApp.Controllers
             var iCaptchaStore = CaptchaConfiguration.DefaultStoreFactory(Context);
             iCaptchaStore.PutCaptcha(key, text);
 
-            captchaContext.WriteCaptchaCookie(key);
+            captchaContext.WriteCaptchaCookie(key, _captchaSettings.Options.CaptchaDurationSeconds);
 
             FileContentResult result;
             using (var b = ci.RenderImage())
@@ -68,12 +75,12 @@ namespace SciVacancies.WebApp.Controllers
             //    b.Save(Context.Response.OutputStream, ImageFormat.Gif);
             //}
 
-            //captchaContext.WriteCaptchaCookie(key);
-            //Context.Response.ContentType = "image/gif";
-            //Context.Response.StatusCode = 200;
+            captchaContext.WriteCaptchaCookie(key, _captchaSettings.Options.CaptchaDurationSeconds);
+            Context.Response.ContentType = "image/gif";
+            Context.Response.StatusCode = 200;
             //Context.Response.StatusDescription = "OK";
             //Context.ApplicationInstance.CompleteRequest();
-            //return null;
+            return null;
         }
 
         /// <summary>

@@ -5,15 +5,14 @@ using Autofac;
 using Autofac.Dnx;
 using Autofac.Features.Variance;
 using Microsoft.AspNet.Builder;
+using Microsoft.AspNet.DataProtection;
 using Microsoft.AspNet.Diagnostics;
 using Microsoft.AspNet.Hosting;
-using Microsoft.AspNet.Http;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Mvc;
 using Microsoft.Framework.ConfigurationModel;
 using Microsoft.Framework.DependencyInjection;
 using Microsoft.Framework.Logging;
-using Microsoft.Framework.WebEncoders;
 using SciVacancies.WebApp.Infrastructure;
 
 namespace SciVacancies.WebApp
@@ -43,7 +42,10 @@ namespace SciVacancies.WebApp
             services.Configure<OAuthSettings>(Configuration.GetSubKey("OAuthSettings"));
             services.Configure<ApiSettings>(Configuration.GetSubKey("ApiSettings"));
             services.Configure<ElasticSettings>(Configuration.GetSubKey("ElasticSettings"));
-            services.Configure<FileStorageSettings>(Configuration.GetSubKey("FileStorageSettings"));
+            services.Configure<AttachmentSettings>(Configuration.GetSubKey("AttachmentSettings"));
+            services.Configure<SiteFileSettings>(Configuration.GetSubKey("SiteFileSettings"));
+            services.Configure<VacancyLifeCycleSettings>(Configuration.GetSubKey("VacancyLifeCycleSettings"));
+            services.Configure<CaptchaSettings>(Configuration.GetSubKey("CaptchaSettings"));
 
             services.ConfigureCookieAuthentication(options =>
             {
@@ -143,15 +145,6 @@ namespace SciVacancies.WebApp
             MappingConfiguration.Initialize();
 
             //SearchSubscriptionService.Initialize(Configuration);
-        }
-    }
-
-    public class YourCustomFilter : ActionFilterAttribute, IExceptionFilter
-    {
-        public void OnException(ExceptionContext context)
-        {
-            var t = 5;
-            t = 5 * t;
         }
     }
 

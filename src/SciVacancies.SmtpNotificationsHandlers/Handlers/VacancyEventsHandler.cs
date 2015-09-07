@@ -32,11 +32,12 @@ namespace SciVacancies.SmtpNotificationsHandlers.Handlers
         }
         public void Handle(VacancyPublished msg)
         {
-            VacancyStatusChangedSmtpNotification(msg.VacancyGuid);
+            VacancyStatusChangedSmtpNotificationForResearcher(msg.VacancyGuid);
         }
         public void Handle(VacancyInCommittee msg)
         {
-            VacancyStatusChangedSmtpNotification(msg.VacancyGuid);
+            VacancyStatusChangedSmtpNotificationForOrganization(msg.VacancyGuid);
+            VacancyStatusChangedSmtpNotificationForResearcher(msg.VacancyGuid);
         }
         public void Handle(VacancyPretenderSet msg)
         {
@@ -44,33 +45,32 @@ namespace SciVacancies.SmtpNotificationsHandlers.Handlers
         }
         public void Handle(VacancyOfferAcceptedByWinner msg)
         {
-
+            VacancyStatusChangedSmtpNotificationForOrganization(msg.VacancyGuid);
         }
         public void Handle(VacancyOfferRejectedByWinner msg)
         {
-
+            VacancyStatusChangedSmtpNotificationForOrganization(msg.VacancyGuid);
         }
         public void Handle(VacancyOfferAcceptedByPretender msg)
         {
-
+            VacancyStatusChangedSmtpNotificationForOrganization(msg.VacancyGuid);
         }
         public void Handle(VacancyOfferRejectedByPretender msg)
         {
-
+            VacancyStatusChangedSmtpNotificationForOrganization(msg.VacancyGuid);
         }
         public void Handle(VacancyClosed msg)
         {
-            VacancyStatusChangedSmtpNotification(msg.VacancyGuid);
+            VacancyStatusChangedSmtpNotificationForResearcher(msg.VacancyGuid);
         }
 
         public void Handle(VacancyCancelled msg)
         {
-            VacancyStatusChangedSmtpNotification(msg.VacancyGuid);
+            VacancyStatusChangedSmtpNotificationForResearcher(msg.VacancyGuid);
         }
 
 
-
-        private void VacancyStatusChangedSmtpNotification(Guid vacancyGuid)
+        private void VacancyStatusChangedSmtpNotificationForResearcher(Guid vacancyGuid)
         {
             var vacancy = _db.SingleOrDefaultById<Vacancy>(vacancyGuid);
             if (vacancy == null) return;
@@ -83,11 +83,20 @@ namespace SciVacancies.SmtpNotificationsHandlers.Handlers
                     researcherGuids));
             if (!researchers.Any()) return;
 
-            var smtpNotificatorVacancyStatusChanged = new SmtpNotificatorVacancyStatusChanged();
+            var smtpNotificatorVacancyStatusChangedForResearcher = new SmtpNotificatorVacancyStatusChangedForResearcher();
             foreach (var researcher in researchers)
-            {
-                smtpNotificatorVacancyStatusChanged.Send(vacancy, researcher);
-            }
+                smtpNotificatorVacancyStatusChangedForResearcher.Send(vacancy, researcher);
+        }
+
+
+        private void VacancyStatusChangedSmtpNotificationForOrganization(Guid vacancyGuid)
+        {
+            var vacancy = _db.SingleOrDefaultById<Vacancy>(vacancyGuid);
+            if (vacancy == null) return;
+            var organization =
+                _db.SingleOrDefaultById<Organization>(vacancy.organization_guid);
+
+            new SmtpNotificatorVacancyStatusChangedForOrganization().Send(vacancy, organization);
         }
 
 

@@ -7,6 +7,15 @@ namespace SciVacancies.WebApp.ViewModels
     {
         public Guid ResearcherGuid { get; set; }
 
-        public string Title { get; set; }
+        public string Name { get; set; }
+
+        public string Type { get; set; }
+
+        public int ExtId { get; set; }
+
+        public string Authors { get; set; }
+
+        public DateTime? Updated { get; set; }
+
     }
 }

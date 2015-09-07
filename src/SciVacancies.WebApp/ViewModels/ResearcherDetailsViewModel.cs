@@ -9,12 +9,12 @@ namespace SciVacancies.WebApp.ViewModels
 {
     public class ResearcherDetailsViewModel : PageViewModelBase
     {
+
         public ResearcherDetailsViewModel()
         {
             Title = "Личная карточка пользователя";
         }
 
-        [Ignore]
         public string Login { get; set; }
 
         public string FirstName { get; set; }
@@ -31,11 +31,13 @@ namespace SciVacancies.WebApp.ViewModels
         public DateTime BirthDate { get; set; }
 
         public string Email { get; set; }
+        [Obsolete("неопределено назначение этого свойства. планируется его удаление")]
         public string ExtraEmail { get; set; }
 
         public string Phone { get; set; }
-        public string ExtraPhone { get; set; }
+        public string ExtraPhone { get; set;}
 
+        [Obsolete("гражданство планируется убрать")]
         public string Nationality { get; set; }
 
         public string ResearchActivity { get; set; }
@@ -51,13 +53,21 @@ namespace SciVacancies.WebApp.ViewModels
         public string ImageName { get; set; }
         public long? ImageSize { get; set; }
         public string ImageExtension { get; set; }
-        public string ImageUrl { get; set; }
-        public string ImageUrlOrDefault => string.IsNullOrWhiteSpace(ImageUrl)
-            ? ConstTerms.PathToBlankImage
-            : (ConstTerms.FolderResearcherPhotoUtl + ImageUrl);
+
+        private string _imageUrl;
+        public string ImageUrl
+        {
+            get { return _imageUrl ?? string.Empty; }
+            set { _imageUrl = value; }
+        }
+        /// <summary>
+        /// Индивидуальный номер учёного
+        /// </summary>
+        public int ExtNumber { get; set; }
 
         public List<EducationEditViewModel> Educations { get; set; }
         public List<PublicationEditViewModel> Publications { get; set; }
+        public List<InterestDetailsViewModel> Interests { get; set; }
 
         public ResearcherStatus Status { get; set; }
 
@@ -66,5 +76,6 @@ namespace SciVacancies.WebApp.ViewModels
 
         public string FullName => $"{SecondName} {FirstName} {Patronymic}";
         public string FullNameEng => $"{FirstNameEng} {PatronymicEng} {SecondNameEng}";
+
     }
 }

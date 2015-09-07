@@ -9,7 +9,7 @@ namespace SciVacancies.WebApp.ViewModels
     {
         public string org { get; set; }
         public string position { get; set; }
-        public DateTime updated { get; set; }
+        //public DateTime updated { get; set; }
         public int year_from { get; set; }
         public int year_to { get; set; }
     }

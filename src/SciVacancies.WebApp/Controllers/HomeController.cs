@@ -4,6 +4,7 @@ using Microsoft.AspNet.Diagnostics;
 using Microsoft.AspNet.Mvc;
 using SciVacancies.ReadModel.Core;
 using SciVacancies.WebApp.Engine;
+using SciVacancies.WebApp.Models;
 using SciVacancies.WebApp.Queries;
 using SciVacancies.WebApp.ViewModels;
 

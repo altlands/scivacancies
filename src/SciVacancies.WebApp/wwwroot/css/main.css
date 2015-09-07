@@ -82,7 +82,9 @@ a {
     text-decoration: underline;
 }
 
-input[type="text"], input[type="password"] {
+input[type="text"], 
+input[type="number"], 
+input[type="password"] {
     font: italic 14px Arial;
     -webkit-border-radius: 4px;
     -moz-border-radius: 4px;
@@ -91,6 +93,7 @@ input[type="text"], input[type="password"] {
 }
 
 input[type="text"],
+input[type="number"],
 input[type="password"],
 textarea {
     padding: 5px 10px;
@@ -101,6 +104,7 @@ textarea {
 }
 
     input[type="text"].disabled,
+    input[type="number"].disabled,
     textarea.disabled {
         background: #d1d1d1;
         color: #596573;
@@ -251,31 +255,39 @@ table.table.request-table td.pl0 {
     color: #041833;
 }
 
-input[type="text"] {
+input[type="text"],
+input[type="number"] {
     width: 266px;
 }
 
-    input[type="text"].big-input {
+    input[type="text"].big-input,
+    input[type="number"].big-input {
         width: 590px;
     }
 
-    input[type="text"].long-input {
+    input[type="text"].long-input,
+    input[type="number"].long-input {
         width: 315px;
     }
 
-.window-popup input[type="text"].long-input, .window-popup input[type="password"].long-input {
+.window-popup input[type="text"].long-input, 
+.window-popup input[type="number"].long-input, 
+.window-popup input[type="password"].long-input {
     width: 305px;
 }
 
-input[type="text"].middle-input {
+input[type="text"].middle-input,
+input[type="number"].middle-input {
     width: 166px;
 }
 
-input[type="text"].middle-popup-input {
+input[type="text"].middle-popup-input,
+input[type="number"].middle-popup-input {
     width: 252px;
 }
 
-input[type="text"].small-input {
+input[type="text"].small-input,
+input[type="number"].small-input {
     width: 94px;
 }
 /* /basic style */
@@ -940,7 +952,9 @@ a.search-icons {
     display: inline-block;
 }
 
-.bottom-nav input[type="text"] {
+.bottom-nav input[type="text"] ,
+.bottom-nav input[type="number"] 
+{
     font-style: italic;
     width: 40px;
     height: 22px;
@@ -1157,7 +1171,7 @@ a.search-icons {
 
 .lk-head-icon {
     display: inline-block;
-    background: url('../images/icons/cab-head-b.png') no-repeat;
+    background: url('../images/icons/cab-head.png') no-repeat;
     width: 22px;
     height: 22px;
     vertical-align: middle;
@@ -1165,7 +1179,7 @@ a.search-icons {
 
 .lk-icon-bl {
     display: inline-block;
-    background: url('../images/icons/cab-head-bl.png') no-repeat;
+    background: url('../images/icons/cab-head-b.png') no-repeat;
     width: 22px;
     height: 22px;
     vertical-align: middle;
@@ -1621,6 +1635,7 @@ table.table.request-table td.view-col, table.table.request-table th.view-col, ta
     }
 
 .table-form .right-cell input[type="text"],
+.table-form .right-cell input[type="number"],
 .table-form .right-cell textarea {
     font: italic 14px Arial;
     color: #333333;
@@ -1630,12 +1645,14 @@ table.table.request-table td.view-col, table.table.request-table th.view-col, ta
 }
 
     .table-form .right-cell input[type="text"].big-input,
+    .table-form .right-cell input[type="number"].big-input,
     .table-form .right-cell textarea,
     .table-form .content-list li {
         width: 590px;
     }
 
-.table-form .right-cell input[type="text"] {
+.table-form .right-cell input[type="text"],
+.table-form .right-cell input[type="number"] {
     height: 30px;
     border-radius: 0;
 }
@@ -1670,6 +1687,13 @@ ol.content-list {
         color: #596573;
         position: relative;
         min-height: 24px;
+    }
+    
+    .content-list li+li{
+        border-top: 1px solid #d1d1d1;
+    }
+    .content-list li+li+li{
+        border-top: 0;
     }
 
     .content-list .buttons {
@@ -2012,7 +2036,9 @@ span.close-popup {
     margin: 28px 0 0 0;
 }
 
-.window-popup input[type="text"], .window-popup input[type="password"] {
+.window-popup input[type="text"], 
+.window-popup input[type="number"], 
+.window-popup input[type="password"] {
     border-radius: 0;
 }
 
@@ -2070,7 +2096,8 @@ span + input.small-input {
     float: left;
 }
 
-.b-form input[type="text"] {
+.b-form input[type="text"],
+.b-form input[type="number"] {
     border-radius: 0;
 }
 
@@ -3026,14 +3053,13 @@ h4 + .b-vacancies {
     background: url(../images/sprite.png) no-repeat -183px -222px;
 }
 
-[data-selectorphoto=true] {
+/*[data-selectorphoto=true] {
     cursor: pointer;
 }
-
 input[type=file] {
     display: none;
     visibility: hidden;
-}
+}*/
 
 table.table.request-table a.sort-order {
     font: inherit;

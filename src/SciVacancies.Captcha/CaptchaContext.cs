@@ -20,14 +20,22 @@ namespace SciVacancies.Captcha
             return captchaCookie;
         }
 
+        [Obsolete("указывать период актуальности кода из конфига приложения")]
         public void WriteCaptchaCookie(string captchaId)
+        {
+            WriteCaptchaCookie(captchaId, 180);
+        }
+
+        public void WriteCaptchaCookie(string captchaId, int captchaDurationSeconds)
         {
             _context.Response.Cookies.Append(captchaKey, captchaId, new CookieOptions
             {
                 HttpOnly = true,
-                Expires = DateTime.Now.AddSeconds(180) //TODO: вынести в конфиг время действия Капчи
+                Expires = DateTime.Now.AddSeconds(captchaDurationSeconds) 
             });
         }
+
+
 
     }
 }

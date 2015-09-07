@@ -4,11 +4,10 @@ using AutoMapper;
 using MediatR;
 using Microsoft.AspNet.Mvc.Rendering;
 using SciVacancies.Domain.Enums;
-using SciVacancies.ReadModel;
-using SciVacancies.WebApp.Engine;
 using SciVacancies.WebApp.Queries;
+using SciVacancies.WebApp.ViewModels;
 
-namespace SciVacancies.WebApp.ViewModels
+namespace SciVacancies.WebApp.Models
 {
     public class VacanciesFilterSource
     {
