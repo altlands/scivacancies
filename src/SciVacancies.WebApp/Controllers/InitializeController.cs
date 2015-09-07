@@ -5,7 +5,6 @@ using Microsoft.AspNet.Mvc;
 using SciVacancies.Domain.DataModels;
 using SciVacancies.Domain.Enums;
 using SciVacancies.WebApp.Commands;
-using SciVacancies.WebApp.Engine;
 using SciVacancies.WebApp.Infrastructure.Identity;
 using SciVacancies.WebApp.Queries;
 using SciVacancies.WebApp.ViewModels;
@@ -16,7 +15,7 @@ using SciVacancies.WebApp.Models.DataModels;
 
 namespace SciVacancies.WebApp.Controllers
 {
-        [ResponseCache(NoStore = true)]
+    [ResponseCache(NoStore = true)]
     public class InitializeController : Controller
     {
         private readonly IMediator _mediator;
@@ -61,6 +60,8 @@ namespace SciVacancies.WebApp.Controllers
             };
             var user1 = _mediator.Send(createUserResearcherCommand1);
             var researcherGuid1 = Guid.Parse(user1.Claims.Single(s => s.ClaimType.Equals(ConstTerms.ClaimTypeResearcherId)).ClaimValue);
+            if (!_userManager.IsInRole(user1.Id, ConstTerms.RequireRoleResearcher))
+                _userManager.AddToRole(user1.Id, ConstTerms.RequireRoleResearcher);
 
             var createUserResearcherCommand2 = new RegisterUserResearcherCommand
             {
@@ -80,6 +81,8 @@ namespace SciVacancies.WebApp.Controllers
             };
             var user2 = _mediator.Send(createUserResearcherCommand2);
             var researcherGuid2 = Guid.Parse(user2.Claims.Single(s => s.ClaimType.Equals(ConstTerms.ClaimTypeResearcherId)).ClaimValue);
+            if (!_userManager.IsInRole(user2.Id, ConstTerms.RequireRoleResearcher))
+                _userManager.AddToRole(user2.Id, ConstTerms.RequireRoleResearcher);
 
             var createUserResearcherCommand3 = new RegisterUserResearcherCommand
             {
@@ -99,8 +102,8 @@ namespace SciVacancies.WebApp.Controllers
             };
             var user3 = _mediator.Send(createUserResearcherCommand3);
             var researcherGuid3 = Guid.Parse(user3.Claims.Single(s => s.ClaimType.Equals(ConstTerms.ClaimTypeResearcherId)).ClaimValue);
-
-
+            if (!_userManager.IsInRole(user3.Id, ConstTerms.RequireRoleResearcher))
+                _userManager.AddToRole(user3.Id, ConstTerms.RequireRoleResearcher);
 
             var createUserOrganizationCommand0 = new RegisterUserOrganizationCommand
             {
@@ -152,7 +155,7 @@ namespace SciVacancies.WebApp.Controllers
             _mediator.Send(new CreateSearchSubscriptionCommand
             {
                 ResearcherGuid = researcherGuid1,
-                Data = new SearchSubscriptionDataModel { Title = "Разведение лазерных акул", Query = "",OrderBy= "relevant" }
+                Data = new SearchSubscriptionDataModel { Title = "Разведение лазерных акул", Query = "", OrderBy = "relevant" }
             });
 
             var vacancyGuid1 = _mediator.Send(new CreateVacancyCommand
@@ -186,7 +189,7 @@ namespace SciVacancies.WebApp.Controllers
                 OrganizationGuid = organizationGuid0,
                 Data = new VacancyDataModel
                 {
-                    PositionTypeId = positions.First(c=>c.title.Contains("Младший научный сотрудник")).id,
+                    PositionTypeId = positions.First(c => c.title.Contains("Младший научный сотрудник")).id,
                     Name = "Младший научный сотрудник",
                     FullName = "Младший научный сотрудник по разработке лазерных систем",
                     ResearchDirection = "Прикладная математика",
@@ -249,7 +252,7 @@ namespace SciVacancies.WebApp.Controllers
                     PositionTypeId = positions.First(c => c.title.Contains("начальник") && c.title.Contains("научно-") && c.title.Contains("лаборатории")).id,
                     Name = "Начальник научно-исследовательской лаборатории",
                     FullName = "Начальник научно-исследовательской лаборатории лазерных систем",
-                    ResearchDirection = researchDiretions.First(c=>c.title.Contains("системы")).title,
+                    ResearchDirection = researchDiretions.First(c => c.title.Contains("системы")).title,
                     ResearchDirectionId = researchDiretions.First(c => c.title.Contains("системы")).id,
                     Tasks = "Исследование в области химических структур для лазерных систем",
                     //SalaryFrom = 0,
