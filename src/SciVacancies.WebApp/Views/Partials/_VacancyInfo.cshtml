@@ -1,23 +1,68 @@
 ﻿@using System.Threading.Tasks
 @using SciVacancies
 @using SciVacancies.WebApp.ViewModels
-@model  SciVacancies.WebApp.ViewModels.VacancyDetailsViewModel
+@model VacancyDetailsViewModel
 
 <div class="title-cat-inform">Специализация:</div>
 <ul class="list-information layout-inform">
     <li class="even">
-        <span>Статус:</span>@Model.Status.GetDescription(User) 
+        <span>Статус:</span>@Model.Status.GetDescription(User)
+
     </li>
     <li class="odd">
+
+        <div>
+            @if (!string.IsNullOrWhiteSpace(Model.CloseReason))
+            {
+                <text>
+                <div class="section-eval">
+                    <span class="name-section">Решение комиссии:</span>
+                    <div class="list-fields">
+                        <div>
+                            <div class="field">
+                                @Model.CloseReason
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                </text>
+            }
+
+            @if (Model.Attachments != null && Model.Attachments.SelectProtocols().Any())
+            {
+                <text>
+                <div class="section-eval">
+                    <span class="name-section">Протокол(ы) решения комиссии:</span>
+                    <div class="list-fields">
+                        @foreach (var item in Model.Attachments.SelectVacancyFiles())
+                        {
+                            <text>
+                            <div>
+                                <div class="field">
+                                    <div class="section-eval">
+                                        @item.name <span class="small-icon icon-sm-download"><a href="@(Model.FolderApplicationsAttachmentsUrl + item.url)">Скачать</a></span>
+                                    </div>
+                                </div>
+                            </div>
+                            </text>
+                        }
+                    </div>
+                </div>
+                </text>
+            }
+
+        </div>
+    </li>
+    <li class="even">
         <span>Должность:</span>@Model.Name
     </li>
-    <li class="even">
+    <li class="odd">
         <span>Полное наименование:</span>@Model.FullName
     </li>
-    <li class="odd">
+    <li class="even">
         <span>Отрасль науки:</span>@Model.ResearchDirection
     </li>
-    <li class="even">
+    <li class="odd">
         <span>Тематика исследований:</span>@Model.ResearchTheme
     </li>
 </ul>
@@ -76,6 +121,26 @@
     </li>
     <li class="even">
         <span>Компенсация проезда:</span>@(Model.TransportCompensation ? "Да" : "Нет")
+    </li>
+</ul>
+
+
+
+<div class="title-cat-inform">Прикреплённые файлы:</div>
+<ul class="list-information layout-inform">
+    <li class="even">
+        <span>Файлы:</span>
+        <div>
+            @if (Model.Attachments != null)
+            {
+                foreach (var item in Model.Attachments.SelectVacancyFiles())
+                {
+                    <div class="section-eval">
+                        @item.name <span class="small-icon icon-sm-download"><a href="@(Model.FolderApplicationsAttachmentsUrl + item.url)">Скачать</a></span>
+                    </div>
+                }
+            }
+        </div>
     </li>
 </ul>
 

@@ -141,10 +141,8 @@ namespace SciVacancies.WebApp.Controllers
             if (model.PhotoFile != null)
             {
                 var file = model.PhotoFile;
-                var fileName = ContentDispositionHeaderValue
-                    .Parse(file.ContentDisposition)
-                    .FileName
-                    .Trim('"');
+                var fileName = System.IO.Path.GetFileName(ContentDispositionHeaderValue.Parse(file.ContentDisposition).FileName.Trim('"'));
+                
                 var fileExtension = fileName
                     .Split('.')
                     .Last()

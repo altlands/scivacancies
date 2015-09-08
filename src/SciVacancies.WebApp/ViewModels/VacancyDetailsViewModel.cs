@@ -169,6 +169,20 @@ namespace SciVacancies.WebApp.ViewModels
 
         public IEnumerable<VacancyCriteria> Criterias { get; set; }
         public List<CriteriaItemViewModel> CriteriasHierarchy { get; set; }
+        
+        /// <summary>
+        /// причина отмены
+        /// </summary>
+        public string CancelReason { get; set; }
+        /// <summary>
+        /// протокол закрытия
+        /// </summary>
+        public string CloseReason { get; set; }
 
+        public List<VacancyAttachment> Attachments { get; set; }
+        /// <summary>
+        /// часть пути для доступа к прикреплённым файлам
+        /// </summary>
+        public string FolderApplicationsAttachmentsUrl { get; set; }
     }
 }

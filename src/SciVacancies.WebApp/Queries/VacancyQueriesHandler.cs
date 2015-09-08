@@ -21,7 +21,8 @@ namespace SciVacancies.WebApp.Queries
         IRequestHandler<SelectPagedClosedVacanciesByOrganizationQuery, Page<Vacancy>>,
         IRequestHandler<SelectPagedFavoriteVacanciesByResearcherQuery, Page<Vacancy>>,
         IRequestHandler<SelectFavoriteVacancyGuidsByResearcherQuery, IEnumerable<Guid>>,
-        IRequestHandler<SelectPagedVacanciesByGuidsQuery, Page<Vacancy>>
+        IRequestHandler<SelectPagedVacanciesByGuidsQuery, Page<Vacancy>>,
+        IRequestHandler<SelectVacancyAttachmentsQuery, IEnumerable<VacancyAttachment>>
 
     {
         private readonly IDatabase _db;

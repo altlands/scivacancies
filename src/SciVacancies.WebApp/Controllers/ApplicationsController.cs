@@ -124,7 +124,7 @@ namespace SciVacancies.WebApp.Controllers
             //TODO: Application -> Attachments : как проверять безопасность, прикрепляемых файлов
             if (model.Attachments != null && model.Attachments.Any(c => c.Length > _attachmentSettings.Options.VacancyApplication.MaxItemSize))
             {
-                ModelState.AddModelError("Attachments", @"Размер изображения превышает допустимый объём. Повторите создания Заявки ещё раз.");
+                ModelState.AddModelError("Attachments", @"Размер одного из прикрепленных файлов превышает допустимый размер. Повторите создания Заявки ещё раз.");
             }
 
             //с формы мы не получаем практически никаких данных, поэтому заново наполняем ViewModel
@@ -143,10 +143,7 @@ namespace SciVacancies.WebApp.Controllers
             {
                 foreach (var file in model.Attachments)
                 {
-                    var fileName = ContentDispositionHeaderValue
-                        .Parse(file.ContentDisposition)
-                        .FileName
-                        .Trim('"');
+                    var fileName = System.IO.Path.GetFileName(ContentDispositionHeaderValue.Parse(file.ContentDisposition).FileName.Trim('"'));
 
                     //сценарий-А: сохранить файл на диск
                     try
@@ -161,7 +158,7 @@ namespace SciVacancies.WebApp.Controllers
                         attachmentsList.Add(new SciVacancies.Domain.Core.VacancyApplicationAttachment
                         {
                             Size = file.Length,
-                            Extension = fileName.Split('.')[1],
+                            Extension = fileName.Split('.').Last(),
                             Name = fileName,
                             UploadDate = DateTime.Now,
                             Url = $"/{newFolderName}/{fileName}"
@@ -285,171 +282,32 @@ namespace SciVacancies.WebApp.Controllers
         }
 
 
-        private object SetWinnerPreValidation(Guid vacancyApplicationGuid, Guid organizationGuid, out Vacancy vacancy, bool isWinner)
+        private object OfferAcceptionPreValidation(Guid vacancyApplicationGuid, Guid researcherGuid, bool isWinner)
         {
             var vacancyApplicaiton = _mediator.Send(new SingleVacancyApplicationQuery { VacancyApplicationGuid = vacancyApplicationGuid });
-            vacancy = null;
 
             if (vacancyApplicaiton == null)
                 return HttpNotFound(); //throw new ObjectNotFoundException($"Не найдена Заявка c идентификатором: {vacancyApplicationGuid}");
 
-            if (vacancyApplicaiton.status != VacancyApplicationStatus.Applied)
-                return View("Error",
-                    $"Вы не можете выбрать в качестве одного из победителей Заявку со статусом: {vacancyApplicaiton.status.GetDescription()}");
+            if (isWinner && vacancyApplicaiton.status != VacancyApplicationStatus.Won)
+                return View("Error", "Вы не можете принять предложение если Вы не Победитель");
 
-            vacancy = _mediator.Send(new SingleVacancyQuery { VacancyGuid = vacancyApplicaiton.vacancy_guid });
+            if (!isWinner && vacancyApplicaiton.status != VacancyApplicationStatus.Pretended)
+                return View("Error", "Вы не можете принять предложение если Вы не Победитель");
+
+            var vacancy = _mediator.Send(new SingleVacancyQuery { VacancyGuid = vacancyApplicaiton.vacancy_guid });
 
             if (vacancy == null)
                 return HttpNotFound(); //throw new ObjectNotFoundException($"Не найдена Вакансия c идентификатором: {vacancyApplicaiton.vacancy_guid}");
 
-            if (vacancy.organization_guid != organizationGuid)
-                return View("Error", "Вы не можете изменять Заявки, поданные на вакансии других организаций.");
+            if (isWinner && vacancy.winner_researcher_guid != researcherGuid)
+                return View("Error", "Вы не можете принять или отказаться от предложения, сделанного для другого заявителя.");
+            if (!isWinner && vacancy.pretender_researcher_guid != researcherGuid)
+                return View("Error", "Вы не можете принять или отказаться от предложения, сделанного для другого заявителя.");
 
-            if (isWinner && vacancy.winner_researcher_guid != Guid.Empty)
-                return View("Error", "Для данной Вакансии уже выбран Победитель.");
-
-            if (!isWinner && vacancy.winner_researcher_guid == Guid.Empty)
-                return View("Error", "Для данной Вакансии еще не выбран Победитель.");
-
-            if (vacancy.winner_researcher_guid != Guid.Empty && vacancy.pretender_researcher_guid != Guid.Empty)
-                return View("Error", "Для данной Вакансии уже выбраны Победитель и Претендент.");
-
-            if (vacancy.status != VacancyStatus.InCommittee)
-                return View("Error",
-                    $"Вы не можете выбирать победителя для Заявки со статусом: {vacancy.status.GetDescription()}");
-            return vacancyApplicaiton;
-        }
-
-        [PageTitle("Выбор победителя")]
-        [BindOrganizationIdFromClaims]
-        [Authorize(Roles = ConstTerms.RequireRoleOrganizationAdmin)]
-        public IActionResult SetWinner(Guid id, Guid organizationGuid, bool isWinner)
-        {
-            if (id == Guid.Empty)
-                throw new ArgumentNullException(nameof(id));
-            if (organizationGuid == Guid.Empty)
-                throw new ArgumentNullException(nameof(organizationGuid));
-
-            Vacancy vacancy;
-            var result = SetWinnerPreValidation(id, organizationGuid, out vacancy, isWinner);
-            if (result is HttpNotFoundResult) return (HttpNotFoundResult)result;
-            var vacancyApplication = (VacancyApplication)result;
-
-            var model = Mapper.Map<VacancyApplicationSetWinnerViewModel>(vacancyApplication);
-            model.Vacancy = Mapper.Map<VacancyDetailsViewModel>(vacancy);
-            model.Researcher = Mapper.Map<ResearcherDetailsViewModel>(_mediator.Send(new SingleResearcherQuery { ResearcherGuid = vacancyApplication.researcher_guid }));
-            model.WinnerIsSetting = isWinner;
-
-            return View(model);
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        [PageTitle("Выбор победителя")]
-        [BindOrganizationIdFromClaims]
-        [Authorize(Roles = ConstTerms.RequireRoleOrganizationAdmin)]
-        public IActionResult SetWinner(VacancyApplicationSetWinnerViewModel model, Guid organizationGuid)
-        {
-            if (organizationGuid == Guid.Empty)
-                throw new ArgumentNullException(nameof(organizationGuid));
-
-            Vacancy vacancy;
-            var result = SetWinnerPreValidation(model.Guid, organizationGuid, out vacancy, model.WinnerIsSetting);
-            if (result is HttpNotFoundResult) return (HttpNotFoundResult)result;
-            var vacancyApplication = (VacancyApplication)result;
-
-            if (ModelState.IsValid)
-            {
-                model = Mapper.Map<VacancyApplicationSetWinnerViewModel>(vacancyApplication);
-                model.Vacancy = Mapper.Map<VacancyDetailsViewModel>(vacancy);
-                model.Researcher = Mapper.Map<ResearcherDetailsViewModel>(_mediator.Send(new SingleResearcherQuery { ResearcherGuid = vacancyApplication.researcher_guid }));
-
-                return View(model);
-            }
-
-            #region attachments
-            var attachmentsList = new List<SciVacancies.Domain.Core.VacancyAttachment>();
-            var newFolderName = Guid.NewGuid();
-            //save attachments
-            var fullDirectoryPath = $"{_hostingEnvironment.WebRootPath}{_attachmentSettings.Options.Vacancy.PhisicalPathPart}\\{newFolderName}\\";
-            if (model.Attachments != null && model.Attachments.Any())
-            {
-                foreach (var file in model.Attachments)
-                {
-                    var fileName = ContentDispositionHeaderValue
-                        .Parse(file.ContentDisposition)
-                        .FileName
-                        .Trim('"');
-
-                    //сценарий-А: сохранить файл на диск
-                    try
-                    {
-                        //TODO: Application -> Attachments : что делать с Директорией при удалении(отмене, отклонении) Заявки
-                        //TODO: Application -> Attachments : как искать Текущую директорию при повторном добавлении(изменении текущего списка) файлов
-                        //TODO: Application -> Attachments : можно ли редактировать список файлов, или Заявки создаются разово и для каждой генеиртся новая папка с вложениями
-                        Directory.CreateDirectory(fullDirectoryPath);
-                        var filePath =
-                            $"{_hostingEnvironment.WebRootPath}{_attachmentSettings.Options.Vacancy.PhisicalPathPart}\\{newFolderName}\\{fileName}";
-                        file.SaveAs(filePath);
-                        attachmentsList.Add(new SciVacancies.Domain.Core.VacancyAttachment
-                        {
-                            Size = file.Length,
-                            Extension = fileName.Split('.')[1],
-                            Name = fileName,
-                            UploadDate = DateTime.Now,
-                            Url = $"/{newFolderName}/{fileName}"
-                        });
-
-                    }
-                    catch (Exception)
-                    {
-                        RemoveAttachmentDirectory(fullDirectoryPath);
-                        return View("Error", "Ошибка при сохранении прикреплённых файлов");
-                    }
-
-                    //TODO: сохранение файл в БД (сделать)
-                    //using (var memoryStream = new MemoryStream())
-                    //{
-                    //    файл в byte
-                    //    byte[] byteData;
-                    //    //сценарий-Б: сохранить файл в БД
-                    //    //var openReadStream = file.OpenReadStream();
-                    //    //var scale = (int)(500000 / file.Length);
-                    //    //var resizedImage = new Bitmap(image, new Size(image.Width * scale, image.Height * scale));
-                    //    //((Image)resizedImage).Save(memoryStream, ImageFormat.Jpeg);
-                    //    //byteData = memoryStream.ToArray();
-                    //    //memoryStream.SetLength(0);
-
-                    //    //сценарий-В: сохранить файл в БД
-                    //    //var openReadStream = file.OpenReadStream();
-                    //    //openReadStream.CopyTo(memoryStream);
-                    //    //byteData = memoryStream.ToArray();
-                    //    //memoryStream.SetLength(0);
-                    //}
-
-                }
-            }
-            #endregion
-
-            if (model.WinnerIsSetting)
-                _mediator.Send(new SetVacancyWinnerCommand
-                {
-                    VacancyGuid = model.VacancyGuid,
-                    ResearcherGuid = model.ResearcherGuid,
-                    VacancyApplicationGuid = model.Guid,
-                    Reason = model.Reason,
-                    Attachments = attachmentsList
-                });
-            else
-                _mediator.Send(new SetVacancyPretenderCommand
-                {
-                    VacancyGuid = model.VacancyGuid,
-                    ResearcherGuid = model.ResearcherGuid,
-                    VacancyApplicationGuid = model.Guid,
-                    Reason = model.Reason
-                });
-
-            return RedirectToAction("preview", "applications", new { id = model.Guid });
+            if (vacancy.status != VacancyStatus.OfferResponseAwaiting)
+                return View("Error", $"Вы не можете принять предложение или отказаться от него если Вакансия имеет статус: {vacancy.status.GetDescriptionByResearcher()}");
+            return vacancy;
         }
 
         [Authorize(Roles = ConstTerms.RequireRoleOrganizationAdmin)]
@@ -481,34 +339,6 @@ namespace SciVacancies.WebApp.Controllers
             model.Attachments = _mediator.Send(new SelectVacancyApplicationAttachmentsQuery { VacancyApplicationGuid = id });
             model.FolderApplicationsAttachmentsUrl = _attachmentSettings.Options.VacancyApplication.UrlPathPart;
             return View(model);
-        }
-
-        private object OfferAcceptionPreValidation(Guid vacancyApplicationGuid, Guid researcherGuid, bool isWinner)
-        {
-            var vacancyApplicaiton = _mediator.Send(new SingleVacancyApplicationQuery { VacancyApplicationGuid = vacancyApplicationGuid });
-
-            if (vacancyApplicaiton == null)
-                return HttpNotFound(); //throw new ObjectNotFoundException($"Не найдена Заявка c идентификатором: {vacancyApplicationGuid}");
-
-            if (isWinner && vacancyApplicaiton.status != VacancyApplicationStatus.Won)
-                return View("Error", "Вы не можете принять предложение если Вы не Победитель");
-
-            if (!isWinner && vacancyApplicaiton.status != VacancyApplicationStatus.Pretended)
-                return View("Error", "Вы не можете принять предложение если Вы не Победитель");
-
-            var vacancy = _mediator.Send(new SingleVacancyQuery { VacancyGuid = vacancyApplicaiton.vacancy_guid });
-
-            if (vacancy == null)
-                return HttpNotFound(); //throw new ObjectNotFoundException($"Не найдена Вакансия c идентификатором: {vacancyApplicaiton.vacancy_guid}");
-
-            if (isWinner && vacancy.winner_researcher_guid != researcherGuid)
-                return View("Error", "Вы не можете принять или отказаться от предложения, сделанного для другого заявителя.");
-            if (!isWinner && vacancy.pretender_researcher_guid != researcherGuid)
-                return View("Error", "Вы не можете принять или отказаться от предложения, сделанного для другого заявителя.");
-
-            if (vacancy.status != VacancyStatus.OfferResponseAwaiting)
-                return View("Error", $"Вы не можете принять предложение или отказаться от него если Вакансия имеет статус: {vacancy.status.GetDescriptionByResearcher()}");
-            return vacancy;
         }
 
         [Authorize(Roles = ConstTerms.RequireRoleResearcher)]

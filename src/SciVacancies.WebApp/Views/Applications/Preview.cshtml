@@ -163,7 +163,7 @@
                 if (Model.Vacancy.WinnerResearcherGuid == Guid.Empty)
                 {
                     <text>
-                    <a asp-controller="applications" asp-action="setwinner" asp-route-id="@Model.Guid" asp-route-iswinner="true" class="green-btn middle-icon">Выбрать победителем</a>
+                    <a asp-controller="vacancies" asp-action="setwinner" asp-route-id="@Model.Guid" asp-route-iswinner="true" class="green-btn middle-icon">Выбрать победителем</a>
                     </text>
                 }
                 else
@@ -183,7 +183,7 @@
                         {
 
                             <text>
-                            <a asp-controller="applications" asp-action="setwinner" asp-route-id="@Model.Guid" asp-route-iswinner="false" class="green-btn middle-icon">Выбрать претендентом</a>
+                            <a asp-controller="vacancies" asp-action="setwinner" asp-route-id="@Model.Guid" asp-route-iswinner="false" class="green-btn middle-icon">Выбрать претендентом</a>
                             </text>
                         }
                     }
