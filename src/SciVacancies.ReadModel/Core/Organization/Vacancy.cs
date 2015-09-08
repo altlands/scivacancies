@@ -143,7 +143,15 @@ namespace SciVacancies.ReadModel.Core
         public DateTime? awaiting_date { get; set; }
         public DateTime? announcement_date { get; set; }
 
+        /// <summary>
+        /// обонсование отмены заявки
+        /// </summary>
         public string cancel_reason { get; set; }
+
+        /// <summary>
+        /// обоснование закрытия заявки
+        /// </summary>
+        public string close_reason { get; set; }
 
         [Ignore]
         public List<VacancyCriteria> criterias { get; set; }

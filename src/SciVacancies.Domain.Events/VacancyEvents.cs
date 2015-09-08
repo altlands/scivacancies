@@ -1,5 +1,7 @@
 ﻿using SciVacancies.Domain.DataModels;
 using System;
+using System.Collections.Generic;
+using SciVacancies.Domain.Core;
 
 namespace SciVacancies.Domain.Events
 {
@@ -55,6 +57,7 @@ namespace SciVacancies.Domain.Events
         public Guid WinnerVacancyApplicationGuid { get; set; }
 
         public string Reason { get; set; }
+        public List<VacancyAttachment> Attachments { get; set; } = new List<VacancyAttachment>();
     }
 
     /// <summary>

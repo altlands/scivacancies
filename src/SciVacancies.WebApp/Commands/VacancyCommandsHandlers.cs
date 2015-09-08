@@ -117,7 +117,7 @@ namespace SciVacancies.WebApp.Commands
             if (msg.VacancyApplicationGuid == Guid.Empty) throw new ArgumentNullException($"VacancyApplicationGuid is empty: {msg.VacancyApplicationGuid}");
 
             Vacancy vacancy = _repository.GetById<Vacancy>(msg.VacancyGuid);
-            vacancy.SetWinner(msg.ResearcherGuid, msg.VacancyApplicationGuid, msg.Reason);
+            vacancy.SetWinner(msg.ResearcherGuid, msg.VacancyApplicationGuid, msg.Reason, msg.Attachments);
             _repository.Save(vacancy, Guid.NewGuid(), null);
         }
     }

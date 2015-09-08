@@ -1,8 +1,9 @@
 ﻿using SciVacancies.Domain.DataModels;
 
 using System;
-
+using System.Collections.Generic;
 using MediatR;
+using SciVacancies.Domain.Core;
 
 namespace SciVacancies.WebApp.Commands
 {
@@ -39,6 +40,7 @@ namespace SciVacancies.WebApp.Commands
         public Guid VacancyApplicationGuid { get; set; }
 
         public string Reason { get; set; }
+        public List<VacancyAttachment> Attachments { get; set; } = new List<VacancyAttachment>();
     }
     public class SetVacancyPretenderCommand : CommandBase, IRequest
     {

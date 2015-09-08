@@ -3,7 +3,7 @@ using SciVacancies.Domain.Events;
 using SciVacancies.ReadModel.Core;
 
 using System;
-
+using System.Collections.Generic;
 using MediatR;
 using NPoco;
 using AutoMapper;
@@ -128,7 +128,20 @@ namespace SciVacancies.ReadModel.EventHandlers
         {
             using (var transaction = _db.GetTransaction())
             {
-                _db.Execute(new Sql($"UPDATE org_vacancies SET winner_researcher_guid = @0, winner_vacancyapplication_guid = @1, update_date = @2 WHERE guid = @3", msg.WinnerReasearcherGuid, msg.WinnerVacancyApplicationGuid, msg.TimeStamp, msg.VacancyGuid));
+
+                _db.Execute(new Sql($"UPDATE org_vacancies SET winner_researcher_guid = @0, winner_vacancyapplication_guid = @1, reason=@2, update_date = @3 WHERE guid = @4", msg.WinnerReasearcherGuid, msg.WinnerVacancyApplicationGuid, msg.Reason, msg.TimeStamp, msg.VacancyGuid));
+
+                if (msg.Attachments != null)
+                {
+                var attachments = Mapper.Map<List<VacancyAttachment>>(msg.Attachments);
+                    foreach (var at in attachments)
+                    {
+                        if (at.guid == Guid.Empty) at.guid = Guid.NewGuid();
+                        at.vacancy_guid = msg.VacancyGuid;
+                        _db.Insert(at);
+                    }
+                }
+
                 transaction.Complete();
             }
         }

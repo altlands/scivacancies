@@ -53,7 +53,7 @@ namespace SciVacancies.WebApp.Controllers
             model.ScienceDegree = researcher.science_degree;
             model.ScienceRank = researcher.science_rank;
             model.Rewards = researcher.rewards;
-            model.Memberships= researcher.memberships;
+            model.Memberships = researcher.memberships;
             return model;
         }
         #endregion
@@ -133,6 +133,7 @@ namespace SciVacancies.WebApp.Controllers
             if (!ModelState.IsValid)
                 return View(model);
 
+            #region attachments
             var attachmentsList = new List<SciVacancies.Domain.Core.VacancyApplicationAttachment>();
             var newFolderName = Guid.NewGuid();
             //save attachments
@@ -172,7 +173,7 @@ namespace SciVacancies.WebApp.Controllers
                         RemoveAttachmentDirectory(fullDirectoryPath);
                         return View("Error", "Ошибка при сохранении прикреплённых файлов");
                     }
-                    
+
                     //TODO: сохранение файл в БД (сделать)
                     //using (var memoryStream = new MemoryStream())
                     //{
@@ -195,7 +196,7 @@ namespace SciVacancies.WebApp.Controllers
 
                 }
             }
-
+            #endregion
 
             Guid vacancyApplicationGuid;
             try
@@ -337,8 +338,7 @@ namespace SciVacancies.WebApp.Controllers
             var model = Mapper.Map<VacancyApplicationSetWinnerViewModel>(vacancyApplication);
             model.Vacancy = Mapper.Map<VacancyDetailsViewModel>(vacancy);
             model.Researcher = Mapper.Map<ResearcherDetailsViewModel>(_mediator.Send(new SingleResearcherQuery { ResearcherGuid = vacancyApplication.researcher_guid }));
-            model.IsWinner = isWinner;
-            model.SetWinner = isWinner;
+            model.WinnerIsSetting = isWinner;
 
             return View(model);
         }
@@ -354,87 +354,103 @@ namespace SciVacancies.WebApp.Controllers
                 throw new ArgumentNullException(nameof(organizationGuid));
 
             Vacancy vacancy;
-            var result = SetWinnerPreValidation(model.Guid, organizationGuid, out vacancy, model.SetWinner);
+            var result = SetWinnerPreValidation(model.Guid, organizationGuid, out vacancy, model.WinnerIsSetting);
             if (result is HttpNotFoundResult) return (HttpNotFoundResult)result;
             var vacancyApplication = (VacancyApplication)result;
 
             if (ModelState.IsValid)
             {
-                if (model.IsWinner)
-                    _mediator.Send(new SetVacancyWinnerCommand
-                    {
-                        VacancyGuid = model.VacancyGuid,
-                        ResearcherGuid = model.ResearcherGuid,
-                        VacancyApplicationGuid = model.Guid,
-                        Reason = model.Reason
-                    });
-                else
-                    _mediator.Send(new SetVacancyPretenderCommand
-                    {
-                        VacancyGuid = model.VacancyGuid,
-                        ResearcherGuid = model.ResearcherGuid,
-                        VacancyApplicationGuid = model.Guid,
-                        Reason = model.Reason
-                    });
+                model = Mapper.Map<VacancyApplicationSetWinnerViewModel>(vacancyApplication);
+                model.Vacancy = Mapper.Map<VacancyDetailsViewModel>(vacancy);
+                model.Researcher = Mapper.Map<ResearcherDetailsViewModel>(_mediator.Send(new SingleResearcherQuery { ResearcherGuid = vacancyApplication.researcher_guid }));
 
-                return RedirectToAction("preview", "applications", new { id = model.Guid });
+                return View(model);
             }
 
-            model = Mapper.Map<VacancyApplicationSetWinnerViewModel>(vacancyApplication);
-            model.Vacancy = Mapper.Map<VacancyDetailsViewModel>(vacancy);
-            model.Researcher = Mapper.Map<ResearcherDetailsViewModel>(_mediator.Send(new SingleResearcherQuery { ResearcherGuid = vacancyApplication.researcher_guid }));
+            #region attachments
+            var attachmentsList = new List<SciVacancies.Domain.Core.VacancyAttachment>();
+            var newFolderName = Guid.NewGuid();
+            //save attachments
+            var fullDirectoryPath = $"{_hostingEnvironment.WebRootPath}{_attachmentSettings.Options.Vacancy.PhisicalPathPart}\\{newFolderName}\\";
+            if (model.Attachments != null && model.Attachments.Any())
+            {
+                foreach (var file in model.Attachments)
+                {
+                    var fileName = ContentDispositionHeaderValue
+                        .Parse(file.ContentDisposition)
+                        .FileName
+                        .Trim('"');
 
-            return View(model);
+                    //сценарий-А: сохранить файл на диск
+                    try
+                    {
+                        //TODO: Application -> Attachments : что делать с Директорией при удалении(отмене, отклонении) Заявки
+                        //TODO: Application -> Attachments : как искать Текущую директорию при повторном добавлении(изменении текущего списка) файлов
+                        //TODO: Application -> Attachments : можно ли редактировать список файлов, или Заявки создаются разово и для каждой генеиртся новая папка с вложениями
+                        Directory.CreateDirectory(fullDirectoryPath);
+                        var filePath =
+                            $"{_hostingEnvironment.WebRootPath}{_attachmentSettings.Options.Vacancy.PhisicalPathPart}\\{newFolderName}\\{fileName}";
+                        file.SaveAs(filePath);
+                        attachmentsList.Add(new SciVacancies.Domain.Core.VacancyAttachment
+                        {
+                            Size = file.Length,
+                            Extension = fileName.Split('.')[1],
+                            Name = fileName,
+                            UploadDate = DateTime.Now,
+                            Url = $"/{newFolderName}/{fileName}"
+                        });
+
+                    }
+                    catch (Exception)
+                    {
+                        RemoveAttachmentDirectory(fullDirectoryPath);
+                        return View("Error", "Ошибка при сохранении прикреплённых файлов");
+                    }
+
+                    //TODO: сохранение файл в БД (сделать)
+                    //using (var memoryStream = new MemoryStream())
+                    //{
+                    //    файл в byte
+                    //    byte[] byteData;
+                    //    //сценарий-Б: сохранить файл в БД
+                    //    //var openReadStream = file.OpenReadStream();
+                    //    //var scale = (int)(500000 / file.Length);
+                    //    //var resizedImage = new Bitmap(image, new Size(image.Width * scale, image.Height * scale));
+                    //    //((Image)resizedImage).Save(memoryStream, ImageFormat.Jpeg);
+                    //    //byteData = memoryStream.ToArray();
+                    //    //memoryStream.SetLength(0);
+
+                    //    //сценарий-В: сохранить файл в БД
+                    //    //var openReadStream = file.OpenReadStream();
+                    //    //openReadStream.CopyTo(memoryStream);
+                    //    //byteData = memoryStream.ToArray();
+                    //    //memoryStream.SetLength(0);
+                    //}
+
+                }
+            }
+            #endregion
+
+            if (model.WinnerIsSetting)
+                _mediator.Send(new SetVacancyWinnerCommand
+                {
+                    VacancyGuid = model.VacancyGuid,
+                    ResearcherGuid = model.ResearcherGuid,
+                    VacancyApplicationGuid = model.Guid,
+                    Reason = model.Reason,
+                    Attachments = attachmentsList
+                });
+            else
+                _mediator.Send(new SetVacancyPretenderCommand
+                {
+                    VacancyGuid = model.VacancyGuid,
+                    ResearcherGuid = model.ResearcherGuid,
+                    VacancyApplicationGuid = model.Guid,
+                    Reason = model.Reason
+                });
+
+            return RedirectToAction("preview", "applications", new { id = model.Guid });
         }
-
-        //[PageTitle("Удаление шаблона заявки")]
-        //[Authorize(Roles = ConstTerms.RequireRoleResearcher)]
-        //[BindResearcherIdFromClaims]
-        //public IActionResult Delete(Guid id, Guid researcherGuid)
-        //{
-        //    if (id == Guid.Empty)
-        //        throw new ArgumentNullException(nameof(id));
-        //    if (researcherGuid == Guid.Empty)
-        //        throw new ArgumentNullException(nameof(researcherGuid));
-
-        //    var preModel = _mediator.Send(new SingleVacancyApplicationQuery { VacancyApplicationGuid = id });
-
-        //    if (preModel.status != VacancyApplicationStatus.Applied)
-        //        return View("Error", $"Отменить заявку можно только в статусе: {VacancyApplicationStatus.InProcess.GetDescription()}.");
-
-        //    var model = Mapper.Map<VacancyApplicationDetailsViewModel>(preModel);
-        //    model.Researcher = Mapper.Map<ResearcherDetailsViewModel>(_mediator.Send(new SingleResearcherQuery { ResearcherGuid = model.ResearcherGuid }));
-        //    model.Vacancy = Mapper.Map<VacancyDetailsViewModel>(_mediator.Send(new SingleVacancyQuery { VacancyGuid = model.VacancyGuid }));
-        //    return View(model);
-        //}
-
-        //[HttpPost]
-        //[PageTitle("Удаление шаблона заявки")]
-        //[Authorize(Roles = ConstTerms.RequireRoleResearcher)]
-        //[BindResearcherIdFromClaims]
-        //public IActionResult DeletePost(Guid id, Guid researcherGuid)
-        //{
-        //    if (id == Guid.Empty)
-        //        throw new ArgumentNullException(nameof(id));
-        //    if (researcherGuid == Guid.Empty)
-        //        throw new ArgumentNullException(nameof(researcherGuid));
-
-        //    var preModel = _mediator.Send(new SingleVacancyApplicationQuery { VacancyApplicationGuid = id });
-
-        //    if (preModel.status != VacancyApplicationStatus.Applied)
-        //        return View("Error", $"Отменить заявку можно только в статусе: {VacancyApplicationStatus.InProcess.GetDescription()}.");
-
-        //    if (!ModelState.IsValid)
-        //    {
-        //        var model = Mapper.Map<VacancyApplicationDetailsViewModel>(preModel);
-        //        model.Researcher = Mapper.Map<ResearcherDetailsViewModel>(_mediator.Send(new SingleResearcherQuery { ResearcherGuid = model.ResearcherGuid }));
-        //        model.Vacancy = Mapper.Map<VacancyDetailsViewModel>(_mediator.Send(new SingleVacancyQuery { VacancyGuid = model.VacancyGuid }));
-        //        return View("delete", model);
-        //    }
-
-        //    _mediator.Send(new CancelVacancyApplicationCommand { ResearcherGuid = researcherGuid, VacancyApplicationGuid = id });
-        //    return RedirectToAction("applications", "researchers");
-        //}
 
         [Authorize(Roles = ConstTerms.RequireRoleOrganizationAdmin)]
         [PageTitle("Детали заявки")]

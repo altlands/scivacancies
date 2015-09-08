@@ -1,11 +1,9 @@
 ﻿@using System.Threading.Tasks
 @using SciVacancies.WebApp.ViewModels
-@model SciVacancies.WebApp.ViewModels.VacancyApplicationSetWinnerViewModel
+@model VacancyApplicationSetWinnerViewModel
+
 @{
-    if (Model.Vacancy.WinnerResearcherGuid!= Guid.Empty || Model.Vacancy.PretenderResearcherGuid!= Guid.Empty)
-    {
-        Model.IsWinner = Model.Vacancy.PretenderResearcherGuid!= Guid.Empty;
-    }
+    var invisibleItemStyle = "display: none;";
 }
 
 <div class="crumbs">
@@ -28,13 +26,13 @@
 
 <div class="content-slide">
 
-    <form class="table-form" asp-controller="applications" asp-action="setwinner">
+    <form class="table-form" asp-controller="applications" asp-action="setwinner"  enctype="multipart/form-data">
 
         <input type="hidden" asp-anti-forgery="true" />
         <input type="hidden" asp-for="Guid" />
         <input type="hidden" asp-for="VacancyGuid" />
         <input type="hidden" asp-for="ResearcherGuid" />
-        <input type="hidden" asp-for="SetWinner"/>
+        <input type="hidden" asp-for="WinnerIsSetting" />
 
         <div class="table-row">
             <div class="left-cell">
@@ -42,19 +40,19 @@
             </div>
             <div class="right-cell">
                 <ul class="radio-list">
-                    @if (Model.Vacancy.WinnerResearcherGuid== Guid.Empty)
+                    @if (Model.WinnerIsSetting)
                     {
                         <li>
-                            <span class="radio @(Model.IsWinner ? "checked" : string.Empty)">
-                                <input asp-for="IsWinner" id="winner1" value="true" />
+                            <span class="radio @(Model.WinnerIsSetting ? "checked" : string.Empty)">
+                                <input asp-for="WinnerIsSetting" id="winner1" value="true" />
                             </span><label for="winner1">Первое место</label>
                         </li>
                     }
                     else
                     {
                         <li>
-                            <span class="radio @(!Model.IsWinner ? "checked" : string.Empty)">
-                                <input asp-for="IsWinner" id="winner2" value="false" />
+                            <span class="radio @(!Model.WinnerIsSetting? "checked" : string.Empty)">
+                                <input asp-for="WinnerIsSetting" id="winner2" value="false" />
                             </span><label for="winner2">Второе место</label>
                         </li>
                     }
@@ -68,27 +66,38 @@
                 <label>Обоснование:</label>
             </div>
             <div class="right-cell">
-                <textarea asp-for="Reason"></textarea>
+                <textarea asp-for="Reason" required=""></textarea>
             </div>
         </div>
 
-        <div class="table-row form-row mt14">
-            <div class="left-cell">
-                <label>Приложенные файлы:</label>
+        @if (Model.WinnerIsSetting)
+        {
+            <text>
+            <div class="table-row form-row mt14">
+                <div class="left-cell">
+                    <label>Приложенные файлы:</label>
+                </div>
+                <div class="right-cell">
+
+                    <div class="property-list-container" data-innercount="0">
+                        <ul class="content-list">
+
+                            <li style="@invisibleItemStyle" class="property-list-item" data-list-template="true">
+                                <input type="hidden" name="Attachments.Index" value="0"/>
+                                <input type="file" id="Attachments##0##" name="Attachments"/>
+                                <div class="buttons">
+                                    <span class="big-link-remove" onclick="return removeItemFromList(this);"></span>
+                                </div>
+
+                            </li>
+                        </ul>
+                        <a onclick="return addNewItemToList(this, 'Attachments')" class="small-icon link-add" href="#">Приложить файл</a>
+                    </div>
+
+                </div>
             </div>
-            <div class="right-cell">
-                @*<ul class="content-list">
-                    <li>
-                        Протокол №6000567.pdf
-                        <div class="buttons">
-                            <span class="big-link-remove"></span>
-                        </div>
-                    </li>
-                </ul>*@
-                <span class="small-icon link-add">Приложить файл</span>
-                <span style="color: red;">в разработке</span>
-            </div>
-        </div>
+            </text>
+        }
 
         <br />
 

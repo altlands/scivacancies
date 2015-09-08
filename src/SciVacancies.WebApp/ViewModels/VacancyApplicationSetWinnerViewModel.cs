@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNet.Http;
 using Microsoft.AspNet.Mvc;
 using SciVacancies.Domain.Enums;
 using SciVacancies.ReadModel.Core;
@@ -17,6 +18,8 @@ namespace SciVacancies.WebApp.ViewModels
             [HiddenInput]
             public Guid Guid { get; set; }
         }
+
+        public List<IFormFile> Attachments { get; set; }
 
         [Required]
         public Guid VacancyGuid { get; set; }
@@ -63,13 +66,13 @@ namespace SciVacancies.WebApp.ViewModels
         public DateTime? UpdateDate { get; set; }
         public DateTime? SentDate { get; set; }
 
-        public bool IsWinner { get; set; }
+        //public bool IsWinner { get; set; }
         [Required]
         public string Reason { get; set; }
 
         /// <summary>
         /// кого выбираем - победителя или претендента
         /// </summary>
-        public bool SetWinner { get; set; }
+        public bool WinnerIsSetting { get; set; }
     }
 }

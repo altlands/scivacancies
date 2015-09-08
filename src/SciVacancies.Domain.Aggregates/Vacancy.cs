@@ -3,8 +3,9 @@ using SciVacancies.Domain.Enums;
 using SciVacancies.Domain.Events;
 
 using System;
-
+using System.Collections.Generic;
 using CommonDomain.Core;
+using SciVacancies.Domain.Core;
 
 namespace SciVacancies.Domain.Aggregates
 {
@@ -87,7 +88,7 @@ namespace SciVacancies.Domain.Aggregates
                 });
             }
         }
-        public void SetWinner(Guid winnerGuid, Guid winnerVacancyApplicationGuid, string reason)
+        public void SetWinner(Guid winnerGuid, Guid winnerVacancyApplicationGuid, string reason, List<VacancyAttachment> attachments)
         {
             if (Status == VacancyStatus.InCommittee)
             {
@@ -97,7 +98,8 @@ namespace SciVacancies.Domain.Aggregates
                     OrganizationGuid = this.OrganizationGuid,
                     WinnerReasearcherGuid = winnerGuid,
                     WinnerVacancyApplicationGuid = winnerVacancyApplicationGuid,
-                    Reason = reason
+                    Reason = reason,
+                    Attachments = attachments
                 });
             }
         }
