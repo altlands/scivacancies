@@ -97,7 +97,7 @@ namespace SciVacancies.WebApp.Infrastructure
                 ;
 
             Mapper.CreateMap<ResearcherEditViewModel, ResearcherDataModel>()
-                //.ForSourceMember(src=> src.BirthDate, o=>o.Ignore())
+                .ForSourceMember(src=> src.ExtNumber, o=>o.Ignore()) // Индивидуальный номер учёного обрабатывается по отдельной логике (в контроллере)
                 .ForMember(dest => dest.BirthDate, src => src.MapFrom(c => new DateTime(c.BirthYear, 1, 1)))
                 .ForMember(dest => dest.Rewards, src => src.MapFrom(c => JsonConvert.SerializeObject(c.Rewards)))
                 .ForMember(dest => dest.Memberships, src => src.MapFrom(c => JsonConvert.SerializeObject(c.Memberships)))

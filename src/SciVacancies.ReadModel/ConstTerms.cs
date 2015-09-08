@@ -45,6 +45,6 @@
         public const string ClaimTypeResearcherId = "researcher_id";
         public const string ClaimTypeUserActivated = "userActivated";
 
-        public const string LoginProvider = "ScienceMap";
+        public const string LoginProviderScienceMap = "ScienceMap";
     }
 }

@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using Microsoft.AspNet.Http;
+using System.Linq;
+using Microsoft.AspNet.Identity;
 using SciVacancies.WebApp.ViewModels.Base;
 
 namespace SciVacancies.WebApp.ViewModels
@@ -61,5 +62,13 @@ namespace SciVacancies.WebApp.ViewModels
         public List<EducationEditViewModel> Educations { get; set; }
         public List<PublicationEditViewModel> Publications { get; set; }
         public List<InterestEditViewModel> Interests { get; set; }
+
+        public IList<UserLoginInfo> Logins { get; set; }
+
+        public bool IsScienceMapUser
+        {
+            get { return Logins != null && Logins.Any(c => c.LoginProvider == ConstTerms.LoginProviderScienceMap); }
+        }
+
     }
 }

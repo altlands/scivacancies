@@ -3,10 +3,12 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using AutoMapper;
 using MediatR;
 using Microsoft.AspNet.Authorization;
 using Microsoft.AspNet.Hosting;
+using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Mvc;
 using Microsoft.Framework.OptionsModel;
 using Microsoft.Net.Http.Headers;
@@ -16,6 +18,7 @@ using SciVacancies.ReadModel.Core;
 using SciVacancies.WebApp.Commands;
 using SciVacancies.WebApp.Engine;
 using SciVacancies.WebApp.Engine.CustomAttribute;
+using SciVacancies.WebApp.Infrastructure.Identity;
 using SciVacancies.WebApp.Queries;
 using SciVacancies.WebApp.ViewModels;
 
@@ -28,12 +31,14 @@ namespace SciVacancies.WebApp.Controllers
         private readonly IMediator _mediator;
         private readonly IHostingEnvironment _hostingEnvironment;
         private readonly IOptions<AttachmentSettings> _attachmentSettings;
+        private SciVacUserManager _userManager;
 
-        public ResearchersController(IMediator mediator, IHostingEnvironment hostingEnvironment, IOptions<AttachmentSettings> attachmentSettings)
+        public ResearchersController(IMediator mediator, IHostingEnvironment hostingEnvironment, IOptions<AttachmentSettings> attachmentSettings, SciVacUserManager userManager)
         {
             _mediator = mediator;
             _hostingEnvironment = hostingEnvironment;
             _attachmentSettings = attachmentSettings;
+            _userManager = userManager;
         }
 
         [ResponseCache(NoStore = true)]
@@ -62,7 +67,7 @@ namespace SciVacancies.WebApp.Controllers
         [ResponseCache(NoStore = true)]
         [PageTitle("Изменить данные")]
         [BindResearcherIdFromClaims]
-        public IActionResult Edit(Guid researcherGuid)
+        public async Task<IActionResult> Edit(Guid researcherGuid)
         {
             if (researcherGuid == Guid.Empty)
                 throw new ArgumentNullException(nameof(researcherGuid));
@@ -74,6 +79,7 @@ namespace SciVacancies.WebApp.Controllers
             var model = Mapper.Map<ResearcherEditViewModel>(preModel);
             model.Educations = Mapper.Map<List<EducationEditViewModel>>(_mediator.Send(new SelectResearcherEducationsQuery { ResearcherGuid = researcherGuid }));
             model.Publications = Mapper.Map<List<PublicationEditViewModel>>(_mediator.Send(new SelectResearcherPublicationsQuery { ResearcherGuid = researcherGuid }));
+            model.Logins = await _userManager.GetLoginsAsync(User.Identity.GetUserId());
 
             return View(model);
         }
@@ -81,10 +87,13 @@ namespace SciVacancies.WebApp.Controllers
         [HttpPost]
         [PageTitle("Редактирование информации пользователя")]
         [BindResearcherIdFromClaims("authorizedUserGuid")]
-        public IActionResult Edit(ResearcherEditViewModel model, Guid authorizedUserGuid)
+        public async Task<IActionResult> Edit(ResearcherEditViewModel model, Guid authorizedUserGuid)
         {
             if (model.Guid == Guid.Empty)
                 throw new ArgumentNullException(nameof(model), "Отсутствует идентификатор исследователя");
+
+            //повторно инициализируем свойство, чтобы не сохранять его на форме
+            model.Logins = await _userManager.GetLoginsAsync(User.Identity.GetUserId());
 
             if (authorizedUserGuid != model.Guid)
                 return View("Error", "Вы не можете изменять чужой профиль");
@@ -97,7 +106,12 @@ namespace SciVacancies.WebApp.Controllers
                 return HttpNotFound(); //throw new ObjectNotFoundException();
 
             var dataModel = Mapper.Map<ResearcherDataModel>(preModel);
-            var data = Mapper.Map(model, dataModel);
+
+            var data = Mapper.Map(model, dataModel);//маппинг игнорирует Индивидуальный номер учёного
+            //отдельно обновляем для "своих" пользователей Инд.Номер учёного, и не обновляем для "чужих" пользователей
+            if (!model.IsScienceMapUser)
+                data.ExtNumber =model.ExtNumber;
+
             _mediator.Send(new UpdateResearcherCommand
             {
                 Data = data,
@@ -142,7 +156,7 @@ namespace SciVacancies.WebApp.Controllers
             {
                 var file = model.PhotoFile;
                 var fileName = System.IO.Path.GetFileName(ContentDispositionHeaderValue.Parse(file.ContentDisposition).FileName.Trim('"'));
-                
+
                 var fileExtension = fileName
                     .Split('.')
                     .Last()

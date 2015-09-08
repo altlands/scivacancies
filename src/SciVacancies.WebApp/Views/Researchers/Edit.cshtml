@@ -125,7 +125,15 @@
                     <label>Индивидуальный номер учёного</label>
                 </div>
                 <div class="right-cell">
-                    <input asp-for="ExtNumber" />
+                    @if (Model.IsScienceMapUser)
+                    {
+                        <input type="hidden" asp-for="ExtNumber"/>
+                        <input asp-for="ExtNumber" disabled="disabled" class="disabled"/>
+                    }
+                    else
+                    {
+                        <input asp-for="ExtNumber"/>
+                    }
                     <span asp-validation-for="ExtNumber"></span>
                 </div>
             </div>
@@ -149,14 +157,14 @@
                 </div>
             </div>
             @*<div class="table-row form-row">
-                <div class="left-cell">
-                    <label>Добавить E-mail</label>
-                </div>
-                <div class="right-cell">
-                    <input asp-for="ExtraEmail" class="big-input" />
-                    <span asp-validation-for="ExtraEmail"></span>
-                </div>
-            </div>*@
+                    <div class="left-cell">
+                        <label>Добавить E-mail</label>
+                    </div>
+                    <div class="right-cell">
+                        <input asp-for="ExtraEmail" class="big-input" />
+                        <span asp-validation-for="ExtraEmail"></span>
+                    </div>
+                </div>*@
             <div class="table-row form-row">
                 <div class="left-cell">
                     <label>Контактный телефон</label>
