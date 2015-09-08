@@ -1,0 +1,10 @@
+﻿{
+  "Data": {
+    "ReadModelDb": "Server=alt-dev002;Database=scivacancies;User Id=postgres;Password=postgres",
+    "QuartzDb": ""
+  },
+  "ElasticSettings": {
+    "ConnectionUrl": "http://alt-dev002:9200/",
+    "DefaultIndex": "scivacancies"
+  }
+}

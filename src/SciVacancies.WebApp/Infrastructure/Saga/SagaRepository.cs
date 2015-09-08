@@ -93,7 +93,7 @@ namespace SciVacancies.WebApp.Infrastructure.Saga
 
         private TSaga BuildSaga<TSaga>(string sagaId, IEventStream stream) where TSaga : class, ISaga
         {
-            
+
             var saga = (TSaga)_factory.Build(typeof(TSaga), sagaId);
             foreach (var @event in stream.CommittedEvents.Select(x => x.Body))
             {
@@ -158,6 +158,10 @@ namespace SciVacancies.WebApp.Infrastructure.Saga
             catch (StorageException e)
             {
                 throw new PersistenceException(e.Message, e);
+            }
+            catch (Exception e)
+            {
+                throw new Exception(e.Message, e);
             }
         }
 

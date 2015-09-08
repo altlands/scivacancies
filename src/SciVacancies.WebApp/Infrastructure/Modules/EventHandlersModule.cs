@@ -26,6 +26,7 @@ namespace SciVacancies.WebApp.Infrastructure
 
             builder.RegisterAssemblyTypes(new Assembly[]
             {
+                //Assembly.Load("SciVacancies.WebApp"),
                 Assembly.Load("SciVacancies.ReadModel"),
                 Assembly.Load("SciVacancies.ReadModelNotifications"),
                 Assembly.Load("SciVacancies.ReadModel.ElasticSearchModel"),
@@ -34,7 +35,6 @@ namespace SciVacancies.WebApp.Infrastructure
             })
                 .AsClosedTypesOf(typeof(INotificationHandler<>))
                 .AsImplementedInterfaces();
-
             //builder.RegisterAssemblyTypes(new Assembly[]
             //{
             //    Assembly.Load("SciVacancies.WebApp")

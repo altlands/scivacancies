@@ -36,6 +36,12 @@ namespace SciVacancies.WebApp.Infrastructure
             //builder.Register(c => GetEventStoreWithoutDispatchers()).As<IStoreEvents>().SingleInstance();
             //builder.Register(c => new EventStoreRepository(c.Resolve<IStoreEvents>(), c.Resolve<IConstructAggregates>(), c.Resolve<IDetectConflicts>())).As<IRepository>();
             builder.Register(c => new EventStoreRepository(c.Resolve<IStoreEvents>(), c.Resolve<IConstructAggregates>(), c.Resolve<IDetectConflicts>())).As<IRepository>().SingleInstance();
+
+            //sagas start
+            //builder.Register(c => new SciVacancies.WebApp.Infrastructure.Saga.SagaBase()).As<SciVacancies.WebApp.Infrastructure.Saga.ISaga>();
+            //builder.Register(c => new SciVacancies.WebApp.Infrastructure.Saga.SagaFactory()).As<SciVacancies.WebApp.Infrastructure.Saga.IConstructSagas>().SingleInstance();
+            //builder.Register(c => new SciVacancies.WebApp.Infrastructure.Saga.SagaEventStoreRepository(c.Resolve<IStoreEvents>(), c.Resolve<SciVacancies.WebApp.Infrastructure.Saga.IConstructSagas>())).As<SciVacancies.WebApp.Infrastructure.Saga.ISagaRepository>().SingleInstance();
+            //sagas end
         }
         private IStoreEvents GetEventStore(IMediator mediator)
         {

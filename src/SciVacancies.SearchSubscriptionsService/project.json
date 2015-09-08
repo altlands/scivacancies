@@ -1,29 +1,33 @@
 {
-  "version": "1.0.0-*",
-  "description": "",
-  "authors": [ "" ],
-  "tags": [ "" ],
-  "projectUrl": "",
-  "licenseUrl": "",
+    "version": "1.0.0-*",
+    "description": "",
+    "authors": [ "" ],
+    "tags": [ "" ],
+    "projectUrl": "",
+    "licenseUrl": "",
 
-  "dependencies": {
-    "Quartz": "2.3.3",
-    "NPoco": "2.9.103",
-    "Npgsql.EntityFramework": "2.2.5",
-    "NEST": "1.5.1",
-    "SciVacancies.ReadModel": "1.0.0-*",
-    "SciVacancies.ReadModel.ElasticSearchModel": "1.0.0-*"
-  },
+    "dependencies": {
+        "Quartz": "2.3.3",
+        "NPoco": "2.9.103",
+        "Npgsql.EntityFramework": "2.2.5",
+        "NEST": "1.5.1",
+        "SciVacancies.ReadModel": "1.0.0-*",
+        "SciVacancies.ReadModel.ElasticSearchModel": "1.0.0-*",
+        "Topshelf": "3.2.0",
+        "Topshelf.Linux": "1.0.12.11",
+        "SciVacancies.SmtpNotifications": "1.0.0-*",
+        "Autofac": "4.0.0-alpha2"
+    },
 
-  "commands": {
-    "SciVacancies.SearchSubscriptionsService": "SciVacancies.SearchSubscriptionsService"
-  },
+    "commands": {
+        "SciVacancies.SearchSubscriptionsService": "SciVacancies.SearchSubscriptionsService"
+    },
 
-  "frameworks": {
-    "dnx451": {
-      "frameworkAssemblies": {
-        "System.Data": "4.0.0.0"
-      }
+    "frameworks": {
+        "dnx451": {
+            "frameworkAssemblies": {
+                "System.Data": "4.0.0.0"
+            }
+        }
     }
-  }
 }
