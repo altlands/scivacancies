@@ -77,4 +77,8 @@ namespace SciVacancies.WebApp.Queries
     {
         public int ParentId { get; set; }
     }
+    public class SelectAllAttachmentTypesQuery : IRequest<IEnumerable<AttachmentType>>
+    {
+
+    }
 }

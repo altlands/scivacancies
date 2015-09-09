@@ -1,6 +1,6 @@
 ﻿using NPoco;
 
-namespace SciVacancies.ReadModel.Core.Dictionaries
+namespace SciVacancies.ReadModel.Core
 {
     [TableName("d_attachmenttypes")]
     [PrimaryKey("id", AutoIncrement = true)]
