@@ -22,7 +22,6 @@ namespace SciVacancies.WebApp.Queries
         IRequestHandler<SelectPagedFavoriteVacanciesByResearcherQuery, Page<Vacancy>>,
         IRequestHandler<SelectFavoriteVacancyGuidsByResearcherQuery, IEnumerable<Guid>>,
         IRequestHandler<SelectPagedVacanciesByGuidsQuery, Page<Vacancy>>,
-        IRequestHandler<SelectVacancyAttachmentsQuery, IEnumerable<VacancyAttachment>>,
         IRequestHandler<SelectAllVacancyAttachmentsQuery, IEnumerable<VacancyAttachment>>,
         IRequestHandler<SelectAllExceptCommitteeVacancyAttachmentsQuery, IEnumerable<VacancyAttachment>>,
         IRequestHandler<SelectCommitteeVacancyAttachmentsQuery, IEnumerable<VacancyAttachment>>
@@ -123,12 +122,6 @@ namespace SciVacancies.WebApp.Queries
             IEnumerable<VacancyCriteria> vacancyCriterias = _db.Fetch<VacancyCriteria>(new Sql($"SELECT * FROM org_vacancycriterias ovc WHERE ovc.vacancy_guid = @0", msg.VacancyGuid));
 
             return vacancyCriterias;
-        }
-        public IEnumerable<VacancyAttachment> Handle(SelectVacancyAttachmentsQuery msg)
-        {
-            IEnumerable<VacancyAttachment> vaAttachments = _db.Fetch<VacancyAttachment>(new Sql($"SELECT * FROM org_vacancy_attachments ra WHERE ra.vacancy_guid = @0", msg.VacancyGuid));
-
-            return vaAttachments;
         }
         public IEnumerable<VacancyAttachment> Handle(SelectAllVacancyAttachmentsQuery msg)
         {

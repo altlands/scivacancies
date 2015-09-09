@@ -179,10 +179,18 @@ namespace SciVacancies.WebApp.ViewModels
         /// </summary>
         public string CloseReason { get; set; }
 
+        /// <summary>
+        /// файлы, описывающие вакансию
+        /// </summary>
         public List<VacancyAttachment> Attachments { get; set; }
+        /// <summary>
+        /// файлы решения комиссии
+        /// </summary>
+        public List<VacancyAttachment> AttachmentsCommittee { get; set; }
+
         /// <summary>
         /// часть пути для доступа к прикреплённым файлам
         /// </summary>
-        public string FolderApplicationsAttachmentsUrl { get; set; }
+        public string FolderVacanciesAttachmentsUrl { get; set; }
     }
 }

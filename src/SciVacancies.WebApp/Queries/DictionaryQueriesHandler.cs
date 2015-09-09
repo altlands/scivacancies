@@ -31,7 +31,9 @@ namespace SciVacancies.WebApp.Queries
 
         IRequestHandler<SelectAllResearchDirectionsQuery, IEnumerable<ResearchDirection>>,
         IRequestHandler<SelectResearchDirectionsForAutocompleteQuery, IEnumerable<ResearchDirection>>,
-        IRequestHandler<SelectResearchDirectionsByParentIdQuery, IEnumerable<ResearchDirection>>
+        IRequestHandler<SelectResearchDirectionsByParentIdQuery, IEnumerable<ResearchDirection>>,
+
+        IRequestHandler<SelectAllAttachmentTypesQuery, IEnumerable<AttachmentType>>
     {
         private readonly IDatabase _db;
 
@@ -202,6 +204,12 @@ namespace SciVacancies.WebApp.Queries
             return researchDirections;
         }
 
+        public IEnumerable<AttachmentType> Handle(SelectAllAttachmentTypesQuery message)
+        {
+            IEnumerable<AttachmentType> attachmentTypes = _db.Fetch<AttachmentType>();
+
+            return attachmentTypes;
+        }
     }
-    
+
 }

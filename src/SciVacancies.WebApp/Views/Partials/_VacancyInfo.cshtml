@@ -28,38 +28,28 @@
                 </text>
             }
 
-            @if (User.Identity.IsAuthenticated
-               && (User.IsInRole(ConstTerms.RequireRoleAdministrator)
-                   || User.IsInRole(ConstTerms.RequireRoleOrganizationAdmin)
-                   || User.IsInRole(ConstTerms.RequireRoleAdministrator)
-                   || User.IsInRole(ConstTerms.RequireRoleResearcher)
-                ))
+            <br/>
+
+            @if (Model.AttachmentsCommittee != null && Model.AttachmentsCommittee.Any())
             {
                 <text>
-                <br />
-
-                @if (Model.Attachments != null && Model.Attachments.SelectProtocols().Any())
-                {
-                    <text>
-                    <div class="section-eval">
-                        <span class="name-section">Протокол(ы) решения комиссии:</span>
-                        <div class="list-fields">
-                            @foreach (var item in Model.Attachments.SelectVacancyFiles())
-                            {
-                                <text>
-                                <div>
-                                    <div class="field">
-                                        <div class="section-eval">
-                                            @item.name <span class="small-icon icon-sm-download"><a href="@(Model.FolderApplicationsAttachmentsUrl + item.url)">Скачать</a></span>
-                                        </div>
+                <div class="section-eval">
+                    <span class="name-section">Протокол(ы) решения комиссии:</span>
+                    <div class="list-fields">
+                        @foreach (var item in Model.AttachmentsCommittee)
+                        {
+                            <text>
+                            <div>
+                                <div class="field">
+                                    <div class="section-eval">
+                                        @item.name <span class="small-icon icon-sm-download"><a href="@(Model.FolderVacanciesAttachmentsUrl + item.url)">Скачать</a></span>
                                     </div>
                                 </div>
-                                </text>
-                            }
-                        </div>
+                            </div>
+                            </text>
+                        }
                     </div>
-                    </text>
-                }
+                </div>
                 </text>
             }
 
@@ -137,24 +127,25 @@
 </ul>
 
 
-
-<div class="title-cat-inform">Прикреплённые файлы:</div>
-<ul class="list-information layout-inform">
-    <li class="even">
-        <span>Файлы:</span>
-        <div>
-            @if (Model.Attachments != null)
-            {
-                foreach (var item in Model.Attachments.SelectVacancyFiles())
+@if (Model.Attachments != null && Model.Attachments.Any())
+{
+    <text>
+    <div class="title-cat-inform">Прикреплённые файлы:</div>
+    <ul class="list-information layout-inform">
+        <li class="even">
+            <span>Файлы:</span>
+            <div>
+                @foreach (var item in Model.Attachments)
                 {
                     <div class="section-eval">
-                        @item.name <span class="small-icon icon-sm-download"><a href="@(Model.FolderApplicationsAttachmentsUrl + item.url)">Скачать</a></span>
+                        @item.name <span class="small-icon icon-sm-download"><a href="@(Model.FolderVacanciesAttachmentsUrl + item.url)">Скачать</a></span>
                     </div>
                 }
-            }
-        </div>
-    </li>
-</ul>
+            </div>
+        </li>
+    </ul>
+    </text>
+}
 
 <div class="title-cat-inform">Лицо для получения дополнительных справок:</div>
 <ul class="list-information layout-inform">
