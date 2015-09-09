@@ -4,7 +4,7 @@ namespace SciVacancies.WebApp.Models.OAuth
 {
     public class OAuthResProfile
     {
-        //TODO: рабочий и другие стажи
+        //TODO: нет данных о деятельности (рабочий стаж, преподавательская деятельность, исследовательская деятельность)
 
         public IdentityNumberSc identityNumberSc { get; set; } = new IdentityNumberSc();
 
