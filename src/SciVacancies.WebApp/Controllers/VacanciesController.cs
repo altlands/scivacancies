@@ -200,7 +200,7 @@ namespace SciVacancies.WebApp.Controllers
             if (preModel == null)
                 return HttpNotFound(); //throw new ObjectNotFoundException($"Не найдена вакансия с идентификатором: {id}");
 
-            //TODO: вынести однотипную инициализацию в отдульный сервис
+            //TODO: вынести однотипную инициализацию в отдельный сервис
             var model = Mapper.Map<VacancyDetailsViewModel>(preModel);
             model.Winner =
                 Mapper.Map<ResearcherDetailsViewModel>(_mediator.Send(new SingleResearcherQuery { ResearcherGuid = preModel.winner_researcher_guid }));
@@ -786,6 +786,7 @@ namespace SciVacancies.WebApp.Controllers
             if (organizationGuid != model.OrganizationGuid)
                 return View("Error", "Вы не можете просматривать детальную информацию о Вакансиях других организаций");
 
+            //TODO: оптимизировать запрос и его обработку.
             var page = _mediator.Send(new SelectPagedVacancyApplicationsByVacancyQuery
             {
                 PageSize = pageSize,

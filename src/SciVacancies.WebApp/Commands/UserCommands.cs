@@ -13,7 +13,7 @@ namespace SciVacancies.WebApp.Commands
 
     public class RegisterUserOrganizationCommand : CommandBase, IRequest<SciVacUser>
     {
-        //TODO: написать и исопльзовать вместо AccountOrganizationRegisterViewModel класс AccountOrganizationRegisterDataModel
+        //TODO: написать и использовать вместо AccountOrganizationRegisterViewModel класс AccountOrganizationRegisterDataModel
         public AccountOrganizationRegisterViewModel Data { get; set; }
     }
 }
