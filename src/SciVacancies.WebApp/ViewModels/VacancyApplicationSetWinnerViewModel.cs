@@ -67,7 +67,6 @@ namespace SciVacancies.WebApp.ViewModels
         public DateTime? SentDate { get; set; }
 
         //public bool IsWinner { get; set; }
-        [Required]
         public string Reason { get; set; }
 
         /// <summary>
