@@ -356,6 +356,7 @@ namespace SciVacancies.WebApp.Infrastructure
                 .ForMember(d => d.size, o => o.MapFrom(s => s.Size))
                 .ForMember(d => d.extension, o => o.MapFrom(s => s.Extension))
                 .ForMember(d => d.url, o => o.MapFrom(s => s.Url))
+                .ForMember(d => d.type_id, o =>o.MapFrom(s=>s.TypeId))
                 .ForMember(d => d.upload_date, o => o.MapFrom(s => s.UploadDate));
 
 

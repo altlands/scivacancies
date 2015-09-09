@@ -22,7 +22,10 @@ namespace SciVacancies.WebApp.Queries
         IRequestHandler<SelectPagedFavoriteVacanciesByResearcherQuery, Page<Vacancy>>,
         IRequestHandler<SelectFavoriteVacancyGuidsByResearcherQuery, IEnumerable<Guid>>,
         IRequestHandler<SelectPagedVacanciesByGuidsQuery, Page<Vacancy>>,
-        IRequestHandler<SelectVacancyAttachmentsQuery, IEnumerable<VacancyAttachment>>
+        IRequestHandler<SelectVacancyAttachmentsQuery, IEnumerable<VacancyAttachment>>,
+        IRequestHandler<SelectAllVacancyAttachmentsQuery, IEnumerable<VacancyAttachment>>,
+        IRequestHandler<SelectAllExceptCommitteeVacancyAttachmentsQuery, IEnumerable<VacancyAttachment>>,
+        IRequestHandler<SelectCommitteeVacancyAttachmentsQuery, IEnumerable<VacancyAttachment>>
 
     {
         private readonly IDatabase _db;
@@ -68,8 +71,8 @@ namespace SciVacancies.WebApp.Queries
         {
             if (String.IsNullOrEmpty(message.Query)) throw new ArgumentNullException($"Query is empty: {message.Query}");
 
-            var vacancies = message.Take != 0 
-                ? _db.FetchBy<Vacancy>(f => f.Where(w => w.name.Contains(message.Query) && w.status != VacancyStatus.Removed)).Take(message.Take) 
+            var vacancies = message.Take != 0
+                ? _db.FetchBy<Vacancy>(f => f.Where(w => w.name.Contains(message.Query) && w.status != VacancyStatus.Removed)).Take(message.Take)
                 : _db.FetchBy<Vacancy>(f => f.Where(w => w.name.Contains(message.Query) && w.status != VacancyStatus.Removed));
 
             return vacancies;
@@ -92,7 +95,7 @@ namespace SciVacancies.WebApp.Queries
             if (string.IsNullOrWhiteSpace(message.OrderDirection))
                 message.OrderDirection = "DESC";
             if (string.IsNullOrWhiteSpace(message.OrderBy))
-                message.OrderBy= nameof(Vacancy.creation_date);
+                message.OrderBy = nameof(Vacancy.creation_date);
 
             var favoriteVacancies = _db.Page<Vacancy>(message.PageIndex, message.PageSize, new Sql($"SELECT * FROM res_favoritevacancies fv, org_vacancies v WHERE fv.researcher_guid = @0 AND fv.vacancy_guid = v.guid ORDER BY v.{message.OrderBy} {message.OrderDirection.ToUpper()}", message.ResearcherGuid));
 
@@ -124,6 +127,24 @@ namespace SciVacancies.WebApp.Queries
         public IEnumerable<VacancyAttachment> Handle(SelectVacancyAttachmentsQuery msg)
         {
             IEnumerable<VacancyAttachment> vaAttachments = _db.Fetch<VacancyAttachment>(new Sql($"SELECT * FROM org_vacancy_attachments ra WHERE ra.vacancy_guid = @0", msg.VacancyGuid));
+
+            return vaAttachments;
+        }
+        public IEnumerable<VacancyAttachment> Handle(SelectAllVacancyAttachmentsQuery msg)
+        {
+            IEnumerable<VacancyAttachment> vaAttachments = _db.Fetch<VacancyAttachment>(new Sql($"SELECT * FROM org_vacancy_attachments ra WHERE ra.vacancy_guid = @0", msg.VacancyGuid));
+
+            return vaAttachments;
+        }
+        public IEnumerable<VacancyAttachment> Handle(SelectAllExceptCommitteeVacancyAttachmentsQuery msg)
+        {
+            IEnumerable<VacancyAttachment> vaAttachments = _db.Fetch<VacancyAttachment>(new Sql($"SELECT * FROM org_vacancy_attachments ra WHERE ra.vacancy_guid = @0 AND ra.type_id = 3", msg.VacancyGuid));
+
+            return vaAttachments;
+        }
+        public IEnumerable<VacancyAttachment> Handle(SelectCommitteeVacancyAttachmentsQuery msg)
+        {
+            IEnumerable<VacancyAttachment> vaAttachments = _db.Fetch<VacancyAttachment>(new Sql($"SELECT * FROM org_vacancy_attachments ra WHERE ra.vacancy_guid = @0 AND ra.type_id = 1", msg.VacancyGuid));
 
             return vaAttachments;
         }

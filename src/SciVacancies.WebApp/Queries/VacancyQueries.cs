@@ -87,7 +87,20 @@ namespace SciVacancies.WebApp.Queries
     {
         public Guid VacancyGuid { get; set; }
     }
+    [Obsolete("Use SelectAllVacancyAttachmentsQuery instead")]
     public class SelectVacancyAttachmentsQuery : IRequest<IEnumerable<VacancyAttachment>>
+    {
+        public Guid VacancyGuid { get; set; }
+    }
+    public class SelectAllVacancyAttachmentsQuery : IRequest<IEnumerable<VacancyAttachment>>
+    {
+        public Guid VacancyGuid { get; set; }
+    }
+    public class SelectAllExceptCommitteeVacancyAttachmentsQuery : IRequest<IEnumerable<VacancyAttachment>>
+    {
+        public Guid VacancyGuid { get; set; }
+    }
+    public class SelectCommitteeVacancyAttachmentsQuery : IRequest<IEnumerable<VacancyAttachment>>
     {
         public Guid VacancyGuid { get; set; }
     }

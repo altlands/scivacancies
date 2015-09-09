@@ -29,6 +29,11 @@ namespace SciVacancies.ReadModel.Core
         public string url { get; set; }
 
         /// <summary>
+        /// Тип файла (резюме, портфолио и т.д.)
+        /// </summary>
+        public int type_id { get; set; }
+
+        /// <summary>
         /// Guid заявки
         /// </summary>
         public Guid vacancyapplication_guid { get; set; }
