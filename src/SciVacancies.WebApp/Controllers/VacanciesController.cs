@@ -72,6 +72,11 @@ namespace SciVacancies.WebApp.Controllers
                 }
 
                 var vacancyDataModel = Mapper.Map<VacancyDataModel>(model);
+
+                // раскоментировать когда будут прикреплённые файлы для вакансии
+                //присваиваем прикреплённым файлам тип "Прочее" (для соответствущей выборки)
+                //attachmentsList.ForEach(c => c.TypeId = 3);
+
                 var vacancyGuid = _mediator.Send(new CreateVacancyCommand { OrganizationGuid = model.OrganizationGuid, Data = vacancyDataModel });
 
                 var vacancy = _mediator.Send(new SingleVacancyQuery { VacancyGuid = vacancyGuid });
@@ -209,7 +214,8 @@ namespace SciVacancies.WebApp.Controllers
             model.Criterias = _mediator.Send(new SelectVacancyCriteriasQuery { VacancyGuid = model.Guid });
             model.CriteriasHierarchy =
                     _mediator.Send(new SelectAllCriteriasQuery()).ToList().ToHierarchyCriteriaViewModelList(model.Criterias.ToList());
-            model.Attachments = _mediator.Send(new SelectVacancyAttachmentsQuery { VacancyGuid = model.Guid }).ToList();
+            model.Attachments = _mediator.Send(new SelectAllExceptCommitteeVacancyAttachmentsQuery { VacancyGuid = model.Guid }).ToList();
+            model.AttachmentsCommittee = _mediator.Send(new SelectCommitteeVacancyAttachmentsQuery { VacancyGuid = model.Guid }).ToList();
 
             //TODO: показать отрасль науки, направление исследований
 
@@ -262,7 +268,8 @@ namespace SciVacancies.WebApp.Controllers
             model.Criterias = _mediator.Send(new SelectVacancyCriteriasQuery { VacancyGuid = model.Guid });
             model.CriteriasHierarchy =
                     _mediator.Send(new SelectAllCriteriasQuery()).ToList().ToHierarchyCriteriaViewModelList(model.Criterias.ToList());
-            model.Attachments = _mediator.Send(new SelectVacancyAttachmentsQuery {VacancyGuid = model.Guid}).ToList();
+            model.Attachments = _mediator.Send(new SelectAllExceptCommitteeVacancyAttachmentsQuery { VacancyGuid = model.Guid }).ToList();
+            model.AttachmentsCommittee = _mediator.Send(new SelectCommitteeVacancyAttachmentsQuery { VacancyGuid = model.Guid }).ToList();
 
             //TODO: показать отрасль науки, направление исследований
 
@@ -309,7 +316,8 @@ namespace SciVacancies.WebApp.Controllers
             model.Criterias = _mediator.Send(new SelectVacancyCriteriasQuery { VacancyGuid = model.Guid });
             model.CriteriasHierarchy =
                     _mediator.Send(new SelectAllCriteriasQuery()).ToList().ToHierarchyCriteriaViewModelList(model.Criterias.ToList());
-            model.Attachments = _mediator.Send(new SelectVacancyAttachmentsQuery { VacancyGuid = model.Guid }).ToList();
+            model.Attachments = _mediator.Send(new SelectAllExceptCommitteeVacancyAttachmentsQuery{ VacancyGuid = model.Guid }).ToList();
+            model.AttachmentsCommittee = _mediator.Send(new SelectCommitteeVacancyAttachmentsQuery{ VacancyGuid = model.Guid }).ToList();
 
             //TODO: показать отрасль науки, направление исследований
 
@@ -587,6 +595,9 @@ namespace SciVacancies.WebApp.Controllers
                     //}
 
                 }
+
+                //присваиваем прикреплённым файлам тип "Решение комиссии" (для соответствущей выборки)
+                attachmentsList.ForEach(c=>c.TypeId = 1);
             }
             #endregion
 

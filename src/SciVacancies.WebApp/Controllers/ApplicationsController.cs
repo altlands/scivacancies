@@ -94,6 +94,7 @@ namespace SciVacancies.WebApp.Controllers
 
 
 
+        [PageTitle("Новая заявка")]
         [Authorize(Roles = ConstTerms.RequireRoleResearcher)]
         [HttpPost]
         [BindResearcherIdFromClaims]
@@ -124,7 +125,7 @@ namespace SciVacancies.WebApp.Controllers
             //TODO: Application -> Attachments : как проверять безопасность, прикрепляемых файлов
             if (model.Attachments != null && model.Attachments.Any(c => c.Length > _attachmentSettings.Options.VacancyApplication.MaxItemSize))
             {
-                ModelState.AddModelError("Attachments", @"Размер одного из прикрепленных файлов превышает допустимый размер. Повторите создания Заявки ещё раз.");
+                ModelState.AddModelError("Attachments", $"Размер одного из прикрепленных файлов превышает допустимый размер ({_attachmentSettings.Options.VacancyApplication.MaxItemSize/1000}КБ). Повторите создания Заявки ещё раз.");
             }
 
             //с формы мы не получаем практически никаких данных, поэтому заново наполняем ViewModel
@@ -192,6 +193,10 @@ namespace SciVacancies.WebApp.Controllers
                     //}
 
                 }
+
+                //присваиваем прикреплённым файлам тип "Резюме" (для соответствущей выборки)
+                attachmentsList.ForEach(c => c.TypeId = 2);
+
             }
             #endregion
 
@@ -237,9 +242,8 @@ namespace SciVacancies.WebApp.Controllers
             var model = Mapper.Map<VacancyApplicationDetailsViewModel>(preModel);
             model.Researcher = Mapper.Map<ResearcherDetailsViewModel>(_mediator.Send(new SingleResearcherQuery { ResearcherGuid = researcherGuid }));
             model.Vacancy = Mapper.Map<VacancyDetailsViewModel>(_mediator.Send(new SingleVacancyQuery { VacancyGuid = preModel.vacancy_guid }));
-            model.Attachments = _mediator.Send(new SelectVacancyApplicationAttachmentsQuery { VacancyApplicationGuid = id });
+            model.Attachments = _mediator.Send(new SelectAllVacancyApplicationAttachmentsQuery { VacancyApplicationGuid = id });
             model.FolderApplicationsAttachmentsUrl = _attachmentSettings.Options.VacancyApplication.UrlPathPart;
-            //TODO: ntemnikov : показать Научные интересы
             return View(model);
         }
 
@@ -275,7 +279,7 @@ namespace SciVacancies.WebApp.Controllers
             var model = Mapper.Map<VacancyApplicationDetailsViewModel>(preModel);
             model.Researcher = Mapper.Map<ResearcherDetailsViewModel>(_mediator.Send(new SingleResearcherQuery { ResearcherGuid = preModel.researcher_guid }));
             model.Vacancy = Mapper.Map<VacancyDetailsViewModel>(vacancy);
-            model.Attachments = _mediator.Send(new SelectVacancyApplicationAttachmentsQuery { VacancyApplicationGuid = id });
+            model.Attachments = _mediator.Send(new SelectAllVacancyApplicationAttachmentsQuery { VacancyApplicationGuid = id });
             model.FolderApplicationsAttachmentsUrl = _attachmentSettings.Options.VacancyApplication.UrlPathPart;
             //TODO: ntemnikov : показать Научные интересы
             return View(model);
@@ -336,7 +340,7 @@ namespace SciVacancies.WebApp.Controllers
             var model = Mapper.Map<VacancyApplicationDetailsViewModel>(preModel);
             model.Researcher = Mapper.Map<ResearcherDetailsViewModel>(_mediator.Send(new SingleResearcherQuery { ResearcherGuid = preModel.researcher_guid }));
             model.Vacancy = Mapper.Map<VacancyDetailsViewModel>(vacancy);
-            model.Attachments = _mediator.Send(new SelectVacancyApplicationAttachmentsQuery { VacancyApplicationGuid = id });
+            model.Attachments = _mediator.Send(new SelectAllVacancyApplicationAttachmentsQuery { VacancyApplicationGuid = id });
             model.FolderApplicationsAttachmentsUrl = _attachmentSettings.Options.VacancyApplication.UrlPathPart;
             return View(model);
         }
