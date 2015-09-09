@@ -40,6 +40,7 @@ namespace SciVacancies.WebApp
             services.Configure<AppSettings>(Configuration.GetSubKey("AppSettings"));
             services.Configure<DbSettings>(Configuration.GetSubKey("Data"));
             services.Configure<OAuthSettings>(Configuration.GetSubKey("OAuthSettings"));
+            services.Configure<QuartzSettings>(Configuration.GetSubKey("QuartzSettings"));
             services.Configure<ApiSettings>(Configuration.GetSubKey("ApiSettings"));
             services.Configure<ElasticSettings>(Configuration.GetSubKey("ElasticSettings"));
             services.Configure<AttachmentSettings>(Configuration.GetSubKey("AttachmentSettings"));

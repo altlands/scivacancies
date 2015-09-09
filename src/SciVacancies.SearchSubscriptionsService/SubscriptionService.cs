@@ -12,7 +12,7 @@ namespace SciVacancies.SearchSubscriptionsService
 {
     public class SubscriptionService : ServiceControl
     {
-        static readonly int MinuteInterval;
+        readonly int MinuteInterval;
 
         public SubscriptionService()
         {

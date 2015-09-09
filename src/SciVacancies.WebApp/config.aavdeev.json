@@ -1,73 +1,93 @@
 ﻿{
-    "Data": {
-        "ReadModelDb": "Server=localhost;Database=scivacancies;User Id=postgres;Password=postgres",
-        "EventStoreDb": "Server=localhost;Database=scivacancies;User Id=postgres;Password=postgres"
+  "Data": {
+    "ReadModelDb": "Server=localhost;Database=scivacancies;User Id=postgres;Password=postgres",
+    "EventStoreDb": "Server=localhost;Database=scivacancies;User Id=postgres;Password=postgres"
+  },
+  "OAuthSettings": {
+    "Sciencemon": {
+      "AuthorizationEndpoint": "http://www.sciencemon.ru/oauth/v2/auth",
+      "TokenEndpoint": "http://www.sciencemon.ru/oauth/v2/token",
+      "UserEndpoint": "http://www.sciencemon.ru/api/user",
+      "ClientId": "1_ikniwc909y8kog4k4sc00oogg0g8scc8o4k0wocgw4cg84k00",
+      "ClientSecret": "67sq61c6xekgw0wgkosg04gwo488osk48ogks4og40cgws8ook",
+      "Scope": "",
+      "RedirectUrl": "http://localhost:59075/account/callback"
     },
-    "OAuthSettings": {
-        "Sciencemon": {
-            "AuthorizationEndpoint": "http://www.sciencemon.ru/oauth/v2/auth",
-            "TokenEndpoint": "http://www.sciencemon.ru/oauth/v2/token",
-            "UserEndpoint": "http://www.sciencemon.ru/api/user",
-            "ClientId": "1_ikniwc909y8kog4k4sc00oogg0g8scc8o4k0wocgw4cg84k00",
-            "ClientSecret": "67sq61c6xekgw0wgkosg04gwo488osk48ogks4og40cgws8ook",
-            "Scope": "",
-            "RedirectUrl": "http://localhost:59075/account/callback"
-        },
-        "Mapofscience": {
-            "AuthorizationEndpoint": "http://scimap-sso.alt-lan.com/scimap-sso/oauth/authorize",
-            "TokenEndpoint": "http://scimap-sso.alt-lan.com/scimap-sso/oauth/token",
-            "UserEndpoint": "http://scimap-sso.alt-lan.com/scimap-sso/user/account",
-            "ClientId": "my-trusted-client",
-            "ClientSecret": "secret",
-            "Scope": "",
-            "RedirectUrl": "http://localhost:59075/account/callback"
-        }
-    },
-    //TODO
-    "ApiSettings": {
-        "Sciencemon": {
-            //"OrganizationProfile": "http://www.sciencemon.ru/ext-api/v1.0/org/",
-            //"BasicAuthorization": "dev:informika"
-        },
-        "Mapofscience": {
-            "ResearcherProfile": "http://scimap-sso.alt-lan.com/user/profile"
-        }
-    },
-    "ElasticSettings": {
-        "ConnectionUrl": "http://localhost:9200/",
-        "DefaultIndex": "scivacancies"
-    },
-    "AttachmentSettings": {
-        "VacancyApplication": {
-            "MaxItemSize": 100000,
-            "MaxTotalSize": 1000000,
-            "PhisicalPathPart": "\\uploads\\applications\\attachments",
-            "UrlPathPart": "/uploads/applications/attachments",
-            "AllowExtensions": ""
-        },
-        "Vacancy": {
-            "MaxItemSize": 100000,
-            "MaxTotalSize": 1000000,
-            "PhisicalPathPart": "",
-            "UrlPathPart": "",
-            "AllowExtensions": ""
-        },
-        "Researcher": {
-            "MaxItemSize": 500000,
-            "MaxTotalSize": 500000,
-            "PhisicalPathPart": "\\uploads\\researcherphoto",
-            "UrlPathPart": "/uploads/researcherphoto",
-            "AllowExtensions": "JPG,JPEG,PNG"
-        }
-    },
-    "SiteFileSettings": {
-        "FavIconName": "",
-        "PathToBlankAvatar": "/images/profile-photo.png"
-    },
-    "VacancyLifeCycleSettings": {
-        "DeltaFromPublishToInCommitteeMinDays": 60
-    },
-    "CaptchaSettings": {
-        "CaptchaDurationSeconds": 180
+    "Mapofscience": {
+      "AuthorizationEndpoint": "http://scimap-sso.alt-lan.com/scimap-sso/oauth/authorize",
+      "TokenEndpoint": "http://scimap-sso.alt-lan.com/scimap-sso/oauth/token",
+      "UserEndpoint": "http://scimap-sso.alt-lan.com/scimap-sso/user/account",
+      "ClientId": "my-trusted-client",
+      "ClientSecret": "secret",
+      "Scope": "",
+      "RedirectUrl": "http://localhost:59075/account/callback"
     }
+  },
+  //TODO
+  "ApiSettings": {
+    "Sciencemon": {
+      //"OrganizationProfile": "http://www.sciencemon.ru/ext-api/v1.0/org/",
+      //"BasicAuthorization": "dev:informika"
+    },
+    "Mapofscience": {
+      "ResearcherProfile": "http://scimap-sso.alt-lan.com/user/profile"
+    }
+  },
+  "ElasticSettings": {
+    "ConnectionUrl": "http://localhost:9200/",
+    "DefaultIndex": "scivacancies"
+  },
+  "QuartzSettings": {
+    "Scheduler": {
+      "InstanceName": "SciVacanciesScheduler"
+    },
+    "JobStore": {
+      "Type": "Quartz.Impl.AdoJobStore.JobStoreTX, Quartz",
+      "UseProperties": "true",
+      "DataSource": "default",
+      "TablePrefix": "QRTZ_",
+      "LockHandler": {
+        "Type": "Quartz.Impl.AdoJobStore.UpdateLockRowSemaphore, Quartz"
+      }
+    },
+    "DataSource": {
+      "Default": {
+        "ConnectionString": "Server = localhost; Database = scivacancies; User Id = postgres; Password = postgres",
+        "Provider":"Npgsql-20"
+      }
+    }
+  },
+  "AttachmentSettings": {
+    "VacancyApplication": {
+      "MaxItemSize": 100000,
+      "MaxTotalSize": 1000000,
+      "PhisicalPathPart": "\\uploads\\applications\\attachments",
+      "UrlPathPart": "/uploads/applications/attachments",
+      "AllowExtensions": ""
+    },
+    "Vacancy": {
+      "MaxItemSize": 100000,
+      "MaxTotalSize": 1000000,
+      "PhisicalPathPart": "",
+      "UrlPathPart": "",
+      "AllowExtensions": ""
+    },
+    "Researcher": {
+      "MaxItemSize": 500000,
+      "MaxTotalSize": 500000,
+      "PhisicalPathPart": "\\uploads\\researcherphoto",
+      "UrlPathPart": "/uploads/researcherphoto",
+      "AllowExtensions": "JPG,JPEG,PNG"
+    }
+  },
+  "SiteFileSettings": {
+    "FavIconName": "",
+    "PathToBlankAvatar": "/images/profile-photo.png"
+  },
+  "VacancyLifeCycleSettings": {
+    "DeltaFromPublishToInCommitteeMinDays": 60
+  },
+  "CaptchaSettings": {
+    "CaptchaDurationSeconds": 180
+  }
 }

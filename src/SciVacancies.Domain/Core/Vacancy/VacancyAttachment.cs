@@ -30,6 +30,11 @@ namespace SciVacancies.Domain.Core
         public string Url { get; set; }
 
         /// <summary>
+        /// Тип файла (решение комиссии и т.д.)
+        /// </summary>
+        public int TypeId { get; set; }
+
+        /// <summary>
         /// Дата загрузки файла на сервер
         /// </summary>
         public DateTime UploadDate { get; set; }

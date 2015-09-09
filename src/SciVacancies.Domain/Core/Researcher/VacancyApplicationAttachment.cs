@@ -30,6 +30,11 @@ namespace SciVacancies.Domain.Core
         public string Url { get; set; }
 
         /// <summary>
+        /// Тип файла (резюме, портфолио и т.д.)
+        /// </summary>
+        public int TypeId { get; set; }
+
+        /// <summary>
         /// Дата загрузки файла на сервер
         /// </summary>
         public DateTime UploadDate { get; set; }
