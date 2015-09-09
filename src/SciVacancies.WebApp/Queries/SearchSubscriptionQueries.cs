@@ -20,7 +20,7 @@ namespace SciVacancies.WebApp.Queries
         public long PageIndex { get; set; }
         public string OrderBy { get; set; }
 
-        //TODO - добавить фильтр сортировки по колонкам
+        //TODO - добавить фильтр по колонкам
     }
     public class SelectActiveSearchSubscriptionsQuery:IRequest<IEnumerable<SearchSubscription>>
     {

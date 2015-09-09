@@ -18,6 +18,7 @@
     Model.Memberships.Insert(0, new MembershipEditViewModel());
     Model.Interests = Model.Interests ?? new List<InterestEditViewModel>();
     Model.Interests.Insert(0, new InterestEditViewModel());
+    //перед отправкой формы эти элементы будут удалены с формы
 
     var years = Enumerable.Range(DateTime.Now.Year - 150, 150 + 1).OrderByDescending(c => c).Select(c => new SelectListItem { Text = c.ToString(), Value = c.ToString() }).ToList();
     var yearsZeroBased = Enumerable.Range(DateTime.Now.Year - 150, 150 + 1).OrderByDescending(c => c).Select(c => new SelectListItem { Text = c.ToString(), Value = c.ToString() }).ToList();

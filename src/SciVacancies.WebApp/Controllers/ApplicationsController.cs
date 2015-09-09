@@ -239,7 +239,6 @@ namespace SciVacancies.WebApp.Controllers
             model.Vacancy = Mapper.Map<VacancyDetailsViewModel>(_mediator.Send(new SingleVacancyQuery { VacancyGuid = preModel.vacancy_guid }));
             model.Attachments = _mediator.Send(new SelectVacancyApplicationAttachmentsQuery { VacancyApplicationGuid = id });
             model.FolderApplicationsAttachmentsUrl = _attachmentSettings.Options.VacancyApplication.UrlPathPart;
-            //TODO: ntemnikov : показать Научные интересы
             return View(model);
         }
 
@@ -277,7 +276,6 @@ namespace SciVacancies.WebApp.Controllers
             model.Vacancy = Mapper.Map<VacancyDetailsViewModel>(vacancy);
             model.Attachments = _mediator.Send(new SelectVacancyApplicationAttachmentsQuery { VacancyApplicationGuid = id });
             model.FolderApplicationsAttachmentsUrl = _attachmentSettings.Options.VacancyApplication.UrlPathPart;
-            //TODO: ntemnikov : показать Научные интересы
             return View(model);
         }
 

@@ -219,6 +219,7 @@ namespace SciVacancies.WebApp.Controllers
         [Authorize(Roles = ConstTerms.RequireRoleOrganizationAdmin)]
         [PageTitle("Подробно о вакансии")]
         [BindOrganizationIdFromClaims]
+        [ValidatePagerParameters]
         public IActionResult Details(Guid id, Guid organizationGuid, int pageSize = 10, int currentPage = 1,
             string sortField = ConstTerms.OrderByFieldApplyDate, string sortDirection = ConstTerms.OrderByDescending)
         {
@@ -765,6 +766,7 @@ namespace SciVacancies.WebApp.Controllers
         [Authorize(Roles = ConstTerms.RequireRoleOrganizationAdmin)]
         [PageTitle("Подробно о вакансии")]
         [BindOrganizationIdFromClaims]
+        [ValidatePagerParameters]
         public IActionResult Print(Guid id, Guid organizationGuid, int pageSize = 10, int currentPage = 1)
         {
             if (id == Guid.Empty)

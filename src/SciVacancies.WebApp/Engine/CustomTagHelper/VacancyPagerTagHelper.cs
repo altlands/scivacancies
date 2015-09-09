@@ -16,8 +16,6 @@ namespace SciVacancies.WebApp
         private IDictionary<string, string[]> _queryDictionary;
         private const string ParameterNamePageNumber = "CurrentPage";
         private const string ParameterNamePageSize= "PageSize";
-        private const string ParameterNameSortField= "SortField";
-        private const string ParameterNameSortDirection= "SortDirection";
 
         [HtmlAttributeName("request")]
         public HttpRequest Request { get; set; }
@@ -30,6 +28,10 @@ namespace SciVacancies.WebApp
 
             if (PagedList == null)
                 return;
+
+            //проверка минимальных допустимых значений
+            PagedList.CurrentPage = PagedList.CurrentPage < 0 ? 1 : PagedList.CurrentPage;
+            PagedList.PageSize = PagedList.PageSize < 0 ? 10 : PagedList.PageSize;
 
             if (!_queryDictionary.ContainsKey(ParameterNamePageNumber))
                 _queryDictionary.Add(ParameterNamePageNumber,  new []{"1"});
@@ -67,7 +69,6 @@ namespace SciVacancies.WebApp
                         form.Attributes.Add("style", "display:inline;");
 
                         {
-                            //TODO: ntemnikov: VacancyPagerTagHelper -> input validation : добавить проверку и обработку (js, cshtml, cs) на минимально допустимое значение
 
                             var input = new TagBuilder("input");
                             input.Attributes.Add("type", "text");
@@ -162,8 +163,6 @@ namespace SciVacancies.WebApp
 
                                 {
                             
-                                    //TODO: ntemnikov: VacancyPagerTagHelper -> input validation : добавить проверку и обработку (js, cshtml, cs) на минимально допустимое значение
-
                                     var input = new TagBuilder("input");
                                     input.Attributes.Add("type", "text");
                                     input.Attributes.Add("name", ParameterNamePageNumber);

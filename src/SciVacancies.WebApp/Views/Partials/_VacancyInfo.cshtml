@@ -28,26 +28,38 @@
                 </text>
             }
 
-            @if (Model.Attachments != null && Model.Attachments.SelectProtocols().Any())
+            @if (User.Identity.IsAuthenticated
+               && (User.IsInRole(ConstTerms.RequireRoleAdministrator)
+                   || User.IsInRole(ConstTerms.RequireRoleOrganizationAdmin)
+                   || User.IsInRole(ConstTerms.RequireRoleAdministrator)
+                   || User.IsInRole(ConstTerms.RequireRoleResearcher)
+                ))
             {
                 <text>
-                <div class="section-eval">
-                    <span class="name-section">Протокол(ы) решения комиссии:</span>
-                    <div class="list-fields">
-                        @foreach (var item in Model.Attachments.SelectVacancyFiles())
-                        {
-                            <text>
-                            <div>
-                                <div class="field">
-                                    <div class="section-eval">
-                                        @item.name <span class="small-icon icon-sm-download"><a href="@(Model.FolderApplicationsAttachmentsUrl + item.url)">Скачать</a></span>
+                <br />
+
+                @if (Model.Attachments != null && Model.Attachments.SelectProtocols().Any())
+                {
+                    <text>
+                    <div class="section-eval">
+                        <span class="name-section">Протокол(ы) решения комиссии:</span>
+                        <div class="list-fields">
+                            @foreach (var item in Model.Attachments.SelectVacancyFiles())
+                            {
+                                <text>
+                                <div>
+                                    <div class="field">
+                                        <div class="section-eval">
+                                            @item.name <span class="small-icon icon-sm-download"><a href="@(Model.FolderApplicationsAttachmentsUrl + item.url)">Скачать</a></span>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                            </text>
-                        }
+                                </text>
+                            }
+                        </div>
                     </div>
-                </div>
+                    </text>
+                }
                 </text>
             }
 
