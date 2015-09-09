@@ -480,35 +480,35 @@ namespace SciVacancies.WebApp.Controllers
             await _userManager.SetLockoutEnabledAsync(user.Id, false);
             await _userManager.SetLockoutEndDateAsync(user.Id, DateTimeOffset.Now.AddSeconds(-1));
 
-            //if (lastRequests.Any())
-            //{
-            //    //todo: вынести все параметры в конфиг
+            if (lastRequests.Any())
+            {
+                //todo: вынести все параметры в конфиг
 
-            //    var afterLastRequestPeriod = new TimeSpan(0, 10, 0); //10 min
-            //    //если последний запрос на сброс пароля был менее, чем afterLastRequestPeriod (минут/секунд) назад, то показывать капчу.
-            //    if ((DateTime.UtcNow - lastRequests.Max()) < afterLastRequestPeriod)
-            //    {
-            //        //todo: показывать капчу
-            //    }
+                var afterLastRequestPeriod = new TimeSpan(0, 10, 0); //10 min
+                //если последний запрос на сброс пароля был менее, чем afterLastRequestPeriod (минут/секунд) назад, то показывать капчу.
+                if ((DateTime.UtcNow - lastRequests.Max()) < afterLastRequestPeriod)
+                {
+                    //todo: показывать капчу
+                }
 
-            //    var nLastRequestsCount = 3; //последние n-запросов
-            //    var nLastRequestsPeriod = new TimeSpan(0, 60, 0);
-            //    //период, в котором не должно быть запросов пароля, чтобы не заблокировать пользователя
-            //    var tBlockPeriod = new TimeSpan(0, 90, 0); //90 min
-            //    //если последние n-запрос на сброс пароля были менее, в течение nLastRequestsCountPeriod (минут/секунд), то временно заблокировать пользователя на t-период.
-            //    if (lastRequests.Count >= nLastRequestsCount
-            //        && (DateTime.UtcNow - lastRequests.Take(nLastRequestsCount).Min()) < nLastRequestsPeriod)
-            //    {
-            //        //блокируем пользователя на t-период
-            //        await _userManager.SetLockoutEnabledAsync(user.Id, true);
-            //        await
-            //            _userManager.SetLockoutEndDateAsync(user.Id,
-            //                new DateTimeOffset(DateTime.UtcNow.Add(tBlockPeriod)));
+                var nLastRequestsCount = 3; //последние n-запросов
+                var nLastRequestsPeriod = new TimeSpan(0, 60, 0);
+                //период, в котором не должно быть запросов пароля, чтобы не заблокировать пользователя
+                var tBlockPeriod = new TimeSpan(0, 90, 0); //90 min
+                //если последние n-запрос на сброс пароля были менее, в течение nLastRequestsCountPeriod (минут/секунд), то временно заблокировать пользователя на t-период.
+                if (lastRequests.Count >= nLastRequestsCount
+                    && (DateTime.UtcNow - lastRequests.Take(nLastRequestsCount).Min()) < nLastRequestsPeriod)
+                {
+                    //блокируем пользователя на t-период
+                    await _userManager.SetLockoutEnabledAsync(user.Id, true);
+                    await
+                        _userManager.SetLockoutEndDateAsync(user.Id,
+                            new DateTimeOffset(DateTime.UtcNow.Add(tBlockPeriod)));
 
-            //        return View("Error", model: "Ваш пользователь временно заблокирован.");
-            //    }
+                    return View("Error", model: "Ваш пользователь временно заблокирован.");
+                }
 
-            //}
+            }
 
             //фиксируем текущий запрос на сброс пароля
             lastRequests.Add(DateTime.UtcNow);

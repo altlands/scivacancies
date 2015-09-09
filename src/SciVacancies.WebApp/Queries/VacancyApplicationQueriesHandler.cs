@@ -14,7 +14,6 @@ namespace SciVacancies.WebApp.Queries
         IRequestHandler<SelectPagedVacancyApplicationsByResearcherQuery, Page<VacancyApplication>>,
         IRequestHandler<SelectVacancyApplicationsByResearcherQuery, IEnumerable<VacancyApplication>>,
         IRequestHandler<SelectPagedVacancyApplicationsByVacancyQuery, Page<VacancyApplication>>,
-        IRequestHandler<SelectVacancyApplicationAttachmentsQuery, IEnumerable<VacancyApplicationAttachment>>,
         IRequestHandler<SelectAllVacancyApplicationAttachmentsQuery, IEnumerable<VacancyApplicationAttachment>>
     {
         private readonly IDatabase _db;
@@ -64,12 +63,6 @@ namespace SciVacancies.WebApp.Queries
             return vacancyApplications;
         }
 
-        public IEnumerable<VacancyApplicationAttachment> Handle(SelectVacancyApplicationAttachmentsQuery message)
-        {
-            IEnumerable<VacancyApplicationAttachment> vaAttachments = _db.Fetch<VacancyApplicationAttachment>(new Sql($"SELECT * FROM res_vacancyapplication_attachments ra WHERE ra.vacancyapplication_guid = @0", message.VacancyApplicationGuid));
-
-            return vaAttachments;
-        }
         public IEnumerable<VacancyApplicationAttachment> Handle(SelectAllVacancyApplicationAttachmentsQuery message)
         {
             IEnumerable<VacancyApplicationAttachment> vaAttachments = _db.Fetch<VacancyApplicationAttachment>(new Sql($"SELECT * FROM res_vacancyapplication_attachments ra WHERE ra.vacancyapplication_guid = @0", message.VacancyApplicationGuid));

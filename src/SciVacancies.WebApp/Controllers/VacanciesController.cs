@@ -72,6 +72,11 @@ namespace SciVacancies.WebApp.Controllers
                 }
 
                 var vacancyDataModel = Mapper.Map<VacancyDataModel>(model);
+
+                // раскоментировать когда будут прикреплённые файлы для вакансии
+                //присваиваем прикреплённым файлам тип "Прочее" (для соответствущей выборки)
+                //attachmentsList.ForEach(c => c.TypeId = 3);
+
                 var vacancyGuid = _mediator.Send(new CreateVacancyCommand { OrganizationGuid = model.OrganizationGuid, Data = vacancyDataModel });
 
                 var vacancy = _mediator.Send(new SingleVacancyQuery { VacancyGuid = vacancyGuid });
@@ -200,7 +205,7 @@ namespace SciVacancies.WebApp.Controllers
             if (preModel == null)
                 return HttpNotFound(); //throw new ObjectNotFoundException($"Не найдена вакансия с идентификатором: {id}");
 
-            //TODO: вынести однотипную инициализацию в отдульный сервис
+            //TODO: вынести однотипную инициализацию в отдельный сервис
             var model = Mapper.Map<VacancyDetailsViewModel>(preModel);
             model.Winner =
                 Mapper.Map<ResearcherDetailsViewModel>(_mediator.Send(new SingleResearcherQuery { ResearcherGuid = preModel.winner_researcher_guid }));
@@ -209,7 +214,8 @@ namespace SciVacancies.WebApp.Controllers
             model.Criterias = _mediator.Send(new SelectVacancyCriteriasQuery { VacancyGuid = model.Guid });
             model.CriteriasHierarchy =
                     _mediator.Send(new SelectAllCriteriasQuery()).ToList().ToHierarchyCriteriaViewModelList(model.Criterias.ToList());
-            model.Attachments = _mediator.Send(new SelectVacancyAttachmentsQuery { VacancyGuid = model.Guid }).ToList();
+            model.Attachments = _mediator.Send(new SelectAllExceptCommitteeVacancyAttachmentsQuery { VacancyGuid = model.Guid }).ToList();
+            model.AttachmentsCommittee = _mediator.Send(new SelectCommitteeVacancyAttachmentsQuery { VacancyGuid = model.Guid }).ToList();
 
             //TODO: показать отрасль науки, направление исследований
 
@@ -219,6 +225,7 @@ namespace SciVacancies.WebApp.Controllers
         [Authorize(Roles = ConstTerms.RequireRoleOrganizationAdmin)]
         [PageTitle("Подробно о вакансии")]
         [BindOrganizationIdFromClaims]
+        [ValidatePagerParameters]
         public IActionResult Details(Guid id, Guid organizationGuid, int pageSize = 10, int currentPage = 1,
             string sortField = ConstTerms.OrderByFieldApplyDate, string sortDirection = ConstTerms.OrderByDescending)
         {
@@ -262,7 +269,8 @@ namespace SciVacancies.WebApp.Controllers
             model.Criterias = _mediator.Send(new SelectVacancyCriteriasQuery { VacancyGuid = model.Guid });
             model.CriteriasHierarchy =
                     _mediator.Send(new SelectAllCriteriasQuery()).ToList().ToHierarchyCriteriaViewModelList(model.Criterias.ToList());
-            model.Attachments = _mediator.Send(new SelectVacancyAttachmentsQuery {VacancyGuid = model.Guid}).ToList();
+            model.Attachments = _mediator.Send(new SelectAllExceptCommitteeVacancyAttachmentsQuery { VacancyGuid = model.Guid }).ToList();
+            model.AttachmentsCommittee = _mediator.Send(new SelectCommitteeVacancyAttachmentsQuery { VacancyGuid = model.Guid }).ToList();
 
             //TODO: показать отрасль науки, направление исследований
 
@@ -309,7 +317,8 @@ namespace SciVacancies.WebApp.Controllers
             model.Criterias = _mediator.Send(new SelectVacancyCriteriasQuery { VacancyGuid = model.Guid });
             model.CriteriasHierarchy =
                     _mediator.Send(new SelectAllCriteriasQuery()).ToList().ToHierarchyCriteriaViewModelList(model.Criterias.ToList());
-            model.Attachments = _mediator.Send(new SelectVacancyAttachmentsQuery { VacancyGuid = model.Guid }).ToList();
+            model.Attachments = _mediator.Send(new SelectAllExceptCommitteeVacancyAttachmentsQuery { VacancyGuid = model.Guid }).ToList();
+            model.AttachmentsCommittee = _mediator.Send(new SelectCommitteeVacancyAttachmentsQuery { VacancyGuid = model.Guid }).ToList();
 
             //TODO: показать отрасль науки, направление исследований
 
@@ -432,9 +441,9 @@ namespace SciVacancies.WebApp.Controllers
             });
 
             //если нет заявок, то закрыть вакансию
-            if (vacancyApplications.Items.Count(c => c.status == VacancyApplicationStatus.Applied) ==0)
+            if (vacancyApplications.Items.Count(c => c.status == VacancyApplicationStatus.Applied) == 0)
             {
-                _mediator.Send(new CloseVacancyCommand {VacancyGuid = preModel.guid});
+                _mediator.Send(new CloseVacancyCommand { VacancyGuid = preModel.guid });
             }
 
             _mediator.Send(new SwitchVacancyInCommitteeCommand
@@ -481,7 +490,6 @@ namespace SciVacancies.WebApp.Controllers
             return vacancyApplicaiton;
         }
 
-        [PageTitle("Выбор победителя")]
         [BindOrganizationIdFromClaims]
         [Authorize(Roles = ConstTerms.RequireRoleOrganizationAdmin)]
         public IActionResult SetWinner(Guid id, Guid organizationGuid, bool isWinner)
@@ -507,7 +515,6 @@ namespace SciVacancies.WebApp.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [PageTitle("Выбор победителя")]
         [BindOrganizationIdFromClaims]
         [Authorize(Roles = ConstTerms.RequireRoleOrganizationAdmin)]
         public IActionResult SetWinner(VacancyApplicationSetWinnerViewModel model, Guid organizationGuid)
@@ -519,6 +526,10 @@ namespace SciVacancies.WebApp.Controllers
             var result = SetWinnerPreValidation(model.Guid, organizationGuid, out vacancy, model.WinnerIsSetting);
             if (result is HttpNotFoundResult) return (HttpNotFoundResult)result;
             var vacancyApplication = (VacancyApplication)result;
+
+            if (model.WinnerIsSetting)
+                if (string.IsNullOrWhiteSpace(model.Reason) && (model.Attachments == null || !model.Attachments.Any()))
+                    ModelState.AddModelError("Reason", "Укажите обоснование решения либо прикрепите протоколы решения комиссии");
 
             if (!ModelState.IsValid)
             {
@@ -587,6 +598,9 @@ namespace SciVacancies.WebApp.Controllers
                     //}
 
                 }
+
+                //присваиваем прикреплённым файлам тип "Решение комиссии" (для соответствущей выборки)
+                attachmentsList.ForEach(c => c.TypeId = 1);
             }
             #endregion
 
@@ -610,7 +624,7 @@ namespace SciVacancies.WebApp.Controllers
 
             return RedirectToAction("preview", "applications", new { id = model.Guid });
         }
-        
+
         private object VacancyClosePrevalidation(Guid id, Guid organizationGuid)
         {
             if (id == Guid.Empty)
@@ -765,6 +779,7 @@ namespace SciVacancies.WebApp.Controllers
         [Authorize(Roles = ConstTerms.RequireRoleOrganizationAdmin)]
         [PageTitle("Подробно о вакансии")]
         [BindOrganizationIdFromClaims]
+        [ValidatePagerParameters]
         public IActionResult Print(Guid id, Guid organizationGuid, int pageSize = 10, int currentPage = 1)
         {
             if (id == Guid.Empty)
@@ -784,6 +799,7 @@ namespace SciVacancies.WebApp.Controllers
             if (organizationGuid != model.OrganizationGuid)
                 return View("Error", "Вы не можете просматривать детальную информацию о Вакансиях других организаций");
 
+            //TODO: оптимизировать запрос и его обработку.
             var page = _mediator.Send(new SelectPagedVacancyApplicationsByVacancyQuery
             {
                 PageSize = pageSize,

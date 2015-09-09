@@ -12,7 +12,7 @@ using SciVacancies.WebApp.ViewModels;
 
 namespace SciVacancies.WebApp.Controllers
 {
-        [ResponseCache(NoStore = true)]
+    [ResponseCache(NoStore = true)]
     [Authorize(Roles = ConstTerms.RequireRoleOrganizationAdmin)]
     public class OrganizationsController : Controller
     {
@@ -25,6 +25,7 @@ namespace SciVacancies.WebApp.Controllers
 
         [AllowAnonymous]
         [PageTitle("Карточка организации")]
+        [ValidatePagerParameters]
         public IActionResult Card(Guid id, int pageSize = 10, int currentPage = 1)
         {
             if (id == Guid.Empty)
@@ -67,13 +68,14 @@ namespace SciVacancies.WebApp.Controllers
         [SiblingPage]
         [PageTitle("Вакансии")]
         [BindOrganizationIdFromClaims]
-        public ViewResult Vacancies(Guid organizationGuid, int pageSize = 10, int currentPage = 1, 
+        [ValidatePagerParameters]
+        public ViewResult Vacancies(Guid organizationGuid, int pageSize = 10, int currentPage = 1,
             string sortField = ConstTerms.OrderByFieldPublishDate, string sortDirection = ConstTerms.OrderByDescending)
         {
             if (organizationGuid == Guid.Empty)
                 throw new ArgumentNullException(nameof(organizationGuid));
 
-            var preModel = _mediator.Send(new SingleOrganizationQuery {OrganizationGuid = organizationGuid});
+            var preModel = _mediator.Send(new SingleOrganizationQuery { OrganizationGuid = organizationGuid });
 
             var model = new VacanciesInOrganizationIndexViewModel
             {
@@ -95,6 +97,7 @@ namespace SciVacancies.WebApp.Controllers
         [PageTitle("Закрытые вакансии")]
         [SiblingPage]
         [BindOrganizationIdFromClaims]
+        [ValidatePagerParameters]
         public ViewResult Closed(Guid organizationGuid, int pageSize = 10, int currentPage = 1,
             string sortField = ConstTerms.OrderByFieldClosedDate, string sortDirection = ConstTerms.OrderByDescending)
         {
@@ -105,7 +108,9 @@ namespace SciVacancies.WebApp.Controllers
 
             var model = new VacanciesInOrganizationIndexViewModel
             {
-                PagedVacancies = _mediator.Send(new SelectPagedClosedVacanciesByOrganizationQuery { OrganizationGuid = organizationGuid,
+                PagedVacancies = _mediator.Send(new SelectPagedClosedVacanciesByOrganizationQuery
+                {
+                    OrganizationGuid = organizationGuid,
                     PageSize = pageSize,
                     PageIndex = currentPage,
                     OrderBy = new SortFilterHelper().GetSortField<Vacancy>(sortField),
@@ -119,6 +124,7 @@ namespace SciVacancies.WebApp.Controllers
         [SiblingPage]
         [PageTitle("Уведомления")]
         [BindOrganizationIdFromClaims]
+        [ValidatePagerParameters]
         public ViewResult Notifications(Guid organizationGuid, int pageSize = 10, int currentPage = 1,
             string sortField = ConstTerms.OrderByFieldCreationDate, string sortDirection = ConstTerms.OrderByDescending)
         {

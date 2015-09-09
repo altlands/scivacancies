@@ -25,11 +25,6 @@ namespace SciVacancies.WebApp.Commands
             Guid vacancyApplicationGuid = researcher.CreateVacancyApplicationTemplate(msg.VacancyGuid, msg.Data);
             _repository.Save(researcher, Guid.NewGuid(), null);
 
-            //TODO: вынести в отдельный VacancyCreatedEventHandler
-            ////send email notification
-            //var vacancyStatusChangedSmtpNotificator = new VacancyStatusChangedSmtpNotificator();
-            //vacancyStatusChangedSmtpNotificator.Send(msg.Data.FullName, message.Data.UserName, message.Data.Password, message.Data.Email);
-
             return vacancyApplicationGuid;
         }
     }

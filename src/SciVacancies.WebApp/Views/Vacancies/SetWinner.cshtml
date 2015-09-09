@@ -15,7 +15,7 @@
     @ViewBag.Title
 </div>
 
-<h3>Выбор победителем </h3>
+<h3>Выбор @(Model.WinnerIsSetting ? "победителя":"претендента") </h3>
 
 <div>
     заявки: <a asp-controller="applications" asp-action="preview" asp-route-id="@Model.Guid">@Model.FullName</a>
@@ -26,7 +26,7 @@
 
 <div class="content-slide">
 
-    <form class="table-form" asp-controller="vacancies" asp-action="setwinner"  enctype="multipart/form-data">
+    <form class="table-form" asp-controller="vacancies" asp-action="setwinner" enctype="multipart/form-data">
 
         <input type="hidden" asp-anti-forgery="true" />
         <input type="hidden" asp-for="Guid" />
@@ -61,18 +61,18 @@
             </div>
         </div>
 
-        <div class="table-row form-row mt18">
-            <div class="left-cell">
-                <label>Обоснование:</label>
-            </div>
-            <div class="right-cell">
-                <textarea asp-for="Reason" required=""></textarea>
-            </div>
-        </div>
-
         @if (Model.WinnerIsSetting)
         {
             <text>
+            <div class="table-row form-row mt18">
+                <div class="left-cell">
+                    <label>Обоснование:</label>
+                </div>
+                <div class="right-cell">
+                    <textarea asp-for="Reason" required=""></textarea>
+                </div>
+            </div>
+
             <div class="table-row form-row mt14">
                 <div class="left-cell">
                     <label>Приложенные файлы:</label>
@@ -83,8 +83,8 @@
                         <ul class="content-list">
 
                             <li style="@invisibleItemStyle" class="property-list-item" data-list-template="true">
-                                <input type="hidden" name="Attachments.Index" value="0"/>
-                                <input type="file" id="Attachments##0##" name="Attachments"/>
+                                <input type="hidden" name="Attachments.Index" value="0" />
+                                <input type="file" id="Attachments##0##" name="Attachments" />
                                 <div class="buttons">
                                     <span class="big-link-remove" onclick="return removeItemFromList(this);"></span>
                                 </div>

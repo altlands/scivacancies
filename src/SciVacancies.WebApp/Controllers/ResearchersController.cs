@@ -245,6 +245,7 @@ namespace SciVacancies.WebApp.Controllers
         [SiblingPage]
         [PageTitle("Мои заявки")]
         [BindResearcherIdFromClaims]
+        [ValidatePagerParameters]
         public ViewResult Applications(Guid researcherGuid, int pageSize = 10, int currentPage = 1,
             string sortField = ConstTerms.OrderByFieldApplyDate, string sortDirection = ConstTerms.OrderByDescending)
         {
@@ -286,6 +287,7 @@ namespace SciVacancies.WebApp.Controllers
         [SiblingPage]
         [PageTitle("Избранные вакансии")]
         [BindResearcherIdFromClaims]
+        [ValidatePagerParameters]
         public ActionResult Favorities(Guid researcherGuid, int pageSize = 10, int currentPage = 1, string sortField = ConstTerms.OrderByFieldPublishDate, string sortDirection = ConstTerms.OrderByDescending)
         {
             if (researcherGuid == Guid.Empty)
@@ -309,6 +311,7 @@ namespace SciVacancies.WebApp.Controllers
         [SiblingPage]
         [PageTitle("Подписки")]
         [BindResearcherIdFromClaims]
+        [ValidatePagerParameters]
         public ViewResult Subscriptions(Guid researcherGuid, int pageSize = 10, int currentPage = 1)
         {
             var model = new SearchSubscriptionsInResearcherIndexViewModel
@@ -328,6 +331,7 @@ namespace SciVacancies.WebApp.Controllers
         [SiblingPage]
         [PageTitle("Уведомления")]
         [BindResearcherIdFromClaims]
+        [ValidatePagerParameters]
         public ViewResult Notifications(Guid researcherGuid, int pageSize = 10, int currentPage = 1,
             string sortField = ConstTerms.OrderByFieldCreationDate, string sortDirection = ConstTerms.OrderByDescending)
         {

@@ -38,11 +38,6 @@ namespace SciVacancies.WebApp.Queries
 
         //TODO - добавить фильтр по колонкам
     }
-    [Obsolete("Use SelectAllVacancyApplicationAttachmentsQuery instead")]
-    public class SelectVacancyApplicationAttachmentsQuery : IRequest<IEnumerable<VacancyApplicationAttachment>>
-    {
-        public Guid VacancyApplicationGuid { get; set; }
-    }
     public class SelectAllVacancyApplicationAttachmentsQuery : IRequest<IEnumerable<VacancyApplicationAttachment>>
     {
         public Guid VacancyApplicationGuid { get; set; }

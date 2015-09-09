@@ -21,11 +21,21 @@
             <span class="int-name">@Model.Researcher.FullNameEng</span>
             <span class="block bold">Год рождения: @Model.Researcher.BirthDate.ToLocalVacancyDateString()</span>
             <span class="block"><span class="bold">Индивидуальный номер ученого:</span> 00005444</span>
-            @*<span class="block">
-                    <span class="bold">Научные интересы (Государственный рубрикатор научно-технической информации):</span>
-                    <span>Автоматизация и автоматизированные системы в области науковедения; Библиотечное дело, библиотековедение; Информационная деятельность в области науковедения...</span>
+            <span class="block">
+                <span class="bold">Научные интересы (Государственный рубрикатор научно-технической информации):</span>
+                <span>
+                    @if (Model.Researcher.Interests != null)
+                    {
+                        foreach (var item in Model.Researcher.Interests)
+                        {
+                            <text>
+                            @item.IntName (En: @item.IntNameEn);
+                            </text>
+                        }
+                    }
                 </span>
-                <span class="small-icon icon-sm-eye"><span>Показать все (23)</span></span>*@
+            </span>
+            @*<span class="small-icon icon-sm-eye"><span>Показать все (23)</span></span>*@
         </div>
     </div>
     <div class="list-info">
