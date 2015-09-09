@@ -77,6 +77,7 @@ namespace SciVacancies.WebApp
             builder.RegisterModule(new EventHandlersModule());
             builder.RegisterModule(new ReadModelModule(Configuration));
             builder.RegisterModule(new ServicesModule(Configuration));
+            //builder.RegisterModule(new QuartzModule());
             builder.RegisterModule(new IdentityModule());
         }
 

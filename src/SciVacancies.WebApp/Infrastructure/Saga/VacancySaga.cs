@@ -9,13 +9,78 @@ using SciVacancies.Domain.Events;
 
 namespace SciVacancies.WebApp.Infrastructure.Saga
 {
+    public class VacancySagaActivator :
+        INotificationHandler<VacancyPublished>,
+        INotificationHandler<VacancySagaTimeout>
+    {
+        readonly ISagaRepository _repository;
+
+        public VacancySagaActivator(ISagaRepository repository)
+        {
+            _repository = repository;
+        }
+        public void Handle(VacancyPublished msg)
+        {
+
+        }
+        public void Handle(VacancySagaTimeout msg)
+        {
+            VacancySaga saga = _repository.GetById<VacancySaga>("", msg.SagaGuid.ToString());
+
+            switch (saga.State)
+            {
+                case VacancyStatus.Published:
+                    if (saga.InCommitteeStartDate < DateTime.UtcNow)
+                    {
+                        saga.Transition<VacancySagaSwitchedInCommittee>(new VacancySagaSwitchedInCommittee { SagaGuid = Guid.Parse(saga.Id) });
+                    }
+                    break;
+                case VacancyStatus.InCommittee:
+                    //if(saga.OfferResponseStartDate)
+                    break;
+                case VacancyStatus.OfferResponseAwaiting:
+
+                    break;
+                case VacancyStatus.OfferAccepted:
+
+                    break;
+                case VacancyStatus.OfferRejected:
+
+                    break;
+            }
+        }
+    }
+
     public class VacancySaga : SagaBase
     {
+        public Guid VacancyGuid { get; set; }
+
         public DateTime PublishStartDate { get; set; }
-        public DateTime InComitteeStartDate { get; set; }
+        public DateTime PublishEndDate { get; set; }
+        public DateTime InCommitteeStartDate { get; set; }
+        public DateTime InCommitteeEndDate { get; set; }
         public DateTime OfferResponseStartDate { get; set; }
+        public DateTime OfferResponseEndDate { get; set; }
         public DateTime ClosedDate { get; set; }
+
         public VacancyStatus State { get; set; }
+
+        public void Handle(VacancyCreated msg)
+        {
+
+        }
+        public void Handle(VacancyCancelled msg)
+        {
+
+        }
+        public void Handle(VacancyClosed msg)
+        {
+
+        }
+        public void Handle(VacancySagaTimeout msg)
+        {
+            //var saga = _repository.GetById<VacancySaga>("", "");
+        }
 
         public void Handle(VacancyApplicationCreated notification)
         {
@@ -37,7 +102,7 @@ namespace SciVacancies.WebApp.Infrastructure.Saga
             switch (this.State)
             {
                 case VacancyStatus.Published:
-                    if (this.InComitteeStartDate < DateTime.UtcNow)
+                    if (this.InCommitteeStartDate < DateTime.UtcNow)
                     {
 
                     }
