@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using SciVacancies.ReadModel.Core;
-using SciVacancies.SmtpNotificationsHandlers;
 
 namespace SciVacancies.Services.SmtpNotificators
 {

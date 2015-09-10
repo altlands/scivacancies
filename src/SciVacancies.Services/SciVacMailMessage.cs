@@ -1,10 +1,10 @@
 ﻿using System.Net.Mail;
 
-namespace SciVacancies.SmtpNotificationsHandlers
+namespace SciVacancies.Services
 {
     public class SciVacMailMessage : MailMessage
     {
-        public SciVacMailMessage(string mailTo, string subject,string body) : base(from: new MailAddress("mailer@alt-lan.com"), to: new MailAddress(mailTo))
+        public SciVacMailMessage(string mailTo, string subject,string body) : base(@from: new MailAddress("mailer@alt-lan.com"), to: new MailAddress(mailTo))
         {
             Subject = subject;
             IsBodyHtml = true;
