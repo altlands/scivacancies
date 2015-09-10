@@ -3,16 +3,16 @@ using System.Net.Mail;
 using SciVacancies.SmtpNotifications;
 using SciVacancies.SmtpNotifications.Vendors;
 
-namespace SciVacancies.SmtpNotificationsHandlers.SmtpNotificators
+namespace SciVacancies.Services
 {
-    public class SmtpNotificator
+    public class SmtpNotificatorService: ISmtpNotificatorService
     {
         private readonly SmtpEmailService _smtpEmailService;
         //protected string Domain = "localhost:59075";
-        protected string Domain = "scivac.test.alt-lan.com";
+        public string Domain { get; } = "scivac.test.alt-lan.com";
 
 
-        public SmtpNotificator()
+        public SmtpNotificatorService()
         {
             var p1 = "mailer@alt-lan.com";
             var p2 = "123456-mailer";
@@ -26,10 +26,16 @@ namespace SciVacancies.SmtpNotificationsHandlers.SmtpNotificators
             //_smtpEmailService = new OutlookEmailService(p1, p2);
         }
 
-        protected void Send(MailMessage mailMessage)
+        public void Send(MailMessage mailMessage)
         {
             _smtpEmailService.SendEmail(mailMessage);
         }
 
+    }
+
+    public interface ISmtpNotificatorService
+    {
+        void Send(MailMessage mailMessage);
+        string Domain { get; }
     }
 }

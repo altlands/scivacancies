@@ -13,18 +13,19 @@ using Npgsql;
 using SciVacancies.WebApp.Engine;
 using SciVacancies.ReadModel.ElasticSearchModel.Model;
 using Microsoft.Framework.ConfigurationModel;
-using SciVacancies.SmtpNotificationsHandlers.SmtpNotificators;
+using SciVacancies.Services.SmtpNotificators;
 
 namespace SciVacancies.WebApp.Infrastructure
 {
     public static class SearchSubscriptionService
     {
         private static readonly IConfiguration _configuration;
+        private static ISmtpNotificatorSearchSubscriptionService _smtpNotificatorSearchSubscriptionService;
 
-        public static void Initialize(IConfiguration configuration)
+        public static void Initialize(IConfiguration configuration, ISmtpNotificatorSearchSubscriptionService smtpNotificatorSearchSubscriptionService)
         {
             //_configuration = configuration;
-
+            _smtpNotificatorSearchSubscriptionService = smtpNotificatorSearchSubscriptionService;
             int HourRun = 16;
             int MinuteRun = 00;
             int HourInterval = 10;
@@ -65,8 +66,6 @@ namespace SciVacancies.WebApp.Infrastructure
                 var elasticClient = new ElasticClient(new ConnectionSettings(new Uri("http://localhost:9200/"), defaultIndex: "scivacancies"));
                 IEnumerable<SciVacancies.ReadModel.Core.SearchSubscription> searchsubscriptions = dataBase.Fetch<SciVacancies.ReadModel.Core.SearchSubscription>(new Sql($"SELECT * FROM res_searchsubscriptions ss WHERE ss.status = @0", SearchSubscriptionStatus.Active));
 
-                var searchSubscriptionSmtpNotificator = new SmtpNotificatorSearchSubscription();
-                
                 foreach (SciVacancies.ReadModel.Core.SearchSubscription searchSubscription in searchsubscriptions)
                 {
                     var searchQuery = new SearchQuery
@@ -95,7 +94,7 @@ namespace SciVacancies.WebApp.Infrastructure
                         }
 
                         var researcher = dataBase.SingleOrDefaultById<SciVacancies.ReadModel.Core.Researcher>(searchSubscription.researcher_guid);
-                        searchSubscriptionSmtpNotificator.Send(searchSubscription,researcher, vacanciesList);
+                        _smtpNotificatorSearchSubscriptionService.Notify(searchSubscription,researcher, vacanciesList);
 
                     }
                 }

@@ -7,7 +7,7 @@ using MediatR;
 using NPoco;
 using SciVacancies.Domain.Events;
 using SciVacancies.ReadModel.Core;
-using SciVacancies.SmtpNotificationsHandlers.SmtpNotificators;
+using SciVacancies.Services.SmtpNotificators;
 
 namespace SciVacancies.SmtpNotificationsHandlers.Handlers
 {
@@ -23,12 +23,12 @@ namespace SciVacancies.SmtpNotificationsHandlers.Handlers
         INotificationHandler<VacancyCancelled>
     {
         private readonly IDatabase _db;
+        private readonly ISmtpNotificatorVacancyService _smtpNotificatorVacancyService;
 
-        public VacancyEventsHandler(IDatabase db)
+        public VacancyEventsHandler(IDatabase db, ISmtpNotificatorVacancyService smtpNotificatorVacancyService)
         {
             _db = db;
-
-
+            _smtpNotificatorVacancyService = smtpNotificatorVacancyService;
         }
         public void Handle(VacancyPublished msg)
         {
@@ -83,9 +83,8 @@ namespace SciVacancies.SmtpNotificationsHandlers.Handlers
                     researcherGuids));
             if (!researchers.Any()) return;
 
-            var smtpNotificatorVacancyStatusChangedForResearcher = new SmtpNotificatorVacancyStatusChangedForResearcher();
             foreach (var researcher in researchers)
-                smtpNotificatorVacancyStatusChangedForResearcher.Send(vacancy, researcher);
+                _smtpNotificatorVacancyService.SendVacancyStatusChangedForResearcher(vacancy, researcher);
         }
 
 
@@ -96,7 +95,7 @@ namespace SciVacancies.SmtpNotificationsHandlers.Handlers
             var organization =
                 _db.SingleOrDefaultById<Organization>(vacancy.organization_guid);
 
-            new SmtpNotificatorVacancyStatusChangedForOrganization().Send(vacancy, organization);
+            _smtpNotificatorVacancyService.SendVacancyStatusChangedForOrganization(vacancy, organization);
         }
 
 

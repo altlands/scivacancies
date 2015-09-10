@@ -1,7 +1,7 @@
 ﻿using MediatR;
 using NPoco;
 using SciVacancies.Domain.Events;
-using SciVacancies.SmtpNotificationsHandlers.SmtpNotificators;
+using SciVacancies.Services.SmtpNotificators;
 
 namespace SciVacancies.SmtpNotificationsHandlers.Handlers
 {
@@ -9,10 +9,12 @@ namespace SciVacancies.SmtpNotificationsHandlers.Handlers
         INotificationHandler<ResearcherCreated>
     {
         private readonly IDatabase _db;
+        private readonly ISmtpNotificatorAccountService _smtpNotificatorAccountService;
 
-        public ResearcherEventsHandler(IDatabase db)
+        public ResearcherEventsHandler(IDatabase db, ISmtpNotificatorAccountService smtpNotificatorAccountService)
         {
             _db = db;
+            _smtpNotificatorAccountService = smtpNotificatorAccountService;
         }
 
         public void Handle(ResearcherCreated msg)
@@ -21,8 +23,7 @@ namespace SciVacancies.SmtpNotificationsHandlers.Handlers
             //if (researcher == null) return;
 
             //send email notification
-            //new SmtpNotificatorUserRegistered().Send(msg.Data.FullName, msg.Data.Email, msg.Data.ExtraEmail);
-            new SmtpNotificatorUserRegistered().Send(msg.Data.FullName, msg.Data.Email);
+            _smtpNotificatorAccountService.SendUserRegistered(msg.Data.FullName, msg.Data.Email);
         }
     }
 }

@@ -18,7 +18,6 @@ using SciVacancies.WebApp.Models.OAuth;
 using Microsoft.Framework.OptionsModel;
 using AutoMapper;
 using Microsoft.AspNet.Authorization;
-using SciVacancies.SmtpNotificationsHandlers.SmtpNotificators;
 using SciVacancies.WebApp.Engine;
 using SciVacancies.WebApp.Infrastructure;
 using SciVacancies.WebApp.Infrastructure.WebAuthorize;
@@ -34,15 +33,13 @@ namespace SciVacancies.WebApp.Controllers
         private readonly SciVacUserManager _userManager;
         private readonly IOptions<OAuthSettings> _oauthSettings;
         private readonly IAuthorizeService _authorizeService;
-        private readonly IRecoveryPasswordService _recoveryPasswordService;
 
-        public AccountController(SciVacUserManager userManager, IMediator mediator, IOptions<OAuthSettings> oAuthSettings, IAuthorizeService authorizeService, IRecoveryPasswordService recoveryPasswordService)
+        public AccountController(SciVacUserManager userManager, IMediator mediator, IOptions<OAuthSettings> oAuthSettings, IAuthorizeService authorizeService)
         {
             _mediator = mediator;
             _userManager = userManager;
             _oauthSettings = oAuthSettings;
             _authorizeService = authorizeService;
-            _recoveryPasswordService = recoveryPasswordService;
         }
 
         public IActionResult LoginUser(string id)
@@ -206,7 +203,6 @@ namespace SciVacancies.WebApp.Controllers
         //Сюда редиректит после OAuth авторизации
         public async Task<ActionResult> Callback()
         {
-            _authorizeService.Initialize(Request, Response);
             Tuple<AuthorizeUserTypes, AuthorizeResourceTypes> authorizationCookies = GetAuthorizationCookies();
             ClaimsPrincipal claimsPrincipal = null;
             switch (authorizationCookies.Item1)

@@ -2,7 +2,7 @@
 using NPoco;
 using SciVacancies.Domain.Events;
 using SciVacancies.ReadModel.Core;
-using SciVacancies.SmtpNotificationsHandlers.SmtpNotificators;
+using SciVacancies.Services.SmtpNotificators;
 
 namespace SciVacancies.SmtpNotificationsHandlers.Handlers
 {
@@ -10,10 +10,12 @@ namespace SciVacancies.SmtpNotificationsHandlers.Handlers
         INotificationHandler<VacancyApplicationApplied>
     {
         private readonly IDatabase _db;
+        private readonly ISmtpNotificatorVacancyService _smtpNotificatorVacancyService;
 
-        public VacancyApplicationEventsHandler(IDatabase db)
+        public VacancyApplicationEventsHandler(IDatabase db, ISmtpNotificatorVacancyService smtpNotificatorVacancyService)
         {
             _db = db;
+            _smtpNotificatorVacancyService = smtpNotificatorVacancyService;
         }
 
         public void Handle(VacancyApplicationApplied msg)
@@ -27,8 +29,8 @@ namespace SciVacancies.SmtpNotificationsHandlers.Handlers
             var organization = _db.SingleOrDefaultById<Organization>(vacancy.organization_guid);
             if (organization == null) return;
 
-            new SmtpNotificatorVacancyApplicationAppliedForOrganization().Send(organization, vacancy, vacancyapplication);
-            new SmtpNotificatorVacancyApplicationAppliedForResearcher().Send(researcher, vacancy, vacancyapplication);
+            _smtpNotificatorVacancyService.SendVacancyApplicationAppliedForOrganization(organization, vacancy, vacancyapplication);
+            _smtpNotificatorVacancyService.SendVacancyApplicationAppliedForResearcher(researcher, vacancy, vacancyapplication);
         }
 
 
