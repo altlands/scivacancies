@@ -40,6 +40,7 @@
         "SciVacancies.SmtpNotifications": "1.0.0-*",
         "SciVacancies.SmtpNotificationsHandlers": "1.0.0-*",
         "SciVacancies.Captcha": "1.0.0-*",
+        "SciVacancies.Services": "1.0.0-*",
         "NEST": "1.5.1",
         "SciVacancies.ReadModel.ElasticSearchModel": "1.0.0-*",
         "FluentValidation": "5.6.2",
