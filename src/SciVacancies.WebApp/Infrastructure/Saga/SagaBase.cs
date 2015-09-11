@@ -29,6 +29,7 @@ namespace SciVacancies.WebApp.Infrastructure.Saga
         public SagaBase()
         {
             //TODO КОСТЫЛЬ
+            this.Id = Guid.NewGuid();
             Type type = this.GetType();
             var methods = type.GetMethods();
             foreach (var method in methods)

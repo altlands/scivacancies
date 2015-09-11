@@ -155,7 +155,7 @@ namespace SciVacancies.WebApp.Infrastructure.Saga
             }
             catch (StorageException e)
             {
-                throw new PersistenceException(e.Message, e);
+                throw new CommonDomain.Persistence.PersistenceException(e.Message, e);
             }
             catch (Exception e)
             {
