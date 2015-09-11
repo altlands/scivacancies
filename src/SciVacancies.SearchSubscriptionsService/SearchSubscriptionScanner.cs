@@ -4,14 +4,13 @@ using Npgsql;
 using NPoco;
 using Quartz;
 using SciVacancies.Domain.Enums;
-using SciVacancies.SmtpNotifications;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
-using System.Threading.Tasks;
 using SciVacancies.ReadModel.Core;
+using SciVacancies.Services.SmtpNotificators;
+using Vacancy = SciVacancies.ReadModel.ElasticSearchModel.Model.Vacancy;
 
 namespace SciVacancies.SearchSubscriptionsService
 {
@@ -22,11 +21,13 @@ namespace SciVacancies.SearchSubscriptionsService
     {
         private readonly ManualResetEvent _doneEvent;
         private readonly IEnumerable<SearchSubscription> _subscriptionQueue;
+        private readonly ISmtpNotificatorSearchSubscriptionService _smtpNotificatorSearchSubscriptionService;
 
-        public SearchSubscriptionScanner(ManualResetEvent doneEvent, IEnumerable<SearchSubscription> subscriptionQueue)
+        public SearchSubscriptionScanner(ManualResetEvent doneEvent, IEnumerable<SearchSubscription> subscriptionQueue, ISmtpNotificatorSearchSubscriptionService smtpNotificatorSearchSubscriptionService)
         {
             _doneEvent = doneEvent;
             _subscriptionQueue = subscriptionQueue;
+            _smtpNotificatorSearchSubscriptionService = smtpNotificatorSearchSubscriptionService;
         }
 
         /// <summary>
@@ -57,22 +58,22 @@ namespace SciVacancies.SearchSubscriptionsService
                     VacancyStatuses = JsonConvert.DeserializeObject<IEnumerable<VacancyStatus>>(searchSubscription.vacancy_statuses)
                 };
 
-                Func<SearchQuery, SearchDescriptor<SciVacancies.ReadModel.ElasticSearchModel.Model.Vacancy>> searchSelector = VacancySearchDescriptor;
+                Func<SearchQuery, SearchDescriptor<Vacancy>> searchSelector = VacancySearchDescriptor;
 
                 var searchResults = elasticClient.Search<Vacancy>(searchSelector(searchQuery));
                 var vacanciesList = searchResults.Documents.ToList();
 
                 if (vacanciesList.Count > 0)
                 {
-                //    using (var transaction = dataBase.GetTransaction())
-                //    {
-                //        dataBase.Execute(new Sql("UPDATE res_searchsubscriptions SET currenttotal_count = @0, currentcheck_date = @1, lasttotal_count = @2, lastcheck_date = @3 WHERE guid = @4", vacanciesList.Count, DateTime.UtcNow, searchSubscription.currenttotal_count, searchSubscription.currentcheck_date, searchSubscription.guid));
-                //        transaction.Complete();
-                //    }
+                    //    using (var transaction = dataBase.GetTransaction())
+                    //    {
+                    //        dataBase.Execute(new Sql("UPDATE res_searchsubscriptions SET currenttotal_count = @0, currentcheck_date = @1, lasttotal_count = @2, lastcheck_date = @3 WHERE guid = @4", vacanciesList.Count, DateTime.UtcNow, searchSubscription.currenttotal_count, searchSubscription.currentcheck_date, searchSubscription.guid));
+                    //        transaction.Complete();
+                    //    }
 
-                //    var researcher = dataBase.SingleOrDefaultById<SciVacancies.ReadModel.Core.Researcher>(searchSubscription.researcher_guid);
-                //    winnerSetSmtpNotificator.Send(searchSubscription, researcher, vacanciesList);
-
+                    //    var researcher = dataBase.SingleOrDefaultById<SciVacancies.ReadModel.Core.Researcher>(searchSubscription.researcher_guid);
+                    //    winnerSetSmtpNotificator.Send(searchSubscription, researcher, vacanciesList);
+                    _smtpNotificatorSearchSubscriptionService.Notify(searchSubscription, new Researcher(), vacanciesList);
                 }
             }
 
@@ -82,9 +83,9 @@ namespace SciVacancies.SearchSubscriptionsService
 
         #region QueryContainers
 
-        public SearchDescriptor<SciVacancies.ReadModel.ElasticSearchModel.Model.Vacancy> VacancySearchDescriptor(SearchQuery sq)
+        public SearchDescriptor<Vacancy> VacancySearchDescriptor(SearchQuery sq)
         {
-            var sdescriptor = new SearchDescriptor<SciVacancies.ReadModel.ElasticSearchModel.Model.Vacancy>();
+            var sdescriptor = new SearchDescriptor<Vacancy>();
 
             if (sq.PageSize.HasValue && sq.CurrentPage.HasValue &&
                 sq.PageSize.Value != 0 && sq.CurrentPage.Value != 0)
@@ -104,7 +105,7 @@ namespace SciVacancies.SearchSubscriptionsService
         public QueryContainer VacancyQueryContainer(SearchQuery sq)
         {
 
-            var queryContainer = Query<SciVacancies.ReadModel.ElasticSearchModel.Model.Vacancy>.Filtered(fltd => fltd
+            var queryContainer = Query<Vacancy>.Filtered(fltd => fltd
                      .Query(q => q
                          .FuzzyLikeThis(flt => flt
                              .LikeText(sq.Query)
