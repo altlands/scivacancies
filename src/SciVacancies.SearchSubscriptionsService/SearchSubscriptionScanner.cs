@@ -23,7 +23,7 @@ namespace SciVacancies.SearchSubscriptionsService
         private readonly IEnumerable<SearchSubscription> _subscriptionQueue;
         private readonly ISmtpNotificatorSearchSubscriptionService _smtpNotificatorSearchSubscriptionService;
 
-        public SearchSubscriptionScanner(ManualResetEvent doneEvent, IEnumerable<SearchSubscription> subscriptionQueue, ISmtpNotificatorSearchSubscriptionService smtpNotificatorSearchSubscriptionService)
+        public SearchSubscriptionScanner(ManualResetEvent doneEvent, ISmtpNotificatorSearchSubscriptionService smtpNotificatorSearchSubscriptionService, IEnumerable<SearchSubscription> subscriptionQueue)
         {
             _doneEvent = doneEvent;
             _subscriptionQueue = subscriptionQueue;

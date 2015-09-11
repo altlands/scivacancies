@@ -11,6 +11,7 @@ using NPoco;
 using Npgsql;
 using Newtonsoft.Json;
 using SciVacancies.Domain.Enums;
+using SciVacancies.Services.SmtpNotificators;
 
 namespace SciVacancies.SearchSubscriptionsService.Jobs
 {
@@ -22,13 +23,15 @@ namespace SciVacancies.SearchSubscriptionsService.Jobs
         readonly IEmailService _emailService;
         //readonly IElasticService _elasticService;
         readonly IDatabase _db;
+        private readonly ISmtpNotificatorSearchSubscriptionService _smtpNotificatorSearchSubscriptionService;
 
         //TODO
-        public SearchSubscriptionJob(IEmailService emailService, IDatabase db)
+        public SearchSubscriptionJob(IEmailService emailService, IDatabase db, ISmtpNotificatorSearchSubscriptionService smtpNotificatorSearchSubscriptionService)
         {
             _emailService = emailService;
             //_elasticService = elasticService;
             _db = db;
+            _smtpNotificatorSearchSubscriptionService = smtpNotificatorSearchSubscriptionService;
         }
 
         /// <summary>
@@ -55,7 +58,7 @@ namespace SciVacancies.SearchSubscriptionsService.Jobs
             while (subscriptionQueue.Skip(threadSize * i).Take(threadSize).Any())
             {
                 manualResetEventsArray[i] = new ManualResetEvent(false);
-                searchSubscriptionScannerArray[i] = new SearchSubscriptionScanner(manualResetEventsArray[i], subscriptionQueue.Skip(threadSize * i).Take(threadSize));
+                searchSubscriptionScannerArray[i] = new SearchSubscriptionScanner(manualResetEventsArray[i],_smtpNotificatorSearchSubscriptionService, subscriptionQueue.Skip(threadSize * i).Take(threadSize));
                 //todo ntemnikov parallel linq
                 ThreadPool.QueueUserWorkItem(searchSubscriptionScannerArray[i].PoolHandleSubscriptions);
                 manualResetEventsArray[i].Set();
