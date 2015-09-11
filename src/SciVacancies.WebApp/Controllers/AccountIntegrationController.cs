@@ -52,7 +52,6 @@ namespace SciVacancies.WebApp.Controllers
         public async Task<ViewResult> UpdateResearcherAccountFromOutside(Guid researcherGuid)
         {
             var model = new ResearcherProfileCompareModel();
-            _authorizeService.Initialize(Request, Response);
 
             if (User.Claims.SingleOrDefault(c => c.Type.Equals("access_token")) == null)
             {

@@ -82,6 +82,7 @@ namespace SciVacancies.WebApp
             builder.RegisterModule(new ServicesModule(Configuration));
             builder.RegisterModule(new QuartzModule());
             builder.RegisterModule(new IdentityModule());
+            builder.RegisterModule(new SmtpNotificationModule());
         }
 
         // Configure is called after ConfigureServices is called.

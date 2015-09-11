@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Autofac;
+using SciVacancies.Services.SmtpNotificators;
 using Topshelf;
 
 namespace SciVacancies.SearchSubscriptionsService

@@ -7,6 +7,7 @@ using Quartz;
 using Quartz.Impl;
 using Quartz.Spi;
 using Quartz.Core;
+using SciVacancies.SearchSubscriptionsService.Jobs;
 
 namespace SciVacancies.SearchSubscriptionsService
 {

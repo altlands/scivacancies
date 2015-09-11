@@ -16,6 +16,7 @@
         "Topshelf": "3.2.0",
         "Topshelf.Linux": "1.0.12.11",
         "SciVacancies.SmtpNotifications": "1.0.0-*",
+        "SciVacancies.Services": "1.0.0-*",
         "Autofac": "4.0.0-alpha2"
     },
 

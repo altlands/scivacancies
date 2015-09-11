@@ -9,8 +9,7 @@
     "dependencies": {
         "SciVacancies.Domain.Events": "1.0.0-*",
         "SciVacancies.ReadModel": "1.0.0-*",
-        "SciVacancies.SmtpNotifications": "1.0.0-*",
-        "SciVacancies.ReadModel.ElasticSearchModel": "1.0.0-*"
+        "SciVacancies.Services": "1.0.0-*"
     },
 
     "frameworks": {

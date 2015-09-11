@@ -11,7 +11,7 @@ using Microsoft.AspNet.Http;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Mvc;
 using SciVacancies.ReadModel.Core;
-using SciVacancies.SmtpNotificationsHandlers.SmtpNotificators;
+using SciVacancies.Services.SmtpNotificators;
 using SciVacancies.WebApp.Controllers;
 using SciVacancies.WebApp.Infrastructure.Identity;
 using SciVacancies.WebApp.Queries;
@@ -25,19 +25,14 @@ namespace SciVacancies.WebApp.Infrastructure.WebAuthorize
     public class AuthorizeService : IAuthorizeService
     {
         private readonly SciVacUserManager _userManager;
-        private HttpRequest _request;
-        private HttpResponse _response;
+        private readonly ISmtpNotificatorAccountService _smtpNotificatorAccountService;
 
-        public AuthorizeService(SciVacUserManager userManager)
+        public AuthorizeService(SciVacUserManager userManager, ISmtpNotificatorAccountService smtpNotificatorAccountService)
         {
             _userManager = userManager;
+            _smtpNotificatorAccountService = smtpNotificatorAccountService;
         }
-
-        public void Initialize(HttpRequest request, HttpResponse response)
-        {
-            _request = request;
-            _response = response;
-        }
+        
 
         //общаемся с картой науки
         public string GetResearcherProfile(string accessToken)
@@ -72,6 +67,7 @@ namespace SciVacancies.WebApp.Infrastructure.WebAuthorize
 
             return cp;
         }
+
         public async Task<TokenResponse> GetOAuthAuthorizeTokenAsync(OAuthProviderSettings oauth, string code)
         {
             var client = new OAuth2Client(new Uri(oauth.TokenEndpoint), oauth.ClientId, oauth.ClientSecret);
@@ -138,15 +134,13 @@ namespace SciVacancies.WebApp.Infrastructure.WebAuthorize
         public async Task CallUserActivationAsync(SciVacUser sciVacUser, Researcher researcher)
         {
             var token = await _userManager.GenerateEmailConfirmationTokenAsync(sciVacUser.Id);
-            var smtpNotificatorEmailConfirmation = new SmtpNotificatorUserActivation();
-            smtpNotificatorEmailConfirmation.Send(researcher, sciVacUser.UserName, sciVacUser.Email, token);
+            _smtpNotificatorAccountService.SendUserActivation(researcher, sciVacUser.UserName, sciVacUser.Email, token);
         }
         
         public async Task CallPasswordResetAsync(SciVacUser sciVacUser, Researcher researcher)
         {
             var token = await _userManager.GenerateUserTokenAsync("ChangePa$$bord", sciVacUser.Id);
-            var smtpNotificatorPasswordRestore = new SmtpNotificatorPasswordRestore();
-            smtpNotificatorPasswordRestore.Send(researcher, sciVacUser.UserName, sciVacUser.Email, token);
+            _smtpNotificatorAccountService.SendPasswordRestore(researcher, sciVacUser.UserName, sciVacUser.Email, token);
         }
 
     }
@@ -156,8 +150,6 @@ namespace SciVacancies.WebApp.Infrastructure.WebAuthorize
     /// </summary>
     public interface IAuthorizeService
     {
-        void Initialize(HttpRequest request, HttpResponse response);
-
         Task<TokenResponse> GetOAuthAuthorizeTokenAsync(OAuthProviderSettings oauth, string code);
         Task<TokenResponse> GetOAuthRefreshTokenAsync(OAuthProviderSettings oauth, string refreshToken);
         /// <summary>
