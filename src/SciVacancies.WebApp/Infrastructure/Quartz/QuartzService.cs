@@ -23,18 +23,27 @@ namespace SciVacancies.WebApp.Infrastructure
         {
             this.configuration = configuration;
 
-            QuartzSettings settings = configuration.Get<QuartzSettings>("QuartzSettigs");
+            //QuartzSettings settings = configuration.Get<QuartzSettings>("QuartzSettigs");
 
             NameValueCollection properties = new NameValueCollection();
 
-            properties["quartz.scheduler.instanceName"] = settings.Scheduler.InstanceName;
-            properties["quartz.jobStore.type"] = settings.JobStore.Type;
-            properties["quartz.jobStore.useProperties"] = settings.JobStore.UseProperties;
-            properties["quartz.jobStore.dataSource"] = settings.JobStore.DataSource;
-            properties["quartz.jobStore.tablePrefix"] = settings.JobStore.TablePrefix;
-            properties["quartz.jobStore.lockHandler.type"] = settings.JobStore.LockHandler.Type;
-            properties["quartz.dataSource.default.connectionString"] = settings.DataSource.Default.ConnectionString;
-            properties["quartz.dataSource.default.provider"] = settings.DataSource.Default.Provider;
+            properties["quartz.scheduler.instanceName"] = configuration.Get("QuartzSettings:Scheduler:InstanceName");
+            properties["quartz.jobStore.type"] = configuration.Get("QuartzSettings:JobStore:Type");
+            properties["quartz.jobStore.useProperties"] = configuration.Get("QuartzSettings:JobStore:UseProperties");
+            properties["quartz.jobStore.dataSource"] = configuration.Get("QuartzSettings:JobStore:DataSource");
+            properties["quartz.jobStore.tablePrefix"] = configuration.Get("QuartzSettings:JobStore:TablePrefix");
+            properties["quartz.jobStore.lockHandler.type"] = configuration.Get("QuartzSettings:JobStore:LockHandler:Type");
+            properties["quartz.dataSource.default.connectionString"] = configuration.Get("QuartzSettings:DataSource:Default:ConnectionString");
+            properties["quartz.dataSource.default.provider"] = configuration.Get("QuartzSettings:DataSource:Default:Provider");
+            properties["quartz.jobStore.misfireThreshold"] = "60000";
+            //properties["quartz.scheduler.instanceName"] = settings.Scheduler.InstanceName;
+            //properties["quartz.jobStore.type"] = settings.JobStore.Type;
+            //properties["quartz.jobStore.useProperties"] = settings.JobStore.UseProperties;
+            //properties["quartz.jobStore.dataSource"] = settings.JobStore.DataSource;
+            //properties["quartz.jobStore.tablePrefix"] = settings.JobStore.TablePrefix;
+            //properties["quartz.jobStore.lockHandler.type"] = settings.JobStore.LockHandler.Type;
+            //properties["quartz.dataSource.default.connectionString"] = settings.DataSource.Default.ConnectionString;
+            //properties["quartz.dataSource.default.provider"] = settings.DataSource.Default.Provider;
 
             schedulerFactory = new StdSchedulerFactory(properties);
             scheduler = schedulerFactory.GetScheduler();
@@ -52,8 +61,13 @@ namespace SciVacancies.WebApp.Infrastructure
 
             var trigger = TriggerBuilder.Create()
                     .WithIdentity(jobIdentity.ToString(), typeof(T).Name)
-                    .StartAt(executionTime)
-                    .WithSimpleSchedule(x => x.WithMisfireHandlingInstructionFireNow())
+
+                    .WithSimpleSchedule(s => s
+                        .WithIntervalInSeconds(5)
+                        .RepeatForever()
+                    )
+                    //.StartAt(executionTime)
+                    //.WithSimpleSchedule(x => x.WithMisfireHandlingInstructionFireNow())
                     .Build();
 
             scheduler.ScheduleJob(jobDetail, trigger);

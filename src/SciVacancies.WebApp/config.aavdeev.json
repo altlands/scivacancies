@@ -34,7 +34,7 @@
     }
   },
   "ElasticSettings": {
-    "ConnectionUrl": "http://localhost:9200/",
+    "ConnectionUrl": "http://192.168.10.124:9200/",
     "DefaultIndex": "scivacancies"
   },
   "QuartzSettings": {
@@ -45,7 +45,7 @@
       "Type": "Quartz.Impl.AdoJobStore.JobStoreTX, Quartz",
       "UseProperties": "true",
       "DataSource": "default",
-      "TablePrefix": "QRTZ_",
+      "TablePrefix": "qrtz_",
       "LockHandler": {
         "Type": "Quartz.Impl.AdoJobStore.UpdateLockRowSemaphore, Quartz"
       }

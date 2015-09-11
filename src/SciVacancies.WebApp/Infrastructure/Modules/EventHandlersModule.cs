@@ -10,7 +10,6 @@ using SciVacancies.ReadModel.EventHandlers;
 using SciVacancies.WebApp.Commands;
 using SciVacancies.WebApp.Infrastructure.Saga;
 using Module = Autofac.Module;
-using OrganizationEventsHandler = SciVacancies.ReadModel.ElasticSearchModel.EventHandlers.OrganizationEventsHandler;
 
 namespace SciVacancies.WebApp.Infrastructure
 {
@@ -18,15 +17,12 @@ namespace SciVacancies.WebApp.Infrastructure
     {
         protected override void Load(ContainerBuilder builder)
         {
-            //builder.RegisterAssemblyTypes(typeof(VacancyApplicationEventsHandler).Assembly).AsClosedTypesOf(typeof(INotificationHandler<>)).AsImplementedInterfaces();
-            //builder.RegisterAssemblyTypes(typeof(OrganizationEventsHandler).Assembly).AsClosedTypesOf(typeof(INotificationHandler<>)).AsImplementedInterfaces();
-
             builder.RegisterAssemblyTypes(typeof(EventBase).Assembly).SingleInstance();
             builder.RegisterAssemblyTypes(typeof(CommandBase).Assembly).AsClosedTypesOf(typeof(IRequest<>)).SingleInstance();
 
             builder.RegisterAssemblyTypes(new Assembly[]
             {
-                //Assembly.Load("SciVacancies.WebApp"),
+                Assembly.Load("SciVacancies.WebApp"),
                 Assembly.Load("SciVacancies.ReadModel"),
                 Assembly.Load("SciVacancies.ReadModelNotifications"),
                 Assembly.Load("SciVacancies.ReadModel.ElasticSearchModel"),
@@ -35,12 +31,6 @@ namespace SciVacancies.WebApp.Infrastructure
             })
                 .AsClosedTypesOf(typeof(INotificationHandler<>))
                 .AsImplementedInterfaces();
-            //builder.RegisterAssemblyTypes(new Assembly[]
-            //{
-            //    Assembly.Load("SciVacancies.WebApp")
-            //})
-            //    .AsClosedTypesOf(typeof(ISagaMessageHandler<>))
-            //    .AsImplementedInterfaces();
 
             builder.RegisterAssemblyTypes(new Assembly[]
             {

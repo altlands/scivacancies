@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using CommonDomain.Persistence;
 using NEventStore;
 using NEventStore.Persistence;
 
@@ -31,7 +30,7 @@ namespace SciVacancies.WebApp.Infrastructure.Saga
             GC.SuppressFinalize(this);
         }
 
-        public TSaga GetById<TSaga>(string bucketId, string sagaId) where TSaga : class, ISaga
+        public TSaga GetById<TSaga>(string bucketId, Guid sagaId) where TSaga : class, ISaga
         {
             return BuildSaga<TSaga>(sagaId, OpenStream(bucketId, sagaId));
         }
@@ -70,10 +69,10 @@ namespace SciVacancies.WebApp.Infrastructure.Saga
             }
         }
 
-        private IEventStream OpenStream(string bucketId, string sagaId)
+        private IEventStream OpenStream(string bucketId, Guid sagaId)
         {
             IEventStream stream;
-            var sagaKey = bucketId + "+" + sagaId;
+            var sagaKey = bucketId + "+" + sagaId.ToString();
             if (_streams.TryGetValue(sagaKey, out stream))
             {
                 return stream;
@@ -91,13 +90,12 @@ namespace SciVacancies.WebApp.Infrastructure.Saga
             return _streams[sagaKey] = stream;
         }
 
-        private TSaga BuildSaga<TSaga>(string sagaId, IEventStream stream) where TSaga : class, ISaga
+        private TSaga BuildSaga<TSaga>(Guid sagaId, IEventStream stream) where TSaga : class, ISaga
         {
-
             var saga = (TSaga)_factory.Build(typeof(TSaga), sagaId);
             foreach (var @event in stream.CommittedEvents.Select(x => x.Body))
             {
-                saga.Transition(@event as ISagaMessage);
+                saga.Transition(@event);
             }
 
             saga.ClearUncommittedEvents();
@@ -129,7 +127,7 @@ namespace SciVacancies.WebApp.Infrastructure.Saga
         private IEventStream PrepareStream(string bucketId, ISaga saga, Dictionary<string, object> headers)
         {
             IEventStream stream;
-            var sagaKey = bucketId + "+" + saga.Id;
+            var sagaKey = bucketId + "+" + saga.Id.ToString();
             if (!_streams.TryGetValue(sagaKey, out stream))
             {
                 _streams[sagaKey] = stream = _eventStore.CreateStream(bucketId, saga.Id);
@@ -164,7 +162,5 @@ namespace SciVacancies.WebApp.Infrastructure.Saga
                 throw new Exception(e.Message, e);
             }
         }
-
-
     }
 }

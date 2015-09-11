@@ -1,13 +1,15 @@
-﻿using System.Collections;
-using MediatR;
+﻿using System;
+using System.Collections;
 
 namespace SciVacancies.WebApp.Infrastructure.Saga
 {
     public interface ISaga
     {
-        string Id { get; }
+        Guid Id { get; }
 
         int Version { get; }
+
+        void Transition(object message);
 
         ICollection GetUncommittedEvents();
 
@@ -16,7 +18,5 @@ namespace SciVacancies.WebApp.Infrastructure.Saga
         ICollection GetUndispatchedMessages();
 
         void ClearUndispatchedMessages();
-
-        void Transition<TMessage>(TMessage message) where TMessage : INotification;
-    }    
+    }
 }
