@@ -25,7 +25,7 @@ namespace SciVacancies.WebApp.Infrastructure
 
         public void Execute(IJobExecutionContext context)
         {
-            VacancySaga saga = repository.GetById<VacancySaga>("", SagaGuid.ToString());
+            VacancySaga saga = repository.GetById<VacancySaga>("saga", SagaGuid);
         }
     }
 }

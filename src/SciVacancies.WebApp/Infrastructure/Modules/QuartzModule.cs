@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Quartz;
+﻿using Quartz;
 using Quartz.Spi;
 using Autofac;
 
@@ -14,12 +10,10 @@ namespace SciVacancies.WebApp.Infrastructure
         {
             builder.RegisterType<QuartzService>().AsImplementedInterfaces();
             builder.RegisterType<AutofacJobFactory>().As<IJobFactory>().InstancePerLifetimeScope();
-            builder.RegisterAssemblyTypes(new System.Reflection.Assembly[]
-            {
-                System.Reflection.Assembly.Load("SciVacancies.WebApp")
-            })
-                .AsClosedTypesOf(typeof(IJob))
-                .AsImplementedInterfaces();
+            builder.RegisterTypes(System.Reflection.Assembly.GetAssembly(typeof(QuartzModule)).GetTypes())
+               .Where(t => t != typeof(IJob) && typeof(IJob).IsAssignableFrom(t))
+               .AsSelf()
+               .InstancePerLifetimeScope();
         }
     }
 }

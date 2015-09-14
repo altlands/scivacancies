@@ -65,6 +65,9 @@ namespace SciVacancies.WebApp
 
             builder.Populate(services);
             var container = builder.Build();
+
+            SchedulerServiceInitialize(container.Resolve<ISchedulerService>());
+
             return container.Resolve<IServiceProvider>();
         }
 
@@ -77,7 +80,7 @@ namespace SciVacancies.WebApp
             builder.RegisterModule(new EventHandlersModule());
             builder.RegisterModule(new ReadModelModule(Configuration));
             builder.RegisterModule(new ServicesModule(Configuration));
-            //builder.RegisterModule(new QuartzModule());
+            builder.RegisterModule(new QuartzModule());
             builder.RegisterModule(new IdentityModule());
             builder.RegisterModule(new SmtpNotificationModule());
         }
@@ -147,7 +150,12 @@ namespace SciVacancies.WebApp
 
             MappingConfiguration.Initialize();
 
+
             //SearchSubscriptionService.Initialize(Configuration);
+        }
+        public void SchedulerServiceInitialize(ISchedulerService schedulerService)
+        {
+            schedulerService.StartScheduler();
         }
     }
 
