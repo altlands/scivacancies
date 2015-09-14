@@ -1,4 +1,5 @@
-﻿using Autofac;
+﻿using System;
+using Autofac;
 using Topshelf;
 
 namespace SciVacancies.SearchSubscriptionsService
@@ -7,7 +8,7 @@ namespace SciVacancies.SearchSubscriptionsService
     {
         public int Main(string[] args)
         {
-            return (int)HostFactory.Run(x =>
+            var result =  (int)HostFactory.Run(x =>
             {
                 x.StartAutomatically();
                 x.Service(settings => new SubscriptionService());
@@ -25,6 +26,19 @@ namespace SciVacancies.SearchSubscriptionsService
                 x.SetDisplayName("SciVacancies.SearchSubscriptionService");
                 x.SetServiceName("SciVacancies.SearchSubscriptionService");
             });
+
+
+            Console.WriteLine(result);
+
+
+            var line = string.Empty;
+            while (line!="exit")
+            {
+                line = Console.ReadLine();
+            }
+
+
+            return result;
         }
     }
 }

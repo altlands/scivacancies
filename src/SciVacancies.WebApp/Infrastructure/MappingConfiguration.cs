@@ -103,7 +103,6 @@ namespace SciVacancies.WebApp.Infrastructure
                 .ForMember(d => d.PreviousSecondName, o => o.MapFrom(s => s.lastNameOld))
                 .ForMember(d => d.PreviousSecondNameEng, o => o.MapFrom(s => s.lastNameEnOld))
                 .ForMember(d => d.Email, o => o.MapFrom(s => s.email))
-                .ForMember(d => d.ExtraEmail, o => o.Ignore())
                 .ForMember(d => d.Phone, o => o.MapFrom(s => s.phone))
                 .ForMember(d => d.ExtraPhone, o => o.Ignore())
                 //.ForMember(d => d, o => o.MapFrom(s => s.nationality))
