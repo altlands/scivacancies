@@ -13,8 +13,7 @@ namespace SciVacancies.ReadModel.Notifications
 {
     public class VacancyEventsHandler :
         INotificationHandler<VacancyInCommittee>,
-        //TODO
-        //INotificationHandler<VacancyInAwaitingOfferResponse>,
+        INotificationHandler<VacancyInAwaitingOfferResponse>,
         INotificationHandler<VacancyOfferAcceptedByWinner>,
         INotificationHandler<VacancyOfferRejectedByWinner>,
         INotificationHandler<VacancyOfferAcceptedByPretender>,
@@ -43,20 +42,21 @@ namespace SciVacancies.ReadModel.Notifications
             }
         }
         //TODO
-        //public void Handle(VacancyInAwaitingOfferResponse msg)
-        //{
-        //    List<Guid> researcherGuids = _db.Fetch<Guid>(new Sql($"SELECT va.researcher_guid FROM res_vacancyapplications va WHERE va.vacancy_guid = @0", msg.VacancyGuid));
+        public void Handle(VacancyInAwaitingOfferResponse msg)
+        {
+            throw new NotImplementedException();
+            //List<Guid> researcherGuids = _db.Fetch<Guid>(new Sql($"SELECT va.researcher_guid FROM res_vacancyapplications va WHERE va.vacancy_guid = @0", msg.VacancyGuid));
 
-        //    string title = "По вашей заявке на вакансию " + msg.VacancyGuid + " утверждены";
-        //    using (var transaction = _db.GetTransaction())
-        //    {
-        //        foreach (Guid researcherGuid in researcherGuids)
-        //        {
-        //            _db.Execute(new Sql($"INSERT INTO res_notifications (guid, title, vacancy_guid, researcher_guid, creation_date) VALUES(@0, @1, @2, @3, @4)", Guid.NewGuid(), title, msg.VacancyGuid, researcherGuid, msg.TimeStamp));
-        //        }
-        //        transaction.Complete();
-        //    }
-        //}
+            //string title = "По вашей заявке на вакансию " + msg.VacancyGuid + " утверждены";
+            //using (var transaction = _db.GetTransaction())
+            //{
+            //    foreach (Guid researcherGuid in researcherGuids)
+            //    {
+            //        _db.Execute(new Sql($"INSERT INTO res_notifications (guid, title, vacancy_guid, researcher_guid, creation_date) VALUES(@0, @1, @2, @3, @4)", Guid.NewGuid(), title, msg.VacancyGuid, researcherGuid, msg.TimeStamp));
+            //    }
+            //    transaction.Complete();
+            //}
+        }
         public void Handle(VacancyOfferAcceptedByWinner msg)
         {
             Vacancy vacancy = _db.SingleById<Vacancy>(msg.VacancyGuid);
