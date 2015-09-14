@@ -22,7 +22,8 @@ namespace SciVacancies.SearchSubscriptionsService
             MinuteInterval = 1;
         }
 
-        public bool Start(HostControl hostControl)
+        public bool Start(HostControl hostControl) => Start();
+        public bool Start()
         {
             //logging
 
@@ -30,21 +31,21 @@ namespace SciVacancies.SearchSubscriptionsService
             try
             {
                 ISchedulerFactory schedulerFactory = new StdSchedulerFactory();
-                IScheduler scheduler = schedulerFactory.GetScheduler();
+                var scheduler = schedulerFactory.GetScheduler();
 
-                JobKey jobKey = new JobKey("SciVacancies.SearchSubscriptionJob", "SciVacancies.SearchSubscriptionService");
-                TriggerKey triggerKey = new TriggerKey("SciVacancies.SearchSubscriptionJobTrigger", "SciVacancies.SearchSubscriptionService");
+                var jobKey = new JobKey("SciVacancies.SearchSubscriptionJob", "SciVacancies.SearchSubscriptionService");
+                var triggerKey = new TriggerKey("SciVacancies.SearchSubscriptionJobTrigger", "SciVacancies.SearchSubscriptionService");
 
                 if (scheduler.CheckExists(jobKey) && scheduler.CheckExists(triggerKey))
                 {
                     scheduler.DeleteJob(jobKey);
                 }
 
-                IJobDetail job = JobBuilder.Create<SearchSubscriptionJob>()
+                var job = JobBuilder.Create<SearchSubscriptionJob>()
                                             .WithIdentity(jobKey)
                                             .Build();
 
-                ITrigger trigger = TriggerBuilder.Create()
+                var trigger = TriggerBuilder.Create()
                                                 .WithIdentity(triggerKey)
                                                 .WithSimpleSchedule(s => s
                                                     .WithIntervalInMinutes(MinuteInterval)
@@ -60,9 +61,13 @@ namespace SciVacancies.SearchSubscriptionsService
 
             }
 
+            Console.WriteLine("Started");
+
             return true;
         }
-        public bool Stop(HostControl hostControl)
+
+        public bool Stop(HostControl hostControl) => Stop();
+        public bool Stop()
         {
             return true;
         }
