@@ -17,6 +17,7 @@ using SciVacancies.Services.SmtpNotificators;
 
 namespace SciVacancies.WebApp.Infrastructure
 {
+    [Obsolete("Delete")]
     public static class SearchSubscriptionService
     {
         private static readonly IConfiguration _configuration;

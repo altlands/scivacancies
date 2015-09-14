@@ -1,18 +1,13 @@
-﻿using SciVacancies.Domain.Enums;
+﻿using SciVacancies.Domain.Events;
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+
 using MediatR;
-using SciVacancies.Domain.Events;
-using CommonDomain;
-using CommonDomain.Persistence;
+
 
 namespace SciVacancies.WebApp.Infrastructure.Saga
 {
-    public class VacancySagaActivator :
-        INotificationHandler<VacancyPublished>
+    public class VacancySagaActivator : INotificationHandler<VacancyPublished>
     {
         readonly ISagaRepository _repository;
         readonly ISchedulerService _schedulerService;
@@ -24,20 +19,22 @@ namespace SciVacancies.WebApp.Infrastructure.Saga
         }
         public void Handle(VacancyPublished msg)
         {
-            //VacancySaga saga = new VacancySaga();
+            VacancySaga saga = new VacancySaga(msg.VacancyGuid);
+            saga.Transition(new VacancySagaCreated
+            {
+                SagaGuid = saga.Id,
+                VacancyGuid = msg.VacancyGuid,
+                OrganizationGuid = msg.OrganizationGuid
+            });
 
-            //saga.Transition(new VacancySagaCreated { SagaGuid = Guid.NewGuid() });
-            //saga.Transition(new VacancySagaSwitchedInCommittee { SagaGuid = Guid.NewGuid() });
+            _repository.Save("vacancysaga", saga, Guid.NewGuid(), null);
 
-            //_repository.Save("saga", saga, Guid.NewGuid(), null);
+            var job = new VacancySagaTimeoutJob()
+            {
+                SagaGuid = saga.Id
+            };
 
-            //var s = _repository.GetById<VacancySaga>("saga", saga.Id);
-
-            ////s.Transition<VacancySagaSwitchedInCommittee>(new VacancySagaSwitchedInCommittee { SagaGuid = Guid.NewGuid() });
-
-            //_repository.Save("saga", s, Guid.NewGuid(), null);
-
-            ////var d = _repository.GetById<VacancySaga>("saga", s.Id);
+            _schedulerService.CreateSheduledJob<VacancySagaTimeoutJob>(job, job.SagaGuid, 1);
         }
     }
 }

@@ -6,6 +6,7 @@ using MediatR;
 
 namespace SciVacancies.WebApp.Infrastructure
 {
+    [Obsolete("WTF???")]
     public class RecoveryPasswordService: IRecoveryPasswordService
     {
         private IMediator _mediator;

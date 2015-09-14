@@ -2,42 +2,45 @@
 
 using System;
 using MediatR;
-//using CommonDomain.Core;
 
 namespace SciVacancies.WebApp.Infrastructure.Saga
 {
     public class VacancySaga : SagaBase,
     INotificationHandler<VacancySagaCreated>,
-    INotificationHandler<VacancySagaSwitchedInCommittee>
+    INotificationHandler<VacancySagaSwitchedInCommittee>,
+    INotificationHandler<VacancySagaSwitchedInOfferAwaiting>
     {
-        public Guid OrganizationGuid { get; set; }
-        public Guid VacancyGuid { get; set; }
+        public Guid VacancyGuid { get; private set; }
+        public Guid OrganizationGuid { get; private set; }
 
-        public DateTime PublishStartDate { get; set; }
-        public DateTime PublishEndDate { get; set; }
-        public DateTime InCommitteeStartDate { get; set; }
-        public DateTime InCommitteeEndDate { get; set; }
-        public DateTime OfferResponseStartDate { get; set; }
-        public DateTime OfferResponseEndDate { get; set; }
-        public DateTime ClosedDate { get; set; }
+        public DateTime PublishDate { get; private set; }
+        public DateTime InCommitteeDate { get; private set; }
+        public DateTime OfferResponseAwaitingDate { get; private set; }
 
-        public VacancyStatus State { get; set; }
+        public DateTime CancelDate { get; private set; }
+        public DateTime CloseDate { get; private set; }
+
+        public VacancyStatus State { get; private set; }
 
         public VacancySaga() : base() { }
         public VacancySaga(Guid id) : base(id) { }
 
         public void Handle(VacancySagaCreated msg)
         {
-            //this.Id = msg.SagaGuid.ToString();
-            this.OrganizationGuid = msg.SagaGuid;
             this.VacancyGuid = Guid.NewGuid();
-            this.State = VacancyStatus.InCommittee;
-            var test = 0;
+            this.OrganizationGuid = msg.SagaGuid;
+
+            this.PublishDate = msg.TimeStamp;
+
+            this.State = VacancyStatus.Published;
         }
         public void Handle(VacancySagaSwitchedInCommittee msg)
         {
-            var t = 0;
-            this.State = VacancyStatus.OfferRejected;
+            this.State = VacancyStatus.InCommittee;
+        }
+        public void Handle(VacancySagaSwitchedInOfferAwaiting msg)
+        {
+            this.State = VacancyStatus.OfferResponseAwaiting;
         }
     }
 }
