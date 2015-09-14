@@ -53,9 +53,6 @@ namespace SciVacancies.WebApp.ViewModels
         [Required(ErrorMessage = "Требуется указать адрес электронной почты")]
         [EmailAddress(ErrorMessage = "Поле E-mail содержит не допустимый адрес электронной почты.")]
         public string Email { get; set; }
-        [EmailAddress(ErrorMessage = "Поле Добавить E-mail содержит не допустимый адрес электронной почты.")]
-        [Obsolete("неопределено назначение этого свойства. планируется его удаление")]
-        public string ExtraEmail { get; set; }
         [Required(ErrorMessage = "Требуется заполнить поле Телефон")]
         [Phone(ErrorMessage = "Поле Телефон содержит не допустимый номер телефона.")]
         public string Phone { get; set; }

@@ -39,7 +39,7 @@ namespace SciVacancies.SmtpNotifications.SmtpNotificators
 </div>
 ";
 
-            _smtpNotificatorService.Send(new SciVacMailMessage(researcher.email, /*researcher.extraemail,*/ "Уведомление с портала вакансий", body));
+            _smtpNotificatorService.Send(new SciVacMailMessage(researcher.email, "Уведомление с портала вакансий", body));
         }
      
     }
