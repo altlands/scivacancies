@@ -14,7 +14,7 @@ namespace SciVacancies.WebApp.Infrastructure
     {
         public Guid SagaGuid;
 
-        readonly ISagaRepository repository;
+        readonly ISagaRepository sagaRepository;
         readonly ISchedulerService scheduler;
 
         public VacancySagaTimeoutJob()
@@ -22,30 +22,31 @@ namespace SciVacancies.WebApp.Infrastructure
             //оставляем пустым
         }
 
-        public VacancySagaTimeoutJob(ISagaRepository repository, ISchedulerService scheduler)
+        public VacancySagaTimeoutJob(ISagaRepository sagaRepository, ISchedulerService scheduler)
         {
-            this.repository = repository;
+            this.sagaRepository = sagaRepository;
         }
 
         public void Execute(IJobExecutionContext context)
         {
-            VacancySaga saga = repository.GetById<VacancySaga>("vacancysaga", SagaGuid);
+            VacancySaga saga = sagaRepository.GetById<VacancySaga>("vacancysaga", SagaGuid);
             
             switch (saga.State)
             {
                 case VacancyStatus.Published:
-                    if (saga.InCommitteeDate < DateTime.UtcNow)
+                    if (saga.InCommitteeDate <= DateTime.UtcNow)
                     {
                         saga.Transition(new VacancySagaSwitchedInCommittee());
-                        repository.Save("vacancysaga", saga, Guid.NewGuid(), null);
+                        sagaRepository.Save("vacancysaga", saga, Guid.NewGuid(), null);
+
                     }
                     break;
 
                 case VacancyStatus.InCommittee:
-                    if (saga.OfferResponseAwaitingDate < DateTime.UtcNow)
+                    if (saga.OfferResponseAwaitingDate <= DateTime.UtcNow)
                     {
                         saga.Transition(new VacancySagaSwitchedInOfferAwaiting());
-                        repository.Save("vacancysaga", saga, Guid.NewGuid(), null);
+                        sagaRepository.Save("vacancysaga", saga, Guid.NewGuid(), null);
                     }
                     break;
 
@@ -53,12 +54,18 @@ namespace SciVacancies.WebApp.Infrastructure
 
                     break;
 
-                    //case VacancyStatus.
+                case VacancyStatus.OfferAccepted:
+
+                    break;
+
+                case VacancyStatus.OfferRejected:
+
+                    break;
             }
 
             if (saga.State == VacancyStatus.Closed || saga.State == VacancyStatus.Cancelled)
             {
-                scheduler.RemoveScheduledJob(this.SagaGuid);
+                scheduler.RemoveScheduledJob(SagaGuid);
             }
         }
     }

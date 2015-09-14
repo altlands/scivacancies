@@ -34,7 +34,7 @@ namespace SciVacancies.WebApp.Infrastructure.Saga
                 SagaGuid = saga.Id
             };
 
-            _schedulerService.CreateSheduledJob<VacancySagaTimeoutJob>(job, job.SagaGuid, 1);
+            _schedulerService.CreateSheduledJob(job, job.SagaGuid, 1);
         }
     }
 }
