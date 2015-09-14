@@ -2,7 +2,7 @@
 using System.Net;
 using System.Net.Mail;
 
-namespace SciVacancies.SmtpNotifications
+namespace SciVacancies.Services.Email
 {
     public class SmtpEmailService : IEmailService, IDisposable
     {

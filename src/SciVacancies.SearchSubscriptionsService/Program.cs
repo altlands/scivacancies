@@ -1,5 +1,4 @@
 ﻿using Autofac;
-using SciVacancies.Services.SmtpNotificators;
 using Topshelf;
 
 namespace SciVacancies.SearchSubscriptionsService
@@ -22,7 +21,7 @@ namespace SciVacancies.SearchSubscriptionsService
                     x.RunAsLocalSystem();
                 }
 
-                x.SetDescription("SciVacancies.SearchSubscriptionService");
+                x.SetDescription("SciVacancies.SearchSubscriptionService: выполняет поиск Подписок, их обработку и рассылку уведомлений");
                 x.SetDisplayName("SciVacancies.SearchSubscriptionService");
                 x.SetServiceName("SciVacancies.SearchSubscriptionService");
             });

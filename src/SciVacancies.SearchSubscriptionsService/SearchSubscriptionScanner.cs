@@ -9,7 +9,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using SciVacancies.ReadModel.Core;
-using SciVacancies.Services.SmtpNotificators;
+using SciVacancies.SmtpNotifications.SmtpNotificators;
 using Vacancy = SciVacancies.ReadModel.ElasticSearchModel.Model.Vacancy;
 
 namespace SciVacancies.SearchSubscriptionsService

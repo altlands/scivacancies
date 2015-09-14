@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Net.Mail;
-using SciVacancies.SmtpNotifications;
-using SciVacancies.SmtpNotifications.Vendors;
+using SciVacancies.Services.Email.Vendors;
 
-namespace SciVacancies.Services
+namespace SciVacancies.Services.Email
 {
     public class SmtpNotificatorService: ISmtpNotificatorService
     {

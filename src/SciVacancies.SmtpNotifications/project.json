@@ -8,7 +8,8 @@
 
     "dependencies": {
         "SciVacancies.Domain.Events": "1.0.0-*",
-        "SciVacancies.ReadModel": "1.0.0-*"
+        "SciVacancies.ReadModel": "1.0.0-*",
+        "SciVacancies.Services": "1.0.0-*"
     },
 
     "frameworks": {

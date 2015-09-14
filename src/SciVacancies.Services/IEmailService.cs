@@ -1,6 +1,6 @@
 ﻿using System.Net.Mail;
 
-namespace SciVacancies.SmtpNotifications
+namespace SciVacancies.Services
 {
     public interface IEmailService
     {

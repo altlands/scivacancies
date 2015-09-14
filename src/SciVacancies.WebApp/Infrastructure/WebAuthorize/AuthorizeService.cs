@@ -11,7 +11,7 @@ using Microsoft.AspNet.Http;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Mvc;
 using SciVacancies.ReadModel.Core;
-using SciVacancies.Services.SmtpNotificators;
+using SciVacancies.SmtpNotifications.SmtpNotificators;
 using SciVacancies.WebApp.Controllers;
 using SciVacancies.WebApp.Infrastructure.Identity;
 using SciVacancies.WebApp.Queries;

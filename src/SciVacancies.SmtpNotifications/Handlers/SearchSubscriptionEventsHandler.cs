@@ -1,4 +1,4 @@
-﻿namespace SciVacancies.SmtpNotificationsHandlers.Handlers
+﻿namespace SciVacancies.SmtpNotifications.Handlers
 {
     public class SearchSubscriptionEventsHandler
     {

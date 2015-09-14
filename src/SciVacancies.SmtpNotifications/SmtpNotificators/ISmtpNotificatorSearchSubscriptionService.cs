@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using SciVacancies.ReadModel.Core;
 
-namespace SciVacancies.Services.SmtpNotificators
+namespace SciVacancies.SmtpNotifications.SmtpNotificators
 {
     public interface ISmtpNotificatorSearchSubscriptionService
     {

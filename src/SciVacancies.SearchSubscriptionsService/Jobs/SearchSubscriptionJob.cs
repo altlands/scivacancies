@@ -11,7 +11,9 @@ using NPoco;
 using Npgsql;
 using Newtonsoft.Json;
 using SciVacancies.Domain.Enums;
-using SciVacancies.Services.SmtpNotificators;
+using SciVacancies.Services;
+using SciVacancies.Services.Email;
+using SciVacancies.SmtpNotifications.SmtpNotificators;
 
 namespace SciVacancies.SearchSubscriptionsService.Jobs
 {

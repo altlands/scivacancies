@@ -1,8 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using SciVacancies.ReadModel.Core;
+using SciVacancies.Services;
+using SciVacancies.Services.Email;
 
-namespace SciVacancies.Services.SmtpNotificators
+namespace SciVacancies.SmtpNotifications.SmtpNotificators
 {
     public class SmtpNotificatorSearchSubscriptionService : ISmtpNotificatorSearchSubscriptionService
     {

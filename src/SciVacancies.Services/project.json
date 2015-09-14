@@ -7,9 +7,11 @@
   "licenseUrl": "",
 
     "dependencies": {
+        "Autofac": "4.0.0-alpha2",
+        "Autofac.Dnx": "4.0.0-alpha2",
+        "Quartz": "2.3.3",
         "SciVacancies.Domain.Events": "1.0.0-*",
         "SciVacancies.ReadModel": "1.0.0-*",
-        "SciVacancies.SmtpNotifications": "1.0.0-*",
         "SciVacancies.ReadModel.ElasticSearchModel": "1.0.0-*"
     },
 
