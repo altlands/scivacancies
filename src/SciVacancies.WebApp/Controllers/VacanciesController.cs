@@ -343,9 +343,10 @@ namespace SciVacancies.WebApp.Controllers
             if (preModel.organization_guid != organizationGuid)
                 return View("Error", "Вы не можете отменить вакансии других организаций");
 
-            //todo: review this requirement (vacancy cancelling)
-            //if (preModel.status != VacancyStatus.Published && preModel.status != VacancyStatus.InCommittee)
-            //    return View("Error", $"Вы не можете отменить вакансию со статусом: {preModel.status.GetDescription()}");
+            if (preModel.status == VacancyStatus.InProcess
+                || preModel.status == VacancyStatus.Closed
+                || preModel.status == VacancyStatus.Removed)
+                return View("Error", $"Вы не можете отменить вакансию со статусом: {preModel.status.GetDescription()}");
 
             var model = Mapper.Map<VacancyDetailsViewModel>(preModel);
 
@@ -369,7 +370,9 @@ namespace SciVacancies.WebApp.Controllers
             if (model.organization_guid != organizationGuid)
                 return View("Error", "Вы не можете отменить вакансии других организаций");
 
-            if (model.status != VacancyStatus.Published && model.status != VacancyStatus.InCommittee)
+            if (model.status == VacancyStatus.InProcess
+                || model.status == VacancyStatus.Closed
+                || model.status == VacancyStatus.Removed)
                 return View("Error", $"Вы не можете отменить вакансию со статусом: {model.status.GetDescription()}");
 
             _mediator.Send(new CancelVacancyCommand { VacancyGuid = id, Reason = reason });
@@ -424,7 +427,7 @@ namespace SciVacancies.WebApp.Controllers
                 return View("Error", "Вы не можете менять Вакансии других организаций");
 
             if (preModel.status != VacancyStatus.Published)
-                return View("Error", $"Вы не можете Вакансию на рассмотрение комиссии со статусом: {preModel.status.GetDescription()}");
+                return View("Error", $"Вы не можете перевести Вакансию на рассмотрение комиссии со статусом: {preModel.status.GetDescription()}");
 
             //TODO: Saga -> реализовать эту проверку при замуске Саг с таймерами
             //if ((DateTime.Now - preModel.committee_date).Days < _vacancyLifeCycleSettings.Options.DeltaFromPublishToInCommitteeMinDays)
@@ -736,47 +739,6 @@ namespace SciVacancies.WebApp.Controllers
         {
             return Create(model);
         }
-
-        ////Победитель и претендент сами выбирают Принять или Отказаться от Предложения
-        //[Authorize(Roles = ConstTerms.RequireRoleOrganizationAdmin)]
-        //[BindOrganizationIdFromClaims]
-        //public IActionResult WinnerDecision(Guid id, bool decision, Guid organizationGuid, bool isWinner)
-        //{
-        //    if (id == Guid.Empty)
-        //        throw new ArgumentNullException(nameof(id));
-        //    if (organizationGuid == Guid.Empty)
-        //        throw new ArgumentNullException(nameof(organizationGuid));
-
-        //    var preModel = _mediator.Send(new SingleVacancyQuery { VacancyGuid = id });
-
-        //    if (preModel == null)
-        //        return HttpNotFound(); //throw new ObjectNotFoundException($"Не найдена вакансия с идентификатором: {id}");
-
-        //    if (preModel.organization_guid != organizationGuid)
-        //        return View("Error", "Вы не можете изменять вакансии других организаций");
-
-        //    if (preModel.status != VacancyStatus.InCommittee)
-        //        return View("Error", $"Вы не можете изменить вакансию с текущим статусом: {preModel.status.GetDescription()}");
-
-        //    var model = Mapper.Map<VacancyCreateViewModel>(preModel);
-        //    model.InitDictionaries(_mediator);
-
-        //    if (isWinner)
-        //        if (decision)
-        //            _mediator.Send(new SetWinnerAcceptOfferCommand { VacancyGuid = id });
-        //        else
-        //            _mediator.Send(new SetWinnerRejectOfferCommand { VacancyGuid = id });
-        //    else
-        //    {
-        //        if (decision)
-        //        {
-        //            _mediator.Send(new SetPretenderAcceptOfferCommand { VacancyGuid = id });
-        //        }
-        //        else
-        //            _mediator.Send(new SetPretenderRejectOfferCommand { VacancyGuid = id });
-        //    }
-        //    return RedirectToAction("vacancies", "organizations");
-        //}
 
         [Authorize(Roles = ConstTerms.RequireRoleOrganizationAdmin)]
         [PageTitle("Подробно о вакансии")]
