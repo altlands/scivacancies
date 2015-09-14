@@ -18,8 +18,7 @@ namespace SciVacancies.ReadModel.EventHandlers
         INotificationHandler<VacancyInCommittee>,
         INotificationHandler<VacancyWinnerSet>,
         INotificationHandler<VacancyPretenderSet>,
-        //TODO
-        //INotificationHandler<VacancyInAwaitingOfferResponse>,
+        INotificationHandler<VacancyInAwaitingOfferResponse>,
         INotificationHandler<VacancyOfferAcceptedByWinner>,
         INotificationHandler<VacancyOfferRejectedByWinner>,
         INotificationHandler<VacancyOfferAcceptedByPretender>,
@@ -153,15 +152,14 @@ namespace SciVacancies.ReadModel.EventHandlers
                 transaction.Complete();
             }
         }
-        //TODO
-        //public void Handle(VacancyInAwaitingOfferResponse msg)
-        //{
-        //    using (var transaction = _db.GetTransaction())
-        //    {
-        //        _db.Execute(new Sql($"UPDATE org_vacancies SET awaiting_date = @0, status = @1, update_date = @0 WHERE guid = @2", msg.TimeStamp, VacancyStatus.OfferResponseAwaiting, msg.VacancyGuid));
-        //        transaction.Complete();
-        //    }
-        //}
+        public void Handle(VacancyInAwaitingOfferResponse msg)
+        {
+            using (var transaction = _db.GetTransaction())
+            {
+                _db.Execute(new Sql($"UPDATE org_vacancies SET awaiting_date = @0, status = @1, update_date = @0 WHERE guid = @2", msg.TimeStamp, VacancyStatus.OfferResponseAwaiting, msg.VacancyGuid));
+                transaction.Complete();
+            }
+        }
         public void Handle(VacancyOfferAcceptedByWinner msg)
         {
             using (var transaction = _db.GetTransaction())

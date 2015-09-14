@@ -11,6 +11,7 @@ namespace SciVacancies.Domain.DataModels
         public VacancyDataModel()
         {
             this.Criterias = new List<VacancyCriteria>();
+            this.Attachments = new List<VacancyAttachment>();
         }
 
         #region General

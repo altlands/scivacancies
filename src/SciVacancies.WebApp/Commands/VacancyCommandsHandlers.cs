@@ -18,8 +18,6 @@ namespace SciVacancies.WebApp.Commands
 
         public Guid Handle(CreateVacancyCommand msg)
         {
-            if (msg.OrganizationGuid == Guid.Empty) throw new ArgumentNullException($"OrganizationGuid is empty: {msg.OrganizationGuid}");
-
             Vacancy vacancy = new Vacancy(Guid.NewGuid(), msg.OrganizationGuid, msg.Data);
             _repository.Save(vacancy, Guid.NewGuid(), null);
 
@@ -113,9 +111,6 @@ namespace SciVacancies.WebApp.Commands
         {
             if (msg.VacancyGuid == Guid.Empty) throw new ArgumentNullException($"VacancyGuid is empty: {msg.VacancyGuid}");
 
-            if (msg.ResearcherGuid == Guid.Empty) throw new ArgumentNullException($"ResearcherGuid is empty: {msg.ResearcherGuid}");
-            if (msg.VacancyApplicationGuid == Guid.Empty) throw new ArgumentNullException($"VacancyApplicationGuid is empty: {msg.VacancyApplicationGuid}");
-
             Vacancy vacancy = _repository.GetById<Vacancy>(msg.VacancyGuid);
             vacancy.SetWinner(msg.ResearcherGuid, msg.VacancyApplicationGuid, msg.Reason, msg.Attachments);
             _repository.Save(vacancy, Guid.NewGuid(), null);
@@ -134,44 +129,51 @@ namespace SciVacancies.WebApp.Commands
         {
             if (msg.VacancyGuid == Guid.Empty) throw new ArgumentNullException($"VacancyGuid is empty: {msg.VacancyGuid}");
 
-            if (msg.ResearcherGuid == Guid.Empty) throw new ArgumentNullException($"ResearcherGuid is empty: {msg.ResearcherGuid}");
-            if (msg.VacancyApplicationGuid == Guid.Empty) throw new ArgumentNullException($"VacancyApplicationGuid is empty: {msg.VacancyApplicationGuid}");
+            Vacancy vacancy = _repository.GetById<Vacancy>(msg.VacancyGuid);
+            vacancy.SetPretender(msg.ResearcherGuid, msg.VacancyApplicationGuid, msg.Reason);
+            _repository.Save(vacancy, Guid.NewGuid(), null);
+        }
+    }
+    public class SetVacancyToResponseAwaitingCommandHandler : RequestHandler<SetVacancyToResponseAwaitingCommand>
+    {
+        private readonly IRepository _repository;
+
+        public SetVacancyToResponseAwaitingCommandHandler(IRepository repository)
+        {
+            _repository = repository;
+        }
+
+        protected override void HandleCore(SetVacancyToResponseAwaitingCommand msg)
+        {
+            if (msg.VacancyGuid == Guid.Empty) throw new ArgumentNullException($"VacancyGuid is empty: {msg.VacancyGuid}");
 
             Vacancy vacancy = _repository.GetById<Vacancy>(msg.VacancyGuid);
 
-            Guid winnerResearcherGuid = vacancy.WinnerResearcherGuid;
-            Guid winnerVacancyApplicationGuid = vacancy.WinnerVacancyApplicationGuid;
+            if (vacancy.IsWinnerAccept.HasValue && vacancy.IsPretenderAccept.HasValue) throw new InvalidOperationException("IsWinnerAccept and IsPretenderAccept already have values");
 
-            vacancy.SetPretender(msg.ResearcherGuid, msg.VacancyApplicationGuid, msg.Reason);
+            vacancy.VacancyToResponseAwaiting();
             _repository.Save(vacancy, Guid.NewGuid(), null);
 
-            Researcher winnerResearcher = _repository.GetById<Researcher>(winnerResearcherGuid);
-            winnerResearcher.MakeVacancyApplicationWinner(winnerVacancyApplicationGuid,"");
-            _repository.Save(winnerResearcher, Guid.NewGuid(), null);
+            if (!vacancy.IsWinnerAccept.HasValue)
+            {
+                Guid winnerResearcherGuid = vacancy.WinnerResearcherGuid;
+                Guid winnerVacancyApplicationGuid = vacancy.WinnerVacancyApplicationGuid;
+
+                VacancyApplication vacancyApplication = _repository.GetById<VacancyApplication>(winnerVacancyApplicationGuid);
+                vacancyApplication.MakeVacancyApplicationWinner(vacancy.WinnerReason);
+                _repository.Save(vacancyApplication, Guid.NewGuid(), null);
+            }
+            if (vacancy.IsWinnerAccept.HasValue && !vacancy.IsWinnerAccept.Value && !vacancy.IsPretenderAccept.HasValue)
+            {
+                Guid pretenderResearcherGuid = vacancy.PretenderResearcherGuid;
+                Guid pretenderVacancyApplicationGuid = vacancy.PretenderVacancyApplicationGuid;
+
+                VacancyApplication vacancyApplication = _repository.GetById<VacancyApplication>(pretenderVacancyApplicationGuid);
+                vacancyApplication.MakeVacancyApplicationPretender(vacancy.PretenderReason);
+                _repository.Save(vacancyApplication, Guid.NewGuid(), null);
+            }
         }
     }
-
-    //TODO
-    //public class SetVacancyToResponseAwaitingCommandHandler:RequestHandler<SetVacancyToResponseAwaitingCommand>
-    //{
-    //    private readonly IRepository _repository;
-
-    //    public SetVacancyToResponseAwaitingCommandHandler(IRepository repository)
-    //    {
-    //        _repository = repository;
-    //    }
-
-    //    protected override void HandleCore(SetVacancyToResponseAwaitingCommand msg)
-    //    {
-    //        if (msg.VacancyGuid == Guid.Empty) throw new ArgumentNullException($"VacancyGuid is empty: {msg.VacancyGuid}");
-
-    //        Vacancy vacancy = _repository.GetById<Vacancy>(msg.VacancyGuid);
-
-    //        vacancy.VacancyToResponseAwaiting();
-    //        _repository.Save(vacancy, Guid.NewGuid(), null);
-    //    }
-    //}
-
     public class SetWinnerAcceptOfferCommandHandler : RequestHandler<SetWinnerAcceptOfferCommand>
     {
         private readonly IRepository _repository;
@@ -204,16 +206,8 @@ namespace SciVacancies.WebApp.Commands
             if (msg.VacancyGuid == Guid.Empty) throw new ArgumentNullException($"VacancyGuid is empty: {msg.VacancyGuid}");
 
             Vacancy vacancy = _repository.GetById<Vacancy>(msg.VacancyGuid);
-
-            Guid pretenderResearcherGuid = vacancy.PretenderResearcherGuid;
-            Guid pretenderVacancyApplicationGuid = vacancy.PretenderVacancyApplicationGuid;
-
             vacancy.WinnerRejectOffer();
             _repository.Save(vacancy, Guid.NewGuid(), null);
-
-            Researcher pretenderResearcher = _repository.GetById<Researcher>(pretenderResearcherGuid);
-            pretenderResearcher.MakeVacancyApplicationPretender(pretenderVacancyApplicationGuid, "");
-            _repository.Save(pretenderResearcher, Guid.NewGuid(), null);
         }
     }
     public class SetPretenderAcceptOfferCommandHandler : RequestHandler<SetPretenderAcceptOfferCommand>
@@ -304,7 +298,6 @@ namespace SciVacancies.WebApp.Commands
         public int Handle(AddVacancyToFavoritesCommand msg)
         {
             if (msg.ResearcherGuid == Guid.Empty) throw new ArgumentNullException($"ResearcherGuid is empty: {msg.ResearcherGuid}");
-            if (msg.VacancyGuid == Guid.Empty) throw new ArgumentNullException($"VacancyGuid is empty: {msg.VacancyGuid}");
 
             Researcher researcher = _repository.GetById<Researcher>(msg.ResearcherGuid);
             int favoritesCount = researcher.AddVacancyToFavorites(msg.VacancyGuid);
@@ -325,7 +318,6 @@ namespace SciVacancies.WebApp.Commands
         public int Handle(RemoveVacancyFromFavoritesCommand msg)
         {
             if (msg.ResearcherGuid == Guid.Empty) throw new ArgumentNullException($"ResearcherGuid is empty: {msg.ResearcherGuid}");
-            if (msg.VacancyGuid == Guid.Empty) throw new ArgumentNullException($"VacancyGuid is empty: {msg.VacancyGuid}");
 
             Researcher researcher = _repository.GetById<Researcher>(msg.ResearcherGuid);
             int favoritesCount = researcher.RemoveVacancyFromFavorites(msg.VacancyGuid);

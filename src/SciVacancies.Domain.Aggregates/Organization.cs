@@ -12,7 +12,7 @@ namespace SciVacancies.Domain.Aggregates
     {
         private OrganizationDataModel Data { get; set; }
 
-        private OrganizationStatus Status { get; set; }
+        public OrganizationStatus Status { get; private set; }
 
         public Organization()
         {
@@ -20,6 +20,9 @@ namespace SciVacancies.Domain.Aggregates
         }
         public Organization(Guid guid, OrganizationDataModel data)
         {
+            if (guid.Equals(Guid.Empty)) throw new ArgumentNullException("guid is empty");
+            if (data == null) throw new ArgumentNullException("data is empty");
+
             RaiseEvent(new OrganizationCreated()
             {
                 OrganizationGuid = guid,
@@ -31,24 +34,23 @@ namespace SciVacancies.Domain.Aggregates
 
         public void Update(OrganizationDataModel data)
         {
-            if (Status == OrganizationStatus.Active)
+            if (data == null) throw new ArgumentNullException("data is empty");
+            if (Status != OrganizationStatus.Active) throw new InvalidOperationException("organization state is invalid");
+
+            RaiseEvent(new OrganizationUpdated()
             {
-                RaiseEvent(new OrganizationUpdated()
-                {
-                    OrganizationGuid = this.Id,
-                    Data = data
-                });
-            }
+                OrganizationGuid = this.Id,
+                Data = data
+            });
         }
         public void Remove()
         {
-            if (Status != OrganizationStatus.Removed)
+            if (Status == OrganizationStatus.Removed) throw new InvalidOperationException("organization has been already removed");
+
+            RaiseEvent(new OrganizationRemoved()
             {
-                RaiseEvent(new OrganizationRemoved()
-                {
-                    OrganizationGuid = this.Id
-                });
-            }
+                OrganizationGuid = this.Id
+            });
         }
 
         #endregion

@@ -37,6 +37,11 @@
     "ConnectionUrl": "http://192.168.10.124:9200/",
     "DefaultIndex": "scivacancies"
   },
+  "SagaSettings": {
+    "Publish": "",
+    "Committee": "",
+    "OfferResponse": ""
+  },
   "QuartzSettings": {
     "Scheduler": {
       "InstanceName": "SciVacanciesScheduler"
@@ -53,7 +58,7 @@
     "DataSource": {
       "Default": {
         "ConnectionString": "Server = localhost; Database = scivacancies; User Id = postgres; Password = postgres",
-        "Provider":"Npgsql-20"
+        "Provider": "Npgsql-20"
       }
     }
   }

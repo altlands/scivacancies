@@ -51,11 +51,10 @@ namespace SciVacancies.WebApp.Commands
 
         public string Reason { get; set; }
     }
-    //TODO
-    //public class SetVacancyToResponseAwaitingCommand : CommandBase, IRequest
-    //{
-    //    public Guid VacancyGuid { get; set; }
-    //}
+    public class SetVacancyToResponseAwaitingCommand : CommandBase, IRequest
+    {
+        public Guid VacancyGuid { get; set; }
+    }
     public class SetWinnerAcceptOfferCommand : CommandBase, IRequest
     {
         public Guid VacancyGuid { get; set; }
