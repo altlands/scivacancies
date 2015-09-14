@@ -7,15 +7,17 @@ using MediatR;
 
 namespace SciVacancies.WebApp.Infrastructure.Saga
 {
-    public class VacancySagaActivator : INotificationHandler<VacancyPublished>
+    public class VacancySagaActivator :
+        INotificationHandler<VacancyPublished>,
+        INotificationHandler<VacancyInAwaitingOfferResponse>
     {
-        readonly ISagaRepository _repository;
-        readonly ISchedulerService _schedulerService;
+        readonly ISagaRepository sagaRepository;
+        readonly ISchedulerService schedulerService;
 
-        public VacancySagaActivator(ISagaRepository repository, ISchedulerService schedulerService)
+        public VacancySagaActivator(ISagaRepository sagaRepository, ISchedulerService schedulerService)
         {
-            _repository = repository;
-            _schedulerService = schedulerService;
+            this.sagaRepository = sagaRepository;
+            this.schedulerService = schedulerService;
         }
         public void Handle(VacancyPublished msg)
         {
@@ -24,17 +26,41 @@ namespace SciVacancies.WebApp.Infrastructure.Saga
             {
                 SagaGuid = saga.Id,
                 VacancyGuid = msg.VacancyGuid,
-                OrganizationGuid = msg.OrganizationGuid
+                OrganizationGuid = msg.OrganizationGuid,
+                //TODO вынести сроки в конфиг
+                PublishEndDate=msg.TimeStamp.AddDays(20)
             });
 
-            _repository.Save("vacancysaga", saga, Guid.NewGuid(), null);
+            sagaRepository.Save("vacancysaga", saga, Guid.NewGuid(), null);
 
             var job = new VacancySagaTimeoutJob()
             {
                 SagaGuid = saga.Id
             };
 
-            _schedulerService.CreateSheduledJob(job, job.SagaGuid, 1);
+            //вынести интервал в конфиг
+            schedulerService.CreateSheduledJob(job, job.SagaGuid, 1);
+        }
+        /// <summary>
+        /// Как только у вакансии этот статус проставляется - ожидается респонс от победителя или претендента. Нужно запустить таймер на 30 дней
+        /// </summary>
+        /// <param name="msg"></param>
+        public void Handle(VacancyInAwaitingOfferResponse msg)
+        {
+            VacancySaga saga = sagaRepository.GetById<VacancySaga>("vacancysaga", msg.VacancyGuid);
+            saga.Transition(new VacancySagaSwitchedInOfferAwaiting
+            {
+                //TODO вынести сроки в конфиг
+                OfferResponseAwaitingEndDate=msg.TimeStamp.AddDays(30)
+            });
+
+            var job = new VacancySagaTimeoutJob()
+            {
+                SagaGuid = saga.Id
+            };
+
+            //вынести интервал в конфиг
+            schedulerService.CreateSheduledJob(job, job.SagaGuid, 1);
         }
     }
 }

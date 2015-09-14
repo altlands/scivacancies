@@ -75,6 +75,7 @@ namespace SciVacancies.Domain.Events
     /// </summary>
     public class VacancyInAwaitingOfferResponse : VacancyEventBase
     {
+        //public bool IsSentToWinner { get; set; }
     }
     public class VacancyOfferAcceptedByWinner : VacancyEventBase
     {
