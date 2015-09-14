@@ -164,7 +164,7 @@ namespace SciVacancies.ReadModel.EventHandlers
         {
             using (var transaction = _db.GetTransaction())
             {
-                _db.Execute(new Sql($"UPDATE org_vacancies SET is_winner_accept = @0, status = @1, update_date = @2 WHERE guid = @3", true, VacancyStatus.OfferAccepted, msg.TimeStamp, msg.VacancyGuid));
+                _db.Execute(new Sql($"UPDATE org_vacancies SET is_winner_accept = @0, status = @1, update_date = @2 WHERE guid = @3", true, VacancyStatus.OfferAcceptedByWinner, msg.TimeStamp, msg.VacancyGuid));
                 transaction.Complete();
             }
         }
@@ -180,7 +180,7 @@ namespace SciVacancies.ReadModel.EventHandlers
         {
             using (var transaction = _db.GetTransaction())
             {
-                _db.Execute(new Sql($"UPDATE org_vacancies SET is_pretender_accept = @0, status = @1, update_date = @2 WHERE guid = @3", true, VacancyStatus.OfferAccepted, msg.TimeStamp, msg.VacancyGuid));
+                _db.Execute(new Sql($"UPDATE org_vacancies SET is_pretender_accept = @0, status = @1, update_date = @2 WHERE guid = @3", true, VacancyStatus.OfferAcceptedByPretender, msg.TimeStamp, msg.VacancyGuid));
                 transaction.Complete();
             }
         }
@@ -188,7 +188,7 @@ namespace SciVacancies.ReadModel.EventHandlers
         {
             using (var transaction = _db.GetTransaction())
             {
-                _db.Execute(new Sql($"UPDATE org_vacancies SET is_pretender_accept = @0, status = @1, update_date = @2 WHERE guid = @3", false, VacancyStatus.OfferRejected, msg.TimeStamp, msg.VacancyGuid));
+                _db.Execute(new Sql($"UPDATE org_vacancies SET is_pretender_accept = @0, status = @1, update_date = @2 WHERE guid = @3", false, VacancyStatus.OfferRejectedByPretender, msg.TimeStamp, msg.VacancyGuid));
                 transaction.Complete();
             }
         }

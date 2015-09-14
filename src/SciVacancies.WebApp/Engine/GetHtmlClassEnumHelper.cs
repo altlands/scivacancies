@@ -12,22 +12,26 @@ namespace SciVacancies.WebApp.Engine
         {
             switch (value)
             {
+                //return "failed"; //red
+                //return "draft"; //orange
+
                 case VacancyStatus.InProcess:
                 case VacancyStatus.Published:
                 case VacancyStatus.InCommittee:
                     return "work"; //orange
-                case VacancyStatus.OfferResponseAwaiting:
-                case VacancyStatus.OfferAccepted:
+                case VacancyStatus.OfferResponseAwaitingFromWinner:
+                case VacancyStatus.OfferResponseAwaitingFromPretender:
+                case VacancyStatus.OfferAcceptedByWinner:
+                case VacancyStatus.OfferAcceptedByPretender:
                     return "executed"; //green
-                case VacancyStatus.OfferRejected:
-                    return "failed"; //red
-
+                case VacancyStatus.OfferRejectedByWinner:
+                case VacancyStatus.OfferRejectedByPretender:
+                    return "closed"; //light-grey
                 case VacancyStatus.Closed:
                 case VacancyStatus.Cancelled:
-                    return "draft"; //orange
                 case VacancyStatus.Removed:
                     return "closed"; //light-grey
-                default:  return null;
+                default: return null;
             }
         }
 

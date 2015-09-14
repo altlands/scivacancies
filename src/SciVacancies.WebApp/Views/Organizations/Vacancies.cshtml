@@ -131,7 +131,11 @@
                             <a asp-controller="vacancies" asp-action="delete" asp-route-id="@item.guid" onclick="javascript: return confirm('Вы уверены что хотите удалить вакансию?');" class="close-td-icon" title="Удалить"></a>
                             <a asp-controller="vacancies" asp-action="publish" asp-route-id="@item.guid" class="class-td-icon" title="Опубликовать"></a>
                         }
-                        @if (item.status == VacancyStatus.Published || item.status == VacancyStatus.InCommittee || item.status == VacancyStatus.OfferResponseAwaiting || item.status == VacancyStatus.OfferRejected)
+                        @if (item.status != VacancyStatus.InProcess
+                            && item.status == VacancyStatus.Closed
+                            && item.status == VacancyStatus.Cancelled
+                            && item.status == VacancyStatus.Removed
+                            )
                         {
                             <a asp-controller="vacancies" asp-action="cancel" asp-route-id="@item.guid" onclick="javascript: return confirm('Вы уверены что хотите отменить вакансию?');" class="close-td-icon" title="Отменить вакансию"></a>
                         }
@@ -140,7 +144,7 @@
                             <br />
                             <a asp-controller="vacancies" asp-action="startincommittee" asp-route-id="@item.guid" title="Перевести на рассмотрение">на рассмотрение</a>
                         }
-                        @if (item.status == VacancyStatus.OfferAccepted || item.status == VacancyStatus.OfferRejected)
+                        @if (item.status == VacancyStatus.OfferAcceptedByWinner || item.status == VacancyStatus.OfferRejectedByPretender)
                         {
                             <br />
                             <a asp-controller="vacancies" asp-action="close" asp-route-id="@item.guid" title="Выбрать победителя">Закрыть вакансию</a>

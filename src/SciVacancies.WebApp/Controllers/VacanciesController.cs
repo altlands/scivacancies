@@ -642,8 +642,9 @@ namespace SciVacancies.WebApp.Controllers
             if (preModel.organization_guid != organizationGuid)
                 return View("Error", "Вы не можете менять Вакансии других организаций");
 
-            if (preModel.status != VacancyStatus.OfferAccepted && preModel.status != VacancyStatus.OfferRejected)
-                return View("Error", "Вы не можете закрыть вакансию, пока кто-то из победителей не даст согласится или оба не откажутся");
+            if (preModel.status == VacancyStatus.OfferAcceptedByWinner
+                || preModel.status == VacancyStatus.OfferAcceptedByPretender)
+                return View("Error", "Вы не можете закрыть вакансию, пока кто-то из победителей не даст согласится");
 
             return preModel;
         }
