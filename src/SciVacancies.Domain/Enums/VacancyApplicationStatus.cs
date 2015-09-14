@@ -17,7 +17,7 @@ namespace SciVacancies.Domain.Enums
         Applied = 1,
 
         /// <summary>
-        /// Заявка отменена (заявителем)
+        /// Заявка отменена (вакансию отменили, заявки - аналогично)
         /// </summary>
         [Description("Отменена")]
         Cancelled = 2,
@@ -40,17 +40,10 @@ namespace SciVacancies.Domain.Enums
         [Description("Не в финале")]
         Lost = 5,
 
-     
         /// <summary>
         /// Заявка со статусом "в работе" была удалена соискателем
         /// </summary>
         [Description("Удалена")]
         Removed = 6,
-
-        
-        ///// <summary>
-        ///// отказ от предложения (победителем, либо организацией если победитель согласился)
-        ///// </summary>
-        //Refused=7
     }
 }

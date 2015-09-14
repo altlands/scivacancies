@@ -58,13 +58,13 @@ namespace SciVacancies.Domain.Enums
         /// Претендент согласился подписать контракт
         /// </summary>
         [Description("Предложение принято претендентом")]
-        OfferResponseAcceptedByPretender = 8,
+        OfferAcceptedByPretender = 8,
 
         /// <summary>
         /// Претендент отказался подписать контракт
         /// </summary>
         [Description("Предложение отклонено претендентом")]
-        OfferResponseRejectedByPretender = 9,
+        OfferRejectedByPretender = 9,
 
         /// <summary>
         /// Контракт подписан с победителем или претендентом

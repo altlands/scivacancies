@@ -73,7 +73,7 @@ namespace SciVacancies.Domain.Events
     /// <summary>
     /// Предложение подписать контракт отправлено победителю
     /// </summary>
-    public class VacancyInAwaitingOfferResponseFromWinner : VacancyEventBase
+    public class VacancyInOfferResponseAwaitingFromWinner : VacancyEventBase
     {
     }
     public class VacancyOfferAcceptedByWinner : VacancyEventBase
@@ -82,7 +82,7 @@ namespace SciVacancies.Domain.Events
     public class VacancyOfferRejectedByWinner : VacancyEventBase
     {
     }
-    public class VacancyInAwaitingOfferResponseFromPretender : VacancyEventBase
+    public class VacancyInOfferResponseAwaitingFromPretender : VacancyEventBase
     {
     }
     public class VacancyOfferAcceptedByPretender : VacancyEventBase

@@ -136,7 +136,7 @@ namespace SciVacancies.Domain.Aggregates
             if (Status != VacancyStatus.InCommittee) throw new InvalidOperationException("vacancy state is invalid");
             if (WinnerResearcherGuid == Guid.Empty || WinnerVacancyApplicationGuid == Guid.Empty) throw new ArgumentNullException("WinnerGuid or WinnerVacancyApplicationGuid is empty");
 
-            RaiseEvent(new VacancyInAwaitingOfferResponseFromWinner
+            RaiseEvent(new VacancyInOfferResponseAwaitingFromWinner
             {
                 VacancyGuid = this.Id,
                 OrganizationGuid = this.OrganizationGuid
@@ -158,7 +158,7 @@ namespace SciVacancies.Domain.Aggregates
         {
             if (this.WinnerResearcherGuid.Equals(Guid.Empty)) throw new ArgumentNullException("WinnerResearcherGuid is empty");
             if (this.WinnerVacancyApplicationGuid.Equals(Guid.Empty)) throw new ArgumentNullException("WinnerVacancyApplicationGuid is empty");
-            if (Status != VacancyStatus.OfferResponseAwaiting) throw new InvalidOperationException("vacancy state is invalid");
+            if (Status != VacancyStatus.OfferResponseAwaitingFromWinner) throw new InvalidOperationException("vacancy state is invalid");
 
             RaiseEvent(new VacancyOfferRejectedByWinner
             {
@@ -168,25 +168,21 @@ namespace SciVacancies.Domain.Aggregates
         }
         public void VacancyToResponseAwaitingFromPretender()
         {
+            if (Status != VacancyStatus.OfferRejectedByWinner) throw new InvalidOperationException("vacancy state is invalid");
+            if (PretenderResearcherGuid == Guid.Empty || PretenderVacancyApplicationGuid == Guid.Empty) throw new ArgumentNullException("WinnerGuid or WinnerVacancyApplicationGuid is empty");
 
-        }
-        public void VacancyToResponseAwaiting()
-        {
-            if (!(Status == VacancyStatus.InCommittee || Status == VacancyStatus.OfferRejected)) throw new InvalidOperationException("vacancy state is invalid");
-            if (WinnerResearcherGuid == Guid.Empty || WinnerVacancyApplicationGuid == Guid.Empty) throw new ArgumentNullException("WinnerGuid or WinnerVacancyApplicationGuid is empty");
-
-            //RaiseEvent(new VacancyInAwaitingOfferResponse
-            //{
-            //    VacancyGuid = this.Id,
-            //    OrganizationGuid = this.OrganizationGuid
-            //});
+            RaiseEvent(new VacancyInOfferResponseAwaitingFromPretender
+            {
+                VacancyGuid = this.Id,
+                OrganizationGuid = this.OrganizationGuid
+            });
         }
         public void PretenderAcceptOffer()
         {
             if (this.PretenderResearcherGuid.Equals(Guid.Empty)) throw new ArgumentNullException("PretenderResearcherGuid is empty");
             if (this.PretenderVacancyApplicationGuid.Equals(Guid.Empty)) throw new ArgumentNullException("PretenderVacancyApplicationGuid is empty");
             if (!(this.IsWinnerAccept.HasValue && !this.IsWinnerAccept.Value)) throw new InvalidOperationException("IsWinnerAccept is invalid");
-            if (Status != VacancyStatus.OfferResponseAwaiting) throw new InvalidOperationException("vacancy state is invalid");
+            if (Status != VacancyStatus.OfferResponseAwaitingFromPretender) throw new InvalidOperationException("vacancy state is invalid");
 
             RaiseEvent(new VacancyOfferAcceptedByPretender
             {
@@ -199,7 +195,7 @@ namespace SciVacancies.Domain.Aggregates
             if (this.PretenderResearcherGuid.Equals(Guid.Empty)) throw new ArgumentNullException("PretenderResearcherGuid is empty");
             if (this.PretenderVacancyApplicationGuid.Equals(Guid.Empty)) throw new ArgumentNullException("PretenderVacancyApplicationGuid is empty");
             if (!(this.IsWinnerAccept.HasValue && !this.IsWinnerAccept.Value)) throw new InvalidOperationException("IsWinnerAccept is invalid");
-            if (Status != VacancyStatus.OfferResponseAwaiting) throw new InvalidOperationException("vacancy state is invalid");
+            if (Status != VacancyStatus.OfferResponseAwaitingFromPretender) throw new InvalidOperationException("vacancy state is invalid");
 
             RaiseEvent(new VacancyOfferRejectedByPretender
             {
@@ -209,7 +205,7 @@ namespace SciVacancies.Domain.Aggregates
         }
         public void Close()
         {
-            if (Status != VacancyStatus.OfferAccepted) throw new InvalidOperationException("vacancy state is invalid");
+            //if (!(Status == VacancyStatus.OfferAcceptedByWinner||Status==VacancyStatus.of)) throw new InvalidOperationException("vacancy state is invalid");
 
             RaiseEvent(new VacancyClosed
             {
