@@ -34,7 +34,7 @@ namespace SciVacancies.Domain.Enums
         /// Ожидается решение от победителя
         /// </summary>
         [Description("Предложение контракта победителю")]
-        OfferResponseFromWinnerAwaiting = 4,
+        OfferResponseAwaitingFromWinner = 4,
 
         /// <summary>
         /// Победитель согласился подписать контракт
@@ -52,19 +52,19 @@ namespace SciVacancies.Domain.Enums
         /// Ожидается решение от претендента
         /// </summary>
         [Description("Предложение контракта претенденту")]
-        OfferResponseFromPretenderAwaiting = 7,
+        OfferResponseAwaitingFromPretender = 7,
 
         /// <summary>
         /// Претендент согласился подписать контракт
         /// </summary>
         [Description("Предложение принято претендентом")]
-        OfferResponseAcceptedByPretender = 8,
+        OfferAcceptedByPretender = 8,
 
         /// <summary>
         /// Претендент отказался подписать контракт
         /// </summary>
         [Description("Предложение отклонено претендентом")]
-        OfferResponseRejectedByPretender = 9,
+        OfferRejectedByPretender = 9,
 
         /// <summary>
         /// Контракт подписан с победителем или претендентом

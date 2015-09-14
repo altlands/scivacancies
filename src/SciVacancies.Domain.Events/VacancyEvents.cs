@@ -71,16 +71,18 @@ namespace SciVacancies.Domain.Events
         public string Reason { get; set; }
     }
     /// <summary>
-    /// Предложение подписать контракт отправлено победителю или претенденту. Ожидается согласие с их стороны
+    /// Предложение подписать контракт отправлено победителю
     /// </summary>
-    public class VacancyInAwaitingOfferResponse : VacancyEventBase
+    public class VacancyInOfferResponseAwaitingFromWinner : VacancyEventBase
     {
-        //public bool IsSentToWinner { get; set; }
     }
     public class VacancyOfferAcceptedByWinner : VacancyEventBase
     {
     }
     public class VacancyOfferRejectedByWinner : VacancyEventBase
+    {
+    }
+    public class VacancyInOfferResponseAwaitingFromPretender : VacancyEventBase
     {
     }
     public class VacancyOfferAcceptedByPretender : VacancyEventBase
