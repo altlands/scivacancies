@@ -150,7 +150,7 @@ namespace SciVacancies.WebApp.Commands
             Vacancy vacancy = _repository.GetById<Vacancy>(msg.VacancyGuid);
 
             if (vacancy.IsWinnerAccept.HasValue && vacancy.IsPretenderAccept.HasValue) throw new InvalidOperationException("IsWinnerAccept and IsPretenderAccept already have values");
-
+       
             vacancy.VacancyToResponseAwaiting();
             _repository.Save(vacancy, Guid.NewGuid(), null);
 
