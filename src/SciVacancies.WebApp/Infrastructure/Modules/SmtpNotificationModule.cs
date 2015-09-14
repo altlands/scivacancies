@@ -1,6 +1,7 @@
 ﻿using Autofac;
 using SciVacancies.Services;
-using SciVacancies.Services.SmtpNotificators;
+using SciVacancies.Services.Email;
+using SciVacancies.SmtpNotifications.SmtpNotificators;
 
 namespace SciVacancies.WebApp.Infrastructure
 {

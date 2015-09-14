@@ -2,9 +2,9 @@
 using NPoco;
 using SciVacancies.Domain.Events;
 using SciVacancies.ReadModel.Core;
-using SciVacancies.Services.SmtpNotificators;
+using SciVacancies.SmtpNotifications.SmtpNotificators;
 
-namespace SciVacancies.SmtpNotificationsHandlers.Handlers
+namespace SciVacancies.SmtpNotifications.Handlers
 {
     public class VacancyApplicationEventsHandler :
         INotificationHandler<VacancyApplicationApplied>

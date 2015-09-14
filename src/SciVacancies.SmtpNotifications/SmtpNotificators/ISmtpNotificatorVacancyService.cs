@@ -1,7 +1,7 @@
 ﻿using System;
 using SciVacancies.ReadModel.Core;
 
-namespace SciVacancies.Services.SmtpNotificators
+namespace SciVacancies.SmtpNotifications.SmtpNotificators
 {
     public interface ISmtpNotificatorVacancyService
     {

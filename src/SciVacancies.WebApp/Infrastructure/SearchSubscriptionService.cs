@@ -13,7 +13,7 @@ using Npgsql;
 using SciVacancies.WebApp.Engine;
 using SciVacancies.ReadModel.ElasticSearchModel.Model;
 using Microsoft.Framework.ConfigurationModel;
-using SciVacancies.Services.SmtpNotificators;
+using SciVacancies.SmtpNotifications.SmtpNotificators;
 
 namespace SciVacancies.WebApp.Infrastructure
 {

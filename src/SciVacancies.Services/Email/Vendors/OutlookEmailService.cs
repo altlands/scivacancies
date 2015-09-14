@@ -1,4 +1,4 @@
-﻿namespace SciVacancies.SmtpNotifications.Vendors
+﻿namespace SciVacancies.Services.Email.Vendors
 {
     public class OutlookEmailService : SmtpEmailService
     {

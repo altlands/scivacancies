@@ -1,6 +1,6 @@
 ﻿using System.Net.Mail;
 
-namespace SciVacancies.Services
+namespace SciVacancies.SmtpNotifications
 {
     public class SciVacMailMessage : MailMessage
     {

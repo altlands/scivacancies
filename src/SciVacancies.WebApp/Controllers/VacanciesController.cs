@@ -343,8 +343,9 @@ namespace SciVacancies.WebApp.Controllers
             if (preModel.organization_guid != organizationGuid)
                 return View("Error", "Вы не можете отменить вакансии других организаций");
 
-            if (preModel.status != VacancyStatus.Published && preModel.status != VacancyStatus.InCommittee)
-                return View("Error", $"Вы не можете отменить вакансию со статусом: {preModel.status.GetDescription()}");
+            //todo: review this requirement (vacancy cancelling)
+            //if (preModel.status != VacancyStatus.Published && preModel.status != VacancyStatus.InCommittee)
+            //    return View("Error", $"Вы не можете отменить вакансию со статусом: {preModel.status.GetDescription()}");
 
             var model = Mapper.Map<VacancyDetailsViewModel>(preModel);
 
