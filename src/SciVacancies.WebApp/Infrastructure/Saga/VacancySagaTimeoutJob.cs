@@ -91,7 +91,7 @@ namespace SciVacancies.WebApp.Infrastructure
                     }
                     if (saga.OfferResponseAwaitingFromWinnerEndDate <= DateTime.UtcNow)
                     {
-                        saga.Transition(new VacancySagaOfferRejectByWinner());
+                        saga.Transition(new VacancySagaOfferRejectedByWinner());
                         sagaRepository.Save("vacancysaga", saga, Guid.NewGuid(), null);
 
                         Vacancy vacancy = repository.GetById<Vacancy>(saga.VacancyGuid);
@@ -115,7 +115,7 @@ namespace SciVacancies.WebApp.Infrastructure
                     }
                     if (saga.OfferResponseAwaitingFromPretenderEndDate <= DateTime.UtcNow)
                     {
-                        saga.Transition(new VacancySagaOfferRejectByPretender());
+                        saga.Transition(new VacancySagaOfferRejectedByPretender());
                         sagaRepository.Save("vacancysaga", saga, Guid.NewGuid(), null);
 
                         Vacancy vacancy = repository.GetById<Vacancy>(saga.VacancyGuid);

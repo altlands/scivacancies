@@ -10,8 +10,15 @@ namespace SciVacancies.WebApp.Infrastructure.Saga
 {
     public class VacancySagaActivator :
     INotificationHandler<VacancyPublished>,
+    INotificationHandler<VacancyProlongedInCommittee>,
     INotificationHandler<VacancyInOfferResponseAwaitingFromWinner>,
-    INotificationHandler<VacancyInOfferResponseAwaitingFromPretender>
+    INotificationHandler<VacancyOfferAcceptedByWinner>,
+    INotificationHandler<VacancyOfferRejectedByWinner>,
+    INotificationHandler<VacancyInOfferResponseAwaitingFromPretender>,
+    INotificationHandler<VacancyOfferAcceptedByPretender>,
+    INotificationHandler<VacancyOfferRejectedByPretender>,
+    INotificationHandler<VacancyCancelled>,
+    INotificationHandler<VacancyClosed>
     {
         readonly ISagaRepository sagaRepository;
         readonly ISchedulerService schedulerService;
@@ -29,8 +36,9 @@ namespace SciVacancies.WebApp.Infrastructure.Saga
                 SagaGuid = saga.Id,
                 VacancyGuid = msg.VacancyGuid,
                 OrganizationGuid = msg.OrganizationGuid,
-                //TODO вынести сроки в конфиг
-                PublishEndDate = msg.TimeStamp.AddDays(20)
+
+                InCommitteeStartDate = msg.InCommitteeStartDate,
+                InCommitteeEndDate = msg.InCommitteeEndDate
             });
 
             sagaRepository.Save("vacancysaga", saga, Guid.NewGuid(), null);
@@ -43,34 +51,121 @@ namespace SciVacancies.WebApp.Infrastructure.Saga
             //вынести интервал в конфиг
             schedulerService.CreateSheduledJob(job, job.SagaGuid, 1);
         }
+
+        public void Handle(VacancyProlongedInCommittee msg)
+        {
+            VacancySaga saga = sagaRepository.GetById<VacancySaga>("vacancysaga", msg.VacancyGuid);
+            saga.Transition(new VacancySagaProlongedInCommittee
+            {
+                SagaGuid = saga.Id,
+
+                InCommitteeEndDate = msg.InCommitteeEndDate
+            });
+
+            sagaRepository.Save("vacancysaga", saga, Guid.NewGuid(), null);
+        }
+
         /// <summary>
         /// Как только у вакансии этот статус проставляется - ожидается респонс от победителя или претендента. Нужно запустить таймер на 30 дней
         /// </summary>
         /// <param name="msg"></param>
         public void Handle(VacancyInOfferResponseAwaitingFromWinner msg)
         {
-            throw new NotImplementedException();
+            VacancySaga saga = sagaRepository.GetById<VacancySaga>("vacancysaga", msg.VacancyGuid);
+            saga.Transition(new VacancySagaSwitchedInOfferResponseAwaitingFromWinner
+            {
+                SagaGuid = saga.Id,
+                OfferResponseAwaitingFromWinnerEndDate = msg.TimeStamp.AddDays(30)
+            });
 
-            //VacancySaga saga = sagaRepository.GetById<VacancySaga>("vacancysaga", msg.VacancyGuid);
-            //saga.Transition(new VacancySagaSwitchedInOfferAwaiting
-            //{
-            //    //TODO вынести сроки в конфиг
-            //    OfferResponseAwaitingEndDate = msg.TimeStamp.AddDays(30)
-            //});
+            sagaRepository.Save("vacancysaga", saga, Guid.NewGuid(), null);
 
-            //var job = new VacancySagaTimeoutJob()
-            //{
-            //    SagaGuid = saga.Id
-            //};
+            var job = new VacancySagaTimeoutJob()
+            {
+                SagaGuid = saga.Id
+            };
 
-            ////вынести интервал в конфиг
-            //schedulerService.CreateSheduledJob(job, job.SagaGuid, 1);
+            //вынести интервал в конфиг
+            schedulerService.CreateSheduledJob(job, job.SagaGuid, 1);
+        }
+        public void Handle(VacancyOfferAcceptedByWinner msg)
+        {
+            VacancySaga saga = sagaRepository.GetById<VacancySaga>("vacancysaga", msg.VacancyGuid);
+            saga.Transition(new VacancySagaOfferAcceptedByWinner
+            {
+                SagaGuid = saga.Id
+            });
+
+            sagaRepository.Save("vacancysaga", saga, Guid.NewGuid(), null);
+        }
+        public void Handle(VacancyOfferRejectedByWinner msg)
+        {
+            VacancySaga saga = sagaRepository.GetById<VacancySaga>("vacancysaga", msg.VacancyGuid);
+            saga.Transition(new VacancySagaOfferRejectedByWinner
+            {
+                SagaGuid = saga.Id
+            });
+
+            sagaRepository.Save("vacancysaga", saga, Guid.NewGuid(), null);
         }
         public void Handle(VacancyInOfferResponseAwaitingFromPretender msg)
         {
-            throw new NotImplementedException();
+            VacancySaga saga = sagaRepository.GetById<VacancySaga>("vacancysaga", msg.VacancyGuid);
+            saga.Transition(new VacancySagaSwitchedInOfferResponseAwaitingFromPretender
+            {
+                SagaGuid = saga.Id,
+                OfferResponseAwaitingFromPretenderEndDate = msg.TimeStamp.AddDays(30)
+            });
 
+            sagaRepository.Save("vacancysaga", saga, Guid.NewGuid(), null);
 
+            var job = new VacancySagaTimeoutJob()
+            {
+                SagaGuid = saga.Id
+            };
+
+            //вынести интервал в конфиг
+            schedulerService.CreateSheduledJob(job, job.SagaGuid, 1);
+        }
+        public void Handle(VacancyOfferAcceptedByPretender msg)
+        {
+            VacancySaga saga = sagaRepository.GetById<VacancySaga>("vacancysaga", msg.VacancyGuid);
+            saga.Transition(new VacancySagaOfferAcceptedByPretender
+            {
+                SagaGuid = saga.Id
+            });
+
+            sagaRepository.Save("vacancysaga", saga, Guid.NewGuid(), null);
+        }
+        public void Handle(VacancyOfferRejectedByPretender msg)
+        {
+            VacancySaga saga = sagaRepository.GetById<VacancySaga>("vacancysaga", msg.VacancyGuid);
+            saga.Transition(new VacancySagaOfferRejectedByPretender
+            {
+                SagaGuid = saga.Id
+            });
+
+            sagaRepository.Save("vacancysaga", saga, Guid.NewGuid(), null);
+        }
+        public void Handle(VacancyCancelled msg)
+        {
+            VacancySaga saga = sagaRepository.GetById<VacancySaga>("vacancysaga", msg.VacancyGuid);
+            saga.Transition(new VacancySagaCancelled
+            {
+                SagaGuid = saga.Id
+            });
+
+            sagaRepository.Save("vacancysaga", saga, Guid.NewGuid(), null);
+        }
+        public void Handle(VacancyClosed msg)
+        {
+            VacancySaga saga = sagaRepository.GetById<VacancySaga>("vacancysaga", msg.VacancyGuid);
+            saga.Transition(new VacancySagaClosed
+            {
+                SagaGuid = saga.Id
+            });
+
+            sagaRepository.Save("vacancysaga", saga, Guid.NewGuid(), null);
         }
     }
 }
