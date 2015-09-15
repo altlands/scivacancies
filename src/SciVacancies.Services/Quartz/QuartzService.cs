@@ -1,18 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Quartz;
-using Quartz.Core;
 using Quartz.Impl;
-using Quartz.Listener;
 using Quartz.Spi;
 using Microsoft.Framework.ConfigurationModel;
 using System.Collections.Specialized;
 using Newtonsoft.Json;
-using SciVacancies.Services.Quartz;
 
-namespace SciVacancies.WebApp.Infrastructure
+namespace SciVacancies.Services.Quartz
 {
     public class QuartzService : ISchedulerService
     {
@@ -94,5 +88,4 @@ namespace SciVacancies.WebApp.Infrastructure
             if (scheduler.IsStarted) scheduler.Shutdown(true);
         }
     }
-
 }

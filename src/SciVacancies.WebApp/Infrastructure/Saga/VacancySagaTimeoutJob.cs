@@ -3,9 +3,6 @@ using SciVacancies.Domain.Aggregates;
 using SciVacancies.WebApp.Infrastructure.Saga;
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 using Quartz;
 using SciVacancies.Services.Quartz;

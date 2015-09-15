@@ -2,7 +2,6 @@
 using Quartz;
 using Quartz.Spi;
 using SciVacancies.Services.Quartz;
-using SciVacancies.WebApp.Infrastructure;
 
 namespace SciVacancies.Services
 {
