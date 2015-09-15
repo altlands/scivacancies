@@ -1,5 +1,8 @@
 ﻿using System;
 using Autofac;
+using Autofac.Features.Variance;
+using SciVacancies.SearchSubscriptionsService.Quartz;
+using SciVacancies.Services.Quartz;
 using Topshelf;
 
 namespace SciVacancies.SearchSubscriptionsService
@@ -33,6 +36,19 @@ namespace SciVacancies.SearchSubscriptionsService
             //});
 
 
+            #region Autofac
+            //var builder = new ContainerBuilder();
+            //builder.RegisterSource(new ContravariantRegistrationSource());
+            //builder.RegisterModule(new QuartzModule());
+            ////builder.Populate(services);
+            //builder.RegisterType<>()
+            //var container = builder.Build();
+
+            //SchedulerServiceInitialize(container.Resolve<ISchedulerService>());
+
+            //return container.Resolve<IServiceProvider>();
+
+            #endregion
             var subscriptionService = new SubscriptionService();
             subscriptionService.Start();
 

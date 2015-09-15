@@ -177,7 +177,7 @@ namespace SciVacancies.WebApp.ViewModels
         /// <summary>
         /// протокол закрытия
         /// </summary>
-        public string CloseReason { get; set; }
+        public string CommitteeReasolution { get; set; }
 
         /// <summary>
         /// файлы, описывающие вакансию
