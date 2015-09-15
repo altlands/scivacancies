@@ -1,9 +1,11 @@
 ﻿using SciVacancies.Domain.Enums;
 using SciVacancies.Domain.Aggregates;
 using SciVacancies.WebApp.Infrastructure.Saga;
+using SciVacancies.WebApp.Commands;
 
 using System;
 
+using MediatR;
 using Quartz;
 using SciVacancies.Services.Quartz;
 
@@ -19,10 +21,7 @@ namespace SciVacancies.WebApp.Infrastructure
         /// </summary>
         readonly ISagaRepository sagaRepository;
 
-        /// <summary>
-        /// Репозиторий с агрегатами
-        /// </summary>
-        readonly CommonDomain.Persistence.IRepository repository;
+        readonly IMediator mediator;
 
         readonly ISchedulerService scheduler;
 
@@ -31,10 +30,9 @@ namespace SciVacancies.WebApp.Infrastructure
             //оставляем пустым
         }
 
-        public VacancySagaTimeoutJob(ISagaRepository sagaRepository, CommonDomain.Persistence.IRepository repository, ISchedulerService scheduler)
+        public VacancySagaTimeoutJob(ISagaRepository sagaRepository, IMediator mediator, ISchedulerService scheduler)
         {
             this.sagaRepository = sagaRepository;
-            this.repository = repository;
             this.scheduler = scheduler;
         }
 
@@ -50,9 +48,10 @@ namespace SciVacancies.WebApp.Infrastructure
                         saga.Transition(new VacancySagaSwitchedInCommittee());
                         sagaRepository.Save("vacancysaga", saga, Guid.NewGuid(), null);
 
-                        Vacancy vacancy = repository.GetById<Vacancy>(saga.VacancyGuid);
-                        vacancy.VacancyToCommittee();
-                        repository.Save(vacancy, Guid.NewGuid(), null);
+                        mediator.Send(new SwitchVacancyInCommitteeCommand
+                        {
+                            VacancyGuid = SagaGuid
+                        });
                     }
                     break;
 
@@ -63,6 +62,7 @@ namespace SciVacancies.WebApp.Infrastructure
                         saga.Transition(new VacancySagaFirstInCommitteeNotificationSent());
                         sagaRepository.Save("vacancysaga", saga, Guid.NewGuid(), null);
 
+                        throw new NotImplementedException();
                         //TODO отправить уведомление, что пора бы опубликовывать протокол комиссии (скоро истекут 15 или 30 дней)
                     }
                     //TODO вынести сроки в конфиг
@@ -71,6 +71,7 @@ namespace SciVacancies.WebApp.Infrastructure
                         saga.Transition(new VacancySagaSecondInCommitteeNotificationSent());
                         sagaRepository.Save("vacancysaga", saga, Guid.NewGuid(), null);
 
+                        throw new NotImplementedException();
                         //TODO отправить уведомление, что скоро истекут сроки (3 дня) на публикацию протокола (а 15 или 30 дней уже прошли)
 
                         //отправили два увеодмления, теперь ничего не делаем и просто ждём, когда организация выберет победителя и претендта(необязательно) и приложит
@@ -87,6 +88,7 @@ namespace SciVacancies.WebApp.Infrastructure
                         saga.Transition(new VacancySagaOfferResponseNotificationSentToWinner());
                         sagaRepository.Save("vacancysaga", saga, Guid.NewGuid(), null);
 
+                        throw new NotImplementedException();
                         //TODO отправить уведомление
                     }
                     if (saga.OfferResponseAwaitingFromWinnerEndDate <= DateTime.UtcNow)
@@ -94,9 +96,11 @@ namespace SciVacancies.WebApp.Infrastructure
                         saga.Transition(new VacancySagaOfferRejectedByWinner());
                         sagaRepository.Save("vacancysaga", saga, Guid.NewGuid(), null);
 
-                        Vacancy vacancy = repository.GetById<Vacancy>(saga.VacancyGuid);
-                        vacancy.WinnerRejectOffer();
-                        repository.Save(vacancy, Guid.NewGuid(), null);
+
+                        mediator.Send(new SetWinnerRejectOfferCommand
+                        {
+                            VacancyGuid = SagaGuid
+                        });
 
                         //перевели вакансию в статус "предложение контракта отклонено победителем" и ждём решения от организации (отменять вакансию или отправить оффер претенднету)
                         scheduler.RemoveScheduledJob(SagaGuid);
@@ -111,6 +115,7 @@ namespace SciVacancies.WebApp.Infrastructure
                         saga.Transition(new VacancySagaOfferResponseNotificationSentToPretender());
                         sagaRepository.Save("vacancysaga", saga, Guid.NewGuid(), null);
 
+                        throw new NotImplementedException();
                         //TODO отправить уведомление
                     }
                     if (saga.OfferResponseAwaitingFromPretenderEndDate <= DateTime.UtcNow)
@@ -118,15 +123,19 @@ namespace SciVacancies.WebApp.Infrastructure
                         saga.Transition(new VacancySagaOfferRejectedByPretender());
                         sagaRepository.Save("vacancysaga", saga, Guid.NewGuid(), null);
 
-                        Vacancy vacancy = repository.GetById<Vacancy>(saga.VacancyGuid);
-                        vacancy.PretenderRejectOffer();
-                        repository.Save(vacancy, Guid.NewGuid(), null);
+                        mediator.Send(new SetPretenderRejectOfferCommand
+                        {
+                            VacancyGuid = SagaGuid
+                        });
 
                         saga.Transition(new VacancySagaCancelled());
                         sagaRepository.Save("vacancysaga", saga, Guid.NewGuid(), null);
 
-                        vacancy.Cancel("Pretender didn't click the button");
-                        repository.Save(vacancy, Guid.NewGuid(), null);
+                        mediator.Send(new CancelVacancyCommand
+                        {
+                            VacancyGuid = SagaGuid,
+                            Reason = "Pretender didn't click the button"
+                        });
 
                         //перевели вакансию в статус "предложение контракта отклонено претендентом" и ждём решения от организации
                         scheduler.RemoveScheduledJob(SagaGuid);
