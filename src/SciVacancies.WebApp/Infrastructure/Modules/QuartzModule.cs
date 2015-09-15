@@ -1,8 +1,10 @@
-﻿using Quartz;
+﻿using Autofac;
+using Quartz;
 using Quartz.Spi;
-using Autofac;
+using SciVacancies.Services.Quartz;
+using SciVacancies.WebApp.Infrastructure;
 
-namespace SciVacancies.WebApp.Infrastructure
+namespace SciVacancies.Services
 {
     public class QuartzModule : Module
     {

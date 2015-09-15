@@ -5,7 +5,6 @@ using Autofac;
 using Autofac.Dnx;
 using Autofac.Features.Variance;
 using Microsoft.AspNet.Builder;
-using Microsoft.AspNet.DataProtection;
 using Microsoft.AspNet.Diagnostics;
 using Microsoft.AspNet.Hosting;
 using Microsoft.AspNet.Identity;
@@ -13,6 +12,8 @@ using Microsoft.AspNet.Mvc;
 using Microsoft.Framework.ConfigurationModel;
 using Microsoft.Framework.DependencyInjection;
 using Microsoft.Framework.Logging;
+using SciVacancies.Services;
+using SciVacancies.Services.Quartz;
 using SciVacancies.WebApp.Infrastructure;
 
 namespace SciVacancies.WebApp

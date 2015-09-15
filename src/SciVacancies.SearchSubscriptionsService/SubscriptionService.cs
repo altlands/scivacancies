@@ -18,7 +18,6 @@ namespace SciVacancies.SearchSubscriptionsService
 
         public SubscriptionService()
         {
-            Debugger.Break();
             MinuteInterval = 1;
         }
 
