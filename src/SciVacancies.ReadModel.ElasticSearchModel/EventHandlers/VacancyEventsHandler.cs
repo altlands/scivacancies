@@ -14,8 +14,12 @@ namespace SciVacancies.ReadModel.ElasticSearchModel.EventHandlers
         INotificationHandler<VacancyRemoved>,
         INotificationHandler<VacancyPublished>,
         INotificationHandler<VacancyInCommittee>,
-        INotificationHandler<VacancyInAwaitingOfferResponse>,
-        INotificationHandler<VacancyPretenderSet>,
+        INotificationHandler<VacancyInOfferResponseAwaitingFromWinner>,
+        INotificationHandler<VacancyOfferAcceptedByWinner>,
+        INotificationHandler<VacancyOfferRejectedByWinner>,
+        INotificationHandler<VacancyInOfferResponseAwaitingFromPretender>,
+        INotificationHandler<VacancyOfferAcceptedByPretender>,
+        INotificationHandler<VacancyOfferRejectedByPretender>,
         INotificationHandler<VacancyClosed>,
         INotificationHandler<VacancyCancelled>
     {
@@ -59,19 +63,51 @@ namespace SciVacancies.ReadModel.ElasticSearchModel.EventHandlers
 
             _elasticClient.Update<Vacancy>(u => u.IdFrom(vacancy).Doc(vacancy));
         }
-        public void Handle(VacancyInAwaitingOfferResponse msg)
+        public void Handle(VacancyInOfferResponseAwaitingFromWinner msg)
         {
             Vacancy vacancy = _elasticClient.Get<Vacancy>(msg.VacancyGuid.ToString()).Source;
             vacancy.AwaitingDate = msg.TimeStamp;
-            vacancy.Status = VacancyStatus.OfferResponseAwaiting;
+            vacancy.Status = VacancyStatus.OfferResponseAwaitingFromWinner;
 
             _elasticClient.Update<Vacancy>(u => u.IdFrom(vacancy).Doc(vacancy));
         }
-        public void Handle(VacancyPretenderSet msg)
+        public void Handle(VacancyOfferAcceptedByWinner msg)
         {
             Vacancy vacancy = _elasticClient.Get<Vacancy>(msg.VacancyGuid.ToString()).Source;
             vacancy.AwaitingDate = msg.TimeStamp;
-            vacancy.Status = VacancyStatus.OfferResponseAwaiting;
+            vacancy.Status = VacancyStatus.OfferAcceptedByWinner;
+
+            _elasticClient.Update<Vacancy>(u => u.IdFrom(vacancy).Doc(vacancy));
+        }
+        public void Handle(VacancyOfferRejectedByWinner msg)
+        {
+            Vacancy vacancy = _elasticClient.Get<Vacancy>(msg.VacancyGuid.ToString()).Source;
+            vacancy.AwaitingDate = msg.TimeStamp;
+            vacancy.Status = VacancyStatus.OfferRejectedByWinner;
+
+            _elasticClient.Update<Vacancy>(u => u.IdFrom(vacancy).Doc(vacancy));
+        }
+        public void Handle(VacancyInOfferResponseAwaitingFromPretender msg)
+        {
+            Vacancy vacancy = _elasticClient.Get<Vacancy>(msg.VacancyGuid.ToString()).Source;
+            vacancy.AwaitingDate = msg.TimeStamp;
+            vacancy.Status = VacancyStatus.OfferResponseAwaitingFromPretender;
+
+            _elasticClient.Update<Vacancy>(u => u.IdFrom(vacancy).Doc(vacancy));
+        }
+        public void Handle(VacancyOfferAcceptedByPretender msg)
+        {
+            Vacancy vacancy = _elasticClient.Get<Vacancy>(msg.VacancyGuid.ToString()).Source;
+            vacancy.AwaitingDate = msg.TimeStamp;
+            vacancy.Status = VacancyStatus.OfferAcceptedByPretender;
+
+            _elasticClient.Update<Vacancy>(u => u.IdFrom(vacancy).Doc(vacancy));
+        }
+        public void Handle(VacancyOfferRejectedByPretender msg)
+        {
+            Vacancy vacancy = _elasticClient.Get<Vacancy>(msg.VacancyGuid.ToString()).Source;
+            vacancy.AwaitingDate = msg.TimeStamp;
+            vacancy.Status = VacancyStatus.OfferRejectedByPretender;
 
             _elasticClient.Update<Vacancy>(u => u.IdFrom(vacancy).Doc(vacancy));
         }

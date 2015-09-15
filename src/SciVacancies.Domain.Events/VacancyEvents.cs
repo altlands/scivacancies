@@ -67,27 +67,46 @@ namespace SciVacancies.Domain.Events
     {
         public Guid PretenderReasearcherGuid { get; set; }
         public Guid PretenderVacancyApplicationGuid { get; set; }
-
-        public string Reason { get; set; }
     }
+
     /// <summary>
     /// Предложение подписать контракт отправлено победителю
     /// </summary>
     public class VacancyInOfferResponseAwaitingFromWinner : VacancyEventBase
     {
     }
+
+    /// <summary>
+    /// Предложение принято победителем
+    /// </summary>
     public class VacancyOfferAcceptedByWinner : VacancyEventBase
     {
     }
+
+    /// <summary>
+    /// Предложение отклонено победителем
+    /// </summary>
     public class VacancyOfferRejectedByWinner : VacancyEventBase
     {
     }
+
+    /// <summary>
+    /// Предложение подписать контракт отправлено претенденту
+    /// </summary>
     public class VacancyInOfferResponseAwaitingFromPretender : VacancyEventBase
     {
     }
+
+    /// <summary>
+    /// Предложение принято претендентом
+    /// </summary>
     public class VacancyOfferAcceptedByPretender : VacancyEventBase
     {
     }
+
+    /// <summary>
+    /// Предложение отклонено претендентом
+    /// </summary>
     public class VacancyOfferRejectedByPretender : VacancyEventBase
     {
     }

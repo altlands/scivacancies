@@ -149,7 +149,7 @@ namespace SciVacancies.ReadModel.Core
         public string cancel_reason { get; set; }
 
         /// <summary>
-        /// обоснование закрытия заявки
+        /// обоснование закрытия заявки (одно для победителя и претенднта) - аналог протокола комиссии
         /// </summary>
         public string close_reason { get; set; }
 

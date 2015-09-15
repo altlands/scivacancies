@@ -51,7 +51,7 @@ namespace SciVacancies.WebApp.Commands
 
         public string Reason { get; set; }
     }
-    public class SetVacancyToResponseAwaitingCommand : CommandBase, IRequest
+    public class SetVacancyToResponseAwaitingFromWinnerCommand : CommandBase, IRequest
     {
         public Guid VacancyGuid { get; set; }
     }
@@ -60,6 +60,10 @@ namespace SciVacancies.WebApp.Commands
         public Guid VacancyGuid { get; set; }
     }
     public class SetWinnerRejectOfferCommand : CommandBase, IRequest
+    {
+        public Guid VacancyGuid { get; set; }
+    }
+    public class SetVacancyToResponseAwaitingFromPretenderCommand : CommandBase, IRequest
     {
         public Guid VacancyGuid { get; set; }
     }

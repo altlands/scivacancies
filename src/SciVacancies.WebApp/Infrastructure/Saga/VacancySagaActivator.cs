@@ -8,8 +8,9 @@ using MediatR;
 namespace SciVacancies.WebApp.Infrastructure.Saga
 {
     public class VacancySagaActivator :
-        INotificationHandler<VacancyPublished>,
-        INotificationHandler<VacancyInAwaitingOfferResponse>
+    INotificationHandler<VacancyPublished>,
+    INotificationHandler<VacancyInOfferResponseAwaitingFromWinner>,
+    INotificationHandler<VacancyInOfferResponseAwaitingFromPretender>
     {
         readonly ISagaRepository sagaRepository;
         readonly ISchedulerService schedulerService;
@@ -28,7 +29,7 @@ namespace SciVacancies.WebApp.Infrastructure.Saga
                 VacancyGuid = msg.VacancyGuid,
                 OrganizationGuid = msg.OrganizationGuid,
                 //TODO вынести сроки в конфиг
-                PublishEndDate=msg.TimeStamp.AddDays(20)
+                PublishEndDate = msg.TimeStamp.AddDays(20)
             });
 
             sagaRepository.Save("vacancysaga", saga, Guid.NewGuid(), null);
@@ -45,22 +46,30 @@ namespace SciVacancies.WebApp.Infrastructure.Saga
         /// Как только у вакансии этот статус проставляется - ожидается респонс от победителя или претендента. Нужно запустить таймер на 30 дней
         /// </summary>
         /// <param name="msg"></param>
-        public void Handle(VacancyInAwaitingOfferResponse msg)
+        public void Handle(VacancyInOfferResponseAwaitingFromWinner msg)
         {
-            VacancySaga saga = sagaRepository.GetById<VacancySaga>("vacancysaga", msg.VacancyGuid);
-            saga.Transition(new VacancySagaSwitchedInOfferAwaiting
-            {
-                //TODO вынести сроки в конфиг
-                OfferResponseAwaitingEndDate=msg.TimeStamp.AddDays(30)
-            });
+            throw new NotImplementedException();
 
-            var job = new VacancySagaTimeoutJob()
-            {
-                SagaGuid = saga.Id
-            };
+            //VacancySaga saga = sagaRepository.GetById<VacancySaga>("vacancysaga", msg.VacancyGuid);
+            //saga.Transition(new VacancySagaSwitchedInOfferAwaiting
+            //{
+            //    //TODO вынести сроки в конфиг
+            //    OfferResponseAwaitingEndDate = msg.TimeStamp.AddDays(30)
+            //});
 
-            //вынести интервал в конфиг
-            schedulerService.CreateSheduledJob(job, job.SagaGuid, 1);
+            //var job = new VacancySagaTimeoutJob()
+            //{
+            //    SagaGuid = saga.Id
+            //};
+
+            ////вынести интервал в конфиг
+            //schedulerService.CreateSheduledJob(job, job.SagaGuid, 1);
+        }
+        public void Handle(VacancyInOfferResponseAwaitingFromPretender msg)
+        {
+            throw new NotImplementedException();
+
+
         }
     }
 }
