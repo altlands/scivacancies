@@ -11,9 +11,9 @@ using SciVacancies.SmtpNotifications.SmtpNotificators;
 namespace SciVacancies.SmtpNotifications.Handlers
 {
     public class VacancyEventsHandler :
-        INotificationHandler<VacancyInCommittee>,
         INotificationHandler<VacancyPublished>,
-        INotificationHandler<VacancyPretenderSet>,
+        INotificationHandler<VacancyInCommittee>,
+        INotificationHandler<VacancyProlongedInCommittee>,
         INotificationHandler<VacancyOfferAcceptedByWinner>,
         INotificationHandler<VacancyOfferRejectedByWinner>,
         INotificationHandler<VacancyOfferAcceptedByPretender>,
@@ -38,9 +38,10 @@ namespace SciVacancies.SmtpNotifications.Handlers
             VacancyStatusChangedSmtpNotificationForOrganization(msg.VacancyGuid);
             VacancyStatusChangedSmtpNotificationForResearcher(msg.VacancyGuid);
         }
-        public void Handle(VacancyPretenderSet msg)
+        //TODO
+        public void Handle(VacancyProlongedInCommittee msg)
         {
-
+            throw new NotImplementedException();
         }
         public void Handle(VacancyOfferAcceptedByWinner msg)
         {
