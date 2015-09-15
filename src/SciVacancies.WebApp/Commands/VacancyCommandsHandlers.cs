@@ -75,7 +75,7 @@ namespace SciVacancies.WebApp.Commands
             if (msg.VacancyGuid == Guid.Empty) throw new ArgumentNullException($"VacancyGuid is empty: {msg.VacancyGuid}");
 
             Vacancy vacancy = _repository.GetById<Vacancy>(msg.VacancyGuid);
-            vacancy.Publish();
+            vacancy.Publish(msg.InCommitteeStartDate, msg.InCommitteeEndDate);
             _repository.Save(vacancy, Guid.NewGuid(), null);
         }
     }
@@ -97,7 +97,42 @@ namespace SciVacancies.WebApp.Commands
             _repository.Save(vacancy, Guid.NewGuid(), null);
         }
     }
+    public class ProlongVacancyInCommitteeCommandHandler : RequestHandler<ProlongVacancyInCommitteeCommand>
+    {
+        private readonly IRepository _repository;
 
+        public ProlongVacancyInCommitteeCommandHandler(IRepository repository)
+        {
+            _repository = repository;
+        }
+
+        protected override void HandleCore(ProlongVacancyInCommitteeCommand msg)
+        {
+            if (msg.VacancyGuid == Guid.Empty) throw new ArgumentNullException($"VacancyGuid is empty: {msg.VacancyGuid}");
+
+            Vacancy vacancy = _repository.GetById<Vacancy>(msg.VacancyGuid);
+            vacancy.ProlongInCommittee(msg.Reason, msg.InCommitteeEndDate);
+            _repository.Save(vacancy, Guid.NewGuid(), null);
+        }
+    }
+    public class SetVacancyCommitteeResolutionCommandHandler : RequestHandler<SetVacancyCommitteeResolutionCommand>
+    {
+        private readonly IRepository _repository;
+
+        public SetVacancyCommitteeResolutionCommandHandler(IRepository repository)
+        {
+            _repository = repository;
+        }
+
+        protected override void HandleCore(SetVacancyCommitteeResolutionCommand msg)
+        {
+            if (msg.VacancyGuid == Guid.Empty) throw new ArgumentNullException($"VacancyGuid is empty: {msg.VacancyGuid}");
+
+            Vacancy vacancy = _repository.GetById<Vacancy>(msg.VacancyGuid);
+            vacancy.SetCommitteeResolution(msg.Resolution, msg.Attachments);
+            _repository.Save(vacancy, Guid.NewGuid(), null);
+        }
+    }
     public class SetVacancyWinnerCommandHandler : RequestHandler<SetVacancyWinnerCommand>
     {
         private readonly IRepository _repository;
@@ -112,7 +147,7 @@ namespace SciVacancies.WebApp.Commands
             if (msg.VacancyGuid == Guid.Empty) throw new ArgumentNullException($"VacancyGuid is empty: {msg.VacancyGuid}");
 
             Vacancy vacancy = _repository.GetById<Vacancy>(msg.VacancyGuid);
-            vacancy.SetWinner(msg.ResearcherGuid, msg.VacancyApplicationGuid, msg.Reason, msg.Attachments);
+            vacancy.SetWinner(msg.ResearcherGuid, msg.VacancyApplicationGuid);
             _repository.Save(vacancy, Guid.NewGuid(), null);
         }
     }
@@ -130,48 +165,36 @@ namespace SciVacancies.WebApp.Commands
             if (msg.VacancyGuid == Guid.Empty) throw new ArgumentNullException($"VacancyGuid is empty: {msg.VacancyGuid}");
 
             Vacancy vacancy = _repository.GetById<Vacancy>(msg.VacancyGuid);
-            vacancy.SetPretender(msg.ResearcherGuid, msg.VacancyApplicationGuid, msg.Reason);
+            vacancy.SetPretender(msg.ResearcherGuid, msg.VacancyApplicationGuid);
             _repository.Save(vacancy, Guid.NewGuid(), null);
         }
     }
-    public class SetVacancyToResponseAwaitingCommandHandler : RequestHandler<SetVacancyToResponseAwaitingCommand>
+    public class SetVacancyToResponseAwaitingFromWinnerCommandHandler : RequestHandler<SetVacancyToResponseAwaitingFromWinnerCommand>
     {
         private readonly IRepository _repository;
 
-        public SetVacancyToResponseAwaitingCommandHandler(IRepository repository)
+        public SetVacancyToResponseAwaitingFromWinnerCommandHandler(IRepository repository)
         {
             _repository = repository;
         }
 
-        protected override void HandleCore(SetVacancyToResponseAwaitingCommand msg)
+        protected override void HandleCore(SetVacancyToResponseAwaitingFromWinnerCommand msg)
         {
             if (msg.VacancyGuid == Guid.Empty) throw new ArgumentNullException($"VacancyGuid is empty: {msg.VacancyGuid}");
 
             Vacancy vacancy = _repository.GetById<Vacancy>(msg.VacancyGuid);
 
             if (vacancy.IsWinnerAccept.HasValue && vacancy.IsPretenderAccept.HasValue) throw new InvalidOperationException("IsWinnerAccept and IsPretenderAccept already have values");
-       
-            vacancy.VacancyToResponseAwaiting();
+
+            vacancy.VacancyToResponseAwaitingFromWinner();
             _repository.Save(vacancy, Guid.NewGuid(), null);
 
-            if (!vacancy.IsWinnerAccept.HasValue)
-            {
-                Guid winnerResearcherGuid = vacancy.WinnerResearcherGuid;
-                Guid winnerVacancyApplicationGuid = vacancy.WinnerVacancyApplicationGuid;
+            Guid winnerResearcherGuid = vacancy.WinnerResearcherGuid;
+            Guid winnerVacancyApplicationGuid = vacancy.WinnerVacancyApplicationGuid;
 
-                VacancyApplication vacancyApplication = _repository.GetById<VacancyApplication>(winnerVacancyApplicationGuid);
-                vacancyApplication.MakeVacancyApplicationWinner(vacancy.WinnerReason);
-                _repository.Save(vacancyApplication, Guid.NewGuid(), null);
-            }
-            if (vacancy.IsWinnerAccept.HasValue && !vacancy.IsWinnerAccept.Value && !vacancy.IsPretenderAccept.HasValue)
-            {
-                Guid pretenderResearcherGuid = vacancy.PretenderResearcherGuid;
-                Guid pretenderVacancyApplicationGuid = vacancy.PretenderVacancyApplicationGuid;
-
-                VacancyApplication vacancyApplication = _repository.GetById<VacancyApplication>(pretenderVacancyApplicationGuid);
-                vacancyApplication.MakeVacancyApplicationPretender(vacancy.PretenderReason);
-                _repository.Save(vacancyApplication, Guid.NewGuid(), null);
-            }
+            VacancyApplication vacancyApplication = _repository.GetById<VacancyApplication>(winnerVacancyApplicationGuid);
+            vacancyApplication.MakeVacancyApplicationWinner(vacancy.CommitteeResolution);
+            _repository.Save(vacancyApplication, Guid.NewGuid(), null);
         }
     }
     public class SetWinnerAcceptOfferCommandHandler : RequestHandler<SetWinnerAcceptOfferCommand>
@@ -208,6 +231,34 @@ namespace SciVacancies.WebApp.Commands
             Vacancy vacancy = _repository.GetById<Vacancy>(msg.VacancyGuid);
             vacancy.WinnerRejectOffer();
             _repository.Save(vacancy, Guid.NewGuid(), null);
+        }
+    }
+    public class SetVacancyToResponseAwaitingFromPretenderCommandHandler : RequestHandler<SetVacancyToResponseAwaitingFromPretenderCommand>
+    {
+        private readonly IRepository _repository;
+
+        public SetVacancyToResponseAwaitingFromPretenderCommandHandler(IRepository repository)
+        {
+            _repository = repository;
+        }
+
+        protected override void HandleCore(SetVacancyToResponseAwaitingFromPretenderCommand msg)
+        {
+            if (msg.VacancyGuid == Guid.Empty) throw new ArgumentNullException($"VacancyGuid is empty: {msg.VacancyGuid}");
+
+            Vacancy vacancy = _repository.GetById<Vacancy>(msg.VacancyGuid);
+
+            if (vacancy.IsWinnerAccept.HasValue && vacancy.IsPretenderAccept.HasValue) throw new InvalidOperationException("IsWinnerAccept and IsPretenderAccept already have values");
+
+            vacancy.VacancyToResponseAwaitingFromPretender();
+            _repository.Save(vacancy, Guid.NewGuid(), null);
+
+            Guid pretenderResearcherGuid = vacancy.PretenderResearcherGuid;
+            Guid pretenderVacancyApplicationGuid = vacancy.PretenderVacancyApplicationGuid;
+
+            VacancyApplication vacancyApplication = _repository.GetById<VacancyApplication>(pretenderVacancyApplicationGuid);
+            vacancyApplication.MakeVacancyApplicationPretender(vacancy.CommitteeResolution);
+            _repository.Save(vacancyApplication, Guid.NewGuid(), null);
         }
     }
     public class SetPretenderAcceptOfferCommandHandler : RequestHandler<SetPretenderAcceptOfferCommand>

@@ -17,21 +17,42 @@ namespace SciVacancies.Domain.Aggregates
 
         public VacancyStatus Status { get; private set; }
 
+        /// <summary>
+        /// Дато окончания приёма заявок и начала работы комиссии
+        /// </summary>
+        public DateTime InCommitteeStartDate { get; private set; }
+        /// <summary>
+        /// Дата окончания работы комиссии (далее даётся Х дней на оглашение результатов, статус при этом остаётся "на комиссии".
+        /// Дата может сдвигаться соответсующей командой
+        /// </summary>
+        public DateTime InCommitteeEndDate { get; private set; }
+
+        /// <summary>
+        /// Причина, почему продлили комиссию
+        /// </summary>
+        public string ProlongingInCommitteeReason { get; private set; }
+        /// <summary>
+        /// Заключение комиссии (помимо этого ещё файл "протокол комиссии" в attachments)
+        /// </summary>
+        public string CommitteeResolution { get; private set; }
+
         public Guid WinnerResearcherGuid { get; private set; }
         public Guid WinnerVacancyApplicationGuid { get; private set; }
+        /// <summary>
+        /// Если null, значит победитель ещё не принял решение или ему не отсылалось уведомление
+        /// </summary>
         public bool? IsWinnerAccept { get; private set; }
         /// <summary>
         /// Обоснование выбора этой заявки в качестве победителя
         /// </summary>
-        public string WinnerReason { get; private set; }
+
 
         public Guid PretenderResearcherGuid { get; private set; }
         public Guid PretenderVacancyApplicationGuid { get; private set; }
-        public bool? IsPretenderAccept { get; private set; }
         /// <summary>
-        /// Обоснование выбора этой заявки в качестве претендента
+        /// Если null, значит претендент ещё не принял решение или ему не отсылалось уведомление
         /// </summary>
-        public string PretenderReason { get; private set; }
+        public bool? IsPretenderAccept { get; private set; }
 
         public string CancelReason { get; private set; }
 
@@ -77,14 +98,17 @@ namespace SciVacancies.Domain.Aggregates
                 OrganizationGuid = this.OrganizationGuid
             });
         }
-        public void Publish()
+        public void Publish(DateTime inCommitteeStartDate, DateTime inCommitteeEndDate)
         {
+            if (inCommitteeStartDate > inCommitteeEndDate) throw new ArgumentException("inCommitteeStartDate is bigger than inCommitteeEndDate");
             if (Status != VacancyStatus.InProcess) throw new InvalidOperationException("vacancy state is invalid");
 
             RaiseEvent(new VacancyPublished
             {
                 VacancyGuid = this.Id,
-                OrganizationGuid = this.OrganizationGuid
+                OrganizationGuid = this.OrganizationGuid,
+                InCommitteeStartDate = inCommitteeStartDate,
+                InCommitteeEndDate = inCommitteeEndDate
             });
         }
         public void VacancyToCommittee()
@@ -97,12 +121,38 @@ namespace SciVacancies.Domain.Aggregates
                 OrganizationGuid = this.OrganizationGuid
             });
         }
-        public void SetWinner(Guid winnerGuid, Guid winnerVacancyApplicationGuid, string reason, List<VacancyAttachment> attachments)
+        public void ProlongInCommittee(string reason, DateTime inCommitteeEndDate)
+        {
+            if (String.IsNullOrEmpty(reason)) throw new ArgumentNullException("reason is empty");
+            if (this.InCommitteeEndDate >= inCommitteeEndDate) throw new ArgumentException("invalid inCommitteeEndDate");
+            if (Status != VacancyStatus.InCommittee) throw new InvalidOperationException("vacancy state is invalid");
+
+            RaiseEvent(new VacancyProlongedInCommittee
+            {
+                VacancyGuid = this.Id,
+                OrganizationGuid = this.OrganizationGuid,
+                Reason = reason,
+                InCommitteeEndDate = inCommitteeEndDate
+            });
+        }
+        public void SetCommitteeResolution(string resolution, List<VacancyAttachment> attachments)
+        {
+            if (String.IsNullOrEmpty(resolution)) throw new ArgumentNullException("resolution is empty");
+            if (attachments == null || attachments.Count == 0) throw new ArgumentNullException("attachments is null or empty");
+            if (Status != VacancyStatus.InCommittee) throw new InvalidOperationException("vacancy state is invalid");
+
+            RaiseEvent(new VacancyCommitteeResolutionSet
+            {
+                VacancyGuid = this.Id,
+                OrganizationGuid = this.OrganizationGuid,
+                Resolution = resolution,
+                Attachments = attachments
+            });
+        }
+        public void SetWinner(Guid winnerGuid, Guid winnerVacancyApplicationGuid)
         {
             if (winnerGuid.Equals(Guid.Empty)) throw new ArgumentNullException("winnerGuid is empty");
             if (winnerVacancyApplicationGuid.Equals(Guid.Empty)) throw new ArgumentNullException("winnerVacancyApplicationGuid is empty");
-            if (String.IsNullOrEmpty(reason)) throw new ArgumentNullException("reason is empty");
-            if (attachments == null || attachments.Count == 0) throw new ArgumentNullException("attachments is null or empty");
             if (Status != VacancyStatus.InCommittee) throw new InvalidOperationException("vacancy state is invalid");
 
             RaiseEvent(new VacancyWinnerSet
@@ -110,16 +160,13 @@ namespace SciVacancies.Domain.Aggregates
                 VacancyGuid = this.Id,
                 OrganizationGuid = this.OrganizationGuid,
                 WinnerReasearcherGuid = winnerGuid,
-                WinnerVacancyApplicationGuid = winnerVacancyApplicationGuid,
-                Reason = reason,
-                Attachments = attachments
+                WinnerVacancyApplicationGuid = winnerVacancyApplicationGuid
             });
         }
-        public void SetPretender(Guid pretenderGuid, Guid pretenderVacancyApplicationGuid, string reason)
+        public void SetPretender(Guid pretenderGuid, Guid pretenderVacancyApplicationGuid)
         {
             if (pretenderGuid.Equals(Guid.Empty)) throw new ArgumentNullException("pretenderGuid is empty");
             if (pretenderVacancyApplicationGuid.Equals(Guid.Empty)) throw new ArgumentNullException("pretenderVacancyApplicationGuid is empty");
-            if (String.IsNullOrEmpty(reason)) throw new ArgumentNullException("reason is empty");
             if (Status != VacancyStatus.InCommittee) throw new InvalidOperationException("vacancy state is invalid");
 
             RaiseEvent(new VacancyPretenderSet
@@ -127,8 +174,7 @@ namespace SciVacancies.Domain.Aggregates
                 VacancyGuid = this.Id,
                 OrganizationGuid = this.OrganizationGuid,
                 PretenderReasearcherGuid = pretenderGuid,
-                PretenderVacancyApplicationGuid = pretenderVacancyApplicationGuid,
-                Reason = reason
+                PretenderVacancyApplicationGuid = pretenderVacancyApplicationGuid
             });
         }
         public void VacancyToResponseAwaitingFromWinner()
@@ -205,7 +251,7 @@ namespace SciVacancies.Domain.Aggregates
         }
         public void Close()
         {
-            //if (!(Status == VacancyStatus.OfferAcceptedByWinner||Status==VacancyStatus.of)) throw new InvalidOperationException("vacancy state is invalid");
+            if (!(Status == VacancyStatus.OfferAcceptedByWinner || Status == VacancyStatus.OfferAcceptedByPretender)) throw new InvalidOperationException("vacancy state is invalid");
 
             RaiseEvent(new VacancyClosed
             {
@@ -221,10 +267,13 @@ namespace SciVacancies.Domain.Aggregates
         }
         public void Cancel(string reason)
         {
+            if (String.IsNullOrEmpty(reason)) throw new ArgumentNullException("reason is empty");
             if (!(Status == VacancyStatus.Published
                 || Status == VacancyStatus.InCommittee
-                || Status == VacancyStatus.OfferAccepted
-                || Status == VacancyStatus.OfferRejected))
+                || Status == VacancyStatus.OfferAcceptedByWinner
+                || Status == VacancyStatus.OfferRejectedByWinner
+                || Status == VacancyStatus.OfferAcceptedByPretender
+                || Status == VacancyStatus.OfferRejectedByPretender))
                 throw new InvalidOperationException("vacancy state is invalid");
 
             RaiseEvent(new VacancyCancelled
@@ -255,47 +304,61 @@ namespace SciVacancies.Domain.Aggregates
         }
         public void Apply(VacancyPublished @event)
         {
+            this.InCommitteeStartDate = @event.InCommitteeStartDate;
+            this.InCommitteeEndDate = @event.InCommitteeEndDate;
             this.Status = VacancyStatus.Published;
         }
         public void Apply(VacancyInCommittee @event)
         {
             this.Status = VacancyStatus.InCommittee;
         }
+        public void Apply(VacancyProlongedInCommittee @event)
+        {
+            this.ProlongingInCommitteeReason = @event.Reason;
+            this.InCommitteeEndDate = @event.InCommitteeEndDate;
+        }
+        public void Apply(VacancyCommitteeResolutionSet @event)
+        {
+            this.CommitteeResolution = @event.Resolution;
+            this.Data.Attachments.AddRange(@event.Attachments);
+        }
         public void Apply(VacancyWinnerSet @event)
         {
             this.WinnerResearcherGuid = @event.WinnerReasearcherGuid;
             this.WinnerVacancyApplicationGuid = @event.WinnerVacancyApplicationGuid;
-
-            this.Data.Attachments.AddRange(@event.Attachments);
         }
         public void Apply(VacancyPretenderSet @event)
         {
             this.PretenderResearcherGuid = @event.PretenderReasearcherGuid;
             this.PretenderVacancyApplicationGuid = @event.PretenderVacancyApplicationGuid;
         }
-        public void Apply(VacancyInAwaitingOfferResponse @event)
+        public void Apply(VacancyInOfferResponseAwaitingFromWinner @event)
         {
-            this.Status = VacancyStatus.OfferResponseAwaiting;
+            this.Status = VacancyStatus.OfferResponseAwaitingFromWinner;
         }
         public void Apply(VacancyOfferAcceptedByWinner @event)
         {
             this.IsWinnerAccept = true;
-            this.Status = VacancyStatus.OfferAccepted;
+            this.Status = VacancyStatus.OfferAcceptedByWinner;
         }
         public void Apply(VacancyOfferRejectedByWinner @event)
         {
             this.IsWinnerAccept = false;
-            this.Status = VacancyStatus.OfferRejected;
+            this.Status = VacancyStatus.OfferRejectedByWinner;
+        }
+        public void Apply(VacancyInOfferResponseAwaitingFromPretender @event)
+        {
+            this.Status = VacancyStatus.OfferResponseAwaitingFromPretender;
         }
         public void Apply(VacancyOfferAcceptedByPretender @event)
         {
             this.IsPretenderAccept = true;
-            this.Status = VacancyStatus.OfferAccepted;
+            this.Status = VacancyStatus.OfferAcceptedByPretender;
         }
         public void Apply(VacancyOfferRejectedByPretender @event)
         {
             this.IsPretenderAccept = false;
-            this.Status = VacancyStatus.OfferRejected;
+            this.Status = VacancyStatus.OfferRejectedByPretender;
         }
         public void Apply(VacancyClosed @event)
         {

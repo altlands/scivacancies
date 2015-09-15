@@ -39,6 +39,8 @@ namespace SciVacancies.Domain.Events
     /// </summary>
     public class VacancyPublished : VacancyEventBase
     {
+        public DateTime InCommitteeStartDate { get; set; }
+        public DateTime InCommitteeEndDate { get; set; }
     }
 
     /// <summary>
@@ -49,15 +51,30 @@ namespace SciVacancies.Domain.Events
     }
 
     /// <summary>
+    /// Статус вакансии "на комиссии" продлён
+    /// </summary>
+    public class VacancyProlongedInCommittee : VacancyEventBase
+    {
+        public string Reason { get; set; }
+        public DateTime InCommitteeEndDate { get; set; }
+    }
+
+    /// <summary>
+    /// К вакансии прикреплено решение комиссии с нужными файлами
+    /// </summary>
+    public class VacancyCommitteeResolutionSet : VacancyEventBase
+    {
+        public string Resolution { get; set; }
+        public List<VacancyAttachment> Attachments { get; set; } = new List<VacancyAttachment>();
+    }
+
+    /// <summary>
     /// Для вакансии выбран победитель (первое место)
     /// </summary>
     public class VacancyWinnerSet : VacancyEventBase
     {
         public Guid WinnerReasearcherGuid { get; set; }
         public Guid WinnerVacancyApplicationGuid { get; set; }
-
-        public string Reason { get; set; }
-        public List<VacancyAttachment> Attachments { get; set; } = new List<VacancyAttachment>();
     }
 
     /// <summary>
@@ -67,27 +84,46 @@ namespace SciVacancies.Domain.Events
     {
         public Guid PretenderReasearcherGuid { get; set; }
         public Guid PretenderVacancyApplicationGuid { get; set; }
-
-        public string Reason { get; set; }
     }
+
     /// <summary>
     /// Предложение подписать контракт отправлено победителю
     /// </summary>
     public class VacancyInOfferResponseAwaitingFromWinner : VacancyEventBase
     {
     }
+
+    /// <summary>
+    /// Предложение принято победителем
+    /// </summary>
     public class VacancyOfferAcceptedByWinner : VacancyEventBase
     {
     }
+
+    /// <summary>
+    /// Предложение отклонено победителем
+    /// </summary>
     public class VacancyOfferRejectedByWinner : VacancyEventBase
     {
     }
+
+    /// <summary>
+    /// Предложение подписать контракт отправлено претенденту
+    /// </summary>
     public class VacancyInOfferResponseAwaitingFromPretender : VacancyEventBase
     {
     }
+
+    /// <summary>
+    /// Предложение принято претендентом
+    /// </summary>
     public class VacancyOfferAcceptedByPretender : VacancyEventBase
     {
     }
+
+    /// <summary>
+    /// Предложение отклонено претендентом
+    /// </summary>
     public class VacancyOfferRejectedByPretender : VacancyEventBase
     {
     }
@@ -113,6 +149,7 @@ namespace SciVacancies.Domain.Events
     {
         public string Reason { get; set; }
     }
+
 
     /// <summary>
     /// Вакансия добавлена соискателем в избранное

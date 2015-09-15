@@ -27,10 +27,26 @@ namespace SciVacancies.WebApp.Commands
     public class PublishVacancyCommand : CommandBase, IRequest
     {
         public Guid VacancyGuid { get; set; }
+        public DateTime InCommitteeStartDate { get; set; }
+        public DateTime InCommitteeEndDate { get; set; }
     }
     public class SwitchVacancyInCommitteeCommand : CommandBase, IRequest
     {
         public Guid VacancyGuid { get; set; }
+    }
+    public class ProlongVacancyInCommitteeCommand : CommandBase, IRequest
+    {
+        public Guid VacancyGuid { get; set; }
+
+        public string Reason { get; set; }
+        public DateTime InCommitteeEndDate { get; set; }
+    }
+    public class SetVacancyCommitteeResolutionCommand : CommandBase, IRequest
+    {
+        public Guid VacancyGuid { get; set; }
+
+        public string Resolution { get; set; }
+        public List<VacancyAttachment> Attachments { get; set; } = new List<VacancyAttachment>();
     }
     public class SetVacancyWinnerCommand : CommandBase, IRequest
     {
@@ -38,9 +54,6 @@ namespace SciVacancies.WebApp.Commands
 
         public Guid ResearcherGuid { get; set; }
         public Guid VacancyApplicationGuid { get; set; }
-
-        public string Reason { get; set; }
-        public List<VacancyAttachment> Attachments { get; set; } = new List<VacancyAttachment>();
     }
     public class SetVacancyPretenderCommand : CommandBase, IRequest
     {
@@ -48,10 +61,8 @@ namespace SciVacancies.WebApp.Commands
 
         public Guid ResearcherGuid { get; set; }
         public Guid VacancyApplicationGuid { get; set; }
-
-        public string Reason { get; set; }
     }
-    public class SetVacancyToResponseAwaitingCommand : CommandBase, IRequest
+    public class SetVacancyToResponseAwaitingFromWinnerCommand : CommandBase, IRequest
     {
         public Guid VacancyGuid { get; set; }
     }
@@ -60,6 +71,10 @@ namespace SciVacancies.WebApp.Commands
         public Guid VacancyGuid { get; set; }
     }
     public class SetWinnerRejectOfferCommand : CommandBase, IRequest
+    {
+        public Guid VacancyGuid { get; set; }
+    }
+    public class SetVacancyToResponseAwaitingFromPretenderCommand : CommandBase, IRequest
     {
         public Guid VacancyGuid { get; set; }
     }

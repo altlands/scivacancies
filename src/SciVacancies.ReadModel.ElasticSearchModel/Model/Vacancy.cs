@@ -166,8 +166,26 @@ namespace SciVacancies.ReadModel.ElasticSearchModel.Model
         /// </summary>
         public DateTime? PublishDate { get; set; }
 
-        public DateTime? CommitteeDate { get; set; }
+        public DateTime? CommitteeStartDate { get; set; }
+        public DateTime? CommitteeEndDate { get; set; }
+
+        /// <summary>
+        /// Причина продления статуса "на комиссии"
+        /// </summary>
+        public string ProlongingInCommitteeReason { get; set; }
+
+        /// <summary>
+        /// Заключение комиссии
+        /// </summary>
+        public string CommitteeResolution { get; set; }
+
+        /// <summary>
+        /// Дата начала ожидания ответа победителя и претендента
+        /// </summary>
         public DateTime? AwaitingDate { get; set; }
+        /// <summary>
+        /// Дата объявления результатов конкурса
+        /// </summary>
         public DateTime? AnnouncementDate { get; set; }
 
         public string CancelReason { get; set; }
