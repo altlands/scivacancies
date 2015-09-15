@@ -13,6 +13,7 @@ namespace SciVacancies.ReadModel.Notifications
 {
     public class VacancyEventsHandler :
         INotificationHandler<VacancyInCommittee>,
+        INotificationHandler<VacancyProlongedInCommittee>,
         INotificationHandler<VacancyInOfferResponseAwaitingFromWinner>,
         INotificationHandler<VacancyOfferAcceptedByWinner>,
         INotificationHandler<VacancyOfferRejectedByWinner>,
@@ -41,6 +42,23 @@ namespace SciVacancies.ReadModel.Notifications
                 }
                 transaction.Complete();
             }
+        }
+        public void Handle(VacancyProlongedInCommittee msg)
+        {
+            throw new NotImplementedException();
+
+
+            //List<Guid> researcherGuids = _db.Fetch<Guid>(new Sql($"SELECT va.researcher_guid FROM res_vacancyapplications va WHERE va.vacancy_guid = @0", msg.VacancyGuid));
+
+            //string title = "Ваша заявка на вакансию " + msg.VacancyGuid + " отправлена на комиссию";
+            //using (var transaction = _db.GetTransaction())
+            //{
+            //    foreach (Guid researcherGuid in researcherGuids)
+            //    {
+            //        _db.Execute(new Sql($"INSERT INTO res_notifications (guid, title, vacancy_guid, researcher_guid, creation_date) VALUES(@0, @1, @2, @3, @4)", Guid.NewGuid(), title, msg.VacancyGuid, researcherGuid, msg.TimeStamp));
+            //    }
+            //    transaction.Complete();
+            //}
         }
         public void Handle(VacancyInOfferResponseAwaitingFromWinner msg)
         {

@@ -139,7 +139,10 @@ namespace SciVacancies.ReadModel.Core
 
         public DateTime? publish_date { get; set; }
 
-        public DateTime? committee_date { get; set; }
+        public DateTime? committee_start_date { get; set; }
+        public DateTime? committee_end_date { get; set; }
+        public string prolonging_reason { get; set; }
+
         public DateTime? awaiting_date { get; set; }
         public DateTime? announcement_date { get; set; }
 
@@ -151,7 +154,7 @@ namespace SciVacancies.ReadModel.Core
         /// <summary>
         /// обоснование закрытия заявки (одно для победителя и претенднта) - аналог протокола комиссии
         /// </summary>
-        public string close_reason { get; set; }
+        public string committee_resolution { get; set; }
 
         [Ignore]
         public List<VacancyCriteria> criterias { get; set; }

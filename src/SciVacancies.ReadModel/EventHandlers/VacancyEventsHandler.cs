@@ -16,9 +16,9 @@ namespace SciVacancies.ReadModel.EventHandlers
         INotificationHandler<VacancyRemoved>,
         INotificationHandler<VacancyPublished>,
         INotificationHandler<VacancyInCommittee>,
-        //INotificationHandler<VacancyProlongedInCommittee>,
-        //INotificationHandler<VacancyCommitteeResolutionSet>,
-        //INotificationHandler<VacancyWinnerSet>,
+        INotificationHandler<VacancyProlongedInCommittee>,
+        INotificationHandler<VacancyCommitteeResolutionSet>,
+        INotificationHandler<VacancyWinnerSet>,
         INotificationHandler<VacancyPretenderSet>,
         INotificationHandler<VacancyInOfferResponseAwaitingFromWinner>,
         INotificationHandler<VacancyOfferAcceptedByWinner>,
@@ -112,11 +112,9 @@ namespace SciVacancies.ReadModel.EventHandlers
         }
         public void Handle(VacancyPublished msg)
         {
-            throw new NotImplementedException();
-
             using (var transaction = _db.GetTransaction())
             {
-                _db.Execute(new Sql($"UPDATE org_vacancies SET publish_date = @0, status = @1, update_date = @2 WHERE guid = @3", msg.TimeStamp, VacancyStatus.Published, msg.TimeStamp, msg.VacancyGuid));
+                _db.Execute(new Sql($"UPDATE org_vacancies SET publish_date = @0, committee_start_date = @1, committee_end_date = @2, status = @3, update_date = @4 WHERE guid = @5", msg.TimeStamp, msg.InCommitteeStartDate, msg.InCommitteeEndDate, VacancyStatus.Published, msg.TimeStamp, msg.VacancyGuid));
                 transaction.Complete();
             }
         }
@@ -130,21 +128,18 @@ namespace SciVacancies.ReadModel.EventHandlers
         }
         public void Handle(VacancyProlongedInCommittee msg)
         {
+            using (var transaction = _db.GetTransaction())
+            {
+                _db.Execute(new Sql($"UPDATE org_vacancies SET committee_end_date = @0, prolonging_reason = @1, update_date = @2 WHERE guid = @3", msg.InCommitteeEndDate, msg.Reason, msg.TimeStamp, msg.VacancyGuid));
+                transaction.Complete();
+            }
             throw new NotImplementedException();
         }
         public void Handle(VacancyCommitteeResolutionSet msg)
         {
-            throw new NotImplementedException();
-        }
-        public void Handle(VacancyWinnerSet msg)
-        {
-            throw new NotImplementedException();
-
             using (var transaction = _db.GetTransaction())
             {
-                throw new NotImplementedException();
-
-                _db.Execute(new Sql($"UPDATE org_vacancies SET winner_researcher_guid = @0, winner_vacancyapplication_guid = @1, close_reason=@2, update_date = @3 WHERE guid = @4", msg.WinnerReasearcherGuid, msg.WinnerVacancyApplicationGuid, msg.Reason, msg.TimeStamp, msg.VacancyGuid));
+                _db.Execute(new Sql($"UPDATE org_vacancies SET committee_resolution = @0, update_date = @1 WHERE guid = @2", msg.Resolution, msg.TimeStamp, msg.VacancyGuid));
 
                 if (msg.Attachments != null)
                 {
@@ -156,6 +151,15 @@ namespace SciVacancies.ReadModel.EventHandlers
                         _db.Insert(at);
                     }
                 }
+
+                transaction.Complete();
+            }
+        }
+        public void Handle(VacancyWinnerSet msg)
+        {
+            using (var transaction = _db.GetTransaction())
+            {
+                _db.Execute(new Sql($"UPDATE org_vacancies SET winner_researcher_guid = @0, winner_vacancyapplication_guid = @1, update_date = @2 WHERE guid = @3", msg.WinnerReasearcherGuid, msg.WinnerVacancyApplicationGuid, msg.TimeStamp, msg.VacancyGuid));
 
                 transaction.Complete();
             }

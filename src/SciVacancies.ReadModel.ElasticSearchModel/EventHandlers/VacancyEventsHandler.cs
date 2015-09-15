@@ -12,10 +12,10 @@ namespace SciVacancies.ReadModel.ElasticSearchModel.EventHandlers
         INotificationHandler<VacancyCreated>,
         INotificationHandler<VacancyUpdated>,
         INotificationHandler<VacancyRemoved>,
-        //INotificationHandler<VacancyPublished>,
+        INotificationHandler<VacancyPublished>,
         INotificationHandler<VacancyInCommittee>,
-        //INotificationHandler<VacancyProlongedInCommittee>,
-        //INotificationHandler<VacancyCommitteeResolutionSet>,
+        INotificationHandler<VacancyProlongedInCommittee>,
+        INotificationHandler<VacancyCommitteeResolutionSet>,
         INotificationHandler<VacancyInOfferResponseAwaitingFromWinner>,
         INotificationHandler<VacancyOfferAcceptedByWinner>,
         INotificationHandler<VacancyOfferRejectedByWinner>,
@@ -48,38 +48,39 @@ namespace SciVacancies.ReadModel.ElasticSearchModel.EventHandlers
         {
             _elasticClient.Delete<Vacancy>(msg.VacancyGuid.ToString());
         }
-        //public void Handle(VacancyPublished msg)
-        //{
-        //    Vacancy vacancy = _elasticClient.Get<Vacancy>(msg.VacancyGuid.ToString()).Source;
-        //    vacancy.PublishDate = msg.TimeStamp;
-        //    vacancy.Status = VacancyStatus.Published;
+        public void Handle(VacancyPublished msg)
+        {
+            Vacancy vacancy = _elasticClient.Get<Vacancy>(msg.VacancyGuid.ToString()).Source;
+            vacancy.PublishDate = msg.TimeStamp;
+            vacancy.CommitteeStartDate = msg.InCommitteeStartDate;
+            vacancy.CommitteeEndDate = msg.InCommitteeEndDate;
+            vacancy.Status = VacancyStatus.Published;
 
-        //    _elasticClient.Update<Vacancy>(u => u.IdFrom(vacancy).Doc(vacancy));
-        //}
+            _elasticClient.Update<Vacancy>(u => u.IdFrom(vacancy).Doc(vacancy));
+        }
         public void Handle(VacancyInCommittee msg)
         {
             Vacancy vacancy = _elasticClient.Get<Vacancy>(msg.VacancyGuid.ToString()).Source;
-            vacancy.CommitteeDate = msg.TimeStamp;
+            vacancy.CommitteeStartDate = msg.TimeStamp;
             vacancy.Status = VacancyStatus.InCommittee;
 
             _elasticClient.Update<Vacancy>(u => u.IdFrom(vacancy).Doc(vacancy));
         }
-        //public void Handle(VacancyProlongedInCommittee msg)
-        //{
-        //    Vacancy vacancy = _elasticClient.Get<Vacancy>(msg.VacancyGuid.ToString()).Source;
-        //    vacancy.CommitteeDate = msg.TimeStamp;
-        //    vacancy.Status = VacancyStatus.InCommittee;
+        public void Handle(VacancyProlongedInCommittee msg)
+        {
+            Vacancy vacancy = _elasticClient.Get<Vacancy>(msg.VacancyGuid.ToString()).Source;
+            vacancy.CommitteeEndDate = msg.InCommitteeEndDate;
+            vacancy.ProlongingInCommitteeReason = msg.Reason;
 
-        //    _elasticClient.Update<Vacancy>(u => u.IdFrom(vacancy).Doc(vacancy));
-        //}
-        //public void Handle(VacancyCommitteeResolutionSet msg)
-        //{
-        //    Vacancy vacancy = _elasticClient.Get<Vacancy>(msg.VacancyGuid.ToString()).Source;
-        //    vacancy.CommitteeDate = msg.TimeStamp;
-        //    vacancy.Status = VacancyStatus.InCommittee;
+            _elasticClient.Update<Vacancy>(u => u.IdFrom(vacancy).Doc(vacancy));
+        }
+        public void Handle(VacancyCommitteeResolutionSet msg)
+        {
+            Vacancy vacancy = _elasticClient.Get<Vacancy>(msg.VacancyGuid.ToString()).Source;
+            vacancy.CommitteeResolution = msg.Resolution;
 
-        //    _elasticClient.Update<Vacancy>(u => u.IdFrom(vacancy).Doc(vacancy));
-        //}
+            _elasticClient.Update<Vacancy>(u => u.IdFrom(vacancy).Doc(vacancy));
+        }
         public void Handle(VacancyInOfferResponseAwaitingFromWinner msg)
         {
             Vacancy vacancy = _elasticClient.Get<Vacancy>(msg.VacancyGuid.ToString()).Source;
@@ -91,7 +92,6 @@ namespace SciVacancies.ReadModel.ElasticSearchModel.EventHandlers
         public void Handle(VacancyOfferAcceptedByWinner msg)
         {
             Vacancy vacancy = _elasticClient.Get<Vacancy>(msg.VacancyGuid.ToString()).Source;
-            vacancy.AwaitingDate = msg.TimeStamp;
             vacancy.Status = VacancyStatus.OfferAcceptedByWinner;
 
             _elasticClient.Update<Vacancy>(u => u.IdFrom(vacancy).Doc(vacancy));
@@ -99,7 +99,6 @@ namespace SciVacancies.ReadModel.ElasticSearchModel.EventHandlers
         public void Handle(VacancyOfferRejectedByWinner msg)
         {
             Vacancy vacancy = _elasticClient.Get<Vacancy>(msg.VacancyGuid.ToString()).Source;
-            vacancy.AwaitingDate = msg.TimeStamp;
             vacancy.Status = VacancyStatus.OfferRejectedByWinner;
 
             _elasticClient.Update<Vacancy>(u => u.IdFrom(vacancy).Doc(vacancy));
@@ -107,7 +106,6 @@ namespace SciVacancies.ReadModel.ElasticSearchModel.EventHandlers
         public void Handle(VacancyInOfferResponseAwaitingFromPretender msg)
         {
             Vacancy vacancy = _elasticClient.Get<Vacancy>(msg.VacancyGuid.ToString()).Source;
-            vacancy.AwaitingDate = msg.TimeStamp;
             vacancy.Status = VacancyStatus.OfferResponseAwaitingFromPretender;
 
             _elasticClient.Update<Vacancy>(u => u.IdFrom(vacancy).Doc(vacancy));
@@ -115,7 +113,6 @@ namespace SciVacancies.ReadModel.ElasticSearchModel.EventHandlers
         public void Handle(VacancyOfferAcceptedByPretender msg)
         {
             Vacancy vacancy = _elasticClient.Get<Vacancy>(msg.VacancyGuid.ToString()).Source;
-            vacancy.AwaitingDate = msg.TimeStamp;
             vacancy.Status = VacancyStatus.OfferAcceptedByPretender;
 
             _elasticClient.Update<Vacancy>(u => u.IdFrom(vacancy).Doc(vacancy));
@@ -123,7 +120,6 @@ namespace SciVacancies.ReadModel.ElasticSearchModel.EventHandlers
         public void Handle(VacancyOfferRejectedByPretender msg)
         {
             Vacancy vacancy = _elasticClient.Get<Vacancy>(msg.VacancyGuid.ToString()).Source;
-            vacancy.AwaitingDate = msg.TimeStamp;
             vacancy.Status = VacancyStatus.OfferRejectedByPretender;
 
             _elasticClient.Update<Vacancy>(u => u.IdFrom(vacancy).Doc(vacancy));
