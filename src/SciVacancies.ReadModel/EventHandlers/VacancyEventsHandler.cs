@@ -16,7 +16,9 @@ namespace SciVacancies.ReadModel.EventHandlers
         INotificationHandler<VacancyRemoved>,
         INotificationHandler<VacancyPublished>,
         INotificationHandler<VacancyInCommittee>,
-        INotificationHandler<VacancyWinnerSet>,
+        //INotificationHandler<VacancyProlongedInCommittee>,
+        //INotificationHandler<VacancyCommitteeResolutionSet>,
+        //INotificationHandler<VacancyWinnerSet>,
         INotificationHandler<VacancyPretenderSet>,
         INotificationHandler<VacancyInOfferResponseAwaitingFromWinner>,
         INotificationHandler<VacancyOfferAcceptedByWinner>,
@@ -110,6 +112,8 @@ namespace SciVacancies.ReadModel.EventHandlers
         }
         public void Handle(VacancyPublished msg)
         {
+            throw new NotImplementedException();
+
             using (var transaction = _db.GetTransaction())
             {
                 _db.Execute(new Sql($"UPDATE org_vacancies SET publish_date = @0, status = @1, update_date = @2 WHERE guid = @3", msg.TimeStamp, VacancyStatus.Published, msg.TimeStamp, msg.VacancyGuid));
@@ -124,16 +128,27 @@ namespace SciVacancies.ReadModel.EventHandlers
                 transaction.Complete();
             }
         }
+        public void Handle(VacancyProlongedInCommittee msg)
+        {
+            throw new NotImplementedException();
+        }
+        public void Handle(VacancyCommitteeResolutionSet msg)
+        {
+            throw new NotImplementedException();
+        }
         public void Handle(VacancyWinnerSet msg)
         {
+            throw new NotImplementedException();
+
             using (var transaction = _db.GetTransaction())
             {
+                throw new NotImplementedException();
 
                 _db.Execute(new Sql($"UPDATE org_vacancies SET winner_researcher_guid = @0, winner_vacancyapplication_guid = @1, close_reason=@2, update_date = @3 WHERE guid = @4", msg.WinnerReasearcherGuid, msg.WinnerVacancyApplicationGuid, msg.Reason, msg.TimeStamp, msg.VacancyGuid));
 
                 if (msg.Attachments != null)
                 {
-                var attachments = Mapper.Map<List<VacancyAttachment>>(msg.Attachments);
+                    var attachments = Mapper.Map<List<VacancyAttachment>>(msg.Attachments);
                     foreach (var at in attachments)
                     {
                         if (at.guid == Guid.Empty) at.guid = Guid.NewGuid();

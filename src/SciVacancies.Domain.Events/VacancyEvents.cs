@@ -39,6 +39,8 @@ namespace SciVacancies.Domain.Events
     /// </summary>
     public class VacancyPublished : VacancyEventBase
     {
+        public DateTime InCommitteeStartDate { get; set; }
+        public DateTime InCommitteeEndDate { get; set; }
     }
 
     /// <summary>
@@ -49,15 +51,30 @@ namespace SciVacancies.Domain.Events
     }
 
     /// <summary>
+    /// Статус вакансии "на комиссии" продлён
+    /// </summary>
+    public class VacancyProlongedInCommittee : VacancyEventBase
+    {
+        public string Reason { get; set; }
+        public DateTime InCommitteeEndDate { get; set; }
+    }
+
+    /// <summary>
+    /// К вакансии прикреплено решение комиссии с нужными файлами
+    /// </summary>
+    public class VacancyCommitteeResolutionSet : VacancyEventBase
+    {
+        public string Resolution { get; set; }
+        public List<VacancyAttachment> Attachments { get; set; } = new List<VacancyAttachment>();
+    }
+
+    /// <summary>
     /// Для вакансии выбран победитель (первое место)
     /// </summary>
     public class VacancyWinnerSet : VacancyEventBase
     {
         public Guid WinnerReasearcherGuid { get; set; }
         public Guid WinnerVacancyApplicationGuid { get; set; }
-
-        public string Reason { get; set; }
-        public List<VacancyAttachment> Attachments { get; set; } = new List<VacancyAttachment>();
     }
 
     /// <summary>
@@ -132,6 +149,7 @@ namespace SciVacancies.Domain.Events
     {
         public string Reason { get; set; }
     }
+
 
     /// <summary>
     /// Вакансия добавлена соискателем в избранное

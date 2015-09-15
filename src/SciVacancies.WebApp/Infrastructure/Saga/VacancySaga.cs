@@ -6,6 +6,8 @@ using MediatR;
 namespace SciVacancies.WebApp.Infrastructure.Saga
 {
     public class VacancySaga : SagaBase,
+
+        //TODO переделать. Должны быть CommandHandlers чтобы во время Transition команда шла дальше (за одну транзакцию менялась сага и вакансия)
     INotificationHandler<VacancySagaCreated>,
     INotificationHandler<VacancySagaSwitchedInCommittee>,
     INotificationHandler<VacancySagaSwitchedInOfferAwaiting>,
@@ -19,11 +21,15 @@ namespace SciVacancies.WebApp.Infrastructure.Saga
 
         public DateTime InCommitteeStartDate { get; private set; }
         public DateTime InCommitteeEndDate { get; private set; }
-        public bool FirstInCommitteNotificationSent { get; private set; }
+        public bool FirstInCommitteeNotificationSent { get; private set; }
 
-        public DateTime OfferResponseAwaitingStartDate { get; private set; }
-        public DateTime OfferResponseAwaitingEndDate { get; private set; }
-        public bool OfferResponseNotificationSent { get; private set; }
+        public DateTime OfferResponseAwaitingFromWinnerStartDate { get; private set; }
+        public DateTime OfferResponseAwaitingFromWinnerEndDate { get; private set; }
+        public bool OfferResponseNotificationSentToWinner { get; private set; }
+
+        public DateTime OfferResponseAwaitingFromPretenderStartDate { get; private set; }
+        public DateTime OfferResponseAwaitingFromPretenderEndDate { get; private set; }
+        public bool OfferResponseNotificationSentToPretender { get; private set; }
 
         public DateTime CancelDate { get; private set; }
         public DateTime CloseDate { get; private set; }
