@@ -1,23 +1,18 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Quartz;
-using Quartz.Core;
-using Quartz.Impl;
-using Quartz.Spi;
 using Autofac;
 using Newtonsoft.Json;
+using Quartz;
+using Quartz.Spi;
 
-namespace SciVacancies.WebApp.Infrastructure
+namespace SciVacancies.Services.Quartz
 {
     public class AutofacJobFactory : IJobFactory
     {
-        private readonly ILifetimeScope lifetimeScope;
+        private readonly ILifetimeScope _lifetimeScope;
 
         public AutofacJobFactory(ILifetimeScope lifetimeScope)
         {
-            this.lifetimeScope = lifetimeScope;
+            this._lifetimeScope = lifetimeScope;
         }
 
         public IJob NewJob(TriggerFiredBundle bundle, IScheduler scheduler)
@@ -27,7 +22,7 @@ namespace SciVacancies.WebApp.Infrastructure
 
             try
             {
-                var job = lifetimeScope.Resolve(jobType);
+                var job = _lifetimeScope.Resolve(jobType);
 
                 var jsonData = jobDetail.JobDataMap.GetString("data");
 
@@ -37,7 +32,7 @@ namespace SciVacancies.WebApp.Infrastructure
             }
             catch (Exception e)
             {
-                var message = String.Format("Problem instantiating class {0}", jobType != null ? jobType.Name : "UNKNOWN");
+                var message = string.Format("Problem instantiating class {0}", jobType?.Name ?? "UNKNOWN");
                 throw new SchedulerException(message, e);
             }
         }

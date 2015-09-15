@@ -1,4 +1,4 @@
-﻿namespace SciVacancies.WebApp
+﻿namespace SciVacancies.Services
 {
     public class QuartzSettings
     {

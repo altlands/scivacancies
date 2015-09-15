@@ -125,7 +125,7 @@ namespace SciVacancies.WebApp.Controllers
             //TODO: Application -> Attachments : как проверять безопасность, прикрепляемых файлов
             if (model.Attachments != null && model.Attachments.Any(c => c.Length > _attachmentSettings.Options.VacancyApplication.MaxItemSize))
             {
-                ModelState.AddModelError("Attachments", $"Размер одного из прикрепленных файлов превышает допустимый размер ({_attachmentSettings.Options.VacancyApplication.MaxItemSize/1000}КБ). Повторите создания Заявки ещё раз.");
+                ModelState.AddModelError("Attachments", $"Размер одного из прикрепленных файлов превышает допустимый размер ({_attachmentSettings.Options.VacancyApplication.MaxItemSize / 1000}КБ). Повторите создания Заявки ещё раз.");
             }
 
             //с формы мы не получаем практически никаких данных, поэтому заново наполняем ViewModel
@@ -303,13 +303,21 @@ namespace SciVacancies.WebApp.Controllers
             if (vacancy == null)
                 return HttpNotFound(); //throw new ObjectNotFoundException($"Не найдена Вакансия c идентификатором: {vacancyApplicaiton.vacancy_guid}");
 
-            if (isWinner && vacancy.winner_researcher_guid != researcherGuid)
-                return View("Error", "Вы не можете принять или отказаться от предложения, сделанного для другого заявителя.");
-            if (!isWinner && vacancy.pretender_researcher_guid != researcherGuid)
-                return View("Error", "Вы не можете принять или отказаться от предложения, сделанного для другого заявителя.");
+            if (isWinner)
+            {
+                if (vacancy.status != VacancyStatus.OfferResponseAwaitingFromWinner)
+                    return View("Error", $"Вы не можете принять предложение или отказаться от него если Вакансия имеет статус: {vacancy.status.GetDescriptionByResearcher()}");
+                if (vacancy.winner_researcher_guid != researcherGuid)
+                    return View("Error", "Вы не можете принять или отказаться от предложения, сделанного для другого заявителя.");
+            }
+            if (!isWinner)
+            {
+                if (vacancy.status != VacancyStatus.OfferResponseAwaitingFromPretender)
+                    return View("Error", $"Вы не можете принять предложение или отказаться от него если Вакансия имеет статус: {vacancy.status.GetDescriptionByResearcher()}");
+                if (vacancy.pretender_researcher_guid != researcherGuid)
+                    return View("Error", "Вы не можете принять или отказаться от предложения, сделанного для другого заявителя.");
+            }
 
-            if (vacancy.status != VacancyStatus.OfferResponseAwaiting)
-                return View("Error", $"Вы не можете принять предложение или отказаться от него если Вакансия имеет статус: {vacancy.status.GetDescriptionByResearcher()}");
             return vacancy;
         }
 

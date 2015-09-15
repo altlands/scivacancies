@@ -133,7 +133,7 @@ namespace SciVacancies.ReadModel.EventHandlers
 
                 if (msg.Attachments != null)
                 {
-                    var attachments = Mapper.Map<List<VacancyAttachment>>(msg.Attachments);
+                var attachments = Mapper.Map<List<VacancyAttachment>>(msg.Attachments);
                     foreach (var at in attachments)
                     {
                         if (at.guid == Guid.Empty) at.guid = Guid.NewGuid();

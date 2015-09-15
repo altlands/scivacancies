@@ -40,7 +40,7 @@ namespace SciVacancies.WebApp.ViewModels
         {
             get
             {
-                if (this.Vacancy == null)
+                if (Vacancy == null)
                     return Status.GetDescription();
 
                 var vacancyWinnerInterface = (IVacancyWinnerPretenderInfo)Vacancy;
@@ -52,13 +52,14 @@ namespace SciVacancies.WebApp.ViewModels
                     case VacancyStatus.InCommittee:
                         return "Отправлена";
 
-                    case VacancyStatus.OfferResponseAwaiting:
+                    case VacancyStatus.OfferResponseAwaitingFromWinner:
+                    case VacancyStatus.OfferResponseAwaitingFromPretender:
                         //описываем заявки проигравших
-                        if (vacancyWinnerInterface.WinnerVacancyApplicationGuid != this.Guid
-                            && vacancyWinnerInterface.PretenderVacancyApplicationGuid != this.Guid)
+                        if (vacancyWinnerInterface.WinnerVacancyApplicationGuid != Guid
+                            && vacancyWinnerInterface.PretenderVacancyApplicationGuid != Guid)
                             return "Не в финале";
                         //описываем заявку победителя
-                        if (vacancyWinnerInterface.WinnerVacancyApplicationGuid == this.Guid)
+                        if (vacancyWinnerInterface.WinnerVacancyApplicationGuid == Guid)
                         {
                             //победитель еще не принял решение
                             if (!vacancyWinnerInterface.IsWinnerAccept.HasValue)
@@ -68,7 +69,7 @@ namespace SciVacancies.WebApp.ViewModels
                                 return "Предложение отклонено";
                         }
                         //описываем заявку претендента
-                        if (vacancyWinnerInterface.PretenderVacancyApplicationGuid == this.Guid)
+                        if (vacancyWinnerInterface.PretenderVacancyApplicationGuid == Guid)
                         {
                             //победитель еще не принял решение
                             if (!vacancyWinnerInterface.IsWinnerAccept.HasValue)
@@ -80,66 +81,65 @@ namespace SciVacancies.WebApp.ViewModels
                         }
                         break;
 
-                    case VacancyStatus.OfferAccepted:
+                    case VacancyStatus.OfferAcceptedByWinner:
+                    case VacancyStatus.OfferAcceptedByPretender:
                         //описываем заявки проигравших
-                        if (vacancyWinnerInterface.WinnerVacancyApplicationGuid != this.Guid
-                            && vacancyWinnerInterface.PretenderVacancyApplicationGuid != this.Guid)
+                        if (vacancyWinnerInterface.WinnerVacancyApplicationGuid != Guid
+                            && vacancyWinnerInterface.PretenderVacancyApplicationGuid != Guid)
                             return "Отклонена";
                         //описываем заявку победителя
-                        if (vacancyWinnerInterface.WinnerVacancyApplicationGuid == this.Guid)
+                        if (vacancyWinnerInterface.WinnerVacancyApplicationGuid == Guid)
                         {
                             //победитель принял предложение
-                            if (vacancyWinnerInterface.IsWinnerAccept.Value)
+                            if (vacancyWinnerInterface.IsWinnerAccept != null && vacancyWinnerInterface.IsWinnerAccept.Value)
                                 return "Предложение принято";
                             //победитель отказался от предложения
                             return "Отклонена";
                         }
                         //описываем заявку претендента
-                        if (vacancyWinnerInterface.PretenderVacancyApplicationGuid == this.Guid)
+                        if (vacancyWinnerInterface.PretenderVacancyApplicationGuid == Guid)
                         {
                             //победитель принял предложение
-                            if (vacancyWinnerInterface.IsWinnerAccept.Value)
+                            if (vacancyWinnerInterface.IsWinnerAccept != null && vacancyWinnerInterface.IsWinnerAccept.Value)
                                 return "Отклонена";
                             //победитель отказался от предложения (значит претендент принял)
                             return "Предложение принято";
                         }
                         break;
-                    case VacancyStatus.OfferRejected:
+                    case VacancyStatus.OfferRejectedByWinner:
+                    case VacancyStatus.OfferRejectedByPretender:
                         //описываем заявки проигравших
-                        if (vacancyWinnerInterface.WinnerVacancyApplicationGuid != this.Guid
-                            && vacancyWinnerInterface.PretenderVacancyApplicationGuid != this.Guid)
-                            return "Отклонена";
-
+                        if (vacancyWinnerInterface.WinnerVacancyApplicationGuid != Guid
+                            && vacancyWinnerInterface.PretenderVacancyApplicationGuid != Guid)
+                            return "Не в финале";
                         //описываем заявку победителя
                         //описываем заявку претендента
-                        if (vacancyWinnerInterface.WinnerVacancyApplicationGuid == this.Guid
-                            || vacancyWinnerInterface.PretenderVacancyApplicationGuid == this.Guid)
-                        {
+                        if (vacancyWinnerInterface.WinnerVacancyApplicationGuid == Guid
+                            || vacancyWinnerInterface.PretenderVacancyApplicationGuid == Guid)
                             return "Предложение отклонено";
-                        }
                         break;
                     case VacancyStatus.Closed:
                         //описываем заявки проигравших
-                        if (vacancyWinnerInterface.WinnerVacancyApplicationGuid != this.Guid
-                            && vacancyWinnerInterface.PretenderVacancyApplicationGuid != this.Guid)
+                        if (vacancyWinnerInterface.WinnerVacancyApplicationGuid != Guid
+                            && vacancyWinnerInterface.PretenderVacancyApplicationGuid != Guid)
                             return "Отклонена";
                         //описываем заявку победителя
-                        if (vacancyWinnerInterface.WinnerVacancyApplicationGuid == this.Guid)
+                        if (vacancyWinnerInterface.WinnerVacancyApplicationGuid == Guid)
                         {
                             //победитель принял предложение
-                            if (vacancyWinnerInterface.IsWinnerAccept.Value)
+                            if (vacancyWinnerInterface.IsWinnerAccept != null && vacancyWinnerInterface.IsWinnerAccept.Value)
                                 return "Контракт подписан";
                             //победитель отказался от предложения
                             return "Отклонена";
                         }
                         //описываем заявку претендента
-                        if (vacancyWinnerInterface.PretenderVacancyApplicationGuid == this.Guid)
+                        if (vacancyWinnerInterface.PretenderVacancyApplicationGuid == Guid)
                         {
                             //победитель принял предложение
-                            if (vacancyWinnerInterface.IsWinnerAccept.Value)
+                            if (vacancyWinnerInterface.IsWinnerAccept != null && vacancyWinnerInterface.IsWinnerAccept.Value)
                                 return "Отклонена";
                             //претендент принял предложение
-                            if (vacancyWinnerInterface.IsPretenderAccept.Value)
+                            if (vacancyWinnerInterface.IsPretenderAccept != null && vacancyWinnerInterface.IsPretenderAccept.Value)
                                 return "Контракт подписан";
                             //претендент отказался от предложения
                             return "Отклонена";

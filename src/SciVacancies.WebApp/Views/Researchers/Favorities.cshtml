@@ -107,7 +107,8 @@
                                     }
                                 }
                                 break;
-                            case VacancyStatus.OfferAccepted:
+                            case VacancyStatus.OfferAcceptedByWinner:
+                            case VacancyStatus.OfferAcceptedByPretender:
                                 if (item.is_winner_accept.HasValue && item.is_winner_accept.Value && item.winner_researcher_guid == Model.Guid)
                                 {
                                     <text>
@@ -119,7 +120,7 @@
                                     if (item.is_pretender_accept.HasValue && item.is_pretender_accept.Value && item.pretender_researcher_guid == Model.Guid)
                                     {
                                         <text>
-                                        <span class="success-request-icon"><span class="italic">Победитель</span></span>
+                                        <span class="success-request-icon"><span class="italic">В финале</span></span>
                                         </text>
                                     }
                                 }

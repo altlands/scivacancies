@@ -8,6 +8,7 @@ using System.Linq;
 using System.Threading.Tasks;
 
 using Quartz;
+using SciVacancies.Services.Quartz;
 
 namespace SciVacancies.WebApp.Infrastructure
 {

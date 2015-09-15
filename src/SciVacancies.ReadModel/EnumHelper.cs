@@ -65,9 +65,12 @@ namespace SciVacancies
                 case VacancyStatus.InCommittee:
                     return VacancyStatus.InCommittee.GetDescription();
 
-                case VacancyStatus.OfferResponseAwaiting:
-                case VacancyStatus.OfferAccepted:
-                case VacancyStatus.OfferRejected:
+                case VacancyStatus.OfferResponseAwaitingFromWinner:
+                case VacancyStatus.OfferResponseAwaitingFromPretender:
+                case VacancyStatus.OfferAcceptedByWinner:
+                case VacancyStatus.OfferAcceptedByPretender:
+                case VacancyStatus.OfferRejectedByWinner:
+                case VacancyStatus.OfferRejectedByPretender:
                     return "Финал";
                 default:
                     return "Закрыта";
@@ -85,11 +88,15 @@ namespace SciVacancies
             {
                 case VacancyStatus.InCommittee:
                     return "Ожидается выбор Победителя и Претендента";
-                case VacancyStatus.OfferResponseAwaiting:
-                    return "Ожидается ответ от Заявителя";
-                case VacancyStatus.OfferAccepted:
-                case VacancyStatus.OfferRejected:
+                case VacancyStatus.OfferResponseAwaitingFromWinner:
+                    return "Ожидается ответ от Победителя";
+                case VacancyStatus.OfferResponseAwaitingFromPretender:
+                    return "Ожидается ответ от Претендента";
+                case VacancyStatus.OfferAcceptedByWinner:
+                case VacancyStatus.OfferAcceptedByPretender:
                     return "Ождидается закрытие вакансии";
+                case VacancyStatus.OfferRejectedByWinner:
+                    return "Ождидается ожидается подача предложения претенденту (если он указан)";
                 default:
                     return null;
             }

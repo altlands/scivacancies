@@ -6,30 +6,35 @@ namespace SciVacancies.SearchSubscriptionsService
 {
     public class Program
     {
-        public int Main(string[] args)
+        public void Main(string[] args)
         {
-            var result =  (int)HostFactory.Run(x =>
-            {
-                x.StartAutomatically();
-                x.Service(settings => new SubscriptionService());
+            //HostFactory.Run(hostConfigurator =>
+            //{
+            //    hostConfigurator.StartAutomatically();
+            //    hostConfigurator.Service<SubscriptionService>(serviceConfigurator =>
+            //    {
+            //        serviceConfigurator.ConstructUsing(() => new SubscriptionService());
+            //        serviceConfigurator.WhenStarted((service, hostControl) => service.Start(hostControl));
+            //        serviceConfigurator.WhenStarted((service, hostControl) => service.Stop(hostControl));
+            //    });
 
-                if (ServiceConfiguration.UseCredentials)
-                {
-                    x.RunAs(ServiceConfiguration.ServiceUserName, ServiceConfiguration.ServicePassword);
-                }
-                else
-                {
-                    x.RunAsLocalSystem();
-                }
+            //    if (ServiceConfiguration.UseCredentials)
+            //    {
+            //        hostConfigurator.RunAs(ServiceConfiguration.ServiceUserName, ServiceConfiguration.ServicePassword);
+            //    }
+            //    else
+            //    {
+            //        hostConfigurator.RunAsLocalSystem();
+            //    }
 
-                x.SetDescription("SciVacancies.SearchSubscriptionService: выполняет поиск Подписок, их обработку и рассылку уведомлений");
-                x.SetDisplayName("SciVacancies.SearchSubscriptionService");
-                x.SetServiceName("SciVacancies.SearchSubscriptionService");
-            });
+            //    hostConfigurator.SetDescription("SciVacancies.SearchSubscriptionService: выполняет поиск Подписок, их обработку и рассылку уведомлений");
+            //    hostConfigurator.SetDisplayName("SciVacancies.SearchSubscriptionService");
+            //    hostConfigurator.SetServiceName("SciVacancies.SearchSubscriptionService");
+            //});
 
 
-            Console.WriteLine(result);
-
+            var subscriptionService = new SubscriptionService();
+            subscriptionService.Start();
 
             var line = string.Empty;
             while (line!="exit")
@@ -37,8 +42,8 @@ namespace SciVacancies.SearchSubscriptionsService
                 line = Console.ReadLine();
             }
 
+            subscriptionService.Stop();
 
-            return result;
         }
     }
 }

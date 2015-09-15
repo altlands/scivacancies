@@ -1,10 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Quartz;
 
-namespace SciVacancies.WebApp.Infrastructure
+namespace SciVacancies.Services.Quartz
 {
     public interface ISchedulerService
     {

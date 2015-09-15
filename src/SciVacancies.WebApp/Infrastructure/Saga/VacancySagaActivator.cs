@@ -3,6 +3,7 @@
 using System;
 
 using MediatR;
+using SciVacancies.Services.Quartz;
 
 
 namespace SciVacancies.WebApp.Infrastructure.Saga

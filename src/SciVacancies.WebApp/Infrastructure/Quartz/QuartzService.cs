@@ -10,6 +10,7 @@ using Quartz.Spi;
 using Microsoft.Framework.ConfigurationModel;
 using System.Collections.Specialized;
 using Newtonsoft.Json;
+using SciVacancies.Services.Quartz;
 
 namespace SciVacancies.WebApp.Infrastructure
 {
