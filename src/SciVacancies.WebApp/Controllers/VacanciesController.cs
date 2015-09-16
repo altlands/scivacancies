@@ -664,6 +664,9 @@ namespace SciVacancies.WebApp.Controllers
             var model = Mapper.Map<VacancyDetailsViewModel>(VacancyClosePrevalidation(id, organizationGuid));
             model.Winner = Mapper.Map<ResearcherDetailsViewModel>(_mediator.Send(new SingleResearcherQuery { ResearcherGuid = model.WinnerResearcherGuid }));
             model.Pretender = Mapper.Map<ResearcherDetailsViewModel>(_mediator.Send(new SingleResearcherQuery { ResearcherGuid = model.PretenderResearcherGuid }));
+
+            //todo: обоснование вводить отдельно
+
             return View(model);
         }
 
