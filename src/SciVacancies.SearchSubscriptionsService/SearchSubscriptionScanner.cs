@@ -9,6 +9,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using SciVacancies.ReadModel.Core;
+using SciVacancies.Services.Email;
+using SciVacancies.SmtpNotifications;
 using SciVacancies.SmtpNotifications.SmtpNotificators;
 using Vacancy = SciVacancies.ReadModel.ElasticSearchModel.Model.Vacancy;
 
@@ -17,19 +19,22 @@ namespace SciVacancies.SearchSubscriptionsService
     /// <summary>
     /// выполнять обработку поискового запроса (запросов)
     /// </summary>
-    public class SearchSubscriptionScanner
+    public class SearchSubscriptionScanner : ISearchSubscriptionScanner
     {
-        private readonly ManualResetEvent _doneEvent;
-        private readonly IEnumerable<SearchSubscription> _subscriptionQueue;
-        private readonly ISmtpNotificatorSearchSubscriptionService _smtpNotificatorSearchSubscriptionService;
+        private IEnumerable<SearchSubscription> _subscriptionQueue;
+        private readonly ISmtpNotificatorService _smtpNotificatorService;
+        private ManualResetEvent _doneEvent;
 
-        public SearchSubscriptionScanner(ManualResetEvent doneEvent, ISmtpNotificatorSearchSubscriptionService smtpNotificatorSearchSubscriptionService, IEnumerable<SearchSubscription> subscriptionQueue)
+        public SearchSubscriptionScanner(ISmtpNotificatorService smtpNotificatorService)
+        {
+            _smtpNotificatorService = smtpNotificatorService;
+        }
+
+        public void Initialize(ManualResetEvent doneEvent, IEnumerable<SearchSubscription> subscriptionQueue)
         {
             _doneEvent = doneEvent;
             _subscriptionQueue = subscriptionQueue;
-            _smtpNotificatorSearchSubscriptionService = smtpNotificatorSearchSubscriptionService;
         }
-
         /// <summary>
         /// обработать несколько запросов
         /// </summary>
@@ -73,11 +78,37 @@ namespace SciVacancies.SearchSubscriptionsService
 
                     //    var researcher = dataBase.SingleOrDefaultById<SciVacancies.ReadModel.Core.Researcher>(searchSubscription.researcher_guid);
                     //    winnerSetSmtpNotificator.Send(searchSubscription, researcher, vacanciesList);
-                    _smtpNotificatorSearchSubscriptionService.Notify(searchSubscription, new Researcher(), vacanciesList);
+
+                    #region SmtpNotifications
+                    var researcher = new Researcher();
+                    var researcherFullName = $"{researcher.secondname} {researcher.firstname} {researcher.patronymic}";
+                    var body = $@"
+<div style=''>
+    Уважаемый(-ая), {researcherFullName}, по одной из ваших
+    <a target='_blank' href='http://{_smtpNotificatorService.Domain}/researcher/subscriptions/'>подписок</a>
+     ('{searchSubscription.title}') подобраны следующие вакансии: <br/>
+    {vacanciesList.Aggregate(string.Empty, (current, vacancy) => current + $"<a target='_blank' href='http://{_smtpNotificatorService.Domain}/vacancies/card/{vacancy.Id}'>{vacancy.FullName}</a> <br/>")}
+</div>
+
+<br/>
+<br/>
+<hr/>
+
+<div style='color: lightgray; font-size: smaller;'>
+    Это письмо создано автоматически с 
+    <a target='_blank' href='http://{_smtpNotificatorService.Domain}'>Портала вакансий</a>.
+    Чтобы не получать такие уведомления отключите их или смените email в 
+    <a target='_blank' href='http://{_smtpNotificatorService.Domain}/researchers/account/'>личном кабинете</a>.
+</div>
+";
+                    _smtpNotificatorService.Send(new SciVacMailMessage(researcher.email, "Уведомление с портала вакансий", body));
+                    #endregion
                 }
             }
 
+
             _doneEvent?.Set();
+
         }
 
 

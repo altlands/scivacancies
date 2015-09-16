@@ -1,9 +1,6 @@
 ﻿using System;
 using Autofac;
-using Autofac.Features.Variance;
-using SciVacancies.SearchSubscriptionsService.Quartz;
-using SciVacancies.Services.Quartz;
-using Topshelf;
+using SciVacancies.Services.Email;
 
 namespace SciVacancies.SearchSubscriptionsService
 {
@@ -11,12 +8,22 @@ namespace SciVacancies.SearchSubscriptionsService
     {
         public void Main(string[] args)
         {
+            //todo: use Quartz
+
+
+            var builder = new ContainerBuilder();
+            builder.RegisterType<SearchSubscriptionManager>().As<ISearchSubscriptionManager>().InstancePerLifetimeScope();
+            builder.RegisterType<SearchSubscriptionScanner>().As<ISearchSubscriptionScanner>().InstancePerLifetimeScope();
+            builder.RegisterType<SmtpNotificatorService>().As<ISmtpNotificatorService>().InstancePerLifetimeScope();
+            
+            var container = builder.Build();
+
             //HostFactory.Run(hostConfigurator =>
             //{
             //    hostConfigurator.StartAutomatically();
-            //    hostConfigurator.Service<SubscriptionService>(serviceConfigurator =>
+            //    hostConfigurator.Service<SearchSubscriptionService>(serviceConfigurator =>
             //    {
-            //        serviceConfigurator.ConstructUsing(() => new SubscriptionService());
+            //        serviceConfigurator.ConstructUsing(() => new SearchSubscriptionService());
             //        serviceConfigurator.WhenStarted((service, hostControl) => service.Start(hostControl));
             //        serviceConfigurator.WhenStarted((service, hostControl) => service.Stop(hostControl));
             //    });
@@ -36,30 +43,12 @@ namespace SciVacancies.SearchSubscriptionsService
             //});
 
 
-            #region Autofac
-            //var builder = new ContainerBuilder();
-            //builder.RegisterSource(new ContravariantRegistrationSource());
-            //builder.RegisterModule(new QuartzModule());
-            ////builder.Populate(services);
-            //builder.RegisterType<>()
-            //var container = builder.Build();
+            //todo: this work should be done in the Job
+            var manager = container.Resolve<ISearchSubscriptionManager>();
+            manager.Combine();
 
-            //SchedulerServiceInitialize(container.Resolve<ISchedulerService>());
-
-            //return container.Resolve<IServiceProvider>();
-
-            #endregion
-            var subscriptionService = new SubscriptionService();
-            subscriptionService.Start();
-
-            var line = string.Empty;
-            while (line!="exit")
-            {
-                line = Console.ReadLine();
-            }
-
-            subscriptionService.Stop();
-
+            Console.WriteLine("Started");
+            Console.ReadLine();
         }
     }
 }

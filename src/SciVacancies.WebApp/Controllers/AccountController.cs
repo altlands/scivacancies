@@ -318,7 +318,7 @@ namespace SciVacancies.WebApp.Controllers
                                             //TODO: что делать если кто-то в нашей системе прописал email (такой же как у авторизованного пользователя)
                                             if (!resUser.EmailConfirmed)
                                             {
-                                                //удалить "нашего" пользователя
+                                                //todo: расширить данные нашего пользователя
                                             }
                                             else
                                             {
