@@ -26,6 +26,7 @@ namespace SciVacancies.WebApp.Infrastructure
                 Assembly.Load("SciVacancies.ReadModel"),
                 Assembly.Load("SciVacancies.ReadModel.Notifications"),
                 Assembly.Load("SciVacancies.ReadModel.ElasticSearchModel"),
+                Assembly.Load("SciVacancies.Services"),
                 Assembly.Load("SciVacancies.SmtpNotifications")
             })
                 .AsClosedTypesOf(typeof(INotificationHandler<>))
