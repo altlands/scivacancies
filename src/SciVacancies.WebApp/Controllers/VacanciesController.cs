@@ -73,8 +73,12 @@ namespace SciVacancies.WebApp.Controllers
 
                 var vacancyDataModel = Mapper.Map<VacancyDataModel>(model);
 
+
+                if (model.InCommitteeDate < DateTime.Now)
+                    ModelState.AddModelError("InCommitteeDate", "Вы установили дату ранее текущей");
+
                 if (model.ToPublish)
-                    if ((DateTime.Now - model.InCommitteeDate).Days < _vacancyLifeCycleSettings.Options.DeltaFromPublishToInCommitteeMinDays)
+                    if ((model.InCommitteeDate - DateTime.Now).Days < _vacancyLifeCycleSettings.Options.DeltaFromPublishToInCommitteeMinDays)
                         ModelState.AddModelError("InCommitteeDate", $"Вы не можете установить дату перевода вакансии на рассмотрение комиссии раньше, чем через {_vacancyLifeCycleSettings.Options.DeltaFromPublishToInCommitteeMinDays} дн.");
 
                 if (ModelState.ErrorCount > 0)

@@ -74,8 +74,8 @@ namespace SciVacancies.WebApp.Controllers
                     }
                 });
 
-                if (model.NewSubscriptionNotifyByEmail)
-                    _mediator.Send(new ActivateSearchSubscriptionCommand { ResearcherGuid = researcherGuid, SearchSubscriptionGuid = newSubscriptionGuid });
+                if (!model.NewSubscriptionNotifyByEmail)
+                    _mediator.Send(new CancelSearchSubscriptionCommand { ResearcherGuid = researcherGuid, SearchSubscriptionGuid = newSubscriptionGuid });
 
                 model.SubscriptionInfo = new SubscriptionInfoViewModel
                 {

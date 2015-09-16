@@ -177,7 +177,10 @@
                                 </div>*@
 
                             <div class="form-line mt25">
-                                <span class="checkbox ">
+                                @{
+                                    var isSheckedEmail = Model.NewSubscriptionNotifyByEmail ? "checked" : string.Empty;
+                                }
+                                <span class="checkbox @isSheckedEmail">
                                     <input type="checkbox" asp-for="NewSubscriptionNotifyByEmail" />
                                 </span>
                                 <label asp-for="NewSubscriptionNotifyByEmail">Получать уведомления по электронной почте</label>
@@ -191,9 +194,9 @@
                     </div>
                     <div class="bg-window" style="display: none;"></div>
                     </text>
-                }
-                if (Model.SubscriptionInfo != null && Model.SubscriptionInfo.NewJustAdded)
-                {
+                                    }
+                                    if (Model.SubscriptionInfo != null && Model.SubscriptionInfo.NewJustAdded)
+                                    {
                     <div class="ctr-buttons" style="margin-top: 20px;">
                         <a asp-controller="researchers" asp-action="subscriptions" class="white-btn middle-icon icon-lgr-ok" id="subscribed" rel="tooltip" target="_blank">Подписка оформлена</a>
                         <div id="subscribed-popover" style="display: none; text-align: center;">
