@@ -3,7 +3,7 @@ using Quartz;
 using Quartz.Spi;
 using SciVacancies.Services.Quartz;
 
-namespace SciVacancies.Services
+namespace SciVacancies.WebApp.Infrastructure
 {
     public class QuartzModule : Module
     {

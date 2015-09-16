@@ -5,6 +5,7 @@ using SciVacancies.Services.Email;
 
 namespace SciVacancies.SmtpNotifications.SmtpNotificators
 {
+    //TODO: ntemnikov: move body generation to handlers
     public class SmtpNotificatorVacancyService: ISmtpNotificatorVacancyService
     {
         private readonly ISmtpNotificatorService _smtpNotificatorService;
