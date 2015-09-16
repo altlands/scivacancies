@@ -24,7 +24,7 @@ namespace SciVacancies.WebApp.Infrastructure
             {
                 Assembly.Load("SciVacancies.WebApp"),
                 Assembly.Load("SciVacancies.ReadModel"),
-                Assembly.Load("SciVacancies.ReadModelNotifications"),
+                Assembly.Load("SciVacancies.ReadModel.Notifications"),
                 Assembly.Load("SciVacancies.ReadModel.ElasticSearchModel"),
                 Assembly.Load("SciVacancies.SmtpNotifications")
             })

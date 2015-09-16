@@ -75,6 +75,7 @@ namespace SciVacancies.Domain.Aggregates
             this.Id = @event.SearchSubscriptionGuid;
             this.ResearcherGuid = @event.ResearcherGuid;
             this.Data = @event.Data;
+            this.Status = SearchSubscriptionStatus.Active;
         }
         public void Apply(SearchSubscriptionActivated @event)
         {

@@ -1,5 +1,5 @@
 ﻿using SciVacancies.Domain.Enums;
-using SciVacancies.Domain.Aggregates;
+using SciVacancies.Domain.Events;
 using SciVacancies.WebApp.Infrastructure.Saga;
 using SciVacancies.WebApp.Commands;
 
