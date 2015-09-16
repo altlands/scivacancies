@@ -33,6 +33,7 @@ namespace SciVacancies.WebApp.Infrastructure
         public VacancySagaTimeoutJob(ISagaRepository sagaRepository, IMediator mediator, ISchedulerService scheduler)
         {
             this.sagaRepository = sagaRepository;
+            this.mediator = mediator;
             this.scheduler = scheduler;
         }
 

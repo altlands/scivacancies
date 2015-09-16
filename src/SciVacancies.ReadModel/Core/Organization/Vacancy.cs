@@ -143,6 +143,7 @@ namespace SciVacancies.ReadModel.Core
         public DateTime? committee_end_date { get; set; }
         public string prolonging_reason { get; set; }
 
+        public DateTime? committee_date { get; set; }
         public DateTime? awaiting_date { get; set; }
         public DateTime? announcement_date { get; set; }
 
