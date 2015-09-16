@@ -15,7 +15,7 @@ namespace SciVacancies.SmtpNotifications.SmtpNotificators
         {
             _smtpNotificatorService = smtpNotificatorService;
         }
-
+        //TODO: ntemnikov: move body generation to Services project
         public void Notify(SearchSubscription searchSubscription, Researcher researcher, List<SciVacancies.ReadModel.ElasticSearchModel.Model.Vacancy> vacancies)
         {
             var researcherFullName = $"{researcher.secondname} {researcher.firstname} {researcher.patronymic}";
