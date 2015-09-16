@@ -1,10 +1,8 @@
-﻿using SciVacancies.Domain.DataModels;
+﻿using CommonDomain.Core;
+using SciVacancies.Domain.DataModels;
 using SciVacancies.Domain.Enums;
 using SciVacancies.Domain.Events;
-
 using System;
-
-using CommonDomain.Core;
 
 namespace SciVacancies.Domain.Aggregates
 {
@@ -22,11 +20,11 @@ namespace SciVacancies.Domain.Aggregates
         }
         public SearchSubscription(Guid guid, Guid researcherGuid, SearchSubscriptionDataModel data)
         {
-            if (guid.Equals(Guid.Empty)) throw new ArgumentNullException("guid is empty");
-            if (researcherGuid.Equals(Guid.Empty)) throw new ArgumentNullException("researcherGuid is empty");
-            if (data == null) throw new ArgumentNullException("data is empty");
+            if (guid.Equals(Guid.Empty)) throw new ArgumentNullException(nameof(guid));
+            if (researcherGuid.Equals(Guid.Empty)) throw new ArgumentNullException(nameof(researcherGuid));
+            if (data == null) throw new ArgumentNullException(nameof(data));
 
-            RaiseEvent(new SearchSubscriptionCreated()
+            RaiseEvent(new SearchSubscriptionCreated
             {
                 SearchSubscriptionGuid = guid,
                 ResearcherGuid = researcherGuid,
@@ -40,7 +38,7 @@ namespace SciVacancies.Domain.Aggregates
         {
             if (Status != SearchSubscriptionStatus.Cancelled) throw new InvalidOperationException("searchSubscription state is invalid");
 
-            RaiseEvent(new SearchSubscriptionActivated()
+            RaiseEvent(new SearchSubscriptionActivated
             {
                 SearchSubscriptionGuid = Id,
                 ResearcherGuid = ResearcherGuid
@@ -50,7 +48,7 @@ namespace SciVacancies.Domain.Aggregates
         {
             if (Status != SearchSubscriptionStatus.Active) throw new InvalidOperationException("searchSubscription state is invalid");
 
-            RaiseEvent(new SearchSubscriptionCanceled()
+            RaiseEvent(new SearchSubscriptionCanceled
             {
                 SearchSubscriptionGuid = Id,
                 ResearcherGuid = ResearcherGuid
@@ -60,7 +58,7 @@ namespace SciVacancies.Domain.Aggregates
         {
             if (Status == SearchSubscriptionStatus.Removed) throw new InvalidOperationException("searchSubscription state is invalid");
 
-            RaiseEvent(new SearchSubscriptionRemoved()
+            RaiseEvent(new SearchSubscriptionRemoved
             {
                 SearchSubscriptionGuid = Id,
                 ResearcherGuid = ResearcherGuid
@@ -72,21 +70,21 @@ namespace SciVacancies.Domain.Aggregates
 
         public void Apply(SearchSubscriptionCreated @event)
         {
-            this.Id = @event.SearchSubscriptionGuid;
-            this.ResearcherGuid = @event.ResearcherGuid;
-            this.Data = @event.Data;
+            Id = @event.SearchSubscriptionGuid;
+            ResearcherGuid = @event.ResearcherGuid;
+            Data = @event.Data;
         }
         public void Apply(SearchSubscriptionActivated @event)
         {
-            this.Status = SearchSubscriptionStatus.Active;
+            Status = SearchSubscriptionStatus.Active;
         }
         public void Apply(SearchSubscriptionCanceled @event)
         {
-            this.Status = SearchSubscriptionStatus.Cancelled;
+            Status = SearchSubscriptionStatus.Cancelled;
         }
         public void Apply(SearchSubscriptionRemoved @event)
         {
-            this.Status = SearchSubscriptionStatus.Removed;
+            Status = SearchSubscriptionStatus.Removed;
         }
 
         #endregion

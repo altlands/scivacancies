@@ -36,5 +36,30 @@
     "ElasticSettings": {
         "ConnectionUrl": "http://localhost:9200/",
         "DefaultIndex": "scivacancies"
+    },
+    "SagaSettings": {
+        "Publish": "",
+        "Committee": "",
+        "OfferResponse": ""
+    },
+    "QuartzSettings": {
+        "Scheduler": {
+            "InstanceName": "SciVacanciesScheduler"
+        },
+        "JobStore": {
+            "Type": "Quartz.Impl.AdoJobStore.JobStoreTX, Quartz",
+            "UseProperties": "true",
+            "DataSource": "default",
+            "TablePrefix": "qrtz_",
+            "LockHandler": {
+                "Type": "Quartz.Impl.AdoJobStore.UpdateLockRowSemaphore, Quartz"
+            }
+        },
+        "DataSource": {
+            "Default": {
+                "ConnectionString": "Server = localhost; Database = scivacancies; User Id = postgres; Password = postgres",
+                "Provider": "Npgsql-20"
+            }
+        }
     }
 }
