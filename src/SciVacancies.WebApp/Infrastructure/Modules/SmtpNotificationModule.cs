@@ -12,7 +12,6 @@ namespace SciVacancies.WebApp.Infrastructure
             builder.RegisterType<SmtpNotificatorService>().As<ISmtpNotificatorService>().InstancePerLifetimeScope();
             builder.RegisterType<SmtpNotificatorAccountService>().As<ISmtpNotificatorAccountService>().InstancePerLifetimeScope();
             builder.RegisterType<SmtpNotificatorVacancyService>().As<ISmtpNotificatorVacancyService>().InstancePerLifetimeScope();
-            builder.RegisterType<SmtpNotificatorSearchSubscriptionService>().As<ISmtpNotificatorSearchSubscriptionService>().InstancePerLifetimeScope();
         }
     }
 }
