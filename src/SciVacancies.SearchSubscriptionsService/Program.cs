@@ -1,5 +1,7 @@
 ﻿using System;
 using Autofac;
+using Npgsql;
+using NPoco;
 using SciVacancies.Services.Email;
 
 namespace SciVacancies.SearchSubscriptionsService
@@ -15,7 +17,11 @@ namespace SciVacancies.SearchSubscriptionsService
             builder.RegisterType<SearchSubscriptionManager>().As<ISearchSubscriptionManager>().InstancePerLifetimeScope();
             builder.RegisterType<SearchSubscriptionScanner>().As<ISearchSubscriptionScanner>().InstancePerLifetimeScope();
             builder.RegisterType<SmtpNotificatorService>().As<ISmtpNotificatorService>().InstancePerLifetimeScope();
-            
+
+            //todo: move to config
+            builder.Register(c => new Database("Server=localhost;Database=scivacancies;User Id=postgres;Password=postgres", NpgsqlFactory.Instance)).As<IDatabase>();
+            //builder.Register(c => new Database(Config.Get("Data:ReadModelDb"), NpgsqlFactory.Instance)).As<IDatabase>().InstancePerLifetimeScope();
+
             var container = builder.Build();
 
             //HostFactory.Run(hostConfigurator =>

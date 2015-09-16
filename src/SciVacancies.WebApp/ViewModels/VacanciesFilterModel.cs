@@ -56,7 +56,10 @@ namespace SciVacancies.WebApp.ViewModels
         /// </summary>
         public SubscriptionInfoViewModel SubscriptionInfo { get; set; }
 
-        public bool NewSubscriptionNotifyByEmail { get; set; }
+        /// <summary>
+        /// получать уведомления о новых вакансиях по данной подписке
+        /// </summary>
+        public bool NewSubscriptionNotifyByEmail { get; set; } = true;
 
     }
 }

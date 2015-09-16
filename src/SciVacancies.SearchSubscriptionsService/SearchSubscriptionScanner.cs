@@ -8,10 +8,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
+using Autofac;
 using SciVacancies.ReadModel.Core;
 using SciVacancies.Services.Email;
 using SciVacancies.SmtpNotifications;
-using SciVacancies.SmtpNotifications.SmtpNotificators;
 using Vacancy = SciVacancies.ReadModel.ElasticSearchModel.Model.Vacancy;
 
 namespace SciVacancies.SearchSubscriptionsService
@@ -22,12 +22,12 @@ namespace SciVacancies.SearchSubscriptionsService
     public class SearchSubscriptionScanner : ISearchSubscriptionScanner
     {
         private IEnumerable<SearchSubscription> _subscriptionQueue;
-        private readonly ISmtpNotificatorService _smtpNotificatorService;
         private ManualResetEvent _doneEvent;
+        private readonly ILifetimeScope _lifetimeScope;
 
-        public SearchSubscriptionScanner(ISmtpNotificatorService smtpNotificatorService)
+        public SearchSubscriptionScanner(ILifetimeScope lifetimeScope)
         {
-            _smtpNotificatorService = smtpNotificatorService;
+            _lifetimeScope = lifetimeScope;
         }
 
         public void Initialize(ManualResetEvent doneEvent, IEnumerable<SearchSubscription> subscriptionQueue)
@@ -35,9 +35,7 @@ namespace SciVacancies.SearchSubscriptionsService
             _doneEvent = doneEvent;
             _subscriptionQueue = subscriptionQueue;
         }
-        /// <summary>
-        /// обработать несколько запросов
-        /// </summary>
+
         public void PoolHandleSubscriptions(object threadContext)
         {
             if (_subscriptionQueue == null)
@@ -80,14 +78,21 @@ namespace SciVacancies.SearchSubscriptionsService
                     //    winnerSetSmtpNotificator.Send(searchSubscription, researcher, vacanciesList);
 
                     #region SmtpNotifications
-                    var researcher = new Researcher();
-                    var researcherFullName = $"{researcher.secondname} {researcher.firstname} {researcher.patronymic}";
-                    var body = $@"
+
+                    using (var scope1 = _lifetimeScope.BeginLifetimeScope("scope1"))
+                    {
+                        var db = scope1.Resolve<IDatabase>();
+                        var smtpNotificatorService = scope1.Resolve<ISmtpNotificatorService>();
+
+                        var researcher = db.SingleOrDefaultById<Researcher>(searchSubscription.researcher_guid);
+                        var researcherFullName = $"{researcher.secondname} {researcher.firstname} {researcher.patronymic}";
+
+                        var body = $@"
 <div style=''>
     Уважаемый(-ая), {researcherFullName}, по одной из ваших
-    <a target='_blank' href='http://{_smtpNotificatorService.Domain}/researcher/subscriptions/'>подписок</a>
+    <a target='_blank' href='http://{smtpNotificatorService.Domain}/researcher/subscriptions/'>подписок</a>
      ('{searchSubscription.title}') подобраны следующие вакансии: <br/>
-    {vacanciesList.Aggregate(string.Empty, (current, vacancy) => current + $"<a target='_blank' href='http://{_smtpNotificatorService.Domain}/vacancies/card/{vacancy.Id}'>{vacancy.FullName}</a> <br/>")}
+    {vacanciesList.Aggregate(string.Empty, (current, vacancy) => current + $"<a target='_blank' href='http://{smtpNotificatorService.Domain}/vacancies/card/{vacancy.Id}'>{vacancy.FullName}</a> <br/>")}
 </div>
 
 <br/>
@@ -96,12 +101,13 @@ namespace SciVacancies.SearchSubscriptionsService
 
 <div style='color: lightgray; font-size: smaller;'>
     Это письмо создано автоматически с 
-    <a target='_blank' href='http://{_smtpNotificatorService.Domain}'>Портала вакансий</a>.
+    <a target='_blank' href='http://{smtpNotificatorService.Domain}'>Портала вакансий</a>.
     Чтобы не получать такие уведомления отключите их или смените email в 
-    <a target='_blank' href='http://{_smtpNotificatorService.Domain}/researchers/account/'>личном кабинете</a>.
+    <a target='_blank' href='http://{smtpNotificatorService.Domain}/researchers/account/'>личном кабинете</a>.
 </div>
 ";
-                    _smtpNotificatorService.Send(new SciVacMailMessage(researcher.email, "Уведомление с портала вакансий", body));
+                        smtpNotificatorService.Send(new SciVacMailMessage(researcher.email, "Уведомление с портала вакансий", body));
+                    }
                     #endregion
                 }
             }

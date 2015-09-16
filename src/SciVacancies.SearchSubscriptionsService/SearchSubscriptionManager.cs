@@ -19,9 +19,6 @@ namespace SciVacancies.SearchSubscriptionsService
 
         public void Combine()
         {
-            var builder = new ContainerBuilder();
-            var container = builder.Build();
-
             var dataBase = new Database("Server = localhost; Database = scivacancies; User Id = postgres; Password = postgres", NpgsqlFactory.Instance);
 
 
@@ -41,13 +38,13 @@ namespace SciVacancies.SearchSubscriptionsService
                 manualResetEventsArray[i] = new ManualResetEvent(false);
                 searchSubscriptionScannerArray[i] = _lifetimeScope.Resolve<ISearchSubscriptionScanner>();
                 searchSubscriptionScannerArray[i].Initialize(manualResetEventsArray[i], subscriptionQueue.Skip(threadSize * i).Take(threadSize));
-                
+
                 //todo ntemnikov parallel linq
                 ThreadPool.QueueUserWorkItem(searchSubscriptionScannerArray[i].PoolHandleSubscriptions);
                 manualResetEventsArray[i].Set();
                 i++;
             }
-            
+
         }
     }
 }
