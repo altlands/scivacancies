@@ -4,13 +4,15 @@ using System;
 
 using MediatR;
 using SciVacancies.Services.Quartz;
-
+using Microsoft.Framework.OptionsModel;
 
 namespace SciVacancies.WebApp.Infrastructure.Saga
 {
     public class VacancySagaActivator :
     INotificationHandler<VacancyPublished>,
     INotificationHandler<VacancyProlongedInCommittee>,
+    INotificationHandler<VacancyWinnerSet>,
+    INotificationHandler<VacancyPretenderSet>,
     INotificationHandler<VacancyInOfferResponseAwaitingFromWinner>,
     INotificationHandler<VacancyOfferAcceptedByWinner>,
     INotificationHandler<VacancyOfferRejectedByWinner>,
@@ -22,11 +24,13 @@ namespace SciVacancies.WebApp.Infrastructure.Saga
     {
         readonly ISagaRepository sagaRepository;
         readonly ISchedulerService schedulerService;
+        readonly IOptions<QuartzSettings> settings;
 
-        public VacancySagaActivator(ISagaRepository sagaRepository, ISchedulerService schedulerService)
+        public VacancySagaActivator(ISagaRepository sagaRepository, ISchedulerService schedulerService, IOptions<QuartzSettings> settings)
         {
             this.sagaRepository = sagaRepository;
             this.schedulerService = schedulerService;
+            this.settings = settings;
         }
         public void Handle(VacancyPublished msg)
         {
@@ -49,7 +53,7 @@ namespace SciVacancies.WebApp.Infrastructure.Saga
             };
 
             //вынести интервал в конфиг
-            schedulerService.CreateSheduledJob(job, job.SagaGuid, 1);
+            schedulerService.CreateSheduledJob(job, job.SagaGuid, settings.Options.Scheduler.ExecutionInterval);
         }
 
         public void Handle(VacancyProlongedInCommittee msg)
@@ -65,6 +69,28 @@ namespace SciVacancies.WebApp.Infrastructure.Saga
             sagaRepository.Save("vacancysaga", saga, Guid.NewGuid(), null);
         }
 
+        public void Handle(VacancyWinnerSet msg)
+        {
+            VacancySaga saga = sagaRepository.GetById<VacancySaga>("vacancysaga", msg.VacancyGuid);
+            saga.Transition(new VacancySagaWinnerSet
+            {
+                SagaGuid = saga.Id,
+
+                WinnerReasearcherGuid = msg.WinnerReasearcherGuid,
+                WinnerVacancyApplicationGuid = msg.WinnerVacancyApplicationGuid
+            });
+        }
+        public void Handle(VacancyPretenderSet msg)
+        {
+            VacancySaga saga = sagaRepository.GetById<VacancySaga>("vacancysaga", msg.VacancyGuid);
+            saga.Transition(new VacancySagaPretenderSet
+            {
+                SagaGuid = saga.Id,
+
+                PretenderReasearcherGuid = msg.PretenderReasearcherGuid,
+                PretenderVacancyApplicationGuid = msg.PretenderVacancyApplicationGuid
+            });
+        }
         /// <summary>
         /// Как только у вакансии этот статус проставляется - ожидается респонс от победителя или претендента. Нужно запустить таймер на 30 дней
         /// </summary>
@@ -86,7 +112,7 @@ namespace SciVacancies.WebApp.Infrastructure.Saga
             };
 
             //вынести интервал в конфиг
-            schedulerService.CreateSheduledJob(job, job.SagaGuid, 1);
+            schedulerService.CreateSheduledJob(job, job.SagaGuid, settings.Options.Scheduler.ExecutionInterval);
         }
         public void Handle(VacancyOfferAcceptedByWinner msg)
         {
@@ -125,7 +151,7 @@ namespace SciVacancies.WebApp.Infrastructure.Saga
             };
 
             //вынести интервал в конфиг
-            schedulerService.CreateSheduledJob(job, job.SagaGuid, 1);
+            schedulerService.CreateSheduledJob(job, job.SagaGuid, settings.Options.Scheduler.ExecutionInterval);
         }
         public void Handle(VacancyOfferAcceptedByPretender msg)
         {

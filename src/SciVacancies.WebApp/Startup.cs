@@ -48,6 +48,8 @@ namespace SciVacancies.WebApp
             services.Configure<SiteFileSettings>(Configuration.GetSubKey("SiteFileSettings"));
             services.Configure<VacancyLifeCycleSettings>(Configuration.GetSubKey("VacancyLifeCycleSettings"));
             services.Configure<CaptchaSettings>(Configuration.GetSubKey("CaptchaSettings"));
+            services.Configure<QuartzSettings>(Configuration.GetSubKey("QuartzSettings"));
+            services.Configure<SagaSettings>(Configuration.GetSubKey("SagaSettings"));
 
             services.ConfigureCookieAuthentication(options =>
             {

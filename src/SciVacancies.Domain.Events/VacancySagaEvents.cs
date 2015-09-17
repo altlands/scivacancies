@@ -28,6 +28,16 @@ namespace SciVacancies.Domain.Events
     public class VacancySagaSecondInCommitteeNotificationSent : VacancySagaEventBase
     {
     }
+    public class VacancySagaWinnerSet : VacancySagaEventBase
+    {
+        public Guid WinnerReasearcherGuid { get; set; }
+        public Guid WinnerVacancyApplicationGuid { get; set; }
+    }
+    public class VacancySagaPretenderSet : VacancySagaEventBase
+    {
+        public Guid PretenderReasearcherGuid { get; set; }
+        public Guid PretenderVacancyApplicationGuid { get; set; }
+    }
     public class VacancySagaSwitchedInOfferResponseAwaitingFromWinner : VacancySagaEventBase
     {
         public DateTime OfferResponseAwaitingFromWinnerEndDate { get; set; }
