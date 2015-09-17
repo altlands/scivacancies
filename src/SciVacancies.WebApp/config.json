@@ -36,44 +36,44 @@
             "ResearcherProfile": "http://scimap-sso.alt-lan.com/user/profile"
         }
     },
-  "ElasticSettings": {
-    "ConnectionUrl": "http://alt-dev002:9200/",
-    "DefaultIndex": "scivacancies"
-  },
-  //TODO сделать только с положительными днями, обозвать соответствующе
+    "ElasticSettings": {
+        "ConnectionUrl": "http://alt-dev002:9200/",
+        "DefaultIndex": "scivacancies"
+    },
+    //TODO сделать только с положительными днями, обозвать соответствующе
     "SagaSettings": {
-      "Date": {
-        "Committee": {
-          "FirstNotificationDays": -1,
-          "SecondNotificationDays": 2,
-          "ProlongingDays": 15
-        },
-        "OfferResponseAwaiting": {
-          "WinnerNotificationDays": -1,
-          "PretenderNotificationDays": -1
+        "Date": {
+            "Committee": {
+                "FirstNotificationDays": -1,
+                "SecondNotificationDays": 2,
+                "ProlongingDays": 15
+            },
+            "OfferResponseAwaiting": {
+                "WinnerNotificationDays": -1,
+                "PretenderNotificationDays": -1
+            }
         }
-      }
     },
     "QuartzSettings": {
-      "Scheduler": {
-        "InstanceName": "SciVacanciesScheduler",
-        "ExecutionInterval": 10
-      },
-      "JobStore": {
-        "Type": "Quartz.Impl.AdoJobStore.JobStoreTX, Quartz",
-        "UseProperties": "true",
-        "DataSource": "default",
-        "TablePrefix": "qrtz_",
-        "LockHandler": {
-          "Type": "Quartz.Impl.AdoJobStore.UpdateLockRowSemaphore, Quartz"
+        "Scheduler": {
+            "InstanceName": "SciVacanciesScheduler",
+            "ExecutionInterval": 10
+        },
+        "JobStore": {
+            "Type": "Quartz.Impl.AdoJobStore.JobStoreTX, Quartz",
+            "UseProperties": "true",
+            "DataSource": "default",
+            "TablePrefix": "qrtz_",
+            "LockHandler": {
+                "Type": "Quartz.Impl.AdoJobStore.UpdateLockRowSemaphore, Quartz"
+            }
+        },
+        "DataSource": {
+            "Default": {
+                "ConnectionString": "Server=alt-dev002;Database=scivacancies;User Id=postgres;Password=postgres",
+                "Provider": "Npgsql-20"
+            }
         }
-      },
-      "DataSource": {
-        "Default": {
-          "ConnectionString": "Server=alt-dev002;Database=scivacancies;User Id=postgres;Password=postgres",
-          "Provider": "Npgsql-20"
-        }
-      }
     },
     "AttachmentSettings": {
         "VacancyApplication": {

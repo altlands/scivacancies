@@ -55,11 +55,9 @@ namespace SciVacancies.SearchSubscriptionsService
 
             //service initializing
             var searchSubscriptionService = container.Resolve<SearchSubscriptionService>();
-            // to create a new instance of a new service,
-            // just add it to the list of services 
-            // specified in the ServiceBase array constructor.
-            var servicesToRun = new ServiceBase[] { searchSubscriptionService };
-            ServiceBase.Run(servicesToRun);
+            searchSubscriptionService.OnStart();
+            //searchSubscriptionService.ServiceName = "SearchSubscriptionService";
+            //ServiceBase.Run(searchSubscriptionService);
 
             Console.WriteLine("Started");
             Console.ReadLine();

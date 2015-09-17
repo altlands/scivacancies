@@ -9,64 +9,63 @@ using Quartz;
 using Quartz.Impl;
 using Quartz.Spi;
 using Quartz.Core;
+using SciVacancies.SearchSubscriptionsService.Jobs;
 
 namespace SciVacancies.SearchSubscriptionsService
 {
     public class SearchSubscriptionService : ServiceBase
     {
         readonly int MinuteInterval;
-        private readonly ILifetimeScope _lifetimeScope;
 
-        public SearchSubscriptionService(ILifetimeScope lifetimeScope)
+        public SearchSubscriptionService()
         {
             MinuteInterval = 1;
-            _lifetimeScope = lifetimeScope;
+        }
+
+        public void OnStart()
+        {
+            OnStart(null);
         }
 
         protected override void OnStart(string[] args)
         {
-
-            //todo: this work should be done in the Job
-            var manager = _lifetimeScope.Resolve<ISearchSubscriptionManager>();
-            manager.Combine();
-
             //base.OnStart(args);
 
-            ////logging
+            //logging
 
-            ////quartz
-            //try
-            //{
-            //    ISchedulerFactory schedulerFactory = new StdSchedulerFactory();
-            //    var scheduler = schedulerFactory.GetScheduler();
+            //quartz
+            try
+            {
+                ISchedulerFactory schedulerFactory = new StdSchedulerFactory();
+                var scheduler = schedulerFactory.GetScheduler();
 
-            //    var jobKey = new JobKey("SciVacancies.SearchSubscriptionJob", "SciVacancies.SearchSubscriptionService");
-            //    var triggerKey = new TriggerKey("SciVacancies.SearchSubscriptionJobTrigger", "SciVacancies.SearchSubscriptionService");
+                var jobKey = new JobKey("SciVacancies.SearchSubscriptionJob", "SciVacancies.SearchSubscriptionService");
+                var triggerKey = new TriggerKey("SciVacancies.SearchSubscriptionJobTrigger", "SciVacancies.SearchSubscriptionService");
 
-            //    if (scheduler.CheckExists(jobKey) && scheduler.CheckExists(triggerKey))
-            //    {
-            //        scheduler.DeleteJob(jobKey);
-            //    }
+                if (scheduler.CheckExists(jobKey) && scheduler.CheckExists(triggerKey))
+                {
+                    scheduler.DeleteJob(jobKey);
+                }
 
-            //    var job = JobBuilder.Create<SearchSubscriptionJob>()
-            //                                .WithIdentity(jobKey)
-            //                                .Build();
+                var job = JobBuilder.Create<SearchSubscriptionJob>()
+                                            .WithIdentity(jobKey)
+                                            .Build();
 
-            //    var trigger = TriggerBuilder.Create()
-            //                                    .WithIdentity(triggerKey)
-            //                                    .WithSimpleSchedule(s => s
-            //                                        .WithIntervalInMinutes(MinuteInterval)
-            //                                        .RepeatForever())
-            //                                    .Build();
+                var trigger = TriggerBuilder.Create()
+                                                .WithIdentity(triggerKey)
+                                                .WithSimpleSchedule(s => s
+                                                    .WithIntervalInMinutes(MinuteInterval)
+                                                    .RepeatForever())
+                                                .Build();
 
-            //    scheduler.ScheduleJob(job, trigger);
+                scheduler.ScheduleJob(job, trigger);
 
-            //    scheduler.Start();
-            //}
-            //catch (Exception e)
-            //{
+                scheduler.Start();
+            }
+            catch (Exception e)
+            {
 
-            //}
+            }
 
         }
 
