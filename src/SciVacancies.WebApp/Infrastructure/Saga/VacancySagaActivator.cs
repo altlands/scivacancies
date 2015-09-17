@@ -4,7 +4,7 @@ using System;
 
 using MediatR;
 using SciVacancies.Services.Quartz;
-
+using Microsoft.Framework.OptionsModel;
 
 namespace SciVacancies.WebApp.Infrastructure.Saga
 {
@@ -22,11 +22,13 @@ namespace SciVacancies.WebApp.Infrastructure.Saga
     {
         readonly ISagaRepository sagaRepository;
         readonly ISchedulerService schedulerService;
+        readonly IOptions<QuartzSettings> settings;
 
-        public VacancySagaActivator(ISagaRepository sagaRepository, ISchedulerService schedulerService)
+        public VacancySagaActivator(ISagaRepository sagaRepository, ISchedulerService schedulerService, IOptions<QuartzSettings> settings)
         {
             this.sagaRepository = sagaRepository;
             this.schedulerService = schedulerService;
+            this.settings = settings;
         }
         public void Handle(VacancyPublished msg)
         {
@@ -49,7 +51,7 @@ namespace SciVacancies.WebApp.Infrastructure.Saga
             };
 
             //вынести интервал в конфиг
-            schedulerService.CreateSheduledJob(job, job.SagaGuid, 1);
+            schedulerService.CreateSheduledJob(job, job.SagaGuid, settings.Options.Scheduler.ExecutionInterval);
         }
 
         public void Handle(VacancyProlongedInCommittee msg)
@@ -86,7 +88,7 @@ namespace SciVacancies.WebApp.Infrastructure.Saga
             };
 
             //вынести интервал в конфиг
-            schedulerService.CreateSheduledJob(job, job.SagaGuid, 1);
+            schedulerService.CreateSheduledJob(job, job.SagaGuid, settings.Options.Scheduler.ExecutionInterval);
         }
         public void Handle(VacancyOfferAcceptedByWinner msg)
         {
@@ -125,7 +127,7 @@ namespace SciVacancies.WebApp.Infrastructure.Saga
             };
 
             //вынести интервал в конфиг
-            schedulerService.CreateSheduledJob(job, job.SagaGuid, 1);
+            schedulerService.CreateSheduledJob(job, job.SagaGuid, settings.Options.Scheduler.ExecutionInterval);
         }
         public void Handle(VacancyOfferAcceptedByPretender msg)
         {

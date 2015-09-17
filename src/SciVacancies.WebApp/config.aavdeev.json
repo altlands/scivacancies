@@ -38,13 +38,22 @@
     "DefaultIndex": "scivacancies"
   },
   "SagaSettings": {
-    "Publish": "",
-    "Committee": "",
-    "OfferResponse": ""
+    "Date": {
+      "Committee": {
+        "FirstNotificationDays": -1,
+        "SecondNotificationDays": 2,
+        "ProlongingDays": 15
+      },
+      "OfferResponseAwaiting": {
+        "WinnerNotificationDays": -1,
+        "PretenderNotificationDays": -1
+      }
+    }
   },
   "QuartzSettings": {
     "Scheduler": {
-      "InstanceName": "SciVacanciesScheduler"
+      "InstanceName": "SciVacanciesScheduler",
+      "ExecutionInterval": 10
     },
     "JobStore": {
       "Type": "Quartz.Impl.AdoJobStore.JobStoreTX, Quartz",

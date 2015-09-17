@@ -8,6 +8,7 @@ using System;
 using MediatR;
 using Quartz;
 using SciVacancies.Services.Quartz;
+using Microsoft.Framework.OptionsModel;
 
 namespace SciVacancies.WebApp.Infrastructure
 {
@@ -25,16 +26,19 @@ namespace SciVacancies.WebApp.Infrastructure
 
         readonly ISchedulerService scheduler;
 
+        readonly IOptions<SagaSettings> settings;
+
         public VacancySagaTimeoutJob()
         {
             //оставляем пустым
         }
 
-        public VacancySagaTimeoutJob(ISagaRepository sagaRepository, IMediator mediator, ISchedulerService scheduler)
+        public VacancySagaTimeoutJob(ISagaRepository sagaRepository, IMediator mediator, ISchedulerService scheduler, IOptions<SagaSettings> settings)
         {
             this.sagaRepository = sagaRepository;
             this.mediator = mediator;
             this.scheduler = scheduler;
+            this.settings = settings;
         }
 
         public void Execute(IJobExecutionContext context)
@@ -57,8 +61,7 @@ namespace SciVacancies.WebApp.Infrastructure
                     break;
 
                 case VacancyStatus.InCommittee:
-                    //TODO вынести сроки в конфиг
-                    if (!saga.FirstInCommitteeNotificationSent && saga.InCommitteeEndDate.AddDays(-1) <= DateTime.UtcNow)
+                    if (!saga.FirstInCommitteeNotificationSent && saga.InCommitteeEndDate.AddDays(settings.Options.Date.Committee.FirstNotificationDays) <= DateTime.UtcNow)
                     {
                         saga.Transition(new VacancySagaFirstInCommitteeNotificationSent());
                         sagaRepository.Save("vacancysaga", saga, Guid.NewGuid(), null);
@@ -66,8 +69,7 @@ namespace SciVacancies.WebApp.Infrastructure
                         throw new NotImplementedException();
                         //TODO отправить уведомление, что пора бы опубликовывать протокол комиссии (скоро истекут 15 или 30 дней)
                     }
-                    //TODO вынести сроки в конфиг
-                    if (saga.InCommitteeEndDate.AddDays(2) <= DateTime.UtcNow)
+                    if (saga.InCommitteeEndDate.AddDays(settings.Options.Date.Committee.SecondNotificationDays) <= DateTime.UtcNow)
                     {
                         saga.Transition(new VacancySagaSecondInCommitteeNotificationSent());
                         sagaRepository.Save("vacancysaga", saga, Guid.NewGuid(), null);
@@ -84,7 +86,7 @@ namespace SciVacancies.WebApp.Infrastructure
 
                 case VacancyStatus.OfferResponseAwaitingFromWinner:
                     //высылаем победителю уведомление, что пора бы принять решение по предложению контракта
-                    if (!saga.OfferResponseNotificationSentToWinner && saga.OfferResponseAwaitingFromWinnerEndDate.AddDays(-1) <= DateTime.UtcNow)
+                    if (!saga.OfferResponseNotificationSentToWinner && saga.OfferResponseAwaitingFromWinnerEndDate.AddDays(settings.Options.Date.OfferResponseAwaiting.WinnerNotificationDays) <= DateTime.UtcNow)
                     {
                         saga.Transition(new VacancySagaOfferResponseNotificationSentToWinner());
                         sagaRepository.Save("vacancysaga", saga, Guid.NewGuid(), null);
@@ -111,7 +113,7 @@ namespace SciVacancies.WebApp.Infrastructure
 
                 case VacancyStatus.OfferResponseAwaitingFromPretender:
                     //высылаем претенденту уведомление, что пора бы принять решение по предложению контракта
-                    if (!saga.OfferResponseNotificationSentToPretender && saga.OfferResponseAwaitingFromPretenderEndDate.AddDays(-1) <= DateTime.UtcNow)
+                    if (!saga.OfferResponseNotificationSentToPretender && saga.OfferResponseAwaitingFromPretenderEndDate.AddDays(settings.Options.Date.OfferResponseAwaiting.PretenderNotificationDays) <= DateTime.UtcNow)
                     {
                         saga.Transition(new VacancySagaOfferResponseNotificationSentToPretender());
                         sagaRepository.Save("vacancysaga", saga, Guid.NewGuid(), null);
