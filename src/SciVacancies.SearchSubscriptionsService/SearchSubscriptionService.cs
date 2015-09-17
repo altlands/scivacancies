@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.ServiceProcess;
 using System.Threading.Tasks;
+using Autofac;
 using Quartz;
 using Quartz.Impl;
 using Quartz.Spi;
@@ -14,16 +15,23 @@ namespace SciVacancies.SearchSubscriptionsService
     public class SearchSubscriptionService : ServiceBase
     {
         readonly int MinuteInterval;
+        private readonly ILifetimeScope _lifetimeScope;
 
-        public SearchSubscriptionService()
+        public SearchSubscriptionService(ILifetimeScope lifetimeScope)
         {
             MinuteInterval = 1;
+            _lifetimeScope = lifetimeScope;
         }
 
         protected override void OnStart(string[] args)
         {
+
+            //todo: this work should be done in the Job
+            var manager = _lifetimeScope.Resolve<ISearchSubscriptionManager>();
+            manager.Combine();
+
             //base.OnStart(args);
-         
+
             ////logging
 
             ////quartz

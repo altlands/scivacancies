@@ -1,4 +1,6 @@
 ﻿using System;
+using System.ServiceProcess;
+using System.Threading;
 using Autofac;
 using Npgsql;
 using NPoco;
@@ -14,9 +16,11 @@ namespace SciVacancies.SearchSubscriptionsService
 
 
             var builder = new ContainerBuilder();
+            builder.RegisterType<SearchSubscriptionService>().AsSelf();
             builder.RegisterType<SearchSubscriptionManager>().As<ISearchSubscriptionManager>().InstancePerLifetimeScope();
             builder.RegisterType<SearchSubscriptionScanner>().As<ISearchSubscriptionScanner>().InstancePerLifetimeScope();
             builder.RegisterType<SmtpNotificatorService>().As<ISmtpNotificatorService>().InstancePerLifetimeScope();
+            
 
             //todo: move to config
             builder.Register(c => new Database("Server=localhost;Database=scivacancies;User Id=postgres;Password=postgres", NpgsqlFactory.Instance)).As<IDatabase>();
@@ -49,12 +53,23 @@ namespace SciVacancies.SearchSubscriptionsService
             //});
 
 
-            //todo: this work should be done in the Job
-            var manager = container.Resolve<ISearchSubscriptionManager>();
-            manager.Combine();
+            //service initializing
+            var searchSubscriptionService = container.Resolve<SearchSubscriptionService>();
+            // to create a new instance of a new service,
+            // just add it to the list of services 
+            // specified in the ServiceBase array constructor.
+            var servicesToRun = new ServiceBase[] { searchSubscriptionService };
+            ServiceBase.Run(servicesToRun);
 
             Console.WriteLine("Started");
             Console.ReadLine();
+
+            while (!searchSubscriptionService.CanStop)
+            {
+                Thread.Sleep(500);
+            }
+
+            searchSubscriptionService.Stop();
         }
     }
 }
