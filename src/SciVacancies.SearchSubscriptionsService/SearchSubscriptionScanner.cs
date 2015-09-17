@@ -16,6 +16,12 @@ using Vacancy = SciVacancies.ReadModel.ElasticSearchModel.Model.Vacancy;
 
 namespace SciVacancies.SearchSubscriptionsService
 {
+    public interface ISearchSubscriptionScanner
+    {
+        void PoolHandleSubscriptions(object threadContext);
+        void Initialize(ManualResetEvent doneEvent, IEnumerable<SearchSubscription> subscriptionQueue);
+    }
+
     /// <summary>
     /// выполнять обработку поискового запроса (запросов)
     /// </summary>

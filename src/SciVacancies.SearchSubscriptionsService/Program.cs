@@ -1,10 +1,17 @@
 ﻿using System;
+using System.Linq;
+using System.Collections;
 using System.ServiceProcess;
 using System.Threading;
 using Autofac;
+using Microsoft.Framework.ConfigurationModel;
 using Npgsql;
 using NPoco;
+using Quartz;
+using Quartz.Spi;
+using SciVacancies.SearchSubscriptionsService.Jobs;
 using SciVacancies.Services.Email;
+using SciVacancies.Services.Quartz;
 
 namespace SciVacancies.SearchSubscriptionsService
 {
@@ -12,16 +19,27 @@ namespace SciVacancies.SearchSubscriptionsService
     {
         public void Main(string[] args)
         {
-            //todo: use Quartz
-
+            var vars = Environment.GetEnvironmentVariables();
+            var devEnv = (string)vars.Cast<DictionaryEntry>().FirstOrDefault(e => e.Key.Equals("dev_env")).Value;
 
             var builder = new ContainerBuilder();
-            builder.RegisterType<SearchSubscriptionService>().AsSelf();
-            builder.RegisterType<SearchSubscriptionManager>().As<ISearchSubscriptionManager>().InstancePerLifetimeScope();
-            builder.RegisterType<SearchSubscriptionScanner>().As<ISearchSubscriptionScanner>().InstancePerLifetimeScope();
+            builder
+                .Register(c =>
+                    new Configuration()
+                    .AddJsonFile("config.json")
+                    .AddJsonFile($"config.{devEnv}.json", optional: true)
+                    .AddEnvironmentVariables())
+                .As<IConfiguration>().SingleInstance();
             builder.RegisterType<SmtpNotificatorService>().As<ISmtpNotificatorService>().InstancePerLifetimeScope();
-            
-
+            builder.RegisterType<SearchSubscriptionService>().AsSelf();
+            builder.RegisterType<QuartzService>().AsImplementedInterfaces();
+            builder.RegisterType<AutofacJobFactory>().As<IJobFactory>().InstancePerLifetimeScope();
+            builder.RegisterType<SearchSubscriptionJob>().As<IJob>().InstancePerLifetimeScope();
+            builder.RegisterTypes(System.Reflection.Assembly.GetAssembly(typeof(Program)).GetTypes())
+                .Where(t => t != typeof(IJob) && typeof(IJob).IsAssignableFrom(t))
+                .AsSelf()
+                .InstancePerLifetimeScope();
+            builder.RegisterType<SearchSubscriptionScanner>().As<ISearchSubscriptionScanner>().InstancePerLifetimeScope();
             //todo: move to config
             builder.Register(c => new Database("Server=localhost;Database=scivacancies;User Id=postgres;Password=postgres", NpgsqlFactory.Instance)).As<IDatabase>();
             //builder.Register(c => new Database(Config.Get("Data:ReadModelDb"), NpgsqlFactory.Instance)).As<IDatabase>().InstancePerLifetimeScope();

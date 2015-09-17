@@ -11,10 +11,11 @@
         "NEST": "1.5.1",
         "Npgsql.EntityFramework": "2.2.5",
         "NPoco": "2.9.103",
-        //"Quartz": "2.3.3",
+        "Quartz": "2.3.3",
         "SciVacancies.ReadModel": "1.0.0-*",
         "SciVacancies.ReadModel.ElasticSearchModel": "1.0.0-*",
         "SciVacancies.SmtpNotifications": "1.0.0-*",
+        "Microsoft.Framework.ConfigurationModel.Json": "1.0.0-beta4"
         //"Topshelf": "3.2.0",
         //"Topshelf.Linux": "1.0.12.11"
     },
