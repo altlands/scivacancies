@@ -34,7 +34,7 @@ namespace SciVacancies.SearchSubscriptionsService
             builder.RegisterType<SearchSubscriptionService>().AsSelf();
             builder.RegisterType<QuartzService>().AsImplementedInterfaces();
             builder.RegisterType<AutofacJobFactory>().As<IJobFactory>().InstancePerLifetimeScope();
-            builder.RegisterType<SearchSubscriptionJob>().As<IJob>().InstancePerLifetimeScope();
+            builder.RegisterType<SearchSubscriptionJob>().As<IJob>().InstancePerLifetimeScope().AsSelf();
             builder.RegisterTypes(System.Reflection.Assembly.GetAssembly(typeof(Program)).GetTypes())
                 .Where(t => t != typeof(IJob) && typeof(IJob).IsAssignableFrom(t))
                 .AsSelf()
@@ -85,7 +85,10 @@ namespace SciVacancies.SearchSubscriptionsService
                 Thread.Sleep(500);
             }
 
+            Console.WriteLine("Stopped");
             searchSubscriptionService.Stop();
+            Console.Read();
+
         }
     }
 }

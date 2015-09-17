@@ -5,6 +5,7 @@ using System;
 using MediatR;
 using SciVacancies.Services.Quartz;
 using Microsoft.Framework.OptionsModel;
+using SciVacancies.Services;
 
 namespace SciVacancies.WebApp.Infrastructure.Saga
 {

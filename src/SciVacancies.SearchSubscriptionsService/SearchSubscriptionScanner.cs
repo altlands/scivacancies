@@ -18,8 +18,9 @@ namespace SciVacancies.SearchSubscriptionsService
 {
     public interface ISearchSubscriptionScanner
     {
-        void PoolHandleSubscriptions(object threadContext);
-        void Initialize(ManualResetEvent doneEvent, IEnumerable<SearchSubscription> subscriptionQueue);
+        void PoolHandleSubscriptions();
+        void Initialize(EventWaitHandle doneEvent, IEnumerable<SearchSubscription> subscriptionQueue);
+        void Initialize(IEnumerable<SearchSubscription> subscriptionQueue);
     }
 
     /// <summary>
@@ -28,7 +29,7 @@ namespace SciVacancies.SearchSubscriptionsService
     public class SearchSubscriptionScanner : ISearchSubscriptionScanner
     {
         private IEnumerable<SearchSubscription> _subscriptionQueue;
-        private ManualResetEvent _doneEvent;
+        private EventWaitHandle _doneEvent;
         private readonly ILifetimeScope _lifetimeScope;
 
         public SearchSubscriptionScanner(ILifetimeScope lifetimeScope)
@@ -36,13 +37,17 @@ namespace SciVacancies.SearchSubscriptionsService
             _lifetimeScope = lifetimeScope;
         }
 
-        public void Initialize(ManualResetEvent doneEvent, IEnumerable<SearchSubscription> subscriptionQueue)
+        public void Initialize(EventWaitHandle doneEvent, IEnumerable<SearchSubscription> subscriptionQueue)
         {
             _doneEvent = doneEvent;
             _subscriptionQueue = subscriptionQueue;
         }
+        public void Initialize(IEnumerable<SearchSubscription> subscriptionQueue)
+        {
+            _subscriptionQueue = subscriptionQueue;
+        }
 
-        public void PoolHandleSubscriptions(object threadContext)
+        public void PoolHandleSubscriptions()
         {
             if (_subscriptionQueue == null)
                 return;
@@ -57,20 +62,22 @@ namespace SciVacancies.SearchSubscriptionsService
                 var searchQuery = new SearchQuery
                 {
                     Query = searchSubscription.query,
-                    PublishDateFrom = searchSubscription.currentcheck_date,
-                    FoivIds = JsonConvert.DeserializeObject<IEnumerable<int>>(searchSubscription.foiv_ids),
-                    PositionTypeIds = JsonConvert.DeserializeObject<IEnumerable<int>>(searchSubscription.positiontype_ids),
-                    RegionIds = JsonConvert.DeserializeObject<IEnumerable<int>>(searchSubscription.region_ids),
-                    ResearchDirectionIds = JsonConvert.DeserializeObject<IEnumerable<int>>(searchSubscription.researchdirection_ids),
-                    SalaryFrom = searchSubscription.salary_from,
-                    SalaryTo = searchSubscription.salary_to,
-                    VacancyStatuses = JsonConvert.DeserializeObject<IEnumerable<VacancyStatus>>(searchSubscription.vacancy_statuses)
+                    //PublishDateFrom = searchSubscription.currentcheck_date,
+                    //FoivIds = JsonConvert.DeserializeObject<IEnumerable<int>>(searchSubscription.foiv_ids),
+                    //PositionTypeIds = JsonConvert.DeserializeObject<IEnumerable<int>>(searchSubscription.positiontype_ids),
+                    //RegionIds = JsonConvert.DeserializeObject<IEnumerable<int>>(searchSubscription.region_ids),
+                    //ResearchDirectionIds = JsonConvert.DeserializeObject<IEnumerable<int>>(searchSubscription.researchdirection_ids),
+                    //SalaryFrom = searchSubscription.salary_from,
+                    //SalaryTo = searchSubscription.salary_to,
+                    //VacancyStatuses = JsonConvert.DeserializeObject<IEnumerable<VacancyStatus>>(searchSubscription.vacancy_statuses)
                 };
 
                 Func<SearchQuery, SearchDescriptor<Vacancy>> searchSelector = VacancySearchDescriptor;
 
                 var searchResults = elasticClient.Search<Vacancy>(searchSelector(searchQuery));
                 var vacanciesList = searchResults.Documents.ToList();
+
+                Console.WriteLine($"По подписке найдено {vacanciesList.Count} записей");
 
                 if (vacanciesList.Count > 0)
                 {
@@ -92,6 +99,8 @@ namespace SciVacancies.SearchSubscriptionsService
 
                         var researcher = db.SingleOrDefaultById<Researcher>(searchSubscription.researcher_guid);
                         var researcherFullName = $"{researcher.secondname} {researcher.firstname} {researcher.patronymic}";
+
+                        Console.WriteLine($"Для {researcherFullName} отправлено письмо на почту {researcher.email}");
 
                         var body = $@"
 <div style=''>

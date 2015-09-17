@@ -10,29 +10,26 @@ namespace SciVacancies.Services.Quartz
 {
     public class QuartzService : ISchedulerService
     {
-        readonly IConfiguration configuration;
-        readonly ISchedulerFactory schedulerFactory;
-        readonly IScheduler scheduler;
+        readonly IScheduler _scheduler;
 
         public QuartzService(IConfiguration configuration, IJobFactory jobFactory)
         {
-            this.configuration = configuration;
+            var properties = new NameValueCollection
+            {
+                ["quartz.scheduler.instanceName"] = configuration.Get("QuartzSettings:Scheduler:InstanceName"),
+                ["quartz.jobStore.type"] = configuration.Get("QuartzSettings:JobStore:Type"),
+                ["quartz.jobStore.useProperties"] = configuration.Get("QuartzSettings:JobStore:UseProperties"),
+                ["quartz.jobStore.dataSource"] = configuration.Get("QuartzSettings:JobStore:DataSource"),
+                ["quartz.jobStore.tablePrefix"] = configuration.Get("QuartzSettings:JobStore:TablePrefix"),
+                ["quartz.jobStore.lockHandler.type"] = configuration.Get("QuartzSettings:JobStore:LockHandler:Type"),
+                ["quartz.dataSource.default.connectionString"] = configuration.Get("QuartzSettings:DataSource:Default:ConnectionString"),
+                ["quartz.dataSource.default.provider"] = configuration.Get("QuartzSettings:DataSource:Default:Provider"),
+                ["quartz.jobStore.misfireThreshold"] = "60000"
+            };
 
-            NameValueCollection properties = new NameValueCollection();
-
-            properties["quartz.scheduler.instanceName"] = configuration.Get("QuartzSettings:Scheduler:InstanceName");
-            properties["quartz.jobStore.type"] = configuration.Get("QuartzSettings:JobStore:Type");
-            properties["quartz.jobStore.useProperties"] = configuration.Get("QuartzSettings:JobStore:UseProperties");
-            properties["quartz.jobStore.dataSource"] = configuration.Get("QuartzSettings:JobStore:DataSource");
-            properties["quartz.jobStore.tablePrefix"] = configuration.Get("QuartzSettings:JobStore:TablePrefix");
-            properties["quartz.jobStore.lockHandler.type"] = configuration.Get("QuartzSettings:JobStore:LockHandler:Type");
-            properties["quartz.dataSource.default.connectionString"] = configuration.Get("QuartzSettings:DataSource:Default:ConnectionString");
-            properties["quartz.dataSource.default.provider"] = configuration.Get("QuartzSettings:DataSource:Default:Provider");
-            properties["quartz.jobStore.misfireThreshold"] = "60000";
-
-            schedulerFactory = new StdSchedulerFactory(properties);
-            scheduler = schedulerFactory.GetScheduler();
-            scheduler.JobFactory = jobFactory;
+            ISchedulerFactory schedulerFactory = new StdSchedulerFactory(properties);
+            _scheduler = schedulerFactory.GetScheduler();
+            _scheduler.JobFactory = jobFactory;
         }
 
         public void CreateSheduledJob<T>(T jobObject, object jobIdentity, DateTime executionTime) where T : IJob
@@ -50,7 +47,7 @@ namespace SciVacancies.Services.Quartz
                     .WithSimpleSchedule(x => x.WithMisfireHandlingInstructionFireNow())
                     .Build();
 
-            scheduler.ScheduleJob(jobDetail, trigger);
+            _scheduler.ScheduleJob(jobDetail, trigger);
         }
 
         public void CreateSheduledJob<T>(T jobObject, object jobIdentity, int executionInterval) where T : IJob
@@ -70,22 +67,63 @@ namespace SciVacancies.Services.Quartz
                     )
                     .Build();
 
-            scheduler.ScheduleJob(jobDetail, trigger);
+            _scheduler.ScheduleJob(jobDetail, trigger);
+        }
+
+        public void CreateSheduledJobWithStrongName<T>(T jobObject, JobKey jobIdentity, int executionInterval) where T : IJob
+        {
+
+            var jsonData = JsonConvert.SerializeObject(jobObject);
+
+            var jobDetail = JobBuilder.Create<T>()
+                .WithIdentity(jobIdentity.Name, jobIdentity.Group)
+                .UsingJobData("data", jsonData)
+                .Build();
+
+            var trigger = TriggerBuilder.Create()
+                    .WithIdentity(jobIdentity.Name, jobIdentity.Group)
+                    .WithSimpleSchedule(s => s
+                        .WithIntervalInMinutes(executionInterval)
+                        .RepeatForever()
+                    )
+                    .Build();
+
+            _scheduler.ScheduleJob(jobDetail, trigger);
         }
 
         public void RemoveScheduledJob(object jobIdentity)
         {
-            scheduler.DeleteJob(new JobKey(jobIdentity.ToString()));
+            _scheduler.DeleteJob(new JobKey(jobIdentity.ToString()));
         }
 
         public void StartScheduler()
         {
-            if (!scheduler.IsStarted) scheduler.Start();
+            if (!_scheduler.IsStarted) _scheduler.Start();
         }
 
         public void StopScheduler()
         {
-            if (scheduler.IsStarted) scheduler.Shutdown(true);
+            if (_scheduler.IsStarted) _scheduler.Shutdown(true);
+        }
+
+        public bool CheckExists(JobKey jobKey)
+        {
+            return _scheduler.CheckExists(jobKey);
+        }
+
+        public bool CheckExists(TriggerKey triggerKey)
+        {
+            return _scheduler.CheckExists(triggerKey);
+        }
+
+        public bool DeleteJob(JobKey jobKey)
+        {
+            return _scheduler.DeleteJob(jobKey);
+        }
+
+        public void Shutdown()
+        {
+            _scheduler.Shutdown();
         }
     }
 }

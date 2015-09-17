@@ -1,6 +1,9 @@
 ﻿using System;
 using System.ServiceProcess;
 using Autofac;
+using Microsoft.Framework.ConfigurationModel;
+using Quartz;
+using SciVacancies.SearchSubscriptionsService.Jobs;
 using SciVacancies.Services.Quartz;
 
 namespace SciVacancies.SearchSubscriptionsService
@@ -9,65 +12,75 @@ namespace SciVacancies.SearchSubscriptionsService
     {
         readonly int MinuteInterval;
         private readonly ILifetimeScope _lifetimeScope;
+        private readonly ISchedulerService _schedulerService;
 
-        public SearchSubscriptionService(ILifetimeScope lifetimeScope)
+        public SearchSubscriptionService(IConfiguration configuration, ILifetimeScope lifetimeScope)
         {
-            MinuteInterval = 1;
             _lifetimeScope = lifetimeScope;
+            _schedulerService = _lifetimeScope.Resolve<ISchedulerService>();
+
+            MinuteInterval = int.Parse(configuration.Get("QuartzSettings:Scheduler:ExecutionInterval"));
         }
 
+        /// <summary>
+        /// используется при запуске в консоли
+        /// </summary>
         public void OnStart()
         {
             OnStart(null);
         }
-
+        /// <summary>
+        /// используется при запущенном сервисе
+        /// </summary>
+        /// <param name="args"></param>
         protected override void OnStart(string[] args)
         {
-            //base.OnStart(args);
+            base.OnStart(args);
 
             //logging
 
             //quartz
             try
             {
-
                 //ISchedulerFactory schedulerFactory = new StdSchedulerFactory();
-                //var scheduler = schedulerFactory.GetScheduler();
+                //_schedulerService = schedulerFactory.GetScheduler();
 
-                //var jobKey = new JobKey("SciVacancies.SearchSubscriptionJob", "SciVacancies.SearchSubscriptionService");
-                //var triggerKey = new TriggerKey("SciVacancies.SearchSubscriptionJobTrigger", "SciVacancies.SearchSubscriptionService");
+                var jobKey = new JobKey("SciVacancies.SearchSubscriptionJob", "SciVacancies.SearchSubscriptionService");
+                var triggerKey = new TriggerKey("SciVacancies.SearchSubscriptionJobTrigger", "SciVacancies.SearchSubscriptionService");
 
-                //if (scheduler.CheckExists(jobKey) && scheduler.CheckExists(triggerKey))
-                //{
-                //    scheduler.DeleteJob(jobKey);
-                //}
 
                 //var job = JobBuilder.Create<SearchSubscriptionJob>()
                 //                            .WithIdentity(jobKey)
                 //                            .Build();
-
                 //var trigger = TriggerBuilder.Create()
                 //                                .WithIdentity(triggerKey)
                 //                                .WithSimpleSchedule(s => s
                 //                                    .WithIntervalInMinutes(MinuteInterval)
                 //                                    .RepeatForever())
                 //                                .Build();
-                //scheduler.ScheduleJob(job, trigger);
-                //scheduler.Start();
+                //_schedulerService.ScheduleJob(job, trigger);
 
-                var schedulerService = _lifetimeScope.Resolve<ISchedulerService>();
-                schedulerService.StartScheduler();
+                if (!_schedulerService.CheckExists(jobKey))
+                {
+                    //_schedulerService.DeleteJob(jobKey);
+                    _schedulerService.CreateSheduledJobWithStrongName(_lifetimeScope.Resolve<SearchSubscriptionJob>(), jobKey, MinuteInterval);
+                }
+                
 
+                _schedulerService.StartScheduler();
             }
             catch (Exception e)
             {
-
+                Console.WriteLine($"Exception happend: {e.Message}");
             }
 
         }
 
         protected override void OnStop()
         {
+            _schedulerService.Shutdown();
+            //...???
+
             base.OnStop();
         }
     }
