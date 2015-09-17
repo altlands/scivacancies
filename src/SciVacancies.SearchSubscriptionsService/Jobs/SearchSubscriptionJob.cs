@@ -26,9 +26,8 @@ namespace SciVacancies.SearchSubscriptionsService.Jobs
         /// <param name="context"></param>
         public void Execute(IJobExecutionContext context)
         {
-            var dataBase = new Database("Server = localhost; Database = scivacancies; User Id = postgres; Password = postgres", NpgsqlFactory.Instance);
-
-
+            var dataBase = _lifetimeScope.Resolve<IDatabase>();
+            
             //TODO - загружать по частям, вызывая хранимую процедуру
             Queue<SciVacancies.ReadModel.Core.SearchSubscription> subscriptionQueue = new Queue<ReadModel.Core.SearchSubscription>(dataBase.Fetch<SciVacancies.ReadModel.Core.SearchSubscription>(new Sql($"SELECT * FROM res_searchsubscriptions ss WHERE ss.status = @0", SearchSubscriptionStatus.Active)));
 

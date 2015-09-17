@@ -6,5 +6,27 @@
   "ElasticSettings": {
     "ConnectionUrl": "http://alt-dev002:9200/",
     "DefaultIndex": "scivacancies"
-  }
+  },
+    "QuartzSettings": {
+        "Scheduler": {
+            "InstanceName": "SciVacanciesScheduler",
+            "ExecutionInterval": 10
+        },
+        "JobStore": {
+            "Type": "Quartz.Impl.AdoJobStore.JobStoreTX, Quartz",
+            "UseProperties": "true",
+            "DataSource": "default",
+            "TablePrefix": "qrtz_",
+            "LockHandler": {
+                "Type": "Quartz.Impl.AdoJobStore.UpdateLockRowSemaphore, Quartz"
+            }
+        },
+        "DataSource": {
+            "Default": {
+                "ConnectionString": "Server=alt-dev002;Database=scivacancies;User Id=postgres;Password=postgres",
+                "Provider": "Npgsql-20"
+            }
+        }
+    },
 }
+
