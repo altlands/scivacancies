@@ -15,6 +15,9 @@ namespace SciVacancies.WebApp.Infrastructure.Saga
     INotificationHandler<VacancySagaFirstInCommitteeNotificationSent>,
     INotificationHandler<VacancySagaSecondInCommitteeNotificationSent>,
 
+    INotificationHandler<VacancySagaWinnerSet>,
+    INotificationHandler<VacancySagaPretenderSet>,
+
     INotificationHandler<VacancySagaSwitchedInOfferResponseAwaitingFromWinner>,
     INotificationHandler<VacancySagaOfferResponseNotificationSentToWinner>,
     INotificationHandler<VacancySagaOfferAcceptedByWinner>,
@@ -39,9 +42,15 @@ namespace SciVacancies.WebApp.Infrastructure.Saga
         public bool FirstInCommitteeNotificationSent { get; private set; }
         public bool SecondInCommitteeNotificationSent { get; private set; }
 
+        public Guid WinnerResearcherGuid { get; private set; }
+        public Guid WinnerVacancyApplicationGuid { get; private set; }
+
         public DateTime OfferResponseAwaitingFromWinnerStartDate { get; private set; }
         public DateTime OfferResponseAwaitingFromWinnerEndDate { get; private set; }
         public bool OfferResponseNotificationSentToWinner { get; private set; }
+
+        public Guid PretenderResearcherGuid { get; private set; }
+        public Guid PretenderVacancyApplicationGuid { get; private set; }
 
         public DateTime OfferResponseAwaitingFromPretenderStartDate { get; private set; }
         public DateTime OfferResponseAwaitingFromPretenderEndDate { get; private set; }
@@ -75,6 +84,16 @@ namespace SciVacancies.WebApp.Infrastructure.Saga
         public void Handle(VacancySagaProlongedInCommittee msg)
         {
             this.InCommitteeEndDate = msg.InCommitteeEndDate;
+        }
+        public void Handle(VacancySagaWinnerSet msg)
+        {
+            this.WinnerResearcherGuid = msg.WinnerReasearcherGuid;
+            this.WinnerVacancyApplicationGuid = msg.WinnerVacancyApplicationGuid;
+        }
+        public void Handle(VacancySagaPretenderSet msg)
+        {
+            this.PretenderResearcherGuid = msg.PretenderReasearcherGuid;
+            this.PretenderVacancyApplicationGuid = msg.PretenderVacancyApplicationGuid;
         }
         public void Handle(VacancySagaFirstInCommitteeNotificationSent msg)
         {

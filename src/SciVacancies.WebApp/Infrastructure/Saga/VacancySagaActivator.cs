@@ -11,6 +11,8 @@ namespace SciVacancies.WebApp.Infrastructure.Saga
     public class VacancySagaActivator :
     INotificationHandler<VacancyPublished>,
     INotificationHandler<VacancyProlongedInCommittee>,
+    INotificationHandler<VacancyWinnerSet>,
+    INotificationHandler<VacancyPretenderSet>,
     INotificationHandler<VacancyInOfferResponseAwaitingFromWinner>,
     INotificationHandler<VacancyOfferAcceptedByWinner>,
     INotificationHandler<VacancyOfferRejectedByWinner>,
@@ -67,6 +69,28 @@ namespace SciVacancies.WebApp.Infrastructure.Saga
             sagaRepository.Save("vacancysaga", saga, Guid.NewGuid(), null);
         }
 
+        public void Handle(VacancyWinnerSet msg)
+        {
+            VacancySaga saga = sagaRepository.GetById<VacancySaga>("vacancysaga", msg.VacancyGuid);
+            saga.Transition(new VacancySagaWinnerSet
+            {
+                SagaGuid = saga.Id,
+
+                WinnerReasearcherGuid = msg.WinnerReasearcherGuid,
+                WinnerVacancyApplicationGuid = msg.WinnerVacancyApplicationGuid
+            });
+        }
+        public void Handle(VacancyPretenderSet msg)
+        {
+            VacancySaga saga = sagaRepository.GetById<VacancySaga>("vacancysaga", msg.VacancyGuid);
+            saga.Transition(new VacancySagaPretenderSet
+            {
+                SagaGuid = saga.Id,
+
+                PretenderReasearcherGuid = msg.PretenderReasearcherGuid,
+                PretenderVacancyApplicationGuid = msg.PretenderVacancyApplicationGuid
+            });
+        }
         /// <summary>
         /// Как только у вакансии этот статус проставляется - ожидается респонс от победителя или претендента. Нужно запустить таймер на 30 дней
         /// </summary>

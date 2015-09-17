@@ -2,6 +2,9 @@
 using SciVacancies.Domain.Events;
 using SciVacancies.WebApp.Infrastructure.Saga;
 using SciVacancies.WebApp.Commands;
+using SciVacancies.SmtpNotifications.SmtpNotificators;
+using SciVacancies.WebApp.Queries;
+using SciVacancies.ReadModel.Core;
 
 using System;
 
@@ -28,17 +31,20 @@ namespace SciVacancies.WebApp.Infrastructure
 
         readonly IOptions<SagaSettings> settings;
 
+        readonly ISmtpNotificatorVacancyService smtpService;
+
         public VacancySagaTimeoutJob()
         {
             //оставляем пустым
         }
 
-        public VacancySagaTimeoutJob(ISagaRepository sagaRepository, IMediator mediator, ISchedulerService scheduler, IOptions<SagaSettings> settings)
+        public VacancySagaTimeoutJob(ISagaRepository sagaRepository, IMediator mediator, ISchedulerService scheduler, IOptions<SagaSettings> settings, ISmtpNotificatorVacancyService smtpService)
         {
             this.sagaRepository = sagaRepository;
             this.mediator = mediator;
             this.scheduler = scheduler;
             this.settings = settings;
+            this.smtpService = smtpService;
         }
 
         public void Execute(IJobExecutionContext context)
@@ -66,16 +72,22 @@ namespace SciVacancies.WebApp.Infrastructure
                         saga.Transition(new VacancySagaFirstInCommitteeNotificationSent());
                         sagaRepository.Save("vacancysaga", saga, Guid.NewGuid(), null);
 
-                        throw new NotImplementedException();
                         //TODO отправить уведомление, что пора бы опубликовывать протокол комиссии (скоро истекут 15 или 30 дней)
+                        //TODO сделать всё за один запрос
+                        Vacancy vacancy = mediator.Send(new SingleVacancyQuery { VacancyGuid = SagaGuid });
+                        Organization organization = mediator.Send(new SingleOrganizationQuery { OrganizationGuid = vacancy.organization_guid });
+                        smtpService.SendFirstCommitteeNotificationToOrganization(organization, vacancy);
                     }
                     if (saga.InCommitteeEndDate.AddDays(settings.Options.Date.Committee.SecondNotificationDays) <= DateTime.UtcNow)
                     {
                         saga.Transition(new VacancySagaSecondInCommitteeNotificationSent());
                         sagaRepository.Save("vacancysaga", saga, Guid.NewGuid(), null);
 
-                        throw new NotImplementedException();
                         //TODO отправить уведомление, что скоро истекут сроки (3 дня) на публикацию протокола (а 15 или 30 дней уже прошли)
+                        //TODO сделать всё за один запрос
+                        Vacancy vacancy = mediator.Send(new SingleVacancyQuery { VacancyGuid = SagaGuid });
+                        Organization organization = mediator.Send(new SingleOrganizationQuery { OrganizationGuid = vacancy.organization_guid });
+                        smtpService.SendSecondCommitteeNotificationToOrganization(organization, vacancy);
 
                         //отправили два увеодмления, теперь ничего не делаем и просто ждём, когда организация выберет победителя и претендта(необязательно) и приложит
                         //документ с рейтингом заявок
@@ -91,8 +103,9 @@ namespace SciVacancies.WebApp.Infrastructure
                         saga.Transition(new VacancySagaOfferResponseNotificationSentToWinner());
                         sagaRepository.Save("vacancysaga", saga, Guid.NewGuid(), null);
 
-                        throw new NotImplementedException();
                         //TODO отправить уведомление
+                        Researcher researcher = mediator.Send(new SingleResearcherQuery { ResearcherGuid = saga.WinnerResearcherGuid });
+                        smtpService.SendOfferResponseAwaitingNotificationToWinner(researcher, saga.WinnerVacancyApplicationGuid, SagaGuid);
                     }
                     if (saga.OfferResponseAwaitingFromWinnerEndDate <= DateTime.UtcNow)
                     {
@@ -118,8 +131,9 @@ namespace SciVacancies.WebApp.Infrastructure
                         saga.Transition(new VacancySagaOfferResponseNotificationSentToPretender());
                         sagaRepository.Save("vacancysaga", saga, Guid.NewGuid(), null);
 
-                        throw new NotImplementedException();
                         //TODO отправить уведомление
+                        Researcher researcher = mediator.Send(new SingleResearcherQuery { ResearcherGuid = saga.PretenderResearcherGuid });
+                        smtpService.SendOfferResponseAwaitingNotificationToWinner(researcher, saga.PretenderVacancyApplicationGuid, SagaGuid);
                     }
                     if (saga.OfferResponseAwaitingFromPretenderEndDate <= DateTime.UtcNow)
                     {

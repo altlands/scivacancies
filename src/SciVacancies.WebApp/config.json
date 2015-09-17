@@ -36,10 +36,11 @@
             "ResearcherProfile": "http://scimap-sso.alt-lan.com/user/profile"
         }
     },
-    "ElasticSettings": {
-        "ConnectionUrl": "http://alt-dev002:9200/",
-        "DefaultIndex": "scivacancies"
-    },
+  "ElasticSettings": {
+    "ConnectionUrl": "http://alt-dev002:9200/",
+    "DefaultIndex": "scivacancies"
+  },
+  //TODO сделать только с положительными днями, обозвать соответствующе
     "SagaSettings": {
       "Date": {
         "Committee": {
