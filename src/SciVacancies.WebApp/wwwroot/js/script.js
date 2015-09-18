@@ -234,16 +234,16 @@ $(document).ready(function () {
         event.stopPropagation();
     });
     /*
-     * Управление внутренними вклаlками в Областях науки
+     * Управление внутренними вкладками в Областях науки
      */
-    $('.sub-research-directions').click(function () {
+    $('.jshelper-sub-research-directions').click(function () {
         var source = this;
 
         $(source).siblings().removeClass('active');
         $(source).addClass('active');
-        var parentContainer = $(source).parents('ul.tabs')[0];
-        $(parentContainer).siblings('ul.list-sections-science').hide();
-        $(parentContainer).siblings('ul.list-sections-science[id="' + $(source).attr('data-tabname') + '"]').show();
+        var parentContainer = $(source).parents('.jshelper-parent-of-tabs')[0];
+        $(parentContainer).siblings('.jshelper-list-sections-science').hide();
+        $(parentContainer).siblings('.jshelper-list-sections-science[id="' + $(source).attr('data-tabname') + '"]').show();
     });
     /*
      * закрывать модальное окно при нажатии кнопки Отмены
@@ -297,6 +297,20 @@ $(document).ready(function () {
     //    file.click();
     //    return false;
     //});
+    /*
+     * переключатели для главной страницы
+     */
+    function toggleChevron(e) {
+        $(e.target).prev('.panel-heading').parent().toggleClass('selected');
+    }
+    $('#accordion').on('hidden.bs.collapse', toggleChevron);
+    $('#accordion').on('show.bs.collapse', toggleChevron);
+
+    $('.tabs-toggle__item:first a').tab('show');
+    $('.tabs-toggle__item a').click(function (e) {
+        e.preventDefault();
+        $(this).tab('show');
+    });
     /*
     end of the code
     */

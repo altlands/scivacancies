@@ -11,8 +11,8 @@
                 <span class="dashed italic">Вход в Личный кабинет</span>
             </a>
             <div class="sub-control">
-                <a asp-controller="account" asp-action="register" class="underline">Регистрация</a>
-                <a asp-controller="account" asp-action="forgotpassword" class="underline">Забыли пароль?</a>
+                <a asp-controller="account" asp-action="register" >Регистрация</a>
+                <a asp-controller="account" asp-action="forgotpassword" >Забыли пароль?</a>
             </div>
         </div>
 
@@ -117,10 +117,10 @@
             }
 
             <a asp-controller="@controller" asp-action="account" class="cab-head">
-                <span class="underline white italic">Личный кабинет</span>
+                <span class="underline italic">Личный кабинет</span>
             </a>
 
-            <a asp-controller="account" asp-action="logout" class="close-head"><span class="dashed white italic">Выход</span></a>
+            <a asp-controller="account" asp-action="logout" class="close-head"><span class="dashed italic">Выход</span></a>
         </div>
         </text>
     }

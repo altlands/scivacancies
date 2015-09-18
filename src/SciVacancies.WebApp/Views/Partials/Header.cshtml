@@ -2,9 +2,12 @@
     <div class="b-wrap-header">
         <div class="logo">
             <a href="/">
-                <img src="/images/logo.png">
-                <span class="logo-desc">Министерство образования и науки РФ</span>
-                <span class="logo-title">Портал вакансий</span>
+                <img src="images/logo-gray.png">
+                <span class="logo-desc">
+                    Единая информационная система проведения конкурсов
+                    <br />
+                    на замещение должностей научных работников
+                </span>
             </a>
         </div>
 
@@ -13,11 +16,3 @@
     </div>
 </div>
 
-<div class="b-search">
-    <div class="b-wrap">
-        <form asp-controller="search" asp-action="index" method="GET">
-            <input class="search-input" type="text" name="search" placeholder="поиск по порталу" value="@ViewBag.Search" />
-            <input type="submit" class="search-button" value=""/><!--i class="icon icon-search"></i-->
-        </form>
-    </div>
-</div>

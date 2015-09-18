@@ -1111,7 +1111,7 @@ a.search-icons {
         height: 29px;
         padding-top: 6px;
         font-family: Arial;
-        color: white;
+        /*color: white;*/
     }
 
     .header .control.control-registration {
@@ -1227,10 +1227,6 @@ a.search-icons {
 
 .tab-content-main-page .list-sections-science > li {
     margin: -5px -8px 24px 37px;
-}
-
-ul.tabs li.active {
-    margin-top: 3px;
 }
 
 .profile .photo {
