@@ -11,6 +11,6 @@ CREATE SEQUENCE org_vacancy_read_id_seq;
 ALTER TABLE "org_vacancies" ADD COLUMN "read_id" bigint NOT NULL default nextval('org_vacancy_read_id_seq');
 ALTER SEQUENCE org_vacancy_read_id_seq owned by org_vacancies.read_id;
 
-CREATE SEQUENCE res_vacancyapplications__read_id_seq;
+CREATE SEQUENCE res_vacancyapplications_read_id_seq;
 ALTER TABLE "res_vacancyapplications" ADD COLUMN "read_id" bigint NOT NULL default nextval('res_vacancyapplications_read_id_seq');
 ALTER SEQUENCE res_vacancyapplications_read_id_seq owned by res_vacancyapplications.read_id;
