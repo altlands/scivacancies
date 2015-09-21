@@ -188,13 +188,6 @@ namespace SciVacancies.WebApp.Commands
 
             vacancy.VacancyToResponseAwaitingFromWinner();
             _repository.Save(vacancy, Guid.NewGuid(), null);
-
-            Guid winnerResearcherGuid = vacancy.WinnerResearcherGuid;
-            Guid winnerVacancyApplicationGuid = vacancy.WinnerVacancyApplicationGuid;
-
-            VacancyApplication vacancyApplication = _repository.GetById<VacancyApplication>(winnerVacancyApplicationGuid);
-            vacancyApplication.MakeVacancyApplicationWinner(vacancy.CommitteeResolution);
-            _repository.Save(vacancyApplication, Guid.NewGuid(), null);
         }
     }
     public class SetWinnerAcceptOfferCommandHandler : RequestHandler<SetWinnerAcceptOfferCommand>
@@ -252,13 +245,6 @@ namespace SciVacancies.WebApp.Commands
 
             vacancy.VacancyToResponseAwaitingFromPretender();
             _repository.Save(vacancy, Guid.NewGuid(), null);
-
-            Guid pretenderResearcherGuid = vacancy.PretenderResearcherGuid;
-            Guid pretenderVacancyApplicationGuid = vacancy.PretenderVacancyApplicationGuid;
-
-            VacancyApplication vacancyApplication = _repository.GetById<VacancyApplication>(pretenderVacancyApplicationGuid);
-            vacancyApplication.MakeVacancyApplicationPretender(vacancy.CommitteeResolution);
-            _repository.Save(vacancyApplication, Guid.NewGuid(), null);
         }
     }
     public class SetPretenderAcceptOfferCommandHandler : RequestHandler<SetPretenderAcceptOfferCommand>
