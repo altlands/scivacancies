@@ -11,6 +11,11 @@ namespace SciVacancies.ReadModel.Core
     [PrimaryKey("guid", AutoIncrement = false)]
     public class Vacancy : BaseEntity
     {
+        /// <summary>
+        /// Autoincremented id - нужен для "читаемого" отображения идентификатора, использовать только в GUI
+        /// </summary>
+        public long id { get; set; }
+
         #region General
 
         /// <summary>
