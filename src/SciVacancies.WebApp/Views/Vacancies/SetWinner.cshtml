@@ -60,45 +60,6 @@
                 </ul>
             </div>
         </div>
-
-        @if (Model.WinnerIsSetting)
-        {
-            <text>
-            <div class="table-row form-row mt18">
-                <div class="left-cell">
-                    <label>Обоснование:</label>
-                </div>
-                <div class="right-cell">
-                    <textarea asp-for="Reason" required=""></textarea>
-                </div>
-            </div>
-
-            <div class="table-row form-row mt14">
-                <div class="left-cell">
-                    <label>Приложенные файлы:</label>
-                </div>
-                <div class="right-cell">
-
-                    <div class="property-list-container" data-innercount="0">
-                        <ul class="content-list">
-
-                            <li style="@invisibleItemStyle" class="property-list-item" data-list-template="true">
-                                <input type="hidden" name="Attachments.Index" value="0" />
-                                <input type="file" id="Attachments##0##" name="Attachments" />
-                                <div class="buttons">
-                                    <span class="big-link-remove" onclick="return removeItemFromList(this);"></span>
-                                </div>
-
-                            </li>
-                        </ul>
-                        <a onclick="return addNewItemToList(this, 'Attachments')" class="small-icon link-add" href="#">Приложить файл</a>
-                    </div>
-
-                </div>
-            </div>
-            </text>
-        }
-
         <br />
 
         <div class="ctr-buttons button-align">

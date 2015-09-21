@@ -1,0 +1,77 @@
+﻿@using System.Threading.Tasks
+@using SciVacancies.WebApp.ViewModels
+@model VacancySetReasonViewModel
+
+@{
+    var invisibleItemStyle = "display: none;";
+}
+
+<div class="crumbs">
+    <a href="/">Главная</a><span class="separator">/</span>
+    <a asp-controller="organizations" asp-action="account">Карточка организации</a><span class="separator">/</span>
+    <a asp-controller="organizations" asp-action="vacancies">Вакансии</a><span class="separator">/</span>
+    <a asp-controller="vacancies" asp-action="details" asp-route-id="@Model.Guid">@Model.Vacancy.Name</a><span class="separator">/</span>
+    @ViewBag.Title
+</div>
+
+<h3>@ViewBag.Title</h3>
+
+<div>
+    Вакансия: <a asp-controller="vacancies" asp-action="details" asp-route-id="@Model.Guid">@Model.Vacancy.FullName</a>
+</div>
+
+<div class="content-slide">
+
+    <form class="table-form" enctype="multipart/form-data">
+
+        <input type="hidden" asp-anti-forgery="true" />
+        <input type="hidden" asp-for="Guid" />
+
+        <div class="table-row form-row mt18">
+            <div class="left-cell">
+                <label>Обоснование:</label>
+            </div>
+            <div class="right-cell">
+                <textarea asp-for="Reason" required=""></textarea>
+            </div>
+        </div>
+
+        <div class="table-row form-row mt14">
+            <div class="left-cell">
+                <label>Приложенные файлы:</label>
+            </div>
+            <div class="right-cell">
+
+                <div class="property-list-container" data-innercount="0">
+                    <ul class="content-list">
+
+                        <li style="@invisibleItemStyle" class="property-list-item" data-list-template="true">
+                            <input type="hidden" name="Attachments.Index" value="0" />
+                            <input type="file" id="Attachments##0##" name="Attachments" />
+                            <div class="buttons">
+                                <span class="big-link-remove" onclick="return removeItemFromList(this);"></span>
+                            </div>
+
+                        </li>
+                    </ul>
+                    <a onclick="return addNewItemToList(this, 'Attachments')" class="small-icon link-add" href="#">Приложить файл</a>
+                </div>
+
+            </div>
+        </div>
+
+        <br />
+
+        <div class="ctr-buttons button-align">
+            <input type="submit" class="green-btn middle-icon" value="Подтвердить" />
+        </div>
+
+    </form>
+</div>
+
+<div class="b-bottom-nav">
+    <a href="/" class="small-icon icon-prev">Главная</a>
+    <a asp-controller="organizations" asp-action="account" class="small-icon icon-prev">Карточка организации</a>
+    <a asp-controller="organizations" asp-action="vacancies" class="small-icon icon-prev">Вакансии</a>
+    <a asp-controller="vacancies" asp-action="details" asp-route-id="@Model.Guid" class="small-icon icon-prev">@Model.Vacancy.Name</a>
+</div>

@@ -8,19 +8,6 @@
     @Context.User.Identity.Name
 </div>
 
-
-@*
-    <div class="b-search">
-        <div class="b-wrap">
-            <form asp-controller="search" asp-action="index" method="GET">
-                <input class="search-input" type="text" name="search" placeholder="поиск по порталу" value="@ViewBag.Search" />
-                <input type="submit" class="search-button" value="" /><!--i class="icon icon-search"></i-->
-            </form>
-        </div>
-    </div>
-*@
-
-
 <div class="row-block">
     <div class="row-2">
 
@@ -130,7 +117,7 @@
                                     var innerItem = child.Childs[j];
                                     <text>
                                     <div class="b-directions jshelper-list-sections-science" id="jshelper-list-sections-science_@innerItem.Id" @(j != 0 ? @"style=display:none;" : string.Empty)>
-                                        @foreach (var innerInnerItem in innerItem.Childs.OrderBy(c=>c.Title))
+                                        @foreach (var innerInnerItem in innerItem.Childs.OrderBy(c => c.Title))
                                         {
                                             <text>
                                             <div class="item-direction">
@@ -165,11 +152,9 @@
     <div class="row-2">
 
         <div class="b-search">
-            <form action="">
-                <input type="text" class="search-input" placeholder="поиск по порталу">
-                <button class="search-button">
-                    <i class="icon icon-search"></i>
-                </button>
+            <form asp-controller="search" asp-action="index" method="GET">
+                <input class="search-input" type="text" name="search" placeholder="поиск по порталу" value="@ViewBag.Search"/>
+                <input type="submit" class="search-button" value="" />
             </form>
         </div>
 

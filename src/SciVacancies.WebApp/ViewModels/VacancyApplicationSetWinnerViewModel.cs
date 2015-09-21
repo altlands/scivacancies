@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using Microsoft.AspNet.Http;
 using Microsoft.AspNet.Mvc;
 using SciVacancies.Domain.Enums;
 using SciVacancies.ReadModel.Core;
@@ -10,7 +9,7 @@ using SciVacancies.WebApp.ViewModels.Base;
 namespace SciVacancies.WebApp.ViewModels
 {
     [MetadataType(typeof(VacancyApplicationSetWinnerViewModelMetadata))]
-    public class VacancyApplicationSetWinnerViewModel : PageViewModelBase
+    public class VacancyApplicationSetWinnerViewModel: ViewModelBase
     {
         internal sealed class VacancyApplicationSetWinnerViewModelMetadata
         {
@@ -19,14 +18,13 @@ namespace SciVacancies.WebApp.ViewModels
             public Guid Guid { get; set; }
         }
 
-        public List<IFormFile> Attachments { get; set; }
-
         [Required]
         public Guid VacancyGuid { get; set; }
         public VacancyDetailsViewModel Vacancy { get; set; }
         [Required]
         public Guid ResearcherGuid { get; set; }
         public ResearcherDetailsViewModel Researcher { get; set; }
+
         /// <summary>
         /// Образование
         /// </summary>
@@ -35,8 +33,6 @@ namespace SciVacancies.WebApp.ViewModels
         /// Публикации
         /// </summary>
         public List<Publication> Publications { get; set; }
-
-
 
         public int PositionTypeId { get; set; }
         public string PositionTypeName { get; set; }
@@ -63,9 +59,6 @@ namespace SciVacancies.WebApp.ViewModels
         public DateTime CreationDate { get; set; }
         public DateTime? UpdateDate { get; set; }
         public DateTime? SentDate { get; set; }
-
-        //public bool IsWinner { get; set; }
-        public string Reason { get; set; }
 
         /// <summary>
         /// кого выбираем - победителя или претендента

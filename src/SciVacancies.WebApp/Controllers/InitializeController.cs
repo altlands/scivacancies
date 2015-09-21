@@ -9,6 +9,7 @@ using SciVacancies.WebApp.Infrastructure.Identity;
 using SciVacancies.WebApp.Queries;
 using SciVacancies.WebApp.ViewModels;
 using Microsoft.AspNet.Identity;
+using Microsoft.Framework.OptionsModel;
 using SciVacancies.WebApp.Models.DataModels;
 
 // For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
@@ -31,7 +32,8 @@ namespace SciVacancies.WebApp.Controllers
         {
             var user = _userManager.FindByName("researcher1");
             if (user != null)
-                return Content("инициализация уже проходила");
+                //return Content("инициализация уже проходила");
+                return RedirectToAction("index", "home");
 
             var positions = _mediator.Send(new SelectAllPositionTypesQuery()).ToList();
             var researchDiretions = _mediator.Send(new SelectAllResearchDirectionsQuery()).ToList();
@@ -182,7 +184,7 @@ namespace SciVacancies.WebApp.Controllers
                     ResearchDirectionId = 3026
                 }
             });
-            _mediator.Send(new PublishVacancyCommand { VacancyGuid = vacancyGuid1 });
+            _mediator.Send(new PublishVacancyCommand { VacancyGuid = vacancyGuid1, InCommitteeStartDate = DateTime.Now.AddDays(60), InCommitteeEndDate = DateTime.Now.AddDays(65) });
 
             var vacancyGuid2 = _mediator.Send(new CreateVacancyCommand
             {
@@ -212,7 +214,7 @@ namespace SciVacancies.WebApp.Controllers
 
                 }
             });
-            _mediator.Send(new PublishVacancyCommand { VacancyGuid = vacancyGuid2 });
+            _mediator.Send(new PublishVacancyCommand { VacancyGuid = vacancyGuid2, InCommitteeStartDate = DateTime.Now.AddDays(60), InCommitteeEndDate = DateTime.Now.AddDays(65) });
 
             var vacancyGuid3 = _mediator.Send(new CreateVacancyCommand
             {
@@ -242,7 +244,7 @@ namespace SciVacancies.WebApp.Controllers
 
                 }
             });
-            _mediator.Send(new PublishVacancyCommand { VacancyGuid = vacancyGuid3 });
+            _mediator.Send(new PublishVacancyCommand { VacancyGuid = vacancyGuid3, InCommitteeStartDate = DateTime.Now.AddDays(60), InCommitteeEndDate = DateTime.Now.AddDays(65) });
 
             var vacancyGuid4 = _mediator.Send(new CreateVacancyCommand
             {
@@ -271,7 +273,7 @@ namespace SciVacancies.WebApp.Controllers
                     RegionId = 27
                 }
             });
-            _mediator.Send(new PublishVacancyCommand { VacancyGuid = vacancyGuid4 });
+            _mediator.Send(new PublishVacancyCommand { VacancyGuid = vacancyGuid4, InCommitteeStartDate = DateTime.Now.AddDays(60), InCommitteeEndDate = DateTime.Now.AddDays(65) });
 
             var vacancyGuid5 = _mediator.Send(new CreateVacancyCommand
             {
@@ -301,7 +303,7 @@ namespace SciVacancies.WebApp.Controllers
 
                 }
             });
-            _mediator.Send(new PublishVacancyCommand { VacancyGuid = vacancyGuid5 });
+            _mediator.Send(new PublishVacancyCommand { VacancyGuid = vacancyGuid5, InCommitteeStartDate = DateTime.Now.AddDays(60), InCommitteeEndDate = DateTime.Now.AddDays(65) });
 
 
 
@@ -333,7 +335,7 @@ namespace SciVacancies.WebApp.Controllers
 
                 }
             });
-            _mediator.Send(new PublishVacancyCommand { VacancyGuid = vacancyGuid6 });
+            _mediator.Send(new PublishVacancyCommand { VacancyGuid = vacancyGuid6, InCommitteeStartDate = DateTime.Now.AddDays(60), InCommitteeEndDate = DateTime.Now.AddDays(65) });
 
 
 
@@ -365,7 +367,7 @@ namespace SciVacancies.WebApp.Controllers
 
                 }
             });
-            _mediator.Send(new PublishVacancyCommand { VacancyGuid = vacancyGuid7 });
+            _mediator.Send(new PublishVacancyCommand { VacancyGuid = vacancyGuid7, InCommitteeStartDate = DateTime.Now.AddDays(60), InCommitteeEndDate = DateTime.Now.AddDays(65) });
 
 
             var vacancyGuid8 = _mediator.Send(new CreateVacancyCommand
@@ -396,7 +398,7 @@ namespace SciVacancies.WebApp.Controllers
 
                 }
             });
-            _mediator.Send(new PublishVacancyCommand { VacancyGuid = vacancyGuid8 });
+            _mediator.Send(new PublishVacancyCommand { VacancyGuid = vacancyGuid8, InCommitteeStartDate = DateTime.Now.AddDays(60), InCommitteeEndDate = DateTime.Now.AddDays(65) });
 
 
             var vacancyGuid9 = _mediator.Send(new CreateVacancyCommand
@@ -427,7 +429,7 @@ namespace SciVacancies.WebApp.Controllers
 
                 }
             });
-            _mediator.Send(new PublishVacancyCommand { VacancyGuid = vacancyGuid9 });
+            _mediator.Send(new PublishVacancyCommand { VacancyGuid = vacancyGuid9, InCommitteeStartDate = DateTime.Now.AddDays(60), InCommitteeEndDate = DateTime.Now.AddDays(65) });
 
 
 
@@ -460,7 +462,7 @@ namespace SciVacancies.WebApp.Controllers
 
                 }
             });
-            _mediator.Send(new PublishVacancyCommand { VacancyGuid = vacancyGuid10 });
+            _mediator.Send(new PublishVacancyCommand { VacancyGuid = vacancyGuid10, InCommitteeStartDate = DateTime.Now.AddDays(60), InCommitteeEndDate = DateTime.Now.AddDays(65) });
 
 
 

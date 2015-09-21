@@ -1,10 +1,8 @@
-﻿using SciVacancies.Domain.DataModels;
+﻿using CommonDomain.Core;
+using SciVacancies.Domain.DataModels;
 using SciVacancies.Domain.Enums;
 using SciVacancies.Domain.Events;
-
 using System;
-
-using CommonDomain.Core;
 
 namespace SciVacancies.Domain.Aggregates
 {
@@ -13,6 +11,7 @@ namespace SciVacancies.Domain.Aggregates
         public Guid ResearcherGuid { get; private set; }
         public Guid VacancyGuid { get; private set; }
 
+        //todo: get - нигде не используется
         private VacancyApplicationDataModel Data { get; set; }
 
         public VacancyApplicationStatus Status { get; private set; }
@@ -28,10 +27,10 @@ namespace SciVacancies.Domain.Aggregates
         }
         public VacancyApplication(Guid guid, Guid researcherGuid, Guid vacancyGuid, VacancyApplicationDataModel data)
         {
-            if (guid.Equals(Guid.Empty)) throw new ArgumentNullException("guid is empty");
-            if (researcherGuid.Equals(Guid.Empty)) throw new ArgumentNullException("researcherGuid is empty");
-            if (vacancyGuid.Equals(Guid.Empty)) throw new ArgumentNullException("vacancyGuid is empty");
-            if (data == null) throw new ArgumentNullException("data is empty");
+            if (guid.Equals(Guid.Empty)) throw new ArgumentNullException(nameof(guid));
+            if (researcherGuid.Equals(Guid.Empty)) throw new ArgumentNullException(nameof(researcherGuid));
+            if (vacancyGuid.Equals(Guid.Empty)) throw new ArgumentNullException(nameof(vacancyGuid));
+            if (data == null) throw new ArgumentNullException(nameof(data));
 
             RaiseEvent(new VacancyApplicationCreated()
             {
@@ -46,14 +45,14 @@ namespace SciVacancies.Domain.Aggregates
 
         public void Update(VacancyApplicationDataModel data)
         {
-            if (data == null) throw new ArgumentNullException("data is empty");
+            if (data == null) throw new ArgumentNullException(nameof(data));
             if (Status != VacancyApplicationStatus.InProcess) throw new InvalidOperationException("vacancyApplication state is invalid");
 
             RaiseEvent(new VacancyApplicationUpdated()
             {
-                VacancyApplicationGuid = this.Id,
-                ResearcherGuid = this.ResearcherGuid,
-                VacancyGuid = this.VacancyGuid,
+                VacancyApplicationGuid = Id,
+                ResearcherGuid = ResearcherGuid,
+                VacancyGuid = VacancyGuid,
                 Data = data
             });
         }
@@ -63,9 +62,9 @@ namespace SciVacancies.Domain.Aggregates
 
             RaiseEvent(new VacancyApplicationRemoved()
             {
-                VacancyApplicationGuid = this.Id,
-                VacancyGuid = this.VacancyGuid,
-                ResearcherGuid = this.ResearcherGuid
+                VacancyApplicationGuid = Id,
+                VacancyGuid = VacancyGuid,
+                ResearcherGuid = ResearcherGuid
             });
         }
 
@@ -75,9 +74,9 @@ namespace SciVacancies.Domain.Aggregates
 
             RaiseEvent(new VacancyApplicationApplied()
             {
-                VacancyApplicationGuid = this.Id,
-                VacancyGuid = this.VacancyGuid,
-                ResearcherGuid = this.ResearcherGuid
+                VacancyApplicationGuid = Id,
+                VacancyGuid = VacancyGuid,
+                ResearcherGuid = ResearcherGuid
             });
         }
         public void Cancel()
@@ -86,34 +85,34 @@ namespace SciVacancies.Domain.Aggregates
 
             RaiseEvent(new VacancyApplicationCancelled()
             {
-                VacancyApplicationGuid = this.Id,
-                VacancyGuid = this.VacancyGuid,
-                ResearcherGuid = this.ResearcherGuid
+                VacancyApplicationGuid = Id,
+                VacancyGuid = VacancyGuid,
+                ResearcherGuid = ResearcherGuid
             });
         }
         public void MakeVacancyApplicationWinner(string reason)
         {
-            if (String.IsNullOrEmpty(reason)) throw new ArgumentNullException("reason is null or empty");
+            if (string.IsNullOrEmpty(reason)) throw new ArgumentNullException(nameof(reason));
             if (Status != VacancyApplicationStatus.Applied) throw new InvalidOperationException("vacancyApplication state is invalid");
 
             RaiseEvent(new VacancyApplicationWon
             {
-                VacancyApplicationGuid = this.Id,
-                VacancyGuid = this.VacancyGuid,
-                ResearcherGuid = this.ResearcherGuid,
+                VacancyApplicationGuid = Id,
+                VacancyGuid = VacancyGuid,
+                ResearcherGuid = ResearcherGuid,
                 Reason = reason
             });
         }
         public void MakeVacancyApplicationPretender(string reason)
         {
-            if (String.IsNullOrEmpty(reason)) throw new ArgumentNullException("reason is null or empty");
+            if (string.IsNullOrEmpty(reason)) throw new ArgumentNullException(nameof(reason));
             if (Status != VacancyApplicationStatus.Applied) throw new InvalidOperationException("vacancyApplication state is invalid");
 
             RaiseEvent(new VacancyApplicationPretended
             {
-                VacancyApplicationGuid = this.Id,
-                VacancyGuid = this.VacancyGuid,
-                ResearcherGuid = this.ResearcherGuid,
+                VacancyApplicationGuid = Id,
+                VacancyGuid = VacancyGuid,
+                ResearcherGuid = ResearcherGuid,
                 Reason = reason
             });
         }
@@ -123,9 +122,9 @@ namespace SciVacancies.Domain.Aggregates
 
             RaiseEvent(new VacancyApplicationLost
             {
-                VacancyApplicationGuid = this.Id,
-                VacancyGuid = this.VacancyGuid,
-                ResearcherGuid = this.ResearcherGuid
+                VacancyApplicationGuid = Id,
+                VacancyGuid = VacancyGuid,
+                ResearcherGuid = ResearcherGuid
             });
         }
 
@@ -135,41 +134,41 @@ namespace SciVacancies.Domain.Aggregates
 
         public void Apply(VacancyApplicationCreated @event)
         {
-            this.Id = @event.VacancyApplicationGuid;
-            this.ResearcherGuid = @event.ResearcherGuid;
-            this.VacancyGuid = @event.VacancyGuid;
-            this.Data = @event.Data;
+            Id = @event.VacancyApplicationGuid;
+            ResearcherGuid = @event.ResearcherGuid;
+            VacancyGuid = @event.VacancyGuid;
+            Data = @event.Data;
         }
         public void Apply(VacancyApplicationUpdated @event)
         {
-            this.Data = @event.Data;
+            Data = @event.Data;
         }
         public void Apply(VacancyApplicationRemoved @event)
         {
-            this.Status = VacancyApplicationStatus.Removed;
+            Status = VacancyApplicationStatus.Removed;
         }
 
         public void Apply(VacancyApplicationApplied @event)
         {
-            this.Status = VacancyApplicationStatus.Applied;
+            Status = VacancyApplicationStatus.Applied;
         }
         public void Apply(VacancyApplicationCancelled @event)
         {
-            this.Status = VacancyApplicationStatus.Cancelled;
+            Status = VacancyApplicationStatus.Cancelled;
         }
         public void Apply(VacancyApplicationWon @event)
         {
-            this.Status = VacancyApplicationStatus.Won;
-            this.Reason = @event.Reason;
+            Status = VacancyApplicationStatus.Won;
+            Reason = @event.Reason;
         }
         public void Apply(VacancyApplicationPretended @event)
         {
-            this.Status = VacancyApplicationStatus.Pretended;
-            this.Reason = @event.Reason;
+            Status = VacancyApplicationStatus.Pretended;
+            Reason = @event.Reason;
         }
         public void Apply(VacancyApplicationLost @event)
         {
-            this.Status = VacancyApplicationStatus.Lost;
+            Status = VacancyApplicationStatus.Lost;
         }
 
         #endregion
