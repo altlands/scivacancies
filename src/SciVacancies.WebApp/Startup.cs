@@ -8,11 +8,9 @@ using Microsoft.AspNet.Builder;
 using Microsoft.AspNet.Diagnostics;
 using Microsoft.AspNet.Hosting;
 using Microsoft.AspNet.Identity;
-using Microsoft.AspNet.Mvc;
 using Microsoft.Framework.ConfigurationModel;
 using Microsoft.Framework.DependencyInjection;
 using Microsoft.Framework.Logging;
-using SciVacancies.Services;
 using SciVacancies.Services.Quartz;
 using SciVacancies.WebApp.Infrastructure;
 
@@ -48,7 +46,6 @@ namespace SciVacancies.WebApp
             services.Configure<SiteFileSettings>(Configuration.GetSubKey("SiteFileSettings"));
             services.Configure<VacancyLifeCycleSettings>(Configuration.GetSubKey("VacancyLifeCycleSettings"));
             services.Configure<CaptchaSettings>(Configuration.GetSubKey("CaptchaSettings"));
-            services.Configure<QuartzSettings>(Configuration.GetSubKey("QuartzSettings"));
             services.Configure<SagaSettings>(Configuration.GetSubKey("SagaSettings"));
 
             services.ConfigureCookieAuthentication(options =>
@@ -152,9 +149,6 @@ namespace SciVacancies.WebApp
             });
 
             MappingConfiguration.Initialize();
-
-
-            //SearchSubscriptionService.Initialize(Configuration);
         }
         public void SchedulerServiceInitialize(ISchedulerService schedulerService)
         {

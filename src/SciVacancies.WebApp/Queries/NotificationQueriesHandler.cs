@@ -11,10 +11,10 @@ namespace SciVacancies.WebApp.Queries
     public class NotificationQueriesHandler :
         IRequestHandler<SingleResearcherNotificationQuery, ResearcherNotification>,
         IRequestHandler<SelectPagedResearcherNotificationsQuery, Page<ResearcherNotification>>,
-        IRequestHandler<ResearcherNotificationsUnreadCountQuery, int>,
+        IRequestHandler<CountResearcherNotificationsUnreadQuery, int>,
         IRequestHandler<SingleOrganizationNotificationQuery, OrganizationNotification>,
         IRequestHandler<SelectPagedOrganizationNotificationsQuery, Page<OrganizationNotification>>,
-        IRequestHandler<OrganizationNotificationsUnreadCountQuery, int>
+        IRequestHandler<CountOrganizationNotificationsUnreadQuery, int>
     {
         private readonly IDatabase _db;
 
@@ -42,7 +42,7 @@ namespace SciVacancies.WebApp.Queries
 
             return notifications;
         }
-        public int Handle(ResearcherNotificationsUnreadCountQuery msg)
+        public int Handle(CountResearcherNotificationsUnreadQuery msg)
         {
             if (msg.ResearcherGuid == Guid.Empty) throw new ArgumentNullException($"ResearcherGuid is empty: {msg.ResearcherGuid}");
             var notifications = _db.Fetch<ResearcherNotification>(new Sql($"SELECT n.guid , n.status FROM res_notifications n WHERE n.researcher_guid = @0 AND n.status != @1", msg.ResearcherGuid, NotificationStatus.Removed));
@@ -69,7 +69,7 @@ namespace SciVacancies.WebApp.Queries
 
             return notifications;
         }
-        public int Handle(OrganizationNotificationsUnreadCountQuery msg)
+        public int Handle(CountOrganizationNotificationsUnreadQuery msg)
         {
             if (msg.OrganizationGuid == Guid.Empty) throw new ArgumentNullException($"OrganizationGuid is empty: {msg.OrganizationGuid}");
             var notifications = _db.Fetch<ResearcherNotification>(new Sql($"SELECT n.guid , n.status FROM org_notifications n WHERE n.organization_guid = @0 AND n.status != @1", msg.OrganizationGuid, NotificationStatus.Removed));

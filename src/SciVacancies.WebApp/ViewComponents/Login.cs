@@ -29,7 +29,7 @@ namespace SciVacancies.WebApp.ViewComponents
                 if (idClaim != null)
                 {
                     var userGuid = (Guid)TypeDescriptor.GetConverter(typeof(Guid)).ConvertFrom(idClaim.Value);
-                    model.UnreadNotificationCount = _mediator.Send(new ResearcherNotificationsUnreadCountQuery { ResearcherGuid = userGuid });
+                    model.UnreadNotificationCount = _mediator.Send(new CountResearcherNotificationsUnreadQuery { ResearcherGuid = userGuid });
                 }
             }
             else if (User.IsInRole(ConstTerms.RequireRoleOrganizationAdmin))
@@ -38,7 +38,7 @@ namespace SciVacancies.WebApp.ViewComponents
                 if (idClaim != null)
                 {
                     var userGuid = (Guid)TypeDescriptor.GetConverter(typeof(Guid)).ConvertFrom(idClaim.Value);
-                    model.UnreadNotificationCount = _mediator.Send(new OrganizationNotificationsUnreadCountQuery { OrganizationGuid = userGuid });
+                    model.UnreadNotificationCount = _mediator.Send(new CountOrganizationNotificationsUnreadQuery { OrganizationGuid = userGuid });
                 }
             }
 

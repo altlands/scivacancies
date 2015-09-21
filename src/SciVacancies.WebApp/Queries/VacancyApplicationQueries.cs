@@ -5,12 +5,18 @@ using System.Collections.Generic;
 
 using MediatR;
 using NPoco;
+using SciVacancies.Domain.Enums;
 
 namespace SciVacancies.WebApp.Queries
 {
     public class SingleVacancyApplicationQuery : IRequest<VacancyApplication>
     {
         public Guid VacancyApplicationGuid { get; set; }
+    }
+    public class CountVacancyApplicationInVacancyQuery : IRequest<int>
+    {
+        public Guid VacancyGuid { get; set; }
+        public VacancyApplicationStatus Status { get; set; }
     }
     public class SelectPagedVacancyApplicationsByResearcherQuery : IRequest<Page<VacancyApplication>>
     {

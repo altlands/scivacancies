@@ -3,7 +3,7 @@ using SciVacancies.ReadModel.Core;
 
 using System;
 using System.Collections.Generic;
-
+using System.Linq;
 using NPoco;
 using MediatR;
 
@@ -14,7 +14,8 @@ namespace SciVacancies.WebApp.Queries
         IRequestHandler<SelectPagedVacancyApplicationsByResearcherQuery, Page<VacancyApplication>>,
         IRequestHandler<SelectVacancyApplicationsByResearcherQuery, IEnumerable<VacancyApplication>>,
         IRequestHandler<SelectPagedVacancyApplicationsByVacancyQuery, Page<VacancyApplication>>,
-        IRequestHandler<SelectAllVacancyApplicationAttachmentsQuery, IEnumerable<VacancyApplicationAttachment>>
+        IRequestHandler<SelectAllVacancyApplicationAttachmentsQuery, IEnumerable<VacancyApplicationAttachment>>,
+        IRequestHandler<CountVacancyApplicationInVacancyQuery, int>
     {
         private readonly IDatabase _db;
 
@@ -68,6 +69,14 @@ namespace SciVacancies.WebApp.Queries
             IEnumerable<VacancyApplicationAttachment> vaAttachments = _db.Fetch<VacancyApplicationAttachment>(new Sql($"SELECT * FROM res_vacancyapplication_attachments ra WHERE ra.vacancyapplication_guid = @0", message.VacancyApplicationGuid));
 
             return vaAttachments;
+        }
+        public int Handle(CountVacancyApplicationInVacancyQuery message)
+        {
+            if (message.VacancyGuid== Guid.Empty) throw new ArgumentNullException($"{nameof(message.VacancyGuid)} is empty");
+
+            var vacancyApplication = _db.Fetch<VacancyApplication>(new Sql($"Select * FROM res_vacancyapplications va WHERE va.vacancy_guid = @0 AND va.status = @1", message.VacancyGuid, (int)message.Status));
+
+            return vacancyApplication.Count();
         }
     }
 }
