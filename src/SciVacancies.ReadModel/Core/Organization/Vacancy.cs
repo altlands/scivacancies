@@ -14,7 +14,7 @@ namespace SciVacancies.ReadModel.Core
         /// <summary>
         /// Autoincremented id - нужен для "читаемого" отображения идентификатора, использовать только в GUI
         /// </summary>
-        public long id { get; set; }
+        public long read_id { get; set; }
 
         #region General
 
