@@ -1,4 +1,5 @@
 ﻿@using System.Threading.Tasks
+@using SciVacancies.Domain.Enums
 @model SciVacancies.WebApp.ViewModels.VacancyDetailsViewModel
 
 <div class="crumbs">
@@ -19,11 +20,23 @@
     </li>
     <li class="odd">
         <span>Победитель:</span>@Model.Winner.FullName
+        @if (Model.PretenderRequestDate.HasValue)
+        {
+            <text>
+            <em>(Предложение отозвано в пользу претендента)</em>
+            </text>
+        }
     </li>
     @if (Model.Pretender != null)
     {
         <li class="even">
             <span>Претендент:</span>@Model.Pretender.FullName
+            @if (Model.Status == VacancyStatus.OfferAcceptedByPretender)
+            {
+                <text>
+                <em>(Претендент принял предложение)</em>
+                </text>
+            }
         </li>
     }
 </ul>

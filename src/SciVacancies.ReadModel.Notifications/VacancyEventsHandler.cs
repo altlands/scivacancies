@@ -157,7 +157,8 @@ namespace SciVacancies.ReadModel.Notifications
                     _db.Execute(new Sql($"INSERT INTO res_notifications (guid, title, vacancy_guid, researcher_guid, creation_date) VALUES(@0, @1, @2, @3, @4)", Guid.NewGuid(), looserTitle, msg.VacancyGuid, researcherGuid, msg.TimeStamp));
                 }
                 _db.Execute(new Sql($"INSERT INTO res_notifications (guid, title, vacancy_guid, researcher_guid, creation_date) VALUES(@0, @1, @2, @3, @4)", Guid.NewGuid(), title, msg.VacancyGuid, vacancy.winner_researcher_guid, msg.TimeStamp));
-                _db.Execute(new Sql($"INSERT INTO res_notifications (guid, title, vacancy_guid, researcher_guid, creation_date) VALUES(@0, @1, @2, @3, @4)", Guid.NewGuid(), title, msg.VacancyGuid, vacancy.pretender_researcher_guid, msg.TimeStamp));
+                if (vacancy.pretender_researcher_guid != Guid.Empty)
+                    _db.Execute(new Sql($"INSERT INTO res_notifications (guid, title, vacancy_guid, researcher_guid, creation_date) VALUES(@0, @1, @2, @3, @4)", Guid.NewGuid(), title, msg.VacancyGuid, vacancy.pretender_researcher_guid, msg.TimeStamp));
                 transaction.Complete();
             }
         }
