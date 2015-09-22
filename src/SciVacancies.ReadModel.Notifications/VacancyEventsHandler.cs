@@ -45,7 +45,7 @@ namespace SciVacancies.ReadModel.Notifications
         }
         public void Handle(VacancyProlongedInCommittee msg)
         {
-            throw new NotImplementedException();
+            //throw new NotImplementedException();
 
 
             //List<Guid> researcherGuids = _db.Fetch<Guid>(new Sql($"SELECT va.researcher_guid FROM res_vacancyapplications va WHERE va.vacancy_guid = @0", msg.VacancyGuid));
@@ -62,7 +62,7 @@ namespace SciVacancies.ReadModel.Notifications
         }
         public void Handle(VacancyInOfferResponseAwaitingFromWinner msg)
         {
-            throw new NotImplementedException();
+            //throw new NotImplementedException();
             //List<Guid> researcherGuids = _db.Fetch<Guid>(new Sql($"SELECT va.researcher_guid FROM res_vacancyapplications va WHERE va.vacancy_guid = @0", msg.VacancyGuid));
 
             //string title = "По вашей заявке на вакансию " + msg.VacancyGuid + " утверждены";
@@ -103,7 +103,7 @@ namespace SciVacancies.ReadModel.Notifications
         }
         public void Handle(VacancyInOfferResponseAwaitingFromPretender msg)
         {
-            throw new NotImplementedException();
+            //throw new NotImplementedException();
             //List<Guid> researcherGuids = _db.Fetch<Guid>(new Sql($"SELECT va.researcher_guid FROM res_vacancyapplications va WHERE va.vacancy_guid = @0", msg.VacancyGuid));
 
             //string title = "По вашей заявке на вакансию " + msg.VacancyGuid + " утверждены";

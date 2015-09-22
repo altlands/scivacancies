@@ -222,7 +222,7 @@ namespace SciVacancies.Domain.Aggregates
         }
         public void VacancyToResponseAwaitingFromPretender()
         {
-            if (Status != VacancyStatus.OfferRejectedByWinner) throw new InvalidOperationException("vacancy state is invalid");
+            if (!(Status==VacancyStatus.OfferAcceptedByWinner|| Status == VacancyStatus.OfferRejectedByWinner)) throw new InvalidOperationException("vacancy state is invalid");
             if (PretenderResearcherGuid == Guid.Empty || PretenderVacancyApplicationGuid == Guid.Empty) throw new ArgumentNullException("WinnerGuid or WinnerVacancyApplicationGuid is empty");
 
             RaiseEvent(new VacancyInOfferResponseAwaitingFromPretender
