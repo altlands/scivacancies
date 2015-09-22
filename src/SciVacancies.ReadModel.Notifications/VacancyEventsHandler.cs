@@ -45,8 +45,11 @@ namespace SciVacancies.ReadModel.Notifications
         }
         public void Handle(VacancyProlongedInCommittee msg)
         {
-            //todo: throw new NotImplementedException();
+            //throw new NotImplementedException();
+
+
             //List<Guid> researcherGuids = _db.Fetch<Guid>(new Sql($"SELECT va.researcher_guid FROM res_vacancyapplications va WHERE va.vacancy_guid = @0", msg.VacancyGuid));
+
             //string title = "Ваша заявка на вакансию " + msg.VacancyGuid + " отправлена на комиссию";
             //using (var transaction = _db.GetTransaction())
             //{
@@ -59,8 +62,9 @@ namespace SciVacancies.ReadModel.Notifications
         }
         public void Handle(VacancyInOfferResponseAwaitingFromWinner msg)
         {
-            //todo: throw new NotImplementedException();
+            //throw new NotImplementedException();
             //List<Guid> researcherGuids = _db.Fetch<Guid>(new Sql($"SELECT va.researcher_guid FROM res_vacancyapplications va WHERE va.vacancy_guid = @0", msg.VacancyGuid));
+
             //string title = "По вашей заявке на вакансию " + msg.VacancyGuid + " утверждены";
             //using (var transaction = _db.GetTransaction())
             //{
@@ -99,7 +103,7 @@ namespace SciVacancies.ReadModel.Notifications
         }
         public void Handle(VacancyInOfferResponseAwaitingFromPretender msg)
         {
-            //todo:  throw new NotImplementedException();
+            //throw new NotImplementedException();
             //List<Guid> researcherGuids = _db.Fetch<Guid>(new Sql($"SELECT va.researcher_guid FROM res_vacancyapplications va WHERE va.vacancy_guid = @0", msg.VacancyGuid));
 
             //string title = "По вашей заявке на вакансию " + msg.VacancyGuid + " утверждены";
@@ -153,8 +157,7 @@ namespace SciVacancies.ReadModel.Notifications
                     _db.Execute(new Sql($"INSERT INTO res_notifications (guid, title, vacancy_guid, researcher_guid, creation_date) VALUES(@0, @1, @2, @3, @4)", Guid.NewGuid(), looserTitle, msg.VacancyGuid, researcherGuid, msg.TimeStamp));
                 }
                 _db.Execute(new Sql($"INSERT INTO res_notifications (guid, title, vacancy_guid, researcher_guid, creation_date) VALUES(@0, @1, @2, @3, @4)", Guid.NewGuid(), title, msg.VacancyGuid, vacancy.winner_researcher_guid, msg.TimeStamp));
-                if (vacancy.pretender_researcher_guid != Guid.Empty)
-                    _db.Execute(new Sql($"INSERT INTO res_notifications (guid, title, vacancy_guid, researcher_guid, creation_date) VALUES(@0, @1, @2, @3, @4)", Guid.NewGuid(), title, msg.VacancyGuid, vacancy.pretender_researcher_guid, msg.TimeStamp));
+                _db.Execute(new Sql($"INSERT INTO res_notifications (guid, title, vacancy_guid, researcher_guid, creation_date) VALUES(@0, @1, @2, @3, @4)", Guid.NewGuid(), title, msg.VacancyGuid, vacancy.pretender_researcher_guid, msg.TimeStamp));
                 transaction.Complete();
             }
         }
