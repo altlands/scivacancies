@@ -155,81 +155,178 @@
 
     <br />
     <div class="ctr-buttons">
-        @if (Model.Status == VacancyApplicationStatus.Applied && !(Model.Vacancy.Status == VacancyStatus.InProcess || Model.Vacancy.Status == VacancyStatus.Published))
-        {
-
-            if (Model.Vacancy.WinnerResearcherGuid == Model.ResearcherGuid)
+        @{
+            if (Model.Guid == Model.Vacancy.WinnerVacancyApplicationGuid)
+            //заявка победителя
             {
                 <text>
                 <div class="alert alert-success" style="padding: 15px;">
-                    Победитель в конкурсе на <a asp-controller="vacancies" asp-action="details" asp-route-id="@Model.VacancyGuid">вакансию</a>
+                    Заявка Победителя
+                </div>
+                </text>
+            }
+            else if (Model.Guid == Model.Vacancy.PretenderVacancyApplicationGuid)
+            //заявка претендента
+            {
+                <text>
+                <div class="alert alert-success" style="padding: 15px;">
+                    Заявка претендента
+                </div>
+                </text>
+            }
+            else if (Model.Vacancy.WinnerVacancyApplicationGuid != Guid.Empty && Model.Vacancy.PretenderVacancyApplicationGuid != Guid.Empty)
+            //заявка проигравшего
+            {
+
+                <text>
+                <div class="alert alert-danger" style="padding: 15px;">
+                    Заявка находится не в финале конкурса
                 </div>
                 </text>
             }
 
-            else
+            if (Model.Status == VacancyApplicationStatus.Applied && !(Model.Vacancy.Status == VacancyStatus.InProcess || Model.Vacancy.Status == VacancyStatus.Published))
             {
-
                 if (Model.Vacancy.WinnerResearcherGuid == Guid.Empty)
                 {
                     <text>
                     <a asp-controller="vacancies" asp-action="setwinner" asp-route-id="@Model.Guid" asp-route-iswinner="true" class="green-btn middle-icon">Выбрать победителем</a>
                     </text>
                 }
-                else
+                else if (Model.Vacancy.PretenderResearcherGuid == Guid.Empty)
                 {
+                    <text>
+                    <a asp-controller="vacancies" asp-action="setwinner" asp-route-id="@Model.Guid" asp-route-iswinner="false" class="green-btn middle-icon">Выбрать претендентом</a>
+                    </text>
+                }
+            }
 
-                    if (Model.Vacancy.PretenderResearcherGuid == Model.ResearcherGuid)
+
+            if (Model.Vacancy.Status == VacancyStatus.OfferResponseAwaitingFromWinner)
+            //ожидается ответ от победителя
+            {
+                <text>
+                <div class="alert alert-info" style="padding: 15px;">
+                    Ожидается ответ от победителя
+                </div>
+                </text>
+            }
+            if (Model.Vacancy.Status == VacancyStatus.OfferResponseAwaitingFromPretender)
+            //ожидается ответ от претендента
+            {
+                <text>
+                <div class="alert alert-info" style="padding: 15px;">
+                    Ожидается ответ от претендента
+                </div>
+                </text>
+            }
+
+            if (Model.Guid == Model.Vacancy.WinnerVacancyApplicationGuid || Model.Guid == Model.Vacancy.PretenderVacancyApplicationGuid)
+            //открыта заявка победителя или претендента
+            {
+                if (Model.Vacancy.IsWinnerAccept.HasValue)
+                //рассматриваем победителя, принявшего решение
+                {
+                    if (Model.Vacancy.Status == VacancyStatus.OfferAcceptedByWinner)
                     {
+                        //статус вакансии - победитель принял предложение
+                        //организация - может принять его согласие и закрыть вакансию
                         <text>
                         <div class="alert alert-success" style="padding: 15px;">
-                            Претендент на <a asp-controller="vacancies" asp-action="details" asp-route-id="@Model.VacancyGuid">вакансию</a>
+                            Победитель в конкурсе на <a asp-controller="vacancies" asp-action="details" asp-route-id="@Model.VacancyGuid">вакансию</a> принял предложение
+                        </div>
+
+                        <a asp-controller="vacancies" asp-action="close" asp-route-id="@Model.VacancyGuid" class="btn btn-success " title="Закрыть вакансию">Закрыть вакансию</a>
+
+                        <br />
+                        <br />
+                        </text>
+                    }
+
+                    if (Model.Vacancy.Status == VacancyStatus.OfferRejectedByWinner)
+                    {
+                        //статус вакансии - победитель отказался от предложения
+                        <text>
+                        <div class="alert alert-danger" style="padding: 15px;">
+                            Победитель в конкурсе на <a asp-controller="vacancies" asp-action="details" asp-route-id="@Model.VacancyGuid">вакансию</a> отказался от предложения
                         </div>
                         </text>
                     }
-                    else
-                    {
-                        if (Model.Vacancy.PretenderResearcherGuid == Guid.Empty)
-                        {
 
-                            <text>
-                            <a asp-controller="vacancies" asp-action="setwinner" asp-route-id="@Model.Guid" asp-route-iswinner="false" class="green-btn middle-icon">Выбрать претендентом</a>
-                            </text>
-                        }
+                    if (Model.Vacancy.PretenderVacancyApplicationGuid != Guid.Empty)
+                    {
+                        //вне зависимости от решения победителя
+                        //организация - может перепредложить вакансию претенденту
+                        <text>
+                        <div class="alert alert-warning" style="padding: 15px;">
+
+                            @if (Model.Guid == Model.Vacancy.WinnerVacancyApplicationGuid)
+                            //смотрим заявку Победителя
+                            {
+                                <text>
+                                Предложить вакансию претенденту (<a asp-controller="applications" asp-action="preview" asp-route-id="@Model.Vacancy.PretenderVacancyApplicationGuid" onclick="javascript: return confirm('Вы уверены что хотите предложить вакансию претенденту? В этом случае предложение победителю будет отозвано.');" title="заявка претендента">заявка претендента</a>)
+                                </text>
+                            }
+                            else if (Model.Guid == Model.Vacancy.PretenderVacancyApplicationGuid)
+                            //смотрим заявку Претендента
+                            {
+                                <text>
+                                Предложить вакансию претенденту (<a asp-controller="applications" asp-action="preview" asp-route-id="@Model.Vacancy.WinnerVacancyApplicationGuid" onclick="javascript: return confirm('Вы уверены что хотите предложить вакансию претенденту? В этом случае предложение победителю будет отозвано.');" title="заявка победителя">заявка победителя</a>)
+                                </text>
+                            }
+
+                            <br />
+                            <br />
+                            <a asp-controller="vacancies" asp-action="reoffertopretender" asp-route-id="@Model.VacancyGuid" class="btn btn-warning" title="Предложить вакансию претенденту">Предложить</a>
+                        </div>
+                        </text>
                     }
+
+
+                }
+
+                else if (Model.Vacancy.IsPretenderAccept.HasValue)
+                //рассматриваем претендента, принявшего решение
+                {
+
+                    if (Model.Vacancy.Status == VacancyStatus.OfferAcceptedByPretender)
+                    {
+                        //статус вакансии - претендент принял предложение
+                        //организация - может принять его согласие и закрыть вакансию
+                        <text>
+                        <div class="alert alert-success" style="padding: 15px;">
+                            Претендент в конкурсе на <a asp-controller="vacancies" asp-action="details" asp-route-id="@Model.VacancyGuid">вакансию</a> принял предложение
+                        </div>
+
+                        <a asp-controller="vacancies" asp-action="close" asp-route-id="@Model.VacancyGuid" class="btn btn-success " title="Закрыть вакансию">Закрыть вакансию</a>
+
+                        <br />
+                        <br />
+                        </text>
+                    }
+
+                    if (Model.Vacancy.Status == VacancyStatus.OfferRejectedByPretender)
+                    {
+                        //статус вакансии - претендент отказался от предложения
+                        <text>
+                        <div class="alert alert-danger" style="padding: 15px;">
+                            Претендент в конкурсе на <a asp-controller="vacancies" asp-action="details" asp-route-id="@Model.VacancyGuid">вакансию</a> отказался от предложения
+                        </div>
+                        </text>
+                    }
+
                 }
             }
 
         }
 
-        @if (Model.Vacancy.Status == VacancyStatus.OfferResponseAwaitingFromWinner
-            || Model.Vacancy.Status == VacancyStatus.OfferResponseAwaitingFromPretender
-            || Model.Vacancy.Status == VacancyStatus.OfferAcceptedByWinner
-            || Model.Vacancy.Status == VacancyStatus.OfferAcceptedByPretender
-            || Model.Vacancy.Status == VacancyStatus.OfferRejectedByWinner
-            || Model.Vacancy.Status == VacancyStatus.OfferRejectedByPretender
-            || Model.Vacancy.Status == VacancyStatus.Cancelled
-            || Model.Vacancy.Status == VacancyStatus.Closed)
-        {
-            if (Model.Vacancy.IsWinnerAccept.HasValue && Model.Guid == Model.Vacancy.WinnerVacancyApplicationGuid)
-            {
-                <text>
-                <div class="alert @(Model.Vacancy.IsWinnerAccept.Value ? "alert-success" : "alert-danger")" style="padding: 15px;">
-                    Победитель в конкурсе на <a asp-controller="vacancies" asp-action="details" asp-route-id="@Model.VacancyGuid">вакансию</a> @(Model.Vacancy.IsWinnerAccept.Value ? "принял предложение" : "отказался от предложения")
-                </div>
-                </text>
-            }
-            else if (Model.Vacancy.IsPretenderAccept.HasValue && Model.Guid == Model.Vacancy.PretenderVacancyApplicationGuid)
-            {
-                <text>
-                <div class="alert @(Model.Vacancy.IsPretenderAccept.Value ? "alert-success" : "alert-danger")" style="padding: 15px;">
-                    Претендент на <a asp-controller="vacancies" asp-action="details" asp-route-id="@Model.VacancyGuid">вакансию</a> @(Model.Vacancy.IsPretenderAccept.Value ? "принял предложение" : "отказался от предложения")
-                </div>
-                </text>
-            }
-        }
+        <a asp-controller="vacancies" asp-action="cancel" asp-route-id="@Model.VacancyGuid" onclick="javascript: return confirm('Вы уверены что хотите отменить вакансию?');" class="btn btn-danger" title="Отменить вакансию">Отменить вакансию</a>
 
     </div>
+
+
+
+
 
 
 

@@ -599,19 +599,19 @@ namespace SciVacancies.WebApp.Controllers
 
 
 
-        private object SetWinnerPreValidation(Guid vacancyApplicationGuid, Guid organizationGuid, out Vacancy vacancy, bool isWinner)
+        private object SetWinnerPreValidation(Guid vacancyApplicationGuid, Guid organizationGuid, bool isWinner, out Vacancy vacancy, out VacancyApplication vacancyApplication)
         {
-            var vacancyApplicaiton = _mediator.Send(new SingleVacancyApplicationQuery { VacancyApplicationGuid = vacancyApplicationGuid });
+            vacancyApplication = _mediator.Send(new SingleVacancyApplicationQuery { VacancyApplicationGuid = vacancyApplicationGuid });
             vacancy = null;
 
-            if (vacancyApplicaiton == null)
+            if (vacancyApplication == null)
                 return HttpNotFound(); //throw new ObjectNotFoundException($"Не найдена Заявка c идентификатором: {vacancyApplicationGuid}");
 
-            if (vacancyApplicaiton.status != VacancyApplicationStatus.Applied)
+            if (vacancyApplication.status != VacancyApplicationStatus.Applied)
                 return View("Error",
-                    $"Вы не можете выбрать в качестве одного из победителей Заявку со статусом: {vacancyApplicaiton.status.GetDescription()}");
+                    $"Вы не можете выбрать в качестве одного из победителей Заявку со статусом: {vacancyApplication.status.GetDescription()}");
 
-            vacancy = _mediator.Send(new SingleVacancyQuery { VacancyGuid = vacancyApplicaiton.vacancy_guid });
+            vacancy = _mediator.Send(new SingleVacancyQuery { VacancyGuid = vacancyApplication.vacancy_guid });
 
             if (vacancy == null)
                 return HttpNotFound(); //throw new ObjectNotFoundException($"Не найдена Вакансия c идентификатором: {vacancyApplicaiton.vacancy_guid}");
@@ -637,10 +637,11 @@ namespace SciVacancies.WebApp.Controllers
                 && (vacancyInCommitteeAttachments == null || !vacancyInCommitteeAttachments.Any()))
                 return View("Error", "В вакансии НЕ УКАЗАНО конкурсное обоснование выбора победителя (и претендента).");
 
-            return vacancyApplicaiton;
+            return null;
         }
 
 
+        [PageTitle("Выбрать Победителя или Претендента")]
         [BindOrganizationIdFromClaims]
         [Authorize(Roles = ConstTerms.RequireRoleOrganizationAdmin)]
         public IActionResult SetWinner(Guid id, Guid organizationGuid, bool isWinner)
@@ -651,10 +652,10 @@ namespace SciVacancies.WebApp.Controllers
                 throw new ArgumentNullException(nameof(organizationGuid));
 
             Vacancy vacancy;
-            var result = SetWinnerPreValidation(id, organizationGuid, out vacancy, isWinner);
+            VacancyApplication vacancyApplication;
+            var result = SetWinnerPreValidation(id, organizationGuid, isWinner, out vacancy, out vacancyApplication);
             if (result is HttpNotFoundResult) return (HttpNotFoundResult)result;
             if (result is ViewResult) return (ViewResult)result;
-            var vacancyApplication = (VacancyApplication)result;
 
             var model = Mapper.Map<VacancyApplicationSetWinnerViewModel>(vacancyApplication);
             model.Vacancy = Mapper.Map<VacancyDetailsViewModel>(vacancy);
@@ -664,6 +665,7 @@ namespace SciVacancies.WebApp.Controllers
             return View(model);
         }
 
+        [PageTitle("Выбрать Победителя или Претендента")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         [BindOrganizationIdFromClaims]
@@ -674,9 +676,10 @@ namespace SciVacancies.WebApp.Controllers
                 throw new ArgumentNullException(nameof(organizationGuid));
 
             Vacancy vacancy;
-            var result = SetWinnerPreValidation(model.Guid, organizationGuid, out vacancy, model.WinnerIsSetting);
+            VacancyApplication vacancyApplication;
+            var result = SetWinnerPreValidation(model.Guid, organizationGuid, model.WinnerIsSetting, out vacancy, out vacancyApplication);
             if (result is HttpNotFoundResult) return (HttpNotFoundResult)result;
-            var vacancyApplication = (VacancyApplication)result;
+            if (result is ViewResult) return (ViewResult)result;
 
             if (!ModelState.IsValid)
             {
@@ -750,7 +753,7 @@ namespace SciVacancies.WebApp.Controllers
             return RedirectToAction("preview", "applications", new { id = model.Guid });
         }
 
-        private object VacancyClosePrevalidation(Guid id, Guid organizationGuid)
+        private object VacancyClosePrevalidation(Guid id, Guid organizationGuid, out Vacancy preModel)
         {
             if (id == Guid.Empty)
                 throw new ArgumentNullException(nameof(id));
@@ -758,7 +761,7 @@ namespace SciVacancies.WebApp.Controllers
             if (organizationGuid == Guid.Empty)
                 throw new ArgumentNullException(nameof(organizationGuid));
 
-            var preModel = _mediator.Send(new SingleVacancyQuery { VacancyGuid = id });
+            preModel = _mediator.Send(new SingleVacancyQuery { VacancyGuid = id });
 
             if (preModel == null)
                 return HttpNotFound(); //throw new ObjectNotFoundException($"Не найдена вакансия с идентификатором: {id}");
@@ -766,11 +769,66 @@ namespace SciVacancies.WebApp.Controllers
             if (preModel.organization_guid != organizationGuid)
                 return View("Error", "Вы не можете менять Вакансии других организаций");
 
-            if (preModel.status == VacancyStatus.OfferAcceptedByWinner
-                || preModel.status == VacancyStatus.OfferAcceptedByPretender)
+            if (preModel.status != VacancyStatus.OfferAcceptedByWinner && preModel.status != VacancyStatus.OfferAcceptedByPretender)
                 return View("Error", "Вы не можете закрыть вакансию, пока кто-то из победителей не даст согласится");
+            return null;
+        }
 
-            return preModel;
+
+        [PageTitle("Предложить вакансию претенденту")]
+        [BindOrganizationIdFromClaims]
+        [Authorize(Roles = ConstTerms.RequireRoleOrganizationAdmin)]
+        public IActionResult ReofferToPretender(Guid id, Guid organizationGuid)
+        {
+            if (id == Guid.Empty)
+                throw new ArgumentNullException(nameof(id));
+            if (organizationGuid == Guid.Empty)
+                throw new ArgumentNullException(nameof(organizationGuid));
+
+            Vacancy vacancy;
+            var result = ReofferToPretenderPreValidation(id, organizationGuid, out vacancy);
+            if (result is HttpNotFoundResult) return (HttpNotFoundResult)result;
+            if (result is ViewResult) return (ViewResult)result;
+
+            //передать ваканасию претенденту
+            _mediator.Send(new SetVacancyToResponseAwaitingFromPretenderCommand { VacancyGuid = id });
+
+            //obsolete - добавить статус для заявки
+            //организация для победителя....
+
+            return RedirectToAction("preview", "applications", new { id = vacancy.pretender_vacancyapplication_guid });
+        }
+
+        private object ReofferToPretenderPreValidation(Guid id, Guid organizationGuid, out Vacancy vacancy)
+        {
+
+            if (id == Guid.Empty)
+                throw new ArgumentNullException(nameof(id));
+
+            if (organizationGuid == Guid.Empty)
+                throw new ArgumentNullException(nameof(organizationGuid));
+
+            vacancy = _mediator.Send(new SingleVacancyQuery { VacancyGuid = id });
+
+            if (vacancy == null)
+                return HttpNotFound();
+
+            if (vacancy.organization_guid != organizationGuid)
+                return View("Error", "Вы не можете менять Вакансии других организаций");
+
+            if (vacancy.winner_vacancyapplication_guid == Guid.Empty)
+                return View("Error", "У вакансии не выбран Победитель");
+
+            if (vacancy.pretender_vacancyapplication_guid == Guid.Empty)
+                return View("Error", "У вакансии не выбран претендент");
+
+            if (!vacancy.is_winner_accept.HasValue)
+                return View("Error", "Победитель еще не принял решение");
+
+            if (vacancy.is_pretender_accept.HasValue)
+                return View("Error", "Победитель уже принял решение по вакансии");
+
+            return null;
         }
 
         [PageTitle("Закрыть вакансию")]
@@ -778,12 +836,16 @@ namespace SciVacancies.WebApp.Controllers
         [Authorize(Roles = ConstTerms.RequireRoleOrganizationAdmin)]
         public IActionResult Close(Guid id, Guid organizationGuid)
         {
-            var model = Mapper.Map<VacancyDetailsViewModel>(VacancyClosePrevalidation(id, organizationGuid));
+            Vacancy vacancy;
+            var result = VacancyClosePrevalidation(id, organizationGuid, out vacancy);
+            if (result is HttpNotFoundResult) return (HttpNotFoundResult)result;
+            if (result is ViewResult) return (ViewResult)result;
+
+            var model = Mapper.Map<VacancyDetailsViewModel>(vacancy);
             model.Winner = Mapper.Map<ResearcherDetailsViewModel>(_mediator.Send(new SingleResearcherQuery { ResearcherGuid = model.WinnerResearcherGuid }));
-            model.Pretender = Mapper.Map<ResearcherDetailsViewModel>(_mediator.Send(new SingleResearcherQuery { ResearcherGuid = model.PretenderResearcherGuid }));
-
-            //todo: обоснование вводить отдельно
-
+            if (model.PretenderResearcherGuid != Guid.Empty)
+                model.Pretender = Mapper.Map<ResearcherDetailsViewModel>(_mediator.Send(new SingleResearcherQuery { ResearcherGuid = model.PretenderResearcherGuid }));
+            //todo: ntemnikov -> показать кто принял предложение - Победитель или Претендент
             return View(model);
         }
 
@@ -794,7 +856,10 @@ namespace SciVacancies.WebApp.Controllers
         [Authorize(Roles = ConstTerms.RequireRoleOrganizationAdmin)]
         public IActionResult ClosePost(Guid id, Guid organizationGuid)
         {
-            VacancyClosePrevalidation(id, organizationGuid);
+            Vacancy vacancy;
+            var result = VacancyClosePrevalidation(id, organizationGuid, out vacancy);
+            if (result is HttpNotFoundResult) return (HttpNotFoundResult)result;
+            if (result is ViewResult) return (ViewResult)result;
 
             _mediator.Send(new CloseVacancyCommand
             {

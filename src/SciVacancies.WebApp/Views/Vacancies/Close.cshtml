@@ -20,9 +20,12 @@
     <li class="odd">
         <span>Победитель:</span>@Model.Winner.FullName
     </li>
-    <li class="even">
-        <span>Претендент:</span>@Model.Pretender.FullName
-    </li>
+    @if (Model.Pretender != null)
+    {
+        <li class="even">
+            <span>Претендент:</span>@Model.Pretender.FullName
+        </li>
+    }
 </ul>
 
 <form asp-controller="vacancies" asp-action="closepost" class="l-application">
