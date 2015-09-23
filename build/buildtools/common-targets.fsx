@@ -68,7 +68,7 @@ Target "BuildOctoPackages" (fun _ ->
 let publishOctoPackage project = 
     NuGetPublish (fun p -> 
         {p with
-            AccessKey = "API-Z809CFVNLKWAAERWFAIYFZDW4"
+            AccessKey = "API-RGAPTO3M9TKRPDVUMZZDMNVKQ9E"
             PublishUrl = "http://alt-dev001/nuget/packages"      
             WorkingDir = "./build"                  
             Version = fileVersion
@@ -84,7 +84,7 @@ let OctoRelease () =
     let release = { releaseOptions with 
                         Project = "SciVacancies"
                         PackageVersion = fileVersion }
-    let server = { Server = "http://alt-dev001/api"; ApiKey = "API-Z809CFVNLKWAAERWFAIYFZDW4" }
+    let server = { Server = "http://alt-dev001/api"; ApiKey = "API-RGAPTO3M9TKRPDVUMZZDMNVKQ9E" }
     Octo (fun octoParams ->
         { octoParams with
             ToolPath = "./build/deployment/OctopusTools.2.6.1.52"
@@ -102,7 +102,7 @@ let OctoReleaseAndDeploy environment =
     let deploy  = { deployOptions with 
                         DeployTo = environment
         }
-    let server = {Server = "http://alt-dev001/api"; ApiKey = "API-Z809CFVNLKWAAERWFAIYFZDW4" }
+    let server = {Server = "http://alt-dev001/api"; ApiKey = "API-RGAPTO3M9TKRPDVUMZZDMNVKQ9E" }
     Octo (fun octoParams ->
         { octoParams with
             ToolPath = "./build/deployment/OctopusTools.2.6.1.52"
