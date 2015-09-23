@@ -36,7 +36,6 @@ body {
     color: #06365c;
     text-align: left;
     font: 12px/1.5 Tahoma, Arial,"Helvetica CY","Nimbus Sans L",sans-serif;
-    margin: 0 0 140px 0;
 }
 
 ol, ul {
@@ -82,8 +81,8 @@ a {
     text-decoration: underline;
 }
 
-input[type="text"], 
-input[type="number"], 
+input[type="text"],
+input[type="number"],
 input[type="password"] {
     font: italic 14px Arial;
     -webkit-border-radius: 4px;
@@ -159,7 +158,11 @@ label {
 }
 
 .content {
-    margin-bottom: 30px;
+    margin: 0;
+    padding-bottom: 90px;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
 }
 /* basic style */
 .underline {
@@ -270,8 +273,8 @@ input[type="number"] {
         width: 315px;
     }
 
-.window-popup input[type="text"].long-input, 
-.window-popup input[type="number"].long-input, 
+.window-popup input[type="text"].long-input,
+.window-popup input[type="number"].long-input,
 .window-popup input[type="password"].long-input {
     width: 305px;
 }
@@ -307,15 +310,27 @@ input[type="number"].small-input {
 }
 
 .header {
-    height: 145px;
-    padding: 0px 0 0 0;
-    background: #1c5f96 url(../images/bg-header.jpg) repeat-x left bottom;
+    height: 110px;
+    background: #ffffff;
+}
+
+.b-wrap-header {
+    width: 920px;
 }
 
 .logo {
-    position: relative;
-    padding: 40px 0 0 90px;
+    padding: 35px 0 0 78px;
+    max-width: 560px;
 }
+
+    .logo .logo-desc {
+        font-family: Arial;
+        font-size: 12px;
+        font-weight: bold;
+        color: #3a5e90;
+        text-transform: uppercase;
+        line-height: 17px;
+    }
 
     .logo a {
         text-decoration: none;
@@ -326,23 +341,6 @@ input[type="number"].small-input {
         top: 10px;
         position: absolute;
         vertical-align: top;
-    }
-
-    .logo .logo-desc,
-    .logo .logo-title {
-        display: block;
-        font-family: Arial;
-        color: #ffffff;
-    }
-
-    .logo .logo-desc {
-        font-size: 13px;
-        line-height: 11px;
-    }
-
-    .logo .logo-title {
-        font-size: 25px;
-        text-transform: uppercase;
     }
 
 /* block search */
@@ -400,7 +398,6 @@ select:focus {
     background: url(../images/icons/search-icon.png) center center no-repeat;
     display: inline-block;
 }
-
 
 /* crumbs */
 .content .crumbs {
@@ -952,9 +949,8 @@ a.search-icons {
     display: inline-block;
 }
 
-.bottom-nav input[type="text"] ,
-.bottom-nav input[type="number"] 
-{
+.bottom-nav input[type="text"],
+.bottom-nav input[type="number"] {
     font-style: italic;
     width: 40px;
     height: 22px;
@@ -1038,59 +1034,58 @@ a.search-icons {
 }
 
 .footer {
+    color: #ffffff;
+    font-size: 13px;
+    height: 50px;
+    background: #3669ce url(../images/bg-footer-r.jpg) repeat-x;
     position: absolute;
+    top: 100%;
     left: 0;
     right: 0;
-    bottom: 0;
-    height: 100px;
-    background: #1c6096 url(../images/bg-footer.jpg) repeat-x left top;
+    margin-top: -50px;
 }
+
+    .footer .b-wrap {
+        width: 920px;
+    }
+
+    .footer .footer-copyright,
+    .footer-items {
+        margin: 18px 0 0 0;
+    }
 
     .footer .footer-copyright {
         color: #ffffff;
         float: left;
-        margin: 35px 0 0 0;
     }
 
 .footer-items {
-    margin: 17px 40px 0 0;
     float: right;
+    max-width: 250px;
 }
 
-.footer-item {
-    float: left;
-    padding: 0 0 0 30px;
-    width: 240px;
-    position: relative;
+.footer .footer-copyright {
+    max-width: 650px;
 }
 
-    .footer-item:before {
-        content: "";
-        left: 0;
-        top: -5px;
-        display: block;
-        position: absolute;
-        width: 1px;
-        height: 67px;
-        background: url(../images/separate.jpg) no-repeat;
-    }
-
-.foot-head {
-    text-transform: uppercase;
-    font-weight: bold;
-}
-
-.footer-item2 a {
+.footer a {
     color: #ffffff;
-    text-decoration: underline;
+    font-size: 13px;
 }
 
-    .footer-item2 a:hover {
-        text-decoration: none;
-    }
+.faq-link:before {
+    content: "";
+    display: inline-block;
+    vertical-align: middle;
+    width: 22px;
+    height: 22px;
+    margin: 0 5px 0 0;
+    background: url(../images/sprite.png) no-repeat -245px -299px;
+}
 /* header */
 .header .logo {
     display: inline-block;
+    position: relative;
 }
 
 .header .control {
@@ -1103,13 +1098,13 @@ a.search-icons {
     .header .control a {
         text-decoration: none;
         display: inline-block;
-        border-right: 1px solid white;
+        /*border-right: 1px solid white;*/
         font-size: 14px;
-        margin: 0 11px;
+        /*margin: 0 11px;
         padding-right: 10px;
         margin-right: -5px;
         height: 29px;
-        padding-top: 6px;
+        padding-top: 6px;*/
         font-family: Arial;
         /*color: white;*/
     }
@@ -1128,10 +1123,18 @@ a.search-icons {
                 line-height: 30px;
                 margin-top: -10px;
                 padding-right: 0;
+                font-size: 10px;
+                text-decoration: underline;
+                line-height: 100%;
+                margin: 0;
             }
 
                 .header .control.control-registration .sub-control a:last-child {
                     margin-right: 0;
+                }
+
+                .header .control.control-registration .sub-control a:hover {
+                    text-decoration: none;
                 }
 
         .header .control.control-registration a {
@@ -1142,6 +1145,7 @@ a.search-icons {
             .header .control.control-registration a span {
                 border-color: white;
             }
+
 
     .header .control a:last-child {
         border-right: none;
@@ -1684,13 +1688,14 @@ ol.content-list {
         position: relative;
         min-height: 24px;
     }
-    
-    .content-list li+li{
-        border-top: 1px solid #d1d1d1;
-    }
-    .content-list li+li+li{
-        border-top: 0;
-    }
+
+        .content-list li + li {
+            border-top: 1px solid #d1d1d1;
+        }
+
+            .content-list li + li + li {
+                border-top: 0;
+            }
 
     .content-list .buttons {
         font-size: 0;
@@ -2032,8 +2037,8 @@ span.close-popup {
     margin: 28px 0 0 0;
 }
 
-.window-popup input[type="text"], 
-.window-popup input[type="number"], 
+.window-popup input[type="text"],
+.window-popup input[type="number"],
 .window-popup input[type="password"] {
     border-radius: 0;
 }
