@@ -180,7 +180,7 @@
         @if (Model.Vacancy.Status == VacancyStatus.OfferResponseAwaitingFromPretender)
         {
             if (Model.Status == VacancyApplicationStatus.Pretended && !Model.Vacancy.IsPretenderAccept.HasValue
-                && Model.Vacancy.IsWinnerAccept.HasValue && !Model.Vacancy.IsWinnerAccept.Value
+                && Model.Vacancy.IsWinnerAccept.HasValue
                 && Model.Vacancy.PretenderResearcherGuid == Model.ResearcherGuid)
             {
                 <text>

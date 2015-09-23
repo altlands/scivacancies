@@ -87,7 +87,7 @@ namespace SciVacancies
             switch (value)
             {
                 case VacancyStatus.InCommittee:
-                    return "Ожидается выбор Победителя и Претендента";
+                    return "Ожидается ввод решения комиссии, выбор Победителя (и Претендента)";
                 case VacancyStatus.OfferResponseAwaitingFromWinner:
                     return "Ожидается ответ от Победителя";
                 case VacancyStatus.OfferResponseAwaitingFromPretender:

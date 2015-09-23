@@ -235,7 +235,7 @@ namespace SciVacancies.Domain.Aggregates
         {
             if (PretenderResearcherGuid.Equals(Guid.Empty)) throw new ArgumentNullException("PretenderResearcherGuid is empty");
             if (PretenderVacancyApplicationGuid.Equals(Guid.Empty)) throw new ArgumentNullException("PretenderVacancyApplicationGuid is empty");
-            if (!(IsWinnerAccept.HasValue && !IsWinnerAccept.Value)) throw new InvalidOperationException("IsWinnerAccept is invalid");
+            if (!IsWinnerAccept.HasValue) throw new InvalidOperationException("IsWinnerAccept is invalid");
             if (Status != VacancyStatus.OfferResponseAwaitingFromPretender) throw new InvalidOperationException("vacancy state is invalid");
 
             RaiseEvent(new VacancyOfferAcceptedByPretender
@@ -248,7 +248,7 @@ namespace SciVacancies.Domain.Aggregates
         {
             if (PretenderResearcherGuid.Equals(Guid.Empty)) throw new ArgumentNullException("PretenderResearcherGuid is empty");
             if (PretenderVacancyApplicationGuid.Equals(Guid.Empty)) throw new ArgumentNullException("PretenderVacancyApplicationGuid is empty");
-            if (!(IsWinnerAccept.HasValue && !IsWinnerAccept.Value)) throw new InvalidOperationException("IsWinnerAccept is invalid");
+            if (!IsWinnerAccept.HasValue) throw new InvalidOperationException("IsWinnerAccept is invalid");
             if (Status != VacancyStatus.OfferResponseAwaitingFromPretender) throw new InvalidOperationException("vacancy state is invalid");
 
             RaiseEvent(new VacancyOfferRejectedByPretender
