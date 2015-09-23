@@ -51,7 +51,11 @@ namespace SciVacancies.WebApp.Models.OAuth
         /// <summary>
         /// конференции(симпозиумы, конгрессы)
         /// </summary>
-        public List<OAuthResAbstract> sAbstracts { get; set; }
+        public List<OAuthResAbstract> abstracts { get; set; }
+        /// <summary>
+        /// деятельность
+        /// </summary>
+        public List<OAuthResActivity> researchers { get; set; }
     }
     public class OAuthResEducation
     {
@@ -120,11 +124,24 @@ namespace SciVacancies.WebApp.Models.OAuth
     /// </summary>
     public class OAuthResAbstract
     {
-        public string category { get; set; }
+        public string categoryType { get; set; }
         public string conference { get; set; }
         public string title { get; set; }
         public string updated { get; set; }
         public int year { get; set; }
+    }
+    
+    /// <summary>
+    /// деятельность
+    /// </summary>
+    public class OAuthResActivity
+    {
+        public int yearFrom { get; set; }
+        public int yearTo { get; set; }
+        public string type { get; set; }
+        public string organization{ get; set; }
+        public string title { get; set; }
+        public string position { get; set; }
     }
 
     public class IdentityNumberSc

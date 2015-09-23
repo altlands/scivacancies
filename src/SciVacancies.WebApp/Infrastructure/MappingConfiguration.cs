@@ -106,14 +106,57 @@ namespace SciVacancies.WebApp.Infrastructure
                 .ForMember(d => d.Phone, o => o.MapFrom(s => s.phone))
                 .ForMember(d => d.ExtraPhone, o => o.Ignore())
                 //.ForMember(d => d, o => o.MapFrom(s => s.nationality))
-                //.ForMember(d => d.ResearchActivity, o => o.MapFrom(s => s.))
-                //.ForMember(d => d.TeachingActivity, o => o.MapFrom(s => s.))
-                //.ForMember(d => d.OtherActivity, o => o.MapFrom(s => s.))
+                .ForMember(d => d.OtherActivity, o => o.MapFrom(s => s.researchers != null && s.researchers.Any(c => c.type.Equals("X")) 
+                    ? JsonConvert.SerializeObject(s.researchers.Where(c => c.type.Equals("X") /* X - Прочая деятельность*/ ).Select(c=>new OAuthResActivity
+                        {
+                            title = c.title,
+                            organization = c.organization,
+                            type = "Прочая деятельность",
+                            position = c.position,
+                            yearFrom = c.yearFrom
+                        }
+                        )) 
+                    : string.Empty
+                    ))
+                .ForMember(d => d.TeachingActivity, o => o.MapFrom(s => s.researchers != null && s.researchers.Any(c => c.type.Equals("L"))
+                    ? JsonConvert.SerializeObject(s.researchers.Where(c => c.type.Equals("L") /* L - Преподавательская деятельность*/ ).Select(c => new OAuthResActivity
+                        {
+                            title = c.title,
+                            organization = c.organization,
+                            type = "Преподавательская деятельность",
+                            position = c.position,
+                            yearFrom = c.yearFrom
+                        }
+                        ))
+                    : string.Empty
+                    ))
+                .ForMember(d => d.ResearchActivity, o => o.MapFrom(s => s.researchers != null && s.researchers.Any(c => !c.type.Equals("X") && !c.type.Equals("l"))
+                    ? JsonConvert.SerializeObject(s.researchers.Where(c => !c.type.Equals("X") && !c.type.Equals("l") /* E,S,M,C,W,I,A,O - Исследовательская деятельность*/ ).Select(c => new OAuthResActivity
+                    {
+                        title = c.title,
+                        organization = c.organization,
+                        type = "Исследовательская деятельность",
+                        position = c.position,
+                        yearFrom = c.yearFrom
+                    }
+                        ))
+                    : string.Empty
+                    ))
                 //.ForMember(d => d, o => o.MapFrom(s => s.degrees))
                 //.ForMember(d => d, o => o.MapFrom(s => s.ranks))
                 .ForMember(d => d.Rewards, o => o.MapFrom(s => s.honors != null && s.honors.Any() ? JsonConvert.SerializeObject(s.honors.Where(d => d.deleted != "1").ToList()) : string.Empty))
                 .ForMember(d => d.Memberships, o => o.MapFrom(s => s.members != null && s.members.Any() ? JsonConvert.SerializeObject(s.members) : string.Empty))
-                //.ForMember(d => d.Conferences, o => o.MapFrom(s => s.sAbstracts))
+                .ForMember(d => d.Conferences, o => o.MapFrom(s => s.abstracts != null && s.abstracts.Any() ? JsonConvert.SerializeObject(s.abstracts.Select(
+                    c =>
+                        new OAuthResAbstract
+                        {
+                            title = c.title,
+                            year = c.year,
+                            updated = c.updated,
+                            conference = c.conference,
+                            categoryType = c.categoryType.Equals("R") ? "Всероссийсикая" : "Международная" /* R - Всероссиская; W - Международная */
+                        }
+                    )) : string.Empty))
                 .ForMember(d => d.Publications, o => o.MapFrom(s => s.entities))
                 .ForMember(d => d.Interests, o => o.MapFrom(s => s.interests != null && s.interests.Any() ? JsonConvert.SerializeObject(s.interests) : string.Empty))
                 //.ForMember(d => d, o => o.MapFrom(s => s.photo))
@@ -129,7 +172,7 @@ namespace SciVacancies.WebApp.Infrastructure
                 .ForMember(d => d.ConfirmPassword, o => o.Ignore())
                 .ForMember(d => d.Claims, o => o.Ignore())
                 ;
-
+            
             Mapper.CreateMap<OAuthResEntity, Domain.Core.Publication>()
                 .ForMember(d => d.Authors, opt => opt.MapFrom(src => src.authors ?? string.Empty))
                 .ForMember(d => d.ExtId, opt => opt.MapFrom(src => src.ext_id ?? string.Empty))
