@@ -114,22 +114,67 @@
             </ol>
             @*<span class="small-icon icon-sm-eye"><span>Показать все (5)</span></span>*@
         </div>
-
         <div class="list-item">
-            <div class="bold">Исследовательская деятельность</div>
-            <span>@Model.ResearchActivity</span>
+            <span class="bold">Научная деятельность</span>
+            <span class="">
+                @if (Model.ResearchActivity != null)
+            {
+                foreach (var item in Model.ResearchActivity)
+                {
+                        <br />
+                        <span>
+                            Организация "@item.organization", на должности "@item.position" (период с @item.yearFrom по @item.yearTo; род деятельности @item.title)
+                        </span>
+                    }
+                }
+            </span>
         </div>
 
-
         <div class="list-item">
-            <div class="bold">Преподавательская деятельность</div>
-            <span>@Model.TeachingActivity</span>
+            <span class="bold">Преподавательская деятельность</span>
+            <span class="">
+                @if (Model.TeachingActivity != null)
+            {
+                foreach (var item in Model.TeachingActivity)
+                {
+                        <br />
+                        <span>
+                            Организация "@item.organization", на должности "@item.position" (период с @item.yearFrom по @item.yearTo; род деятельности @item.title)
+                        </span>
+                    }
+                }
+            </span>
         </div>
 
+        <div class="list-item">
+            <span class="bold">Прочая деятельность</span>
+            <span class="">
+                @if (Model.OtherActivity != null)
+            {
+                foreach (var item in Model.OtherActivity)
+                {
+                        <br />
+                        <span>
+                            Организация "@item.organization", на должности "@item.position" (период с @item.yearFrom по @item.yearTo; род деятельности @item.title)
+                        </span>
+                    }
+                }
+            </span>
+        </div>
 
         <div class="list-item">
-            <div class="bold">Прочая деятельность</div>
-            <span>@Model.OtherActivity</span>
+            <div class="bold">Конференции</div>
+            <ol>
+                @if (Model.Conferences != null)
+                {
+                    foreach (var item in Model.Conferences)
+                    {
+                        <text>
+                        <li>@item.conference - доклад "@item.title" (год @item.year, тип @item.categoryType)</li>
+                        </text>
+                    }
+                }
+            </ol>
         </div>
 
         <div class="list-item">

@@ -1,5 +1,6 @@
 ﻿@using System.Threading.Tasks
 @using SciVacancies.WebApp.Controllers
+@using SciVacancies.WebApp.Engine
 @model SciVacancies.WebApp.ViewModels.ResearcherDetailsViewModel
 
 <div class="crumbs">
@@ -33,7 +34,7 @@
             <div>
                 Email:
                 <span class="bold">
-                    @Model.Email 
+                    @Model.Email
                 </span>
                 <br />
             </div>
@@ -133,30 +134,99 @@
             }
         </span>
     </div>
+    
     <div class="row">
         <span class="bold">Конференции, симпозиумы, конгрессы</span>
         <span class="italic">
-            @Model.Conferences
+            @if (Model.Conferences != null)
+            {
+                foreach (var item in Model.Conferences)
+                {
+                    <br />
+                    <span>
+                        @item.conference - доклад "@item.title" (год @item.year, тип @item.categoryType)
+                    </span>
+                }
+            }
         </span>
     </div>
+
     <div class="row">
         <span class="bold">Публикации</span>
         @if (Model.Publications != null)
         {
             foreach (var item in Model.Publications)
             {
-                <br />
+                <br/>
                 <span>
                     @item.Name (авторы: @item.Authors)
                 </span>
             }
         }
     </div>
+
+    <div class="row">
+        <span class="bold">Научная деятельность</span>
+        <span class="italic">
+            @if (Model.ResearchActivity != null)
+            {
+                foreach (var item in Model.ResearchActivity)
+                {
+                    <br />
+                    <span>
+                        Организация "@item.organization", на должности "@item.position" (период с @item.yearFrom по @item.yearTo; род деятельности @item.title)
+                    </span>
+                }
+            }
+        </span>
+    </div>
+
+    <div class="row">
+        <span class="bold">Преподавательская деятельность</span>
+        <span class="italic">
+            @if (Model.TeachingActivity != null)
+            {
+                foreach (var item in Model.TeachingActivity)
+                {
+                    <br />
+                    <span>
+                        Организация "@item.organization", на должности "@item.position" (период с @item.yearFrom по @item.yearTo; род деятельности @item.title)
+                    </span>
+                }
+            }
+        </span>
+    </div>
+
+<div class="row">
+    <span class="bold">Прочая деятельность</span>
+    <span class="italic">
+            @if (Model.OtherActivity != null)
+            {
+                foreach (var item in Model.OtherActivity)
+                {
+                    <br />
+                    <span>
+                        Организация "@item.organization", на должности "@item.position" (период с @item.yearFrom по @item.yearTo; род деятельности @item.title)
+                    </span>
+                }
+            }
+        </span>
+</div>
+    
 </div>
 <div class="b-links mt-2 ml3">
+
+    <br />
+
     <div class="link-edit">
         <a asp-controller="researchers" asp-action="edit" class="arial italic">Редактировать</a>
     </div>
+
+    <br />
+
+    <a asp-controller="accountintegration" asp-action="UpdateResearcherAccountFromOutside" class="link-upload fs13">Загрузить данные из системы «@AuthorizeResourceTypes.ScienceMap.GetDescription()»</a>
+    <span style="color: red;">в разработке</span>
+
 </div>
 
 <div class="b-bottom-nav">

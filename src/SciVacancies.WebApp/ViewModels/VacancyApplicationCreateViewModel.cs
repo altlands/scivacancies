@@ -28,8 +28,19 @@ namespace SciVacancies.WebApp.ViewModels
         public List<PublicationEditViewModel> Publications { get; set; }
 
         public string ResearchActivity { get; set; }
+        public List<ActivityEditViewModel> ResearchActivityDeserialized => !string.IsNullOrWhiteSpace(ResearchActivity)
+            ? JsonConvert.DeserializeObject<List<ActivityEditViewModel>>(ResearchActivity)
+            : new List<ActivityEditViewModel>();
+
         public string TeachingActivity { get; set; }
+        public List<ActivityEditViewModel> TeachingActivityDeserialized => !string.IsNullOrWhiteSpace(TeachingActivity)
+            ? JsonConvert.DeserializeObject<List<ActivityEditViewModel>>(TeachingActivity)
+            : new List<ActivityEditViewModel>();
+
         public string OtherActivity { get; set; }
+        public List<ActivityEditViewModel> OtherActivityDeserialized => !string.IsNullOrWhiteSpace(OtherActivity)
+            ? JsonConvert.DeserializeObject<List<ActivityEditViewModel>>(OtherActivity)
+            : new List<ActivityEditViewModel>();
 
         public string ScienceDegree { get; set; }
         public string ScienceRank { get; set; }
@@ -42,7 +53,11 @@ namespace SciVacancies.WebApp.ViewModels
         public List<MembershipDetailsViewModel> MembershipsDeserialized => !string.IsNullOrWhiteSpace(Memberships)
             ? JsonConvert.DeserializeObject<List<MembershipDetailsViewModel>>(Memberships)
             : new List<MembershipDetailsViewModel>();
+
         public string Conferences { get; set; }
+        public List<ConferenceEditViewModel> ConferencesDeserialized => !string.IsNullOrWhiteSpace(Conferences)
+            ? JsonConvert.DeserializeObject<List<ConferenceEditViewModel>>(Conferences)
+            : new List<ConferenceEditViewModel>();
 
         public string CoveringLetter { get; set; }
 

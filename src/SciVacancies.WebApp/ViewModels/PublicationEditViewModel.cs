@@ -11,7 +11,7 @@ namespace SciVacancies.WebApp.ViewModels
 
         public string Type { get; set; }
 
-        public int ExtId { get; set; }
+        public string ExtId { get; set; }
 
         public string Authors { get; set; }
 

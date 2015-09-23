@@ -23,15 +23,15 @@ namespace SciVacancies.WebApp.ViewModels
         public string Phone { get; set; }
         public string ExtraPhone { get; set; }
 
-        public string ResearchActivity { get; set; }
-        public string TeachingActivity { get; set; }
-        public string OtherActivity { get; set; }
+        public List<ActivityEditViewModel> ResearchActivity { get; set; }
+        public List<ActivityEditViewModel> TeachingActivity { get; set; }
+        public List<ActivityEditViewModel> OtherActivity { get; set; }
 
         public string ScienceDegree { get; set; }
         public string AcademicStatus { get; set; }
         public List<RewardDetailsViewModel> Rewards { get; set; }
         public List<MembershipDetailsViewModel> Memberships { get; set; }
-        public string Conferences { get; set; }
+        public List<ConferenceEditViewModel> Conferences { get; set; }
 
 
         public VacancyApplicationStatus Status { get; set; }
