@@ -38,10 +38,23 @@ namespace SciVacancies.SmtpNotifications.Handlers
             VacancyStatusChangedSmtpNotificationForOrganization(msg.VacancyGuid);
             VacancyStatusChangedSmtpNotificationForResearcher(msg.VacancyGuid);
         }
-        //TODO
         public void Handle(VacancyProlongedInCommittee msg)
         {
-            throw new NotImplementedException();
+            var vacancy = _db.SingleOrDefaultById<Vacancy>(msg.VacancyGuid);
+            if (vacancy == null) return;
+            var researcherGuids =
+                _db.Fetch<Guid>(new Sql(
+                    $"SELECT va.researcher_guid FROM res_vacancyapplications va WHERE va.vacancy_guid = @0", msg.VacancyGuid));
+            if (!researcherGuids.Any()) return;
+            var researchers =
+                _db.Fetch<Researcher>(new Sql($"SELECT * FROM res_researchers r WHERE r.guid IN (@0)",
+                    researcherGuids));
+            if (!researchers.Any()) return;
+
+            foreach (var researcher in researchers)
+            {
+                _smtpNotificatorVacancyService.SendVacancyProlongedForResearcher(vacancy, researcher);
+            }
         }
         public void Handle(VacancyOfferAcceptedByWinner msg)
         {
@@ -97,7 +110,5 @@ namespace SciVacancies.SmtpNotifications.Handlers
 
             _smtpNotificatorVacancyService.SendVacancyStatusChangedForOrganization(vacancy, organization);
         }
-
-
     }
 }

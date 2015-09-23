@@ -1,5 +1,4 @@
-﻿using SciVacancies.Domain.Enums;
-using SciVacancies.Domain.Events;
+﻿using SciVacancies.Domain.Events;
 using SciVacancies.ReadModel.Core;
 
 using System;
@@ -7,7 +6,6 @@ using System.Collections.Generic;
 
 using MediatR;
 using NPoco;
-using AutoMapper;
 
 namespace SciVacancies.ReadModel.Notifications
 {
@@ -45,35 +43,29 @@ namespace SciVacancies.ReadModel.Notifications
         }
         public void Handle(VacancyProlongedInCommittee msg)
         {
-            //throw new NotImplementedException();
+            List<Guid> researcherGuids = _db.Fetch<Guid>(new Sql($"SELECT va.researcher_guid FROM res_vacancyapplications va WHERE va.vacancy_guid = @0", msg.VacancyGuid));
 
-
-            //List<Guid> researcherGuids = _db.Fetch<Guid>(new Sql($"SELECT va.researcher_guid FROM res_vacancyapplications va WHERE va.vacancy_guid = @0", msg.VacancyGuid));
-
-            //string title = "Ваша заявка на вакансию " + msg.VacancyGuid + " отправлена на комиссию";
-            //using (var transaction = _db.GetTransaction())
-            //{
-            //    foreach (Guid researcherGuid in researcherGuids)
-            //    {
-            //        _db.Execute(new Sql($"INSERT INTO res_notifications (guid, title, vacancy_guid, researcher_guid, creation_date) VALUES(@0, @1, @2, @3, @4)", Guid.NewGuid(), title, msg.VacancyGuid, researcherGuid, msg.TimeStamp));
-            //    }
-            //    transaction.Complete();
-            //}
+            string title = "Комиссия по вакансии " + msg.VacancyGuid + " продлена";
+            using (var transaction = _db.GetTransaction())
+            {
+                foreach (Guid researcherGuid in researcherGuids)
+                {
+                    _db.Execute(new Sql($"INSERT INTO res_notifications (guid, title, vacancy_guid, researcher_guid, creation_date) VALUES(@0, @1, @2, @3, @4)", Guid.NewGuid(), title, msg.VacancyGuid, researcherGuid, msg.TimeStamp));
+                }
+                transaction.Complete();
+            }
         }
         public void Handle(VacancyInOfferResponseAwaitingFromWinner msg)
         {
-            //throw new NotImplementedException();
-            //List<Guid> researcherGuids = _db.Fetch<Guid>(new Sql($"SELECT va.researcher_guid FROM res_vacancyapplications va WHERE va.vacancy_guid = @0", msg.VacancyGuid));
+            Vacancy vacancy = _db.SingleOrDefaultById<Vacancy>(msg.VacancyGuid);
+            Researcher researcher = _db.SingleOrDefaultById<Researcher>(vacancy.winner_researcher_guid);
 
-            //string title = "По вашей заявке на вакансию " + msg.VacancyGuid + " утверждены";
-            //using (var transaction = _db.GetTransaction())
-            //{
-            //    foreach (Guid researcherGuid in researcherGuids)
-            //    {
-            //        _db.Execute(new Sql($"INSERT INTO res_notifications (guid, title, vacancy_guid, researcher_guid, creation_date) VALUES(@0, @1, @2, @3, @4)", Guid.NewGuid(), title, msg.VacancyGuid, researcherGuid, msg.TimeStamp));
-            //    }
-            //    transaction.Complete();
-            //}
+            string title = "Поступило предложение контракта по вакансии " + msg.VacancyGuid;
+            using (var transaction = _db.GetTransaction())
+            {
+                _db.Execute(new Sql($"INSERT INTO res_notifications (guid, title, vacancy_guid, researcher_guid, creation_date) VALUES(@0, @1, @2, @3, @4)", Guid.NewGuid(), title, msg.VacancyGuid, researcher.guid, msg.TimeStamp));
+                transaction.Complete();
+            }
         }
         public void Handle(VacancyOfferAcceptedByWinner msg)
         {
@@ -103,18 +95,15 @@ namespace SciVacancies.ReadModel.Notifications
         }
         public void Handle(VacancyInOfferResponseAwaitingFromPretender msg)
         {
-            //throw new NotImplementedException();
-            //List<Guid> researcherGuids = _db.Fetch<Guid>(new Sql($"SELECT va.researcher_guid FROM res_vacancyapplications va WHERE va.vacancy_guid = @0", msg.VacancyGuid));
+            Vacancy vacancy = _db.SingleOrDefaultById<Vacancy>(msg.VacancyGuid);
+            Researcher researcher = _db.SingleOrDefaultById<Researcher>(vacancy.pretender_researcher_guid);
 
-            //string title = "По вашей заявке на вакансию " + msg.VacancyGuid + " утверждены";
-            //using (var transaction = _db.GetTransaction())
-            //{
-            //    foreach (Guid researcherGuid in researcherGuids)
-            //    {
-            //        _db.Execute(new Sql($"INSERT INTO res_notifications (guid, title, vacancy_guid, researcher_guid, creation_date) VALUES(@0, @1, @2, @3, @4)", Guid.NewGuid(), title, msg.VacancyGuid, researcherGuid, msg.TimeStamp));
-            //    }
-            //    transaction.Complete();
-            //}
+            string title = "Поступило предложение контракта по вакансии " + msg.VacancyGuid;
+            using (var transaction = _db.GetTransaction())
+            {
+                _db.Execute(new Sql($"INSERT INTO res_notifications (guid, title, vacancy_guid, researcher_guid, creation_date) VALUES(@0, @1, @2, @3, @4)", Guid.NewGuid(), title, msg.VacancyGuid, researcher.guid, msg.TimeStamp));
+                transaction.Complete();
+            }
         }
         public void Handle(VacancyOfferAcceptedByPretender msg)
         {

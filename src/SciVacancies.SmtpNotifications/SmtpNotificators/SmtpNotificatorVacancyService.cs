@@ -101,6 +101,29 @@ namespace SciVacancies.SmtpNotifications.SmtpNotificators
 
             _smtpNotificatorService.Send(new SciVacMailMessage(researcher.email, "Уведомление с портала вакансий", body));
         }
+        //TODO брать дни из конфига
+        public void SendVacancyProlongedForResearcher(Vacancy vacancy, Researcher researcher)
+        {
+            var body = $@"
+            <div style=''>
+                Уважаемый(-ая), {researcher.secondname} {researcher.firstname}, сообщаем, что по вакансии
+                <a target='_blank' href='http://{_smtpNotificatorService.Domain}/vacancies/card/{vacancy.guid}'>{vacancy.fullname}</a> дата принятия решения комиссией переносится на 15 дней вперёд.
+            </div>
+
+            <br/>
+            <br/>
+            <hr/>
+
+            <div style='color: lightgray; font-size: smaller;'>
+                Это письмо создано автоматически с 
+                <a target='_blank' href='http://{_smtpNotificatorService.Domain}'>Портала вакансий</a>.
+                Чтобы не получать такие уведомления отключите их или смените email в 
+                <a target='_blank' href='http://{_smtpNotificatorService.Domain}/researchers/account/'>личном кабинете</a>.
+            </div>
+            ";
+
+            _smtpNotificatorService.Send(new SciVacMailMessage(researcher.email, "Уведомление с портала вакансий", body));
+        }
         public void SendWinnerSet(Researcher researcher, Guid applicationGuid, Guid vacancyGuid)
         {
             var body = $@"

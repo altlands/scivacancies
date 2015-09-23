@@ -9,6 +9,7 @@ namespace SciVacancies.SmtpNotifications.SmtpNotificators
         void SendVacancyApplicationAppliedForResearcher(Researcher researcher, Vacancy vacancy, VacancyApplication vacancyApplication);
         void SendVacancyStatusChangedForOrganization(Vacancy vacancy, Organization organization);
         void SendVacancyStatusChangedForResearcher(Vacancy vacancy, Researcher researcher);
+        void SendVacancyProlongedForResearcher(Vacancy vacancy, Researcher researcher);
         void SendWinnerSet(Researcher researcher, Guid applicationGuid, Guid vacancyGuid);
 
         void SendFirstCommitteeNotificationToOrganization(Organization organization, Vacancy vacancy);
