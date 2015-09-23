@@ -51,7 +51,9 @@ namespace SciVacancies.ReadModel.EventHandlers
             var vacancyApplication = _db.SingleById<VacancyApplication>(message.VacancyApplicationGuid);
 
             var updatedVacancyApplication = Mapper.Map<VacancyApplication>(message);
+            //TODO - без костыля
             updatedVacancyApplication.creation_date = vacancyApplication.creation_date;
+            //updatedVacancyApplication.read_id = vacancyApplication.read_id;
 
             using (var transaction = _db.GetTransaction())
             {

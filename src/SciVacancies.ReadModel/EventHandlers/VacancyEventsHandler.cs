@@ -72,7 +72,9 @@ namespace SciVacancies.ReadModel.EventHandlers
             Vacancy vacancy = _db.SingleById<Vacancy>(msg.VacancyGuid);
 
             Vacancy updatedVacancy = Mapper.Map<Vacancy>(msg);
+            //TODO без костыля
             updatedVacancy.creation_date = vacancy.creation_date;
+            //updatedVacancy.read_id = vacancy.read_id;
 
             using (var transaction = _db.GetTransaction())
             {
