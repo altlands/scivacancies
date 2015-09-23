@@ -39,7 +39,13 @@ namespace SciVacancies.WebApp.Commands
         }
         protected override void HandleCore(RemoveSearchIndexCommand message)
         {
-            _elastic.DeleteIndex(s => s.Index(_elasticSettings.Options.DefaultIndex));
+            try
+            {
+                _elastic.DeleteIndex(s => s.Index(_elasticSettings.Options.DefaultIndex));
+            }
+            catch (System.Exception)
+            {
+            }
         }
     }
     public class RestoreSearchIndexFromReadModelCommandHandler : RequestHandler<RestoreSearchIndexFromReadModelCommand>
