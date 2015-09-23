@@ -14,8 +14,10 @@ namespace SciVacancies.SmtpNotifications.Handlers
         INotificationHandler<VacancyPublished>,
         INotificationHandler<VacancyInCommittee>,
         INotificationHandler<VacancyProlongedInCommittee>,
+        INotificationHandler<VacancyInOfferResponseAwaitingFromWinner>,
         INotificationHandler<VacancyOfferAcceptedByWinner>,
         INotificationHandler<VacancyOfferRejectedByWinner>,
+        INotificationHandler<VacancyInOfferResponseAwaitingFromPretender>,
         INotificationHandler<VacancyOfferAcceptedByPretender>,
         INotificationHandler<VacancyOfferRejectedByPretender>,
         INotificationHandler<VacancyClosed>,
@@ -56,6 +58,13 @@ namespace SciVacancies.SmtpNotifications.Handlers
                 _smtpNotificatorVacancyService.SendVacancyProlongedForResearcher(vacancy, researcher);
             }
         }
+        public void Handle(VacancyInOfferResponseAwaitingFromWinner msg)
+        {
+            Vacancy vacancy = _db.SingleOrDefaultById<Vacancy>(msg.VacancyGuid);
+            Researcher researcher = _db.SingleOrDefaultById<Researcher>(vacancy.winner_researcher_guid);
+
+            _smtpNotificatorVacancyService.SendWinnerSet(researcher, vacancy.winner_vacancyapplication_guid, vacancy.guid);
+        }
         public void Handle(VacancyOfferAcceptedByWinner msg)
         {
             VacancyStatusChangedSmtpNotificationForOrganization(msg.VacancyGuid);
@@ -63,6 +72,13 @@ namespace SciVacancies.SmtpNotifications.Handlers
         public void Handle(VacancyOfferRejectedByWinner msg)
         {
             VacancyStatusChangedSmtpNotificationForOrganization(msg.VacancyGuid);
+        }
+        public void Handle(VacancyInOfferResponseAwaitingFromPretender msg)
+        {
+            Vacancy vacancy = _db.SingleOrDefaultById<Vacancy>(msg.VacancyGuid);
+            Researcher researcher = _db.SingleOrDefaultById<Researcher>(vacancy.pretender_researcher_guid);
+
+            _smtpNotificatorVacancyService.SendWinnerSet(researcher, vacancy.pretender_vacancyapplication_guid, vacancy.guid);
         }
         public void Handle(VacancyOfferAcceptedByPretender msg)
         {
