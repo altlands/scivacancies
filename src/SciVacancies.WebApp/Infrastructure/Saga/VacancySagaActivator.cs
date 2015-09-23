@@ -119,6 +119,11 @@ namespace SciVacancies.WebApp.Infrastructure.Saga
                 SagaGuid = saga.Id
             };
 
+            if (_schedulerService.CheckExists(new Quartz.JobKey(saga.Id.ToString())))
+            {
+                _schedulerService.RemoveScheduledJob(saga.Id);
+            }
+
             _schedulerService.CreateSheduledJob(job, job.SagaGuid, _settings.Options.Scheduler.ExecutionInterval);
         }
         public void Handle(VacancyOfferAcceptedByWinner msg)
@@ -163,6 +168,11 @@ namespace SciVacancies.WebApp.Infrastructure.Saga
             {
                 SagaGuid = saga.Id
             };
+
+            if (_schedulerService.CheckExists(new Quartz.JobKey(saga.Id.ToString())))
+            {
+                _schedulerService.RemoveScheduledJob(saga.Id);
+            }
 
             _schedulerService.CreateSheduledJob(job, job.SagaGuid, _settings.Options.Scheduler.ExecutionInterval);
         }
