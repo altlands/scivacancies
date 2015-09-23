@@ -125,30 +125,6 @@ else
                 </div>
 
                 <div class="row">
-                    <input type="checkbox" asp-for="New.SelectResearchActivity" class="col-xs-1" style="display: inherit" />
-                    <label asp-for="New.SelectResearchActivity" class="col-xs-4">
-                        Исследовательская деятельность
-                    </label>
-                    <input asp-for="New.ResearchActivity" class="col-xs-7 disabled" disabled="disabled" />
-                </div>
-
-                <div class="row">
-                    <input type="checkbox" asp-for="New.SelectTeachingActivity" class="col-xs-1" style="display: inherit" />
-                    <label asp-for="New.SelectTeachingActivity" class="col-xs-4">
-                        Преподавательская деятельность
-                    </label>
-                    <input asp-for="New.TeachingActivity" class="col-xs-7 disabled" disabled="disabled" />
-                </div>
-
-                <div class="row">
-                    <input type="checkbox" asp-for="New.SelectOtherActivity" class="col-xs-1" style="display: inherit" />
-                    <label asp-for="New.SelectOtherActivity" class="col-xs-4">
-                        Другая деятельность
-                    </label>
-                    <input asp-for="New.OtherActivity" class="col-xs-7 disabled" disabled="disabled" />
-                </div>
-
-                <div class="row">
                     <input type="checkbox" asp-for="New.SelectScienceDegree" class="col-xs-1" style="display: inherit" />
                     <label asp-for="New.SelectScienceDegree" class="col-xs-4">
                         Ученая степень
@@ -163,15 +139,6 @@ else
                     </label>
                     <input asp-for="New.ScienceRank" class="col-xs-7 disabled" disabled="disabled" />
                 </div>
-
-                <div class="row">
-                    <input type="checkbox" asp-for="New.SelectConferences" class="col-xs-1" style="display: inherit" />
-                    <label asp-for="New.SelectConferences" class="col-xs-4">
-                        Концеренции
-                    </label>
-                    <input asp-for="New.Conferences" class="col-xs-7 disabled" disabled="disabled" />
-                </div>
-
 
 
 
@@ -279,30 +246,6 @@ else
                 </div>
 
                 <div class="row">
-                    <input type="checkbox" asp-for="Original.SelectResearchActivity" class="col-xs-1" style="display: inherit" />
-                    <label asp-for="Original.SelectResearchActivity" class="col-xs-4">
-                        Исследовательская деятельность
-                    </label>
-                    <input asp-for="Original.ResearchActivity" class="col-xs-7 disabled" disabled="disabled" />
-                </div>
-
-                <div class="row">
-                    <input type="checkbox" asp-for="Original.SelectTeachingActivity" class="col-xs-1" style="display: inherit" />
-                    <label asp-for="Original.SelectTeachingActivity" class="col-xs-4">
-                        Преподавательская деятельность
-                    </label>
-                    <input asp-for="Original.TeachingActivity" class="col-xs-7 disabled" disabled="disabled" />
-                </div>
-
-                <div class="row">
-                    <input type="checkbox" asp-for="Original.SelectOtherActivity" class="col-xs-1" style="display: inherit" />
-                    <label asp-for="Original.SelectOtherActivity" class="col-xs-4">
-                        Другая деятельность
-                    </label>
-                    <input asp-for="Original.OtherActivity" class="col-xs-7 disabled" disabled="disabled" />
-                </div>
-
-                <div class="row">
                     <input type="checkbox" asp-for="Original.SelectScienceDegree" class="col-xs-1" style="display: inherit" />
                     <label asp-for="Original.SelectScienceDegree" class="col-xs-4">
                         Ученая степень
@@ -318,14 +261,6 @@ else
                     <input asp-for="Original.ScienceRank" class="col-xs-7 disabled" disabled="disabled" />
                 </div>
 
-                <div class="row">
-                    <input type="checkbox" asp-for="Original.SelectConferences" class="col-xs-1" style="display: inherit" />
-                    <label asp-for="Original.SelectConferences" class="col-xs-4">
-                        Концеренции
-                    </label>
-                    <input asp-for="Original.Conferences" class="col-xs-7 disabled" disabled="disabled" />
-                </div>
-
             </div>
 
         </div>
@@ -336,52 +271,508 @@ else
         <div class="row">
             <div class="col-xs-6">
 
-                @if (Model.New.Rewards.Any())
+                @if (Model.New.ResearchActivity.Any())
                 {
-                    <text>
-                    <div class="row">
-                        <input type="checkbox" asp-for="New.Rewards.Checked" class="col-xs-1" style="display: inherit" />
-                        <label asp-for="New.Rewards.Checked" class="col-xs-11">
-                            Выбрать все награды
-                        </label>
-                    </div>
+                <text>
+                <div class="row">
+                    <input type="checkbox" asp-for="New.ResearchActivity.Checked" class="col-xs-1" style="display: inherit" />
+                    <label asp-for="New.ResearchActivity.Checked" class="col-xs-11">
+                        Исследовательская деятельность
+                    </label>
+                </div>
 
-                    <br />
-                    <br />
+                <br />
+                <br />
 
-                    @for (var i = 0; i < Model.New.Rewards.Count; i++)
+                @for (var i = 0; i < Model.New.ResearchActivity.Count; i++)
                     {
-                        <text>
-                        <input type="hidden" name="New.Rewards.Index" value="@i" />
+                <text>
+                <input type="hidden" name="New.ResearchActivity.Index" value="@i" />
 
-                        <div class="row">
-                            <input type="checkbox" asp-for="New.Rewards[i].Checked" class="col-xs-1" style="display: inherit" />
-                            <label asp-for="New.Rewards[i].Checked" class="col-xs-4">
-                                Награда
-                            </label>
-                            <input asp-for="New.Rewards[i].This.title" class="col-xs-7 disabled" disabled="disabled" />
-                        </div>
+                <div class="row">
+                    <input type="checkbox" asp-for="New.ResearchActivity[i].Checked" class="col-xs-1" style="display: inherit" />
+                    <label asp-for="New.ResearchActivity[i].Checked" class="col-xs-4">
+                        Организация
+                    </label>
+                    <input asp-for="New.ResearchActivity[i].This.organization" class="col-xs-7 disabled" disabled="disabled" />
+                </div>
 
-                        <div class="row">
-                            <label asp-for="New.Rewards[i].Checked" class="col-xs-offset-1 col-xs-4">
-                                Организация
-                            </label>
-                            <input asp-for="New.Rewards[i].This.org" class="col-xs-7 disabled" disabled="disabled" />
-                        </div>
+                <div class="row">
+                    <label asp-for="New.ResearchActivity[i].Checked" class="col-xs-offset-1 col-xs-4">
+                        Должность
+                    </label>
+                    <input asp-for="New.ResearchActivity[i].This.position" class="col-xs-7 disabled" disabled="disabled" />
+                </div>
 
-                        <div class="row">
-                            <label asp-for="New.Rewards[i].Checked" class="col-xs-offset-1 col-xs-4">
-                                Год
-                            </label>
-                            <input asp-for="New.Rewards[i].This.year" class="col-xs-7 disabled" disabled="disabled" />
-                        </div>
+                <div class="row">
+                    <label asp-for="New.ResearchActivity[i].Checked" class="col-xs-offset-1 col-xs-4">
+                        Название
+                    </label>
+                    <input asp-for="New.ResearchActivity[i].This.title" class="col-xs-7 disabled" disabled="disabled" />
+                </div>
 
-                        <br />
+                <div class="row">
+                    <label asp-for="New.ResearchActivity[i].Checked" class="col-xs-offset-1 col-xs-4">
+                        Год от
+                    </label>
+                    <input asp-for="New.ResearchActivity[i].This.yearFrom" class="col-xs-7 disabled" disabled="disabled" />
+                </div>
 
-                        </text>
+                <div class="row">
+                    <label asp-for="New.ResearchActivity[i].Checked" class="col-xs-offset-1 col-xs-4">
+                        Год по
+                    </label>
+                    <input asp-for="New.ResearchActivity[i].This.yearTo" class="col-xs-7 disabled" disabled="disabled" />
+                </div>
+
+                <div class="row">
+                    <label asp-for="New.ResearchActivity[i].Checked" class="col-xs-offset-1 col-xs-4">
+                        Тип
+                    </label>
+                    <input asp-for="New.ResearchActivity[i].This.type" class="col-xs-7 disabled" disabled="disabled" />
+                </div>
+
+
+                <br />
+
+                </text>
                     }
 
-                    </text>
+                </text>
+                }
+
+            </div>
+            <div class="col-xs-6">
+
+                @if (Model.Original.ResearchActivity.Any())
+                {
+                <text>
+                <div class="row">
+                    <input type="checkbox" asp-for="Original.ResearchActivity.Checked" class="col-xs-1" style="display: inherit" />
+                    <label asp-for="Original.ResearchActivity.Checked" class="col-xs-11">
+                        Выбрать все награды
+                    </label>
+                </div>
+
+                <br />
+                <br />
+
+                @for (var i = 0; i < Model.Original.ResearchActivity.Count; i++)
+                    {
+                <text>
+                <input type="hidden" name="Original.ResearchActivity.Index" value="@i" />
+
+                <div class="row">
+                    <input type="checkbox" asp-for="Original.ResearchActivity[i].Checked" class="col-xs-1" style="display: inherit" />
+                    <label asp-for="Original.ResearchActivity[i].Checked" class="col-xs-4">
+                        Организация
+                    </label>
+                    <input asp-for="Original.ResearchActivity[i].This.organization" class="col-xs-7 disabled" disabled="disabled" />
+                </div>
+
+                <div class="row">
+                    <label asp-for="Original.ResearchActivity[i].Checked" class="col-xs-offset-1 col-xs-4">
+                        Должность
+                    </label>
+                    <input asp-for="Original.ResearchActivity[i].This.position" class="col-xs-7 disabled" disabled="disabled" />
+                </div>
+
+                <div class="row">
+                    <label asp-for="Original.ResearchActivity[i].Checked" class="col-xs-offset-1 col-xs-4">
+                        Название
+                    </label>
+                    <input asp-for="Original.ResearchActivity[i].This.title" class="col-xs-7 disabled" disabled="disabled" />
+                </div>
+
+                <div class="row">
+                    <label asp-for="Original.ResearchActivity[i].Checked" class="col-xs-offset-1 col-xs-4">
+                        Год от
+                    </label>
+                    <input asp-for="Original.ResearchActivity[i].This.yearFrom" class="col-xs-7 disabled" disabled="disabled" />
+                </div>
+
+                <div class="row">
+                    <label asp-for="Original.ResearchActivity[i].Checked" class="col-xs-offset-1 col-xs-4">
+                        Год по
+                    </label>
+                    <input asp-for="Original.ResearchActivity[i].This.yearTo" class="col-xs-7 disabled" disabled="disabled" />
+                </div>
+
+                <div class="row">
+                    <label asp-for="Original.ResearchActivity[i].Checked" class="col-xs-offset-1 col-xs-4">
+                        Тип
+                    </label>
+                    <input asp-for="Original.ResearchActivity[i].This.type" class="col-xs-7 disabled" disabled="disabled" />
+                </div>
+
+
+                <br />
+
+                </text>
+                    }
+
+                </text>
+                }
+
+            </div>
+        </div>
+
+        <br />
+        <br />
+
+        <div class="row">
+            <div class="col-xs-6">
+
+                @if (Model.New.TeachingActivity.Any())
+                {
+                <text>
+                <div class="row">
+                    <input type="checkbox" asp-for="New.TeachingActivity.Checked" class="col-xs-1" style="display: inherit" />
+                    <label asp-for="New.TeachingActivity.Checked" class="col-xs-11">
+                        Преподавательская деятельность
+                    </label>
+                </div>
+
+                <br />
+                <br />
+
+                @for (var i = 0; i < Model.New.TeachingActivity.Count; i++)
+                    {
+                <text>
+                <input type="hidden" name="New.TeachingActivity.Index" value="@i" />
+
+                <div class="row">
+                    <input type="checkbox" asp-for="New.TeachingActivity[i].Checked" class="col-xs-1" style="display: inherit" />
+                    <label asp-for="New.TeachingActivity[i].Checked" class="col-xs-4">
+                        Организация
+                    </label>
+                    <input asp-for="New.TeachingActivity[i].This.organization" class="col-xs-7 disabled" disabled="disabled" />
+                </div>
+
+                <div class="row">
+                    <label asp-for="New.TeachingActivity[i].Checked" class="col-xs-offset-1 col-xs-4">
+                        Должность
+                    </label>
+                    <input asp-for="New.TeachingActivity[i].This.position" class="col-xs-7 disabled" disabled="disabled" />
+                </div>
+
+                <div class="row">
+                    <label asp-for="New.TeachingActivity[i].Checked" class="col-xs-offset-1 col-xs-4">
+                        Название
+                    </label>
+                    <input asp-for="New.TeachingActivity[i].This.title" class="col-xs-7 disabled" disabled="disabled" />
+                </div>
+
+                <div class="row">
+                    <label asp-for="New.TeachingActivity[i].Checked" class="col-xs-offset-1 col-xs-4">
+                        Год от
+                    </label>
+                    <input asp-for="New.TeachingActivity[i].This.yearFrom" class="col-xs-7 disabled" disabled="disabled" />
+                </div>
+
+                <div class="row">
+                    <label asp-for="New.TeachingActivity[i].Checked" class="col-xs-offset-1 col-xs-4">
+                        Год по
+                    </label>
+                    <input asp-for="New.TeachingActivity[i].This.yearTo" class="col-xs-7 disabled" disabled="disabled" />
+                </div>
+
+                <div class="row">
+                    <label asp-for="New.TeachingActivity[i].Checked" class="col-xs-offset-1 col-xs-4">
+                        Тип
+                    </label>
+                    <input asp-for="New.TeachingActivity[i].This.type" class="col-xs-7 disabled" disabled="disabled" />
+                </div>
+
+
+                <br />
+
+                </text>
+                    }
+
+                </text>
+                }
+
+            </div>
+            <div class="col-xs-6">
+
+                @if (Model.Original.TeachingActivity.Any())
+                {
+                <text>
+                <div class="row">
+                    <input type="checkbox" asp-for="Original.TeachingActivity.Checked" class="col-xs-1" style="display: inherit" />
+                    <label asp-for="Original.TeachingActivity.Checked" class="col-xs-11">
+                        Выбрать все награды
+                    </label>
+                </div>
+
+                <br />
+                <br />
+
+                @for (var i = 0; i < Model.Original.TeachingActivity.Count; i++)
+                    {
+                <text>
+                <input type="hidden" name="Original.TeachingActivity.Index" value="@i" />
+
+                <div class="row">
+                    <input type="checkbox" asp-for="Original.TeachingActivity[i].Checked" class="col-xs-1" style="display: inherit" />
+                    <label asp-for="Original.TeachingActivity[i].Checked" class="col-xs-4">
+                        Организация
+                    </label>
+                    <input asp-for="Original.TeachingActivity[i].This.organization" class="col-xs-7 disabled" disabled="disabled" />
+                </div>
+
+                <div class="row">
+                    <label asp-for="Original.TeachingActivity[i].Checked" class="col-xs-offset-1 col-xs-4">
+                        Должность
+                    </label>
+                    <input asp-for="Original.TeachingActivity[i].This.position" class="col-xs-7 disabled" disabled="disabled" />
+                </div>
+
+                <div class="row">
+                    <label asp-for="Original.TeachingActivity[i].Checked" class="col-xs-offset-1 col-xs-4">
+                        Название
+                    </label>
+                    <input asp-for="Original.TeachingActivity[i].This.title" class="col-xs-7 disabled" disabled="disabled" />
+                </div>
+
+                <div class="row">
+                    <label asp-for="Original.TeachingActivity[i].Checked" class="col-xs-offset-1 col-xs-4">
+                        Год от
+                    </label>
+                    <input asp-for="Original.TeachingActivity[i].This.yearFrom" class="col-xs-7 disabled" disabled="disabled" />
+                </div>
+
+                <div class="row">
+                    <label asp-for="Original.TeachingActivity[i].Checked" class="col-xs-offset-1 col-xs-4">
+                        Год по
+                    </label>
+                    <input asp-for="Original.TeachingActivity[i].This.yearTo" class="col-xs-7 disabled" disabled="disabled" />
+                </div>
+
+                <div class="row">
+                    <label asp-for="Original.TeachingActivity[i].Checked" class="col-xs-offset-1 col-xs-4">
+                        Тип
+                    </label>
+                    <input asp-for="Original.TeachingActivity[i].This.type" class="col-xs-7 disabled" disabled="disabled" />
+                </div>
+
+
+                <br />
+
+                </text>
+                    }
+
+                </text>
+                }
+
+            </div>
+        </div>
+
+        <br />
+        <br />
+
+        <div class="row">
+            <div class="col-xs-6">
+
+                @if (Model.New.OtherActivity.Any())
+                {
+                <text>
+                <div class="row">
+                    <input type="checkbox" asp-for="New.OtherActivity.Checked" class="col-xs-1" style="display: inherit" />
+                    <label asp-for="New.OtherActivity.Checked" class="col-xs-11">
+                        Прочая деятельность
+                    </label>
+                </div>
+
+                <br />
+                <br />
+
+                @for (var i = 0; i < Model.New.OtherActivity.Count; i++)
+                    {
+                <text>
+                <input type="hidden" name="New.OtherActivity.Index" value="@i" />
+
+                <div class="row">
+                    <input type="checkbox" asp-for="New.OtherActivity[i].Checked" class="col-xs-1" style="display: inherit" />
+                    <label asp-for="New.OtherActivity[i].Checked" class="col-xs-4">
+                        Организация
+                    </label>
+                    <input asp-for="New.OtherActivity[i].This.organization" class="col-xs-7 disabled" disabled="disabled" />
+                </div>
+
+                <div class="row">
+                    <label asp-for="New.OtherActivity[i].Checked" class="col-xs-offset-1 col-xs-4">
+                        Должность
+                    </label>
+                    <input asp-for="New.OtherActivity[i].This.position" class="col-xs-7 disabled" disabled="disabled" />
+                </div>
+
+                <div class="row">
+                    <label asp-for="New.OtherActivity[i].Checked" class="col-xs-offset-1 col-xs-4">
+                        Название
+                    </label>
+                    <input asp-for="New.OtherActivity[i].This.title" class="col-xs-7 disabled" disabled="disabled" />
+                </div>
+
+                <div class="row">
+                    <label asp-for="New.OtherActivity[i].Checked" class="col-xs-offset-1 col-xs-4">
+                        Год от
+                    </label>
+                    <input asp-for="New.OtherActivity[i].This.yearFrom" class="col-xs-7 disabled" disabled="disabled" />
+                </div>
+
+                <div class="row">
+                    <label asp-for="New.OtherActivity[i].Checked" class="col-xs-offset-1 col-xs-4">
+                        Год по
+                    </label>
+                    <input asp-for="New.OtherActivity[i].This.yearTo" class="col-xs-7 disabled" disabled="disabled" />
+                </div>
+
+                <div class="row">
+                    <label asp-for="New.OtherActivity[i].Checked" class="col-xs-offset-1 col-xs-4">
+                        Тип
+                    </label>
+                    <input asp-for="New.OtherActivity[i].This.type" class="col-xs-7 disabled" disabled="disabled" />
+                </div>
+
+
+                <br />
+
+                </text>
+                    }
+
+                </text>
+                }
+
+            </div>
+            <div class="col-xs-6">
+
+                @if (Model.Original.OtherActivity.Any())
+                {
+                <text>
+                <div class="row">
+                    <input type="checkbox" asp-for="Original.OtherActivity.Checked" class="col-xs-1" style="display: inherit" />
+                    <label asp-for="Original.OtherActivity.Checked" class="col-xs-11">
+                        Выбрать все награды
+                    </label>
+                </div>
+
+                <br />
+                <br />
+
+                @for (var i = 0; i < Model.Original.OtherActivity.Count; i++)
+                    {
+                <text>
+                <input type="hidden" name="Original.OtherActivity.Index" value="@i" />
+
+                <div class="row">
+                    <input type="checkbox" asp-for="Original.OtherActivity[i].Checked" class="col-xs-1" style="display: inherit" />
+                    <label asp-for="Original.OtherActivity[i].Checked" class="col-xs-4">
+                        Организация
+                    </label>
+                    <input asp-for="Original.OtherActivity[i].This.organization" class="col-xs-7 disabled" disabled="disabled" />
+                </div>
+
+                <div class="row">
+                    <label asp-for="Original.OtherActivity[i].Checked" class="col-xs-offset-1 col-xs-4">
+                        Должность
+                    </label>
+                    <input asp-for="Original.OtherActivity[i].This.position" class="col-xs-7 disabled" disabled="disabled" />
+                </div>
+
+                <div class="row">
+                    <label asp-for="Original.OtherActivity[i].Checked" class="col-xs-offset-1 col-xs-4">
+                        Название
+                    </label>
+                    <input asp-for="Original.OtherActivity[i].This.title" class="col-xs-7 disabled" disabled="disabled" />
+                </div>
+
+                <div class="row">
+                    <label asp-for="Original.OtherActivity[i].Checked" class="col-xs-offset-1 col-xs-4">
+                        Год от
+                    </label>
+                    <input asp-for="Original.OtherActivity[i].This.yearFrom" class="col-xs-7 disabled" disabled="disabled" />
+                </div>
+
+                <div class="row">
+                    <label asp-for="Original.OtherActivity[i].Checked" class="col-xs-offset-1 col-xs-4">
+                        Год по
+                    </label>
+                    <input asp-for="Original.OtherActivity[i].This.yearTo" class="col-xs-7 disabled" disabled="disabled" />
+                </div>
+
+                <div class="row">
+                    <label asp-for="Original.OtherActivity[i].Checked" class="col-xs-offset-1 col-xs-4">
+                        Тип
+                    </label>
+                    <input asp-for="Original.OtherActivity[i].This.type" class="col-xs-7 disabled" disabled="disabled" />
+                </div>
+
+
+                <br />
+
+                </text>
+                    }
+
+                </text>
+                }
+
+            </div>
+        </div>
+
+        <br />
+        <br />
+
+        <div class="row">
+            <div class="col-xs-6">
+
+                @if (Model.New.Rewards.Any())
+                {
+                <text>
+                <div class="row">
+                    <input type="checkbox" asp-for="New.Rewards.Checked" class="col-xs-1" style="display: inherit" />
+                    <label asp-for="New.Rewards.Checked" class="col-xs-11">
+                        Выбрать все награды
+                    </label>
+                </div>
+
+                <br />
+                <br />
+
+                @for (var i = 0; i < Model.New.Rewards.Count; i++)
+                    {
+                <text>
+                <input type="hidden" name="New.Rewards.Index" value="@i" />
+
+                <div class="row">
+                    <input type="checkbox" asp-for="New.Rewards[i].Checked" class="col-xs-1" style="display: inherit" />
+                    <label asp-for="New.Rewards[i].Checked" class="col-xs-4">
+                        Награда
+                    </label>
+                    <input asp-for="New.Rewards[i].This.title" class="col-xs-7 disabled" disabled="disabled" />
+                </div>
+
+                <div class="row">
+                    <label asp-for="New.Rewards[i].Checked" class="col-xs-offset-1 col-xs-4">
+                        Организация
+                    </label>
+                    <input asp-for="New.Rewards[i].This.org" class="col-xs-7 disabled" disabled="disabled" />
+                </div>
+
+                <div class="row">
+                    <label asp-for="New.Rewards[i].Checked" class="col-xs-offset-1 col-xs-4">
+                        Год
+                    </label>
+                    <input asp-for="New.Rewards[i].This.year" class="col-xs-7 disabled" disabled="disabled" />
+                </div>
+
+                <br />
+
+                </text>
+                    }
+
+                </text>
                 }
 
             </div>
@@ -389,50 +780,50 @@ else
 
                 @if (Model.Original.Rewards.Any())
                 {
-                    <text>
-                    <div class="row">
-                        <input type="checkbox" asp-for="Original.Rewards.Checked" class="col-xs-1" style="display: inherit" />
-                        <label asp-for="Original.Rewards.Checked" class="col-xs-11">
-                            Выбрать все награды
-                        </label>
-                    </div>
+                <text>
+                <div class="row">
+                    <input type="checkbox" asp-for="Original.Rewards.Checked" class="col-xs-1" style="display: inherit" />
+                    <label asp-for="Original.Rewards.Checked" class="col-xs-11">
+                        Выбрать все награды
+                    </label>
+                </div>
 
-                    <br />
-                    <br />
+                <br />
+                <br />
 
-                    @for (var i = 0; i < Model.Original.Rewards.Count; i++)
+                @for (var i = 0; i < Model.Original.Rewards.Count; i++)
                     {
-                        <text>
-                        <input type="hidden" name="Original.Rewards.Index" value="@i" />
+                <text>
+                <input type="hidden" name="Original.Rewards.Index" value="@i" />
 
-                        <div class="row">
-                            <input type="checkbox" asp-for="Original.Rewards[i].Checked" class="col-xs-1" style="display: inherit" />
-                            <label asp-for="Original.Rewards[i].Checked" class="col-xs-4">
-                                Награда
-                            </label>
-                            <input asp-for="Original.Rewards[i].This.title" class="col-xs-7 disabled" disabled="disabled" />
-                        </div>
+                <div class="row">
+                    <input type="checkbox" asp-for="Original.Rewards[i].Checked" class="col-xs-1" style="display: inherit" />
+                    <label asp-for="Original.Rewards[i].Checked" class="col-xs-4">
+                        Награда
+                    </label>
+                    <input asp-for="Original.Rewards[i].This.title" class="col-xs-7 disabled" disabled="disabled" />
+                </div>
 
-                        <div class="row">
-                            <label asp-for="Original.Rewards[i].Checked" class="col-xs-offset-1 col-xs-4">
-                                Организация
-                            </label>
-                            <input asp-for="Original.Rewards[i].This.org" class="col-xs-7 disabled" disabled="disabled" />
-                        </div>
+                <div class="row">
+                    <label asp-for="Original.Rewards[i].Checked" class="col-xs-offset-1 col-xs-4">
+                        Организация
+                    </label>
+                    <input asp-for="Original.Rewards[i].This.org" class="col-xs-7 disabled" disabled="disabled" />
+                </div>
 
-                        <div class="row">
-                            <label asp-for="Original.Rewards[i].Checked" class="col-xs-offset-1 col-xs-4">
-                                Год
-                            </label>
-                            <input asp-for="Original.Rewards[i].This.year" class="col-xs-7 disabled" disabled="disabled" />
-                        </div>
+                <div class="row">
+                    <label asp-for="Original.Rewards[i].Checked" class="col-xs-offset-1 col-xs-4">
+                        Год
+                    </label>
+                    <input asp-for="Original.Rewards[i].This.year" class="col-xs-7 disabled" disabled="disabled" />
+                </div>
 
-                        <br />
+                <br />
 
-                        </text>
+                </text>
                     }
 
-                    </text>
+                </text>
                 }
 
             </div>
@@ -446,55 +837,55 @@ else
 
                 @if (Model.New.Memberships.Any())
                 {
-                    <text>
-                    <div class="row">
-                        <input type="checkbox" asp-for="New.Memberships.Checked" class="col-xs-1" style="display: inherit" />
-                        <label asp-for="New.Memberships.Checked" class="col-xs-11">
-                            Выбрать все профессиональные сообщества
-                        </label>
-                    </div>
+                <text>
+                <div class="row">
+                    <input type="checkbox" asp-for="New.Memberships.Checked" class="col-xs-1" style="display: inherit" />
+                    <label asp-for="New.Memberships.Checked" class="col-xs-11">
+                        Выбрать все профессиональные сообщества
+                    </label>
+                </div>
 
-                    <br />
-                    <br />
+                <br />
+                <br />
 
-                    @for (var i = 0; i < Model.New.Memberships.Count; i++)
+                @for (var i = 0; i < Model.New.Memberships.Count; i++)
                     {
-                        <text>
-                        <input type="hidden" name="New.Memberships.Index" value="@i" />
+                <text>
+                <input type="hidden" name="New.Memberships.Index" value="@i" />
 
-                        <div class="row">
-                            <input type="checkbox" asp-for="New.Memberships[i].Checked" class="col-xs-1" style="display: inherit" />
-                            <label asp-for="New.Memberships[i].Checked" class="col-xs-4">
-                                Организация
-                            </label>
-                            <input asp-for="New.Memberships[i].This.org" class="col-xs-7 disabled" disabled="disabled" />
-                        </div>
+                <div class="row">
+                    <input type="checkbox" asp-for="New.Memberships[i].Checked" class="col-xs-1" style="display: inherit" />
+                    <label asp-for="New.Memberships[i].Checked" class="col-xs-4">
+                        Организация
+                    </label>
+                    <input asp-for="New.Memberships[i].This.org" class="col-xs-7 disabled" disabled="disabled" />
+                </div>
 
-                        <div class="row">
-                            <label asp-for="New.Memberships[i].Checked" class="col-xs-offset-1 col-xs-4">
-                                Должность
-                            </label>
-                            <input asp-for="New.Memberships[i].This.position" class="col-xs-7 disabled" disabled="disabled" />
-                        </div>
+                <div class="row">
+                    <label asp-for="New.Memberships[i].Checked" class="col-xs-offset-1 col-xs-4">
+                        Должность
+                    </label>
+                    <input asp-for="New.Memberships[i].This.position" class="col-xs-7 disabled" disabled="disabled" />
+                </div>
 
-                        <div class="row">
-                            <label asp-for="New.Memberships[i].Checked" class="col-xs-offset-1 col-xs-4">
-                                Год
-                            </label>
-                            <div class="col-xs-6">
-                                С
-                                <input asp-for="New.Memberships[i].This.year_from" class="small-input disabled" style="max-width: 70px;" disabled="disabled" />
-                                по
-                                <input asp-for="New.Memberships[i].This.year_to" class="small-input disabled" style="max-width: 70px;" disabled="disabled" />
-                            </div>
-                        </div>
+                <div class="row">
+                    <label asp-for="New.Memberships[i].Checked" class="col-xs-offset-1 col-xs-4">
+                        Год
+                    </label>
+                    <div class="col-xs-6">
+                        С
+                        <input asp-for="New.Memberships[i].This.year_from" class="small-input disabled" style="max-width: 70px;" disabled="disabled" />
+                        по
+                        <input asp-for="New.Memberships[i].This.year_to" class="small-input disabled" style="max-width: 70px;" disabled="disabled" />
+                    </div>
+                </div>
 
-                        <br />
+                <br />
 
-                        </text>
+                </text>
                     }
 
-                    </text>
+                </text>
                 }
 
             </div>
@@ -502,55 +893,55 @@ else
 
                 @if (Model.Original.Memberships.Any())
                 {
-                    <text>
-                    <div class="row">
-                        <input type="checkbox" asp-for="Original.Memberships.Checked" class="col-xs-1" style="display: inherit" />
-                        <label asp-for="Original.Memberships.Checked" class="col-xs-11">
-                            Выбрать все профессиональные сообщества
-                        </label>
-                    </div>
+                <text>
+                <div class="row">
+                    <input type="checkbox" asp-for="Original.Memberships.Checked" class="col-xs-1" style="display: inherit" />
+                    <label asp-for="Original.Memberships.Checked" class="col-xs-11">
+                        Выбрать все профессиональные сообщества
+                    </label>
+                </div>
 
-                    <br />
-                    <br />
+                <br />
+                <br />
 
-                    @for (var i = 0; i < Model.Original.Memberships.Count; i++)
+                @for (var i = 0; i < Model.Original.Memberships.Count; i++)
                     {
-                        <text>
-                        <input type="hidden" name="Original.Memberships.Index" value="@i" />
+                <text>
+                <input type="hidden" name="Original.Memberships.Index" value="@i" />
 
-                        <div class="row">
-                            <input type="checkbox" asp-for="Original.Memberships[i].Checked" class="col-xs-1" style="display: inherit" />
-                            <label asp-for="Original.Memberships[i].Checked" class="col-xs-4">
-                                Организация
-                            </label>
-                            <input asp-for="Original.Memberships[i].This.org" class="col-xs-7 disabled" disabled="disabled" />
-                        </div>
+                <div class="row">
+                    <input type="checkbox" asp-for="Original.Memberships[i].Checked" class="col-xs-1" style="display: inherit" />
+                    <label asp-for="Original.Memberships[i].Checked" class="col-xs-4">
+                        Организация
+                    </label>
+                    <input asp-for="Original.Memberships[i].This.org" class="col-xs-7 disabled" disabled="disabled" />
+                </div>
 
-                        <div class="row">
-                            <label asp-for="Original.Memberships[i].Checked" class="col-xs-offset-1 col-xs-4">
-                                Должность
-                            </label>
-                            <input asp-for="Original.Memberships[i].This.position" class="col-xs-7 disabled" disabled="disabled" />
-                        </div>
+                <div class="row">
+                    <label asp-for="Original.Memberships[i].Checked" class="col-xs-offset-1 col-xs-4">
+                        Должность
+                    </label>
+                    <input asp-for="Original.Memberships[i].This.position" class="col-xs-7 disabled" disabled="disabled" />
+                </div>
 
-                        <div class="row">
-                            <label asp-for="Original.Memberships[i].Checked" class="col-xs-offset-1 col-xs-4">
-                                Год
-                            </label>
-                            <div class="col-xs-6">
-                                С
-                                <input asp-for="Original.Memberships[i].This.year_from" class="small-input disabled" style="max-width: 70px;" disabled="disabled" />
-                                по
-                                <input asp-for="Original.Memberships[i].This.year_to" class="small-input disabled" style="max-width: 70px;" disabled="disabled" />
-                            </div>
-                        </div>
+                <div class="row">
+                    <label asp-for="Original.Memberships[i].Checked" class="col-xs-offset-1 col-xs-4">
+                        Год
+                    </label>
+                    <div class="col-xs-6">
+                        С
+                        <input asp-for="Original.Memberships[i].This.year_from" class="small-input disabled" style="max-width: 70px;" disabled="disabled" />
+                        по
+                        <input asp-for="Original.Memberships[i].This.year_to" class="small-input disabled" style="max-width: 70px;" disabled="disabled" />
+                    </div>
+                </div>
 
-                        <br />
+                <br />
 
-                        </text>
+                </text>
                     }
 
-                    </text>
+                </text>
                 }
 
             </div>
@@ -564,57 +955,187 @@ else
 
                 @if (Model.New.Educations.Any())
                 {
+                <text>
+                <div class="row">
+                    <input type="checkbox" asp-for="New.Educations.Checked" class="col-xs-1" style="display: inherit" />
+                    <label asp-for="New.Educations.Checked" class="col-xs-11">
+                        Выбрать все образования
+                    </label>
+                </div>
+
+                <br />
+                <br />
+
+                @for (var i = 0; i < Model.New.Educations.Count; i++)
+                    {
+                <text>
+                <input type="hidden" name="New.Educations.Index" value="@i" />
+                <input type="hidden" asp-for="New.Educations[i].This.Guid" />
+
+                <div class="row">
+                    <input type="checkbox" asp-for="New.Educations[i].Checked" class="col-xs-1" style="display: inherit" />
+                    <label asp-for="New.Educations[i].Checked" class="col-xs-4">
+                        Город
+                    </label>
+                    <input asp-for="New.Educations[i].This.City" class="col-xs-7 disabled" disabled="disabled" />
+                </div>
+
+                <div class="row">
+                    <label asp-for="New.Educations[i].Checked" class="col-xs-offset-1 col-xs-4">
+                        Университет
+                    </label>
+                    <input asp-for="New.Educations[i].This.UniversityShortName" class="col-xs-7 disabled" disabled="disabled" />
+                </div>
+
+                <div class="row">
+                    <label asp-for="New.Educations[i].Checked" class="col-xs-offset-1 col-xs-4">
+                        Факультет
+                    </label>
+                    <input asp-for="New.Educations[i].This.FacultyShortName" class="col-xs-7 disabled" disabled="disabled" />
+                </div>
+
+                <div class="row">
+                    <label asp-for="New.Educations[i].Checked" class="col-xs-offset-1 col-xs-4">
+                        Учёная степень
+                    </label>
+                    <input asp-for="New.Educations[i].This.Degree" class="col-xs-7 disabled" disabled="disabled" />
+                </div>
+
+                <div class="row">
+                    <label asp-for="New.Educations[i].Checked" class="col-xs-offset-1 col-xs-4">
+                        Год
+                    </label>
+                    <input asp-for="New.Educations[i].This.GraduationYear" class="col-xs-7 disabled" disabled="disabled" />
+                </div>
+
+                <br />
+
+                </text>
+                    }
+
+                </text>
+                }
+
+            </div>
+            <div class="col-xs-6">
+
+                @if (Model.Original.Educations.Any())
+                {
+                <text>
+                <div class="row">
+                    <input type="checkbox" asp-for="Original.Educations.Checked" class="col-xs-1" style="display: inherit" />
+                    <label asp-for="Original.Educations.Checked" class="col-xs-11">
+                        Выбрать все образования
+                    </label>
+                </div>
+
+                <br />
+                <br />
+
+                @for (var i = 0; i < Model.Original.Educations.Count; i++)
+                    {
+                <text>
+                <input type="hidden" name="Original.Educations.Index" value="@i" />
+                <input type="hidden" asp-for="Original.Educations[i].This.Guid" />
+
+                <div class="row">
+                    <input type="checkbox" asp-for="Original.Educations[i].Checked" class="col-xs-1" style="display: inherit" />
+                    <label asp-for="Original.Educations[i].Checked" class="col-xs-4">
+                        Город
+                    </label>
+                    <input asp-for="Original.Educations[i].This.City" class="col-xs-7 disabled" disabled="disabled" />
+                </div>
+
+                <div class="row">
+                    <label asp-for="Original.Educations[i].Checked" class="col-xs-offset-1 col-xs-4">
+                        Университет
+                    </label>
+                    <input asp-for="Original.Educations[i].This.UniversityShortName" class="col-xs-7 disabled" disabled="disabled" />
+                </div>
+
+                <div class="row">
+                    <label asp-for="Original.Educations[i].Checked" class="col-xs-offset-1 col-xs-4">
+                        Факультет
+                    </label>
+                    <input asp-for="Original.Educations[i].This.FacultyShortName" class="col-xs-7 disabled" disabled="disabled" />
+                </div>
+
+                <div class="row">
+                    <label asp-for="Original.Educations[i].Checked" class="col-xs-offset-1 col-xs-4">
+                        Учёная степень
+                    </label>
+                    <input asp-for="Original.Educations[i].This.Degree" class="col-xs-7 disabled" disabled="disabled" />
+                </div>
+
+                <div class="row">
+                    <label asp-for="Original.Educations[i].Checked" class="col-xs-offset-1 col-xs-4">
+                        Год
+                    </label>
+                    <input asp-for="Original.Educations[i].This.GraduationYear" class="col-xs-7 disabled" disabled="disabled" />
+                </div>
+
+                <br />
+
+                </text>
+                    }
+
+                </text>
+                }
+
+            </div>
+        </div>
+
+        <br />
+        <br />
+
+        <div class="row">
+            <div class="col-xs-6">
+
+                @if (Model.New.Conferences.Any())
+                {
                     <text>
                     <div class="row">
-                        <input type="checkbox" asp-for="New.Educations.Checked" class="col-xs-1" style="display: inherit" />
-                        <label asp-for="New.Educations.Checked" class="col-xs-11">
-                            Выбрать все образования
+                        <input type="checkbox" asp-for="New.Conferences.Checked" class="col-xs-1" style="display: inherit" />
+                        <label asp-for="New.Conferences.Checked" class="col-xs-11">
+                            Выбрать все конференции
                         </label>
                     </div>
 
                     <br />
                     <br />
 
-                    @for (var i = 0; i < Model.New.Educations.Count; i++)
+                    @for (var i = 0; i < Model.New.Conferences.Count; i++)
                     {
                         <text>
-                        <input type="hidden" name="New.Educations.Index" value="@i" />
-                        <input type="hidden" asp-for="New.Educations[i].This.Guid" />
+                        <input type="hidden" name="New.Conferences.Index" value="@i" />
 
                         <div class="row">
-                            <input type="checkbox" asp-for="New.Educations[i].Checked" class="col-xs-1" style="display: inherit" />
-                            <label asp-for="New.Educations[i].Checked" class="col-xs-4">
-                                Город
+                            <input type="checkbox" asp-for="New.Conferences[i].Checked" class="col-xs-1" style="display: inherit" />
+                            <label asp-for="New.Conferences[i].Checked" class="col-xs-4">
+                                Название конференции
                             </label>
-                            <input asp-for="New.Educations[i].This.City" class="col-xs-7 disabled" disabled="disabled" />
+                            <input asp-for="New.Conferences[i].This.conference" class="col-xs-7 disabled" disabled="disabled" />
                         </div>
 
                         <div class="row">
-                            <label asp-for="New.Educations[i].Checked" class="col-xs-offset-1 col-xs-4">
-                                Университет
+                            <label asp-for="New.Conferences[i].Checked" class="col-xs-offset-1 col-xs-4">
+                                Доклад
                             </label>
-                            <input asp-for="New.Educations[i].This.UniversityShortName" class="col-xs-7 disabled" disabled="disabled" />
+                            <input asp-for="New.Conferences[i].This.title" class="col-xs-7 disabled" disabled="disabled" />
                         </div>
 
                         <div class="row">
-                            <label asp-for="New.Educations[i].Checked" class="col-xs-offset-1 col-xs-4">
-                                Факультет
+                            <label asp-for="New.Conferences[i].Checked" class="col-xs-offset-1 col-xs-4">
+                                Тип конференции
                             </label>
-                            <input asp-for="New.Educations[i].This.FacultyShortName" class="col-xs-7 disabled" disabled="disabled" />
+                            <input asp-for="New.Conferences[i].This.categoryType" class="col-xs-7 disabled" disabled="disabled" />
                         </div>
 
                         <div class="row">
-                            <label asp-for="New.Educations[i].Checked" class="col-xs-offset-1 col-xs-4">
-                                Учёная степень
-                            </label>
-                            <input asp-for="New.Educations[i].This.Degree" class="col-xs-7 disabled" disabled="disabled" />
-                        </div>
-
-                        <div class="row">
-                            <label asp-for="New.Educations[i].Checked" class="col-xs-offset-1 col-xs-4">
+                            <label asp-for="New.Conferences[i].Checked" class="col-xs-offset-1 col-xs-4">
                                 Год
                             </label>
-                            <input asp-for="New.Educations[i].This.GraduationYear" class="col-xs-7 disabled" disabled="disabled" />
+                            <input asp-for="New.Conferences[i].This.year" class="col-xs-7 disabled" disabled="disabled" />
                         </div>
 
                         <br />
@@ -628,59 +1149,51 @@ else
             </div>
             <div class="col-xs-6">
 
-                @if (Model.Original.Educations.Any())
+                @if (Model.Original.Conferences.Any())
                 {
                     <text>
                     <div class="row">
-                        <input type="checkbox" asp-for="Original.Educations.Checked" class="col-xs-1" style="display: inherit" />
-                        <label asp-for="Original.Educations.Checked" class="col-xs-11">
-                            Выбрать все образования
+                        <input type="checkbox" asp-for="Original.Conferences.Checked" class="col-xs-1" style="display: inherit" />
+                        <label asp-for="Original.Conferences.Checked" class="col-xs-11">
+                            Выбрать все конференции
                         </label>
                     </div>
 
                     <br />
                     <br />
 
-                    @for (var i = 0; i < Model.Original.Educations.Count; i++)
+                    @for (var i = 0; i < Model.Original.Conferences.Count; i++)
                     {
                         <text>
-                        <input type="hidden" name="Original.Educations.Index" value="@i" />
-                        <input type="hidden" asp-for="Original.Educations[i].This.Guid" />
+                        <input type="hidden" name="Original.Conferences.Index" value="@i" />
 
                         <div class="row">
-                            <input type="checkbox" asp-for="Original.Educations[i].Checked" class="col-xs-1" style="display: inherit" />
-                            <label asp-for="Original.Educations[i].Checked" class="col-xs-4">
-                                Город
+                            <input type="checkbox" asp-for="Original.Conferences[i].Checked" class="col-xs-1" style="display: inherit" />
+                            <label asp-for="Original.Conferences[i].Checked" class="col-xs-4">
+                                Название конференции
                             </label>
-                            <input asp-for="Original.Educations[i].This.City" class="col-xs-7 disabled" disabled="disabled" />
+                            <input asp-for="Original.Conferences[i].This.conference" class="col-xs-7 disabled" disabled="disabled" />
                         </div>
 
                         <div class="row">
-                            <label asp-for="Original.Educations[i].Checked" class="col-xs-offset-1 col-xs-4">
-                                Университет
+                            <label asp-for="Original.Conferences[i].Checked" class="col-xs-offset-1 col-xs-4">
+                                Доклад
                             </label>
-                            <input asp-for="Original.Educations[i].This.UniversityShortName" class="col-xs-7 disabled" disabled="disabled" />
+                            <input asp-for="Original.Conferences[i].This.title" class="col-xs-7 disabled" disabled="disabled" />
                         </div>
 
                         <div class="row">
-                            <label asp-for="Original.Educations[i].Checked" class="col-xs-offset-1 col-xs-4">
-                                Факультет
+                            <label asp-for="Original.Conferences[i].Checked" class="col-xs-offset-1 col-xs-4">
+                                Тип конференции
                             </label>
-                            <input asp-for="Original.Educations[i].This.FacultyShortName" class="col-xs-7 disabled" disabled="disabled" />
+                            <input asp-for="Original.Conferences[i].This.categoryType" class="col-xs-7 disabled" disabled="disabled" />
                         </div>
 
                         <div class="row">
-                            <label asp-for="Original.Educations[i].Checked" class="col-xs-offset-1 col-xs-4">
-                                Учёная степень
-                            </label>
-                            <input asp-for="Original.Educations[i].This.Degree" class="col-xs-7 disabled" disabled="disabled" />
-                        </div>
-
-                        <div class="row">
-                            <label asp-for="Original.Educations[i].Checked" class="col-xs-offset-1 col-xs-4">
+                            <label asp-for="Original.Conferences[i].Checked" class="col-xs-offset-1 col-xs-4">
                                 Год
                             </label>
-                            <input asp-for="Original.Educations[i].This.GraduationYear" class="col-xs-7 disabled" disabled="disabled" />
+                            <input asp-for="Original.Conferences[i].This.year" class="col-xs-7 disabled" disabled="disabled" />
                         </div>
 
                         <br />
@@ -702,47 +1215,47 @@ else
 
                 @if (Model.New.Publications.Any())
                 {
-                    <text>
-                    <div class="row">
-                        <input type="checkbox" asp-for="New.Publications.Checked" class="col-xs-1" style="display: inherit" />
-                        <label asp-for="New.Publications.Checked" class="col-xs-11">
-                            Выбрать все публикации
-                        </label>
-                    </div>
+                <text>
+                <div class="row">
+                    <input type="checkbox" asp-for="New.Publications.Checked" class="col-xs-1" style="display: inherit" />
+                    <label asp-for="New.Publications.Checked" class="col-xs-11">
+                        Выбрать все публикации
+                    </label>
+                </div>
 
-                    <br />
-                    <br />
+                <br />
+                <br />
 
-                    @for (var i = 0; i < Model.New.Publications.Count; i++)
+                @for (var i = 0; i < Model.New.Publications.Count; i++)
                     {
-                        <text>
-                        <input type="hidden" name="New.Publications.Index" value="@i" />
-                        <input type="hidden" asp-for="New.Publications[i].This.Guid" />
-                        <input type="hidden" asp-for="New.Publications[i].This.Type" />
-                        <input type="hidden" asp-for="New.Publications[i].This.ExtId" />
-                        <input type="hidden" asp-for="New.Publications[i].This.Updated" />
+                <text>
+                <input type="hidden" name="New.Publications.Index" value="@i" />
+                <input type="hidden" asp-for="New.Publications[i].This.Guid" />
+                <input type="hidden" asp-for="New.Publications[i].This.Type" />
+                <input type="hidden" asp-for="New.Publications[i].This.ExtId" />
+                <input type="hidden" asp-for="New.Publications[i].This.Updated" />
 
-                        <div class="row">
-                            <input type="checkbox" asp-for="New.Publications[i].Checked" class="col-xs-1" style="display: inherit" />
-                            <label asp-for="New.Publications[i].Checked" class="col-xs-4">
-                                Название
-                            </label>
-                            <input asp-for="New.Publications[i].This.Name" class="col-xs-7 disabled" disabled="disabled" />
-                        </div>
+                <div class="row">
+                    <input type="checkbox" asp-for="New.Publications[i].Checked" class="col-xs-1" style="display: inherit" />
+                    <label asp-for="New.Publications[i].Checked" class="col-xs-4">
+                        Название
+                    </label>
+                    <input asp-for="New.Publications[i].This.Name" class="col-xs-7 disabled" disabled="disabled" />
+                </div>
 
-                        <div class="row">
-                            <label asp-for="New.Publications[i].Checked" class="col-xs-offset-1 col-xs-4">
-                                Авторы
-                            </label>
-                            <input asp-for="New.Publications[i].This.Authors" class="col-xs-7 disabled" disabled="disabled" />
-                        </div>
+                <div class="row">
+                    <label asp-for="New.Publications[i].Checked" class="col-xs-offset-1 col-xs-4">
+                        Авторы
+                    </label>
+                    <input asp-for="New.Publications[i].This.Authors" class="col-xs-7 disabled" disabled="disabled" />
+                </div>
 
-                        <br />
+                <br />
 
-                        </text>
+                </text>
                     }
 
-                    </text>
+                </text>
                 }
 
             </div>
@@ -750,47 +1263,47 @@ else
 
                 @if (Model.Original.Publications.Any())
                 {
-                    <text>
-                    <div class="row">
-                        <input type="checkbox" asp-for="Original.Publications.Checked" class="col-xs-1" style="display: inherit" />
-                        <label asp-for="Original.Publications.Checked" class="col-xs-11">
-                            Выбрать все публикации
-                        </label>
-                    </div>
+                <text>
+                <div class="row">
+                    <input type="checkbox" asp-for="Original.Publications.Checked" class="col-xs-1" style="display: inherit" />
+                    <label asp-for="Original.Publications.Checked" class="col-xs-11">
+                        Выбрать все публикации
+                    </label>
+                </div>
 
-                    <br />
-                    <br />
+                <br />
+                <br />
 
-                    @for (var i = 0; i < Model.Original.Publications.Count; i++)
+                @for (var i = 0; i < Model.Original.Publications.Count; i++)
                     {
-                        <text>
-                        <input type="hidden" name="New.Publications.Index" value="@i" />
-                        <input type="hidden" asp-for="New.Publications[i].This.Guid" />
-                        <input type="hidden" asp-for="New.Publications[i].This.Type" />
-                        <input type="hidden" asp-for="New.Publications[i].This.ExtId" />
-                        <input type="hidden" asp-for="New.Publications[i].This.Updated" />
+                <text>
+                <input type="hidden" name="Original.Publications.Index" value="@i" />
+                <input type="hidden" asp-for="Original.Publications[i].This.Guid" />
+                <input type="hidden" asp-for="Original.Publications[i].This.Type" />
+                <input type="hidden" asp-for="Original.Publications[i].This.ExtId" />
+                <input type="hidden" asp-for="Original.Publications[i].This.Updated" />
 
-                        <div class="row">
-                            <input type="checkbox" asp-for="New.Publications[i].Checked" class="col-xs-1" style="display: inherit" />
-                            <label asp-for="New.Publications[i].Checked" class="col-xs-4">
-                                Название
-                            </label>
-                            <input asp-for="New.Publications[i].This.Name" class="col-xs-7 disabled" disabled="disabled" />
-                        </div>
+                <div class="row">
+                    <input type="checkbox" asp-for="Original.Publications[i].Checked" class="col-xs-1" style="display: inherit" />
+                    <label asp-for="Original.Publications[i].Checked" class="col-xs-4">
+                        Название
+                    </label>
+                    <input asp-for="Original.Publications[i].This.Name" class="col-xs-7 disabled" disabled="disabled" />
+                </div>
 
-                        <div class="row">
-                            <label asp-for="New.Publications[i].Checked" class="col-xs-offset-1 col-xs-4">
-                                Авторы
-                            </label>
-                            <input asp-for="New.Publications[i].This.Authors" class="col-xs-7 disabled" disabled="disabled" />
-                        </div>
+                <div class="row">
+                    <label asp-for="Original.Publications[i].Checked" class="col-xs-offset-1 col-xs-4">
+                        Авторы
+                    </label>
+                    <input asp-for="Original.Publications[i].This.Authors" class="col-xs-7 disabled" disabled="disabled" />
+                </div>
 
-                        <br />
+                <br />
 
-                        </text>
+                </text>
                     }
 
-                    </text>
+                </text>
                 }
 
             </div>
@@ -804,43 +1317,43 @@ else
 
                 @if (Model.New.Interests.Any())
                 {
-                    <text>
-                    <div class="row">
-                        <input type="checkbox" asp-for="New.Interests.Checked" class="col-xs-1" style="display: inherit" />
-                        <label asp-for="New.Interests.Checked" class="col-xs-11">
-                            Выбрать все интересы
-                        </label>
-                    </div>
+                <text>
+                <div class="row">
+                    <input type="checkbox" asp-for="New.Interests.Checked" class="col-xs-1" style="display: inherit" />
+                    <label asp-for="New.Interests.Checked" class="col-xs-11">
+                        Выбрать все интересы
+                    </label>
+                </div>
 
-                    <br />
-                    <br />
+                <br />
+                <br />
 
-                    @for (var i = 0; i < Model.New.Interests.Count; i++)
+                @for (var i = 0; i < Model.New.Interests.Count; i++)
                     {
-                        <text>
-                        <input type="hidden" name="New.Interests.Index" value="@i" />
+                <text>
+                <input type="hidden" name="New.Interests.Index" value="@i" />
 
-                        <div class="row">
-                            <input type="checkbox" asp-for="New.Interests[i].Checked" class="col-xs-1" style="display: inherit" />
-                            <label asp-for="New.Interests[i].Checked" class="col-xs-4">
-                                Интерес
-                            </label>
-                            <input asp-for="New.Interests[i].This.IntName" class="col-xs-7 disabled" disabled="disabled" />
-                        </div>
+                <div class="row">
+                    <input type="checkbox" asp-for="New.Interests[i].Checked" class="col-xs-1" style="display: inherit" />
+                    <label asp-for="New.Interests[i].Checked" class="col-xs-4">
+                        Интерес
+                    </label>
+                    <input asp-for="New.Interests[i].This.IntName" class="col-xs-7 disabled" disabled="disabled" />
+                </div>
 
-                        <div class="row">
-                            <label asp-for="New.Interests[i].Checked" class="col-xs-offset-1 col-xs-4">
-                                Интерес (англ.)
-                            </label>
-                            <input asp-for="New.Interests[i].This.IntNameEn" class="col-xs-7 disabled" disabled="disabled" />
-                        </div>
+                <div class="row">
+                    <label asp-for="New.Interests[i].Checked" class="col-xs-offset-1 col-xs-4">
+                        Интерес (англ.)
+                    </label>
+                    <input asp-for="New.Interests[i].This.IntNameEn" class="col-xs-7 disabled" disabled="disabled" />
+                </div>
 
-                        <br />
+                <br />
 
-                        </text>
+                </text>
                     }
 
-                    </text>
+                </text>
                 }
 
             </div>
@@ -848,43 +1361,43 @@ else
 
                 @if (Model.Original.Interests.Any())
                 {
-                    <text>
-                    <div class="row">
-                        <input type="checkbox" asp-for="Original.Interests.Checked" class="col-xs-1" style="display: inherit" />
-                        <label asp-for="Original.Interests.Checked" class="col-xs-11">
-                            Выбрать все интересы
-                        </label>
-                    </div>
+                <text>
+                <div class="row">
+                    <input type="checkbox" asp-for="Original.Interests.Checked" class="col-xs-1" style="display: inherit" />
+                    <label asp-for="Original.Interests.Checked" class="col-xs-11">
+                        Выбрать все интересы
+                    </label>
+                </div>
 
-                    <br />
-                    <br />
+                <br />
+                <br />
 
-                    @for (var i = 0; i < Model.Original.Interests.Count; i++)
+                @for (var i = 0; i < Model.Original.Interests.Count; i++)
                     {
-                        <text>
-                        <input type="hidden" name="Original.Interests.Index" value="@i" />
+                <text>
+                <input type="hidden" name="Original.Interests.Index" value="@i" />
 
-                        <div class="row">
-                            <input type="checkbox" asp-for="Original.Interests[i].Checked" class="col-xs-1" style="display: inherit" />
-                            <label asp-for="Original.Interests[i].Checked" class="col-xs-4">
-                                Интерес
-                            </label>
-                            <input asp-for="Original.Interests[i].This.IntName" class="col-xs-7 disabled" disabled="disabled" />
-                        </div>
+                <div class="row">
+                    <input type="checkbox" asp-for="Original.Interests[i].Checked" class="col-xs-1" style="display: inherit" />
+                    <label asp-for="Original.Interests[i].Checked" class="col-xs-4">
+                        Интерес
+                    </label>
+                    <input asp-for="Original.Interests[i].This.IntName" class="col-xs-7 disabled" disabled="disabled" />
+                </div>
 
-                        <div class="row">
-                            <label asp-for="Original.Interests[i].Checked" class="col-xs-offset-1 col-xs-4">
-                                Интерес (англ.)
-                            </label>
-                            <input asp-for="Original.Interests[i].This.IntNameEn" class="col-xs-7 disabled" disabled="disabled" />
-                        </div>
+                <div class="row">
+                    <label asp-for="Original.Interests[i].Checked" class="col-xs-offset-1 col-xs-4">
+                        Интерес (англ.)
+                    </label>
+                    <input asp-for="Original.Interests[i].This.IntNameEn" class="col-xs-7 disabled" disabled="disabled" />
+                </div>
 
-                        <br />
+                <br />
 
-                        </text>
+                </text>
                     }
 
-                    </text>
+                </text>
                 }
 
             </div>
@@ -893,7 +1406,7 @@ else
         <br />
         <br />
 
-        <input type="submit" value="Продолжить" class="btn btn-success" disabled="disabled"/>
+        <input type="submit" value="Продолжить" class="btn btn-success" disabled="disabled" />
     </form>
 
     </text>

@@ -1,6 +1,4 @@
-﻿using SciVacancies.WebApp.ViewModels.Base;
-
-namespace SciVacancies.WebApp.ViewModels
+﻿namespace SciVacancies.WebApp.ViewModels
 {
     /// <summary>
     /// награды
