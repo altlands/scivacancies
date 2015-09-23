@@ -106,7 +106,7 @@ namespace SciVacancies.WebApp.Infrastructure
                 .ForMember(d => d.Phone, o => o.MapFrom(s => s.phone))
                 .ForMember(d => d.ExtraPhone, o => o.Ignore())
                 //.ForMember(d => d, o => o.MapFrom(s => s.nationality))
-                .ForMember(d => d.OtherActivity, o => o.MapFrom(s => s.researchers != null && s.researchers.Any() 
+                .ForMember(d => d.OtherActivity, o => o.MapFrom(s => s.researchers != null && s.researchers.Any(c => c.type.Equals("X")) 
                     ? JsonConvert.SerializeObject(s.researchers.Where(c => c.type.Equals("X") /* X - Прочая деятельность*/ ).Select(c=>new OAuthResActivity
                         {
                             title = c.title,
@@ -118,7 +118,7 @@ namespace SciVacancies.WebApp.Infrastructure
                         )) 
                     : string.Empty
                     ))
-                .ForMember(d => d.TeachingActivity, o => o.MapFrom(s => s.researchers != null && s.researchers.Any()
+                .ForMember(d => d.TeachingActivity, o => o.MapFrom(s => s.researchers != null && s.researchers.Any(c => c.type.Equals("L"))
                     ? JsonConvert.SerializeObject(s.researchers.Where(c => c.type.Equals("L") /* L - Преподавательская деятельность*/ ).Select(c => new OAuthResActivity
                         {
                             title = c.title,
@@ -130,7 +130,7 @@ namespace SciVacancies.WebApp.Infrastructure
                         ))
                     : string.Empty
                     ))
-                .ForMember(d => d.ResearchActivity, o => o.MapFrom(s => s.researchers != null && s.researchers.Any()
+                .ForMember(d => d.ResearchActivity, o => o.MapFrom(s => s.researchers != null && s.researchers.Any(c => !c.type.Equals("X") && !c.type.Equals("l"))
                     ? JsonConvert.SerializeObject(s.researchers.Where(c => !c.type.Equals("X") && !c.type.Equals("l") /* E,S,M,C,W,I,A,O - Исследовательская деятельность*/ ).Select(c => new OAuthResActivity
                     {
                         title = c.title,
