@@ -56,9 +56,11 @@ namespace SciVacancies.WebApp.Models.DataModels
 
         [Obsolete("отказываемся от свойства Национальность")]
         public string Nationality { get; set; }
-        //public string ResearchActivity { get; set; }
-        //public string TeachingActivity { get; set; }
-        //public string OtherActivity { get; set; }
+
+        public string ResearchActivity { get; set; }
+        public string TeachingActivity { get; set; }
+        public string OtherActivity { get; set; }
+
         public string ScienceDegree { get; set; }
         public string ScienceRank { get; set; }
         public string Conferences { get; set; }
