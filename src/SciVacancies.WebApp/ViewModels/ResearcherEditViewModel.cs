@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using Microsoft.AspNet.Identity;
+using SciVacancies.WebApp.Models;
 using SciVacancies.WebApp.ViewModels.Base;
 
 namespace SciVacancies.WebApp.ViewModels
@@ -46,19 +47,17 @@ namespace SciVacancies.WebApp.ViewModels
 
         public string Nationality { get; set; }
 
-        public string ResearchActivity { get; set; }
-        public string TeachingActivity { get; set; }
-        public string OtherActivity { get; set; }
-
         public string ScienceDegree { get; set; }
         public string ScienceRank { get; set; }
-        public List<RewardEditViewModel> Rewards { get; set; }
-        public List<MembershipEditViewModel> Memberships { get; set; }
-        public string Conferences { get; set; }
-
-        public List<EducationEditViewModel> Educations { get; set; }
-        public List<PublicationEditViewModel> Publications { get; set; }
-        public List<InterestEditViewModel> Interests { get; set; }
+        public List<RewardEditViewModel> Rewards { get; set; } = new CheckableList<RewardEditViewModel>();
+        public List<MembershipEditViewModel> Memberships { get; set; } = new CheckableList<MembershipEditViewModel>();
+        public List<ConferenceEditViewModel> Conferences { get; set; } = new CheckableList<ConferenceEditViewModel>();
+        public List<EducationEditViewModel> Educations { get; set; } = new CheckableList<EducationEditViewModel>();
+        public List<PublicationEditViewModel> Publications { get; set; } = new CheckableList<PublicationEditViewModel>();
+        public List<InterestEditViewModel> Interests { get; set; } = new CheckableList<InterestEditViewModel>();
+        public List<ActivityEditViewModel> ResearchActivity { get; set; } = new CheckableList<ActivityEditViewModel>();
+        public List<ActivityEditViewModel> TeachingActivity { get; set; } = new CheckableList<ActivityEditViewModel>();
+        public List<ActivityEditViewModel> OtherActivity { get; set; } = new CheckableList<ActivityEditViewModel>();
 
         public IList<UserLoginInfo> Logins { get; set; }
 

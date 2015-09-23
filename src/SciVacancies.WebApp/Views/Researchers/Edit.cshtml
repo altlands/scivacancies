@@ -14,10 +14,18 @@
     Model.Publications.Insert(0, new PublicationEditViewModel());
     Model.Rewards = Model.Rewards ?? new List<RewardEditViewModel>();
     Model.Rewards.Insert(0, new RewardEditViewModel());
+    Model.Conferences = Model.Conferences ?? new List<ConferenceEditViewModel>();
+    Model.Conferences.Insert(0, new ConferenceEditViewModel());
     Model.Memberships = Model.Memberships ?? new List<MembershipEditViewModel>();
     Model.Memberships.Insert(0, new MembershipEditViewModel());
     Model.Interests = Model.Interests ?? new List<InterestEditViewModel>();
     Model.Interests.Insert(0, new InterestEditViewModel());
+    Model.ResearchActivity = Model.ResearchActivity ?? new List<ActivityEditViewModel>();
+    Model.ResearchActivity.Insert(0, new ActivityEditViewModel());
+    Model.TeachingActivity = Model.TeachingActivity ?? new List<ActivityEditViewModel>();
+    Model.TeachingActivity.Insert(0, new ActivityEditViewModel());
+    Model.OtherActivity = Model.OtherActivity ?? new List<ActivityEditViewModel>();
+    Model.OtherActivity.Insert(0, new ActivityEditViewModel());
     //перед отправкой формы эти элементы будут удалены с формы
 
     var years = Enumerable.Range(DateTime.Now.Year - 150, 150 + 1).OrderByDescending(c => c).Select(c => new SelectListItem { Text = c.ToString(), Value = c.ToString() }).ToList();
@@ -44,9 +52,6 @@
     <input type="hidden" asp-for="Guid" />
     <div class="row">
         <div class="bold mb20">Общая информация</div>
-
-        <a asp-controller="accountintegration" asp-action="UpdateResearcherAccountFromOutside" class="link-upload fs13">Загрузить данные из системы «@AuthorizeResourceTypes.ScienceMap.GetDescription()»</a>
-        <span style="color: red;">в разработке</span>
 
         <div class="table-form">
             <div class="table-row form-row">
@@ -128,12 +133,12 @@
                 <div class="right-cell">
                     @if (Model.IsScienceMapUser)
                     {
-                        <input type="hidden" asp-for="ExtNumber"/>
-                        <input asp-for="ExtNumber" disabled="disabled" class="disabled"/>
+                        <input type="hidden" asp-for="ExtNumber" />
+                        <input asp-for="ExtNumber" disabled="disabled" class="disabled" />
                     }
                     else
                     {
-                        <input asp-for="ExtNumber"/>
+                        <input asp-for="ExtNumber" />
                     }
                     <span asp-validation-for="ExtNumber"></span>
                 </div>
@@ -232,10 +237,10 @@
     </div>
     <div class="row mb13">
         <div class="bold">Образование</div>
-        <div class="table-form mt15 property-list-container" data-innercount="@(Model.Educations.Count-1)">
+        <div class="table-form mt15 property-list-container" data-innercount="@(Model.Educations.Count - 1)">
             @for (var i = 0; i < Model.Educations.Count; i++)
-            {
-                useStyle = i == 0 ? invisibleItemStyle : string.Empty;
+        {
+            useStyle = i == 0 ? invisibleItemStyle : string.Empty;
                 <text>
                 <div class="property-list-item" style="@useStyle" data-list-template="@(i == 0 ? "true" : "false")">
                     <input type="hidden" asp-for="Educations[i].Guid" />
@@ -296,7 +301,7 @@
                     <hr />
                 </div>
                 </text>
-            }
+        }
             <div class="table-row form-row mt17">
                 <div class="left-cell">
                     <label></label>
@@ -308,46 +313,327 @@
 
         </div>
     </div>
+
+
+
+
     <div class="row mb13">
-        <div class="bold">Опыт работы</div>
-        <div class="table-form mt15">
-            <div class="table-row form-row">
-                <div class="left-cell">
-                    <label>Исследовательская деятельность:</label>
+        <div class="bold">Исследовательская деятельность</div>
+        <div class="table-form mt15 property-list-container" data-innercount="@(Model.ResearchActivity.Count - 1)">
+            @for (var i = 0; i < Model.ResearchActivity.Count; i++)
+        {
+            useStyle = i == 0 ? invisibleItemStyle : string.Empty;
+                <text>
+                <div class="property-list-item" style="@useStyle" data-list-template="@(i == 0 ? "true" : "false")">
+                    <input type="hidden" name="ResearchActivity.Index" value="@i" />
+
+
+                    <div class="table-row form-row">
+                        <div class="left-cell">
+                            <label>Организация:</label>
+                        </div>
+                        <div class="right-cell">
+                            <input asp-for="ResearchActivity[i].organization" class="big-input" />
+                            <span asp-validation-for="ResearchActivity[i].organization"></span>
+                        </div>
+                    </div>
+
+
+                    <div class="table-row form-row">
+                        <div class="left-cell">
+                            <label>Должность:</label>
+                        </div>
+                        <div class="right-cell">
+                            <input asp-for="ResearchActivity[i].position" class="big-input" />
+                            <span asp-validation-for="ResearchActivity[i].position"></span>
+                        </div>
+                    </div>
+
+
+                    <div class="table-row form-row">
+                        <div class="left-cell">
+                            <label>Название:</label>
+                        </div>
+                        <div class="right-cell">
+                            <input asp-for="ResearchActivity[i].title" class="big-input" />
+                            <span asp-validation-for="ResearchActivity[i].title"></span>
+                        </div>
+                    </div>
+
+
+                    <div class="table-row form-row">
+                        <div class="left-cell">
+                            <label>Год начала:</label>
+                        </div>
+                        <div class="right-cell b-r-form w120">
+                            <select class="skip"
+                                    asp-for="ResearchActivity[i].yearFrom"
+                                    asp-items="years"></select>
+                            <span asp-validation-for="ResearchActivity[i].yearFrom"></span>
+                        </div>
+                    </div>
+
+
+                    <div class="table-row form-row">
+                        <div class="left-cell">
+                            <label>Год окончания:</label>
+                        </div>
+                        <div class="right-cell b-r-form w120">
+                            <select class="skip"
+                                    asp-for="ResearchActivity[i].yearTo"
+                                    asp-items="years"></select>
+                            <span asp-validation-for="ResearchActivity[i].yearTo"></span>
+                        </div>
+                    </div>
+
+
+                    <div class="table-row form-row">
+                        <div class="left-cell">
+                            <label>Тип:</label>
+                        </div>
+                        <div class="right-cell">
+                            <input asp-for="ResearchActivity[i].type" class="big-input" />
+                            <span asp-validation-for="ResearchActivity[i].type"></span>
+                        </div>
+                    </div>
+
+
+                    <br />
+                    <div class="table-row form-row">
+                        <div class="right-cell">
+                            <button class="btn btn-warning btn-sm" onclick="return removeItemFromList(this);">Удалить</button>
+                        </div>
+                    </div>
+                    <hr />
                 </div>
-                <div class="right-cell">
-                    <textarea asp-for="ResearchActivity"></textarea>
-                    <span asp-validation-for="ResearchActivity"></span>
-                </div>
-            </div>
-            <div class="table-row form-row">
-                <div class="left-cell">
-                    <label>Преподавательская деятельность:</label>
-                </div>
-                <div class="right-cell">
-                    <textarea asp-for="TeachingActivity"></textarea>
-                    <span asp-validation-for="TeachingActivity"></span>
-                </div>
-            </div>
-            <div class="table-row form-row">
-                <div class="left-cell">
-                    <label>Прочая деятельность:</label>
-                </div>
-                <div class="right-cell">
-                    <textarea asp-for="OtherActivity"></textarea>
-                    <span asp-validation-for="OtherActivity"></span>
-                </div>
-            </div>
+                </text>
+        }
             <div class="table-row form-row mt17">
                 <div class="left-cell">
                     <label></label>
                 </div>
                 <div class="right-cell">
-                    <a href="#" class="link-add lk-icon italic link-add-field">Добавить Опыт работы <span style="color: red;">в разработке</span> </a>
+                    <a href="#" onclick="return addNewItemToList(this, 'ResearchActivity')" class="link-add lk-icon italic link-add-field">Добавить запись</a>
                 </div>
             </div>
+
         </div>
     </div>
+
+
+
+
+
+    <div class="row mb13">
+        <div class="bold">Преподавательская деятельность</div>
+        <div class="table-form mt15 property-list-container" data-innercount="@(Model.TeachingActivity.Count - 1)">
+            @for (var i = 0; i < Model.TeachingActivity.Count; i++)
+        {
+            useStyle = i == 0 ? invisibleItemStyle : string.Empty;
+                <text>
+                <div class="property-list-item" style="@useStyle" data-list-template="@(i == 0 ? "true" : "false")">
+                    <input type="hidden" name="TeachingActivity.Index" value="@i" />
+
+
+                    <div class="table-row form-row">
+                        <div class="left-cell">
+                            <label>Организация:</label>
+                        </div>
+                        <div class="right-cell">
+                            <input asp-for="TeachingActivity[i].organization" class="big-input" />
+                            <span asp-validation-for="TeachingActivity[i].organization"></span>
+                        </div>
+                    </div>
+
+
+                    <div class="table-row form-row">
+                        <div class="left-cell">
+                            <label>Должность:</label>
+                        </div>
+                        <div class="right-cell">
+                            <input asp-for="TeachingActivity[i].position" class="big-input" />
+                            <span asp-validation-for="TeachingActivity[i].position"></span>
+                        </div>
+                    </div>
+
+
+                    <div class="table-row form-row">
+                        <div class="left-cell">
+                            <label>Название:</label>
+                        </div>
+                        <div class="right-cell">
+                            <input asp-for="TeachingActivity[i].title" class="big-input" />
+                            <span asp-validation-for="TeachingActivity[i].title"></span>
+                        </div>
+                    </div>
+
+
+                    <div class="table-row form-row">
+                        <div class="left-cell">
+                            <label>Год начала:</label>
+                        </div>
+                        <div class="right-cell b-r-form w120">
+                            <select class="skip"
+                                    asp-for="TeachingActivity[i].yearFrom"
+                                    asp-items="years"></select>
+                            <span asp-validation-for="TeachingActivity[i].yearFrom"></span>
+                        </div>
+                    </div>
+
+
+                    <div class="table-row form-row">
+                        <div class="left-cell">
+                            <label>Год окончания:</label>
+                        </div>
+                        <div class="right-cell b-r-form w120">
+                            <select class="skip"
+                                    asp-for="TeachingActivity[i].yearTo"
+                                    asp-items="years"></select>
+                            <span asp-validation-for="TeachingActivity[i].yearTo"></span>
+                        </div>
+                    </div>
+
+
+                    <div class="table-row form-row">
+                        <div class="left-cell">
+                            <label>Тип:</label>
+                        </div>
+                        <div class="right-cell">
+                            <input asp-for="TeachingActivity[i].type" class="big-input" />
+                            <span asp-validation-for="TeachingActivity[i].type"></span>
+                        </div>
+                    </div>
+
+
+                    <br />
+                    <div class="table-row form-row">
+                        <div class="right-cell">
+                            <button class="btn btn-warning btn-sm" onclick="return removeItemFromList(this);">Удалить</button>
+                        </div>
+                    </div>
+                    <hr />
+                </div>
+                </text>
+        }
+            <div class="table-row form-row mt17">
+                <div class="left-cell">
+                    <label></label>
+                </div>
+                <div class="right-cell">
+                    <a href="#" onclick="return addNewItemToList(this, 'TeachingActivity')" class="link-add lk-icon italic link-add-field">Добавить запись</a>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+
+
+
+    <div class="row mb13">
+        <div class="bold">Прочая деятельность</div>
+        <div class="table-form mt15 property-list-container" data-innercount="@(Model.OtherActivity.Count - 1)">
+            @for (var i = 0; i < Model.OtherActivity.Count; i++)
+        {
+            useStyle = i == 0 ? invisibleItemStyle : string.Empty;
+                <text>
+                <div class="property-list-item" style="@useStyle" data-list-template="@(i == 0 ? "true" : "false")">
+                    <input type="hidden" name="OtherActivity.Index" value="@i" />
+
+
+                    <div class="table-row form-row">
+                        <div class="left-cell">
+                            <label>Организация:</label>
+                        </div>
+                        <div class="right-cell">
+                            <input asp-for="OtherActivity[i].organization" class="big-input" />
+                            <span asp-validation-for="OtherActivity[i].organization"></span>
+                        </div>
+                    </div>
+
+
+                    <div class="table-row form-row">
+                        <div class="left-cell">
+                            <label>Должность:</label>
+                        </div>
+                        <div class="right-cell">
+                            <input asp-for="OtherActivity[i].position" class="big-input" />
+                            <span asp-validation-for="OtherActivity[i].position"></span>
+                        </div>
+                    </div>
+
+
+                    <div class="table-row form-row">
+                        <div class="left-cell">
+                            <label>Название:</label>
+                        </div>
+                        <div class="right-cell">
+                            <input asp-for="OtherActivity[i].title" class="big-input" />
+                            <span asp-validation-for="OtherActivity[i].title"></span>
+                        </div>
+                    </div>
+
+
+                    <div class="table-row form-row">
+                        <div class="left-cell">
+                            <label>Год начала:</label>
+                        </div>
+                        <div class="right-cell b-r-form w120">
+                            <select class="skip"
+                                    asp-for="OtherActivity[i].yearFrom"
+                                    asp-items="years"></select>
+                            <span asp-validation-for="OtherActivity[i].yearFrom"></span>
+                        </div>
+                    </div>
+
+
+                    <div class="table-row form-row">
+                        <div class="left-cell">
+                            <label>Год окончания:</label>
+                        </div>
+                        <div class="right-cell b-r-form w120">
+                            <select class="skip"
+                                    asp-for="OtherActivity[i].yearTo"
+                                    asp-items="years"></select>
+                            <span asp-validation-for="OtherActivity[i].yearTo"></span>
+                        </div>
+                    </div>
+
+
+                    <div class="table-row form-row">
+                        <div class="left-cell">
+                            <label>Тип:</label>
+                        </div>
+                        <div class="right-cell">
+                            <input asp-for="OtherActivity[i].type" class="big-input" />
+                            <span asp-validation-for="OtherActivity[i].type"></span>
+                        </div>
+                    </div>
+
+
+                    <br />
+                    <div class="table-row form-row">
+                        <div class="right-cell">
+                            <button class="btn btn-warning btn-sm" onclick="return removeItemFromList(this);">Удалить</button>
+                        </div>
+                    </div>
+                    <hr />
+                </div>
+                </text>
+        }
+            <div class="table-row form-row mt17">
+                <div class="left-cell">
+                    <label></label>
+                </div>
+                <div class="right-cell">
+                    <a href="#" onclick="return addNewItemToList(this, 'OtherActivity')" class="link-add lk-icon italic link-add-field">Добавить запись</a>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+
     <div class="row mb6">
         <div class="bold">Научная деятельность<br /> и достижения</div>
         <div class="table-form mt15">
@@ -415,37 +701,37 @@
                     <label>Членство в профессиональных сообществах:</label>
                 </div>
                 <div class="right-cell">
-                    <div class="property-list-container" data-innercount="@(Model.Memberships.Count-1)">
+                    <div class="property-list-container" data-innercount="@(Model.Memberships.Count - 1)">
 
                         <ol class="list-Memberships content-list">
                             @for (var i = 0; i < Model.Memberships.Count; i++)
                             {
                                 useStyle = i == 0 ? invisibleItemStyle : string.Empty;
                                 <text>
-                                <li style="@useStyle" class="property-list-item" data-list-template="@(i == 0 ? "true" : "false")">
-                                    <input type="hidden" name="Memberships.Index" value="@i" />
+                                    <li style="@useStyle" class="property-list-item" data-list-template="@(i == 0 ? "true" : "false")">
+                                        <input type="hidden" name="Memberships.Index" value="@i"/>
 
-                                    <br />
+                                        <br/>
 
-                                    <input asp-for="Memberships[i].org" />
-                                    <span>Организация</span>
+                                        <input asp-for="Memberships[i].org"/>
+                                        <span>Организация</span>
 
-                                    <br />
+                                        <br/>
 
-                                    <input asp-for="Memberships[i].position" />
-                                    <span>Позиция</span>
+                                        <input asp-for="Memberships[i].position"/>
+                                        <span>Позиция</span>
 
-                                    <br />
+                                        <br/>
 
-                                    <span>С </span>
-                                    <input asp-for="Memberships[i].year_from" class="small-input" />
-                                    <span> по </span>
-                                    <input asp-for="Memberships[i].year_to" class="small-input" />
+                                        <span>С </span>
+                                        <input asp-for="Memberships[i].year_from" class="small-input"/>
+                                        <span> по </span>
+                                        <input asp-for="Memberships[i].year_to" class="small-input"/>
 
-                                    <div class="buttons">
-                                        <span class="big-link-remove" onclick="return removeItemFromList(this);"></span>
-                                    </div>
-                                </li>
+                                        <div class="buttons">
+                                            <span class="big-link-remove" onclick="return removeItemFromList(this);"></span>
+                                        </div>
+                                    </li>
                                 </text>
                             }
                         </ol>
@@ -453,44 +739,43 @@
                     </div>
                 </div>
             </div>
-            <div class="table-row form-row">
-                <div class="left-cell">
-                    <label>Конференции, симпозиумы, конгрессы:</label>
-                </div>
-                <div class="right-cell">
-                    <textarea asp-for="Conferences"></textarea>
-                    <span asp-validation-for="Conferences"></span>
-                </div>
-            </div>
-            <div class="table-row form-row">
-                <div class="left-cell">
-                    <label>Публикации:</label>
-                </div>
-                <div class="right-cell">
-                    <div class="property-list-container" data-innercount="@(Model.Publications.Count-1)">
 
-                        <ol class="list-publications content-list">
-                            @for (var i = 0; i < Model.Publications.Count; i++)
+
+
+            <div class="table-row form-row">
+                <div class="left-cell">
+                    <label>Конференции, симпозиумы, доклады:</label>
+                </div>
+                <div class="right-cell">
+                    <div class="property-list-container" data-innercount="@(Model.Conferences.Count - 1)">
+
+                        <ol class="list-Conferences content-list">
+                            @for (var i = 0; i < Model.Conferences.Count; i++)
                             {
                                 useStyle = i == 0 ? invisibleItemStyle : string.Empty;
                                 <text>
                                 <li style="@useStyle" class="property-list-item" data-list-template="@(i == 0 ? "true" : "false")">
-                                    <input type="hidden" asp-for="Publications[i].Guid" />
-                                    <input type="hidden" asp-for="Publications[i].ResearcherGuid" />
-                                    <input type="hidden" asp-for="Publications[i].Type" />
-                                    <input type="hidden" asp-for="Publications[i].ExtId" />
-                                    <input type="hidden" asp-for="Publications[i].Updated" />
-                                    <input type="hidden" name="Publications.Index" value="@i" />
+                                    <input type="hidden" name="Conferences.Index" value="@i" />
 
                                     <br />
 
-                                    <input asp-for="Publications[i].Name" />
+                                    <input asp-for="Conferences[i].conference" />
                                     <span>Название</span>
 
                                     <br />
 
-                                    <input asp-for="Publications[i].Authors" />
-                                    <span>Авторы</span>
+                                    <input asp-for="Conferences[i].title" />
+                                    <span>Доклад</span>
+
+                                    <br />
+
+                                    <input asp-for="Conferences[i].categoryType" />
+                                    <span>тип</span>
+
+                                    <br />
+
+                                    <input asp-for="Conferences[i].year" />
+                                    <span>год</span>
 
 
                                     <div class="buttons">
@@ -501,10 +786,64 @@
                                 </text>
                             }
                         </ol>
-                        <a onclick="return addNewItemToList(this, 'Publications')" class="link-add lk-icon italic link-add-field" href="#">Добавить публикацию</a>
+                        <a onclick="return addNewItemToList(this, 'Conferences')" class="link-add lk-icon italic link-add-field" href="#">Добавить запись</a>
                     </div>
                 </div>
             </div>
+
+
+
+
+
+
+            <div class="table-row form-row">
+                <div class="left-cell">
+                    <label>Публикации:</label>
+                </div>
+                <div class="right-cell">
+                    <div class="property-list-container" data-innercount="@(Model.Publications.Count - 1)">
+
+                        <ol class="list-publications content-list">
+                            @for (var i = 0; i < Model.Publications.Count; i++)
+                            {
+                                useStyle = i == 0 ? invisibleItemStyle : string.Empty;
+                                <text>
+                                    <li style="@useStyle" class="property-list-item" data-list-template="@(i == 0 ? "true" : "false")">
+                                        <input type="hidden" asp-for="Publications[i].Guid"/>
+                                        <input type="hidden" asp-for="Publications[i].ResearcherGuid"/>
+                                        <input type="hidden" asp-for="Publications[i].Type"/>
+                                        <input type="hidden" asp-for="Publications[i].ExtId"/>
+                                        <input type="hidden" asp-for="Publications[i].Updated"/>
+                                        <input type="hidden" name="Publications.Index" value="@i"/>
+
+                                        <br/>
+
+                                        <input asp-for="Publications[i].Name"/>
+                                        <span>Название</span>
+
+                                        <br/>
+
+                                        <input asp-for="Publications[i].Authors"/>
+                                        <span>Авторы</span>
+
+
+                                        <div class="buttons">
+                                            @*<span class="big-link-edit"></span>*@
+                                            <span class="big-link-remove" onclick="return removeItemFromList(this);"></span>
+                                        </div>
+                                    </li>
+                                </text>
+                            }
+                        </ol>
+                        <a onclick="return addNewItemToList(this, 'Publications')" class="link-add lk-icon italic link-add-field" href="#">Добавить запись</a>
+                    </div>
+                </div>
+            </div>
+
+
+
+
+
         </div>
     </div>
     <div class="row">

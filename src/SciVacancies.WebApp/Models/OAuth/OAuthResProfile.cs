@@ -55,7 +55,7 @@ namespace SciVacancies.WebApp.Models.OAuth
         /// <summary>
         /// деятельность
         /// </summary>
-        public List<OAuthResActivity> researchers { get; set; }
+        public List<OAuthResActivity> researches { get; set; }
     }
     public class OAuthResEducation
     {

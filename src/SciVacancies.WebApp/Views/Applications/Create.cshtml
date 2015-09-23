@@ -154,32 +154,67 @@
         <div class="row">
             <div class="bold row-title">Опыт работы:</div>
             <div class="table-form">
+
+
+
                 <div class="table-row form-row">
                     <div class="left-cell">
                         <label>Исследовательская деятельность:</label>
                     </div>
                     <div class="right-cell">
-                        <textarea asp-for="ResearchActivity" class="disabled"></textarea>
+                        <div class="property-list-container">
+                            <ol class="content-list">
+                                @foreach (var item in Model.ResearchActivityDeserialized)
+                                {
+                                    <text>
+                                    <li class="property-list-item">
+                                        Организация "@item.organization", на должности "@item.position" (период с @item.yearFrom по @item.yearTo; род деятельности @item.title)
+                                    </li>
+                                    </text>
+                                }
+                            </ol>
+                        </div>
                     </div>
                 </div>
-
                 <div class="table-row form-row">
                     <div class="left-cell">
                         <label>Преподавательская деятельность:</label>
                     </div>
                     <div class="right-cell">
-                        <textarea asp-for="TeachingActivity" class="disabled"></textarea>
+                        <div class="property-list-container">
+                            <ol class="content-list">
+                                @foreach (var item in Model.TeachingActivityDeserialized)
+                                {
+                                    <text>
+                                    <li class="property-list-item">
+                                        Организация "@item.organization", на должности "@item.position" (период с @item.yearFrom по @item.yearTo; род деятельности @item.title)
+                                    </li>
+                                    </text>
+                                }
+                            </ol>
+                        </div>
                     </div>
                 </div>
-
                 <div class="table-row form-row">
                     <div class="left-cell">
                         <label>Прочая деятельность:</label>
                     </div>
                     <div class="right-cell">
-                        <textarea asp-for="OtherActivity" class="disabled"></textarea>
+                        <div class="property-list-container">
+                            <ol class="content-list">
+                                @foreach (var item in Model.OtherActivityDeserialized)
+                                {
+                                    <text>
+                                    <li class="property-list-item">
+                                        Организация "@item.organization", на должности "@item.position" (период с @item.yearFrom по @item.yearTo; род деятельности @item.title)
+                                    </li>
+                                    </text>
+                                }
+                            </ol>
+                        </div>
                     </div>
                 </div>
+
             </div>
         </div>
 
@@ -250,7 +285,7 @@
                         <label>Публикации:</label>
                     </div>
                     <div class="right-cell">
-                        <div class="property-list-container" data-innercount="@(Model.Publications.Count-1)">
+                        <div class="property-list-container" data-innercount="@(Model.Publications.Count - 1)">
                             <ol class="content-list">
                                 @for (var i = 0; i < Model.Publications.Count; i++)
                                 {
@@ -266,6 +301,27 @@
                         </div>
                     </div>
                 </div>
+
+                <div class="table-row form-row">
+                    <div class="left-cell">
+                        <label>Конференции, симпозиумы:</label>
+                    </div>
+                    <div class="right-cell">
+                        <div class="property-list-container">
+                            <ol class="content-list">
+                                @foreach (var item in Model.ConferencesDeserialized)
+                                {
+                                    <text>
+                                    <li class="property-list-item">
+                                        @item.conference - доклад "@item.title" (год @item.year, тип @item.categoryType)
+                                    </li>
+                                    </text>
+                                }
+                            </ol>
+                        </div>
+                    </div>
+                </div>
+
             </div>
         </div>
 

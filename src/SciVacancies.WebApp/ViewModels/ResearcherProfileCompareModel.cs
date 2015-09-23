@@ -52,25 +52,15 @@ namespace SciVacancies.WebApp.ViewModels
 
         /*Activity*/
 
-        public bool SelectResearchActivity { get; set; }
-        public string ResearchActivity { get; set; }
-
-        public bool SelectTeachingActivity { get; set; }
-        public string TeachingActivity { get; set; }
-
-        public bool SelectOtherActivity { get; set; }
-        public string OtherActivity { get; set; }
-
         public bool SelectScienceDegree { get; set; }
         public string ScienceDegree { get; set; }
 
         public bool SelectScienceRank { get; set; }
         public string ScienceRank { get; set; }
 
-        public bool SelectConferences { get; set; }
-        public string Conferences { get; set; }
-
         /*Collections*/
+
+        public CheckableItemsList<ConferenceEditViewModel> Conferences { get; set; }
 
         public CheckableItemsList<RewardEditViewModel> Rewards { get; set; }
         public CheckableItemsList<MembershipEditViewModel> Memberships { get; set; }
@@ -78,7 +68,9 @@ namespace SciVacancies.WebApp.ViewModels
         public CheckableItemsList<PublicationEditViewModel> Publications { get; set; }
         public CheckableItemsList<InterestEditViewModel> Interests { get; set; }
 
+        public CheckableItemsList<ActivityEditViewModel> ResearchActivity { get; set; }
+        public CheckableItemsList<ActivityEditViewModel> TeachingActivity { get; set; }
+        public CheckableItemsList<ActivityEditViewModel> OtherActivity { get; set; }
+
     }
-
-
 }
