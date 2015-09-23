@@ -1,8 +1,6 @@
 ﻿@using System.Threading.Tasks
 @model SciVacancies.WebApp.ViewModels.IndexViewModel
 
-<link rel="stylesheet" href="~/css/home.css" />
-
 <div class="crumbs">
     @ViewBag.Title
     @Context.User.Identity.Name
@@ -154,7 +152,9 @@
         <div class="b-search">
             <form asp-controller="search" asp-action="index" method="GET">
                 <input class="search-input" type="text" name="search" placeholder="поиск по порталу" value="@ViewBag.Search"/>
-                <input type="submit" class="search-button" value="" />
+                <span class="search-button search-button__icon">
+                    <input type="submit" value="" class="search-button__submit">
+                </span>
             </form>
         </div>
 
