@@ -5,13 +5,12 @@ namespace SciVacancies.Domain.Events
     public class VacancySagaEventBase : EventBase
     {
         public Guid SagaGuid { get; set; }
+        public Guid VacancyGuid { get; set; }
+        public Guid OrganizationGuid { get; set; }
     }
 
     public class VacancySagaCreated : VacancySagaEventBase
     {
-        public Guid VacancyGuid { get; set; }
-        public Guid OrganizationGuid { get; set; }
-
         public DateTime InCommitteeStartDate { get; set; }
         public DateTime InCommitteeEndDate { get; set; }
     }
@@ -44,6 +43,8 @@ namespace SciVacancies.Domain.Events
     }
     public class VacancySagaOfferResponseNotificationSentToWinner : VacancySagaEventBase
     {
+        public Guid WinnerReasearcherGuid { get; set; }
+        public Guid WinnerVacancyApplicationGuid { get; set; }
     }
     public class VacancySagaOfferAcceptedByWinner : VacancySagaEventBase
     {
@@ -57,6 +58,8 @@ namespace SciVacancies.Domain.Events
     }
     public class VacancySagaOfferResponseNotificationSentToPretender : VacancySagaEventBase
     {
+        public Guid PretenderReasearcherGuid { get; set; }
+        public Guid PretenderVacancyApplicationGuid { get; set; }
     }
     public class VacancySagaOfferAcceptedByPretender : VacancySagaEventBase
     {

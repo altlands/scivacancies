@@ -61,6 +61,8 @@ namespace SciVacancies.WebApp.Infrastructure.Saga
             vacancySaga.Transition(new VacancySagaProlongedInCommittee
             {
                 SagaGuid = vacancySaga.Id,
+                VacancyGuid = msg.VacancyGuid,
+                OrganizationGuid = msg.OrganizationGuid,
 
                 InCommitteeEndDate = msg.InCommitteeEndDate
             });
@@ -74,6 +76,8 @@ namespace SciVacancies.WebApp.Infrastructure.Saga
             saga.Transition(new VacancySagaWinnerSet
             {
                 SagaGuid = saga.Id,
+                VacancyGuid = msg.VacancyGuid,
+                OrganizationGuid = msg.OrganizationGuid,
 
                 WinnerReasearcherGuid = msg.WinnerReasearcherGuid,
                 WinnerVacancyApplicationGuid = msg.WinnerVacancyApplicationGuid
@@ -85,6 +89,8 @@ namespace SciVacancies.WebApp.Infrastructure.Saga
             saga.Transition(new VacancySagaPretenderSet
             {
                 SagaGuid = saga.Id,
+                VacancyGuid = msg.VacancyGuid,
+                OrganizationGuid = msg.OrganizationGuid,
 
                 PretenderReasearcherGuid = msg.PretenderReasearcherGuid,
                 PretenderVacancyApplicationGuid = msg.PretenderVacancyApplicationGuid
@@ -100,6 +106,9 @@ namespace SciVacancies.WebApp.Infrastructure.Saga
             saga.Transition(new VacancySagaSwitchedInOfferResponseAwaitingFromWinner
             {
                 SagaGuid = saga.Id,
+                VacancyGuid = msg.VacancyGuid,
+                OrganizationGuid = msg.OrganizationGuid,
+
                 OfferResponseAwaitingFromWinnerEndDate = msg.TimeStamp.AddDays(30)
             });
 
@@ -117,7 +126,9 @@ namespace SciVacancies.WebApp.Infrastructure.Saga
             VacancySaga saga = _sagaRepository.GetById<VacancySaga>("vacancysaga", msg.VacancyGuid);
             saga.Transition(new VacancySagaOfferAcceptedByWinner
             {
-                SagaGuid = saga.Id
+                SagaGuid = saga.Id,
+                VacancyGuid = msg.VacancyGuid,
+                OrganizationGuid = msg.OrganizationGuid,
             });
 
             _sagaRepository.Save("vacancysaga", saga, Guid.NewGuid(), null);
@@ -127,7 +138,9 @@ namespace SciVacancies.WebApp.Infrastructure.Saga
             VacancySaga saga = _sagaRepository.GetById<VacancySaga>("vacancysaga", msg.VacancyGuid);
             saga.Transition(new VacancySagaOfferRejectedByWinner
             {
-                SagaGuid = saga.Id
+                SagaGuid = saga.Id,
+                VacancyGuid = msg.VacancyGuid,
+                OrganizationGuid = msg.OrganizationGuid,
             });
 
             _sagaRepository.Save("vacancysaga", saga, Guid.NewGuid(), null);
@@ -138,6 +151,9 @@ namespace SciVacancies.WebApp.Infrastructure.Saga
             saga.Transition(new VacancySagaSwitchedInOfferResponseAwaitingFromPretender
             {
                 SagaGuid = saga.Id,
+                VacancyGuid = msg.VacancyGuid,
+                OrganizationGuid = msg.OrganizationGuid,
+
                 OfferResponseAwaitingFromPretenderEndDate = msg.TimeStamp.AddDays(30)
             });
 
@@ -155,7 +171,9 @@ namespace SciVacancies.WebApp.Infrastructure.Saga
             VacancySaga saga = _sagaRepository.GetById<VacancySaga>("vacancysaga", msg.VacancyGuid);
             saga.Transition(new VacancySagaOfferAcceptedByPretender
             {
-                SagaGuid = saga.Id
+                SagaGuid = saga.Id,
+                VacancyGuid = msg.VacancyGuid,
+                OrganizationGuid = msg.OrganizationGuid,
             });
 
             _sagaRepository.Save("vacancysaga", saga, Guid.NewGuid(), null);
@@ -165,7 +183,9 @@ namespace SciVacancies.WebApp.Infrastructure.Saga
             VacancySaga saga = _sagaRepository.GetById<VacancySaga>("vacancysaga", msg.VacancyGuid);
             saga.Transition(new VacancySagaOfferRejectedByPretender
             {
-                SagaGuid = saga.Id
+                SagaGuid = saga.Id,
+                VacancyGuid = msg.VacancyGuid,
+                OrganizationGuid = msg.OrganizationGuid,
             });
 
             _sagaRepository.Save("vacancysaga", saga, Guid.NewGuid(), null);
@@ -175,7 +195,9 @@ namespace SciVacancies.WebApp.Infrastructure.Saga
             VacancySaga saga = _sagaRepository.GetById<VacancySaga>("vacancysaga", msg.VacancyGuid);
             saga.Transition(new VacancySagaCancelled
             {
-                SagaGuid = saga.Id
+                SagaGuid = saga.Id,
+                VacancyGuid = msg.VacancyGuid,
+                OrganizationGuid = msg.OrganizationGuid,
             });
 
             _sagaRepository.Save("vacancysaga", saga, Guid.NewGuid(), null);
@@ -185,7 +207,9 @@ namespace SciVacancies.WebApp.Infrastructure.Saga
             VacancySaga saga = _sagaRepository.GetById<VacancySaga>("vacancysaga", msg.VacancyGuid);
             saga.Transition(new VacancySagaClosed
             {
-                SagaGuid = saga.Id
+                SagaGuid = saga.Id,
+                VacancyGuid = msg.VacancyGuid,
+                OrganizationGuid = msg.OrganizationGuid,
             });
 
             _sagaRepository.Save("vacancysaga", saga, Guid.NewGuid(), null);

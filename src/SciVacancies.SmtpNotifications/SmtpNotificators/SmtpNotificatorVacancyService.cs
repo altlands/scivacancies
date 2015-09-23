@@ -176,7 +176,7 @@ namespace SciVacancies.SmtpNotifications.SmtpNotificators
                     Уважаемый(-ая), {researcher.secondname} {researcher.firstname}, ваша <a target='_blank' href='http://{_smtpNotificatorService.Domain}/applications/details/{applicationGuid}'>зявка</a>
                     победила в конкурсе на <a target='_blank' href='http://{_smtpNotificatorService.Domain}/vacancies/details/{vacancyGuid}'>вакансию</a>.
 
-                    Вам необходимо до конца сего дня подтвердить или отвергуть предложение контракта по этой вакансии
+                    Вам необходимо до конца сего дня подтвердить или отвергуть предложение контракта по этой вакансии.
                 </div>
 
                 <br/>
@@ -202,7 +202,7 @@ namespace SciVacancies.SmtpNotifications.SmtpNotificators
                     Уважаемый(-ая), {researcher.secondname} {researcher.firstname}, ваша <a target='_blank' href='http://{_smtpNotificatorService.Domain}/applications/details/{applicationGuid}'>зявка</a>
                     заняла второе место в конкурсе на <a target='_blank' href='http://{_smtpNotificatorService.Domain}/vacancies/details/{vacancyGuid}'>вакансию</a>.
                     
-                    Вам необходимо до конца сего дня подтвердить или отвергуть предложение контракта по этой вакансии
+                    Вам необходимо до конца сего дня подтвердить или отвергуть предложение контракта по этой вакансии.
                 </div>
 
                 <br/>
