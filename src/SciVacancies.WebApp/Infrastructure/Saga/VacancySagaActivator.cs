@@ -5,7 +5,6 @@ using System;
 using MediatR;
 using SciVacancies.Services.Quartz;
 using Microsoft.Framework.OptionsModel;
-using SciVacancies.Services;
 
 namespace SciVacancies.WebApp.Infrastructure.Saga
 {
@@ -53,7 +52,7 @@ namespace SciVacancies.WebApp.Infrastructure.Saga
                 SagaGuid = vacancySaga.Id
             };
 
-            _schedulerService.CreateSheduledJob(job, job.SagaGuid, _settings.Options.Scheduler?.ExecutionInterval ?? 10);
+            _schedulerService.CreateSheduledJob(job, job.SagaGuid, _settings.Options.Scheduler.ExecutionInterval);
         }
 
         public void Handle(VacancyProlongedInCommittee msg)
@@ -111,7 +110,6 @@ namespace SciVacancies.WebApp.Infrastructure.Saga
                 SagaGuid = saga.Id
             };
 
-            //вынести интервал в конфиг
             _schedulerService.CreateSheduledJob(job, job.SagaGuid, _settings.Options.Scheduler.ExecutionInterval);
         }
         public void Handle(VacancyOfferAcceptedByWinner msg)
@@ -150,7 +148,6 @@ namespace SciVacancies.WebApp.Infrastructure.Saga
                 SagaGuid = saga.Id
             };
 
-            //вынести интервал в конфиг
             _schedulerService.CreateSheduledJob(job, job.SagaGuid, _settings.Options.Scheduler.ExecutionInterval);
         }
         public void Handle(VacancyOfferAcceptedByPretender msg)
