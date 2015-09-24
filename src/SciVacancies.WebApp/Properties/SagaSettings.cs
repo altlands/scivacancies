@@ -2,12 +2,12 @@
 {
     public class SagaSettings
     {
-        public SagaDateSettings Date { get; set; }
+        public SagaDateSettings Date { get; set; } = new SagaDateSettings();
     }
     public class SagaDateSettings
     {
-        public CommitteeDateSettings Committee { get; set; }
-        public OfferResponseAwaitingDateSettings OfferResponseAwaiting { get; set; }
+        public CommitteeDateSettings Committee { get; set; } = new CommitteeDateSettings();
+        public OfferResponseAwaitingDateSettings OfferResponseAwaiting { get; set; } = new OfferResponseAwaitingDateSettings();
     }
     public class CommitteeDateSettings
     {

@@ -2,6 +2,7 @@
 
 using System;
 
+using Quartz;
 using MediatR;
 using SciVacancies.Services.Quartz;
 using Microsoft.Framework.OptionsModel;
@@ -34,10 +35,10 @@ namespace SciVacancies.WebApp.Infrastructure.Saga
         }
         public void Handle(VacancyPublished msg)
         {
-            var vacancySaga = new VacancySaga(msg.VacancyGuid);
-            vacancySaga.Transition(new VacancySagaCreated
+            var saga = new VacancySaga(msg.VacancyGuid);
+            saga.Transition(new VacancySagaCreated
             {
-                SagaGuid = vacancySaga.Id,
+                SagaGuid = saga.Id,
                 VacancyGuid = msg.VacancyGuid,
                 OrganizationGuid = msg.OrganizationGuid,
 
@@ -45,29 +46,29 @@ namespace SciVacancies.WebApp.Infrastructure.Saga
                 InCommitteeEndDate = msg.InCommitteeEndDate
             });
 
-            _sagaRepository.Save("vacancysaga", vacancySaga, Guid.NewGuid(), null);
+            _sagaRepository.Save("vacancysaga", saga, Guid.NewGuid(), null);
 
             var job = new VacancySagaTimeoutJob()
             {
-                SagaGuid = vacancySaga.Id
+                SagaGuid = saga.Id
             };
 
-            _schedulerService.CreateSheduledJob(job, job.SagaGuid, _settings.Options.Scheduler.ExecutionInterval);
+            _schedulerService.CreateSheduledJobWithStrongName(job, new JobKey(job.SagaGuid.ToString(), "VacancySagaTimeoutJob"), _settings.Options.Scheduler.ExecutionInterval);
         }
 
         public void Handle(VacancyProlongedInCommittee msg)
         {
-            var vacancySaga = _sagaRepository.GetById<VacancySaga>("vacancysaga", msg.VacancyGuid);
-            vacancySaga.Transition(new VacancySagaProlongedInCommittee
+            var saga = _sagaRepository.GetById<VacancySaga>("vacancysaga", msg.VacancyGuid);
+            saga.Transition(new VacancySagaProlongedInCommittee
             {
-                SagaGuid = vacancySaga.Id,
+                SagaGuid = saga.Id,
                 VacancyGuid = msg.VacancyGuid,
                 OrganizationGuid = msg.OrganizationGuid,
 
                 InCommitteeEndDate = msg.InCommitteeEndDate
             });
 
-            _sagaRepository.Save("vacancysaga", vacancySaga, Guid.NewGuid(), null);
+            _sagaRepository.Save("vacancysaga", saga, Guid.NewGuid(), null);
         }
 
         public void Handle(VacancyWinnerSet msg)
@@ -82,6 +83,8 @@ namespace SciVacancies.WebApp.Infrastructure.Saga
                 WinnerReasearcherGuid = msg.WinnerReasearcherGuid,
                 WinnerVacancyApplicationGuid = msg.WinnerVacancyApplicationGuid
             });
+
+            _sagaRepository.Save("vacancysaga", saga, Guid.NewGuid(), null);
         }
         public void Handle(VacancyPretenderSet msg)
         {
@@ -95,6 +98,8 @@ namespace SciVacancies.WebApp.Infrastructure.Saga
                 PretenderReasearcherGuid = msg.PretenderReasearcherGuid,
                 PretenderVacancyApplicationGuid = msg.PretenderVacancyApplicationGuid
             });
+
+            _sagaRepository.Save("vacancysaga", saga, Guid.NewGuid(), null);
         }
         /// <summary>
         /// Как только у вакансии этот статус проставляется - ожидается респонс от победителя или претендента. Нужно запустить таймер на 30 дней
@@ -119,12 +124,15 @@ namespace SciVacancies.WebApp.Infrastructure.Saga
                 SagaGuid = saga.Id
             };
 
-            if (_schedulerService.CheckExists(new Quartz.JobKey(saga.Id.ToString())))
+            if (_schedulerService.CheckExists(new JobKey(saga.Id.ToString(), "VacancySagaTimeoutJob")))
             {
-                _schedulerService.RemoveScheduledJob(saga.Id);
+                if (!_schedulerService.DeleteJob(new JobKey(saga.Id.ToString(), "VacancySagaTimeoutJob")))
+                {
+                    throw new Exception("Can't delete job from DB");
+                }
             }
 
-            _schedulerService.CreateSheduledJob(job, job.SagaGuid, _settings.Options.Scheduler.ExecutionInterval);
+            _schedulerService.CreateSheduledJobWithStrongName(job, new JobKey(job.SagaGuid.ToString(), "VacancySagaTimeoutJob"), _settings.Options.Scheduler.ExecutionInterval);
         }
         public void Handle(VacancyOfferAcceptedByWinner msg)
         {
@@ -169,12 +177,15 @@ namespace SciVacancies.WebApp.Infrastructure.Saga
                 SagaGuid = saga.Id
             };
 
-            if (_schedulerService.CheckExists(new Quartz.JobKey(saga.Id.ToString())))
+            if (_schedulerService.CheckExists(new JobKey(saga.Id.ToString(), "VacancySagaTimeoutJob")))
             {
-                _schedulerService.RemoveScheduledJob(saga.Id);
+                if (!_schedulerService.DeleteJob(new JobKey(saga.Id.ToString(), "VacancySagaTimeoutJob")))
+                {
+                    throw new Exception("Can't delete job from DB");
+                }
             }
 
-            _schedulerService.CreateSheduledJob(job, job.SagaGuid, _settings.Options.Scheduler.ExecutionInterval);
+            _schedulerService.CreateSheduledJobWithStrongName(job, new JobKey(job.SagaGuid.ToString(), "VacancySagaTimeoutJob"), _settings.Options.Scheduler.ExecutionInterval);
         }
         public void Handle(VacancyOfferAcceptedByPretender msg)
         {
