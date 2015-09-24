@@ -84,7 +84,7 @@ namespace SciVacancies.WebApp.Controllers
                 if (ModelState.ErrorCount > 0)
                 {
                     model.InitDictionaries(_mediator);
-                    return View(model);
+                    return View("create", model);
                 }
                 // раскоментировать когда будут прикреплённые файлы для вакансии
                 //присваиваем прикреплённым файлам тип "Прочее" (для соответствущей выборки)

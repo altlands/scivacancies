@@ -9,10 +9,14 @@ using SciVacancies.WebApp.Infrastructure.Identity;
 using SciVacancies.WebApp.Models.DataModels;
 using SciVacancies.WebApp.ViewModels;
 using System;
+using System.Linq;
 using System.Security.Claims;
 
 namespace SciVacancies.WebApp.Commands
 {
+    /// <summary>
+    /// регистрация пользователя
+    /// </summary>
     public class RegisterUserResearcherCommandHandler : IRequestHandler<RegisterUserResearcherCommand, SciVacUser>
     {
         private readonly SciVacUserManager _userManager;
@@ -73,10 +77,10 @@ namespace SciVacancies.WebApp.Commands
             if (!string.IsNullOrWhiteSpace(message.Data.SciMapNumber))
             {
                 _userManager.AddLogin(user.Id, new UserLoginInfo(ConstTerms.LoginProviderScienceMap, message.Data.SciMapNumber));
-                
+
                 //отметить пользователя как прошедшего активацию
                 _userManager.AddClaim(user.Id, new Claim(ConstTerms.ClaimTypeUserActivated, "true"));
-                
+
                 _userManager.AddToRole(user.Id, ConstTerms.RequireRoleResearcher);
             }
             else
@@ -88,6 +92,61 @@ namespace SciVacancies.WebApp.Commands
             return user;
         }
     }
+
+    /// <summary>
+    /// слияние пользователя от Карты Наук с собственноым зарегистрированным пользователем
+    /// </summary>
+    public class MergeSciMapAndUserResearcherCommandHandler : IRequestHandler<MergeSciMapAndUserResearcherCommand, SciVacUser>
+    {
+        private readonly SciVacUserManager _userManager;
+
+        public MergeSciMapAndUserResearcherCommandHandler(SciVacUserManager userManager)
+        {
+            _userManager = userManager;
+        }
+
+        public SciVacUser Handle(MergeSciMapAndUserResearcherCommand message)
+        {
+            if (!string.IsNullOrWhiteSpace(message.SciMapNumber))
+            {
+                if (_userManager.GetLogins(message.UserId).All(c => c.LoginProvider != ConstTerms.LoginProviderScienceMap))
+                    _userManager.AddLogin(message.UserId, new UserLoginInfo(ConstTerms.LoginProviderScienceMap, message.SciMapNumber));
+
+                if (_userManager.GetClaims(message.UserId).Any(c => c.Type == ConstTerms.ClaimTypeUserActivated && c.Value == "false"))
+                    //удалить информацию о Неактивированном пользователе
+                    _userManager.RemoveClaim(message.UserId, new Claim(ConstTerms.ClaimTypeUserActivated, "true"));
+
+                if (!_userManager.GetClaims(message.UserId).Any(c => c.Type == ConstTerms.ClaimTypeUserActivated && c.Value == "true"))
+                    //отметить пользователя как прошедшего активацию
+                    _userManager.AddClaim(message.UserId, new Claim(ConstTerms.ClaimTypeUserActivated, "true"));
+
+                if (!_userManager.IsInRole(message.UserId, ConstTerms.RequireRoleResearcher))
+                    _userManager.AddToRole(message.UserId, ConstTerms.RequireRoleResearcher);
+
+
+                if (message.Claims != null && message.Claims.Any())
+                {
+                    foreach (var claim in _userManager.GetClaims(message.UserId).Where(c => message.Claims.Select(d => d.Type).ToList().Contains(c.Type)).ToList())
+                    //очистить клэймы
+                    {
+                        _userManager.RemoveClaim(message.UserId, claim);
+                    }
+
+                    foreach (var claim in message.Claims)
+                    {
+                        _userManager.AddClaim(message.UserId, claim);
+                    }
+                }
+            }
+
+            return _userManager.FindById(message.UserId);
+        }
+    }
+
+
+    /// <summary>
+    /// organization registration
+    /// </summary>
     public class RegisterUserOrganizationCommandHandler : IRequestHandler<RegisterUserOrganizationCommand, SciVacUser>
     {
         private readonly SciVacUserManager _userManager;

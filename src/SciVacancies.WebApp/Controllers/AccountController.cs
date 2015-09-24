@@ -280,14 +280,18 @@ namespace SciVacancies.WebApp.Controllers
                                     {
                                         var claims = await _authorizeService.GetOAuthUserAndTokensClaimsAsync(_oauthSettings.Options.Mapofscience, tokenResponse);
 
+                                        //ищем пользователя по Email в нашей БД
                                         var resUser = _userManager.FindByEmail(claims.Find(f => f.Type.Equals("email")).Value);
 
-                                        if (resUser == null)
-                                        {
-                                            OAuthResProfile researcherProfile = JsonConvert.DeserializeObject<OAuthResProfile>(_authorizeService.GetResearcherProfile(tokenResponse.AccessToken));
+                                        //получаем информацию о Пользователе с Карты Наук
+                                        OAuthResProfile researcherProfile = JsonConvert.DeserializeObject<OAuthResProfile>(_authorizeService.GetResearcherProfile(tokenResponse.AccessToken));
+                                        var accountResearcherRegisterDataModel = Mapper.Map<ResearcherRegisterDataModel>(researcherProfile);
 
-                                            var accountResearcherRegisterDataModel =
-                                                Mapper.Map<ResearcherRegisterDataModel>(researcherProfile);
+                                        if (resUser == null)
+                                        //в нашей БД пользователь по Email не найден
+                                        {
+
+                                            //TODO: что делать если у нас есть пользователь с таким же логином
 
                                             if (!string.IsNullOrWhiteSpace(accountResearcherRegisterDataModel.SciMapNumber))
                                             {
@@ -313,18 +317,32 @@ namespace SciVacancies.WebApp.Controllers
                                         }
                                         else
                                         {
-                                            //TODO: что делать если у нас есть пользователь с таким же логином
 
-                                            //TODO: что делать если кто-то в нашей системе прописал email (такой же как у авторизованного пользователя)
-                                            if (!resUser.EmailConfirmed)
+                                            //если кто-то в нашей системе прописал email (такой же как у авторизованного с Карты Науки пользователя)
+                                            if (resUser.Email == accountResearcherRegisterDataModel.Email
+                                                && !string.IsNullOrWhiteSpace(accountResearcherRegisterDataModel.SciMapNumber) /*пользователь с Карты Науки прошел их собственную авторизацию */
+                                                )
                                             {
-                                                //todo: расширить данные нашего пользователя
-                                            }
-                                            else
-                                            {
-                                                //выполнить слияние с "нашим" пользователем
-                                            }
+                                                //проверить, что Пользователя Карты наук еще нет в нашей БД
+                                                var logins = await _userManager.GetLoginsAsync(User.Identity.GetUserId());
 
+                                                if (logins == null
+                                                    || logins.All(c => c.LoginProvider != ConstTerms.LoginProviderScienceMap && c.ProviderKey != accountResearcherRegisterDataModel.SciMapNumber))
+                                                {
+                                                    //выполнить слияние с "нашим" пользователем
+                                                    resUser = _mediator.Send(new MergeSciMapAndUserResearcherCommand
+                                                    {
+                                                        UserId = resUser.Id,
+                                                        SciMapNumber = accountResearcherRegisterDataModel.SciMapNumber,
+                                                        Claims = claims.Where(w => //w.Type.Equals("lastName")
+                                                                                   //|| w.Type.Equals("firstName")
+                                                                                   //|| w.Type.Equals("patronymic")
+                                                            w.Type.Equals("access_token")
+                                                            || w.Type.Equals("expires_in")
+                                                            || w.Type.Equals("refresh_token")).ToList()
+                                                    });
+                                                }
+                                            }
 
                                             claimsPrincipal = _authorizeService.RefreshUserClaimTokensAndReauthorize(resUser, claims, Response);
                                         }
@@ -471,7 +489,7 @@ namespace SciVacancies.WebApp.Controllers
                     model:
                         $"Ваш пользователь временно заблокирован. Повторите попытку через {Math.Round((lockoutEndDate - DateTime.UtcNow).TotalMinutes, 0)} минут");
             }
-            
+
             //сбросить блокировки
             await _userManager.SetLockoutEnabledAsync(user.Id, false);
             await _userManager.SetLockoutEndDateAsync(user.Id, DateTimeOffset.Now.AddSeconds(-1));
@@ -563,7 +581,7 @@ namespace SciVacancies.WebApp.Controllers
                 };
 
                 //удалить данные о времени запроса сброса пароля
-                user.LastRequests =null;
+                user.LastRequests = null;
                 _userManager.Update(user);
 
                 return View(model);
@@ -581,8 +599,8 @@ namespace SciVacancies.WebApp.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> RestorePasswordConfirm(RestorePasswordViewModel model)
         {
-            if(!ModelState.IsValid)
-                return View("RestorePassword", model) ;
+            if (!ModelState.IsValid)
+                return View("RestorePassword", model);
             #region validation
             var user = await _userManager.FindByNameAsync(model.UserName);
             if (user == null)

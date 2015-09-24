@@ -94,7 +94,7 @@ namespace SciVacancies.WebApp.Infrastructure
             Mapper.CreateMap<OAuthResProfile, ResearcherUpdateDataModel>()
                 .Include<OAuthResProfile, ResearcherRegisterDataModel>()
                 .ForMember(d => d.FirstName, o => o.MapFrom(s => s.firstName))
-                .ForMember(d => d.ExtNumber, o => o.MapFrom(s => s.identityNumberSc != null ? s.identityNumberSc.scimap : 0))
+                .ForMember(d => d.ExtNumber, o => o.MapFrom(s => (s.identityNumberSc != null && s.identityNumberSc.scimap > 0) ? s.identityNumberSc.scimap.ToString() : string.Empty))
                 .ForMember(d => d.FirstNameEng, o => o.MapFrom(s => s.firstNameEn))
                 .ForMember(d => d.SecondName, o => o.MapFrom(s => s.lastName))
                 .ForMember(d => d.SecondNameEng, o => o.MapFrom(s => s.lastNameEn))
@@ -106,27 +106,27 @@ namespace SciVacancies.WebApp.Infrastructure
                 .ForMember(d => d.Phone, o => o.MapFrom(s => s.phone))
                 .ForMember(d => d.ExtraPhone, o => o.Ignore())
                 //.ForMember(d => d, o => o.MapFrom(s => s.nationality))
-                .ForMember(d => d.OtherActivity, o => o.MapFrom(s => s.researches != null && s.researches.Any(c => c.type.Equals("X")) 
-                    ? JsonConvert.SerializeObject(s.researches.Where(c => c.type.Equals("X") /* X - Прочая деятельность*/ ).Select(c=>new OAuthResActivity
-                        {
-                            title = c.title,
-                            organization = c.organization,
-                            type = "Прочая деятельность",
-                            position = c.position,
-                            yearFrom = c.yearFrom
-                        }
-                        )) 
+                .ForMember(d => d.OtherActivity, o => o.MapFrom(s => s.researches != null && s.researches.Any(c => c.type.Equals("X"))
+                    ? JsonConvert.SerializeObject(s.researches.Where(c => c.type.Equals("X") /* X - Прочая деятельность*/ ).Select(c => new OAuthResActivity
+                    {
+                        title = c.title,
+                        organization = c.organization,
+                        type = "Прочая деятельность",
+                        position = c.position,
+                        yearFrom = c.yearFrom
+                    }
+                        ))
                     : string.Empty
                     ))
                 .ForMember(d => d.TeachingActivity, o => o.MapFrom(s => s.researches != null && s.researches.Any(c => c.type.Equals("L"))
                     ? JsonConvert.SerializeObject(s.researches.Where(c => c.type.Equals("L") /* L - Преподавательская деятельность*/ ).Select(c => new OAuthResActivity
-                        {
-                            title = c.title,
-                            organization = c.organization,
-                            type = "Преподавательская деятельность",
-                            position = c.position,
-                            yearFrom = c.yearFrom
-                        }
+                    {
+                        title = c.title,
+                        organization = c.organization,
+                        type = "Преподавательская деятельность",
+                        position = c.position,
+                        yearFrom = c.yearFrom
+                    }
                         ))
                     : string.Empty
                     ))
@@ -172,7 +172,7 @@ namespace SciVacancies.WebApp.Infrastructure
                 .ForMember(d => d.ConfirmPassword, o => o.Ignore())
                 .ForMember(d => d.Claims, o => o.Ignore())
                 ;
-            
+
             Mapper.CreateMap<OAuthResEntity, Domain.Core.Publication>()
                 .ForMember(d => d.Authors, opt => opt.MapFrom(src => src.authors ?? string.Empty))
                 .ForMember(d => d.ExtId, opt => opt.MapFrom(src => src.ext_id ?? string.Empty))
