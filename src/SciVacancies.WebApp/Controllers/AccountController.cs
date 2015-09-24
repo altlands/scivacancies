@@ -324,7 +324,7 @@ namespace SciVacancies.WebApp.Controllers
                                                 )
                                             {
                                                 //проверить, что Пользователя Карты наук еще нет в нашей БД
-                                                var logins = await _userManager.GetLoginsAsync(User.Identity.GetUserId());
+                                                var logins = await _userManager.GetLoginsAsync(resUser.Id);
 
                                                 if (logins == null
                                                     || logins.All(c => c.LoginProvider != ConstTerms.LoginProviderScienceMap && c.ProviderKey != accountResearcherRegisterDataModel.SciMapNumber))

@@ -112,13 +112,15 @@ namespace SciVacancies.WebApp.Commands
                 if (_userManager.GetLogins(message.UserId).All(c => c.LoginProvider != ConstTerms.LoginProviderScienceMap))
                     _userManager.AddLogin(message.UserId, new UserLoginInfo(ConstTerms.LoginProviderScienceMap, message.SciMapNumber));
 
-                if (_userManager.GetClaims(message.UserId).Any(c => c.Type == ConstTerms.ClaimTypeUserActivated && c.Value == "false"))
+                var activatedClaims =
+                    _userManager.GetClaims(message.UserId)
+                        .Where(c => c.Type == ConstTerms.ClaimTypeUserActivated)
+                        .ToList();
+                foreach (var claim in activatedClaims)
                     //удалить информацию о Неактивированном пользователе
-                    _userManager.RemoveClaim(message.UserId, new Claim(ConstTerms.ClaimTypeUserActivated, "true"));
-
-                if (!_userManager.GetClaims(message.UserId).Any(c => c.Type == ConstTerms.ClaimTypeUserActivated && c.Value == "true"))
-                    //отметить пользователя как прошедшего активацию
-                    _userManager.AddClaim(message.UserId, new Claim(ConstTerms.ClaimTypeUserActivated, "true"));
+                    _userManager.RemoveClaim(message.UserId, claim);
+                //отметить пользователя как прошедшего активацию
+                _userManager.AddClaim(message.UserId, new Claim(ConstTerms.ClaimTypeUserActivated, "true"));
 
                 if (!_userManager.IsInRole(message.UserId, ConstTerms.RequireRoleResearcher))
                     _userManager.AddToRole(message.UserId, ConstTerms.RequireRoleResearcher);
