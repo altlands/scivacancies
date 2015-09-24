@@ -36,12 +36,20 @@ namespace SciVacancies.WebApp.ViewModels
 
         public VacancyApplicationStatus Status { get; set; }
 
-        public string StatusDescription
+        public Tuple<string, string> StatusDescription
         {
             get
             {
                 if (Vacancy == null)
-                    return Status.GetDescription();
+                    return new Tuple<string, string>(Status.GetDescription(), "draft"); //grey
+
+                if (Status == VacancyApplicationStatus.Lost)
+                    //описываем заявки проигравших
+                    return new Tuple<string, string>("Не в финале", "draft"); //grey
+
+                if (Status == VacancyApplicationStatus.Lost)
+                    //описываем заявки, в которых пользователь сам отказался
+                    return new Tuple<string, string>("Предложение отклонено", "draft"); //grey
 
                 var vacancyWinnerInterface = (IVacancyWinnerPretenderInfo)Vacancy;
 
@@ -50,108 +58,96 @@ namespace SciVacancies.WebApp.ViewModels
                 {
                     case VacancyStatus.Published:
                     case VacancyStatus.InCommittee:
-                        return "Отправлена";
+                        return new Tuple<string, string>("Отправлена", "work"); //orange
 
                     case VacancyStatus.OfferResponseAwaitingFromWinner:
-                    case VacancyStatus.OfferResponseAwaitingFromPretender:
-                        //описываем заявки проигравших
-                        if (vacancyWinnerInterface.WinnerVacancyApplicationGuid != Guid
-                            && vacancyWinnerInterface.PretenderVacancyApplicationGuid != Guid)
-                            return "Не в финале";
                         //описываем заявку победителя
                         if (vacancyWinnerInterface.WinnerVacancyApplicationGuid == Guid)
-                        {
-                            //победитель еще не принял решение
-                            if (!vacancyWinnerInterface.IsWinnerAccept.HasValue)
-                                return "ПОБЕДИТЕЛЬ";
-                            //победитель принял решение
-                            if (!vacancyWinnerInterface.IsWinnerAccept.Value) //победитель отказался
-                                return "Предложение отклонено";
-                        }
+                            return new Tuple<string, string>("ПОБЕДИТЕЛЬ", "executed"); //green
+
                         //описываем заявку претендента
                         if (vacancyWinnerInterface.PretenderVacancyApplicationGuid == Guid)
-                        {
-                            //победитель еще не принял решение
-                            if (!vacancyWinnerInterface.IsWinnerAccept.HasValue)
-                                return "В финале";
-                            //победитель принял решение
-                            //претендент еще не принял решение
-                            if (!vacancyWinnerInterface.IsPretenderAccept.HasValue)
-                                return "ПОБЕДИТЕЛЬ";
-                        }
+                            return new Tuple<string, string>("В финале", "executed"); //green
                         break;
 
                     case VacancyStatus.OfferAcceptedByWinner:
-                    case VacancyStatus.OfferAcceptedByPretender:
-                        //описываем заявки проигравших
-                        if (vacancyWinnerInterface.WinnerVacancyApplicationGuid != Guid
-                            && vacancyWinnerInterface.PretenderVacancyApplicationGuid != Guid)
-                            return "Отклонена";
                         //описываем заявку победителя
                         if (vacancyWinnerInterface.WinnerVacancyApplicationGuid == Guid)
-                        {
-                            //победитель принял предложение
-                            if (vacancyWinnerInterface.IsWinnerAccept != null && vacancyWinnerInterface.IsWinnerAccept.Value)
-                                return "Предложение принято";
-                            //победитель отказался от предложения
-                            return "Отклонена";
-                        }
+                            return new Tuple<string, string>("Предложение принято", "executed"); //green
                         //описываем заявку претендента
                         if (vacancyWinnerInterface.PretenderVacancyApplicationGuid == Guid)
-                        {
-                            //победитель принял предложение
-                            if (vacancyWinnerInterface.IsWinnerAccept != null && vacancyWinnerInterface.IsWinnerAccept.Value)
-                                return "Отклонена";
-                            //победитель отказался от предложения (значит претендент принял)
-                            return "Предложение принято";
-                        }
+                            return new Tuple<string, string>("В финале", "executed"); //green
                         break;
+
                     case VacancyStatus.OfferRejectedByWinner:
-                    case VacancyStatus.OfferRejectedByPretender:
-                        //описываем заявки проигравших
-                        if (vacancyWinnerInterface.WinnerVacancyApplicationGuid != Guid
-                            && vacancyWinnerInterface.PretenderVacancyApplicationGuid != Guid)
-                            return "Не в финале";
                         //описываем заявку победителя
                         //описываем заявку претендента
                         if (vacancyWinnerInterface.WinnerVacancyApplicationGuid == Guid
                             || vacancyWinnerInterface.PretenderVacancyApplicationGuid == Guid)
-                            return "Предложение отклонено";
+                            return new Tuple<string, string>("Предложение отклонено", "draft"); //grey
                         break;
+
+                    case VacancyStatus.OfferResponseAwaitingFromPretender:
+                        //описываем заявку победителя
+                        if (vacancyWinnerInterface.WinnerVacancyApplicationGuid == Guid)
+                            return new Tuple<string, string>("Предложение отозвано", "draft"); //grey
+                        //описываем заявку претендента
+                        if (vacancyWinnerInterface.PretenderVacancyApplicationGuid == Guid)
+                            return new Tuple<string, string>("ПОБЕДИТЕЛЬ", "executed"); //green
+                        break;
+
+                    case VacancyStatus.OfferAcceptedByPretender:
+                        //описываем заявку победителя
+                        if (vacancyWinnerInterface.WinnerVacancyApplicationGuid == Guid)
+                            return new Tuple<string, string>("Предложение отозвано", "draft"); //grey
+                        //описываем заявку претендента
+                        if (vacancyWinnerInterface.PretenderVacancyApplicationGuid == Guid)
+                            return new Tuple<string, string>("Предложение принято", "executed"); //green
+                        break;
+
                     case VacancyStatus.Closed:
-                        //описываем заявки проигравших
-                        if (vacancyWinnerInterface.WinnerVacancyApplicationGuid != Guid
-                            && vacancyWinnerInterface.PretenderVacancyApplicationGuid != Guid)
-                            return "Отклонена";
                         //описываем заявку победителя
                         if (vacancyWinnerInterface.WinnerVacancyApplicationGuid == Guid)
                         {
-                            //победитель принял предложение
-                            if (vacancyWinnerInterface.IsWinnerAccept != null && vacancyWinnerInterface.IsWinnerAccept.Value)
-                                return "Контракт подписан";
-                            //победитель отказался от предложения
-                            return "Отклонена";
+                            //претенденту делали предложение
+                            if (vacancyWinnerInterface.PretenderRequestDate.HasValue)
+                                return new Tuple<string, string>("Предложение отозвано", "draft"); //grey
+                            //претенденту НЕ делали предложение
+                            return new Tuple<string, string>("Контракт подписан", "executed"); //green
                         }
+
                         //описываем заявку претендента
                         if (vacancyWinnerInterface.PretenderVacancyApplicationGuid == Guid)
                         {
-                            //победитель принял предложение
-                            if (vacancyWinnerInterface.IsWinnerAccept != null && vacancyWinnerInterface.IsWinnerAccept.Value)
-                                return "Отклонена";
-                            //претендент принял предложение
-                            if (vacancyWinnerInterface.IsPretenderAccept != null && vacancyWinnerInterface.IsPretenderAccept.Value)
-                                return "Контракт подписан";
-                            //претендент отказался от предложения
-                            return "Отклонена";
+                            //претенденту делали предложение
+                            if (vacancyWinnerInterface.PretenderRequestDate.HasValue)
+                                return new Tuple<string, string>("Контракт подписан", "executed"); //green
+                            //претенденту НЕ делали предложение
+                            return new Tuple<string, string>("Не в финале", "draft"); //grey
                         }
                         break;
+
                     case VacancyStatus.Cancelled:
-                        return "Отклонена";
+                        //описываем заявку победителя
+                        if (vacancyWinnerInterface.WinnerVacancyApplicationGuid == Guid)
+                            return new Tuple<string, string>("Предложение отозвано", "draft"); //grey
+
+                        //описываем заявку претендента
+                        if (vacancyWinnerInterface.PretenderVacancyApplicationGuid == Guid)
+                        {
+                            //претенденту делали предложение
+                            if (vacancyWinnerInterface.PretenderRequestDate.HasValue)
+                                return new Tuple<string, string>("Предложение отозвано", "draft"); //grey
+                            //претенденту НЕ делали предложение
+                            return new Tuple<string, string>("Не в финале", "draft"); //grey
+                        }
+                        break;
+
                 }
 
                 #endregion
 
-                return Status.GetDescription();
+                return new Tuple<string, string>(Status.GetDescription(), "draft"); //grey
             }
         }
 

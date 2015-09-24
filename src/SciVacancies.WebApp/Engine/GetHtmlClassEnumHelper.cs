@@ -23,34 +23,14 @@ namespace SciVacancies.WebApp.Engine
                 case VacancyStatus.OfferResponseAwaitingFromPretender:
                 case VacancyStatus.OfferAcceptedByWinner:
                 case VacancyStatus.OfferAcceptedByPretender:
-                    return "executed"; //green
                 case VacancyStatus.OfferRejectedByWinner:
                 case VacancyStatus.OfferRejectedByPretender:
-                    return "closed"; //light-grey
+                    return "executed"; //green
                 case VacancyStatus.Closed:
                 case VacancyStatus.Cancelled:
                 case VacancyStatus.Removed:
                     return "closed"; //light-grey
                 default: return null;
-            }
-        }
-
-        public static string GetHtmlClass(this VacancyApplicationStatus value)
-        {
-            switch (value)
-            {
-                case VacancyApplicationStatus.InProcess:
-                case VacancyApplicationStatus.Applied:
-                    return "work"; //orange
-                case VacancyApplicationStatus.Won:
-                case VacancyApplicationStatus.Pretended:
-                    return "executed"; //green
-                case VacancyApplicationStatus.Lost:
-                case VacancyApplicationStatus.Removed:
-                case VacancyApplicationStatus.Cancelled:
-                    return "draft"; //grey
-                default:
-                    return null;
             }
         }
     }

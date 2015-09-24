@@ -33,7 +33,10 @@ $(document).ready(function () {
         $.datepicker.setDefaults(
 			$.extend($.datepicker.regional["ru"])
 		);
-        $(".datepicker-vacancy").datepicker();
+        $(".datepicker-vacancy").datepicker({
+            changeMonth: true,
+            changeYear: true
+        });
     });
 
     // Checkbox

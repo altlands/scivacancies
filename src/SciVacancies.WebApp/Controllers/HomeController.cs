@@ -1,9 +1,9 @@
 ﻿using System.Linq;
 using MediatR;
-using Microsoft.AspNet.Diagnostics;
+using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Mvc;
 using SciVacancies.ReadModel.Core;
-using SciVacancies.WebApp.Engine;
+using SciVacancies.WebApp.Infrastructure.Identity;
 using SciVacancies.WebApp.Models;
 using SciVacancies.WebApp.Queries;
 using SciVacancies.WebApp.ViewModels;
@@ -14,16 +14,25 @@ namespace SciVacancies.WebApp.Controllers
     public class HomeController : Controller
     {
         private readonly IMediator _mediator;
+        private readonly SciVacUserManager _userManager;
 
-        public HomeController(IMediator mediator)
+        public HomeController(SciVacUserManager userManager, IMediator mediator)
         {
             _mediator = mediator;
+            _userManager = userManager;
         }
 
         [ResponseCache(NoStore = true)]
         [PageTitle("Главная")]
         public IActionResult Index()
         {
+            //проверяем не инициализированную БД
+            var user = _userManager.FindByName("researcher1");
+            if (user == null)
+                //return Content("инициализация уже проходила");
+                return RedirectToAction("index", "initialize");
+
+
             var model = new IndexViewModel
             {
                 VacanciesList =

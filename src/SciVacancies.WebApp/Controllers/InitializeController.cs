@@ -9,7 +9,6 @@ using SciVacancies.WebApp.Infrastructure.Identity;
 using SciVacancies.WebApp.Queries;
 using SciVacancies.WebApp.ViewModels;
 using Microsoft.AspNet.Identity;
-using Microsoft.Framework.OptionsModel;
 using SciVacancies.WebApp.Models.DataModels;
 
 // For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
@@ -349,7 +348,7 @@ namespace SciVacancies.WebApp.Controllers
                     FullName = "Ведущий научный сотрудник по калибровке",
                     ResearchDirection = researchDiretions.First(c => c.title.Contains("системы")).title,
                     ResearchDirectionId = researchDiretions.First(c => c.title.Contains("системы")).id,
-                    Tasks = "",
+                    Tasks = "чистить плавники у акул; кормить;",
                     SalaryFrom = 100000,
                     SalaryTo = 120000,
                     ContractType = ContractType.FixedTerm,
@@ -411,7 +410,7 @@ namespace SciVacancies.WebApp.Controllers
                     FullName = "Заведующий отдела информационных технологий",
                     ResearchDirection = researchDiretions.First(c => c.title.Contains("системы")).title,
                     ResearchDirectionId = researchDiretions.First(c => c.title.Contains("системы")).id,
-                    Tasks = "",
+                    Tasks = "чистить плавники у акул; кормить;",
                     SalaryFrom = 80000,
                     SalaryTo = 100000,
                     ContractType = ContractType.Permanent,
@@ -444,7 +443,7 @@ namespace SciVacancies.WebApp.Controllers
                     FullName = "Ведущий научный сотрудник информационных технологий",
                     ResearchDirection = researchDiretions.First(c => c.title.Contains("системы")).title,
                     ResearchDirectionId = researchDiretions.First(c => c.title.Contains("системы")).id,
-                    Tasks = "",
+                    Tasks = "чистить плавники у акул; кормить;",
                     SalaryFrom = 80000,
                     SalaryTo = 100001,
                     ContractType = ContractType.Permanent,

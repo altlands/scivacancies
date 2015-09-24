@@ -3572,3 +3572,9 @@ ul.item-category__tabs > li{
 .panel{
 	box-shadow:none;
 }
+
+
+.ui-datepicker select {
+    color: #041833;
+    font-weight: normal;
+}
