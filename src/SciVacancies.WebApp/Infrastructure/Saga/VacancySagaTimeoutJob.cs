@@ -94,7 +94,10 @@ namespace SciVacancies.WebApp.Infrastructure
 
                         //отправили два увеодмления, теперь ничего не делаем и просто ждём, когда организация выберет победителя и претендта(необязательно) и приложит
                         //документ с рейтингом заявок
-                        scheduler.RemoveScheduledJob(SagaGuid);
+                        if (!scheduler.DeleteJob(new JobKey(saga.Id.ToString(), "VacancySagaTimeoutJob")))
+                        {
+                            throw new Exception("Can't delete job from DB");
+                        }
                     }
 
                     break;
@@ -112,6 +115,7 @@ namespace SciVacancies.WebApp.Infrastructure
                             WinnerReasearcherGuid = saga.WinnerResearcherGuid,
                             WinnerVacancyApplicationGuid = saga.WinnerVacancyApplicationGuid
                         });
+
                         sagaRepository.Save("vacancysaga", saga, Guid.NewGuid(), null);
                     }
                     if (saga.OfferResponseAwaitingFromWinnerEndDate <= DateTime.UtcNow)
@@ -131,7 +135,10 @@ namespace SciVacancies.WebApp.Infrastructure
                         });
 
                         //перевели вакансию в статус "предложение контракта отклонено победителем" и ждём решения от организации (отменять вакансию или отправить оффер претенднету)
-                        scheduler.RemoveScheduledJob(SagaGuid);
+                        if (!scheduler.DeleteJob(new JobKey(saga.Id.ToString(), "VacancySagaTimeoutJob")))
+                        {
+                            throw new Exception("Can't delete job from DB");
+                        }
                     }
 
                     break;
@@ -181,13 +188,19 @@ namespace SciVacancies.WebApp.Infrastructure
                         });
 
                         //перевели вакансию в статус "предложение контракта отклонено претендентом" и ждём решения от организации
-                        scheduler.RemoveScheduledJob(SagaGuid);
+                        if (!scheduler.DeleteJob(new JobKey(saga.Id.ToString(), "VacancySagaTimeoutJob")))
+                        {
+                            throw new Exception("Can't delete job from DB");
+                        }
                     }
                     break;
 
                 default:
                     //Если приняли офер или отказались от него, то (если отказался победитель) - ждём решения организации, отправлять ли оффер претенденту
-                    scheduler.RemoveScheduledJob(SagaGuid);
+                    if (!scheduler.DeleteJob(new JobKey(saga.Id.ToString(), "VacancySagaTimeoutJob")))
+                    {
+                        throw new Exception("Can't delete job from DB");
+                    }
 
                     break;
             }
