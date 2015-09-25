@@ -35,7 +35,9 @@ $(document).ready(function () {
 		);
         $(".datepicker-vacancy").datepicker({
             changeMonth: true,
-            changeYear: true
+            changeYear: true,
+            minDate: "+1D",
+            showButtonPanel: true
         });
     });
 
