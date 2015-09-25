@@ -635,7 +635,7 @@ namespace SciVacancies.WebApp.Controllers
             var vacancyInCommitteeAttachments = _mediator.Send(new SelectCommitteeVacancyAttachmentsQuery { VacancyGuid = vacancy.guid });
             if (string.IsNullOrWhiteSpace(vacancy.committee_resolution)
                 && (vacancyInCommitteeAttachments == null || !vacancyInCommitteeAttachments.Any()))
-                return View("Error", "В вакансии НЕ УКАЗАНО конкурсное обоснование выбора победителя (и претендента).");
+                return RedirectToAction("setcommitteereason", new { id = vacancy.guid });
 
             return null;
         }
@@ -656,6 +656,7 @@ namespace SciVacancies.WebApp.Controllers
             var result = SetWinnerPreValidation(id, organizationGuid, isWinner, out vacancy, out vacancyApplication);
             if (result is HttpNotFoundResult) return (HttpNotFoundResult)result;
             if (result is ViewResult) return (ViewResult)result;
+            if (result is RedirectToActionResult) return (RedirectToActionResult)result;
 
             var model = Mapper.Map<VacancyApplicationSetWinnerViewModel>(vacancyApplication);
             model.Vacancy = Mapper.Map<VacancyDetailsViewModel>(vacancy);
@@ -680,6 +681,7 @@ namespace SciVacancies.WebApp.Controllers
             var result = SetWinnerPreValidation(model.Guid, organizationGuid, model.WinnerIsSetting, out vacancy, out vacancyApplication);
             if (result is HttpNotFoundResult) return (HttpNotFoundResult)result;
             if (result is ViewResult) return (ViewResult)result;
+            if (result is RedirectToActionResult) return (RedirectToActionResult)result;
 
             if (!ModelState.IsValid)
             {
