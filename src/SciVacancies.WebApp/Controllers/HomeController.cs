@@ -32,7 +32,6 @@ namespace SciVacancies.WebApp.Controllers
                 //return Content("инициализация уже проходила");
                 return RedirectToAction("index", "initialize");
 
-
             var model = new IndexViewModel
             {
                 VacanciesList =
@@ -69,6 +68,8 @@ namespace SciVacancies.WebApp.Controllers
                     }
                 });
             }
+
+            ViewBag.HideSearchPanel = true;
 
             return View(model);
         }
