@@ -1,0 +1,74 @@
+﻿{
+    "Data": {
+        "ReadModelDb": "Server=localhost;Database=scivacancies;User Id=postgres;Password=ekobka",
+        "EventStoreDb": "Server=localhost;Database=scivacancies;User Id=postgres;Password=ekobka"
+    },
+    "OAuthSettings": {
+        "Sciencemon": {
+            "AuthorizationEndpoint": "http://www.sciencemon.ru/oauth/v2/auth",
+            "TokenEndpoint": "http://www.sciencemon.ru/oauth/v2/token",
+            "UserEndpoint": "http://www.sciencemon.ru/api/user",
+            "ClientId": "1_ikniwc909y8kog4k4sc00oogg0g8scc8o4k0wocgw4cg84k00",
+            "ClientSecret": "67sq61c6xekgw0wgkosg04gwo488osk48ogks4og40cgws8ook",
+            "Scope": "",
+            "RedirectUrl": "http://localhost:59075/account/callback"
+        },
+        "Mapofscience": {
+            "AuthorizationEndpoint": "http://scimap-sso.alt-lan.com/scimap-sso/oauth/authorize",
+            "TokenEndpoint": "http://scimap-sso.alt-lan.com/scimap-sso/oauth/token",
+            "UserEndpoint": "http://scimap-sso.alt-lan.com/scimap-sso/user/account",
+            "ClientId": "my-trusted-client",
+            "ClientSecret": "secret",
+            "Scope": "",
+            "RedirectUrl": "http://localhost:59075/account/callback"
+        }
+    },
+    //TODO
+    "ApiSettings": {
+        "Sciencemon": {
+            //"OrganizationProfile": "http://www.sciencemon.ru/ext-api/v1.0/org/",
+            //"BasicAuthorization": "dev:informika"
+        },
+        "Mapofscience": {
+            "ResearcherProfile": "http://scimap-sso.alt-lan.com/user/profile"
+        }
+    },
+    "ElasticSettings": {
+        "ConnectionUrl": "http://192.168.10.124:9200/",
+        "DefaultIndex": "scivacancies"
+    },
+    "SagaSettings": {
+        "Date": {
+            "Committee": {
+                "FirstNotificationDays": -1,
+                "SecondNotificationDays": 2,
+                "ProlongingDays": 15
+            },
+            "OfferResponseAwaiting": {
+                "WinnerNotificationDays": -1,
+                "PretenderNotificationDays": -1
+            }
+        }
+    },
+    "QuartzSettings": {
+        "Scheduler": {
+            "InstanceName": "SciVacanciesScheduler",
+            "ExecutionInterval": 10
+        },
+        "JobStore": {
+            "Type": "Quartz.Impl.AdoJobStore.JobStoreTX, Quartz",
+            "UseProperties": "true",
+            "DataSource": "default",
+            "TablePrefix": "qrtz_",
+            "LockHandler": {
+                "Type": "Quartz.Impl.AdoJobStore.UpdateLockRowSemaphore, Quartz"
+            }
+        },
+        "DataSource": {
+            "Default": {
+                "ConnectionString": "Server = localhost; Database = scivacancies; User Id = postgres; Password = ekobka",
+                "Provider": "Npgsql-20"
+            }
+        }
+    }
+}
