@@ -4,8 +4,8 @@
         "QuartzDb": ""
     },
     "ElasticSettings": {
-        "ConnectionUrl": "http://localhost:9200/",
-        "DefaultIndex": "scivacancies"
+        "ConnectionUrl": "http://alt-dev003:9200/",
+        "DefaultIndex": "scivacancies-ntemnikov"
     },
     "QuartzSettings": {
         "Scheduler": {

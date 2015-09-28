@@ -4,8 +4,8 @@
     "QuartzDb": ""
   },
   "ElasticSettings": {
-    "ConnectionUrl": "http://alt-dev002:9200/",
-    "DefaultIndex": "scivacancies"
+        "ConnectionUrl": "http://alt-dev003:9200/",
+        "DefaultIndex": "scivacancies-dev"
   },
     "QuartzSettings": {
         "Scheduler": {
