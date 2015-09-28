@@ -110,7 +110,7 @@ namespace SciVacancies.WebApp.Controllers
             {
                 Data = new AccountOrganizationRegisterViewModel
                 {
-                    Email = $"organization{rnd.Next(999)}@mailer.org",
+                    Email = "technobrowser@gmail.com",
                     UserName = "organization1",
                     Name = "Научно Исследотельский Институт Горных массивов",
                     ShortName = "НИИ Горных массивов",
