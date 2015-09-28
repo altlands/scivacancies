@@ -47,17 +47,17 @@
                                 if (foivs[a].Childs.Any())
                                 {
                                     var open= foivs[a].Childs.Count(level => (Model.Foivs !=null && Model.Foivs.Contains(level.Id))) > 0 ? "open" : string.Empty;
-                                    <text>
-                                    <li class="collapsible-filter-header @open">
-                                        <span>@foivs[a].Title (@foivs[a].Childs.Count())</span>
-                                        <ul class="list-checkboxes" style="display: none;">
-                                            <checkboxing items="foivs[a].Items"
-                                                         values="Model.Foivs"
-                                                         property="Foivs"
-                                                         labelforindex="@labelForIndex"></checkboxing>
-                                        </ul>
-                                    </li>
-                                    </text>
+                        <text>
+                        <li class="collapsible-filter-header @open">
+                            <span>@foivs[a].Title (@foivs[a].Childs.Count())</span>
+                            <ul class="list-checkboxes" style="display: none;">
+                                <checkboxing items="foivs[a].Items"
+                                             values="Model.Foivs"
+                                             property="Foivs"
+                                             labelforindex="@labelForIndex"></checkboxing>
+                            </ul>
+                        </li>
+                        </text>
                                     labelForIndex += foivs[a].Childs.Count();
                                 }
                             }
@@ -74,30 +74,30 @@
                             for (a = 0; a < researchDirection.Childs.Count; a++)
                             {
                                 var openFirst = researchDirection.Childs[a].Childs.Sum(second => second.Childs.Count(third => (Model.ResearchDirections!=null && Model.ResearchDirections.Contains(third.Id)))) > 0 ? "open" : string.Empty;
-                                <text>
-                                <li class="collapsible-filter-header @openFirst">
-                                    <span>@researchDirection.Childs[a].Title (@researchDirection.Childs[a].Childs.Count)</span>
-                                    <ul class="sub-cat level-1" style="display: none;">
-                                        @for (b = 0; b < researchDirection.Childs[a].Childs.Count; b++)
+                        <text>
+                        <li class="collapsible-filter-header @openFirst">
+                            <span>@researchDirection.Childs[a].Title (@researchDirection.Childs[a].Childs.Count)</span>
+                            <ul class="sub-cat level-1" style="display: none;">
+                                @for (b = 0; b < researchDirection.Childs[a].Childs.Count; b++)
                                         {
                                             var openSecond = researchDirection.Childs[a].Childs[b].Childs.Count(third => (Model.ResearchDirections!=null && Model.ResearchDirections.Contains(third.Id)) )> 0 ? "open" : string.Empty;
-                                            <text>
-                                            <li class="collapsible-filter-header @openSecond">
-                                                <span>@researchDirection.Childs[a].Childs[b].Title (@researchDirection.Childs[a].Childs[b].Childs.Count)</span>
-                                                <ul class="list-checkboxes" style="display: none;">
-                                                    <checkboxing items="researchDirection.Childs[a].Childs[b].Items"
-                                                                 values="Model.ResearchDirections"
-                                                                 property="ResearchDirections"
-                                                                 showcount="-1"
-                                                                 labelforindex="@labelForIndex"></checkboxing>
-                                                </ul>
-                                            </li>
-                                            </text>
+                                        <text>
+                                        <li class="collapsible-filter-header @openSecond">
+                                            <span>@researchDirection.Childs[a].Childs[b].Title (@researchDirection.Childs[a].Childs[b].Childs.Count)</span>
+                                            <ul class="list-checkboxes" style="display: none;">
+                                                <checkboxing items="researchDirection.Childs[a].Childs[b].Items"
+                                                             values="Model.ResearchDirections"
+                                                             property="ResearchDirections"
+                                                             showcount="-1"
+                                                             labelforindex="@labelForIndex"></checkboxing>
+                                            </ul>
+                                        </li>
+                                        </text>
                                             labelForIndex += researchDirection.Childs[a].Childs[b].Childs.Count;
                                         }
-                                    </ul>
-                                </li>
-                                </text>
+                            </ul>
+                        </li>
+                        </text>
                             }
                         }
                     </ul>
@@ -197,17 +197,17 @@
                                     }
                                     if (Model.SubscriptionInfo != null && Model.SubscriptionInfo.NewJustAdded)
                                     {
-                    <div class="ctr-buttons" style="margin-top: 20px;">
-                        <a asp-controller="researchers" asp-action="subscriptions" class="white-btn middle-icon icon-lgr-ok" id="subscribed" rel="tooltip" target="_blank">Подписка оформлена</a>
-                        <div id="subscribed-popover" style="display: none; text-align: center;">
-                            Поздравляем!<br />Вы добавили новую подписку «@Model.SubscriptionInfo.Title»
-                        </div>
-                    </div>
-                    <div class="ctr-buttons" style="margin-top: 20px;">
-                        <a asp-controller="subscriptions" asp-action="delete" asp-route-id="@Model.SubscriptionInfo.NewGuid" onclick="javascript: return confirm('Вы уверены что хотите удалить текущую подписку?');" class="blue-btn middle-icon icon-close" rel="tooltip" title="">Отменить подписку</a>
-                    </div>
-                }
-            }
+                                        <div class="ctr-buttons" style="margin-top: 20px;">
+                                            <a asp-controller="researchers" asp-action="subscriptions" class="white-btn middle-icon icon-lgr-ok" id="subscribed" rel="tooltip" target="_blank">Подписка оформлена</a>
+                                            <div id="subscribed-popover" style="display: none; text-align: center;">
+                                                Поздравляем!<br />Вы добавили новую подписку «@Model.SubscriptionInfo.Title»
+                                            </div>
+                                        </div>
+                                        <div class="ctr-buttons" style="margin-top: 20px;">
+                                            <a asp-controller="subscriptions" asp-action="delete" asp-route-id="@Model.SubscriptionInfo.NewGuid" onclick="javascript: return confirm('Вы уверены что хотите удалить текущую подписку?');" class="blue-btn middle-icon icon-close" rel="tooltip" title="">Отменить подписку</a>
+                                        </div>
+                                        }
+                                    }
 
 
 
@@ -220,7 +220,7 @@
                     <select asp-for="OrderBy"
                             asp-items="ViewBag.FilterSource.OrderBys"></select>
                 </div>
-                <input type="submit" class="blue-btn-sm small-icon icon-sm-eye-wh" value="Обновить" />
+                <input type="submit" class="blue-btn-sm small-icon icon-sm-eye-wh" value="Применить" />
             </div>
 
             <div class="list-results">
