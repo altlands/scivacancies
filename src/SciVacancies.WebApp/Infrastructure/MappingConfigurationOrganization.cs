@@ -195,7 +195,9 @@ namespace SciVacancies.WebApp.Infrastructure
                 .ForMember(d => d.ResearchDirectionId, o => o.MapFrom(s => s.researchdirection_id))
                 .ForMember(d => d.Criterias, o => o.MapFrom(s => s.criterias))
                 //.ForMember(d => d, o => o.MapFrom(s => s.attachments))
-                .ForMember(d => d.OrganizationGuid, o => o.MapFrom(s => s.organization_guid));
+                .ForMember(d => d.OrganizationGuid, o => o.MapFrom(s => s.organization_guid))
+                .ForMember(d => d.InCommitteeDate, o => o.MapFrom(s => s.committee_start_date))
+                ;
             Mapper.CreateMap<Vacancy, VacancyDetailsViewModel>().IncludePagedResultMapping()
                 .ForMember(d => d.Guid, o => o.MapFrom(s => s.guid))
                 .ForMember(d => d.Name, o => o.MapFrom(s => s.name))

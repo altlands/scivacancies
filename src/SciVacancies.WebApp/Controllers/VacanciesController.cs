@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IdentityModel.Tokens;
 using System.IO;
 using System.Linq;
 using AutoMapper;
@@ -348,7 +349,13 @@ namespace SciVacancies.WebApp.Controllers
 
             if (preModel.status == VacancyStatus.InProcess
                 || preModel.status == VacancyStatus.Closed
-                || preModel.status == VacancyStatus.Removed)
+                || preModel.status == VacancyStatus.Cancelled
+                || preModel.status == VacancyStatus.Removed
+              || preModel.status == VacancyStatus.Published
+              || preModel.status == VacancyStatus.InCommittee
+              || preModel.status == VacancyStatus.OfferResponseAwaitingFromWinner
+              || preModel.status == VacancyStatus.OfferResponseAwaitingFromPretender
+                )
                 return View("Error", $"Вы не можете отменить вакансию со статусом: {preModel.status.GetDescription()}");
 
             var model = Mapper.Map<VacancyDetailsViewModel>(preModel);
@@ -374,8 +381,15 @@ namespace SciVacancies.WebApp.Controllers
                 return View("Error", "Вы не можете отменить вакансии других организаций");
 
             if (model.status == VacancyStatus.InProcess
-                || model.status == VacancyStatus.Closed
-                || model.status == VacancyStatus.Removed)
+              || model.status == VacancyStatus.Closed
+              || model.status == VacancyStatus.Cancelled
+              || model.status == VacancyStatus.Removed
+              || model.status == VacancyStatus.Published
+              || model.status == VacancyStatus.InCommittee
+              || model.status == VacancyStatus.OfferResponseAwaitingFromWinner
+              || model.status == VacancyStatus.OfferResponseAwaitingFromPretender
+              )
+
                 return View("Error", $"Вы не можете отменить вакансию со статусом: {model.status.GetDescription()}");
 
             _mediator.Send(new CancelVacancyCommand { VacancyGuid = id, Reason = reason });
@@ -635,7 +649,7 @@ namespace SciVacancies.WebApp.Controllers
             var vacancyInCommitteeAttachments = _mediator.Send(new SelectCommitteeVacancyAttachmentsQuery { VacancyGuid = vacancy.guid });
             if (string.IsNullOrWhiteSpace(vacancy.committee_resolution)
                 && (vacancyInCommitteeAttachments == null || !vacancyInCommitteeAttachments.Any()))
-                return View("Error", "В вакансии НЕ УКАЗАНО конкурсное обоснование выбора победителя (и претендента).");
+                return RedirectToAction("setcommitteereason", new { id = vacancy.guid });
 
             return null;
         }
@@ -656,6 +670,7 @@ namespace SciVacancies.WebApp.Controllers
             var result = SetWinnerPreValidation(id, organizationGuid, isWinner, out vacancy, out vacancyApplication);
             if (result is HttpNotFoundResult) return (HttpNotFoundResult)result;
             if (result is ViewResult) return (ViewResult)result;
+            if (result is RedirectToActionResult) return (RedirectToActionResult)result;
 
             var model = Mapper.Map<VacancyApplicationSetWinnerViewModel>(vacancyApplication);
             model.Vacancy = Mapper.Map<VacancyDetailsViewModel>(vacancy);
@@ -680,6 +695,7 @@ namespace SciVacancies.WebApp.Controllers
             var result = SetWinnerPreValidation(model.Guid, organizationGuid, model.WinnerIsSetting, out vacancy, out vacancyApplication);
             if (result is HttpNotFoundResult) return (HttpNotFoundResult)result;
             if (result is ViewResult) return (ViewResult)result;
+            if (result is RedirectToActionResult) return (RedirectToActionResult)result;
 
             if (!ModelState.IsValid)
             {
@@ -717,12 +733,7 @@ namespace SciVacancies.WebApp.Controllers
                 });
                 //...то переключить вакансию в статус ожидания ответа от победителя
                 if (appliedVacancyApplications == 0)
-                {
-                    _mediator.Send(new SetVacancyToResponseAwaitingFromWinnerCommand
-                    {
-                        VacancyGuid = model.VacancyGuid
-                    });
-                }
+                    GoOutFromInCommittee(model.VacancyGuid);
             }
             else
             {
@@ -743,11 +754,8 @@ namespace SciVacancies.WebApp.Controllers
                     Reason = vacancy.committee_resolution
                 });
 
-                //после выбора победителя, переключить вакансию в статус ожидания ответа от победителя
-                _mediator.Send(new SetVacancyToResponseAwaitingFromWinnerCommand
-                {
-                    VacancyGuid = model.VacancyGuid
-                });
+                //после выбора победителя
+                GoOutFromInCommittee(model.VacancyGuid);
             }
 
             return RedirectToAction("preview", "applications", new { id = model.Guid });
@@ -774,6 +782,26 @@ namespace SciVacancies.WebApp.Controllers
             return null;
         }
 
+        /// <summary>
+        /// обработать выход из Рассмотрения комиссии
+        /// </summary>
+        /// <param name="vacancyGuid"></param>
+        private void GoOutFromInCommittee(Guid vacancyGuid)
+        {
+            //переключить вакансию в статус ожидания ответа от победителя
+            _mediator.Send(new SetVacancyToResponseAwaitingFromWinnerCommand
+            {
+                VacancyGuid = vacancyGuid
+            });
+
+            //отметить лузеров
+            var stillAppliedApplications = _mediator.Send(new SelectVacancyApplicationInVacancyByStatusQuery { VacancyGuid = vacancyGuid, Status = VacancyApplicationStatus.Applied });
+            stillAppliedApplications?.ToList().ForEach(c => _mediator.Send(new MakeVacancyApplicationLooserCommand
+            {
+                ResearcherGuid = c.researcher_guid,
+                VacancyApplicationGuid = c.guid
+            }));
+        }
 
         [PageTitle("Предложить вакансию претенденту")]
         [BindOrganizationIdFromClaims]
@@ -889,9 +917,17 @@ namespace SciVacancies.WebApp.Controllers
             if (model.status != VacancyStatus.InProcess)
                 return View("Error", $"Вы не можете опубликовать вакансию со статусом: {model.status.GetDescription()}");
 
+            if (model.committee_date == null)
+                return View("Error", "Не указана дата перевода вакансии на рассмотрение комиссии");
+
+            if ((model.committee_date.Value.ToUniversalTime() - DateTime.Now.ToUniversalTime()).Days < _vacancyLifeCycleSettings.Options.DeltaFromPublishToInCommitteeMinDays)
+                return View("Error", $"Вы не можете установить дату перевода вакансии на рассмотрение комиссии раньше, чем через {_vacancyLifeCycleSettings.Options.DeltaFromPublishToInCommitteeMinDays} дн.");
+
             var vacancyGuid = _mediator.Send(new PublishVacancyCommand
             {
-                VacancyGuid = id
+                VacancyGuid = id,
+                InCommitteeStartDate = model.committee_date.Value, 
+                InCommitteeEndDate = model.committee_date.Value.AddHours(25) /*TODO: вынести в конфиг: количество дней до окончания комиссии*/
             });
 
             return RedirectToAction("vacancies", "organizations");

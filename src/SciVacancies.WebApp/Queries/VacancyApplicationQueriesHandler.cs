@@ -15,7 +15,8 @@ namespace SciVacancies.WebApp.Queries
         IRequestHandler<SelectVacancyApplicationsByResearcherQuery, IEnumerable<VacancyApplication>>,
         IRequestHandler<SelectPagedVacancyApplicationsByVacancyQuery, Page<VacancyApplication>>,
         IRequestHandler<SelectAllVacancyApplicationAttachmentsQuery, IEnumerable<VacancyApplicationAttachment>>,
-        IRequestHandler<CountVacancyApplicationInVacancyQuery, int>
+        IRequestHandler<CountVacancyApplicationInVacancyQuery, int>,
+        IRequestHandler<SelectVacancyApplicationInVacancyByStatusQuery, IEnumerable<VacancyApplication>>
     {
         private readonly IDatabase _db;
 
@@ -77,6 +78,15 @@ namespace SciVacancies.WebApp.Queries
             var vacancyApplication = _db.Fetch<VacancyApplication>(new Sql($"Select * FROM res_vacancyapplications va WHERE va.vacancy_guid = @0 AND va.status = @1", message.VacancyGuid, (int)message.Status));
 
             return vacancyApplication.Count();
+        }
+
+        public IEnumerable<VacancyApplication> Handle(SelectVacancyApplicationInVacancyByStatusQuery message)
+        {
+            if (message.VacancyGuid == Guid.Empty) throw new ArgumentNullException($"{nameof(message.VacancyGuid)} is empty");
+
+            var vacancyApplications = _db.Fetch<VacancyApplication>(new Sql($"Select * FROM res_vacancyapplications va WHERE va.vacancy_guid = @0 AND va.status = @1", message.VacancyGuid, (int)message.Status));
+
+            return vacancyApplications;
         }
     }
 }

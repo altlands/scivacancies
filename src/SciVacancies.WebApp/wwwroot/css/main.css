@@ -358,7 +358,7 @@ input[type="number"].small-input {
 	font-weight:bold;
 	color:#3a5e90;
 	text-transform:uppercase;
-	line-height:17px;
+	line-height:15px;
 }
 
     .logo a {
@@ -417,6 +417,7 @@ select:focus {
 	height: 40px;
 	position:relative;
 	padding:0;
+	margin:0 0 0 10px;
 	cursor: pointer;
 	-webkit-box-shadow: none;
 	        box-shadow: none;
@@ -589,7 +590,7 @@ ul.tabs {
 }	
 .tab_icon{
 	display:block;
-	width:25px;
+	width:26px;
 	height: 28px;
 	background:url(../images/tabs-icons.png) no-repeat;
 }
@@ -745,8 +746,8 @@ a.search-icons {
     content: "";
     display: inline-block;
     vertical-align: middle;
-    width: 22px;
-    height: 22px;
+    width: 23px;
+    height: 23px;
 }
 
 .big-link-compare:before {
@@ -840,11 +841,12 @@ a.search-icons {
     font: italic 12px Arial;
     color: #041833;
     cursor: pointer;
+	text-decoration:underline;
 }
 
-    .small-icon span {
+    /*.small-icon span {
         border-bottom: 1px solid #041833;
-    }
+    }*/
 
 .blue-btn-sm.small-icon {
     color: #ffffff;
@@ -862,8 +864,8 @@ a.search-icons {
     content: "";
     display: inline-block;
     vertical-align: middle;
-    width: 16px;
-    height: 16px;
+    width: 18px;
+    height: 18px;
 }
 
 .small-icon:before,
@@ -892,7 +894,7 @@ a.search-icons {
 }
 
 .icon-prev:before {
-    background: url(../images/sprite.png) -147px -168px no-repeat;
+    background: url(../images/sprite.png) -146px -168px no-repeat;
 }
 
 .icon-sm-ok:before {
@@ -1005,6 +1007,7 @@ a.search-icons {
 .save-button,
 .create-button,
 .green-btn {
+	border:none;
     background: #4c854c;
     background: -webkit-gradient(linear, left bottom, left top, color-stop(0, #4c854c), color-stop(1, #b1deb1));
     background: -ms-linear-gradient(bottom, #4c854c, #b1deb1);
@@ -1014,6 +1017,7 @@ a.search-icons {
 }
 
 .green-btn {
+	border:none;
     padding: 0 13px 0 39px;
     background: #4c854c url(../images/but-arrow-s.png) no-repeat 10px 9px;
     background: url(../images/but-arrow-s.png) no-repeat 10px 9px, -webkit-gradient(linear, left bottom, left top, color-stop(0, #4c854c), color-stop(1, #b1deb1));
@@ -1055,6 +1059,7 @@ a.search-icons {
 .close-button,
 .blue-btn,
 .blue-btn-sm {
+	border:none;
     background: #4571ae;
     background: -webkit-gradient(linear, left bottom, left top, color-stop(0, #3a5e91), color-stop(1, #4877b7));
     background: -ms-linear-gradient(bottom, #3a5e91, #4877b7);
@@ -1069,6 +1074,7 @@ a.search-icons {
 }
 /* navigation */
 .bottom-nav {
+	font-family:Arial;
     text-align: right;
     font-style: italic;
     font-size: 12px;
@@ -1100,6 +1106,7 @@ a.search-icons {
     box-shadow: none;
     line-height: 100%;
     margin-right: 3px;
+	font-size:12px;
 }
 
 .count-line-page input {
@@ -1127,6 +1134,10 @@ a.search-icons {
         .bottom-nav-right li:first-child {
             margin: 0;
         }
+		
+		.bottom-nav-right li span span{
+			margin:0 0 0 5px;
+		}
 
     .bottom-nav-right .count-page {
         margin: 0 12px;
@@ -1266,12 +1277,12 @@ a.search-icons {
 
         .header .control.control-registration a {
             border-right: none;
-            margin-top: 3px;
+            /*margin-top: 3px;*/
         }
 
-            .header .control.control-registration a span {
+            /*.header .control.control-registration a span {
                 border-color: white;
-            }
+            }*/
 
     .header .control a:last-child {
         border-right: none;
@@ -1291,17 +1302,17 @@ a.search-icons {
 .enter-head:before {
     content: "";
     display: inline-block;
-    background:url(../images/sprite.png) no-repeat -248px -324px;
-    width: 16px;
-    height: 16px;
-    margin-right: 6px;
+    background:url(../images/sprite.png) no-repeat -269px -298px;
+    width: 24px;
+    height: 24px;
+    /*margin-right: 6px;*/
     vertical-align: middle;
 }
 
 .close-head:before {
     content: "";
     display: inline-block;
-    background: url('../images/icons/close-head.png') no-repeat;
+	background: url(../images/sprite.png) no-repeat -270px -324px;
     width: 22px;
     height: 22px;
     margin-right: 6px;
@@ -1318,7 +1329,7 @@ a.search-icons {
 
 .lk-icon-bl {
     display: inline-block;
-    background: url('../images/icons/cab-head-b.png') no-repeat;
+	background: url(../images/sprite.png) no-repeat -270px -349px;
     width: 22px;
     height: 22px;
     vertical-align: middle;
@@ -2345,6 +2356,8 @@ span + input.small-input {
 .cat-filter .title {
     font: 15px Tahoma;
     color: #06365c;
+	position:relative;
+	padding-left:19px;
 }
 
 .cat-filter label {
@@ -2663,7 +2676,7 @@ h4 + .b-vacancies {
         z-index: 1;
         bottom: -1px;
         left: 100%;
-        margin-left: -3px;
+        margin-left: -2px;
         background: url(../images/sprite.png) no-repeat -235px -46px;
         border-bottom: 1px solid #d1d1d1;
     }
@@ -2697,7 +2710,7 @@ h4 + .b-vacancies {
     }
 
         .b-tabs .nav-tabs li a:hover:after {
-            margin-left: -3px;
+            margin-left: -2px;
             background: url(../images/sprite.png) no-repeat -264px -46px;
         }
 
@@ -2991,7 +3004,10 @@ ul.tabs li.active span{
 }
 
 .graphics .image {
-    margin: 0 0 0 10px;
+    margin: 0 0 0 5px;
+}
+.graphics .image img{
+	max-width:100%;
 }
 
 .title-graphic {
@@ -3365,7 +3381,7 @@ table.table.request-table a.sort-order {
 	background-position: -10px -10px;
 }
 .work-org{
-	width: 28px;
+	width: 29px;
 	background-position: -43px -43px;
 }
 .active .work-org{
@@ -3524,6 +3540,7 @@ input.item-category__input{
 }
 ul.item-category__tabs{
 	margin-left: 10px;
+	text-align:left;
 }
 ul.item-category__tabs > li{
 	margin:15px 15px 0 0;
@@ -3572,9 +3589,53 @@ ul.item-category__tabs > li{
 .panel{
 	box-shadow:none;
 }
-
-
 .ui-datepicker select {
     color: #041833;
     font-weight: normal;
+}
+
+
+@media only screen and (-webkit-min-device-pixel-ratio: 1.5), only screen and (min--moz-device-pixel-ratio: 1.5), only screen and (min-resolution: 240dpi) {
+	/*body{
+		background:red;
+	}*/
+	.enter-head:before,
+	.search-button__icon:before,
+	.big-link-edit:before,
+	.big-link-remove:before,
+	.save-button:before,
+	.close-button:before,
+	.icon-arr-left:before,
+	.icon-close:before,
+	.link-upload:before,
+	.icon-edit:before,
+	.icon-favorite:before,
+	.icon-ok:before,
+	.icon-print:before,
+	.icon-add:before,
+	.icon-download:before,
+	.icon-lgr-ok:before,
+	.small-icon:before,
+	.link-edit:before,
+	.link-add:before,
+	.link-remove:before,
+	.bottom-nav .first:before,
+	.bottom-nav .prev:before,
+	.bottom-nav .next:before,
+	.bottom-nav .latest:before,
+	.close-head:before,
+	.faq-link:before,
+	span.close-popup,
+	.b-tabs .nav-tabs li a:after,
+	.middle-icon:before,
+	.checkbox,
+	.lk-icon-bl{
+		background-image:url(../images/sprite@2x.png);
+		background-size:1000px 1000px;
+	}
+	
+	.tab_icon{
+		background-image:url(../images/tabs-icons@2x.png);
+		background-size:113px 80px;
+	}
 }

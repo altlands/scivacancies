@@ -18,6 +18,13 @@ namespace SciVacancies.WebApp.Queries
         public Guid VacancyGuid { get; set; }
         public VacancyApplicationStatus Status { get; set; }
     }
+
+    public class SelectVacancyApplicationInVacancyByStatusQuery : IRequest<IEnumerable<VacancyApplication>>
+    {
+        public Guid VacancyGuid { get; set; }
+        public VacancyApplicationStatus Status { get; set; }
+    }
+
     public class SelectPagedVacancyApplicationsByResearcherQuery : IRequest<Page<VacancyApplication>>
     {
         public Guid ResearcherGuid { get; set; }

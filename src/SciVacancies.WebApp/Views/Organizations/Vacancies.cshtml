@@ -135,6 +135,8 @@
                             && item.status == VacancyStatus.Closed
                             && item.status == VacancyStatus.Cancelled
                             && item.status == VacancyStatus.Removed
+                            && item.status == VacancyStatus.OfferResponseAwaitingFromWinner
+                            && item.status == VacancyStatus.OfferResponseAwaitingFromPretender
                             )
                         {
                             <a asp-controller="vacancies" asp-action="cancel" asp-route-id="@item.guid" onclick="javascript: return confirm('Вы уверены что хотите отменить вакансию?');" class="close-td-icon" title="Отменить вакансию"></a>

@@ -14,6 +14,7 @@ namespace SciVacancies.WebApp.Queries
 {
     public class VacancyQueriesHandler :
         IRequestHandler<SingleVacancyQuery, Vacancy>,
+        IRequestHandler<CountVacanciesQuery, int>,
         IRequestHandler<SelectPagedVacanciesQuery, Page<Vacancy>>,
         IRequestHandler<SelectPagedVacanciesByOrganizationQuery, Page<Vacancy>>,
         IRequestHandler<SelectVacancyCriteriasQuery, IEnumerable<VacancyCriteria>>,
@@ -140,6 +141,12 @@ namespace SciVacancies.WebApp.Queries
             IEnumerable<VacancyAttachment> vaAttachments = _db.Fetch<VacancyAttachment>(new Sql($"SELECT * FROM org_vacancy_attachments ra WHERE ra.vacancy_guid = @0 AND ra.type_id = 1", msg.VacancyGuid));
 
             return vaAttachments;
+        }
+        public int Handle(CountVacanciesQuery msg)
+        {
+            IEnumerable<Vacancy> vacancies = _db.Fetch<Vacancy>(new Sql("SELECT v.* FROM org_vacancies v "));
+
+            return vacancies.Count();
         }
     }
 }
