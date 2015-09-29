@@ -12,6 +12,10 @@ namespace SciVacancies.WebApp.Queries
     {
         public Guid OrganizationGuid { get; set; }
     }
+
+    public class CountOrganizationsQuery : IRequest<int>
+    {
+    }
     public class SelectOrganizationsForAutocompleteQuery : IRequest<IEnumerable<Organization>>
     {
         public string Query { get; set; }

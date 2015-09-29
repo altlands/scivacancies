@@ -12,6 +12,10 @@ namespace SciVacancies.WebApp.Queries
     {
         public Guid VacancyGuid { get; set; }
     }
+
+    public class CountVacanciesQuery : IRequest<int>
+    {
+    }
     public class SelectPagedVacanciesQuery : IRequest<Page<Vacancy>>
     {
         public long PageSize { get; set; }

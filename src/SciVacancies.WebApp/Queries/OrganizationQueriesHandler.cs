@@ -12,6 +12,7 @@ namespace SciVacancies.WebApp.Queries
 {
     public class OrganizationQueriesHandler :
         IRequestHandler<SingleOrganizationQuery, Organization>,
+        IRequestHandler<CountOrganizationsQuery, int>,
         IRequestHandler<SelectOrganizationsForAutocompleteQuery, IEnumerable<Organization>>,
         IRequestHandler<SelectPagedOrganizationsQuery, Page<Organization>>,
         IRequestHandler<SelectOrganizationsByGuidsQuery, IEnumerable<Organization>>,
@@ -66,6 +67,13 @@ namespace SciVacancies.WebApp.Queries
             IEnumerable<ResearchDirection> orgResearchDirections = _db.Fetch<ResearchDirection>(new Sql($"SELECT * FROM org_researchdirections ors, d_researchdirections drs WHERE ors.organization_guid = @0 AND ors.researchdirection_id = drs.id", msg.OrganizationGuid));
 
             return orgResearchDirections;
+        }
+
+        public int Handle(CountOrganizationsQuery msg)
+        {
+            var organizations = _db.Fetch<Organization>(new Sql($"SELECT * FROM org_organizations"));
+
+            return organizations.Count();
         }
     }
 }
