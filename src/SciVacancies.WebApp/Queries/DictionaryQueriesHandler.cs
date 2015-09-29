@@ -28,10 +28,12 @@ namespace SciVacancies.WebApp.Queries
 
         IRequestHandler<SelectAllRegionsQuery, IEnumerable<Region>>,
         IRequestHandler<SelectRegionsForAutocompleteQuery, IEnumerable<Region>>,
+        IRequestHandler<SelectRegionsByGuidsQuery, IEnumerable<Region>>,
 
         IRequestHandler<SelectAllResearchDirectionsQuery, IEnumerable<ResearchDirection>>,
         IRequestHandler<SelectResearchDirectionsForAutocompleteQuery, IEnumerable<ResearchDirection>>,
         IRequestHandler<SelectResearchDirectionsByParentIdQuery, IEnumerable<ResearchDirection>>,
+        IRequestHandler<SelectResearchDirectionQuery, ResearchDirection>,
 
         IRequestHandler<SelectAllAttachmentTypesQuery, IEnumerable<AttachmentType>>
     {
@@ -156,6 +158,12 @@ namespace SciVacancies.WebApp.Queries
 
             return regions;
         }
+
+        public IEnumerable<Region> Handle(SelectRegionsByGuidsQuery message)
+        {
+            var regions = _db.Fetch<Region>(new Sql($"SELECT d.* FROM d_regions d WHERE d.id IN (@0) ORDER BY d.title DESC", message.RegionIds));
+            return regions;
+        }
         public IEnumerable<Region> Handle(SelectRegionsForAutocompleteQuery message)
         {
             if (String.IsNullOrEmpty(message.Query)) throw new ArgumentNullException($"Query is empty: {message.Query}");
@@ -202,6 +210,11 @@ namespace SciVacancies.WebApp.Queries
             IEnumerable<ResearchDirection> researchDirections = _db.FetchBy<ResearchDirection>(f => f.Where(w => w.parent_id == message.ParentId));
 
             return researchDirections;
+        }
+        public ResearchDirection Handle(SelectResearchDirectionQuery message)
+        {
+            if (message.Id == 0) throw new ArgumentNullException(nameof(message.Id));
+            return _db.SingleById<ResearchDirection>(message.Id);
         }
 
         public IEnumerable<AttachmentType> Handle(SelectAllAttachmentTypesQuery message)

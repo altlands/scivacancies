@@ -69,6 +69,7 @@ namespace SciVacancies.WebApp.Controllers
                 });
             }
 
+            //todo: ntemnikov -> переименовать в IsMainPage
             ViewBag.HideSearchPanel = true;
 
             return View(model);
