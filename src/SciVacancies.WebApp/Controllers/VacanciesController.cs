@@ -380,7 +380,7 @@ namespace SciVacancies.WebApp.Controllers
             if (model.organization_guid != organizationGuid)
                 return View("Error", "Вы не можете отменить вакансии других организаций");
 
-            if ( model.status == VacancyStatus.InProcess
+            if (model.status == VacancyStatus.InProcess
               || model.status == VacancyStatus.Closed
               || model.status == VacancyStatus.Cancelled
               || model.status == VacancyStatus.Removed
@@ -917,9 +917,17 @@ namespace SciVacancies.WebApp.Controllers
             if (model.status != VacancyStatus.InProcess)
                 return View("Error", $"Вы не можете опубликовать вакансию со статусом: {model.status.GetDescription()}");
 
+            if (model.committee_date == null)
+                return View("Error", "Не указана дата перевода вакансии на рассмотрение комиссии");
+
+            if ((model.committee_date.Value.ToUniversalTime() - DateTime.Now.ToUniversalTime()).Days < _vacancyLifeCycleSettings.Options.DeltaFromPublishToInCommitteeMinDays)
+                return View("Error", $"Вы не можете установить дату перевода вакансии на рассмотрение комиссии раньше, чем через {_vacancyLifeCycleSettings.Options.DeltaFromPublishToInCommitteeMinDays} дн.");
+
             var vacancyGuid = _mediator.Send(new PublishVacancyCommand
             {
-                VacancyGuid = id
+                VacancyGuid = id,
+                InCommitteeStartDate = model.committee_date.Value, 
+                InCommitteeEndDate = model.committee_date.Value.AddHours(25) /*TODO: вынести в конфиг: количество дней до окончания комиссии*/
             });
 
             return RedirectToAction("vacancies", "organizations");
