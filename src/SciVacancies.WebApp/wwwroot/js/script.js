@@ -317,6 +317,11 @@ $(document).ready(function () {
         $(this).tab('show');
     });
     /*
+     * «срок трудового договора» поля должны показываться только, если выбираешь «срочный»
+     */
+    $('#cusel-scroll-' + 'ContractTypeValue').find('span').click(toggleContractTime);
+    toggleContractTime();
+    /*
     end of the code
     */
 });
@@ -487,4 +492,23 @@ function addNewSubscription(source) {
     }
     $(parentForm).find("input[name=\"NewSubscriptionAdd\"]").val(true);
     return true;
+}
+/*
+ * «срок трудового договора» поля должны показываться только, если выбираешь «срочный»
+ */
+function toggleContractTime(e) {
+    var parent = $('.contract-time-period');
+    var currentValue = ""
+    if (e != undefined) {
+        currentValue = e.target.innerText;
+    } else {
+        currentValue = $('#cusel-scroll-' + 'ContractTypeValue').find('span.cuselActive')[0].textContent;
+    }
+    if (currentValue.indexOf("ессроч") > -1) {
+        $(parent).fadeOut("slow");
+        $('#ContractTimeYears').val(null);
+        $('#ContractTimeMonths').val(null);
+    } else {
+        $(parent).fadeIn("slow");
+    }
 }
