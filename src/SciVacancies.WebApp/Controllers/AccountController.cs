@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Security.Claims;
 using MediatR;
 using Microsoft.AspNet.Identity;
@@ -19,7 +18,6 @@ using Microsoft.Framework.OptionsModel;
 using AutoMapper;
 using Microsoft.AspNet.Authorization;
 using SciVacancies.WebApp.Engine;
-using SciVacancies.WebApp.Infrastructure;
 using SciVacancies.WebApp.Infrastructure.WebAuthorize;
 using SciVacancies.WebApp.Models.DataModels;
 using SciVacancies.WebApp.Queries;
@@ -284,7 +282,8 @@ namespace SciVacancies.WebApp.Controllers
                                         var resUser = _userManager.FindByEmail(claims.Find(f => f.Type.Equals("email")).Value);
 
                                         //получаем информацию о Пользователе с Карты Наук
-                                        OAuthResProfile researcherProfile = JsonConvert.DeserializeObject<OAuthResProfile>(_authorizeService.GetResearcherProfile(tokenResponse.AccessToken));
+                                        var jsonUser = _authorizeService.GetResearcherProfile(tokenResponse.AccessToken);
+                                        OAuthResProfile researcherProfile = JsonConvert.DeserializeObject<OAuthResProfile>(jsonUser);
                                         var accountResearcherRegisterDataModel = Mapper.Map<ResearcherRegisterDataModel>(researcherProfile);
 
                                         if (resUser == null)

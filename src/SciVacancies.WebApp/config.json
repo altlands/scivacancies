@@ -40,8 +40,7 @@
         "ConnectionUrl": "http://alt-dev003:9200/",
         "DefaultIndex": "scivacancies-dev"
     },
-    //TODO сделать только с положительными днями, обозвать соответствующе
-    "SagaSettings": {
+    "SagaSettings": { //TODO сделать только с положительными днями, обозвать соответствующе
         "Date": {
             "Committee": {
                 "FirstNotificationDays": -1,

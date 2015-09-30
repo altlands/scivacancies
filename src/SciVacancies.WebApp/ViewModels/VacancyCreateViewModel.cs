@@ -171,25 +171,25 @@ namespace SciVacancies.WebApp.ViewModels
         /// <summary>
         /// Срок трудового договора (для срочного договора)
         /// </summary>
-        public decimal ContractTime { get; set; }
+        public decimal? ContractTime { get; set; }
 
         /// <summary>
         /// Срок трудового договора (для срочного договора)
         /// </summary>
         [Range(minimum: 0, maximum: 100, ErrorMessage = "Вы ввели недопустимое значение. Допустимо от 0 до 100 лет.")]
-        public decimal ContractTimeYears
+        public decimal? ContractTimeYears
         {
-            get { return Math.Truncate(ContractTime); }
-            set { ContractTime = ContractTime - Math.Truncate(ContractTime) + value; }
+            get { return Math.Truncate(ContractTime ?? 0); }
+            set { ContractTime = ContractTime - Math.Truncate(ContractTime ?? 0) + value; }
         }
         /// <summary>
         /// Срок трудового договора (для срочного договора)
         /// </summary>
         [Range(minimum: 0, maximum: 11, ErrorMessage = "Вы ввели недопустимое значение. Допустимо от 0 до 11 месяцев.")]
-        public decimal ContractTimeMonths
+        public decimal? ContractTimeMonths
         {
-            get { return ContractTime - Math.Truncate(ContractTime); }
-            set { ContractTime = Math.Truncate(ContractTime) + value; }
+            get { return (ContractTime ??0) - Math.Truncate(ContractTime ?? 0); }
+            set { ContractTime = Math.Truncate(ContractTime ?? 0) + value; }
         }
 
         /// <summary>
