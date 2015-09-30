@@ -29,7 +29,7 @@ namespace SciVacancies.SmtpNotifications.Handlers
             var organization = _db.SingleOrDefaultById<Organization>(vacancy.organization_guid);
             if (organization == null) return;
 
-            _smtpNotificatorVacancyService.SendVacancyApplicationAppliedForOrganization(organization, vacancy, vacancyapplication);
+            //_smtpNotificatorVacancyService.SendVacancyApplicationAppliedForOrganization(organization, vacancy, vacancyapplication);
             _smtpNotificatorVacancyService.SendVacancyApplicationAppliedForResearcher(researcher, vacancy, vacancyapplication);
         }
 

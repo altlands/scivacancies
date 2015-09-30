@@ -8,8 +8,12 @@ namespace SciVacancies.Services.Email
     {
         private string p1;
         private string p2;
+
         //protected string Domain = "localhost:59075";
+        //public string PortalLink { get; } = "<a target='_blank' href='http://localhost:59075'>http://localhost:59075</a>";
+
         public string Domain { get; } = "scivac.test.alt-lan.com";
+        public string PortalLink { get; } = "<a target='_blank' href='http://scivac.test.alt-lan.com'>http://scivac.test.alt-lan.com</a>";
 
 
         public SmtpNotificatorService()
@@ -39,5 +43,6 @@ namespace SciVacancies.Services.Email
     {
         void Send(MailMessage mailMessage);
         string Domain { get; }
+        string PortalLink { get; }
     }
 }

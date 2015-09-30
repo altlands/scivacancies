@@ -16,5 +16,9 @@ namespace SciVacancies.SmtpNotifications.SmtpNotificators
         void SendSecondCommitteeNotificationToOrganization(Organization organization, Vacancy vacancy);
         void SendOfferResponseAwaitingNotificationToWinner(Researcher researcher, Guid applicationGuid, Guid vacancyGuid);
         void SendOfferResponseAwaitingNotificationToPretender(Researcher researcher, Guid applicationGuid, Guid vacancyGuid);
+        void SendOfferRejectedByPretender(Vacancy vacancy, Organization organization);
+        void SendOfferRejectedByWinner(Vacancy vacancy, Organization organization);
+        void SendOfferAcceptedByPretender(Vacancy vacancy, Organization organization);
+        void SendOfferAcceptedByWinner(Vacancy vacancy, Organization organization);
     }
 }

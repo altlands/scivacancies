@@ -18,16 +18,16 @@ namespace SciVacancies.SmtpNotifications.SmtpNotificators
             var researcherFullName = $"{researcher.secondname} {researcher.firstname} {researcher.patronymic}";
             var body = $@"
 <div style=''>
-    Уважаемый(-ая), {researcherFullName}, 
-    <br/>
-    для сброса пароля перейдите, пожалуйста, по <a target='_blank' href='http://{_smtpNotificatorService.Domain}/account/restorepassword/?username={username}&token={token}'> ссылке</a>.
-    <br/>
-</div>
-<br/>
-<div style='color: red;'>
-    Если вы не отправляли запрос на сброс пароля, то не открывайте указанные ссылки.
-</div>
 
+    Здравствуйте, {researcherFullName}
+    <br/>
+    Был получен ваш запрос на восстановление доступа к порталу {_smtpNotificatorService.PortalLink}.
+    <br/>
+    Ваш логин: {username}
+    <br/>
+    Для создания нового пароля для вашей учетной записи вам необходимо пройти по <a target='_blank' href='http://{_smtpNotificatorService.Domain}/account/restorepassword/?username={username}&token={token}'> ссылке</a>
+    <br/>
+</div>
 <br/>
 <br/>
 <hr/>

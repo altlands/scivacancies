@@ -1,11 +1,9 @@
 ﻿using System;
 using SciVacancies.ReadModel.Core;
-using SciVacancies.Services;
 using SciVacancies.Services.Email;
 
 namespace SciVacancies.SmtpNotifications.SmtpNotificators
 {
-    //TODO: ntemnikov: move body generation to handlers
     public class SmtpNotificatorVacancyService : ISmtpNotificatorVacancyService
     {
         private readonly ISmtpNotificatorService _smtpNotificatorService;
@@ -19,8 +17,13 @@ namespace SciVacancies.SmtpNotifications.SmtpNotificators
         {
             var body = $@"
 <div style=''>
-    Cообщаем, что на вакансию <a target='_blank' href='http://{_smtpNotificatorService.Domain}/vacancies/details/{vacancy.guid}'>{vacancy.fullname}</a> 
-    подана новая <a target='_blank' href='http://{_smtpNotificatorService.Domain}/applications/preview/{vacancyApplication.guid}'>заявка</a> 
+
+    Здравствуйте, {vacancy.contact_name}
+    <br/>
+    Для участия, в созданной вами вакансии <a target='_blank' href='http://{_smtpNotificatorService.Domain}/vacancies/details/{vacancy.guid}'>{vacancy.fullname}</a>,
+    <br/>
+    подана новая <a target='_blank' href='http://{_smtpNotificatorService.Domain}/applications/preview/{vacancyApplication.guid}'>заявка</a>
+    <br/>
 </div>
 
 <br/>
@@ -34,7 +37,7 @@ namespace SciVacancies.SmtpNotifications.SmtpNotificators
     <a target='_blank' href='http://{_smtpNotificatorService.Domain}/organizations/account/'>личном кабинете</a>.
 </div>
 ";
-            _smtpNotificatorService.Send(new SciVacMailMessage(organization.email, "Уведомление с портала вакансий", body));
+            _smtpNotificatorService.Send(new SciVacMailMessage(vacancy.contact_email, "Уведомление с портала вакансий", body));
         }
         public void SendVacancyApplicationAppliedForResearcher(Researcher researcher, Vacancy vacancy, VacancyApplication vacancyApplication)
         {
@@ -77,14 +80,17 @@ namespace SciVacancies.SmtpNotifications.SmtpNotificators
 </div>
 ";
 
-            _smtpNotificatorService.Send(new SciVacMailMessage(organization.email, "Уведомление с портала вакансий", body));
+            _smtpNotificatorService.Send(new SciVacMailMessage(vacancy.contact_email, "Уведомление с портала вакансий", body));
         }
         public void SendVacancyStatusChangedForResearcher(Vacancy vacancy, Researcher researcher)
         {
             var body = $@"
 <div style=''>
-    Уважаемый(-ая), {researcher.secondname} {researcher.firstname}, сообщаем, что вакансия
-    <a target='_blank' href='http://{_smtpNotificatorService.Domain}/vacancies/card/{vacancy.guid}'>{vacancy.fullname}</a> получила новый статус: {vacancy.status.GetDescriptionByResearcher()}
+    Здравствуйте, {researcher.secondname} {researcher.firstname}
+    <br/>
+    У вакансии {vacancy.fullname}, на которую вы подали заявку, изменился статус ({vacancy.status.GetDescriptionByResearcher()})
+    <br/>
+    Для просмотра обновлений перейдите, пожалуйста, по ссылке: <a target='_blank' href='http://{_smtpNotificatorService.Domain}/vacancies/card/{vacancy.guid}'>http://{_smtpNotificatorService.Domain}/vacancies/card/{vacancy.guid}</a>
 </div>
 
 <br/>
@@ -128,9 +134,12 @@ namespace SciVacancies.SmtpNotifications.SmtpNotificators
         {
             var body = $@"
             <div style=''>
-                Уважаемый(-ая), {researcher.secondname} {researcher.firstname}, ваша <a target='_blank' href='http://{_smtpNotificatorService.Domain}/applications/details/{applicationGuid}'>зявка</a>
-                победила в конкурсе на <a target='_blank' href='http://{_smtpNotificatorService.Domain}/vacancies/details/{vacancyGuid}'>вакансию</a>.
-                В течение 30-ти календарных дней до {DateTime.Now.AddDays(30)} вам необходимо подтвердить своё согласие на замещение должности и подписать трудовой договор.
+    Здравствуйте, {researcher.secondname} {researcher.firstname}
+    <br/>
+    Вы выбраны в качестве победителя в конкурсе на <a target='_blank' href='http://{_smtpNotificatorService.Domain}/vacancies/details/{vacancyGuid}'>вакансию</a>
+    <br/>
+    В течение 30-ти календарных дней (до {DateTime.Now.AddDays(30)}) вам необходимо подтвердить свое согласие на замещение должности и подписать трудовой договор.
+
             </div>
 
             <br/>
@@ -152,9 +161,18 @@ namespace SciVacancies.SmtpNotifications.SmtpNotificators
         {
             //TODO сколько осталось дней - брать из конфига
             var body = $@"
-            <div style=''>
-                У вас остался один день до завершения комиссии по вакансии <a target='_blank' href='http://{_smtpNotificatorService.Domain}/vacancies/details/{vacancy.guid}'>{vacancy.fullname}</a>
-            При необходимости вы можете продлить срок рассмотрения еще на 15-ть рабочих дней.            
+<div style=''>
+    Здравствуйте, {vacancy.contact_name}
+    <br/>
+    Напоминаем вам, что ({vacancy.committee_start_date.Value.ToShortDateString()}) заканчивается прием заявок для участия, в
+    <br/>
+    созданной вами вакансии: <a target='_blank' href='http://{_smtpNotificatorService.Domain}/vacancies/details/{vacancy.guid}'>{vacancy.fullname}</a>
+    <br/>
+    Конкурс на вакансию автоматически перейдет в статус «рассмотрение заявок комиссией». 
+    <br/>
+    Вам необходимо выбрать победителя конкурса в течение 15-ти рабочих дней (до {vacancy.committee_end_date.Value.ToShortDateString()}) и разместить в течение 3-х рабочих дней решение конкурсной комиссии.
+    <br/>
+    При необходимости вы можете продлить срок рассмотрения еще на 15-ть рабочих дней.            
             </div>
 
             <br/>
@@ -168,7 +186,7 @@ namespace SciVacancies.SmtpNotifications.SmtpNotificators
                 <a target='_blank' href='http://{_smtpNotificatorService.Domain}/organizations/account/'>личном кабинете</a>.
             </div>
             ";
-            _smtpNotificatorService.Send(new SciVacMailMessage(organization.email, "Уведомление с портала вакансий", body));
+            _smtpNotificatorService.Send(new SciVacMailMessage(vacancy.contact_email, "Уведомление с портала вакансий", body));
         }
         public void SendSecondCommitteeNotificationToOrganization(Organization organization, Vacancy vacancy)
         {
@@ -176,7 +194,13 @@ namespace SciVacancies.SmtpNotifications.SmtpNotificators
 
             var body = $@"
             <div style=''>
-                У вас остался один день на публикацию протокола комиссии и выбора победителей по вакансии <a target='_blank' href='http://{_smtpNotificatorService.Domain}/vacancies/details/{vacancy.guid}'>{vacancy.fullname}</a>
+    Здравствуйте, {vacancy.contact_name}
+    <br/>
+    Напоминаем вам, что  ({vacancy.committee_end_date.Value.ToShortDateString()}) заканчивается срок рассмотрения заявок, на созданную вами вакансию: <a target='_blank' href='http://{_smtpNotificatorService.Domain}/vacancies/details/{vacancy.guid}'>{vacancy.fullname}</a>
+    <br/>
+    Вам необходимо в течение 3-х рабочих дней выбрать победителя и поместить решение конкурсной комиссии на портале {_smtpNotificatorService.PortalLink}.
+    <br/>
+
             </div>
 
             <br/>
@@ -190,7 +214,7 @@ namespace SciVacancies.SmtpNotifications.SmtpNotificators
                 <a target='_blank' href='http://{_smtpNotificatorService.Domain}/organizations/account/'>личном кабинете</a>.
             </div>
             ";
-            _smtpNotificatorService.Send(new SciVacMailMessage(organization.email, "Уведомление с портала вакансий", body));
+            _smtpNotificatorService.Send(new SciVacMailMessage(vacancy.contact_email, "Уведомление с портала вакансий", body));
         }
         public void SendOfferResponseAwaitingNotificationToWinner(Researcher researcher, Guid applicationGuid, Guid vacancyGuid)
         {
@@ -243,6 +267,98 @@ namespace SciVacancies.SmtpNotifications.SmtpNotificators
                 ";
 
             _smtpNotificatorService.Send(new SciVacMailMessage(researcher.email, "Уведомление с портала вакансий", body));
+        }
+
+        public void SendOfferRejectedByPretender(Vacancy vacancy, Organization organization)
+        {
+            var body = $@"
+<div style=''>
+    Здравствуйте, {vacancy.contact_name}
+    <br />
+    Претендент отклонил ваше предложение по вакансии <a target='_blank' href='http://{_smtpNotificatorService.Domain}/vacancies/card/{vacancy.guid}'>{vacancy.fullname}</a>
+</div>
+
+<br/>
+<br/>
+<hr/>
+
+<div style='color: lightgray; font-size: smaller;'>
+    Это письмо создано автоматически с 
+    <a target='_blank' href='http://{_smtpNotificatorService.Domain}'>Портала вакансий</a>.
+    Чтобы не получать такие уведомления отключите их или смените email в 
+    <a target='_blank' href='http://{_smtpNotificatorService.Domain}/organizations/account/'>личном кабинете</a>.
+</div>
+";
+            _smtpNotificatorService.Send(new SciVacMailMessage(vacancy.contact_email, "Уведомление с портала вакансий", body));
+        }
+
+        public void SendOfferRejectedByWinner(Vacancy vacancy, Organization organization)
+        {
+            var body = $@"
+<div style=''>
+    Здравствуйте, {vacancy.contact_name}
+    <br />
+    Победитель отклонил ваше предложение по вакансии <a target='_blank' href='http://{_smtpNotificatorService.Domain}/vacancies/card/{vacancy.guid}'>{vacancy.fullname}</a>
+</div>
+
+<br/>
+<br/>
+<hr/>
+
+<div style='color: lightgray; font-size: smaller;'>
+    Это письмо создано автоматически с 
+    <a target='_blank' href='http://{_smtpNotificatorService.Domain}'>Портала вакансий</a>.
+    Чтобы не получать такие уведомления отключите их или смените email в 
+    <a target='_blank' href='http://{_smtpNotificatorService.Domain}/organizations/account/'>личном кабинете</a>.
+</div>
+";
+            _smtpNotificatorService.Send(new SciVacMailMessage(vacancy.contact_email, "Уведомление с портала вакансий", body));
+        }
+
+        public void SendOfferAcceptedByPretender(Vacancy vacancy, Organization organization)
+        {
+            var body = $@"
+<div style=''>
+    Здравствуйте, {vacancy.contact_name}
+    <br />
+    Претендент принял ваше предложение по вакансии <a target='_blank' href='http://{_smtpNotificatorService.Domain}/vacancies/card/{vacancy.guid}'>{vacancy.fullname}</a>
+</div>
+
+<br/>
+<br/>
+<hr/>
+
+<div style='color: lightgray; font-size: smaller;'>
+    Это письмо создано автоматически с 
+    <a target='_blank' href='http://{_smtpNotificatorService.Domain}'>Портала вакансий</a>.
+    Чтобы не получать такие уведомления отключите их или смените email в 
+    <a target='_blank' href='http://{_smtpNotificatorService.Domain}/organizations/account/'>личном кабинете</a>.
+</div>
+";
+            _smtpNotificatorService.Send(new SciVacMailMessage(vacancy.contact_email, "Уведомление с портала вакансий", body));
+        }
+
+        public void SendOfferAcceptedByWinner(Vacancy vacancy, Organization organization)
+        {
+            var body = $@"
+<div style=''>
+    Здравствуйте, {vacancy.contact_name}
+    <br />
+    Победитель принял ваше предложение по вакансии <a target='_blank' href='http://{_smtpNotificatorService.Domain}/vacancies/card/{vacancy.guid}'>{vacancy.fullname}</a>
+</div>
+
+<br/>
+<br/>
+<hr/>
+
+<div style='color: lightgray; font-size: smaller;'>
+    Это письмо создано автоматически с 
+    <a target='_blank' href='http://{_smtpNotificatorService.Domain}'>Портала вакансий</a>.
+    Чтобы не получать такие уведомления отключите их или смените email в 
+    <a target='_blank' href='http://{_smtpNotificatorService.Domain}/organizations/account/'>личном кабинете</a>.
+</div>
+";
+            _smtpNotificatorService.Send(new SciVacMailMessage(vacancy.contact_email, "Уведомление с портала вакансий", body));
         }
     }
 }
