@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections;
+using System.Globalization;
 using System.Linq;
+using System.Web.ModelBinding;
 using Autofac;
 using Autofac.Dnx;
 using Autofac.Features.Variance;
@@ -8,6 +10,7 @@ using Microsoft.AspNet.Builder;
 using Microsoft.AspNet.Diagnostics;
 using Microsoft.AspNet.Hosting;
 using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.Mvc;
 using Microsoft.Framework.ConfigurationModel;
 using Microsoft.Framework.DependencyInjection;
 using Microsoft.Framework.Logging;
@@ -149,11 +152,31 @@ namespace SciVacancies.WebApp
             });
 
             MappingConfiguration.Initialize();
+
+            //ModelBinders.Binders.Add(typeof(DateTime), new SciVacancyModelBinder());
         }
         public void SchedulerServiceInitialize(ISchedulerService schedulerService)
         {
             schedulerService.StartScheduler();
         }
     }
+
+    //public class SciVacancyModelBinder : IModelBinder
+    //{
+    //    public bool BindModel(ModelBindingExecutionContext modelBindingExecutionContext, ModelBindingContext bindingContext)
+    //    {
+    //        string theDate = bindingContext.Context.Request.QueryString["InCommitteeDate"];
+    //        //       DateTime dt = new DateTime();
+    //        //       bool success = DateTime.TryParse(theDate, CultureInfo.GetCultureInfo("ru-RU"), DateTimeStyles.None, out dt);
+    //        //       if (success)
+    //        //       {
+    //        //           return new ModelBinderResult(dt);
+    //        //       }
+    //        //       else
+    //        //       {
+    //        //           // Return an appropriate default
+    //        //       }
+    //    }
+    //}
 
 }
