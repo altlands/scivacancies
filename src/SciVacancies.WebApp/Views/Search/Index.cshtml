@@ -117,11 +117,13 @@
 
                 <div class="cat-filter">
                     <div class="title"><span>Заработная плата</span></div>
-                    <div>
-                        От <input type="text" asp-for="SalaryMin" class="small-input" />
-                    </div>
-                    <div>
-                        До <input type="text" asp-for="SalaryMax" class="small-input" />
+                    <div class="b-wages">
+                        <div class="inline-block">
+                            От <input type="text" asp-for="SalaryMin" class="small-input b-wages__input" />
+                        </div>
+                        <div class="inline-block ml9">
+                            До <input type="text" asp-for="SalaryMax" class="small-input b-wages__input" />
+                        </div>
                     </div>
                 </div>
 
@@ -135,7 +137,9 @@
                     </ul>
                 </div>
 
-                <input type="submit" class="blue-btn-sm small-icon icon-sm-eye-wh " value="Применить" />
+                
+                <input type="submit" class="blue-btn-sm small-icon icon-sm-eye-wh" value="Применить" />
+                
 
             </div>
         </div>
@@ -220,7 +224,9 @@
                     <select asp-for="OrderBy"
                             asp-items="ViewBag.FilterSource.OrderBys"></select>
                 </div>
-                <input type="submit" class="blue-btn-sm small-icon icon-sm-eye-wh" value="Применить" />
+                <span class="blue-btn-sm small-icon icon-sm-eye-wh">
+                    Показать<input type="submit" class="bt-default" value="" />
+                </span>
             </div>
 
             <div class="list-results">
