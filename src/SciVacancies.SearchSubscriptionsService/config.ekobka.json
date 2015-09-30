@@ -1,0 +1,31 @@
+﻿{
+    "Data": {
+        "ReadModelDb": "Server=localhost;Database=scivacancies;User Id=postgres;Password=ekobka",
+        "QuartzDb": ""
+    },
+    "ElasticSettings": {
+        "ConnectionUrl": "http://alt-dev003:9200/",
+        "DefaultIndex": "scivacancies-ekobka"
+    },
+    "QuartzSettings": {
+        "Scheduler": {
+            "InstanceName": "SciVacancies.SearchSubscription",
+            "ExecutionInterval": 2
+        },
+        "JobStore": {
+            "Type": "Quartz.Impl.AdoJobStore.JobStoreTX, Quartz",
+            "UseProperties": "true",
+            "DataSource": "default",
+            "TablePrefix": "qrtz_",
+            "LockHandler": {
+                "Type": "Quartz.Impl.AdoJobStore.UpdateLockRowSemaphore, Quartz"
+            }
+        },
+        "DataSource": {
+            "Default": {
+                "ConnectionString": "Server=localhost;Database=scivacancies;User Id=postgres;Password=ekobka",
+                "Provider": "Npgsql-20"
+            }
+        }
+    },
+}
