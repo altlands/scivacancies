@@ -103,7 +103,7 @@
         "PathToBlankAvatar": "/images/profile-photo.png"
     },
     "VacancyLifeCycleSettings": {
-        "DeltaFromPublishToInCommitteeMinDays": 60
+        "DeltaFromPublishToInCommitteeMinDays": 20
     },
     "CaptchaSettings": {
         "CaptchaDurationSeconds": 180

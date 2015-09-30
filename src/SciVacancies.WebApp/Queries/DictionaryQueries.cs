@@ -63,10 +63,19 @@ namespace SciVacancies.WebApp.Queries
         public string Query { get; set; }
         public int Take { get; set; }
     }
+    public class SelectRegionsByGuidsQuery : IRequest<IEnumerable<Region>>
+    {
+        public List<int> RegionIds { get; set; }
+    }
 
     public class SelectAllResearchDirectionsQuery : IRequest<IEnumerable<ResearchDirection>>
     {
 
+    }
+
+    public class SelectResearchDirectionQuery : IRequest<ResearchDirection>
+    {
+        public int Id { get; set; }
     }
     public class SelectResearchDirectionsForAutocompleteQuery : IRequest<IEnumerable<ResearchDirection>>
     {

@@ -220,9 +220,7 @@ namespace SciVacancies.WebApp.Controllers
                     _mediator.Send(new SelectAllCriteriasQuery()).ToList().ToHierarchyCriteriaViewModelList(model.Criterias.ToList());
             model.Attachments = _mediator.Send(new SelectAllExceptCommitteeVacancyAttachmentsQuery { VacancyGuid = model.Guid }).ToList();
             model.AttachmentsCommittee = _mediator.Send(new SelectCommitteeVacancyAttachmentsQuery { VacancyGuid = model.Guid }).ToList();
-
-            //TODO: показать отрасль науки, направление исследований
-
+            model.ResearchDirection = _mediator.Send(new SelectResearchDirectionQuery { Id = preModel.researchdirection_id });
             return View(model);
         }
 
@@ -275,9 +273,7 @@ namespace SciVacancies.WebApp.Controllers
                     _mediator.Send(new SelectAllCriteriasQuery()).ToList().ToHierarchyCriteriaViewModelList(model.Criterias.ToList());
             model.Attachments = _mediator.Send(new SelectAllExceptCommitteeVacancyAttachmentsQuery { VacancyGuid = model.Guid }).ToList();
             model.AttachmentsCommittee = _mediator.Send(new SelectCommitteeVacancyAttachmentsQuery { VacancyGuid = model.Guid }).ToList();
-
-            //TODO: показать отрасль науки, направление исследований
-
+            model.ResearchDirection = _mediator.Send(new SelectResearchDirectionQuery { Id = preModel.researchdirection_id });
             return View(model);
         }
 
@@ -295,7 +291,7 @@ namespace SciVacancies.WebApp.Controllers
                 return HttpNotFound();
 
             var model = Mapper.Map<VacancyDetailsViewModel>(preModel);
-
+            
             ViewBag.VacancyInFavorites = false;
 
             //если Вакансия Опубликована или Принимает Заявки
@@ -323,9 +319,7 @@ namespace SciVacancies.WebApp.Controllers
                     _mediator.Send(new SelectAllCriteriasQuery()).ToList().ToHierarchyCriteriaViewModelList(model.Criterias.ToList());
             model.Attachments = _mediator.Send(new SelectAllExceptCommitteeVacancyAttachmentsQuery { VacancyGuid = model.Guid }).ToList();
             model.AttachmentsCommittee = _mediator.Send(new SelectCommitteeVacancyAttachmentsQuery { VacancyGuid = model.Guid }).ToList();
-
-            //TODO: показать отрасль науки, направление исследований
-
+            model.ResearchDirection = _mediator.Send(new SelectResearchDirectionQuery {Id = preModel.researchdirection_id });
             return View(model);
         }
 
@@ -489,7 +483,7 @@ namespace SciVacancies.WebApp.Controllers
         [PageTitle("Обоснование решения комиссии")]
         [BindOrganizationIdFromClaims]
         [Authorize(Roles = ConstTerms.RequireRoleOrganizationAdmin)]
-        public IActionResult SetCommitteeReason(Guid id, Guid organizationGuid)
+        public IActionResult SetCommitteeReason(Guid id, Guid organizationGuid, Guid applicationGuid)
         {
             if (id == Guid.Empty)
                 throw new ArgumentNullException(nameof(id));
@@ -515,7 +509,7 @@ namespace SciVacancies.WebApp.Controllers
         [BindOrganizationIdFromClaims]
         [Authorize(Roles = ConstTerms.RequireRoleOrganizationAdmin)]
         [ValidateAntiForgeryToken]
-        public IActionResult SetCommitteeReason(VacancySetReasonViewModel model, Guid organizationGuid)
+        public IActionResult SetCommitteeReason(VacancySetReasonViewModel model, Guid organizationGuid, Guid applicationGuid)
         {
             if (model.Guid == Guid.Empty)
                 throw new ArgumentNullException(nameof(model.Guid));
@@ -608,6 +602,9 @@ namespace SciVacancies.WebApp.Controllers
                 VacancyGuid = model.Guid
             });
 
+            if (applicationGuid != Guid.Empty) 
+            return RedirectToAction(actionName: "setwinner", routeValues: new { id = applicationGuid, isWinner= true });
+
             return RedirectToAction(actionName: "details", routeValues: new { id = model.Guid });
         }
 
@@ -649,7 +646,7 @@ namespace SciVacancies.WebApp.Controllers
             var vacancyInCommitteeAttachments = _mediator.Send(new SelectCommitteeVacancyAttachmentsQuery { VacancyGuid = vacancy.guid });
             if (string.IsNullOrWhiteSpace(vacancy.committee_resolution)
                 && (vacancyInCommitteeAttachments == null || !vacancyInCommitteeAttachments.Any()))
-                return RedirectToAction("setcommitteereason", new { id = vacancy.guid });
+                return RedirectToAction("setcommitteereason", new { id = vacancy.guid , applicationGuid = vacancyApplicationGuid});
 
             return null;
         }

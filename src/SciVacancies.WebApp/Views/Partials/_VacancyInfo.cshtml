@@ -10,21 +10,21 @@
 
     </li>
     <li class="odd">
-
+        
         <div>
             @if (!string.IsNullOrWhiteSpace(Model.CommitteeReasolution))
             {
                 <text>
-                <div class="section-eval">
-                    <span class="name-section">Решение комиссии:</span>
-                    <div class="list-fields">
-                        <div>
-                            <div class="field">
-                                @Model.CommitteeReasolution
+                    <div class="section-eval">
+                        <span class="name-section">Решение комиссии:</span>
+                        <div class="list-fields">
+                            <div>
+                                <div class="field">
+                                    @Model.CommitteeReasolution
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
                 </text>
             }
 
@@ -33,23 +33,23 @@
             @if (Model.AttachmentsCommittee != null && Model.AttachmentsCommittee.Any())
             {
                 <text>
-                <div class="section-eval">
-                    <span class="name-section">Протокол(ы) решения комиссии:</span>
-                    <div class="list-fields">
-                        @foreach (var item in Model.AttachmentsCommittee)
-                        {
-                            <text>
-                            <div>
-                                <div class="field">
-                                    <div class="section-eval">
-                                        @item.name <span class="small-icon icon-sm-download"><a href="@(Model.FolderVacanciesAttachmentsUrl + item.url)">Скачать</a></span>
+                    <div class="section-eval">
+                        <span class="name-section">Протокол(ы) решения комиссии:</span>
+                        <div class="list-fields">
+                            @foreach (var item in Model.AttachmentsCommittee)
+                            {
+                                <text>
+                                    <div>
+                                        <div class="field">
+                                            <div class="section-eval">
+                                                @item.name <span class="small-icon icon-sm-download"><a href="@(Model.FolderVacanciesAttachmentsUrl + item.url)">Скачать</a></span>
+                                            </div>
+                                        </div>
                                     </div>
-                                </div>
-                            </div>
-                            </text>
-                        }
+                                </text>
+                            }
+                        </div>
                     </div>
-                </div>
                 </text>
             }
 
@@ -62,7 +62,7 @@
         <span>Полное наименование:</span>@Model.FullName
     </li>
     <li class="even">
-        <span>Отрасль науки:</span>@Model.ResearchDirection
+        <span>Отрасль науки:</span>@(Model.ResearchDirection?.title)
     </li>
     <li class="odd">
         <span>Тематика исследований:</span>@Model.ResearchTheme

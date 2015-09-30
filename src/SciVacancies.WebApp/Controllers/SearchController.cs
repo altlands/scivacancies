@@ -128,9 +128,24 @@ namespace SciVacancies.WebApp.Controllers
 
             if (model.Items.Items != null && model.Items.Items.Any())
             {
-                var organizaitonsGuid = model.Items.Items.Select(c => c.OrganizationGuid).ToList();
-                var organizations = _mediator.Send(new SelectOrganizationsByGuidsQuery { OrganizationGuids = organizaitonsGuid }).ToList();
-                model.Items.Items.Where(c => organizations.Select(d => d.guid).Contains(c.OrganizationGuid)).ToList().ForEach(c => c.OrganizationName = organizations.First(d => d.guid == c.OrganizationGuid).name);
+                {
+                    //заполняем Организации в Вакансиях
+                    var organizaitonsGuid = model.Items.Items.Select(c => c.OrganizationGuid).ToList();
+                    var organizations =
+                        _mediator.Send(new SelectOrganizationsByGuidsQuery { OrganizationGuids = organizaitonsGuid })
+                            .ToList();
+                    model.Items.Items.Where(c => organizations.Select(d => d.guid).Contains(c.OrganizationGuid))
+                        .ToList()
+                        .ForEach(c => c.OrganizationName = organizations.First(d => d.guid == c.OrganizationGuid).name);
+                }
+
+                {   //заполняем 
+                    var regionsGuid = model.Items.Items.Select(c => c.RegionId).ToList();
+                    var regions = _mediator.Send(new SelectRegionsByGuidsQuery { RegionIds = regionsGuid }).ToList();
+                    model.Items.Items.Where(c => regions.Select(d => d.id).Contains(c.RegionId))
+                        .ToList()
+                        .ForEach(c => c.Region= regions.First(d => d.id== c.RegionId).title);
+                }
             }
 
             return View(model);

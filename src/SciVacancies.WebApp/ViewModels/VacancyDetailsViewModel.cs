@@ -38,12 +38,13 @@ namespace SciVacancies.WebApp.ViewModels
         /// <summary>
         /// Отрасль науки
         /// </summary>
-        public string ResearchDirection { get; set; }
+        public ResearchDirection ResearchDirection { get; set; }
         public int ResearchDirectionId { get; set; }
         /// <summary>
         /// Тематика исследований
         /// </summary>
         public string ResearchTheme { get; set; }
+        [Obsolete("Не приходит из ReadModel")]
         public int ResearchThemeId { get; set; }
         /// <summary>
         /// Задачи
