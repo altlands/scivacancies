@@ -6,6 +6,6 @@ namespace SciVacancies.SmtpNotifications.SmtpNotificators
     {
         void SendPasswordRestore(Researcher researcher, string username, string mailTo, string token);
         void SendUserActivation(Researcher researcher, string username, string mailTo, string token);
-        void SendUserRegistered(string fullName, string mailTo);
+        void SendUserRegistered(string fullName, string mailTo, string login);
     }
 }

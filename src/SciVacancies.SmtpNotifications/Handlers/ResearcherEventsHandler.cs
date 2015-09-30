@@ -23,7 +23,7 @@ namespace SciVacancies.SmtpNotifications.Handlers
             //if (researcher == null) return;
 
             //send email notification
-            _smtpNotificatorAccountService.SendUserRegistered(msg.Data.FullName, msg.Data.Email);
+            _smtpNotificatorAccountService.SendUserRegistered(msg.Data.FullName, msg.Data.Email, msg.Data.UserName);
         }
     }
 }

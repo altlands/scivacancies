@@ -77,13 +77,16 @@ namespace SciVacancies.SmtpNotifications.SmtpNotificators
 
 
 
-        public void SendUserRegistered(string fullName, string mailTo)
+        public void SendUserRegistered(string fullName, string mailTo, string login)
         {
             var body =
                 $@"
 <div style=''>
-    Уважаемый(-ая), {fullName}, Вы зарегистрированы на портале Вакансий.
+    Здравствуйте, {fullName}
     <br/>
+    Вы успешно прошли регистрацию на портале http://scivac.ru/
+    <br/>
+    Ваш логин: {login}
 </div>
 
 <br/>
