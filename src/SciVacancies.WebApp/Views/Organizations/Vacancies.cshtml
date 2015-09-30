@@ -20,7 +20,7 @@
 
 <div class="table-control">
     <!-- <a href="#" class="close-table"><span class="italic">Очистить фильтры</span></a> -->
-    <a href="@Context.Request.Path.Value" class="reload-table"><span class="italic">Обновить список</span></a>
+    <a href="@Context.Request.Path.Value" class="reload-table before_icon_top"><span class="italic">Обновить список</span></a>
 </div>
 
 <table class="table request-table tbl-vac">
@@ -160,12 +160,12 @@
 </table>
 
 <div pagedlist="Model.PagedVacancies"
-     request="Context.Request">
+     request="Context.Request" class="b-clear">
 </div>
 
-<div class="ctr-buttons mb5 mt-30">
+<div class="ctr-buttons mb5">
     <a asp-controller="vacancies" asp-action="create">
-        <span class="green-btn middle-icon">Добавить вакансию</span>
+        <span class="green-btn middle-icon icon-add">Добавить вакансию</span>
     </a>
 </div>
 

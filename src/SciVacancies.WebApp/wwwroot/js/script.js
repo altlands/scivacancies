@@ -331,7 +331,7 @@ $(document).ready(function () {
  */
 function reloadImg(captchaImageFieldName) {
     var d = new Date();
-    $('#' + captchaImageFieldName).attr("src", "/captcha/fetch?w=100&h=30" + d.getTime());
+    $('#' + captchaImageFieldName).attr("src", "/captcha/fetch?w=164&h=50" + d.getTime());
 }
 /*
  * сделать некоторую обработку перед отправкой формы Регистрации
