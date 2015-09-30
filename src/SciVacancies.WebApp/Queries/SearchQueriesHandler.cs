@@ -27,13 +27,15 @@ namespace SciVacancies.WebApp.Queries
 
             var results = _elastic.Search<Vacancy>(searchSelector(msg));
 
+            var scoredResult = results.Hits.Where(c=>c.Score > 0.2f).Select(c=>c.Source).ToList();
+
             var pageVacancies = new Page<Vacancy>
             {
                 CurrentPage = msg.CurrentPage.Value,
                 ItemsPerPage = msg.PageSize.Value,
                 TotalItems = results.Total,
                 TotalPages = msg.PageSize.HasValue ? results.Total / msg.PageSize.Value : 0,
-                Items = results.Documents.ToList()
+                Items = scoredResult
             };
 
             return pageVacancies;
