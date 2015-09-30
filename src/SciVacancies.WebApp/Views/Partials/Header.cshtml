@@ -13,26 +13,19 @@
 
         @Component.Invoke("Login")
 
-        <div class="control">
-
-
-
-        @if (ViewBag.HideSearchPanel == null)
-        {
-            <div class="b-search">
-                <form asp-controller="search" asp-action="index" method="GET">
-                    <input class="search-input" type="text" name="search" placeholder="поиск по порталу" value="@ViewBag.Search" />
-                    <span class="search-button search-button__icon">
-                        <input type="submit" value="" class="search-button__submit">
-                    </span>
-                </form>
-            </div>
-        }
-
-
-
-
-        </div>
-
     </div>
 </div>
+
+@if (ViewBag.HideSearchPanel == null)
+{
+    <div class="b-search-blue">
+        <div class="b-wrap">
+            <form asp-controller="search" asp-action="index" method="GET">
+                <input class="search-input search-input_blue" type="text" name="search" placeholder="поиск по порталу" value="@ViewBag.Search" />
+                <span class="search-button search-button__icon search-button_blue">
+                    <input type="submit" value="" class="search-button__submit">
+                </span>
+            </form>
+        </div>
+    </div>
+}
