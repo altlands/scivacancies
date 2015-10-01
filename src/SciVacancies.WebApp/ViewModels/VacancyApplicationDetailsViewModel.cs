@@ -47,7 +47,8 @@ namespace SciVacancies.WebApp.ViewModels
                     //описываем заявки проигравших
                     return new Tuple<string, string>("Не в финале", "draft"); //grey
 
-                if (Status == VacancyApplicationStatus.Lost)
+                //todo: aavdeev : добавить статус Rejected
+                if (Status == VacancyApplicationStatus.Lost) //if (Status == VacancyApplicationStatus.Rejected)
                     //описываем заявки, в которых пользователь сам отказался
                     return new Tuple<string, string>("Предложение отклонено", "draft"); //grey
 
