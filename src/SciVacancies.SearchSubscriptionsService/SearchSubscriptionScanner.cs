@@ -48,17 +48,23 @@ namespace SciVacancies.SearchSubscriptionsService
         public void Initialize(IEnumerable<SearchSubscription> subscriptionQueue)
         {
             _subscriptionQueue = subscriptionQueue;
+            Console.WriteLine($"                 SearchSubscriptionScanner: Initialize: в сканер передали {subscriptionQueue?.Count()} подписок");
         }
 
         public void PoolHandleSubscriptions()
         {
-            if (_subscriptionQueue == null)
+
+            if (_subscriptionQueue == null || !_subscriptionQueue.Any())
+            {
+                Console.WriteLine("                 список подписок пустой");
                 return;
+            }
+            Console.WriteLine($"                 список подписок содержит - {_subscriptionQueue.Count()} - записей");
 
             var elasticClient = new ElasticClient(new ConnectionSettings(new Uri(_configuration.Get("ElasticSettings:ConnectionUrl")), defaultIndex: _configuration.Get("ElasticSettings:DefaultIndex")));
 
             //todo добавить свойство int emailsToSentPerMinute
-            //todo: написать процедуру, которая будет блокировать обрабатываемые подписки
+            //todo: написать sql-процедуру, которая будет блокировать обрабатываемые подписки
             foreach (var searchSubscription in _subscriptionQueue)
             {
                 var searchQuery = new SearchQuery
@@ -73,13 +79,13 @@ namespace SciVacancies.SearchSubscriptionsService
                     SalaryTo = searchSubscription.salary_to,
                     VacancyStatuses = JsonConvert.DeserializeObject<IEnumerable<VacancyStatus>>(searchSubscription.vacancy_statuses)
                 };
+                Console.WriteLine($"                    searchQuery created based on searchSubscription.Guid='{searchSubscription.guid}' ");
 
                 Func<SearchQuery, SearchDescriptor<Vacancy>> searchSelector = VacancySearchDescriptor;
 
                 var searchResults = elasticClient.Search<Vacancy>(searchSelector(searchQuery));
                 var vacanciesList = searchResults.Documents.ToList();
-
-                Console.WriteLine($"По подписке найдено {vacanciesList.Count} записей");
+                Console.WriteLine($"                    по подписке найдено {vacanciesList.Count} записей");
 
                 if (vacanciesList.Count > 0)
                 {

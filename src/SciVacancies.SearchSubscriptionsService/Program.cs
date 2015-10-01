@@ -21,15 +21,12 @@ namespace SciVacancies.SearchSubscriptionsService
         {
             var vars = Environment.GetEnvironmentVariables();
             var devEnv = (string)vars.Cast<DictionaryEntry>().FirstOrDefault(e => e.Key.Equals("dev_env")).Value;
-
+            var configuration = new Configuration()
+                .AddJsonFile("config.json")
+                .AddJsonFile($"config.{devEnv}.json", optional: true)
+                .AddEnvironmentVariables();
             var builder = new ContainerBuilder();
-            builder
-                .Register(c =>
-                    new Configuration()
-                    .AddJsonFile("config.json")
-                    .AddJsonFile($"config.{devEnv}.json", optional: true)
-                    .AddEnvironmentVariables())
-                .As<IConfiguration>().SingleInstance();
+            builder.Register(c => configuration).As<IConfiguration>().SingleInstance();
             builder.RegisterType<SmtpNotificatorService>().As<ISmtpNotificatorService>().InstancePerLifetimeScope();
             builder.RegisterType<SearchSubscriptionService>().AsSelf();
             builder.RegisterType<QuartzService>().AsImplementedInterfaces();
@@ -40,8 +37,7 @@ namespace SciVacancies.SearchSubscriptionsService
                 .AsSelf()
                 .InstancePerLifetimeScope();
             builder.RegisterType<SearchSubscriptionScanner>().As<ISearchSubscriptionScanner>().InstancePerLifetimeScope();
-            //todo: move to config
-            builder.Register(c => new Database("Server=localhost;Database=scivacancies;User Id=postgres;Password=postgres", NpgsqlFactory.Instance)).As<IDatabase>();
+            builder.Register(c => new Database(configuration.Get("Data:ReadModelDb"), NpgsqlFactory.Instance)).As<IDatabase>();
             //builder.Register(c => new Database(Config.Get("Data:ReadModelDb"), NpgsqlFactory.Instance)).As<IDatabase>().InstancePerLifetimeScope();
 
             var container = builder.Build();
@@ -72,32 +68,40 @@ namespace SciVacancies.SearchSubscriptionsService
 
             Console.WriteLine("Started");
 
-            SearchSubscriptionService searchSubscriptionService = null;
+            SearchSubscriptionService searchSubscriptionService;
             //service initializing
             try
             {
                 searchSubscriptionService = container.Resolve<SearchSubscriptionService>();
+                Console.WriteLine("Programm: SearchSubscriptionService Resolved");
                 searchSubscriptionService.OnStart();
+                Console.WriteLine("Programm: SearchSubscriptionService Started");
             }
             catch (Exception exception)
             {
-                Console.WriteLine(exception.Message);
-                Console.Read();
+                Console.WriteLine("Programm:" + exception.Message);
+                Console.ReadLine();
                 return;
             }
             //searchSubscriptionService.ServiceName = "SearchSubscriptionService";
             //ServiceBase.Run(searchSubscriptionService);
 
-            Console.ReadLine();
+            var wroteCommand = Console.ReadLine();
+            while (wroteCommand == null || !wroteCommand.Equals("stop"))
+            {
+                Thread.Sleep(2000);
+                wroteCommand = Console.ReadLine();
+            }
 
             while (!searchSubscriptionService.CanStop)
             {
                 Thread.Sleep(500);
             }
 
-            Console.WriteLine("Stopped");
+            Console.WriteLine("Programm: Stopping");
             searchSubscriptionService.Stop();
-            Console.Read();
+            Console.WriteLine("Programm: SearchSubscriptionService Stopped");
+            Console.ReadLine();
 
         }
     }

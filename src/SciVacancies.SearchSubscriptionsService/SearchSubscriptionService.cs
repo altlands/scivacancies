@@ -37,7 +37,7 @@ namespace SciVacancies.SearchSubscriptionsService
         {
             base.OnStart(args);
 
-            Console.WriteLine("SearchSubscriptionService Starting");
+            Console.WriteLine("SearchSubscriptionService: Starting");
 
             //logging
 
@@ -46,7 +46,6 @@ namespace SciVacancies.SearchSubscriptionsService
             {
                 //ISchedulerFactory schedulerFactory = new StdSchedulerFactory();
                 //_schedulerService = schedulerFactory.GetScheduler();
-
                 var jobKey = new JobKey("SciVacancies.SearchSubscriptionJob", "SciVacancies.SearchSubscriptionService");
                 var triggerKey = new TriggerKey("SciVacancies.SearchSubscriptionJobTrigger", "SciVacancies.SearchSubscriptionService");
 
@@ -67,7 +66,6 @@ namespace SciVacancies.SearchSubscriptionsService
                     //_schedulerService.DeleteJob(jobKey);
                     _schedulerService.CreateSheduledJobWithStrongName(_lifetimeScope.Resolve<SearchSubscriptionJob>(), jobKey, MinuteInterval);
                 }
-                
 
                 _schedulerService.StartScheduler();
             }
@@ -77,18 +75,18 @@ namespace SciVacancies.SearchSubscriptionsService
             }
 
 
-            Console.WriteLine("SearchSubscriptionService Started");
+            Console.WriteLine("SearchSubscriptionService: Started");
             Console.WriteLine("");
         }
 
         protected override void OnStop()
         {
-            Console.WriteLine("SearchSubscriptionService Stopping");
+            Console.WriteLine("SearchSubscriptionService: Stopping");
             _schedulerService.Shutdown();
             //...???
 
             base.OnStop();
-            Console.WriteLine("SearchSubscriptionService Stopped");
+            Console.WriteLine("SearchSubscriptionService: Stopped");
             Console.WriteLine("");
         }
     }

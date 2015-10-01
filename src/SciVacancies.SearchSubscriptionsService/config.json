@@ -1,16 +1,16 @@
 ﻿{
-  "Data": {
-    "ReadModelDb": "Server=alt-dev002;Database=scivacancies;User Id=postgres;Password=postgres",
-    "QuartzDb": ""
-  },
-  "ElasticSettings": {
+    "Data": {
+        "ReadModelDb": "Server=alt-dev002;Database=scivacancies;User Id=postgres;Password=postgres",
+        "QuartzDb": ""
+    },
+    "ElasticSettings": {
         "ConnectionUrl": "http://alt-dev003:9200/",
         "DefaultIndex": "scivacancies-dev"
-  },
+    },
     "QuartzSettings": {
         "Scheduler": {
             "InstanceName": "SciVacancies.SearchSubscription",
-            "ExecutionInterval": 1
+            "ExecutionInterval": 60
         },
         "JobStore": {
             "Type": "Quartz.Impl.AdoJobStore.JobStoreTX, Quartz",
@@ -29,4 +29,3 @@
         }
     },
 }
-
