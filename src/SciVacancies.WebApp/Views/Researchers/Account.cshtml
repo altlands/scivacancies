@@ -14,14 +14,12 @@
 <h4>@ViewBag.Title</h4>
 
 <div class="l-information">
-    <div class="row">
+    <div class="row row-profile">
         <div class="profile">
             <div class="inline-block">
                 @Component.Invoke("AvatarImage", Model.ImageUrl)
-                <br />
-                <a asp-controller="researchers" asp-action="editphoto" style="background: 70%; background-color: white; left: 3px; top: -30px; position: relative; padding: 3px;">
-                    Изменить
-                </a>
+                
+                <div class="link-edit mt10"><a asp-controller="researchers" asp-action="editphoto">Редактировать</a></div>
             </div>
             <div class="info inline-block">
                 <h4>@Model.FullName</h4>
@@ -218,9 +216,7 @@
 
     <br />
 
-    <div class="link-edit">
-        <a asp-controller="researchers" asp-action="edit" class="arial italic">Редактировать</a>
-    </div>
+    <div class="link-edit"><a asp-controller="researchers" asp-action="edit" class="arial italic">Редактировать</a></div>
 
     <br />
 

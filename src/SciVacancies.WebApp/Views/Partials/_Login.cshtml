@@ -11,8 +11,8 @@
                 <span class="dashed italic">Вход в Личный кабинет</span>
             </a>
             <div class="sub-control">
-                <a class="sub-control__link" asp-controller="account" asp-action="register" >Регистрация</a>
-                <a class="sub-control__link" asp-controller="account" asp-action="forgotpassword" >Забыли пароль?</a>
+                <a class="sub-control__link" asp-controller="account" asp-action="register">Регистрация</a>
+                <a class="sub-control__link" asp-controller="account" asp-action="forgotpassword">Забыли пароль?</a>
             </div>
         </div>
 
@@ -41,24 +41,23 @@
                         <div class="tab-pane" id="b-user">
                             <p>Для зарегистрированных пользователей (соискателей) - введите в форму входа логин и пароль, полученные при регистрации на Портале.</p>
 
-                            <a href="/account/register" class="italic">Регистрация</a><br />
-                            <a href="/account/forgotpassword" class="italic">Забыли пароль?</a>
+                            <div class="mt7"><a href="/account/register" class="italic">Регистрация</a></div>
+                            <div class="mt5"><a href="/account/forgotpassword" class="italic">Забыли пароль?</a></div>
 
 
-                            <form asp-controller="account" asp-action="login" method="POST">
+                            <form asp-controller="account" asp-action="login" method="POST" class="mt27">
                                 <input type="hidden" id="Resource" name="Resource" value="@((int)AuthorizeResourceTypes.OwnAuthorization)" />
                                 <input type="hidden" id="User" name="User" value="@((int)AuthorizeUserTypes.Researcher)" />
                                 <div class="form-line">
-                                    <input asp-for="Login" class="long-input" placeholder="Логин (e-mail)" />
+                                    <input asp-for="Login" class="middle-popup-input" placeholder="Логин (e-mail)" />
                                 </div>
 
                                 <div class="form-line">
-                                    <input asp-for="Password" type="password" class="long-input" placeholder="Пароль" />
+                                    <input asp-for="Password" type="password" class="middle-popup-input" placeholder="Пароль" />
                                 </div>
 
                                 <div class="ctr-buttons">
-                                    <span class="green-btn middle-icon icon-arr-right">Войти<input type="submit" class="bt-default" value="" /></span>
-                                    <span id="cancellogin" class="blue-btn middle-icon icon-close">Отмена</span>
+                                    <span class="green-btn middle-icon icon-arr-right pr28">Войти<input type="submit" class="bt-default" value="" /></span><span id="cancellogin" class="blue-btn middle-icon icon-close">Отмена</span>
                                 </div>
                             </form>
 
