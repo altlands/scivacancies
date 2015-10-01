@@ -17,9 +17,9 @@ namespace SciVacancies.WebApp.Queries
         IRequestHandler<CountVacanciesQuery, int>,
         IRequestHandler<SelectPagedVacanciesQuery, Page<Vacancy>>,
         IRequestHandler<SelectPagedVacanciesByOrganizationQuery, Page<Vacancy>>,
+        IRequestHandler<SelectPagedVacanciesByOrganizationAndStatusesQuery, Page<Vacancy>>,
         IRequestHandler<SelectVacancyCriteriasQuery, IEnumerable<VacancyCriteria>>,
         IRequestHandler<SelectVacanciesForAutocompleteQuery, IEnumerable<Vacancy>>,
-        IRequestHandler<SelectPagedClosedVacanciesByOrganizationQuery, Page<Vacancy>>,
         IRequestHandler<SelectPagedFavoriteVacanciesByResearcherQuery, Page<Vacancy>>,
         IRequestHandler<SelectFavoriteVacancyGuidsByResearcherQuery, IEnumerable<Guid>>,
         IRequestHandler<SelectPagedVacanciesByGuidsQuery, Page<Vacancy>>,
@@ -67,17 +67,8 @@ namespace SciVacancies.WebApp.Queries
 
             return vacancies;
         }
-        public IEnumerable<Vacancy> Handle(SelectVacanciesForAutocompleteQuery message)
-        {
-            if (String.IsNullOrEmpty(message.Query)) throw new ArgumentNullException($"Query is empty: {message.Query}");
 
-            var vacancies = message.Take != 0
-                ? _db.FetchBy<Vacancy>(f => f.Where(w => w.name.Contains(message.Query) && w.status != VacancyStatus.Removed)).Take(message.Take)
-                : _db.FetchBy<Vacancy>(f => f.Where(w => w.name.Contains(message.Query) && w.status != VacancyStatus.Removed));
-
-            return vacancies;
-        }
-        public Page<Vacancy> Handle(SelectPagedClosedVacanciesByOrganizationQuery message)
+        public Page<Vacancy> Handle(SelectPagedVacanciesByOrganizationAndStatusesQuery message)
         {
             if (message.OrganizationGuid == Guid.Empty) throw new ArgumentNullException($"OrganizationGuid is empty: {message.OrganizationGuid}");
             if (string.IsNullOrWhiteSpace(message.OrderDirection))
@@ -85,7 +76,17 @@ namespace SciVacancies.WebApp.Queries
             if (string.IsNullOrWhiteSpace(message.OrderBy))
                 message.OrderBy = nameof(Vacancy.creation_date);
 
-            var vacancies = _db.Page<Vacancy>(message.PageIndex, message.PageSize, new Sql($"SELECT v.* FROM org_vacancies v  WHERE v.organization_guid = @0 AND v.status = @1 ORDER BY v.{message.OrderBy} {message.OrderDirection.ToUpper()}", message.OrganizationGuid, VacancyStatus.Closed));
+            var vacancies = _db.Page<Vacancy>(message.PageIndex, message.PageSize, new Sql($"SELECT v.* FROM org_vacancies v WHERE v.organization_guid = @0 AND v.status != @1 AND v.status in (@2) ORDER BY v.{message.OrderBy} {message.OrderDirection.ToUpper()}", message.OrganizationGuid, VacancyStatus.Removed, message.Statuses.Select(c=>(int)c).ToList()));
+
+            return vacancies;
+        }
+        public IEnumerable<Vacancy> Handle(SelectVacanciesForAutocompleteQuery message)
+        {
+            if (String.IsNullOrEmpty(message.Query)) throw new ArgumentNullException($"Query is empty: {message.Query}");
+
+            var vacancies = message.Take != 0
+                ? _db.FetchBy<Vacancy>(f => f.Where(w => w.name.Contains(message.Query) && w.status != VacancyStatus.Removed)).Take(message.Take)
+                : _db.FetchBy<Vacancy>(f => f.Where(w => w.name.Contains(message.Query) && w.status != VacancyStatus.Removed));
 
             return vacancies;
         }

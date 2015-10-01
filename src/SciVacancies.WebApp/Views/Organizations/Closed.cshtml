@@ -73,6 +73,7 @@
                     <td>@(item.announcement_date?.ToLocalVacancyString()) <!--01-09-14, 16:04--></td>
                     <td class="view-col">
                         <a asp-controller="vacancies" asp-action="details" asp-route-id="@item.guid" class="view-td-icon" title="Просмотр вакансии"></a>
+                        <a asp-controller="vacancies" asp-action="copy" asp-route-id="@item.guid" class="pages-td-icon" title="Копировать вакансию"></a>
                     </td>
                     <td><a asp-controller="applications" asp-action="preview" asp-route-id="@item.guid" class="success-request-icon"><span class="italic bold">Победитель</span></a></td>
                 </tr>
