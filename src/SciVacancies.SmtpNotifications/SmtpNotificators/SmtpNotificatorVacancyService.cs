@@ -164,13 +164,13 @@ namespace SciVacancies.SmtpNotifications.SmtpNotificators
 <div style=''>
     Здравствуйте, {vacancy.contact_name}
     <br/>
-    Напоминаем вам, что ({vacancy.committee_start_date.Value.ToShortDateString()}) заканчивается прием заявок для участия, в
+    Напоминаем вам, что ({vacancy.committee_start_date?.ToShortDateString()}) заканчивается прием заявок для участия, в
     <br/>
     созданной вами вакансии: <a target='_blank' href='http://{_smtpNotificatorService.Domain}/vacancies/details/{vacancy.guid}'>{vacancy.fullname}</a>
     <br/>
     Конкурс на вакансию автоматически перейдет в статус «рассмотрение заявок комиссией». 
     <br/>
-    Вам необходимо выбрать победителя конкурса в течение 15-ти рабочих дней (до {vacancy.committee_end_date.Value.ToShortDateString()}) и разместить в течение 3-х рабочих дней решение конкурсной комиссии.
+    Вам необходимо выбрать победителя конкурса в течение 15-ти рабочих дней (до {vacancy.committee_end_date?.ToShortDateString()}) и разместить в течение 3-х рабочих дней решение конкурсной комиссии.
     <br/>
     При необходимости вы можете продлить срок рассмотрения еще на 15-ть рабочих дней.            
             </div>
@@ -196,7 +196,7 @@ namespace SciVacancies.SmtpNotifications.SmtpNotificators
             <div style=''>
     Здравствуйте, {vacancy.contact_name}
     <br/>
-    Напоминаем вам, что  ({vacancy.committee_end_date.Value.ToShortDateString()}) заканчивается срок рассмотрения заявок, на созданную вами вакансию: <a target='_blank' href='http://{_smtpNotificatorService.Domain}/vacancies/details/{vacancy.guid}'>{vacancy.fullname}</a>
+    Напоминаем вам, что  ({vacancy.committee_end_date?.ToShortDateString()}) заканчивается срок рассмотрения заявок, на созданную вами вакансию: <a target='_blank' href='http://{_smtpNotificatorService.Domain}/vacancies/details/{vacancy.guid}'>{vacancy.fullname}</a>
     <br/>
     Вам необходимо в течение 3-х рабочих дней выбрать победителя и поместить решение конкурсной комиссии на портале {_smtpNotificatorService.PortalLink}.
     <br/>
