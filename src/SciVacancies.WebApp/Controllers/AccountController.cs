@@ -62,7 +62,7 @@ namespace SciVacancies.WebApp.Controllers
         }
         public IActionResult LoginOrganization()
         {
-            var user = _userManager.FindByName("organization1");
+            var user = _userManager.FindByName("organization2");
 
             var cp = _authorizeService.LogOutAndLogInUser(Response, _userManager.CreateIdentity(user, DefaultAuthenticationTypes.ApplicationCookie));
             return RedirectToAccount(cp);
