@@ -28,6 +28,8 @@ namespace SciVacancies.SearchSubscriptionsService.Jobs
         /// <param name="context"></param>
         public void Execute(IJobExecutionContext context)
         {
+            Console.WriteLine($"SearchSubscriptionJob Executing at UTC time: {DateTime.Now.ToUniversalTime().ToLongTimeString()}");
+
             var dataBase = _lifetimeScope.Resolve<IDatabase>();
 
             //TODO - загружать по частям, вызывая хранимую процедуру
@@ -69,11 +71,11 @@ namespace SciVacancies.SearchSubscriptionsService.Jobs
             }
             var actionsArray = actions.ToArray();
 
-            Console.WriteLine("Обработка потоков началась");
+            Console.WriteLine($"Обработка потоков началась в: {DateTime.Now.ToUniversalTime().ToLongTimeString()}");
 
             Parallel.Invoke(actionsArray);
 
-            Console.WriteLine("Обработка потоков завершена");
+            Console.WriteLine($"Обработка потоков завершена в: {DateTime.Now.ToUniversalTime().ToLongTimeString()}");
 
             //try
             //{
@@ -84,6 +86,8 @@ namespace SciVacancies.SearchSubscriptionsService.Jobs
             //{
             //    throw e;
             //}
+            Console.WriteLine($"SearchSubscriptionJob Executed at UTC time: {DateTime.Now.ToUniversalTime().ToLongTimeString()}");
+            Console.WriteLine("");
         }
 
     }

@@ -1,5 +1,6 @@
 ﻿using Nest;
 using Newtonsoft.Json;
+using Microsoft.Framework.ConfigurationModel;
 using Npgsql;
 using NPoco;
 using Quartz;
@@ -31,10 +32,12 @@ namespace SciVacancies.SearchSubscriptionsService
         private IEnumerable<SearchSubscription> _subscriptionQueue;
         private EventWaitHandle _doneEvent;
         private readonly ILifetimeScope _lifetimeScope;
+        private readonly IConfiguration _configuration;
 
-        public SearchSubscriptionScanner(ILifetimeScope lifetimeScope)
+        public SearchSubscriptionScanner(ILifetimeScope lifetimeScope, IConfiguration configuration)
         {
             _lifetimeScope = lifetimeScope;
+            _configuration = configuration;
         }
 
         public void Initialize(EventWaitHandle doneEvent, IEnumerable<SearchSubscription> subscriptionQueue)
@@ -52,24 +55,23 @@ namespace SciVacancies.SearchSubscriptionsService
             if (_subscriptionQueue == null)
                 return;
 
-            var elasticClient = new ElasticClient(new ConnectionSettings(new Uri("http://localhost:9200/"), defaultIndex: "scivacancies"));
+            var elasticClient = new ElasticClient(new ConnectionSettings(new Uri(_configuration.Get("ElasticSettings:ConnectionUrl")), defaultIndex: _configuration.Get("ElasticSettings:DefaultIndex")));
 
-            //todo int emailsToSentPerMinute
+            //todo добавить свойство int emailsToSentPerMinute
+            //todo: написать процедуру, которая будет блокировать обрабатываемые подписки
             foreach (var searchSubscription in _subscriptionQueue)
             {
-                //TODO
-
                 var searchQuery = new SearchQuery
                 {
                     Query = searchSubscription.query,
-                    //PublishDateFrom = searchSubscription.currentcheck_date,
-                    //FoivIds = JsonConvert.DeserializeObject<IEnumerable<int>>(searchSubscription.foiv_ids),
-                    //PositionTypeIds = JsonConvert.DeserializeObject<IEnumerable<int>>(searchSubscription.positiontype_ids),
-                    //RegionIds = JsonConvert.DeserializeObject<IEnumerable<int>>(searchSubscription.region_ids),
-                    //ResearchDirectionIds = JsonConvert.DeserializeObject<IEnumerable<int>>(searchSubscription.researchdirection_ids),
-                    //SalaryFrom = searchSubscription.salary_from,
-                    //SalaryTo = searchSubscription.salary_to,
-                    //VacancyStatuses = JsonConvert.DeserializeObject<IEnumerable<VacancyStatus>>(searchSubscription.vacancy_statuses)
+                    PublishDateFrom = searchSubscription.currentcheck_date,
+                    FoivIds = JsonConvert.DeserializeObject<IEnumerable<int>>(searchSubscription.foiv_ids),
+                    PositionTypeIds = JsonConvert.DeserializeObject<IEnumerable<int>>(searchSubscription.positiontype_ids),
+                    RegionIds = JsonConvert.DeserializeObject<IEnumerable<int>>(searchSubscription.region_ids),
+                    ResearchDirectionIds = JsonConvert.DeserializeObject<IEnumerable<int>>(searchSubscription.researchdirection_ids),
+                    SalaryFrom = searchSubscription.salary_from,
+                    SalaryTo = searchSubscription.salary_to,
+                    VacancyStatuses = JsonConvert.DeserializeObject<IEnumerable<VacancyStatus>>(searchSubscription.vacancy_statuses)
                 };
 
                 Func<SearchQuery, SearchDescriptor<Vacancy>> searchSelector = VacancySearchDescriptor;

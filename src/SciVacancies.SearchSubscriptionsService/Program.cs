@@ -70,14 +70,24 @@ namespace SciVacancies.SearchSubscriptionsService
             //    hostConfigurator.SetServiceName("SciVacancies.SearchSubscriptionService");
             //});
 
+            Console.WriteLine("Started");
 
+            SearchSubscriptionService searchSubscriptionService = null;
             //service initializing
-            var searchSubscriptionService = container.Resolve<SearchSubscriptionService>();
-            searchSubscriptionService.OnStart();
+            try
+            {
+                searchSubscriptionService = container.Resolve<SearchSubscriptionService>();
+                searchSubscriptionService.OnStart();
+            }
+            catch (Exception exception)
+            {
+                Console.WriteLine(exception.Message);
+                Console.Read();
+                return;
+            }
             //searchSubscriptionService.ServiceName = "SearchSubscriptionService";
             //ServiceBase.Run(searchSubscriptionService);
 
-            Console.WriteLine("Started");
             Console.ReadLine();
 
             while (!searchSubscriptionService.CanStop)

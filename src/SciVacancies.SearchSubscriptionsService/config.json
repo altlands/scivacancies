@@ -10,7 +10,7 @@
     "QuartzSettings": {
         "Scheduler": {
             "InstanceName": "SciVacancies.SearchSubscription",
-            "ExecutionInterval": 60
+            "ExecutionInterval": 1
         },
         "JobStore": {
             "Type": "Quartz.Impl.AdoJobStore.JobStoreTX, Quartz",

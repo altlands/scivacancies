@@ -37,6 +37,8 @@ namespace SciVacancies.SearchSubscriptionsService
         {
             base.OnStart(args);
 
+            Console.WriteLine("SearchSubscriptionService Starting");
+
             //logging
 
             //quartz
@@ -74,14 +76,20 @@ namespace SciVacancies.SearchSubscriptionsService
                 Console.WriteLine($"Exception happend: {e.Message}");
             }
 
+
+            Console.WriteLine("SearchSubscriptionService Started");
+            Console.WriteLine("");
         }
 
         protected override void OnStop()
         {
+            Console.WriteLine("SearchSubscriptionService Stopping");
             _schedulerService.Shutdown();
             //...???
 
             base.OnStop();
+            Console.WriteLine("SearchSubscriptionService Stopped");
+            Console.WriteLine("");
         }
     }
 }
