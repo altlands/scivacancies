@@ -37,13 +37,14 @@
                     <label class="mb10">
                         Ваше фото
                     </label>
-                    @Component.Invoke("AvatarImage", Model.ImageUrl)
-                </div>
-                <div class="right-cell">Component.Invoke("AvatarImage",
+                    <span id="buttonFile" class="link-upload fs13">Загрузить фото</span>
+                    <input type="file" asp-for="PhotoFile" id="files" />
                     <div class="description mt10">
                         Выберите изображение размером<br /> не более 500 кБ<br />Рекомендуемое соотношение сторон – 3:4
-                        <input type="file" asp-for="PhotoFile" />
                     </div>
+                </div>
+                <div class="right-cell">
+                    @Component.Invoke("AvatarImage", Model.ImageUrl)
                 </div>
             </div>
 
@@ -51,7 +52,7 @@
     </div>
     <div class="row">
         <div class="ctr-buttons button-align mt12 mb5">
-            <input type="submit" class="save-button" onclick=" return beforeFormSubmit(this);" value="Сохранить изменения" />
+            <span class="save-button">Сохранить изменения<input type="submit" class="bt-default" onclick=" return beforeFormSubmit(this);" value="" /></span>
             <a asp-controller="researchers" asp-action="account" class="close-button">Закрыть</a>
         </div>
     </div>

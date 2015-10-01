@@ -297,11 +297,12 @@ $(document).ready(function () {
     // * дизайн для кнопки выбора Фотографии
     // */
     //var buttonFile = $('a[data-selectorphoto="true"]');
-    //var file = $('input[data-selectphoto="true"]');
-    //$(buttonFile).click(function () {
-    //    file.click();
-    //    return false;
-    //});
+    var buttonFile = document.getElementById('buttonFile');
+    var file = $('input[data-selectphoto="true"]');
+    $(buttonFile).click(function () {
+        file.click();
+        return false;
+    });
     /*
      * переключатели для главной страницы
      */
