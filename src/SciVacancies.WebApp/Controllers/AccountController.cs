@@ -427,7 +427,9 @@ namespace SciVacancies.WebApp.Controllers
             var researcher = _mediator.Send(new SingleResearcherQuery { ResearcherGuid = researcherGuid1 });
             await _authorizeService.CallUserActivationAsync(user, researcher);
 
-            return RedirectToAccount(claimsPrincipal);
+            return View("SuccessfulRegister");
+
+            //return RedirectToAccount(claimsPrincipal);
         }
 
         #region restore password
