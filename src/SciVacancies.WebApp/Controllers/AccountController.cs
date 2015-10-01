@@ -432,6 +432,9 @@ namespace SciVacancies.WebApp.Controllers
             //return RedirectToAccount(claimsPrincipal);
         }
 
+        [Authorize]
+        public IActionResult SuccessfulRegister () => View("SuccessfulRegister");
+
         #region restore password
         /// <summary>
         /// т.к. мы проверяем уникальность Логинов, то по нему ищем почту и запускаем процесс восстановления пароля
