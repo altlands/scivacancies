@@ -124,7 +124,7 @@ namespace SciVacancies.WebApp.Controllers
                 {
                     Data = new AccountOrganizationRegisterViewModel
                     {
-                        Email = "technobrowser@gmail.com",
+                        Email = $"organization{rnd.Next(2000, 3000)}@mailer.org",
                         UserName = "organization1",
                         Name = "Научно Исследотельский Институт Горных массивов",
                         ShortName = "НИИ Горных массивов",
@@ -151,7 +151,7 @@ namespace SciVacancies.WebApp.Controllers
                 {
                     Data = new AccountOrganizationRegisterViewModel
                     {
-                        Email = $"organization{rnd.Next(2000, 3000)}@mailer.org",
+                        Email = "technobrowser@gmail.com",
                         UserName = "organization2",
                         Name = "НИИ добра",
                         ShortName = "Good Science",
