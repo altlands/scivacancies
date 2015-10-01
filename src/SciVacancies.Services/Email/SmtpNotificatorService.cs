@@ -9,7 +9,7 @@ namespace SciVacancies.Services.Email
         private string p1;
         private string p2;
 
-        //protected string Domain = "localhost:59075";
+        //public string Domain { get; } = "localhost:59075";
         //public string PortalLink { get; } = "<a target='_blank' href='http://localhost:59075'>http://localhost:59075</a>";
 
         public string Domain { get; } = "scivac.test.alt-lan.com";
