@@ -197,6 +197,10 @@ label {
         text-decoration: none;
     }
 
+.dark-blue{
+	color:#031833;
+}
+	
 .italic {
     font-style: italic;
 }
@@ -2059,6 +2063,16 @@ ol.content-list {
 
 .mb5, .table-form .table-row.mb15 {
     margin-bottom: 15px;
+}
+
+.pl-pr-22{
+	padding:0 22px;
+}
+
+.message-succuss{
+	font-size:14px;
+	line-height:17px;
+	color:#031833;
 }
 
 .link-add-field {

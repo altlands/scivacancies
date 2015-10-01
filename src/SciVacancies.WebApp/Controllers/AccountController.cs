@@ -432,7 +432,6 @@ namespace SciVacancies.WebApp.Controllers
             //return RedirectToAccount(claimsPrincipal);
         }
 
-        [Authorize]
         public IActionResult SuccessfulRegister () => View("SuccessfulRegister");
 
         #region restore password
