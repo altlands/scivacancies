@@ -1,15 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Globalization;
 using System.Linq;
 using MediatR;
 using Microsoft.AspNet.Mvc;
 using Microsoft.AspNet.Mvc.Rendering;
 using SciVacancies.Domain.Enums;
-using SciVacancies.ReadModel;
 using SciVacancies.ReadModel.Core;
 using SciVacancies.WebApp.Engine;
-using SciVacancies.WebApp.Infrastructure.Identity;
 using SciVacancies.WebApp.Queries;
 using SciVacancies.WebApp.ViewModels.Base;
 
@@ -26,8 +25,13 @@ namespace SciVacancies.WebApp.ViewModels
             OrganizationGuid = organizationGuid;
         }
 
-        [Required(ErrorMessage = "Укажите Дату окончания приёма заявок")]
         public DateTime InCommitteeDate { get; set; }
+        [Required(ErrorMessage = "Укажите Дату окончания приёма заявок")]
+        public string InCommitteeDateString
+        {
+            get { return InCommitteeDate.ToString("dd.MM.yy"); }
+            set { InCommitteeDate = DateTime.Parse(value, new CultureInfo("ru-RU")); }
+        }
 
         [HiddenInput]
         public Guid OrganizationGuid { get; set; }
