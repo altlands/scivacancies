@@ -62,7 +62,7 @@
         @if (Model.PagedVacancies != null)
         {
             var i = Model.PagedVacancies.FirstRowIndexOnPage - 1;
-            foreach (var item in Model.PagedVacancies.Items.Where(c => c.status == VacancyStatus.Closed))
+            foreach (var item in Model.PagedVacancies.Items)
             {
                 i += 1;
                 <text>
@@ -75,7 +75,16 @@
                         <a asp-controller="vacancies" asp-action="details" asp-route-id="@item.guid" class="view-td-icon" title="Просмотр вакансии"></a>
                         <a asp-controller="vacancies" asp-action="copy" asp-route-id="@item.guid" class="pages-td-icon" title="Копировать вакансию"></a>
                     </td>
-                    <td><a asp-controller="applications" asp-action="preview" asp-route-id="@item.guid" class="success-request-icon"><span class="italic bold">Победитель</span></a></td>
+                    <td>
+                        @if (item.winner_researcher_guid != Guid.Empty)
+                        {
+                            <a asp-controller="applications" asp-action="preview" asp-route-id="@item.winner_researcher_guid" class="success-request-icon"><span class="italic bold">Победитель</span></a>
+                        }
+                        @if (item.pretender_researcher_guid != Guid.Empty)
+                        {
+                            <a asp-controller="applications" asp-action="preview" asp-route-id="@item.pretender_researcher_guid" class="success-request-icon"><span class="italic bold">Претендент</span></a>
+                        }
+                    </td>
                 </tr>
                 </text>
             }
