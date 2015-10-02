@@ -592,6 +592,7 @@ ul.tabs {
 	float:left;
 	background: #d8d8d8;
 	height:38px;
+	width:49px;
 	padding:5px 11px;
 	border-left:1px solid #b8b8b8;
 	/*cursor:pointer;*/
@@ -3474,6 +3475,7 @@ table.table.request-table a.sort-order {
 	background-position: -43px -10px;
 }
 .vac-sci{
+	margin-left:2px;
 	background-position: -79px -43px;
 }
 .active .vac-sci{
@@ -3631,6 +3633,9 @@ ul.item-category__tabs{
 }
 ul.item-category__tabs > li{
 	margin:15px 15px 0 0;
+}
+ul.item-category__tabs > li:first-child{
+	margin-left:0;
 }
 .b-directions{
 	margin:0 0 0 -30px;

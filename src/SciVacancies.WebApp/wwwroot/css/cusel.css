@@ -139,7 +139,7 @@ span.cuselActive{
     -moz-box-sizing: border-box;
     -webkit-box-sizing: border-box;
 }
-.cusel-scroll-pane{
+#cusel-scroll-region{
 	padding-bottom:5px;
 }
 .cuselOpen{
