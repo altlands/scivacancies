@@ -4,7 +4,7 @@
 
 <div asp-validation-summary="ValidationSummary.All"></div>
 
-<form class="l-application">
+<form class="l-application b-app-rows">
     <input type="hidden" asp-anti-forgery="true" />
     <input asp-for="ToPublish" />
     <input asp-for="OrganizationGuid" />
@@ -20,7 +20,9 @@
                 </div>
                 <div class="right-cell">
                     <input type="text" disabled asp-for="PositionType" clas="big-input" />
-                    <a onclick="javascript: return false;" class="link-add lk-icon italic open-popup" data-modal="PositionTypeId">Выбрать должность</a>
+                    <div class="mt5">
+                        <a onclick="javascript: return false;" class="link-add lk-icon italic open-popup" data-modal="PositionTypeId">Выбрать должность</a>
+                    </div>
                     <input type="hidden" asp-for="PositionTypeId" />
                     <span asp-validation-for="PositionTypeId"></span>
                 </div>
@@ -53,7 +55,9 @@
                 </div>
                 <div class="right-cell">
                     <input type="text" disabled asp-for="ResearchDirection" clas="big-input" />
-                    <a onclick="javascript: return false;" class="link-add lk-icon italic open-popup" data-modal="ResearchDirectionId">Добавить из Государственного рубрикатора научно-технической информации</a>
+                    <div class="mt5">
+                        <a onclick="javascript: return false;" class="link-add lk-icon italic open-popup" data-modal="ResearchDirectionId">Добавить из Государственного рубрикатора научно-технической информации</a>
+                    </div>
                     <input type="hidden" asp-for="ResearchDirectionId" />
                     <span asp-validation-for="ResearchDirectionId"></span>
                 </div>
@@ -90,7 +94,9 @@
                 </div>
                 <div class="right-cell">
                     <input type="text" disabled asp-for="Region" clas="big-input" />
-                    <a onclick="javascript: return false;" class="link-add lk-icon italic open-popup" data-modal="RegionId">Выбрать регион</a>
+                    <div class="mt5">
+                        <a onclick="javascript: return false;" class="link-add lk-icon italic open-popup" data-modal="RegionId">Выбрать регион</a>
+                    </div>
                     <input type="hidden" asp-for="RegionId" />
                     <span asp-validation-for="RegionId"></span>
                 </div>
@@ -358,12 +364,9 @@
         </div>
     </div>
 
-    <div class="row">
+    <div class="row without-border">
         <div class="ctr-buttons button-align">
-            <input type="submit" class="success-btn middle-icon icon-ok" onclick="javascript: vacancySaveOptions({ publish: true });" value="Сохранить и опубликовать" />
-            <input type="submit" class="success-blue-btn middle-icon icon-ok" onclick="javascript: vacancySaveOptions({ saveDraft: true });" value="Сохранить как черновик" />
-            <a asp-controller="organizations" asp-action="vacancies">
-                <span class="blue-btn middle-icon icon-close">Закрыть</span>
+            <span class="green-btn middle-icon icon-ok">Сохранить и опубликовать<input type="submit" class="bt-default" onclick="javascript: vacancySaveOptions({ publish: true });" value="" /></span><span class="blue-btn middle-icon icon-ok">Сохранить как черновик<input type="submit" class="bt-default" onclick="javascript: vacancySaveOptions({ saveDraft: true });" value="" /></span><a asp-controller="organizations" asp-action="vacancies"><span class="blue-btn middle-icon icon-close">Закрыть</span>
             </a>
         </div>
     </div>
@@ -376,7 +379,7 @@
     <div class="title-popup">
         <h4>Выбор должности</h4>
     </div>
-    <div class="content-popup" style="overflow: scroll;">
+    <div class="content-popup" style="overflow-y: scroll;">
         <div>
             @foreach (var item in Model.PositionTypes.OrderBy(c => c.Text))
             {
@@ -399,7 +402,7 @@
     <div class="title-popup">
         <h4>Выбор отрасли науки</h4>
     </div>
-    <div class="content-popup" style="overflow: scroll;">
+    <div class="content-popup" style="overflow-y: scroll;">
         <div>
             @foreach (var item in Model.ResearchDirections.OrderBy(c => c.Text))
             {
@@ -422,7 +425,7 @@
     <div class="title-popup">
         <h4>Выбор региона</h4>
     </div>
-    <div class="content-popup" style="overflow: scroll;">
+    <div class="content-popup" style="overflow-y: scroll;">
         <div>
             @foreach (var item in Model.Regions)
             {

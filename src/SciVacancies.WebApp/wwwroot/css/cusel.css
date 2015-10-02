@@ -93,20 +93,19 @@
 
 .cusel .jScrollPaneTrack { /* трек для ползунка прокрутки */
 	height: 100%;
-	width: 7px !important;
+	width: 5px !important;
 	background: #ccc;
 	position: absolute;
 	top: 0;
-	right: 4px;
+	right: 8px;
 }
 .cusel .jScrollPaneDrag { /* ползунок */
 	position: absolute;
-	background-position: -40px -26px;
 	cursor: pointer;
-	width: 15px !important;
-	height: 27px !important;
-	right: -4px;
-	
+	width: 11px !important;
+	height: 40px !important;
+	right: -3px;
+	background:#06365c;
 }
 
 .cusel .jScrollPaneDragTop {
@@ -139,4 +138,13 @@ span.cuselActive{
     box-sizing: border-box;
     -moz-box-sizing: border-box;
     -webkit-box-sizing: border-box;
+}
+.cusel-scroll-pane{
+	padding-bottom:5px;
+}
+.cuselOpen{
+	border-radius:5px 5px 0 0;
+}
+.cuselOpen .jScrollPaneContainer{
+	border-radius:0 0 5px 5px;
 }

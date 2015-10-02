@@ -142,7 +142,7 @@
                     <input type="text" asp-for="Captcha" class="middle-input" />
                     
                 </div>
-                <span asp-validation-for="Captcha" class="iblock-middle ml6"></span>
+                <!--<span asp-validation-for="Captcha" class="iblock-middle ml6"></span>-->
             </div>
         </div>
 
@@ -152,12 +152,11 @@
                 <div class="agree mtop30">
                     <span class="checkbox @(Model.Agreement ? "checked" : string.Empty)">
                         <input asp-for="Agreement" />
-                    </span>
-                    <label for="Agreement">Я согласен на обработку моих персональных данных</label>
+                    </span><label for="Agreement">Я согласен на обработку моих персональных данных</label>
                     <span asp-validation-for="Agreement"></span>
                 </div>
-                <br />
-                <span class="green-btn middle-icon icon-arr-right">Регистрация<input type="submit" class="bt-default" onclick="return beforeFormSubmitRegister(this, 'captchaImage', 'Captcha', event)" value="" /></span>
+                
+                <span class="mtop30 green-btn middle-icon icon-arr-right">Регистрация<input type="submit" class="bt-default" onclick="return beforeFormSubmitRegister(this, 'captchaImage', 'Captcha', event)" value="" /></span>
             </div>
         </div>
     </form>

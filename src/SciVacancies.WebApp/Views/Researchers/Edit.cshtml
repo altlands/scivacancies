@@ -212,12 +212,10 @@
                                     <input asp-for="Interests[i].IntName" />
                                     <span>Русское название</span>
 
-                                    <br />
-
-                                    <input asp-for="Interests[i].IntNameEn" />
-                                    <span>Английское название</span>
-
-                                    <br />
+                                    <div class="mt10">
+                                        <input asp-for="Interests[i].IntNameEn" />
+                                        <span>Английское название</span>
+                                    </div>
 
                                     <div class="buttons">
                                         <span class="big-link-remove" onclick="return removeItemFromList(this);"></span>
@@ -670,21 +668,21 @@
                                 <li style="@useStyle" class="property-list-item" data-list-template="@(i == 0 ? "true" : "false")">
                                     <input type="hidden" name="Rewards.Index" value="@i" />
 
-                                    <br />
+                                    <div>
+                                        <input asp-for="Rewards[i].title" />
+                                        <span>Название</span>
+                                    </div>
 
-                                    <input asp-for="Rewards[i].title" />
-                                    <span>Название</span>
-
-                                    <br />
-
-                                    <input asp-for="Rewards[i].year" />
-                                    <span>Год вручения</span>
-
-                                    <br />
-
-                                    <input asp-for="Rewards[i].org" />
-                                    <span>Вручившая организация</span>
-
+                                    <div class="mt10">
+                                        <input asp-for="Rewards[i].year" />
+                                        <span>Год вручения</span>
+                                    </div>
+                                    
+                                    <div class="mt10">
+                                        <input asp-for="Rewards[i].org" />
+                                        <span>Вручившая организация</span>
+                                    </div>
+                                    
                                     <div class="buttons">
                                         <span class="big-link-remove" onclick="return removeItemFromList(this);"></span>
                                     </div>
@@ -711,22 +709,20 @@
                                     <li style="@useStyle" class="property-list-item" data-list-template="@(i == 0 ? "true" : "false")">
                                         <input type="hidden" name="Memberships.Index" value="@i"/>
 
-                                        <br/>
-
                                         <input asp-for="Memberships[i].org"/>
                                         <span>Организация</span>
 
-                                        <br/>
+                                        <div class="mt10">
+                                            <input asp-for="Memberships[i].position"/>
+                                            <span>Позиция</span>
+                                        </div>
 
-                                        <input asp-for="Memberships[i].position"/>
-                                        <span>Позиция</span>
-
-                                        <br/>
-
-                                        <span>С </span>
-                                        <input asp-for="Memberships[i].year_from" class="small-input"/>
-                                        <span> по </span>
-                                        <input asp-for="Memberships[i].year_to" class="small-input"/>
+                                        <div class="mt10">
+                                            <span>С </span>
+                                            <input asp-for="Memberships[i].year_from" class="small-input"/>
+                                            <span> по </span>
+                                            <input asp-for="Memberships[i].year_to" class="small-input"/>
+                                        </div>
 
                                         <div class="buttons">
                                             <span class="big-link-remove" onclick="return removeItemFromList(this);"></span>
@@ -757,26 +753,23 @@
                                 <li style="@useStyle" class="property-list-item" data-list-template="@(i == 0 ? "true" : "false")">
                                     <input type="hidden" name="Conferences.Index" value="@i" />
 
-                                    <br />
-
                                     <input asp-for="Conferences[i].conference" />
                                     <span>Название</span>
 
-                                    <br />
+                                    <div class="mt10">
+                                        <input asp-for="Conferences[i].title" />
+                                        <span>Доклад</span>
+                                    </div>
 
-                                    <input asp-for="Conferences[i].title" />
-                                    <span>Доклад</span>
+                                    <div class="mt10">
+                                        <input asp-for="Conferences[i].categoryType" />
+                                        <span>тип</span>
+                                    </div>
 
-                                    <br />
-
-                                    <input asp-for="Conferences[i].categoryType" />
-                                    <span>тип</span>
-
-                                    <br />
-
-                                    <input asp-for="Conferences[i].year" />
-                                    <span>год</span>
-
+                                    <div class="mt10">
+                                        <input asp-for="Conferences[i].year" />
+                                        <span>год</span>
+                                    </div>
 
                                     <div class="buttons">
                                         @*<span class="big-link-edit"></span>*@
@@ -816,22 +809,20 @@
                                         <input type="hidden" asp-for="Publications[i].Updated"/>
                                         <input type="hidden" name="Publications.Index" value="@i"/>
 
-                                        <br/>
-
-                                        <input asp-for="Publications[i].Name"/>
-                                        <span>Название</span>
-
-                                        <br/>
-
-                                        <input asp-for="Publications[i].Authors"/>
-                                        <span>Авторы</span>
-
+                                        <div>
+                                            <input asp-for="Publications[i].Name"/>
+                                            <span>Название</span>
+                                        </div>
+                                        <div class="mt10">
+                                            <input asp-for="Publications[i].Authors" />
+                                            <span>Авторы</span>
+                                        </div>
 
                                         <div class="buttons">
                                             @*<span class="big-link-edit"></span>*@
                                             <span class="big-link-remove" onclick="return removeItemFromList(this);"></span>
                                         </div>
-                                    </li>
+</li>
                                 </text>
                             }
                         </ol>
