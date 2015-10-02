@@ -46,6 +46,7 @@ namespace SciVacancies.WebApp.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet]
+        [HttpPost]
         [PageTitle("Результаты поиска")]
         [BindResearcherIdFromClaims]
         public ActionResult Index(VacanciesFilterModel model, Guid researcherGuid)
