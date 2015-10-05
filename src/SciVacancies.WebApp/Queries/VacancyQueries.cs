@@ -5,6 +5,7 @@ using System.Collections.Generic;
 
 using MediatR;
 using NPoco;
+using SciVacancies.Domain.Enums;
 
 namespace SciVacancies.WebApp.Queries
 {
@@ -42,12 +43,8 @@ namespace SciVacancies.WebApp.Queries
         //public string NameFilterValue { get; set; }
         //public string AddressFilterValue { get; set; }
     }
-    public class SelectVacanciesForAutocompleteQuery : IRequest<IEnumerable<Vacancy>>
-    {
-        public string Query { get; set; }
-        public int Take { get; set; }
-    }
-    public class SelectPagedClosedVacanciesByOrganizationQuery : IRequest<Page<Vacancy>>
+
+    public class SelectPagedVacanciesByOrganizationAndStatusesQuery : IRequest<Page<Vacancy>>
     {
         public Guid OrganizationGuid { get; set; }
 
@@ -55,10 +52,17 @@ namespace SciVacancies.WebApp.Queries
         public long PageIndex { get; set; }
         public string OrderBy { get; set; }
         public string OrderDirection { get; set; }
+        public List<VacancyStatus> Statuses { get; set; }
 
         //public string NameFilterValue { get; set; }
         //public string AddressFilterValue { get; set; }
     }
+    public class SelectVacanciesForAutocompleteQuery : IRequest<IEnumerable<Vacancy>>
+    {
+        public string Query { get; set; }
+        public int Take { get; set; }
+    }
+
     public class SelectPagedFavoriteVacanciesByResearcherQuery : IRequest<Page<Vacancy>>
     {
         public Guid ResearcherGuid { get; set; }

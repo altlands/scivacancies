@@ -168,6 +168,16 @@ namespace SciVacancies.WebApp.Controllers
             return Request.Query["nonce"];
         }
 
+        private string GetErrorFromQuery()
+        {
+            return Request.Query["error"];
+        }
+
+        private string GetErrorDescriptionFromQuery()
+        {
+            return Request.Query["error_description"];
+        }
+
         private string GetOAuthAuthorizationUrl(OAuthProviderSettings oauth)
         {
             var oAuth2Client = new OAuth2Client(new Uri(oauth.AuthorizationEndpoint));
@@ -216,16 +226,25 @@ namespace SciVacancies.WebApp.Controllers
                             {
                                 if (!string.IsNullOrEmpty(GetCodeFromQuery()))
                                 {
-                                    var tokenResponse = await _authorizeService.GetOAuthAuthorizeTokenAsync(_oauthSettings.Options.Sciencemon, GetCodeFromQuery());
+                                    var tokenResponse =
+                                        await
+                                            _authorizeService.GetOAuthAuthorizeTokenAsync(
+                                                _oauthSettings.Options.Sciencemon, GetCodeFromQuery());
 
                                     if (!string.IsNullOrEmpty(tokenResponse.AccessToken))
                                     {
-                                        var claims = await _authorizeService.GetOAuthUserAndTokensClaimsAsync(_oauthSettings.Options.Sciencemon, tokenResponse);
+                                        var claims =
+                                            await
+                                                _authorizeService.GetOAuthUserAndTokensClaimsAsync(
+                                                    _oauthSettings.Options.Sciencemon, tokenResponse);
 
-                                        OAuthOrgClaim orgClaim = JsonConvert.DeserializeObject<OAuthOrgClaim>(claims.Find(f => f.Type.Equals("org")).Value);
+                                        OAuthOrgClaim orgClaim =
+                                            JsonConvert.DeserializeObject<OAuthOrgClaim>(
+                                                claims.Find(f => f.Type.Equals("org")).Value);
 
                                         //var orgUser = _userManager.FindByName(orgClaim.Inn);
-                                        var orgUser = _userManager.FindByEmail(claims.Find(f => f.Type.Equals("email")).Value);
+                                        var orgUser =
+                                            _userManager.FindByEmail(claims.Find(f => f.Type.Equals("email")).Value);
 
                                         if (orgUser == null)
                                         {
@@ -247,18 +266,33 @@ namespace SciVacancies.WebApp.Controllers
                                                 .ToList();
 
 
-                                            var user = _mediator.Send(new RegisterUserOrganizationCommand { Data = orgModel });
+                                            var user =
+                                                _mediator.Send(new RegisterUserOrganizationCommand {Data = orgModel});
 
-                                            claimsPrincipal = _authorizeService.LogOutAndLogInUser(Response, _userManager.CreateIdentity(user, DefaultAuthenticationTypes.ApplicationCookie));
+                                            claimsPrincipal = _authorizeService.LogOutAndLogInUser(Response,
+                                                _userManager.CreateIdentity(user,
+                                                    DefaultAuthenticationTypes.ApplicationCookie));
                                         }
                                         else
                                         {
-                                            claimsPrincipal = _authorizeService.RefreshUserClaimTokensAndReauthorize(orgUser, claims, Response);
+                                            claimsPrincipal =
+                                                _authorizeService.RefreshUserClaimTokensAndReauthorize(orgUser, claims,
+                                                    Response);
                                         }
                                     }
                                     else throw new ArgumentNullException("Token response is null");
                                 }
-                                else throw new ArgumentNullException("Oauth authorization code is null or empty");
+                                else
+                                {
+                                    if (!string.IsNullOrWhiteSpace(GetErrorFromQuery()))
+                                    {
+                                        if (!string.IsNullOrWhiteSpace(GetErrorDescriptionFromQuery()))
+                                            return View("Error", GetErrorDescriptionFromQuery());
+                                        return View("Error", GetErrorFromQuery());
+                                    }
+
+                                    throw new ArgumentNullException("Oauth authorization code is null or empty");
+                                }
                             }
                             else throw new ArgumentException("Oauth state mismatch");
                             break;

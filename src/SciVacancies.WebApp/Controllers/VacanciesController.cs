@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using AutoMapper;
@@ -50,7 +51,6 @@ namespace SciVacancies.WebApp.Controllers
 
             var model = new VacancyCreateViewModel(organizationGuid);
             model.InitDictionaries(_mediator);
-            model.InCommitteeDate = DateTime.Now.AddDays(_vacancyLifeCycleSettings.Options.DeltaFromPublishToInCommitteeMinDays);
             return View(model);
         }
 
@@ -72,15 +72,6 @@ namespace SciVacancies.WebApp.Controllers
                 }
 
                 var vacancyDataModel = Mapper.Map<VacancyDataModel>(model);
-
-
-                if (model.InCommitteeDate.ToUniversalTime() < DateTime.Now.ToUniversalTime())
-                    ModelState.AddModelError("InCommitteeDate", "Вы установили дату ранее текущей");
-
-                if (model.ToPublish)
-                    if ((model.InCommitteeDate.ToUniversalTime() - DateTime.Now.ToUniversalTime()).Days < _vacancyLifeCycleSettings.Options.DeltaFromPublishToInCommitteeMinDays)
-                        ModelState.AddModelError("InCommitteeDate", $"Вы не можете установить дату перевода вакансии на рассмотрение комиссии раньше, чем через {_vacancyLifeCycleSettings.Options.DeltaFromPublishToInCommitteeMinDays} дн.");
-
                 if (ModelState.ErrorCount > 0)
                 {
                     model.InitDictionaries(_mediator);
@@ -91,15 +82,8 @@ namespace SciVacancies.WebApp.Controllers
                 //attachmentsList.ForEach(c => c.TypeId = 3);
 
                 var vacancyGuid = _mediator.Send(new CreateVacancyCommand { OrganizationGuid = model.OrganizationGuid, Data = vacancyDataModel });
-                if (model.ToPublish)
-                {
-                    _mediator.Send(new PublishVacancyCommand
-                    {
-                        VacancyGuid = vacancyGuid,
-                        InCommitteeStartDate = model.InCommitteeDate,
-                        InCommitteeEndDate = model.InCommitteeDate.AddHours(25) /*TODO: вынести в конфиг: количество дней до окончания комиссии*/
-                    });
-                }
+                    if (model.ToPublish)
+                        return RedirectToAction("publish", new { id = vacancyGuid });
 
                 return RedirectToAction("details", new { id = vacancyGuid });
             }
@@ -164,15 +148,6 @@ namespace SciVacancies.WebApp.Controllers
                 if (vacancy.status != VacancyStatus.InProcess)
                     return View("Error", $"Вы не можете изменить вакансию с текущим статусом: {vacancy.status.GetDescription()}");
 
-                if (model.ToPublish)
-                {
-                    if (vacancy.status != VacancyStatus.InProcess)
-                        ModelState.AddModelError("Status", $"Вы не можете публиковать вакансии в статусе {vacancy.status.GetDescription()}");
-
-                    if ((DateTime.Now.ToUniversalTime() - model.InCommitteeDate.ToUniversalTime()).Days < _vacancyLifeCycleSettings.Options.DeltaFromPublishToInCommitteeMinDays)
-                        ModelState.AddModelError("InCommitteeDate", $"Вы не можете установить дату перевода вакансии на рассмотрение комиссии раньше, чем через {_vacancyLifeCycleSettings.Options.DeltaFromPublishToInCommitteeMinDays} дн.");
-                }
-
                 if (ModelState.ErrorCount > 0)
                 {
                     model.InitDictionaries(_mediator);
@@ -183,12 +158,7 @@ namespace SciVacancies.WebApp.Controllers
                 var vacancyGuid = _mediator.Send(new UpdateVacancyCommand { VacancyGuid = model.Guid, Data = vacancyDataModel });
 
                 if (model.ToPublish)
-                    _mediator.Send(new PublishVacancyCommand
-                    {
-                        VacancyGuid = model.Guid,
-                        InCommitteeStartDate = model.InCommitteeDate, /*TODO: уточнять эту дату через модальное окно в UI перед отправкой данных на сервер (подтверждение пользователем)*/
-                        InCommitteeEndDate = model.InCommitteeDate.AddHours(25) /*TODO: вынести в конфиг: количество дней до окончания комиссии*/
-                    });
+                    return RedirectToAction("publish", new { id = vacancyGuid });
 
                 return RedirectToAction("details", new { id = vacancyGuid });
             }
@@ -290,7 +260,7 @@ namespace SciVacancies.WebApp.Controllers
                 return HttpNotFound();
 
             var model = Mapper.Map<VacancyDetailsViewModel>(preModel);
-            
+
             ViewBag.VacancyInFavorites = false;
 
             //если Вакансия Опубликована или Принимает Заявки
@@ -318,7 +288,7 @@ namespace SciVacancies.WebApp.Controllers
                     _mediator.Send(new SelectAllCriteriasQuery()).ToList().ToHierarchyCriteriaViewModelList(model.Criterias.ToList());
             model.Attachments = _mediator.Send(new SelectAllExceptCommitteeVacancyAttachmentsQuery { VacancyGuid = model.Guid }).ToList();
             model.AttachmentsCommittee = _mediator.Send(new SelectCommitteeVacancyAttachmentsQuery { VacancyGuid = model.Guid }).ToList();
-            model.ResearchDirection = _mediator.Send(new SelectResearchDirectionQuery {Id = preModel.researchdirection_id });
+            model.ResearchDirection = _mediator.Send(new SelectResearchDirectionQuery { Id = preModel.researchdirection_id });
             return View(model);
         }
 
@@ -601,8 +571,8 @@ namespace SciVacancies.WebApp.Controllers
                 VacancyGuid = model.Guid
             });
 
-            if (applicationGuid != Guid.Empty) 
-            return RedirectToAction(actionName: "setwinner", routeValues: new { id = applicationGuid, isWinner= true });
+            if (applicationGuid != Guid.Empty)
+                return RedirectToAction(actionName: "setwinner", routeValues: new { id = applicationGuid, isWinner = true });
 
             return RedirectToAction(actionName: "details", routeValues: new { id = model.Guid });
         }
@@ -645,7 +615,7 @@ namespace SciVacancies.WebApp.Controllers
             var vacancyInCommitteeAttachments = _mediator.Send(new SelectCommitteeVacancyAttachmentsQuery { VacancyGuid = vacancy.guid });
             if (string.IsNullOrWhiteSpace(vacancy.committee_resolution)
                 && (vacancyInCommitteeAttachments == null || !vacancyInCommitteeAttachments.Any()))
-                return RedirectToAction("setcommitteereason", new { id = vacancy.guid , applicationGuid = vacancyApplicationGuid});
+                return RedirectToAction("setcommitteereason", new { id = vacancy.guid, applicationGuid = vacancyApplicationGuid });
 
             return null;
         }
@@ -893,9 +863,7 @@ namespace SciVacancies.WebApp.Controllers
             return RedirectToAction("vacancies", "organizations");
         }
 
-        [Authorize(Roles = ConstTerms.RequireRoleOrganizationAdmin)]
-        [BindOrganizationIdFromClaims]
-        public IActionResult Publish(Guid id, Guid organizationGuid)
+        private object PublishPreValidation(Guid id, Guid organizationGuid)
         {
             if (id == Guid.Empty)
                 throw new ArgumentNullException(nameof(id));
@@ -908,25 +876,62 @@ namespace SciVacancies.WebApp.Controllers
                 return HttpNotFound(); //throw new ObjectNotFoundException($"Не найдена вакансия с идентификатором: {id}");
 
             if (model.organization_guid != organizationGuid)
-                return View("Error", "Вы не можете отменить удаление вакансии других организаций");
+                return View("Error", "Вы не можете публиковать вакансии других организаций");
 
             if (model.status != VacancyStatus.InProcess)
                 return View("Error", $"Вы не можете опубликовать вакансию со статусом: {model.status.GetDescription()}");
+            return model;
+        }
 
-            if (model.committee_date == null)
-                return View("Error", "Не указана дата перевода вакансии на рассмотрение комиссии");
+        [Authorize(Roles = ConstTerms.RequireRoleOrganizationAdmin)]
+        [BindOrganizationIdFromClaims]
+        [PageTitle("Публикация вакансии")]
+        public IActionResult Publish(Guid id, Guid organizationGuid)
+        {
+            var result = PublishPreValidation(id, organizationGuid);
+            if (result is HttpNotFoundResult) return (HttpNotFoundResult)result;
+            if (result is ViewResult) return (ViewResult)result;
+            var preModel = (Vacancy)result;
 
-            if ((model.committee_date.Value.ToUniversalTime() - DateTime.Now.ToUniversalTime()).Days < _vacancyLifeCycleSettings.Options.DeltaFromPublishToInCommitteeMinDays)
-                return View("Error", $"Вы не можете установить дату перевода вакансии на рассмотрение комиссии раньше, чем через {_vacancyLifeCycleSettings.Options.DeltaFromPublishToInCommitteeMinDays} дн.");
+            var model = Mapper.Map<VacancyDetailsViewModel>(preModel);
+            return View(model);
+        }
 
+        [PageTitle("Публикация вакансии")]
+        [HttpPost]
+        [Authorize(Roles = ConstTerms.RequireRoleOrganizationAdmin)]
+        [BindOrganizationIdFromClaims]
+        public IActionResult Publish(Guid id, string inCommitteeDateString, Guid organizationGuid)
+        {
+            var result = PublishPreValidation(id, organizationGuid);
+            if (result is HttpNotFoundResult) return (HttpNotFoundResult)result;
+            if (result is ViewResult) return (ViewResult)result;
+            var vacancy = (Vacancy)result;
+
+            DateTime inCommitteeDateValue;
+            if (!DateTime.TryParse(inCommitteeDateString, new CultureInfo("ru-RU"), DateTimeStyles.NoCurrentDateDefault, out inCommitteeDateValue))
+                ModelState.AddModelError("InCommitteeDate", "Мы не смогли распознать дату перевода вакансии на рассмотрение комиссии");
+
+            if (inCommitteeDateValue.ToUniversalTime() < DateTime.Now.ToUniversalTime())
+                ModelState.AddModelError("InCommitteeDate", "Вы установили дату ранее текущей");
+
+            if ((inCommitteeDateValue.ToUniversalTime() - DateTime.Now.ToUniversalTime()).Days < _vacancyLifeCycleSettings.Options.DeltaFromPublishToInCommitteeMinDays)
+                ModelState.AddModelError("InCommitteeDate", $"Вы не можете установить дату перевода вакансии на рассмотрение комиссии раньше, чем через {_vacancyLifeCycleSettings.Options.DeltaFromPublishToInCommitteeMinDays} дн.");
+
+            if (!ModelState.IsValid)
+            {
+                var model = Mapper.Map<VacancyDetailsViewModel>(vacancy);
+                return View(model);
+            }
+            
             var vacancyGuid = _mediator.Send(new PublishVacancyCommand
             {
                 VacancyGuid = id,
-                InCommitteeStartDate = model.committee_date.Value, 
-                InCommitteeEndDate = model.committee_date.Value.AddHours(25) /*TODO: вынести в конфиг: количество дней до окончания комиссии*/
+                InCommitteeStartDate = inCommitteeDateValue,
+                InCommitteeEndDate = inCommitteeDateValue.AddHours(25) /*TODO: вынести в конфиг: количество дней до окончания комиссии*/
             });
 
-            return RedirectToAction("vacancies", "organizations");
+            return RedirectToAction("details", new { id });
         }
 
         [PageTitle("Новая вакансия")]

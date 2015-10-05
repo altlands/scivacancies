@@ -323,6 +323,35 @@ $(document).ready(function () {
     $('#cusel-scroll-' + 'ContractTypeValue').find('span').click(toggleContractTime);
     toggleContractTime();
     /*
+     * сброс фильтра
+     */
+    $(".filter-link-uncheck-all").click(function () {
+        var source = this;
+        var parent = $(source).parents('.filter-contents')[0];
+
+        $(parent).find('input[type="checkbox"]').attr('checked', false);
+        $(parent).find('span.checkbox.checked').removeClass('checked');
+        
+        $(parent).find('input[type="text"]').val(null);
+
+        //$(parent).parents('form').submit();
+    });
+
+    /*
+     * сброс фильтра
+     */
+    $(".filter-link-check-all").click(function () {
+        var source = this;
+        var parent = $(source).parents('.filter-contents')[0];
+
+        $(parent).find('input[type="checkbox"]').attr('checked', true);
+        $(parent).find('span.checkbox').not('.checked').addClass('checked');
+
+        $(parent).find('input[type="text"]').val(null);
+
+        //$(parent).parents('form').submit();
+    });
+    /*
     end of the code
     */
 });
@@ -499,7 +528,12 @@ function addNewSubscription(source) {
  */
 function toggleContractTime(e) {
     var parent = $('.contract-time-period');
-    var currentValue = ""
+
+    if (parent.length === 0) {
+        return;
+    }
+
+    var currentValue = "";
     if (e != undefined) {
         currentValue = e.target.innerText;
     } else {
