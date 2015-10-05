@@ -115,31 +115,54 @@
                                     var innerItem = child.Childs[j];
                                     <text>
                                     <div class="b-directions jshelper-list-sections-science" id="jshelper-list-sections-science_@innerItem.Id" @(j != 0 ? @"style=display:none;" : string.Empty)>
-                                        @foreach (var innerInnerItem in innerItem.Childs.OrderBy(c => c.Title))
-                                        {
-                                            <text>
-                                            <div class="item-direction">
-                                                <a asp-controller="search" asp-action="index" asp-route-researchdirections="@innerInnerItem.Id" class="item-direction__title">
-                                                    @innerInnerItem.Title
-                                                </a>
-                                                <div class="item-direction__desc">
-                                                    <div>
-                                                        1256 вакансий
-                                                    </div>
-                                                    Средняя заработная плата – 67000 руб.
-                                                </div>
-                                            </div>
-                                            </text>
+                                        @{
+                                            int innerItemsLength = innerItem.Childs.Count;
                                         }
+                                        <div class="item-col-2">
+                                            @foreach (var innerInnerItem in innerItem.Childs.OrderBy(c => c.Title).Take(innerItemsLength / 2))
+                                            {
+                                                <text>
+                                                <div class="item-direction">
+                                                    <a asp-controller="search" asp-action="index" asp-route-researchdirections="@innerInnerItem.Id" class="item-direction__title">
+                                                        @innerInnerItem.Title
+                                                    </a>
+                                                    <div class="item-direction__desc">
+                                                        <div>
+                                                            1256 вакансий
+                                                        </div>
+                                                        Средняя заработная плата – 67000 руб.
+                                                    </div>
+                                                </div>
+                                                </text>
+                                            }
+                                        </div>
+                                        <div class="item-col-2">
+                                            @foreach (var innerInnerItem in innerItem.Childs.OrderBy(c => c.Title).Skip(innerItemsLength / 2))
+                                            {
+                                                <text>
+                                                <div class="item-direction">
+                                                    <a asp-controller="search" asp-action="index" asp-route-researchdirections="@innerInnerItem.Id" class="item-direction__title">
+                                                        @innerInnerItem.Title
+                                                    </a>
+                                                    <div class="item-direction__desc">
+                                                        <div>
+                                                            1256 вакансий
+                                                        </div>
+                                                        Средняя заработная плата – 67000 руб.
+                                                    </div>
+                                                </div>
+                                                </text>
+                                            }
+                                        </div>
                                     </div>
                                     </text>
-                                }
+                                            }
 
 
                             </div>
                         </div>
                         </text>
-                    }
+                                            }
 
                 </div>
             </div>
@@ -151,7 +174,7 @@
 
         <div class="b-search">
             <form asp-controller="search" asp-action="index" method="GET">
-                <input class="search-input" type="text" name="search" placeholder="поиск по порталу" value="@ViewBag.Search"/>
+                <input class="search-input" type="text" name="search" placeholder="поиск по порталу" value="@ViewBag.Search" />
                 <span class="search-button search-button__icon">
                     <input type="submit" value="" class="search-button__submit">
                 </span>
