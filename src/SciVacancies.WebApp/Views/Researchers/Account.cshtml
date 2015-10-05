@@ -19,7 +19,7 @@
             <div class="inline-block">
                 @Component.Invoke("AvatarImage", Model.ImageUrl)
                 
-                <div class="link-edit mt10"><a asp-controller="researchers" asp-action="editphoto">Редактировать</a></div>
+                <div class="link-edit mt10"><a asp-controller="researchers" asp-action="editphoto">Изменить фото</a></div>
             </div>
             <div class="info inline-block">
                 <h4>@Model.FullName</h4>
@@ -217,12 +217,11 @@
     <br />
 
     <div class="link-edit"><a asp-controller="researchers" asp-action="edit" class="arial italic">Редактировать</a></div>
+</div>
 
-    <br />
-
+<div class="mt13">
     <a asp-controller="accountintegration" asp-action="UpdateResearcherAccountFromOutside" class="link-upload fs13">Загрузить данные из системы «@AuthorizeResourceTypes.ScienceMap.GetDescription()»</a>
     <span style="color: red;">в разработке</span>
-
 </div>
 
 <div class="b-bottom-nav">

@@ -147,7 +147,7 @@
 
         <div class="b-search-result">
             <h4>@ViewBag.Title</h4>
-            <div class="italic">
+            <div class="comment-italic">
                 @Html.Raw(!string.IsNullOrWhiteSpace(Model.Search) ? string.Format("По запросу «{1}» с учетом фильтрации найдено {0} записей.", Model.Items.TotalItems, Model.Search) : "&nbsp;")
             </div>
 
@@ -158,7 +158,7 @@
                 {
                     <text>
                     <div class="ctr-buttons" style="margin-top: 20px;">
-                        <a class="success-btn-submit open-popup" id="subscribe" rel="tooltip">Подписаться</a>
+                        <a class="green-btn middle-icon icon-ok open-popup" id="subscribe" rel="tooltip">Подписаться</a>
 
                         <div id="subscribe-popover" style="display: none;">
                             Задав поисковый запрос и выбрав необходимые критерии поиска в фильтре результатов, вы можете подписаться на данную конфигурацию запроса.
@@ -187,12 +187,11 @@
                                 }
                                 <span class="checkbox @isSheckedEmail">
                                     <input type="checkbox" asp-for="NewSubscriptionNotifyByEmail" />
-                                </span>
-                                <label asp-for="NewSubscriptionNotifyByEmail">Получать уведомления по электронной почте</label>
+                                </span><label asp-for="NewSubscriptionNotifyByEmail">Получать уведомления по электронной почте</label>
                             </div>
 
                             <div class="ctr-buttons mt40">
-                                <input type="submit" class="green-btn middle-icon icon-arr-right" onclick="javascript: return addNewSubscription(this);" value="Подписаться" />
+                                <span class="green-btn middle-icon icon-arr-right">Подписаться<input type="submit" class="bt-default" onclick="javascript: return addNewSubscription(this);" value="" /></span>
                                 <span class="blue-btn middle-icon icon-close" onclick="javqascript: return false;">Отмена</span>
                             </div>
                         </div>

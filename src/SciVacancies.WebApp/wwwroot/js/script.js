@@ -320,8 +320,8 @@ $(document).ready(function () {
     /*
      * «срок трудового договора» поля должны показываться только, если выбираешь «срочный»
      */
-    $('#cusel-scroll-' + 'ContractTypeValue').find('span').click(toggleContractTime);
-    toggleContractTime();
+    //$('#cusel-scroll-' + 'ContractTypeValue').find('span').click(toggleContractTime);
+    //toggleContractTime();
     /*
      * сброс фильтра
      */
@@ -354,6 +354,13 @@ $(document).ready(function () {
     /*
     end of the code
     */
+	
+	//Временно для переключателя
+	
+	$(".tabs_after_title > li").click(function(){
+		$(".tabs_after_title > li").siblings().removeClass("active");
+		$(this).addClass("active");
+	});
 });
 
 /*
