@@ -638,7 +638,6 @@ ul.tabs {
 	top: 0;
 	bottom: 0;
 }
-
 .l-information {
     border: 1px solid #d1d1d1;
     margin: 13px 0 10px 0px;
@@ -1146,6 +1145,9 @@ span#buttonFile{
 .white-btn {
     border: 1px solid #d1d1d1;
     color: #041833;
+}
+.white-btn:hover{
+	color: #041833 !important;
 }
 /* navigation */
 .bottom-nav {
@@ -2287,8 +2289,7 @@ span.close-popup {
     background: url(../images/sprite.png) -271px -203px no-repeat;
 }
 
-.window-popup .title-cat-inform,
-.content-popup .title-cat-inform {
+.title-cat-inform{
     margin: 19px 0 6px 0;
 }
 
@@ -2454,7 +2455,9 @@ span + input.small-input {
 .form-row label {
     margin-top: 5px;
 }
-
+.form-row .list-checkboxes label{
+	margin-top:0;
+}
 .cat-filter {
     margin: 25px 0 36px 0;
 }
@@ -2622,9 +2625,9 @@ span + input.small-input {
 
     .sorting .cusel {
         height: 30px;
-        -webkit-border-radius: 4px;
+        /*-webkit-border-radius: 4px;
         -moz-border-radius: 4px;
-        border-radius: 4px;
+        border-radius: 4px;*/
         width: 100% !important;
         background: white;
     }
@@ -3202,6 +3205,10 @@ ul.tabs li.active span{
     color: #de2227;
 }
 
+.table-row  .field-validation-error{
+	display:block;
+}
+
 .validation-summary-errors {
     padding: 0 0 20px 0;
 }
@@ -3330,13 +3337,17 @@ ul.tabs li.active span{
     margin: 10px 0 0 0;
 }
 
-    .b-publication .name-section {
-        cursor: pointer;
+    .b-publication .b-publication__name {
         position: relative;
+		margin: 0 0 0 20px;
+		display:inline-block;
+    }
+	
+	.b-publication .name-section {
+		cursor: pointer;
         text-decoration: underline;
         color: #041833;
-        margin: 0 0 0 20px;
-    }
+	}
 
         .b-publication .name-section:before {
             content: "";
@@ -3821,7 +3832,6 @@ input#files {
 	margin:0 0 0 8px;
 	padding:0 0 0 10px;
 }
-
 @media only screen and (-webkit-min-device-pixel-ratio: 1.5), only screen and (min--moz-device-pixel-ratio: 1.5), only screen and (min-resolution: 240dpi) {
 	/*body{
 		background:red;

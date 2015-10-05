@@ -54,7 +54,7 @@
                     <td>@i</td>
                     <td>@item.title</td>
                     <td>@item.creation_date.ToLocalVacancyString()</td>
-                    <td>
+                    <td class="align-center pl0">
                         @if (item.status == SearchSubscriptionStatus.Active)
                         {
                             <a asp-controller="subscriptions" asp-action="cancel" asp-route-id=@item.guid class="mail-td-icon" title="Оповещения отключить"></a>
