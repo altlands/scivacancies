@@ -26,6 +26,7 @@ namespace SciVacancies.WebApp.ViewModels
 
 
         [Required(ErrorMessage = "Требуется ввести логин")]
+        [RegularExpression(@"^([a-zA-Z][\w.]+|[0-9][0-9_.]*[a-zA-Z]+[\w.]*)$", ErrorMessage = "Логин без точек и пробелов")]
         public string UserName { get; set; }
 
         [Required(ErrorMessage = "Требуется заполнить поле Имя")]
