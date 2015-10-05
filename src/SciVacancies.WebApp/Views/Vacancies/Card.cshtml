@@ -33,7 +33,7 @@
             if (Model.Status == VacancyStatus.Published)
             {
                 <text>
-                <a asp-controller="applications" asp-action="create" asp-route-vacancyguid="@Model.Guid" class="green-btn middle-icon">Подать заявку</a>
+                <a asp-controller="applications" asp-action="create" asp-route-vacancyguid="@Model.Guid" class="green-btn middle-icon icon-arr-right default-link">Подать заявку</a>
                 <br />
                 <br />
                 </text>
@@ -61,7 +61,7 @@
         else
         {
             <text>
-            <a asp-controller="researchers" asp-action="addtofavorite" asp-route-vacancyguid="@Model.Guid" class="success-btn middle-icon">Добавить в избранное</a>
+            <a asp-controller="researchers" asp-action="addtofavorite" asp-route-vacancyguid="@Model.Guid" class="blue-btn middle-icon icon-favorite default-link">Добавить в избранное</a>
             <br />
             <br />
             </text>

@@ -742,6 +742,14 @@ table.table {
             padding-left: 10px;
         }
 
+.default-link{
+	text-decoration:none;
+}
+.default-link:hover{
+	color:#ffffff;
+	text-decoration:none;
+}
+		
 .status:before {
     content: "";
     display: inline-block;
@@ -840,6 +848,11 @@ a.search-icons {
 
 .link-upload:before {
     background: url(../images/sprite.png) -245px -274px no-repeat;
+    margin-right: 4px;
+}
+
+.link-upload-s:before {
+    background: url(../images/sprite.png) -306px -172px no-repeat;
     margin-right: 4px;
 }
 
@@ -1509,7 +1522,8 @@ span#buttonFile{
     font-family: Arial;
 }
 
-    .l-information > .row.pt15 {
+    .l-information > .row.pt15,
+	.b-app-rows	> .row.pt15{
         padding-top: 15px;
     }
 
