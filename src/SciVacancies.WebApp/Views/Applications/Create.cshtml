@@ -18,7 +18,7 @@
     @ViewBag.Title
 </div>
 
-<h3>Новая заявка</h3>
+<h4>Новая заявка</h4>
 
 <div asp-validation-summary="ValidationSummary.All"></div>
 
@@ -27,7 +27,7 @@
     <input asp-for="ResearcherGuid" />
     <input asp-for="VacancyGuid" />
 
-    <div class="l-application">
+    <div class="l-application b-app-rows">
         <div class="row">
             <div class="bold row-title">Вакансия:</div>
             <div class="table-form">
@@ -363,13 +363,11 @@
             </div>
         </div>
 
-        <div class="row">
+        <div class="row pt15">
             <div class="ctr-buttons button-align mt26 mb5">
-                <input type="submit" class="create-btn middle-icon" onclick=" return beforeFormSubmit(this);" value="Создать заявку" />
+                <span class="green-btn middle-icon icon-edit">Создать заявку<input type="submit" class="bt-default" onclick=" return beforeFormSubmit(this);" value="" /></span>
                 <a asp-controller="vacancies" asp-action="card" asp-route-id="@Model.VacancyGuid">
-                    <span class="blue-btn middle-icon icon-close">
-                        Закрыть
-                    </span>
+                    <span class="blue-btn middle-icon icon-close">Закрыть</span>
                 </a>
             </div>
         </div>
