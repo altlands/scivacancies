@@ -13,7 +13,7 @@
     <a href="/">Главная</a><span class="separator">/</span>@ViewBag.Title
 </div>
 
-<form method="GET" enctype="application/x-www-form-urlencoded">
+<form method="POST" enctype="application/x-www-form-urlencoded">
     <input type="hidden" asp-for="NewSubscriptionAdd" />
     <input type="hidden" asp-for="Search" />
     <div class="l-search">
@@ -22,8 +22,8 @@
 
             <div class="filter-contents">
                 <div class="ctr-filter">
-                    <span class="small-icon icon-sm-ok" onclick="javascript: void (0);">Выбрать все</span>
-                    <span class="small-icon icon-sm-close">Очистить фильтр</span>
+                    <span class="small-icon icon-sm-ok filter-link-check-all" onclick="javascript: void (0);">Выбрать все</span>
+                    <span class="small-icon icon-sm-close filter-link-uncheck-all">Очистить фильтр</span>
                 </div>
 
                 <div class="cat-filter">

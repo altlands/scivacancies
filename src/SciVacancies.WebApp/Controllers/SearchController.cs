@@ -46,6 +46,7 @@ namespace SciVacancies.WebApp.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet]
+        [HttpPost]
         [PageTitle("Результаты поиска")]
         [BindResearcherIdFromClaims]
         public ActionResult Index(VacanciesFilterModel model, Guid researcherGuid)
@@ -103,11 +104,10 @@ namespace SciVacancies.WebApp.Controllers
                 model.VacancyStates = filterSource.VacancyStates.Select(c => int.Parse(c.Value));
 
             //проебразовать поисковую фразу в utf8, для его передачи по сети
-            var query = string.IsNullOrWhiteSpace(model.Search) ? string.Empty : HttpUtility.UrlEncode(model.Search);
 
             model.Items = _mediator.Send(new SearchQuery
             {
-                Query = query,
+                Query = model.Search,
 
                 PageSize = model.PageSize,
                 CurrentPage = model.CurrentPage,

@@ -1,9 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Data.Entity.Core;
 using AutoMapper;
 using MediatR;
 using Microsoft.AspNet.Authorization;
 using Microsoft.AspNet.Mvc;
+using SciVacancies.Domain.Enums;
 using SciVacancies.ReadModel.Core;
 using SciVacancies.WebApp.Engine;
 using SciVacancies.WebApp.Engine.CustomAttribute;
@@ -80,13 +82,26 @@ namespace SciVacancies.WebApp.Controllers
             var model = new VacanciesInOrganizationIndexViewModel
             {
                 OrganizationGuid = organizationGuid,
-                PagedVacancies = _mediator.Send(new SelectPagedVacanciesByOrganizationQuery
+                PagedVacancies = _mediator.Send(new SelectPagedVacanciesByOrganizationAndStatusesQuery
                 {
                     OrganizationGuid = organizationGuid,
                     PageSize = pageSize,
                     PageIndex = currentPage,
                     OrderBy = new SortFilterHelper().GetSortField<Vacancy>(sortField),
-                    OrderDirection = sortDirection
+                    OrderDirection = sortDirection,
+                    Statuses = new List<VacancyStatus>
+                    {
+                        VacancyStatus.Closed,
+                        VacancyStatus.InCommittee,
+                        VacancyStatus.InProcess,
+                        VacancyStatus.OfferAcceptedByPretender,
+                        VacancyStatus.OfferAcceptedByWinner,
+                        VacancyStatus.OfferRejectedByPretender,
+                        VacancyStatus.OfferRejectedByWinner,
+                        VacancyStatus.OfferResponseAwaitingFromPretender,
+                        VacancyStatus.OfferResponseAwaitingFromWinner,
+                        VacancyStatus.Published
+                    }
                 }).MapToPagedList(),
                 Name = preModel.name
             };
@@ -108,13 +123,18 @@ namespace SciVacancies.WebApp.Controllers
 
             var model = new VacanciesInOrganizationIndexViewModel
             {
-                PagedVacancies = _mediator.Send(new SelectPagedClosedVacanciesByOrganizationQuery
+                PagedVacancies = _mediator.Send(new SelectPagedVacanciesByOrganizationAndStatusesQuery
                 {
                     OrganizationGuid = organizationGuid,
                     PageSize = pageSize,
                     PageIndex = currentPage,
                     OrderBy = new SortFilterHelper().GetSortField<Vacancy>(sortField),
-                    OrderDirection = sortDirection
+                    OrderDirection = sortDirection,
+                    Statuses = new List<VacancyStatus>
+                    {
+                        VacancyStatus.Cancelled,
+                        VacancyStatus.Closed
+                    }
                 }).MapToPagedList(),
                 Name = preModel.name
             };

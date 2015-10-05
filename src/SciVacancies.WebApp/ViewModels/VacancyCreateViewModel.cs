@@ -25,14 +25,6 @@ namespace SciVacancies.WebApp.ViewModels
             OrganizationGuid = organizationGuid;
         }
 
-        public DateTime InCommitteeDate { get; set; }
-        [Required(ErrorMessage = "Укажите Дату окончания приёма заявок")]
-        public string InCommitteeDateString
-        {
-            get { return InCommitteeDate.ToString("dd.MM.yy"); }
-            set { InCommitteeDate = DateTime.Parse(value, new CultureInfo("ru-RU")); }
-        }
-
         [HiddenInput]
         public Guid OrganizationGuid { get; set; }
         /// <summary>

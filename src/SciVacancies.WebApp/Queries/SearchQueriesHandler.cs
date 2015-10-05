@@ -1,6 +1,5 @@
 ﻿using SciVacancies.Domain.Enums;
 using SciVacancies.ReadModel.ElasticSearchModel.Model;
-using SciVacancies.WebApp.Engine;
 
 using System;
 using System.Collections.Generic;
@@ -9,16 +8,19 @@ using System.Linq;
 using Nest;
 using MediatR;
 using NPoco;
+using Microsoft.Framework.OptionsModel;
 
 namespace SciVacancies.WebApp.Queries
 {
     public class SearchQueriesHandler : IRequestHandler<SearchQuery, Page<Vacancy>>
     {
         private readonly IElasticClient _elastic;
+        readonly IOptions<ElasticSettings> settings;
 
-        public SearchQueriesHandler(IElasticClient elastic)
+        public SearchQueriesHandler(IElasticClient elastic, IOptions<ElasticSettings> settings)
         {
             _elastic = elastic;
+            this.settings = settings;
         }
 
         public Page<Vacancy> Handle(SearchQuery msg)
@@ -27,15 +29,13 @@ namespace SciVacancies.WebApp.Queries
 
             var results = _elastic.Search<Vacancy>(searchSelector(msg));
 
-            var scoredResult = results.Hits.Where(c=>c.Score > 0.2f).Select(c=>c.Source).ToList();
-
             var pageVacancies = new Page<Vacancy>
             {
                 CurrentPage = msg.CurrentPage.Value,
                 ItemsPerPage = msg.PageSize.Value,
                 TotalItems = results.Total,
                 TotalPages = msg.PageSize.HasValue ? results.Total / msg.PageSize.Value : 0,
-                Items = scoredResult
+                Items = results.Documents.ToList()
             };
 
             return pageVacancies;
@@ -54,6 +54,8 @@ namespace SciVacancies.WebApp.Queries
                 sdescriptor.Take((int)sq.PageSize);
             }
 
+            sdescriptor.MinScore(settings.Options.MinScore);
+
             switch (sq.OrderFieldByDirection)
             {
                 case ConstTerms.SearchFilterOrderByDateDescending:
@@ -71,40 +73,140 @@ namespace SciVacancies.WebApp.Queries
         }
         public QueryContainer VacancyQueryContainer(SearchQuery sq)
         {
+            Func<QueryDescriptor<Vacancy>, SearchQuery, QueryContainer> querySelector = VacancyFilteredQueryContainer;
+            Func<FilterDescriptor<Vacancy>, SearchQuery, FilterContainer> filterSelector = VacancyFilteredFilterContainer;
 
-            QueryContainer query = Query<Vacancy>.Filtered(fltd => fltd
-                                                        .Query(q => q
-                                                            .FuzzyLikeThis(flt => flt
-                                                                .LikeText(sq.Query)
+            return Query<Vacancy>.Filtered(flt => flt
+                                    .Query(flq => querySelector(flq, sq))
+                                    .Filter(flf => filterSelector(flf, sq))
+                                );
+        }
+        public QueryContainer VacancyFilteredQueryContainer(QueryDescriptor<Vacancy> queryDescriptor, SearchQuery sq)
+        {
+            QueryContainer queryContainer;
+
+            if (String.IsNullOrEmpty(sq.Query))
+            {
+                queryContainer = queryDescriptor.MatchAll();
+            }
+            else
+            {
+                queryContainer = queryDescriptor.MultiMatch(m => m
+                                                 .Query(sq.Query)
+                                                 .OnFieldsWithBoost(fb => fb
+                                                     .Add(f => f.FullName, 10.0)
+                                                     .Add(f => f.Name, 10.0)
+                                                     .Add(f => f.Tasks, 7.0)
+                                                     .Add(f => f.Criterias.FirstOrDefault().CriteriaTitle, 7.0)
+                                                     .Add(f => f.ResearchTheme, 2.0)
+                                                     .Add(f => f.CityName, 2.0)
+                                                     .Add(f => f.Details, 2.0)
+                                                     .Add(f => f.Bonuses, 2.0)
+                                                 )
+                                            );
+            }
+
+            return queryContainer;
+        }
+        public FilterContainer VacancyFilteredFilterContainer(FilterDescriptor<Vacancy> filterDescriptor, SearchQuery sq)
+        {
+            FilterContainer filterContainer;
+
+            List<FilterContainer> filters = new List<FilterContainer>();
+
+            if (sq.FoivIds != null && sq.FoivIds.Count() > 0)
+            {
+                filters.Add(new FilterDescriptor<Vacancy>().Bool(b => b
+                                                                .Must(m => m
+                                                                    .Terms(t => t.OrganizationFoivId, sq.FoivIds)
+                                                                )
                                                             )
-                                                        )
-                                                        .Filter(f => f
-                                                            .Terms<int>(ft => ft.OrganizationFoivId, sq.FoivIds)
-                                                            && f.Terms<int>(ft => ft.PositionTypeId, sq.PositionTypeIds)
-                                                            && f.Terms<int>(ft => ft.RegionId, sq.RegionIds)
-                                                            && f.Terms<int>(ft => ft.ResearchDirectionId, sq.ResearchDirectionIds)
-                                                            && f.Range(fr => fr
-                                                                    .GreaterOrEquals((sq.SalaryFrom.HasValue && sq.SalaryFrom > 0) ? (long?)sq.SalaryFrom : null)
-                                                                    .OnField(of => of.SalaryFrom)
+                                                        );
+            }
+            if (sq.PositionTypeIds != null && sq.PositionTypeIds.Count() > 0)
+            {
+                filters.Add(new FilterDescriptor<Vacancy>().Bool(b => b
+                                                                .Must(m => m
+                                                                    .Terms(t => t.PositionTypeId, sq.PositionTypeIds)
+                                                                )
                                                             )
-                                                            && f.Range(fr => fr
-                                                                    .LowerOrEquals((sq.SalaryTo.HasValue && sq.SalaryTo < 0) ? (long?)sq.SalaryTo : null)
-                                                                    .OnField(of => of.SalaryTo)
+                                                        );
+            }
+            if (sq.RegionIds != null && sq.RegionIds.Count() > 0)
+            {
+                filters.Add(new FilterDescriptor<Vacancy>().Bool(b => b
+                                                                .Must(m => m
+                                                                    .Terms(t => t.RegionId, sq.RegionIds)
+                                                                )
                                                             )
-                                                            && f.Terms<VacancyStatus>(ft => ft.Status, sq.VacancyStatuses)
-                                                            && f.Range(fr => fr
-                                                                    .GreaterOrEquals(sq.PublishDateFrom)
-                                                                    .OnField(of => of.PublishDate)
+                                                        );
+            }
+            if (sq.ResearchDirectionIds != null && sq.ResearchDirectionIds.Count() > 0)
+            {
+                filters.Add(new FilterDescriptor<Vacancy>().Bool(b => b
+                                                                .Must(m => m
+                                                                    .Terms(t => t.ResearchDirectionId, sq.ResearchDirectionIds)
+                                                                )
                                                             )
-                                                            && f.Bool(b => b
-                                                                    .MustNot(mn => mn
-                                                                        .Terms<VacancyStatus>(mnt => mnt.Status, new List<VacancyStatus> { VacancyStatus.InProcess })
+                                                        );
+            }
+            if (sq.SalaryFrom.HasValue && sq.SalaryFrom > 0)
+            {
+                filters.Add(new FilterDescriptor<Vacancy>().Bool(b => b
+                                                                .Must(m => m
+                                                                    .Range(r => r
+                                                                        .GreaterOrEquals(sq.SalaryFrom)
+                                                                        .OnField(of => of.SalaryFrom)
                                                                     )
+                                                                )
+                                                            )
+                                                        );
+            }
+            if (sq.SalaryTo.HasValue && sq.SalaryTo > 0)
+            {
+                filters.Add(new FilterDescriptor<Vacancy>().Bool(b => b
+                                                                .Must(m => m
+                                                                    .Range(r => r
+                                                                        .LowerOrEquals(sq.SalaryTo)
+                                                                        .OnField(of => of.SalaryTo)
+                                                                    )
+                                                                )
+                                                            )
+                                                        );
+            }
+            if (sq.VacancyStatuses != null && sq.VacancyStatuses.Count() > 0)
+            {
+                filters.Add(new FilterDescriptor<Vacancy>().Bool(b => b
+                                                                .Must(m => m
+                                                                    .Terms(t => t.Status, sq.VacancyStatuses)
+                                                                )
+                                                            )
+                                                        );
+            }
+            if (sq.PublishDateFrom.HasValue)
+            {
+                filters.Add(new FilterDescriptor<Vacancy>().Bool(b => b
+                                                                .Must(m => m
+                                                                    .Range(r => r
+                                                                        .GreaterOrEquals(sq.PublishDateFrom)
+                                                                        .OnField(of => of.PublishDate)
+                                                                    )
+                                                                )
+                                                            )
+                                                        );
+            }
+            filters.Add(new FilterDescriptor<Vacancy>().Bool(b => b
+                                                            .MustNot(mn => mn
+                                                                .Terms(t => t.Status, new List<VacancyStatus> {
+                                                                    VacancyStatus.InProcess
+                                                                })
                                                             )
                                                         )
-                                                );
+                                                    );
 
-            return query;
+            filterContainer = filterDescriptor.Bool(b => b.Must(filters.ToArray()));
+
+            return filterContainer;
         }
 
         #endregion

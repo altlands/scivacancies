@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.Globalization;
 using Nest;
 using NPoco;
 using SciVacancies.Domain.Enums;
@@ -143,6 +145,15 @@ namespace SciVacancies.WebApp.ViewModels
         public DateTime DateFinish { get; set; }
         [Obsolete("Дублируется с DateStart")]
         public DateTime CreationDate { get; set; }
+
+
+
+        public DateTime InCommitteeDate { get; set; }
+        public string InCommitteeDateString
+        {
+            get { return InCommitteeDate.ToString("dd.MM.yy"); }
+            set { InCommitteeDate = DateTime.Parse(value, new CultureInfo("ru-RU")); }
+        }
 
         /// <summary>
         /// Заявки на вакансию
