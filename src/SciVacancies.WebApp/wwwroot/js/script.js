@@ -298,7 +298,8 @@ $(document).ready(function () {
     // */
     //var buttonFile = $('a[data-selectorphoto="true"]');
     var buttonFile = document.getElementById('buttonFile');
-    var file = $('input[data-selectphoto="true"]');
+    //var file = $('input[data-selectphoto="true"]');
+	var file = document.getElementById('files');
     $(buttonFile).click(function () {
         file.click();
         return false;
