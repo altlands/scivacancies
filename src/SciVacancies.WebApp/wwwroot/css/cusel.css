@@ -80,7 +80,6 @@
 	right:-1px;
 	/*padding-right:2px;*/
 	top: 100%;
-	background: #fff; /* фон выпадающего списка */
 }
 .cusel .jScrollPaneContainer {
 	position: relative;
@@ -141,6 +140,9 @@ span.cuselActive{
 }
 #cusel-scroll-region{
 	padding-bottom:5px;
+}
+.jScrollPaneContainer{
+	background:#ffffff;
 }
 .cuselOpen{
 	border-radius:5px 5px 0 0;
