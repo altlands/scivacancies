@@ -72,6 +72,10 @@ namespace SciVacancies.WebApp.Controllers
                 }
 
                 var vacancyDataModel = Mapper.Map<VacancyDataModel>(model);
+
+                Organization organization = _mediator.Send(new SingleOrganizationQuery { OrganizationGuid = model.OrganizationGuid });
+                vacancyDataModel.OrganizationFoivId = organization.foiv_id;
+
                 if (ModelState.ErrorCount > 0)
                 {
                     model.InitDictionaries(_mediator);
@@ -82,8 +86,8 @@ namespace SciVacancies.WebApp.Controllers
                 //attachmentsList.ForEach(c => c.TypeId = 3);
 
                 var vacancyGuid = _mediator.Send(new CreateVacancyCommand { OrganizationGuid = model.OrganizationGuid, Data = vacancyDataModel });
-                    if (model.ToPublish)
-                        return RedirectToAction("publish", new { id = vacancyGuid });
+                if (model.ToPublish)
+                    return RedirectToAction("publish", new { id = vacancyGuid });
 
                 return RedirectToAction("details", new { id = vacancyGuid });
             }
@@ -923,7 +927,7 @@ namespace SciVacancies.WebApp.Controllers
                 var model = Mapper.Map<VacancyDetailsViewModel>(vacancy);
                 return View(model);
             }
-            
+
             var vacancyGuid = _mediator.Send(new PublishVacancyCommand
             {
                 VacancyGuid = id,

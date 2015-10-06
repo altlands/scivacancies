@@ -9,6 +9,5 @@ namespace SciVacancies.WebApp.Validation
         {
             RuleFor(c => c.Data.Name).NotEmpty();
         }
-
     }
 }
