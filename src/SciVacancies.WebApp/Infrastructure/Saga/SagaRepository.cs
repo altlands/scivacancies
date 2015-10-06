@@ -86,6 +86,7 @@ namespace SciVacancies.WebApp.Infrastructure.Saga
             {
                 stream = _eventStore.CreateStream(bucketId, sagaId);
             }
+            if (stream == null) throw new ArgumentNullException("Stream is null. SagaKey : {0}",sagaKey);
 
             return _streams[sagaKey] = stream;
         }

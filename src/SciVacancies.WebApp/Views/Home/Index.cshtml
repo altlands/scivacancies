@@ -116,10 +116,21 @@
                                     <text>
                                     <div class="b-directions jshelper-list-sections-science" id="jshelper-list-sections-science_@innerItem.Id" @(j != 0 ? @"style=display:none;" : string.Empty)>
                                         @{
+                                            //TODO - костыль, чтобы в левой колонке было столько же или на одну больше категорий, чем в правой
                                             int innerItemsLength = innerItem.Childs.Count;
+                                            int leftColLength = 0;
+                                            if (innerItemsLength % 2 != 0)
+                                            {
+                                                leftColLength = innerItemsLength / 2 + 1;
+                                            }
+                                            else
+                                            {
+                                                leftColLength = innerItemsLength / 2;
+
+                                            }
                                         }
                                         <div class="item-col-2">
-                                            @foreach (var innerInnerItem in innerItem.Childs.OrderBy(c => c.Title).Take(innerItemsLength / 2))
+                                            @foreach (var innerInnerItem in innerItem.Childs.OrderBy(c => c.Title).Take(leftColLength))
                                             {
                                                 <text>
                                                 <div class="item-direction">
@@ -137,7 +148,7 @@
                                             }
                                         </div>
                                         <div class="item-col-2">
-                                            @foreach (var innerInnerItem in innerItem.Childs.OrderBy(c => c.Title).Skip(innerItemsLength / 2))
+                                            @foreach (var innerInnerItem in innerItem.Childs.OrderBy(c => c.Title).Skip(leftColLength))
                                             {
                                                 <text>
                                                 <div class="item-direction">

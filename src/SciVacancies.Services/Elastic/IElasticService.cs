@@ -1,14 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using SciVacancies.ReadModel.ElasticSearchModel.Model;
+
+using Nest;
 
 namespace SciVacancies.Services.Elastic
 {
-    public class IElasticService
+    public interface IElasticService
     {
-        //TODO поиск по вакансиям
+        ISearchResponse<Vacancy> VacancySearch(SearchQuery sq);
         //TODO поиск по организациям
-        //IEnumerable<>
     }
 }
