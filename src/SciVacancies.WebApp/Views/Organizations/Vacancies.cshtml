@@ -57,7 +57,7 @@
                     </div>
                 </a>
             </th>
-            <th width="150">
+            <th width="140">
                 <a class="sort-order" href="@(Context.Request.Path.Value+"?"+Context.Request.ToQueryStringDictionary().SetDefaultOrInvertOrderParameter(ConstTerms.OrderByFieldVacancyStatus).CreateString())">
                     <div class="inline-block">
                         <img title="Сортировка" src="@Context.Request.GetOrderIcon(ConstTerms.OrderByFieldVacancyStatus)" class="va-middle" />
@@ -67,7 +67,7 @@
                     </div>
                 </a>
             </th>
-            <th width="150">
+            <th width="165">
                 @*<div class="pl21 va-middle">Действия</div>*@
                 <div class="va-middle">Действия</div>
             </th>

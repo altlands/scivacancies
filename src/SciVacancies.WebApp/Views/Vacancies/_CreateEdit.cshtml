@@ -141,7 +141,7 @@
                             <input type="hidden" asp-for="CriteriasHierarchy[groupIndex].Id" />
                             <input type="hidden" asp-for="CriteriasHierarchy[groupIndex].Title" />
 
-                            <span class="name-section">@group.Title (@group.Items.Count)</span>
+                            <div class="b-publication__name"><span class="name-section">@group.Title (@group.Items.Count)</span></div>
                             <div class="list-fields">
 
                                 @for (int itemIndex = 0; itemIndex < @group.Items.Count; itemIndex++)
