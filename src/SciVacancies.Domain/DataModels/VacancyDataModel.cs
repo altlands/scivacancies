@@ -165,6 +165,9 @@ namespace SciVacancies.Domain.DataModels
         public List<VacancyAttachment> Attachments { get; set; }
 
         public string OrganizationFoiv { get; set; }
+        /// <summary>
+        /// Идентификатор ФОИВ организации, создавшей вакансию - нужен для поискового фильтра и т.д.
+        /// </summary>
         public int OrganizationFoivId { get; set; }
     }
 }

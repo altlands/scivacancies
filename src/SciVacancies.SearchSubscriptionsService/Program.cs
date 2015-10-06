@@ -4,6 +4,7 @@ using System.Collections;
 using System.ServiceProcess;
 using System.Threading;
 using Autofac;
+using Nest;
 using Microsoft.Framework.ConfigurationModel;
 using Npgsql;
 using NPoco;
@@ -12,6 +13,7 @@ using Quartz.Spi;
 using SciVacancies.SearchSubscriptionsService.Jobs;
 using SciVacancies.Services.Email;
 using SciVacancies.Services.Quartz;
+using SciVacancies.Services.Elastic;
 
 namespace SciVacancies.SearchSubscriptionsService
 {
@@ -30,6 +32,12 @@ namespace SciVacancies.SearchSubscriptionsService
             builder.RegisterType<SmtpNotificatorService>().As<ISmtpNotificatorService>().InstancePerLifetimeScope();
             builder.RegisterType<SearchSubscriptionService>().AsSelf();
             builder.RegisterType<QuartzService>().AsImplementedInterfaces();
+
+            ConnectionSettings elasticConnectionSettings = new ConnectionSettings(new Uri(configuration.Get("ElasticSettings:ConnectionUrl")), defaultIndex: configuration.Get("ElasticSettings:DefaultIndex"));
+            builder.Register(c => new ElasticClient(elasticConnectionSettings)).As<IElasticClient>().SingleInstance();
+            //TODO single instanse or not?
+            builder.Register(c => new SearchService(configuration, c.Resolve<IElasticClient>())).As<IElasticService>();
+
             builder.RegisterType<AutofacJobFactory>().As<IJobFactory>().InstancePerLifetimeScope();
             builder.RegisterType<SearchSubscriptionJob>().As<IJob>().InstancePerLifetimeScope().AsSelf();
             builder.RegisterTypes(System.Reflection.Assembly.GetAssembly(typeof(Program)).GetTypes())

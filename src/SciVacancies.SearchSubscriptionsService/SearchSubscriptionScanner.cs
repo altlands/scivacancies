@@ -12,6 +12,7 @@ using System.Threading;
 using Autofac;
 using SciVacancies.ReadModel.Core;
 using SciVacancies.Services.Email;
+using SciVacancies.Services.Elastic;
 using SciVacancies.SmtpNotifications;
 using Vacancy = SciVacancies.ReadModel.ElasticSearchModel.Model.Vacancy;
 
@@ -33,11 +34,13 @@ namespace SciVacancies.SearchSubscriptionsService
         private EventWaitHandle _doneEvent;
         private readonly ILifetimeScope _lifetimeScope;
         private readonly IConfiguration _configuration;
+        readonly IElasticService elasticService;
 
-        public SearchSubscriptionScanner(ILifetimeScope lifetimeScope, IConfiguration configuration)
+        public SearchSubscriptionScanner(ILifetimeScope lifetimeScope, IConfiguration configuration, IElasticService elasticService)
         {
             _lifetimeScope = lifetimeScope;
             _configuration = configuration;
+            this.elasticService = elasticService;
         }
 
         public void Initialize(EventWaitHandle doneEvent, IEnumerable<SearchSubscription> subscriptionQueue)
@@ -61,8 +64,6 @@ namespace SciVacancies.SearchSubscriptionsService
             }
             Console.WriteLine($"                 список подписок содержит - {_subscriptionQueue.Count()} - записей");
 
-            var elasticClient = new ElasticClient(new ConnectionSettings(new Uri(_configuration.Get("ElasticSettings:ConnectionUrl")), defaultIndex: _configuration.Get("ElasticSettings:DefaultIndex")));
-
             //todo добавить свойство int emailsToSentPerMinute
             //todo: написать sql-процедуру, которая будет блокировать обрабатываемые подписки
             foreach (var searchSubscription in _subscriptionQueue)
@@ -81,9 +82,8 @@ namespace SciVacancies.SearchSubscriptionsService
                 };
                 Console.WriteLine($"                    searchQuery created based on searchSubscription.Guid='{searchSubscription.guid}' ");
 
-                Func<SearchQuery, SearchDescriptor<Vacancy>> searchSelector = VacancySearchDescriptor;
+                var searchResults = elasticService.VacancySearch(searchQuery);
 
-                var searchResults = elasticClient.Search<Vacancy>(searchSelector(searchQuery));
                 var vacanciesList = searchResults.Documents.ToList();
                 Console.WriteLine($"                    по подписке найдено {vacanciesList.Count} записей");
 
@@ -135,94 +135,7 @@ namespace SciVacancies.SearchSubscriptionsService
                 }
             }
 
-
             _doneEvent?.Set();
-
         }
-
-
-        #region QueryContainers
-
-        public SearchDescriptor<Vacancy> VacancySearchDescriptor(SearchQuery sq)
-        {
-            var sdescriptor = new SearchDescriptor<Vacancy>();
-
-            if (sq.PageSize.HasValue && sq.CurrentPage.HasValue &&
-                sq.PageSize.Value != 0 && sq.CurrentPage.Value != 0)
-            {
-                sdescriptor.Skip((int)((sq.CurrentPage - 1) * sq.PageSize));
-                sdescriptor.Take((int)sq.PageSize);
-            }
-
-            sdescriptor.Sort(sort => sort.OnField(of => of.PublishDate).Descending());
-
-            Func<SearchQuery, QueryContainer> querySelector = VacancyQueryContainer;
-
-            sdescriptor.Query(querySelector(sq));
-
-            return sdescriptor;
-        }
-        public QueryContainer VacancyQueryContainer(SearchQuery sq)
-        {
-
-            var queryContainer = Query<Vacancy>.Filtered(fltd => fltd
-                     .Query(q => q
-                         .FuzzyLikeThis(flt => flt
-                             .LikeText(sq.Query)
-                         )
-                     )
-                     .Filter(f => f
-                         .Terms<int>(ft => ft.OrganizationFoivId, sq.FoivIds)
-                         && f.Terms<int>(ft => ft.PositionTypeId, sq.PositionTypeIds)
-                         && f.Terms<int>(ft => ft.RegionId, sq.RegionIds)
-                         && f.Terms<int>(ft => ft.ResearchDirectionId, sq.ResearchDirectionIds)
-                         && f.Range(fr => fr
-                                 .GreaterOrEquals((sq.SalaryFrom.HasValue && sq.SalaryFrom > 0) ? (long?)sq.SalaryFrom : null)
-                                 .OnField(of => of.SalaryFrom)
-                         )
-                         && f.Range(fr => fr
-                                 .LowerOrEquals((sq.SalaryTo.HasValue && sq.SalaryTo < 0) ? (long?)sq.SalaryTo : null)
-                                 .OnField(of => of.SalaryTo)
-                         )
-                         && f.Terms<VacancyStatus>(ft => ft.Status, sq.VacancyStatuses)
-                         && f.Range(fr => fr
-                                 .GreaterOrEquals(sq.PublishDateFrom)
-                                 .OnField(of => of.PublishDate)
-                         )
-                         && f.Bool(b => b
-                                 .MustNot(mn => mn
-                                     .Terms<VacancyStatus>(mnt => mnt.Status, new List<VacancyStatus> { VacancyStatus.InProcess })
-                                 )
-                         )
-                     )
-             );
-
-            return queryContainer;
-        }
-        #endregion
-
-
-
-        public class SearchQuery
-        {
-            public string Query { get; set; }
-
-            public long? PageSize { get; set; }
-            public long? CurrentPage { get; set; }
-
-            public string OrderFieldByDirection { get; set; }
-
-            public DateTime? PublishDateFrom { get; set; }
-
-            public IEnumerable<int> FoivIds { get; set; }
-            public IEnumerable<int> PositionTypeIds { get; set; }
-            public IEnumerable<int> RegionIds { get; set; }
-            public IEnumerable<int> ResearchDirectionIds { get; set; }
-
-            public int? SalaryFrom { get; set; }
-            public int? SalaryTo { get; set; }
-            public IEnumerable<VacancyStatus> VacancyStatuses { get; set; }
-        }
-
     }
 }

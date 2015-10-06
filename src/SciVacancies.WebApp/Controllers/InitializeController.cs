@@ -119,25 +119,26 @@ namespace SciVacancies.WebApp.Controllers
             /*инициализируем организации*/
             if (_mediator.Send(new CountOrganizationsQuery()) == 0)
             {
+                var organization0Data = new AccountOrganizationRegisterViewModel
+                {
+                    Email = $"organization{rnd.Next(2000, 3000)}@mailer.org",
+                    UserName = "organization1",
+                    Name = "Научно Исследотельский Институт Горных массивов",
+                    ShortName = "НИИ Горных массивов",
+                    Address = "Ул. Василяб д.100",
+                    INN = "23093209230923",
+                    OGRN = "2309230923",
+                    OrgFormId = 1,
+                    FoivId = 42,
+                    ActivityId = 1,
+                    HeadFirstName = "Овидий",
+                    HeadLastName = "Грек",
+                    HeadPatronymic = "Иванович"
+                };
 
                 var createUserOrganizationCommand0 = new RegisterUserOrganizationCommand
                 {
-                    Data = new AccountOrganizationRegisterViewModel
-                    {
-                        Email = $"organization{rnd.Next(2000, 3000)}@mailer.org",
-                        UserName = "organization1",
-                        Name = "Научно Исследотельский Институт Горных массивов",
-                        ShortName = "НИИ Горных массивов",
-                        Address = "Ул. Василяб д.100",
-                        INN = "23093209230923",
-                        OGRN = "2309230923",
-                        OrgFormId = 1,
-                        FoivId = 42,
-                        ActivityId = 1,
-                        HeadFirstName = "Овидий",
-                        HeadLastName = "Грек",
-                        HeadPatronymic = "Иванович"
-                    }
+                    Data = organization0Data
                 };
                 var organization0 = _mediator.Send(createUserOrganizationCommand0);
                 organizationGuid0 =
@@ -145,26 +146,26 @@ namespace SciVacancies.WebApp.Controllers
                         organization0.Claims.Single(s => s.ClaimType.Equals(ConstTerms.ClaimTypeOrganizationId)).ClaimValue);
 
 
-
+                var organization1Data = new AccountOrganizationRegisterViewModel
+                {
+                    Email = "technobrowser@gmail.com",
+                    UserName = "organization2",
+                    Name = "НИИ добра",
+                    ShortName = "Good Science",
+                    Address = "Луна, море спокойствия",
+                    INN = "2332232332",
+                    OGRN = "23111113",
+                    OrgFormId = 2,
+                    FoivId = 42,
+                    ActivityId = 1,
+                    HeadFirstName = "Саруман",
+                    HeadLastName = "Саур",
+                    HeadPatronymic = "Сауронович"
+                };
 
                 var createUserOrganizationCommand1 = new RegisterUserOrganizationCommand
                 {
-                    Data = new AccountOrganizationRegisterViewModel
-                    {
-                        Email = "technobrowser@gmail.com",
-                        UserName = "organization2",
-                        Name = "НИИ добра",
-                        ShortName = "Good Science",
-                        Address = "Луна, море спокойствия",
-                        INN = "2332232332",
-                        OGRN = "23111113",
-                        OrgFormId = 2,
-                        FoivId = 42,
-                        ActivityId = 1,
-                        HeadFirstName = "Саруман",
-                        HeadLastName = "Саур",
-                        HeadPatronymic = "Сауронович"
-                    }
+                    Data = organization1Data
                 };
                 var organization1 = _mediator.Send(createUserOrganizationCommand1);
                 var organizationGuid1 =
@@ -211,7 +212,8 @@ namespace SciVacancies.WebApp.Controllers
                             PositionTypeId = positions.Skip(rnd.Next(positions.Count() - 1)).First().id,
                             RegionId = 25,
                             ResearchDirection = "Аналитическая химия",
-                            ResearchDirectionId = 3026
+                            ResearchDirectionId = 3026,
+                            OrganizationFoivId = organization0Data.FoivId
                         }
                     });
                     _mediator.Send(new PublishVacancyCommand
@@ -245,8 +247,8 @@ namespace SciVacancies.WebApp.Controllers
                             ContactPhone = "89665467233",
                             EmploymentType = EmploymentType.Full,
                             OperatingScheduleType = OperatingScheduleType.FullTime,
-                            RegionId = 27
-
+                            RegionId = 27,
+                            OrganizationFoivId = organization0Data.FoivId
                         }
                     });
                     _mediator.Send(new PublishVacancyCommand
@@ -280,7 +282,8 @@ namespace SciVacancies.WebApp.Controllers
                             ContactPhone = "900923-322",
                             EmploymentType = EmploymentType.Full,
                             OperatingScheduleType = OperatingScheduleType.FullTime,
-                            RegionId = 27
+                            RegionId = 27,
+                            OrganizationFoivId = organization0Data.FoivId
                         }
                     });
                     _mediator.Send(new PublishVacancyCommand
@@ -318,7 +321,8 @@ namespace SciVacancies.WebApp.Controllers
                             ContactPhone = "89665467233",
                             EmploymentType = EmploymentType.Full,
                             OperatingScheduleType = OperatingScheduleType.FullTime,
-                            RegionId = 27
+                            RegionId = 27,
+                            OrganizationFoivId = organization0Data.FoivId
                         }
                     });
                     _mediator.Send(new PublishVacancyCommand
@@ -352,8 +356,8 @@ namespace SciVacancies.WebApp.Controllers
                             ContactPhone = "89665467233",
                             EmploymentType = EmploymentType.Full,
                             OperatingScheduleType = OperatingScheduleType.FullTime,
-                            RegionId = 27
-
+                            RegionId = 27,
+                            OrganizationFoivId = organization0Data.FoivId
                         }
                     });
                     _mediator.Send(new PublishVacancyCommand
@@ -389,8 +393,8 @@ namespace SciVacancies.WebApp.Controllers
                             ContactPhone = "666-999",
                             EmploymentType = EmploymentType.Full,
                             OperatingScheduleType = OperatingScheduleType.FullTime,
-                            RegionId = 27
-
+                            RegionId = 27,
+                            OrganizationFoivId = organization0Data.FoivId
                         }
                     });
                     _mediator.Send(new PublishVacancyCommand
@@ -426,8 +430,8 @@ namespace SciVacancies.WebApp.Controllers
                             ContactPhone = "900923-322",
                             EmploymentType = EmploymentType.Full,
                             OperatingScheduleType = OperatingScheduleType.FullTime,
-                            RegionId = 27
-
+                            RegionId = 27,
+                            OrganizationFoivId = organization0Data.FoivId
                         }
                     });
                     _mediator.Send(new PublishVacancyCommand
@@ -462,8 +466,8 @@ namespace SciVacancies.WebApp.Controllers
                             ContactPhone = "666-999",
                             EmploymentType = EmploymentType.Full,
                             OperatingScheduleType = OperatingScheduleType.FullTime,
-                            RegionId = 27
-
+                            RegionId = 27,
+                            OrganizationFoivId = organization0Data.FoivId
                         }
                     });
                     _mediator.Send(new PublishVacancyCommand
@@ -499,8 +503,8 @@ namespace SciVacancies.WebApp.Controllers
                             ContactPhone = "89980012233",
                             EmploymentType = EmploymentType.Full,
                             OperatingScheduleType = OperatingScheduleType.FullTime,
-                            RegionId = 27
-
+                            RegionId = 27,
+                            OrganizationFoivId = organization0Data.FoivId
                         }
                     });
                     _mediator.Send(new PublishVacancyCommand
@@ -537,8 +541,8 @@ namespace SciVacancies.WebApp.Controllers
                             ContactPhone = "89980012234",
                             EmploymentType = EmploymentType.Full,
                             OperatingScheduleType = OperatingScheduleType.FullTime,
-                            RegionId = 27
-
+                            RegionId = 27,
+                            OrganizationFoivId = organization0Data.FoivId
                         }
                     });
                     _mediator.Send(new PublishVacancyCommand
