@@ -1411,7 +1411,7 @@ span#buttonFile{
 
 .lk-icon-bl {
     display: inline-block;
-	background: url(../images/sprite.png) no-repeat -270px -274px;
+	background: url(../images/sprite.png) no-repeat -270px -349px;
     width: 22px;
     height: 22px;
     vertical-align: middle;
@@ -2968,7 +2968,7 @@ h4 + .b-vacancies {
 .content-slide .list-info {
     border-top: 1px solid #d1d1d1;
     border-bottom: 1px solid #d1d1d1;
-    padding: 15px 0 40px 0;
+    padding: 12px 0 40px 0;
 }
 
 .b-solution {
