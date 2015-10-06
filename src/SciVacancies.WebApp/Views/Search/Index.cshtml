@@ -147,9 +147,13 @@
 
         <div class="b-search-result">
             <h4>@ViewBag.Title</h4>
-            <div class="comment-italic">
+
+            
+            @Html.Raw(!string.IsNullOrWhiteSpace(Model.Search) ? "<div class='comment-italic'>" + string.Format("По запросу «{1}» с учетм фильтрации найдено {0} записей.", Model.Items.TotalItems, Model.Search) + "</div>" : "")
+
+            @*<div class="comment-italic">
                 @Html.Raw(!string.IsNullOrWhiteSpace(Model.Search) ? string.Format("По запросу «{1}» с учетом фильтрации найдено {0} записей.", Model.Items.TotalItems, Model.Search) : "&nbsp;")
-            </div>
+            </div>*@
 
 
             @if (User.IsInRole(ConstTerms.RequireRoleResearcher))

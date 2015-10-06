@@ -66,6 +66,10 @@ table {
     border-spacing: 0;
 }
 
+.table > thead > tr > th, .table > tbody > tr > th, .table > tfoot > tr > th, .table > thead > tr > td, .table > tbody > tr > td, .table > tfoot > tr > td{
+	border:none;
+}
+
 a, input, a:focus {
     outline: none;
 }
@@ -1420,7 +1424,7 @@ span#buttonFile{
 }
 
 .content h4 {
-    margin-top: 29px;
+    margin-top: 25px;
     /*margin-left: 4px;*/
     margin-bottom: 12px;
 }
@@ -1622,7 +1626,7 @@ table.table.request-table th {
     padding: 5px 10px 5px 0;
     vertical-align: middle;
     line-height: 15px;
-    min-height: 40px;
+    height: 40px;
 }
 
     table.table.request-table th > div {
