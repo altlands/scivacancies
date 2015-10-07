@@ -205,13 +205,12 @@
                                     }
                                     if (Model.SubscriptionInfo != null && Model.SubscriptionInfo.NewJustAdded)
                                     {
-                                        <div class="ctr-buttons" style="margin-top: 20px;">
+                                        <div class="ctr-buttons b-buttons" style="margin-top: 20px;">
                                             <a asp-controller="researchers" asp-action="subscriptions" class="white-btn middle-icon icon-lgr-ok" id="subscribed" rel="tooltip" target="_blank">Подписка оформлена</a>
                                             <div id="subscribed-popover" style="display: none; text-align: center;">
                                                 Поздравляем!<br />Вы добавили новую подписку «@Model.SubscriptionInfo.Title»
                                             </div>
-                                        </div>
-                                        <div class="ctr-buttons" style="margin-top: 20px;">
+                                        
                                             <a asp-controller="subscriptions" asp-action="delete" asp-route-id="@Model.SubscriptionInfo.NewGuid" onclick="javascript: return confirm('Вы уверены что хотите удалить текущую подписку?');" class="blue-btn middle-icon icon-close" rel="tooltip" title="">Отменить подписку</a>
                                         </div>
                                         }

@@ -697,6 +697,17 @@ ul.tabs {
     margin-top: 18px;
 }
 
+.row-profile__data{
+	margin-left:10px;
+	font-family:Arial;
+	font-style:italic;
+	color:#596573;
+}
+.row-profile__title{
+	display:block;
+	padding:0 0 5px 0;
+}
+
 .mnt26 {
     margin-top: 26px;
 }
@@ -2962,7 +2973,7 @@ h4 + .b-vacancies {
     }
 
 .content-slide .list-item {
-    margin-bottom: 20px;
+    margin-bottom: 15px;
 }
 
 .slider-popup .caption-slide,
@@ -3871,10 +3882,32 @@ input.sub-form-item__input{
 }
 .b-buttons .middle-icon{
 	display:inline-block;
+	vertical-align:middle;
 	margin:0 0 0 8px;
 }
 .b-buttons .middle-icon:first-child{
 	margin:0;
+}
+.lgc-ffa-i{
+	font-family:Arial;
+	font-style:italic;
+	color:#596573;
+}
+.content-list.list-category li:first-child{
+	margin:0;
+}
+.content-list.list-category li{
+	border:none;
+	margin:1px 0 0 0;
+}
+.sub-form-item__title-elem{
+	font-size:14px;
+	font-style:normal;
+	color:#596573;
+}
+.content-list.list-category li{
+	padding-top:7px;
+	padding-bottom:7px;
 }
 /*.b-edit .content-list{
 	margin:0 0 30px 0;

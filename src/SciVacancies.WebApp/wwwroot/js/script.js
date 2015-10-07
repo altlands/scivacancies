@@ -302,6 +302,10 @@ $(document).ready(function () {
 	var file = document.getElementById('files');
     $(buttonFile).click(function () {
         file.click();
+		file.onchange = function(){	
+			$("#fileName").remove();
+			$(file).prev().after("<div class='italic mt10' id='fileName'>"+file.value+"</div>");	
+		}
         return false;
     });
     /*
