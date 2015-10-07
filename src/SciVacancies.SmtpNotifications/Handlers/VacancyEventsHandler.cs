@@ -43,7 +43,8 @@ namespace SciVacancies.SmtpNotifications.Handlers
         }
         public void Handle(VacancyProlongedInCommittee msg)
         {
-            var vacancy = _db.SingleOrDefaultById<Vacancy>(msg.VacancyGuid);
+            Vacancy vacancy = _db.SingleOrDefault<Vacancy>(new Sql($"SELECT v.* FROM org_vacancies v WHERE v.guid = @0", msg.VacancyGuid));
+
             if (vacancy == null) return;
             var researcherGuids =
                 _db.Fetch<Guid>(new Sql(
@@ -63,7 +64,8 @@ namespace SciVacancies.SmtpNotifications.Handlers
         {
             VacancyStatusChangedSmtpNotificationForResearcher(msg.VacancyGuid);
 
-            var vacancy = _db.SingleOrDefaultById<Vacancy>(msg.VacancyGuid);
+            Vacancy vacancy = _db.SingleOrDefault<Vacancy>(new Sql($"SELECT v.* FROM org_vacancies v WHERE v.guid = @0", msg.VacancyGuid));
+
             var researcher = _db.SingleOrDefaultById<Researcher>(vacancy.winner_researcher_guid);
             _smtpNotificatorVacancyService.SendWinnerSet(researcher, vacancy.winner_vacancyapplication_guid, vacancy.guid);
         }
@@ -77,7 +79,7 @@ namespace SciVacancies.SmtpNotifications.Handlers
         }
         public void Handle(VacancyInOfferResponseAwaitingFromPretender msg)
         {
-            var vacancy = _db.SingleOrDefaultById<Vacancy>(msg.VacancyGuid);
+            Vacancy vacancy = _db.SingleOrDefault<Vacancy>(new Sql($"SELECT v.* FROM org_vacancies v WHERE v.guid = @0", msg.VacancyGuid));
             var researcher = _db.SingleOrDefaultById<Researcher>(vacancy.pretender_researcher_guid);
 
             _smtpNotificatorVacancyService.SendWinnerSet(researcher, vacancy.pretender_vacancyapplication_guid, vacancy.guid);
@@ -92,7 +94,7 @@ namespace SciVacancies.SmtpNotifications.Handlers
         }
         public void Handle(VacancyClosed msg)
         {
-            var vacancy = _db.SingleOrDefaultById<Vacancy>(msg.VacancyGuid);
+            Vacancy vacancy = _db.SingleOrDefault<Vacancy>(new Sql($"SELECT v.* FROM org_vacancies v WHERE v.guid = @0", msg.VacancyGuid));
             if (vacancy == null) return;
             var researcherGuids =
                 new List<Guid>
@@ -113,7 +115,7 @@ namespace SciVacancies.SmtpNotifications.Handlers
 
         private void VacancyStatusChangedSmtpNotificationForResearcher(Guid vacancyGuid)
         {
-            var vacancy = _db.SingleOrDefaultById<Vacancy>(vacancyGuid);
+            Vacancy vacancy = _db.SingleOrDefault<Vacancy>(new Sql($"SELECT v.* FROM org_vacancies v WHERE v.guid = @0", vacancyGuid));
             if (vacancy == null) return;
             var researcherGuids =
                 _db.Fetch<Guid>(new Sql("SELECT va.researcher_guid FROM res_vacancyapplications va WHERE va.vacancy_guid = @0", vacancyGuid));
@@ -140,7 +142,7 @@ namespace SciVacancies.SmtpNotifications.Handlers
 
         private void VacancyStatusChangedSmtpNotificationForOrganization(Guid vacancyGuid)
         {
-            var vacancy = _db.SingleOrDefaultById<Vacancy>(vacancyGuid);
+            Vacancy vacancy = _db.SingleOrDefault<Vacancy>(new Sql($"SELECT v.* FROM org_vacancies v WHERE v.guid = @0", vacancyGuid));
             if (vacancy == null) return;
             var organization =
                 _db.SingleOrDefaultById<Organization>(vacancy.organization_guid);
@@ -150,7 +152,7 @@ namespace SciVacancies.SmtpNotifications.Handlers
 
         private void OfferAcceptedByWinner(Guid vacancyGuid)
         {
-            var vacancy = _db.SingleOrDefaultById<Vacancy>(vacancyGuid);
+            Vacancy vacancy = _db.SingleOrDefault<Vacancy>(new Sql($"SELECT v.* FROM org_vacancies v WHERE v.guid = @0", vacancyGuid));
             if (vacancy == null) return;
             var organization =
                 _db.SingleOrDefaultById<Organization>(vacancy.organization_guid);
@@ -159,7 +161,7 @@ namespace SciVacancies.SmtpNotifications.Handlers
 
         private void OfferAcceptedByPretender(Guid vacancyGuid)
         {
-            var vacancy = _db.SingleOrDefaultById<Vacancy>(vacancyGuid);
+            Vacancy vacancy = _db.SingleOrDefault<Vacancy>(new Sql($"SELECT v.* FROM org_vacancies v WHERE v.guid = @0", vacancyGuid));
             if (vacancy == null) return;
             var organization =
                 _db.SingleOrDefaultById<Organization>(vacancy.organization_guid);
@@ -168,7 +170,7 @@ namespace SciVacancies.SmtpNotifications.Handlers
 
         private void OfferRejectedByWinner(Guid vacancyGuid)
         {
-            var vacancy = _db.SingleOrDefaultById<Vacancy>(vacancyGuid);
+            Vacancy vacancy = _db.SingleOrDefault<Vacancy>(new Sql($"SELECT v.* FROM org_vacancies v WHERE v.guid = @0", vacancyGuid));
             if (vacancy == null) return;
             var organization =
                 _db.SingleOrDefaultById<Organization>(vacancy.organization_guid);
@@ -177,7 +179,7 @@ namespace SciVacancies.SmtpNotifications.Handlers
 
         private void OfferRejectedByPretender(Guid vacancyGuid)
         {
-            var vacancy = _db.SingleOrDefaultById<Vacancy>(vacancyGuid);
+            Vacancy vacancy = _db.SingleOrDefault<Vacancy>(new Sql($"SELECT v.* FROM org_vacancies v WHERE v.guid = @0", vacancyGuid));
             if (vacancy == null) return;
             var organization =
                 _db.SingleOrDefaultById<Organization>(vacancy.organization_guid);

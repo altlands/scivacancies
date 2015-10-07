@@ -122,7 +122,8 @@
                         <div class="inline-block">
                             От <input type="text" asp-for="SalaryMin" class="small-input b-wages__input" />
                         </div>
-                        <div class="inline-block ml9">
+                        @*Скрыто, пока не утверждён алгоритм фильтрации*@
+                        <div class="inline-block ml9" style="display:none;">
                             До <input type="text" asp-for="SalaryMax" class="small-input b-wages__input" />
                         </div>
                     </div>

@@ -57,7 +57,7 @@ namespace SciVacancies.ReadModel.Notifications
         }
         public void Handle(VacancyInOfferResponseAwaitingFromWinner msg)
         {
-            Vacancy vacancy = _db.SingleOrDefaultById<Vacancy>(msg.VacancyGuid);
+            Vacancy vacancy = _db.SingleOrDefault<Vacancy>(new Sql($"SELECT v.* FROM org_vacancies v WHERE v.guid = @0", msg.VacancyGuid));
             Researcher researcher = _db.SingleOrDefaultById<Researcher>(vacancy.winner_researcher_guid);
 
             string title = "Поступило предложение контракта по вакансии " + msg.VacancyGuid;
@@ -69,7 +69,7 @@ namespace SciVacancies.ReadModel.Notifications
         }
         public void Handle(VacancyOfferAcceptedByWinner msg)
         {
-            Vacancy vacancy = _db.SingleById<Vacancy>(msg.VacancyGuid);
+            Vacancy vacancy = _db.SingleOrDefault<Vacancy>(new Sql($"SELECT v.* FROM org_vacancies v WHERE v.guid = @0", msg.VacancyGuid));
 
             VacancyApplication vacancyApplication = _db.Single<VacancyApplication>(new Sql($"SELECT va.* FROM res_vacancyapplications va WHERE va.guid = @0", vacancy.winner_vacancyapplication_guid));
 
@@ -95,7 +95,7 @@ namespace SciVacancies.ReadModel.Notifications
         }
         public void Handle(VacancyInOfferResponseAwaitingFromPretender msg)
         {
-            Vacancy vacancy = _db.SingleOrDefaultById<Vacancy>(msg.VacancyGuid);
+            Vacancy vacancy = _db.SingleOrDefault<Vacancy>(new Sql($"SELECT v.* FROM org_vacancies v WHERE v.guid = @0", msg.VacancyGuid));
             Researcher researcher = _db.SingleOrDefaultById<Researcher>(vacancy.pretender_researcher_guid);
 
             string title = "Поступило предложение контракта по вакансии " + msg.VacancyGuid;

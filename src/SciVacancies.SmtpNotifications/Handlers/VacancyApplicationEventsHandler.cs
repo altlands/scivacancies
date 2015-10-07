@@ -20,9 +20,11 @@ namespace SciVacancies.SmtpNotifications.Handlers
 
         public void Handle(VacancyApplicationApplied msg)
         {
-            var vacancyapplication = _db.SingleOrDefaultById<VacancyApplication>(msg.VacancyApplicationGuid);
+            VacancyApplication vacancyapplication = _db.SingleOrDefault<VacancyApplication>(new Sql($"SELECT va.* FROM res_vacancyapplications va WHERE va.guid = @0", msg.VacancyApplicationGuid));
+
             if (vacancyapplication == null) return;
-            var vacancy = _db.SingleOrDefaultById<Vacancy>(msg.VacancyGuid);
+            Vacancy vacancy = _db.SingleOrDefault<Vacancy>(new Sql($"SELECT v.* FROM org_vacancies v WHERE v.guid = @0", msg.VacancyGuid));
+
             if (vacancy == null) return;
             var researcher = _db.SingleOrDefaultById<Researcher>(vacancyapplication.researcher_guid);
             if (researcher == null) return;

@@ -26,14 +26,14 @@ namespace SciVacancies.SmtpNotifications.Handlers
         public void Handle(VacancySagaFirstInCommitteeNotificationSent msg)
         {
             var organization = _db.SingleOrDefaultById<Organization>(msg.OrganizationGuid);
-            var vacancy = _db.SingleOrDefaultById<Vacancy>(msg.VacancyGuid);
+            Vacancy vacancy = _db.SingleOrDefault<Vacancy>(new Sql($"SELECT v.* FROM org_vacancies v WHERE v.guid = @0", msg.VacancyGuid));
 
             _smtpNotificatorVacancyService.SendFirstCommitteeNotificationToOrganization(organization, vacancy);
         }
         public void Handle(VacancySagaSecondInCommitteeNotificationSent msg)
         {
             var organization = _db.SingleOrDefaultById<Organization>(msg.OrganizationGuid);
-            var vacancy = _db.SingleOrDefaultById<Vacancy>(msg.VacancyGuid);
+            Vacancy vacancy = _db.SingleOrDefault<Vacancy>(new Sql($"SELECT v.* FROM org_vacancies v WHERE v.guid = @0", msg.VacancyGuid));
 
             _smtpNotificatorVacancyService.SendSecondCommitteeNotificationToOrganization(organization, vacancy);
         }

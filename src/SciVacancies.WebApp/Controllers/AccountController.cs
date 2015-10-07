@@ -216,7 +216,7 @@ namespace SciVacancies.WebApp.Controllers
             switch (authorizationCookies.Item1)
             {
                 case AuthorizeUserTypes.Admin:
-
+                    throw new NotImplementedException();
                     break;
                 case AuthorizeUserTypes.Organization:
                     switch (authorizationCookies.Item2)

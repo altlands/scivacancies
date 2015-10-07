@@ -12,7 +12,7 @@ namespace SciVacancies.WebApp.Models
     public class VacanciesFilterSource
     {
         private readonly IMediator _mediator;
-        public VacanciesFilterSource(IMediator mediator){_mediator = mediator;}
+        public VacanciesFilterSource(IMediator mediator) { _mediator = mediator; }
 
         private IEnumerable<SelectListItem> _regions;
         private IEnumerable<SelectListItem> _vacancyStates;
@@ -58,7 +58,7 @@ namespace SciVacancies.WebApp.Models
             get
             {
                 return _regions ?? (_regions = _mediator.Send(new SelectAllRegionsQuery())
-                    .Select(c => new SelectListItem {Value = c.id.ToString(), Text = c.title}));
+                    .Select(c => new SelectListItem { Value = c.id.ToString(), Text = c.title }));
             }
         }
 
@@ -76,7 +76,7 @@ namespace SciVacancies.WebApp.Models
                     });
                 }
                 return _foivs;
-            } 
+            }
         }
 
         public List<ResearchDirectionViewModel> ResearchDirections
@@ -123,8 +123,9 @@ namespace SciVacancies.WebApp.Models
                 if (_mediator != null && _vacancyStates == null)
                     _vacancyStates = new List<VacancyStatus>
                         {
-                            VacancyStatus.Published
-                            ,VacancyStatus.Closed
+                            VacancyStatus.Published,
+                            VacancyStatus.Closed,
+                            VacancyStatus.Cancelled
                         }.Select(c => new SelectListItem { Value = ((int)c).ToString(), Text = c.GetDescription() });
                 return _vacancyStates;
             }

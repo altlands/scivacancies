@@ -39,7 +39,8 @@ namespace SciVacancies.WebApp.Queries
         {
             if (message.VacancyGuid == Guid.Empty) throw new ArgumentNullException($"VacancyGuid is empty: {message.VacancyGuid}");
 
-            var vacancy = _db.SingleOrDefaultById<Vacancy>(message.VacancyGuid);
+            Vacancy vacancy = _db.SingleOrDefault<Vacancy>(new Sql($"SELECT v.* FROM org_vacancies v WHERE v.guid = @0", message.VacancyGuid));
+
             return vacancy;
         }
         public Page<Vacancy> Handle(SelectPagedVacanciesQuery message)
