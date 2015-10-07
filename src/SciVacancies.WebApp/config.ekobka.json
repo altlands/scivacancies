@@ -34,8 +34,10 @@
         }
     },
     "ElasticSettings": {
-        "ConnectionUrl": "http://alt-dev003:9200/",
-        "DefaultIndex": "scivacancies-ekobka"
+        //"ConnectionUrl": "http://localhost:9200/",
+        "ConnectionUrl": "http://altlandev05.cloudapp.net:9200/",
+        "DefaultIndex": "ekobka_scivacancies",
+        "MinScore": 0.2
     },
     "SagaSettings": {
         "Date": {

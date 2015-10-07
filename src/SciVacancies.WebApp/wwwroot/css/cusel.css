@@ -10,7 +10,7 @@
 	
 }
 .cusel { /* общий вид селекта включая стрелку справа */
-	height: 28px;
+	height: 30px;
 	display: inline-block;
 	position: relative;
 	font-size: 13px;
@@ -20,6 +20,7 @@
 	border:1px solid #d1d1d1;
 	outline:none;
 	border-radius: 5px;
+	vertical-align:top;
 }
 
 .cuselText { /* контейнер для отображенного текста селект */
