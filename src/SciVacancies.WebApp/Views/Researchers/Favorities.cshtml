@@ -20,7 +20,7 @@
 
 <div class="table-control">
     @*<a href="#" class="close-table"><span class="italic">Очистить фильтры</span></a>*@
-    <a href="@Context.Request.Path.Value" class="reload-table"><span class="italic">Обновить список</span></a>
+    <a href="@Context.Request.Path.Value" class="reload-table before_icon_top"><span class="italic">Обновить список</span></a>
 </div>
 
 <table class="table request-table tbl-vac">
@@ -110,8 +110,7 @@
                                     if (!appliedAppliedVacanciesGuids.Contains(item.guid))
                                     {
                                         <text>
-                                        <a asp-controller="applications" asp-action="create" asp-route-vacancyguid="@item.guid" class="send-request-icon" title="Подать заявку">
-                                        </a>
+                                        <a asp-controller="applications" asp-action="create" asp-route-vacancyguid="@item.guid" class="class-td-icon" title="Подать заявку"></a>
                                         </text>
                                     }
                                 }

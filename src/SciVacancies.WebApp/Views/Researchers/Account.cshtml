@@ -53,169 +53,229 @@
         </div>
     </div>
     <div class="row pt15 fs12">
-        <div><span class="bold">Индивидуальный номер ученого:</span> @Model.ExtNumber<br /></div>
-        <span class="bold">Научные интересы (Государственный рубрикатор научно-технической информации):</span><br />
-        @if (Model.Publications != null)
-        {
-            foreach (var item in Model.Interests)
+        <div><span class="bold row-profile__title">Индивидуальный номер ученого:</span><div class="row-profile__data">@Model.ExtNumber</div></div>
+        <span class="bold row-profile__title">Научные интересы (Государственный рубрикатор научно-технической информации):</span>
+            @if (Model.Publications != null && Model.Interests.Count() > 0)
+            {
+                foreach (var item in Model.Interests)
+                {
+                    <div class="row-profile__data">@item.IntName (Engl: @item.IntNameEn);</div>
+                }
+            }
+            else
             {
                 <text>
-                <span>
-                    @item.IntName (Engl: @item.IntNameEn);
-                </span>
+                <span class="row-profile__data">Нет данных</span>
                 </text>
-
             }
-        }
     </div>
     <div class="row">
-        <span class="bold">Образование</span>
-        @if (Model.Educations != null)
+        <span class="bold row-profile__title">Образование</span>
+        @if (Model.Educations != null && Model.Educations.Count() > 0)
         {
             foreach (var item in Model.Educations)
             {
-                <br />
-                <ul class="table-emulation">
-                    <li>
-                        <span class="w85 italic inline-block">Город</span> <span class="italic">@item.City</span>
-                    </li>
-                    <li>
-                        <span class="w85 italic inline-block">ВУЗ</span> <span class="italic">@item.UniversityShortName</span>
-                    </li>
-                    <li>
-                        <span class="w85 italic inline-block">Факультет</span> <span class="italic">@item.FacultyShortName</span>
-                    </li>
-                    <li>
-                        <span class="w85 italic inline-block">Год окончания</span> <span class="italic">@(item.GraduationYear)</span>
-                    </li>
-                </ul>
+                <div class="row-profile__data">Город: @item.City</div>
+                <div class="row-profile__data">ВУЗ: @item.UniversityShortName</div>
+                <div class="row-profile__data">Факультет: @item.FacultyShortName</div>
+                <div class="row-profile__data">Год окончания: @(item.GraduationYear)</div>
+                    
+                    @*<ul class="table-emulation">
+                        <li>
+                            <span class="w85 italic inline-block">Город</span> <span class="italic">@item.City</span>
+                        </li>
+                        <li>
+                            <span class="w85 italic inline-block">ВУЗ</span> <span class="italic">@item.UniversityShortName</span>
+                        </li>
+                        <li>
+                            <span class="w85 italic inline-block">Факультет</span> <span class="italic">@item.FacultyShortName</span>
+                        </li>
+                        <li>
+                            <span class="w85 italic inline-block">Год окончания</span> <span class="italic">@(item.GraduationYear)</span>
+                        </li>
+                    </ul>*@
             }
+        }
+        else
+        {
+            <text>
+            <span class="row-profile__data">Нет данных</span>
+            </text>
         }
     </div>
     <div class="row">
-        <span class="bold">Ученая степень</span>
-        <span class="italic">
-            @Model.ScienceDegree
-        </span>
+        <span class="bold row-profile__title">Ученая степень</span>
+        @if (Model.ScienceDegree != null)
+        {
+            <text><span class="row-profile__data">@Model.ScienceDegree</span></text>
+        }
+        else
+        {
+            <text>
+            <span class="row-profile__data">Нет данных</span>
+            </text>
+        }
     </div>
     <div class="row">
-        <span class="bold">Ученые звания</span>
-        @Model.ScienceRank
+        <span class="bold row-profile__title">Ученые звания</span>
+        @if (Model.ScienceRank != null)
+        {
+            <text><span class="row-profile__data">@Model.ScienceRank</span></text>
+        }
+        else
+        {
+            <text>
+            <span class="row-profile__data">Нет данных</span>
+            </text>
+        }
     </div>
     <div class="row">
-        <span class="bold">Награды</span>
-        <span class="italic">
-            @if (Model.Rewards != null)
+        <span class="bold row-profile__title">Награды</span>
+            @if (Model.Rewards != null && Model.Rewards.Count() > 0)
             {
+                @:<div class="row-profile__data">
                 foreach (var item in Model.Rewards.OrderBy(c => c.year))
                 {
-                    <br />
-                    <span>
-                        (@item.year) @item.title @item.org
-                    </span>
+                    <text>(@item.year) @item.title @item.org</text>
                 }
+                @:</div>
             }
-        </span>
+            else
+            {
+                <text>
+                <span class="row-profile__data">Нет данных</span>
+                </text>
+            }
     </div>
     <div class="row">
-        <span class="bold">Членство в профессиональных сообществах</span><br />
-        <span class="italic">
-            @if (Model.Memberships != null)
+        <span class="bold row-profile__title">Членство в профессиональных сообществах</span>
+        
+            @if (Model.Memberships != null && Model.Memberships.Count() > 0)
             {
+            @:<span class="row-profile__data">
                 foreach (var item in Model.Memberships)
                 {
-                    <br />
                     <span>
                         @item.org - @item.position с @item.year_from по @item.year_to
                     </span>
                 }
+            @:</span>
             }
-        </span>
+            else
+            {
+                <text>
+                <span class="row-profile__data">Нет данных</span>
+                </text>
+            }
     </div>
     
     <div class="row">
-        <span class="bold">Конференции, симпозиумы, конгрессы</span>
-        <span class="italic">
-            @if (Model.Conferences != null)
+        <span class="bold row-profile__title">Конференции, симпозиумы, конгрессы</span>
+            @if (Model.Conferences != null && Model.Conferences.Count() > 0)
             {
+                @:<span class="row-profile__data">
                 foreach (var item in Model.Conferences)
                 {
-                    <br />
                     <span>
                         @item.conference - доклад "@item.title" (год @item.year, тип @item.categoryType)
                     </span>
                 }
+                @:</span>
             }
-        </span>
+            else
+            {
+                <text>
+                <span class="row-profile__data">Нет данных</span>
+                </text>
+            }
     </div>
 
     <div class="row">
-        <span class="bold">Публикации</span>
-        @if (Model.Publications != null)
+        <span class="bold row-profile__title">Публикации</span>
+        @if (Model.Publications != null && Model.Publications.Count() > 0)
         {
+            @:<span class="row-profile__data">
             foreach (var item in Model.Publications)
             {
-                <br/>
-                <span>
+                <div>
                     @item.Name (авторы: @item.Authors)
-                </span>
+                </div>
             }
+            @:</span>
+        }
+        else
+        {
+            <text>
+            <span class="row-profile__data">Нет данных</span>
+            </text>
         }
     </div>
 
     <div class="row">
-        <span class="bold">Научная деятельность</span>
-        <span class="italic">
-            @if (Model.ResearchActivity != null)
+        <span class="bold row-profile__title">Научная деятельность</span>
+            @if (Model.ResearchActivity != null && Model.ResearchActivity.Count() > 0)
             {
+                @:<div class="row-profile__data">
                 foreach (var item in Model.ResearchActivity)
                 {
-                    <br />
                     <span>
                         Организация "@item.organization", на должности "@item.position" (период с @item.yearFrom по @item.yearTo; род деятельности @item.title)
                     </span>
                 }
+                @:</div>
             }
-        </span>
+            else
+            {
+                <text>
+                <span class="row-profile__data">Нет данных</span>
+                </text>
+            }
     </div>
 
     <div class="row">
-        <span class="bold">Преподавательская деятельность</span>
-        <span class="italic">
-            @if (Model.TeachingActivity != null)
+        <span class="bold row-profile__title">Преподавательская деятельность</span>
+            @if (Model.TeachingActivity != null && Model.TeachingActivity.Count() > 0)
             {
+                @:<span class="row-profile__data">
                 foreach (var item in Model.TeachingActivity)
                 {
-                    <br />
                     <span>
                         Организация "@item.organization", на должности "@item.position" (период с @item.yearFrom по @item.yearTo; род деятельности @item.title)
                     </span>
                 }
+                @:</span>
             }
-        </span>
+            else
+            {
+                <text>
+                <span class="row-profile__data">Нет данных</span>
+                </text>
+            }
     </div>
 
 <div class="row">
-    <span class="bold">Прочая деятельность</span>
-    <span class="italic">
-            @if (Model.OtherActivity != null)
+    <span class="bold row-profile__title">Прочая деятельность</span>
+            @if (Model.OtherActivity != null && Model.OtherActivity.Count() > 0)
             {
+                @:<div class="row-profile__data">
                 foreach (var item in Model.OtherActivity)
                 {
-                    <br />
                     <span>
                         Организация "@item.organization", на должности "@item.position" (период с @item.yearFrom по @item.yearTo; род деятельности @item.title)
                     </span>
                 }
+                @:</div>
             }
-        </span>
+            else
+            {
+                <text>
+                <span class="row-profile__data">Нет данных</span>
+                </text>
+            }
 </div>
     
 </div>
-<div class="b-links mt-2 ml3">
-
-    <br />
-
+<div class="b-links">
     <div class="link-edit"><a asp-controller="researchers" asp-action="edit" class="arial italic">Редактировать</a></div>
 </div>
 

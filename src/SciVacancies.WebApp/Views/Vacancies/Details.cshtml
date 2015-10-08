@@ -33,14 +33,14 @@
     </h4>
 </div>
 
-<div class="content-popup">
+<div class="content-popup b-buttons">
 
-    <a asp-controller="vacancies" asp-action="copy" asp-route-id="@Model.Guid" class="btn btn-info btn-xs" title="Копировать вакансию">Копировать вакансию</a>
+    <a asp-controller="vacancies" asp-action="copy" asp-route-id="@Model.Guid" class="green-btn middle-icon icon-arr-right default-link" title="Копировать вакансию">Копировать вакансию</a>
     @if (Model.Status == VacancyStatus.InProcess)
     {
-        <a asp-controller="vacancies" asp-action="edit" asp-route-id="@Model.Guid" class="btn btn-info btn-xs" title="Изменить">Изменить</a>
-        <a asp-controller="vacancies" asp-action="delete" asp-route-id="@Model.Guid" onclick="javascript: return confirm('Вы уверены что хотите удалить вакансию?');" class="btn btn-danger btn-xs" title="Удалить">Удалить</a>
-        <a asp-controller="vacancies" asp-action="publish" asp-route-id="@Model.Guid" class="btn btn-info btn-xs" title="Опубликовать">Опубликовать</a>
+        <a asp-controller="vacancies" asp-action="edit" asp-route-id="@Model.Guid" class="green-btn middle-icon icon-edit default-link" title="Изменить">Изменить</a>
+        <a asp-controller="vacancies" asp-action="delete" asp-route-id="@Model.Guid" onclick="javascript: return confirm('Вы уверены что хотите удалить вакансию?');" class="blue-btn middle-icon icon-close default-link" title="Удалить">Удалить</a>
+        <a asp-controller="vacancies" asp-action="publish" asp-route-id="@Model.Guid" class="green-btn middle-icon icon-ok default-link" title="Опубликовать">Опубликовать</a>
     }
     @if (
                 Model.Status != VacancyStatus.InProcess
@@ -203,7 +203,7 @@
 
 @if (Model.Applications != null && Model.Applications.Items.Any())
 {
-    <a asp-controller="vacancies" asp-action="print" asp-route-id="@Model.Guid" class="blue-btn middle-icon icon-print-button" style="margin-right: 15px;" rel="tooltip" target="_blank" title="Распечатать все заявки">Распечатать все заявки</a>
+    <a asp-controller="vacancies" asp-action="print" asp-route-id="@Model.Guid" class="blue-btn middle-icon icon-print-button default-link" style="margin-right: 15px;" rel="tooltip" target="_blank" title="Распечатать все заявки">Распечатать все заявки</a>
 }
 <br />
 <br />
@@ -213,9 +213,9 @@
 
     @if (Model.Status == VacancyStatus.InProcess)
     {
-        <a asp-controller="vacancies" asp-action="edit" asp-route-id="@Model.Guid" class="btn btn-default " title="Изменить">Изменить</a>
-        <a asp-controller="vacancies" asp-action="delete" asp-route-id="@Model.Guid" onclick="javascript: return confirm('Вы уверены что хотите удалить вакансию?');" class="btn btn-danger " title="Удалить">Удалить</a>
-        <a asp-controller="vacancies" asp-action="publish" asp-route-id="@Model.Guid" class="btn btn-success" title="Опубликовать">Опубликовать</a>
+        <a asp-controller="vacancies" asp-action="edit" asp-route-id="@Model.Guid" class="green-btn middle-icon icon-edit default-link" title="Изменить">Изменить</a>
+        <a asp-controller="vacancies" asp-action="delete" asp-route-id="@Model.Guid" onclick="javascript: return confirm('Вы уверены что хотите удалить вакансию?');" class="blue-btn middle-icon icon-close default-link" title="Удалить">Удалить</a>
+        <a asp-controller="vacancies" asp-action="publish" asp-route-id="@Model.Guid" class="green-btn middle-icon icon-ok default-link" title="Опубликовать">Опубликовать</a>
     }
     @if (Model.Status != VacancyStatus.InProcess
                 && Model.Status != VacancyStatus.Closed

@@ -25,13 +25,11 @@
     </h4>
 </div>
 
-<div class="content-popup">
+<div class="content-popup b-buttons">
     @if (User.IsInRole(ConstTerms.RequireRoleOrganizationAdmin))
     {
         <text>
-        <a asp-controller="vacancies" asp-action="details" asp-route-id="@Model.Guid" class="green-btn middle-icon icon-arr-right default-link">Подробнее</a>
-        <br />
-        <br />
+            <a asp-controller="vacancies" asp-action="details" asp-route-id="@Model.Guid" class="green-btn middle-icon icon-arr-right default-link">Подробнее</a>
         </text>
     }
 
@@ -43,37 +41,23 @@
             if (Model.Status == VacancyStatus.Published)
             {
                 <text>
-                <a asp-controller="applications" asp-action="create" asp-route-vacancyguid="@Model.Guid" class="green-btn middle-icon icon-arr-right default-link">Подать заявку</a>
-                <br />
-                <br />
+                    <a asp-controller="applications" asp-action="create" asp-route-vacancyguid="@Model.Guid" class="green-btn middle-icon icon-arr-right default-link">Подать заявку</a>
                 </text>
             }
         }
-        else
-        {
-            <text>
-            <a asp-controller="applications" asp-action="details" asp-route-id="@Model.AppliedByUserApplications.Last(c => c.vacancy_guid == Model.Guid).guid" target="_blank">Последняя заявка, поданная на вакансию</a>
-            <br />
-            <br />
-            </text>
-        }
+        
 
         if (bool.Parse(ViewData["VacancyInFavorites"].ToString()))
         {
             <text>
-            <a asp-controller="researchers" asp-action="favorities" class="success-btn middle-icon">В избранном</a>
-            &nbsp;
-            <a asp-controller="researchers" asp-action="removefavorite" asp-route-vacancyguid="@Model.Guid"> Убрать из избранных</a>
-            <br />
-            <br />
+                <a asp-controller="researchers" asp-action="favorities" class="green-btn middle-icon icon-ok default-link">В избранном</a>
+                <a asp-controller="researchers" asp-action="removefavorite" asp-route-vacancyguid="@Model.Guid" class="blue-btn middle-icon icon-close default-link">Убрать из избранных</a>
             </text>
         }
         else
         {
             <text>
-            <a asp-controller="researchers" asp-action="addtofavorite" asp-route-vacancyguid="@Model.Guid" class="blue-btn middle-icon icon-favorite default-link">Добавить в избранное</a>
-            <br />
-            <br />
+                <a asp-controller="researchers" asp-action="addtofavorite" asp-route-vacancyguid="@Model.Guid" class="blue-btn middle-icon icon-favorite default-link">Добавить в избранное</a>
             </text>
         }
     }

@@ -11,33 +11,38 @@
         <h4>@Model.Researcher.FullName</h4>
         <span class="int-name">@Model.Researcher.FullNameEng</span>
         <span class="block bold">Год рождения: @Model.Researcher.BirthDate.ToLocalVacancyDateString()</span>
-        <span class="block"><span class="bold">Индивидуальный номер ученого:</span> 00005444</span>
+        <span class="block"><span class="bold">Индивидуальный номер ученого:</span> <span class="lgc-ffa-i">00005444</span></span>
         <span class="block">
             <span class="bold">Научные интересы (Государственный рубрикатор научно-технической информации):</span>
-            <span>
-                @if (Model.Researcher.Interests != null)
+                @if (Model.Researcher.Interests != null && Model.Researcher.Interests.Count() > 0)
                 {
+                    @:<div class="lgc-ffa-i">
                     foreach (var item in Model.Researcher.Interests)
                     {
                         <text>
                         @item.IntName (En: @item.IntNameEn);
                         </text>
                     }
+                    @:</div>
                 }
-            </span>
         </span>
         @*<span class="small-icon icon-sm-eye"><span>Показать все (23)</span></span>*@
     </div>
 </div>
 <div class="list-info">
     <div class="list-item">
-        <div class="bold">Образование</div>
-        @if (Model.Educations != null)
+        <div class="bold row-profile__title">Образование</div>
+        @if (Model.Educations != null && Model.Educations.Count() > 0)
             {
                 foreach (var item in Model.Educations)
                 {
                 <text>
-                <ul class="table-emulation">
+                <div class="row-profile__data">Город: @item.city</div>
+                <div class="row-profile__data">ВУЗ: @item.university_shortname</div>
+                <div class="row-profile__data">Факультет: @item.faculty_shortname</div>
+                <div class="row-profile__data">Год окончания: @(item.graduation_date)</div>
+                
+                @*<ul class="table-emulation">
                     <li>
                         <span class="w85 italic inline-block">Город</span> <span class="italic">@item.city</span>
                     </li>
@@ -50,81 +55,116 @@
                     <li>
                         <span class="w85 italic inline-block">Год окончания</span> <span class="italic">@(item.graduation_date)</span>
                     </li>
-                </ul>
+                </ul>*@
                 <hr />
                 </text>
             }
+        }
+        else
+        {
+            <text>
+                <span class="row-profile__data">Нет данных</span>    
+            </text>
         }
 
 
     </div>
 
     <div class="list-item">
-        <div class="bold">Награды</div>
-        <ol>
-            @if (Model.Rewards != null)
+        <div class="bold row-profile__title">Награды</div>
+            @if (Model.Rewards != null && Model.Rewards.Count() > 0)
             {
-                foreach (var item in Model.Rewards.OrderBy(c => c.year))
-                {
+                @:<ol class="row-profile__data">
+                    foreach (var item in Model.Rewards.OrderBy(c => c.year))
+                    {
                     <text>
-                    <li>(@item.year) @item.title @item.org</li>
+                        <li>(@item.year) @item.title @item.org</li>
                     </text>
-                }
+                    }
+                @:</ol>
             }
-        </ol>
+            else
+            {
+                <text>
+                    <span class="row-profile__data">Нет данных</span>
+                </text>
+            }
+                
     </div>
 
     <div class="list-item">
-        <div class="bold">Членство в профессиональных сообществах</div>
-        <ol>
-            @if (Model.Memberships != null)
-            {
+        <div class="bold row-profile__title">Членство в профессиональных сообществах</div>
+        
+        @if (Model.Memberships != null && Model.Memberships.Count() > 0)
+        {
+            @:<ol class="row-profile__data">
                 foreach (var item in Model.Memberships)
                 {
-                    <text>
+                <text>
                     <li>@item.org - @item.position с @item.year_from по @item.year_to</li>
-                    </text>
+                </text>
                 }
-            }
-        </ol>
+            @:</ol>
+        }
+        else
+        {
+            <text>
+                <span class="row-profile__data">Нет данных</span>
+            </text>
+        }
+        
     </div>
 
     <div class="list-item">
-        <div class="bold">Публикации</div>
-        <ol>
-            @if (Model.Publications != null)
+        <div class="bold row-profile__title">Публикации</div>
+            @if (Model.Publications != null && Model.Publications.Count() > 0)
             {
+                @:<ol class="row-profile__data">
                 foreach (var item in Model.Publications)
                 {
                     <text>
                     <li>@item.name (авторы: @item.authors)</li>
                     </text>
                 }
+                @:</ol>
+
             }
-        </ol>
+            else
+            {
+                <text>
+                <span class="row-profile__data">Нет данных</span>
+                </text>
+            }
+
         @*<span class="small-icon icon-sm-eye"><span>Показать все (5)</span></span>*@
     </div>
     <div class="list-item">
-        <span class="bold">Научная деятельность</span>
-        <span class="">
-            @if (Model.ResearchActivity != null)
+        <span class="bold row-profile__title">Научная деятельность</span>
+            @if (Model.ResearchActivity != null && Model.ResearchActivity.Count() > 0)
             {
-                foreach (var item in Model.ResearchActivity)
-                {
+                @:<span class="row-profile__data">
+                    foreach (var item in Model.ResearchActivity)
+                    {
                     <br />
                     <span>
                         Организация "@item.organization", на должности "@item.position" (период с @item.yearFrom по @item.yearTo; род деятельности @item.title)
                     </span>
-                }
+                    }
+                @:</span>
             }
-        </span>
+            else
+            {
+                <text>
+                <span class="row-profile__data">Нет данных</span>
+                </text>
+            }
     </div>
 
     <div class="list-item">
-        <span class="bold">Преподавательская деятельность</span>
-        <span class="">
-            @if (Model.TeachingActivity != null)
+        <span class="bold row-profile__title">Преподавательская деятельность</span>
+            @if (Model.TeachingActivity != null && Model.TeachingActivity.Count() > 0)
             {
+                @:<span class="row-profile__data">
                 foreach (var item in Model.TeachingActivity)
                 {
                     <br />
@@ -132,15 +172,21 @@
                         Организация "@item.organization", на должности "@item.position" (период с @item.yearFrom по @item.yearTo; род деятельности @item.title)
                     </span>
                 }
+                @:</span>
             }
-        </span>
+            else
+            {
+                <text>
+                <span class="row-profile__data">Нет данных</span>
+                </text>
+            }
     </div>
 
     <div class="list-item">
-        <span class="bold">Прочая деятельность</span>
-        <span class="">
-            @if (Model.OtherActivity != null)
+        <span class="bold row-profile__title">Прочая деятельность</span>
+            @if (Model.OtherActivity != null && Model.OtherActivity.Count() > 0)
             {
+                @:<span class="row-profile__data">
                 foreach (var item in Model.OtherActivity)
                 {
                     <br />
@@ -148,43 +194,77 @@
                         Организация "@item.organization", на должности "@item.position" (период с @item.yearFrom по @item.yearTo; род деятельности @item.title)
                     </span>
                 }
+                @:</span>
             }
-        </span>
+            else
+            {
+                <text>
+                <span class="row-profile__data">Нет данных</span>
+                </text>
+            }
     </div>
 
     <div class="list-item">
-        <div class="bold">Конференции</div>
-        <ol>
-            @if (Model.Conferences != null)
+        <div class="bold row-profile__title">Конференции</div>
+        
+            @if (Model.Conferences != null && Model.Conferences.Count() > 0)
             {
+                @:<ol class="row-profile__data">
                 foreach (var item in Model.Conferences)
                 {
                     <text>
                     <li>@item.conference - доклад "@item.title" (год @item.year, тип @item.categoryType)</li>
                     </text>
-                }
+                    }
+                @:</ol>
             }
-        </ol>
-    </div>
-
-    <div class="list-item">
-        <div class="bold">Приложенные файлы</div>
-        <ol>
-            @foreach (var item in Model.Attachments)
+            else
             {
                 <text>
-                <li>
-                    @item.name<br />
-                    <span class="small-icon icon-sm-download"><a href="@(Model.FolderApplicationsAttachmentsUrl + item.url)">Скачать</a></span>
-                </li>
+                    <span class="row-profile__data">Нет данных</span>
                 </text>
             }
-        </ol>
     </div>
 
     <div class="list-item">
-        <div class="bold">Сопроводительное письмо</div>
-        <span>@Model.CoveringLetter</span>
+        <div class="bold row-profile__title">Приложенные файлы</div>
+            @if (Model.Attachments != null && Model.Attachments.Count() > 0)
+            {
+                @:<ol class="row-profile__data">
+                    foreach (var item in Model.Attachments)
+                    {
+                    <text>
+                        <li>
+                            @item.name<br />
+                            <span class="small-icon icon-sm-download"><a href="@(Model.FolderApplicationsAttachmentsUrl + item.url)">Скачать</a></span>
+                        </li>
+                    </text>
+                    }
+                @:</ol>
+            }
+            else
+            {
+                <text>
+                    <span class="row-profile__data">Нет данных</span>
+                </text>
+            }
+    </div>
+
+    <div class="list-item">
+        <div class="bold row-profile__title">Сопроводительное письмо</div>
+        @if (Model.CoveringLetter != null)
+        {
+            @:<span class="row-profile__data">
+                @Model.CoveringLetter
+            @:</span>
+        }
+        else
+        {
+            <text>
+                <span class="row-profile__data">Нет данных</span>
+            </text>
+        }
+
     </div>
     @if (!string.IsNullOrWhiteSpace(Model.Vacancy.CommitteeReasolution)
         && (Model.Status == VacancyApplicationStatus.Won || Model.Status == VacancyApplicationStatus.Pretended) /*отображается только для победившей или претендеующей заявок*/
@@ -192,8 +272,8 @@
     {
         <text>
         <div class="list-item">
-            <div class="bold">Решение комиссии</div>
-            <span>
+            <div class="bold row-profile__title">Решение комиссии</div>
+            <span class="row-profile__data">
                 @Model.Vacancy.CommitteeReasolution
             </span>
         </div>
@@ -204,8 +284,8 @@
     {
         <text>
         <div class="list-item">
-            <div class="bold">Причина отмены вакансии</div>
-            <span>
+            <div class="bold row-profile__title">Причина отмены вакансии</div>
+            <span class="row-profile__data">
                 @Model.Vacancy.CommitteeReasolution
             </span>
         </div>
