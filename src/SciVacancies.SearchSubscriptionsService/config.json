@@ -27,5 +27,5 @@
                 "Provider": "Npgsql-20"
             }
         }
-    },
+    }
 }

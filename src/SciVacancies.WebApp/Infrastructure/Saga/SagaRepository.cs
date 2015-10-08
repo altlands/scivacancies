@@ -86,9 +86,11 @@ namespace SciVacancies.WebApp.Infrastructure.Saga
             {
                 stream = _eventStore.CreateStream(bucketId, sagaId);
             }
-            if (_streams[sagaKey] == null) throw new ArgumentNullException("Can't find the stream by sagaKey : {0}", sagaKey);
+            //if (_streams[sagaKey] == null) throw new ArgumentNullException("Can't find the stream by sagaKey : {0}", sagaKey);
+            _streams.Add(sagaKey, stream);
 
-            return _streams[sagaKey] = stream;
+            //return _streams[sagaKey] = stream;
+            return _streams[sagaKey];
         }
 
         private TSaga BuildSaga<TSaga>(Guid sagaId, IEventStream stream) where TSaga : class, ISaga

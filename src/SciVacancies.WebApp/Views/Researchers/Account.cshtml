@@ -13,6 +13,11 @@
 
 <h4>@ViewBag.Title</h4>
 
+<div class="mt13">
+    <a asp-controller="accountintegration" asp-action="UpdateResearcherAccountFromOutside" class="link-upload-s middle-icon fs13">Загрузить данные из системы «@AuthorizeResourceTypes.ScienceMap.GetDescription()»</a>
+    <span style="color: red;">в разработке</span>
+</div>
+
 <div class="l-information">
     <div class="row row-profile">
         <div class="profile">
@@ -277,11 +282,6 @@
 </div>
 <div class="b-links">
     <div class="link-edit"><a asp-controller="researchers" asp-action="edit" class="arial italic">Редактировать</a></div>
-</div>
-
-<div class="mt13">
-    <a asp-controller="accountintegration" asp-action="UpdateResearcherAccountFromOutside" class="link-upload-s middle-icon fs13">Загрузить данные из системы «@AuthorizeResourceTypes.ScienceMap.GetDescription()»</a>
-    <span style="color: red;">в разработке</span>
 </div>
 
 <div class="b-bottom-nav">
