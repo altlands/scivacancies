@@ -163,12 +163,13 @@ namespace SciVacancies.WebApp.Infrastructure
                 .ForMember(d => d.size, o => o.MapFrom(s => s.Size))
                 .ForMember(d => d.extension, o => o.MapFrom(s => s.Extension))
                 .ForMember(d => d.url, o => o.MapFrom(s => s.Url))
-                .ForMember(d=>d.type_id,o=>o.MapFrom(s=>s.TypeId))
+                .ForMember(d => d.type_id, o => o.MapFrom(s => s.TypeId))
                 .ForMember(d => d.upload_date, o => o.MapFrom(s => s.UploadDate));
 
             //vacancy
             Mapper.CreateMap<Vacancy, VacancyCreateViewModel>()
                 .ForMember(d => d.Guid, o => o.MapFrom(s => s.guid))
+                .ForMember(d => d.ReadId, o => o.MapFrom(s => s.read_id))
                 .ForMember(d => d.Name, o => o.MapFrom(s => s.name))
                 .ForMember(d => d.FullName, o => o.MapFrom(s => s.fullname))
                 .ForMember(d => d.Tasks, o => o.MapFrom(s => s.tasks))
@@ -199,6 +200,7 @@ namespace SciVacancies.WebApp.Infrastructure
                 ;
             Mapper.CreateMap<Vacancy, VacancyDetailsViewModel>().IncludePagedResultMapping()
                 .ForMember(d => d.Guid, o => o.MapFrom(s => s.guid))
+                .ForMember(d => d.ReadId, o => o.MapFrom(s => s.read_id))
                 .ForMember(d => d.Name, o => o.MapFrom(s => s.name))
                 .ForMember(d => d.FullName, o => o.MapFrom(s => s.fullname))
                 .ForMember(d => d.Tasks, o => o.MapFrom(s => s.tasks))

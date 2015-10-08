@@ -79,7 +79,16 @@
                 i += 1;
                 <text>
                 <tr>
-                    <td>@i</td>
+                    <td>
+                        @if (item.read_id == null)
+                    {
+                            <text>VAC ...</text>
+                        }
+                        else
+                        {
+                            <text>VAC @item.read_id</text>
+                        }
+                    </td>
                     <td>
                         @item.name
                         <br />

@@ -25,7 +25,16 @@
     <div class="title-cat-inform">Информация о вакансии:</div>
     <ul class="list-information">
         <li class="odd">
-            <span>Номер ваканасии:</span>@Model.Guid.ToString().Substring(0, 4)
+            @*<span>Номер ваканасии:</span>@Model.Guid.ToString().Substring(0, 4)*@
+            <span>Номер вакансии:</span>
+            @if (Model.ReadId == null)
+            {
+                <text>Присвоение идентификатора вакансии...</text>
+            }
+            else
+            {
+                <text>VAC @Model.ReadId</text>
+            }
         </li>
         <li class="even">
             <span>Статус:</span><span class="status @Model.Status.GetHtmlClass()">@Model.Status.GetDescriptionByResearcher()</span>

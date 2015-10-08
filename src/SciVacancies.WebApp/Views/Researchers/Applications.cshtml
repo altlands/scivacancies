@@ -73,7 +73,16 @@
             {
                 <text>
                 <tr>
-                    <td>ГНС600001</td>
+                    <td>
+                        @if (item.Vacancy.ReadId == null)
+                        {
+                            <text>VAC ...</text>
+                        }
+                        else
+                        {
+                            <text>VAC @item.Vacancy.ReadId</text>
+                        }
+                    </td>
                     <td>@item.PositionTypeName</td>
                     <td>@item.Vacancy.SalaryFrom-@item.Vacancy.SalaryTo руб.</td>
                     <td>@(item.SentDate?.ToLocalVacancyString())</td>

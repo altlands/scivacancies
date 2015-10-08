@@ -200,5 +200,10 @@ namespace SciVacancies.WebApp.ViewModels
         public List<Publication> Publications { get; set; }
 
         public string FolderApplicationsAttachmentsUrl { get; set; }
+
+        /// <summary>
+        /// Autoincrimented field in DB - может быть null
+        /// </summary>
+        public long? ReadId { get; set; }
     }
 }

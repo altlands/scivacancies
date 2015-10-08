@@ -55,6 +55,9 @@ namespace SciVacancies.WebApp.Controllers
             model.Rewards = researcher.rewards;
             model.Memberships = researcher.memberships;
             model.Conferences = researcher.conferences;
+
+            model.ReadId = vacancy.read_id;
+
             return model;
         }
         #endregion

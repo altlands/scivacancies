@@ -68,7 +68,15 @@
                 <text>
                 <tr>
                     <td>@i</td>
-                    <td><a asp-controller="vacancies" asp-action="details" asp-route-id="@item.guid" title="Просмотр вакансии">ГНС600001</a></td>
+                    <td><a asp-controller="vacancies" asp-action="details" asp-route-id="@item.guid" title="Просмотр вакансии">
+                    @if (item.read_id == null)
+                    {
+                        <text>VAC ...</text>
+                    }
+                    else
+                    {
+                        <text>VAC @item.read_id</text>
+                    }</a></td>
                     <td>@item.name</td>
                     <td>@(item.announcement_date?.ToLocalVacancyString()) <!--01-09-14, 16:04--></td>
                     <td class="view-col">

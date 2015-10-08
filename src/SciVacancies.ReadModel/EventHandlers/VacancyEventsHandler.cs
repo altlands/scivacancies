@@ -69,7 +69,7 @@ namespace SciVacancies.ReadModel.EventHandlers
         }
         public void Handle(VacancyUpdated msg)
         {
-            Vacancy vacancy = _db.SingleById<Vacancy>(msg.VacancyGuid);
+            Vacancy vacancy = _db.SingleOrDefault<Vacancy>(new Sql($"SELECT v.* FROM org_vacancies v WHERE v.guid = @0", msg.VacancyGuid));
 
             Vacancy updatedVacancy = Mapper.Map<Vacancy>(msg);
             //TODO без костыля

@@ -204,5 +204,10 @@ namespace SciVacancies.WebApp.ViewModels
         /// часть пути для доступа к прикреплённым файлам
         /// </summary>
         public string FolderVacanciesAttachmentsUrl { get; set; }
+
+        /// <summary>
+        /// Autoincrimented field in DB - может быть null
+        /// </summary>
+        public long? ReadId { get; set; }
     }
 }

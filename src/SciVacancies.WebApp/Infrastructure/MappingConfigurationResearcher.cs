@@ -98,13 +98,13 @@ namespace SciVacancies.WebApp.Infrastructure
             Mapper.CreateMap<ResearcherEditViewModel, ResearcherDataModel>()
                 .ForSourceMember(src => src.ExtNumber, o => o.Ignore()) // Индивидуальный номер учёного обрабатывается по отдельной логике (в контроллере)
                 .ForMember(dest => dest.BirthDate, src => src.MapFrom(c => new DateTime(c.BirthYear, 1, 1)))
-                .ForMember(dest => dest.Conferences, src => src.MapFrom(c =>      c.Conferences.Any() ? JsonConvert.SerializeObject(c.Conferences) : string.Empty ))
-                .ForMember(dest => dest.Rewards, src => src.MapFrom(c =>          c.Rewards.Any() ? JsonConvert.SerializeObject(c.Rewards) : string.Empty ))
-                .ForMember(dest => dest.Memberships, src => src.MapFrom(c =>      c.Memberships.Any() ? JsonConvert.SerializeObject(c.Memberships) : string.Empty ))
-                .ForMember(dest => dest.Interests, src => src.MapFrom(c =>        c.Interests.Any() ? JsonConvert.SerializeObject(c.Interests) : string.Empty ))
-                .ForMember(dest => dest.ResearchActivity, src => src.MapFrom(c => c.ResearchActivity.Any() ? JsonConvert.SerializeObject(c.ResearchActivity) : string.Empty ))
-                .ForMember(dest => dest.TeachingActivity, src => src.MapFrom(c => c.TeachingActivity.Any() ? JsonConvert.SerializeObject(c.TeachingActivity) : string.Empty ))
-                .ForMember(dest => dest.OtherActivity, src => src.MapFrom(   c => c.OtherActivity.Any() ? JsonConvert.SerializeObject(c.OtherActivity) : string.Empty ))
+                .ForMember(dest => dest.Conferences, src => src.MapFrom(c => c.Conferences.Any() ? JsonConvert.SerializeObject(c.Conferences) : string.Empty))
+                .ForMember(dest => dest.Rewards, src => src.MapFrom(c => c.Rewards.Any() ? JsonConvert.SerializeObject(c.Rewards) : string.Empty))
+                .ForMember(dest => dest.Memberships, src => src.MapFrom(c => c.Memberships.Any() ? JsonConvert.SerializeObject(c.Memberships) : string.Empty))
+                .ForMember(dest => dest.Interests, src => src.MapFrom(c => c.Interests.Any() ? JsonConvert.SerializeObject(c.Interests) : string.Empty))
+                .ForMember(dest => dest.ResearchActivity, src => src.MapFrom(c => c.ResearchActivity.Any() ? JsonConvert.SerializeObject(c.ResearchActivity) : string.Empty))
+                .ForMember(dest => dest.TeachingActivity, src => src.MapFrom(c => c.TeachingActivity.Any() ? JsonConvert.SerializeObject(c.TeachingActivity) : string.Empty))
+                .ForMember(dest => dest.OtherActivity, src => src.MapFrom(c => c.OtherActivity.Any() ? JsonConvert.SerializeObject(c.OtherActivity) : string.Empty))
                 ;
             Mapper.CreateMap<ResearcherEditPhotoViewModel, ResearcherDataModel>()
                 ;
@@ -227,13 +227,13 @@ namespace SciVacancies.WebApp.Infrastructure
                 .ForMember(d => d.Educations, o => o.MapFrom(s =>
                     s.Educations.Select(c => new CheckableListItem<EducationEditViewModel> { This = Mapper.Map<EducationEditViewModel>(c) })))
                 .ForMember(d => d.Publications, o => o.MapFrom(s => s.Publications.Select(c => new CheckableListItem<PublicationEditViewModel> { This = Mapper.Map<PublicationEditViewModel>(c) })))
-                
+
                 .ForMember(d => d.Conferences, o => o.MapFrom(s =>
                     !string.IsNullOrWhiteSpace(s.Conferences)
                     ? JsonConvert.DeserializeObject<List<ConferenceEditViewModel>>(s.Conferences).Select(c => new CheckableListItem<ConferenceEditViewModel> { This = c })
                     : new CheckableItemsList<ConferenceEditViewModel>()
                     ))
-                
+
                     .ForMember(d => d.Rewards, o => o.MapFrom(s =>
                     !string.IsNullOrWhiteSpace(s.Rewards)
                     ? JsonConvert.DeserializeObject<List<RewardEditViewModel>>(s.Rewards).Select(c => new CheckableListItem<RewardEditViewModel> { This = c })
@@ -393,6 +393,7 @@ namespace SciVacancies.WebApp.Infrastructure
                 ;
             Mapper.CreateMap<VacancyApplication, VacancyApplicationDetailsViewModel>().IncludePagedResultMapping()
                 .ForSourceMember(s => s.extraemail, o => o.Ignore())
+                .ForMember(d => d.ReadId, o => o.MapFrom(s => s.read_id))
                 .ForMember(d => d.SentDate, o => o.MapFrom(s => s.apply_date))
                 .ForMember(d => d.AcademicStatus, o => o.MapFrom(s => s.science_rank))
                 .ForMember(d => d.CoveringLetter, o => o.MapFrom(s => s.covering_letter))

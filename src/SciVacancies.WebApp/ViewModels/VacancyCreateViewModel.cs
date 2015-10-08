@@ -243,5 +243,10 @@ namespace SciVacancies.WebApp.ViewModels
         /// </summary>
         public List<CriteriaItemViewModel> CriteriasHierarchy { get; set; } = new List<CriteriaItemViewModel>();
         public List<VacancyCriteria> Criterias { get; set; }
+
+        /// <summary>
+        /// Autoincrimented field in DB - может быть null
+        /// </summary>
+        public long? ReadId { get; set; }
     }
 }

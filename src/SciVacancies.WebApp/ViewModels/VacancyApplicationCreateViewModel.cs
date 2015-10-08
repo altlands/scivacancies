@@ -62,5 +62,10 @@ namespace SciVacancies.WebApp.ViewModels
         public string CoveringLetter { get; set; }
 
         public List<IFormFile> Attachments { get; set; }
+
+        /// <summary>
+        /// Autoincrimented field in DB - может быть null
+        /// </summary>
+        public long? ReadId { get; set; }
     }
 }

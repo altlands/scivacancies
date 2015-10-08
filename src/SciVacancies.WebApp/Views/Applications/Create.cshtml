@@ -36,7 +36,7 @@
                         <label>ID вакансии:</label>
                     </div>
                     <div class="right-cell">
-                        <input type="text" value="МНС6000567" disabled class="disabled big-input" />
+                        <input type="text" value="@if (Model.ReadId == null){<text>VAC ...</text>}else{<text>VAC @Model.ReadId</text>}" disabled class="disabled big-input" />
                     </div>
                 </div>
 
