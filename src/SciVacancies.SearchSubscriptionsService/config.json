@@ -1,6 +1,6 @@
 ﻿{
     "Data": {
-        "ReadModelDb": "Server=alt-dev002;Database=scivacancies;User Id=postgres;Password=postgres",
+        "ReadModelDb": "Server=alt-dev002;Database=scivacancies;User Id=scivacservice;Password=scivacservice",
         "QuartzDb": ""
     },
     "ElasticSettings": {
@@ -23,7 +23,7 @@
         },
         "DataSource": {
             "Default": {
-                "ConnectionString": "Server=alt-dev002;Database=scivacancies;User Id=postgres;Password=postgres",
+                "ConnectionString": "Server=alt-dev002;Database=scivacancies;User Id=scivacservice;Password=scivacservice",
                 "Provider": "Npgsql-20"
             }
         }

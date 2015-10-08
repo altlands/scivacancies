@@ -162,9 +162,9 @@ namespace SciVacancies.WebApp.Controllers
                 var vacancyGuid = _mediator.Send(new UpdateVacancyCommand { VacancyGuid = model.Guid, Data = vacancyDataModel });
 
                 if (model.ToPublish)
-                    return RedirectToAction("publish", new { id = vacancyGuid });
+                    return RedirectToAction("publish", new { id = model.Guid });
 
-                return RedirectToAction("details", new { id = vacancyGuid });
+                return RedirectToAction("details", new { id = model.Guid });
             }
 
             model.InitDictionaries(_mediator);
@@ -338,6 +338,8 @@ namespace SciVacancies.WebApp.Controllers
                 throw new ArgumentNullException(nameof(id));
             if (organizationGuid == Guid.Empty)
                 throw new ArgumentNullException(nameof(organizationGuid));
+            if (String.IsNullOrEmpty(reason))
+                throw new ArgumentNullException(nameof(reason));
 
             var model = _mediator.Send(new SingleVacancyQuery { VacancyGuid = id });
 

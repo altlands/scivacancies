@@ -99,8 +99,8 @@ namespace SciVacancies.SmtpNotifications.Handlers
             var researcherGuids =
                 new List<Guid>
                 {
-                    _db.First<Guid>(new Sql("SELECT a.winner_researcher_guid FROM org_vacancies v WHERE v.guid = @0", msg.VacancyGuid)),
-                    _db.First<Guid>(new Sql("SELECT a.pretender_researcher_guid FROM org_vacancies v WHERE v.guid = @0", msg.VacancyGuid))
+                    _db.First<Guid>(new Sql("SELECT v.winner_researcher_guid FROM org_vacancies v WHERE v.guid = @0", msg.VacancyGuid)),
+                    _db.First<Guid>(new Sql("SELECT v.pretender_researcher_guid FROM org_vacancies v WHERE v.guid = @0", msg.VacancyGuid))
                 };
             if (!researcherGuids.Any()) return;
 
