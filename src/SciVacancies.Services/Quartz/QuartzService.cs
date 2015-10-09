@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Quartz;
 using Quartz.Impl;
 using Quartz.Spi;
@@ -88,6 +89,8 @@ namespace SciVacancies.Services.Quartz
                     )
                     .Build();
 
+            Console.WriteLine($">>>>>>>>> Создаём Рабочего с интервалом {executionInterval} (минут) ");
+
             _scheduler.ScheduleJob(jobDetail, trigger);
         }
 
@@ -114,6 +117,16 @@ namespace SciVacancies.Services.Quartz
         public bool CheckExists(TriggerKey triggerKey)
         {
             return _scheduler.CheckExists(triggerKey);
+        }
+
+        public IJobDetail GetJobDetail(JobKey jobKey)
+        {
+            return _scheduler.GetJobDetail(jobKey);
+        }
+
+        public IList<ITrigger> GetTriggersOfJob(JobKey jobKey)
+        {
+            return _scheduler.GetTriggersOfJob(jobKey);
         }
 
         public bool DeleteJob(JobKey jobKey)

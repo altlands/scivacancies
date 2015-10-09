@@ -34,13 +34,13 @@ namespace SciVacancies.SearchSubscriptionsService
         private EventWaitHandle _doneEvent;
         private readonly ILifetimeScope _lifetimeScope;
         private readonly IConfiguration _configuration;
-        readonly IElasticService elasticService;
+        readonly IElasticService _elasticService;
 
         public SearchSubscriptionScanner(ILifetimeScope lifetimeScope, IConfiguration configuration, IElasticService elasticService)
         {
             _lifetimeScope = lifetimeScope;
             _configuration = configuration;
-            this.elasticService = elasticService;
+            _elasticService = elasticService;
         }
 
         public void Initialize(EventWaitHandle doneEvent, IEnumerable<SearchSubscription> subscriptionQueue)
@@ -51,18 +51,15 @@ namespace SciVacancies.SearchSubscriptionsService
         public void Initialize(IEnumerable<SearchSubscription> subscriptionQueue)
         {
             _subscriptionQueue = subscriptionQueue;
-            Console.WriteLine($"                 SearchSubscriptionScanner: Initialize: в сканер передали {subscriptionQueue?.Count()} подписок");
         }
 
         public void PoolHandleSubscriptions()
         {
 
             if (_subscriptionQueue == null || !_subscriptionQueue.Any())
-            {
-                Console.WriteLine("                 список подписок пустой");
                 return;
-            }
-            Console.WriteLine($"                 список подписок содержит - {_subscriptionQueue.Count()} - записей");
+
+            Console.WriteLine($"                 SearchSubscriptionScanner: список подписок содержит -{_subscriptionQueue.Count()}- записей");
 
             //todo добавить свойство int emailsToSentPerMinute
             //todo: написать sql-процедуру, которая будет блокировать обрабатываемые подписки
@@ -80,12 +77,12 @@ namespace SciVacancies.SearchSubscriptionsService
                     SalaryTo = searchSubscription.salary_to,
                     VacancyStatuses = JsonConvert.DeserializeObject<IEnumerable<VacancyStatus>>(searchSubscription.vacancy_statuses)
                 };
-                Console.WriteLine($"                    searchQuery created based on searchSubscription.Guid='{searchSubscription.guid}' ");
+                Console.WriteLine($"                 SearchSubscriptionScanner: searchQuery создан из подписки '{searchSubscription.guid}' ");
 
-                var searchResults = elasticService.VacancySearch(searchQuery);
+                var searchResults = _elasticService.VacancySearch(searchQuery);
 
                 var vacanciesList = searchResults.Documents.ToList();
-                Console.WriteLine($"                    по подписке найдено {vacanciesList.Count} записей");
+                Console.WriteLine($"                 SearchSubscriptionScanner: по подписке найдено {vacanciesList.Count} записей");
 
                 if (vacanciesList.Count > 0)
                 {
@@ -99,17 +96,14 @@ namespace SciVacancies.SearchSubscriptionsService
                     //    winnerSetSmtpNotificator.Send(searchSubscription, researcher, vacanciesList);
 
                     #region SmtpNotifications
-
-                    using (var scope1 = _lifetimeScope.BeginLifetimeScope("scope1"))
+                    
+                    using (var scopePerEmail = _lifetimeScope.BeginLifetimeScope("scopePerEmail"+ Guid.NewGuid()))
                     {
-                        var db = scope1.Resolve<IDatabase>();
-                        var smtpNotificatorService = scope1.Resolve<ISmtpNotificatorService>();
+                        var db = scopePerEmail.Resolve<IDatabase>();
+                        var smtpNotificatorService = scopePerEmail.Resolve<ISmtpNotificatorService>();
 
                         var researcher = db.SingleOrDefaultById<Researcher>(searchSubscription.researcher_guid);
                         var researcherFullName = $"{researcher.secondname} {researcher.firstname} {researcher.patronymic}";
-
-                        Console.WriteLine($"Для {researcherFullName} отправлено письмо на почту {researcher.email}");
-
                         var body = $@"
 <div style=''>
     Уважаемый(-ая), {researcherFullName}, по одной из ваших
@@ -130,6 +124,8 @@ namespace SciVacancies.SearchSubscriptionsService
 </div>
 ";
                         smtpNotificatorService.Send(new SciVacMailMessage(researcher.email, "Уведомление с портала вакансий", body));
+
+                        Console.WriteLine($"                 SearchSubscriptionScanner: письмо {researcher.email} для {researcherFullName}");
                     }
                     #endregion
                 }

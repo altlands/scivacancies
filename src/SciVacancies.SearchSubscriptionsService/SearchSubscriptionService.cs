@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.ServiceProcess;
 using Autofac;
 using Microsoft.Framework.ConfigurationModel;
@@ -64,7 +65,25 @@ namespace SciVacancies.SearchSubscriptionsService
                 if (!_schedulerService.CheckExists(jobKey))
                 {
                     //_schedulerService.DeleteJob(jobKey);
-                    _schedulerService.CreateSheduledJobWithStrongName(_lifetimeScope.Resolve<SearchSubscriptionJob>(), jobKey, MinuteInterval);
+                    _schedulerService.CreateSheduledJobWithStrongName(_lifetimeScope.Resolve<SearchSubscriptionJob>(),
+                        jobKey, MinuteInterval);
+                }
+                else
+                {
+                    //если job существует, то сравнить параметры его работы с настройками в config'e.
+
+                    var savedTriggersOfJobs = _schedulerService.GetTriggersOfJob(jobKey);
+                    var triggerHasChanges = savedTriggersOfJobs
+                        .Select(c => c as Quartz.Impl.Triggers.SimpleTriggerImpl)
+                        .Any(c => c.RepeatInterval.Minutes != MinuteInterval);
+
+                    if (triggerHasChanges)
+                    //recreate trigger
+                    {
+                        _schedulerService.DeleteJob(jobKey);
+                        _schedulerService.CreateSheduledJobWithStrongName(_lifetimeScope.Resolve<SearchSubscriptionJob>(),
+                            jobKey, MinuteInterval);
+                    }
                 }
 
                 _schedulerService.StartScheduler();
