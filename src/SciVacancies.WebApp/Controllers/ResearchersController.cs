@@ -31,7 +31,7 @@ namespace SciVacancies.WebApp.Controllers
         private readonly IMediator _mediator;
         private readonly IHostingEnvironment _hostingEnvironment;
         private readonly IOptions<AttachmentSettings> _attachmentSettings;
-        private SciVacUserManager _userManager;
+        private readonly SciVacUserManager _userManager;
 
         public ResearchersController(IMediator mediator, IHostingEnvironment hostingEnvironment, IOptions<AttachmentSettings> attachmentSettings, SciVacUserManager userManager)
         {

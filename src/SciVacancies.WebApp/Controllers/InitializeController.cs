@@ -10,8 +10,6 @@ using SciVacancies.WebApp.Infrastructure.Identity;
 using SciVacancies.WebApp.Queries;
 using SciVacancies.WebApp.ViewModels;
 using Microsoft.AspNet.Identity;
-using Microsoft.Framework.OptionsModel;
-using Nest;
 using Newtonsoft.Json;
 using SciVacancies.WebApp.Models.DataModels;
 
@@ -133,7 +131,7 @@ namespace SciVacancies.WebApp.Controllers
             {
                 var organization0_Data = new AccountOrganizationRegisterViewModel
                 {
-                    Email = "technobrowser@yandex.ru",
+                    Email = "technobrowser@gmail.com",
                     UserName = "organization2",
                     Name = "НИИ добра",
                     ShortName = "Good Science",
