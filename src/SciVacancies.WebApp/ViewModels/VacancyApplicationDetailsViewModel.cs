@@ -13,12 +13,21 @@ namespace SciVacancies.WebApp.ViewModels
         public Guid VacancyGuid { get; set; }
         public VacancyDetailsViewModel Vacancy { get; set; }
         public Guid ResearcherGuid { get; set; }
-        public ResearcherDetailsViewModel Researcher { get; set; }
+
+        public DateTime BirthDate { get; set; }
+
+        private string _imageUrl;
+        public string ImageUrl
+        {
+            get { return _imageUrl ?? string.Empty; }
+            set { _imageUrl = value; }
+        }
 
         public int PositionTypeId { get; set; }
         public string PositionTypeName { get; set; }
 
         public string FullName { get; set; }
+        public string FullNameEng { get; set; }
         public string Email { get; set; }
         public string Phone { get; set; }
         public string ExtraPhone { get; set; }
@@ -32,7 +41,6 @@ namespace SciVacancies.WebApp.ViewModels
         public List<RewardDetailsViewModel> Rewards { get; set; }
         public List<MembershipDetailsViewModel> Memberships { get; set; }
         public List<ConferenceEditViewModel> Conferences { get; set; }
-
 
         public VacancyApplicationStatus Status { get; set; }
 
@@ -198,6 +206,8 @@ namespace SciVacancies.WebApp.ViewModels
         /// Публикации
         /// </summary>
         public List<Publication> Publications { get; set; }
+
+        public List<InterestDetailsViewModel> Interests { get; set; }
 
         public string FolderApplicationsAttachmentsUrl { get; set; }
 

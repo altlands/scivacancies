@@ -1,8 +1,6 @@
 ﻿using SciVacancies.Domain.Enums;
-
-using System;
-using System.Collections.Generic;
 using SciVacancies.WebApp.ViewModels.Base;
+using System.Collections.Generic;
 
 namespace SciVacancies.WebApp.ViewModels
 {

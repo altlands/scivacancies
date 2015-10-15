@@ -1,5 +1,9 @@
 namespace SciVacancies.WebApp.ViewModels
 {
+    public class ConferenceDetailsViewModel: ConferenceEditViewModel
+    {
+    }
+
     public class ConferenceEditViewModel
     {
         public string conference { get; set; }

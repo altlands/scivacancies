@@ -1,13 +1,10 @@
 ﻿using System;
 using System.Drawing.Imaging;
-using System.Linq;
-using System.Management.Instrumentation;
-using Microsoft.AspNet.Http;
 using Microsoft.AspNet.Mvc;
 using Microsoft.Framework.OptionsModel;
-using SciVacancies.Captcha;
+using SciVacancies.WebApp;
 
-namespace SciVacancies.WebApp.Controllers
+namespace SciVacancies.Captcha.Controllers
 {
 
     public class AltLanDSCaptchaController : Controller
@@ -33,7 +30,7 @@ namespace SciVacancies.WebApp.Controllers
             {
                 //NotFound(context);
                 //return;
-                throw new InstanceNotFoundException();
+                throw new Exception();
             }
             
             var text = CaptchaConfiguration.DefaultTextGeneratorFactory().GenerateText();

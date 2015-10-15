@@ -22,9 +22,21 @@ namespace SciVacancies.ReadModel.Core
         public int? salary_to { get; set; }
         public string vacancy_statuses { get; set; }
 
+        /// <summary>
+        /// количество записей, найденных в при последней обработке
+        /// </summary>
         public long currenttotal_count { get; set; }
+        /// <summary>
+        /// дата последней обработки
+        /// </summary>
         public DateTime? currentcheck_date { get; set; }
+        /// <summary>
+        /// количество записей, найденных в при предпоследней обработке
+        /// </summary>
         public long lasttotal_count { get; set; }
+        /// <summary>
+        /// дата предпоследней обработки (позволяет искать только "свежие" записи)
+        /// </summary>
         public DateTime? lastcheck_date { get; set; }
 
         public SearchSubscriptionStatus status { get; set; }

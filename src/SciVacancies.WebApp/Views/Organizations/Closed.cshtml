@@ -86,11 +86,11 @@
                     <td>
                         @if (item.winner_researcher_guid != Guid.Empty)
                         {
-                            <a asp-controller="applications" asp-action="preview" asp-route-id="@item.winner_researcher_guid" class="success-request-icon"><span class="italic bold">Победитель</span></a>
+                            <a asp-controller="applications" asp-action="preview" asp-route-id="@item.winner_vacancyapplication_guid" class="success-request-icon"><span class="italic bold">Победитель</span></a>
                         }
                         @if (item.pretender_researcher_guid != Guid.Empty)
                         {
-                            <a asp-controller="applications" asp-action="preview" asp-route-id="@item.pretender_researcher_guid" class="success-request-icon"><span class="italic bold">Претендент</span></a>
+                            <a asp-controller="applications" asp-action="preview" asp-route-id="@item.pretender_vacancyapplication_guid" class="success-request-icon"><span class="italic bold">Претендент</span></a>
                         }
                     </td>
                 </tr>

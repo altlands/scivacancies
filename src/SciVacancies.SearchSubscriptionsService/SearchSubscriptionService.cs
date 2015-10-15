@@ -81,6 +81,7 @@ namespace SciVacancies.SearchSubscriptionsService
                     //recreate trigger
                     {
                         _schedulerService.DeleteJob(jobKey);
+
                         _schedulerService.CreateSheduledJobWithStrongName(_lifetimeScope.Resolve<SearchSubscriptionJob>(),
                             jobKey, MinuteInterval);
                     }

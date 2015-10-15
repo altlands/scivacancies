@@ -45,8 +45,6 @@ namespace SciVacancies.WebApp.ViewModels
         [Phone(ErrorMessage = "Поле Телефон содержит не допустимый номер телефона.")]
         public string ExtraPhone { get; set; }
 
-        public string Nationality { get; set; }
-
         public string ScienceDegree { get; set; }
         public string ScienceRank { get; set; }
         public List<RewardEditViewModel> Rewards { get; set; } = new CheckableList<RewardEditViewModel>();

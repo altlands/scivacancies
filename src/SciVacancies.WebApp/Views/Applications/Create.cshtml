@@ -1,10 +1,11 @@
 ﻿@using System.Threading.Tasks
 @using SciVacancies.WebApp.ViewModels
-@model SciVacancies.WebApp.ViewModels.VacancyApplicationCreateViewModel
+@model VacancyApplicationCreateViewModel
 
 @{
-    Model.Publications = Model.Publications ?? new List<PublicationEditViewModel>();
-    Model.Publications.Insert(0, new PublicationEditViewModel());
+    //используется для Добавления публикаций. Добавление пустого объекта, для создания по нему шаблона
+    //Model.Publications = Model.Publications ?? new List<PublicationEditViewModel>();
+    //Model.Publications.Insert(0, new PublicationEditViewModel());
 
     var invisibleItemStyle = "display: none;";
     string useStyle;
@@ -65,6 +66,24 @@
 
                 <div class="table-row form-row">
                     <div class="left-cell">
+                        <label>Полное имя на англйиском:</label>
+                    </div>
+                    <div class="right-cell">
+                        <input asp-for="ResearcherFullNameEng" disabled class="disabled big-input" />
+                    </div>
+                </div>
+
+                <div class="table-row form-row">
+                    <div class="left-cell">
+                        <label>Год рождения:</label>
+                    </div>
+                    <div class="right-cell">
+                        <input asp-for="BirthDate" value="@Model.BirthDate.Year" disabled class="disabled small-input " />
+                    </div>
+                </div>
+
+                <div class="table-row form-row">
+                    <div class="left-cell">
                         <label>E-mail:</label>
                     </div>
                     <div class="right-cell">
@@ -83,12 +102,30 @@
 
                 <div class="table-row form-row">
                     <div class="left-cell">
-                        <label>Добавить телефон:</label>
+                        <label>Дополнительный телефон:</label>
                     </div>
                     <div class="right-cell">
                         <input asp-for="ExtraPhone" class="disabled big-input" />
                     </div>
                 </div>
+
+                <div class="table-row form-row">
+                    <div class="left-cell">
+                        <label>Научные интересы:</label>
+                    </div>
+                    <div class="right-cell">
+                        @if (!string.IsNullOrEmpty(Model.Interests))
+                        {
+                            foreach (var item in Model.InterestsDeserialized)
+                            {
+                                <text>
+                                    <input type="text" class="disabled big-input" value="@item.IntName"/>
+                                </text>
+                            }
+                        }
+                    </div>
+                </div>
+
             </div>
         </div>
 
@@ -99,54 +136,54 @@
             {
                 for (int index = 0; index < Model.Educations.Count; index++)
                 {
-                    <div class="table-form">
-                        <div class="table-row form-row">
-                            <div class="left-cell">
-                                <label>Город:</label>
-                            </div>
-                            <div class="right-cell">
-                                <input asp-for="Educations[index].City" class="disabled big-input" />
-                            </div>
-                        </div>
-
-                        <div class="table-row form-row">
-                            <div class="left-cell">
-                                <label>ВУЗ:</label>
-                            </div>
-                            <div class="right-cell">
-                                <input asp-for="Educations[index].UniversityShortName" class="disabled big-input" />
-                            </div>
-                        </div>
-
-                        <div class="table-row form-row">
-                            <div class="left-cell">
-                                <label>Факультет:</label>
-                            </div>
-                            <div class="right-cell">
-                                <input asp-for="Educations[index].FacultyShortName" class="disabled big-input" />
-                            </div>
-                        </div>
-
-                        <div class="table-row form-row">
-                            <div class="left-cell">
-                                <label>Ученая степень:</label>
-                            </div>
-                            <div class="right-cell">
-                                <input asp-for="Educations[index].Degree" class="disabled big-input" />
-                            </div>
-                        </div>
-
-                        <div class="table-row form-row">
-                            <div class="left-cell">
-                                <label>Год окончания:</label>
-                            </div>
-                            <div class="right-cell">
-                                <input type="text" asp-for="Educations[index].GraduationYear" class="disabled big-input" />
-                                @*value="@(Model.Educations[index].GraduationYear.HasValue ? Model.Educations[index].GraduationYear.Value.ToString() : string.Empty)"*@
-                            </div>
-                        </div>
-                        <hr />
+            <div class="table-form">
+                <div class="table-row form-row">
+                    <div class="left-cell">
+                        <label>Город:</label>
                     </div>
+                    <div class="right-cell">
+                        <input asp-for="Educations[index].City" class="disabled big-input" />
+                    </div>
+                </div>
+
+                <div class="table-row form-row">
+                    <div class="left-cell">
+                        <label>ВУЗ:</label>
+                    </div>
+                    <div class="right-cell">
+                        <input asp-for="Educations[index].UniversityShortName" class="disabled big-input" />
+                    </div>
+                </div>
+
+                <div class="table-row form-row">
+                    <div class="left-cell">
+                        <label>Факультет:</label>
+                    </div>
+                    <div class="right-cell">
+                        <input asp-for="Educations[index].FacultyShortName" class="disabled big-input" />
+                    </div>
+                </div>
+
+                <div class="table-row form-row">
+                    <div class="left-cell">
+                        <label>Ученая степень:</label>
+                    </div>
+                    <div class="right-cell">
+                        <input asp-for="Educations[index].Degree" class="disabled big-input" />
+                    </div>
+                </div>
+
+                <div class="table-row form-row">
+                    <div class="left-cell">
+                        <label>Год окончания:</label>
+                    </div>
+                    <div class="right-cell">
+                        <input type="text" asp-for="Educations[index].GraduationYear" class="disabled big-input" />
+                        @*value="@(Model.Educations[index].GraduationYear.HasValue ? Model.Educations[index].GraduationYear.Value.ToString() : string.Empty)"*@
+                    </div>
+                </div>
+                <hr />
+            </div>
                 }
             }
         </div>

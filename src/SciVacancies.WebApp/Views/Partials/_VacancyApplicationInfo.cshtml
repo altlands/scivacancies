@@ -1,23 +1,21 @@
 ﻿@using System.Threading.Tasks
 @using SciVacancies.Domain.Enums
-@using SciVacancies.WebApp
 @using SciVacancies.WebApp.ViewModels
 @model VacancyApplicationDetailsViewModel
 
-
 <div class="profile">
-    @Component.Invoke("AvatarImage", Model.Researcher.ImageUrl)
+    @Component.Invoke("AvatarImage", Model.ImageUrl)
     <div class="info info-view inline-block">
-        <h4>@Model.Researcher.FullName</h4>
-        <span class="int-name">@Model.Researcher.FullNameEng</span>
-        <span class="block bold">Год рождения: @Model.Researcher.BirthDate.ToLocalVacancyDateString()</span>
+        <h4>@Model.FullName</h4>
+        <span class="int-name">@Model.FullNameEng</span>
+        <span class="block bold">Год рождения: @Model.BirthDate.Year</span>
         <span class="block"><span class="bold">Индивидуальный номер ученого:</span> <span class="lgc-ffa-i">00005444</span></span>
         <span class="block">
             <span class="bold">Научные интересы (Государственный рубрикатор научно-технической информации):</span>
-                @if (Model.Researcher.Interests != null && Model.Researcher.Interests.Count() > 0)
+                @if (Model.Interests != null && Model.Interests.Any())
                 {
                     @:<div class="lgc-ffa-i">
-                    foreach (var item in Model.Researcher.Interests)
+                    foreach (var item in Model.Interests)
                     {
                         <text>
                         @item.IntName (En: @item.IntNameEn);
@@ -32,7 +30,7 @@
 <div class="list-info">
     <div class="list-item">
         <div class="bold row-profile__title">Образование</div>
-        @if (Model.Educations != null && Model.Educations.Count() > 0)
+        @if (Model.Educations != null && Model.Educations.Any())
             {
                 foreach (var item in Model.Educations)
                 {
@@ -62,9 +60,7 @@
         }
         else
         {
-            <text>
-                <span class="row-profile__data">Нет данных</span>    
-            </text>
+            @:<span class="row-profile__data">Нет данных</span>    
         }
 
 
@@ -72,22 +68,18 @@
 
     <div class="list-item">
         <div class="bold row-profile__title">Награды</div>
-            @if (Model.Rewards != null && Model.Rewards.Count() > 0)
+            @if (Model.Rewards != null && Model.Rewards.Any())
             {
                 @:<ol class="row-profile__data">
                     foreach (var item in Model.Rewards.OrderBy(c => c.year))
                     {
-                    <text>
-                        <li>(@item.year) @item.title @item.org</li>
-                    </text>
+                        @:<li>(@item.year) @item.title @item.org</li>
                     }
                 @:</ol>
             }
             else
             {
-                <text>
-                    <span class="row-profile__data">Нет данных</span>
-                </text>
+                @:<span class="row-profile__data">Нет данных</span>
             }
                 
     </div>
@@ -95,29 +87,25 @@
     <div class="list-item">
         <div class="bold row-profile__title">Членство в профессиональных сообществах</div>
         
-        @if (Model.Memberships != null && Model.Memberships.Count() > 0)
+        @if (Model.Memberships != null && Model.Memberships.Any())
         {
             @:<ol class="row-profile__data">
                 foreach (var item in Model.Memberships)
                 {
-                <text>
-                    <li>@item.org - @item.position с @item.year_from по @item.year_to</li>
-                </text>
+                    @:<li>@item.org - @item.position с @item.year_from по @item.year_to</li>
                 }
             @:</ol>
         }
         else
         {
-            <text>
-                <span class="row-profile__data">Нет данных</span>
-            </text>
+                @:<span class="row-profile__data">Нет данных</span>
         }
         
     </div>
 
     <div class="list-item">
         <div class="bold row-profile__title">Публикации</div>
-            @if (Model.Publications != null && Model.Publications.Count() > 0)
+            @if (Model.Publications != null && Model.Publications.Any())
             {
                 @:<ol class="row-profile__data">
                 foreach (var item in Model.Publications)
@@ -131,16 +119,14 @@
             }
             else
             {
-                <text>
-                <span class="row-profile__data">Нет данных</span>
-                </text>
+                @:<span class="row-profile__data">Нет данных</span>
             }
 
         @*<span class="small-icon icon-sm-eye"><span>Показать все (5)</span></span>*@
     </div>
     <div class="list-item">
         <span class="bold row-profile__title">Научная деятельность</span>
-            @if (Model.ResearchActivity != null && Model.ResearchActivity.Count() > 0)
+            @if (Model.ResearchActivity != null && Model.ResearchActivity.Any())
             {
                 @:<span class="row-profile__data">
                     foreach (var item in Model.ResearchActivity)
@@ -154,15 +140,13 @@
             }
             else
             {
-                <text>
-                <span class="row-profile__data">Нет данных</span>
-                </text>
+                @:<span class="row-profile__data">Нет данных</span>
             }
     </div>
 
     <div class="list-item">
         <span class="bold row-profile__title">Преподавательская деятельность</span>
-            @if (Model.TeachingActivity != null && Model.TeachingActivity.Count() > 0)
+            @if (Model.TeachingActivity != null && Model.TeachingActivity.Any())
             {
                 @:<span class="row-profile__data">
                 foreach (var item in Model.TeachingActivity)
@@ -176,15 +160,13 @@
             }
             else
             {
-                <text>
-                <span class="row-profile__data">Нет данных</span>
-                </text>
+                @:<span class="row-profile__data">Нет данных</span>
             }
     </div>
 
     <div class="list-item">
         <span class="bold row-profile__title">Прочая деятельность</span>
-            @if (Model.OtherActivity != null && Model.OtherActivity.Count() > 0)
+            @if (Model.OtherActivity != null && Model.OtherActivity.Any())
             {
                 @:<span class="row-profile__data">
                 foreach (var item in Model.OtherActivity)
@@ -198,16 +180,14 @@
             }
             else
             {
-                <text>
-                <span class="row-profile__data">Нет данных</span>
-                </text>
+                @:<span class="row-profile__data">Нет данных</span>
             }
     </div>
 
     <div class="list-item">
         <div class="bold row-profile__title">Конференции</div>
         
-            @if (Model.Conferences != null && Model.Conferences.Count() > 0)
+            @if (Model.Conferences != null && Model.Conferences.Any())
             {
                 @:<ol class="row-profile__data">
                 foreach (var item in Model.Conferences)
@@ -220,15 +200,13 @@
             }
             else
             {
-                <text>
-                    <span class="row-profile__data">Нет данных</span>
-                </text>
+                @:<span class="row-profile__data">Нет данных</span>
             }
     </div>
 
     <div class="list-item">
         <div class="bold row-profile__title">Приложенные файлы</div>
-            @if (Model.Attachments != null && Model.Attachments.Count() > 0)
+            @if (Model.Attachments != null && Model.Attachments.Any())
             {
                 @:<ol class="row-profile__data">
                     foreach (var item in Model.Attachments)
@@ -244,9 +222,7 @@
             }
             else
             {
-                <text>
-                    <span class="row-profile__data">Нет данных</span>
-                </text>
+                @:<span class="row-profile__data">Нет данных</span>
             }
     </div>
 
@@ -260,9 +236,7 @@
         }
         else
         {
-            <text>
-                <span class="row-profile__data">Нет данных</span>
-            </text>
+            @:<span class="row-profile__data">Нет данных</span>
         }
 
     </div>

@@ -138,7 +138,7 @@ namespace SciVacancies.WebApp.Controllers
             {
                 if (model.ContractType == ContractType.FixedTerm
                     && model.ContractTimeYears == 0
-                    && model.ContractTimeYears == 0)
+                    && model.ContractTimeMonths == 0)
                 {
                     ModelState.AddModelError("ContractTypeValue", $"Для договора типа \"{ContractType.FixedTerm.GetDescription()}\" укажите срок трудового договора");
                     model.InitDictionaries(_mediator);
@@ -232,15 +232,8 @@ namespace SciVacancies.WebApp.Controllers
                  }).MapToPagedList<VacancyApplication, VacancyApplicationDetailsViewModel>();
 
             if (model.Applications?.Items != null && model.Applications.Items.Count > 0)
-            {
                 model.Applications.Items.Where(c => c.ResearcherGuid == Guid.Empty).ToList().ForEach(c => model.Applications.Items.Remove(c));
-                //TODO: оптимизировать запрос и его обработку.
-                model.Applications.Items.ForEach(
-                    c =>
-                        c.Researcher =
-                            Mapper.Map<ResearcherDetailsViewModel>(
-                                _mediator.Send(new SingleResearcherQuery { ResearcherGuid = c.ResearcherGuid })));
-            }
+
             model.Criterias = _mediator.Send(new SelectVacancyCriteriasQuery { VacancyGuid = model.Guid });
             model.CriteriasHierarchy =
                     _mediator.Send(new SelectAllCriteriasQuery()).ToList().ToHierarchyCriteriaViewModelList(model.Criterias.ToList());
@@ -318,7 +311,6 @@ namespace SciVacancies.WebApp.Controllers
                 || preModel.status == VacancyStatus.Closed
                 || preModel.status == VacancyStatus.Cancelled
                 || preModel.status == VacancyStatus.Removed
-              || preModel.status == VacancyStatus.Published
               || preModel.status == VacancyStatus.InCommittee
               || preModel.status == VacancyStatus.OfferResponseAwaitingFromWinner
               || preModel.status == VacancyStatus.OfferResponseAwaitingFromPretender
@@ -338,8 +330,8 @@ namespace SciVacancies.WebApp.Controllers
                 throw new ArgumentNullException(nameof(id));
             if (organizationGuid == Guid.Empty)
                 throw new ArgumentNullException(nameof(organizationGuid));
-            if (String.IsNullOrEmpty(reason))
-                throw new ArgumentNullException(nameof(reason));
+            if (string.IsNullOrEmpty(reason))
+                return View("Error", "Вы не указали причину отмены");
 
             var model = _mediator.Send(new SingleVacancyQuery { VacancyGuid = id });
 
@@ -353,7 +345,6 @@ namespace SciVacancies.WebApp.Controllers
               || model.status == VacancyStatus.Closed
               || model.status == VacancyStatus.Cancelled
               || model.status == VacancyStatus.Removed
-              || model.status == VacancyStatus.Published
               || model.status == VacancyStatus.InCommittee
               || model.status == VacancyStatus.OfferResponseAwaitingFromWinner
               || model.status == VacancyStatus.OfferResponseAwaitingFromPretender
@@ -646,7 +637,6 @@ namespace SciVacancies.WebApp.Controllers
 
             var model = Mapper.Map<VacancyApplicationSetWinnerViewModel>(vacancyApplication);
             model.Vacancy = Mapper.Map<VacancyDetailsViewModel>(vacancy);
-            model.Researcher = Mapper.Map<ResearcherDetailsViewModel>(_mediator.Send(new SingleResearcherQuery { ResearcherGuid = vacancyApplication.researcher_guid }));
             model.WinnerIsSetting = isWinner;
 
             return View(model);
@@ -673,8 +663,6 @@ namespace SciVacancies.WebApp.Controllers
             {
                 model = Mapper.Map<VacancyApplicationSetWinnerViewModel>(vacancyApplication);
                 model.Vacancy = Mapper.Map<VacancyDetailsViewModel>(vacancy);
-                model.Researcher = Mapper.Map<ResearcherDetailsViewModel>(_mediator.Send(new SingleResearcherQuery { ResearcherGuid = vacancyApplication.researcher_guid }));
-
                 return View(model);
             }
 
@@ -1015,15 +1003,7 @@ namespace SciVacancies.WebApp.Controllers
                  page.MapToPagedList<VacancyApplication, VacancyApplicationDetailsViewModel>();
 
             if (model.Applications?.Items != null && model.Applications.Items.Count > 0)
-            {
                 model.Applications.Items.Where(c => c.ResearcherGuid == Guid.Empty).ToList().ForEach(c => model.Applications.Items.Remove(c));
-                //TODO: оптимизировать запрос и его обработку.
-                model.Applications.Items.ForEach(
-                    c =>
-                        c.Researcher =
-                            Mapper.Map<ResearcherDetailsViewModel>(
-                                _mediator.Send(new SingleResearcherQuery { ResearcherGuid = c.ResearcherGuid })));
-            }
 
             return View(model);
         }

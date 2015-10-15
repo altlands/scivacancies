@@ -105,7 +105,6 @@ namespace SciVacancies.WebApp.Infrastructure
                 .ForMember(d => d.Email, o => o.MapFrom(s => s.email))
                 .ForMember(d => d.Phone, o => o.MapFrom(s => s.phone))
                 .ForMember(d => d.ExtraPhone, o => o.Ignore())
-                //.ForMember(d => d, o => o.MapFrom(s => s.nationality))
                 .ForMember(d => d.OtherActivity, o => o.MapFrom(s => s.researches != null && s.researches.Any(c => c.type.Equals("X"))
                     ? JsonConvert.SerializeObject(s.researches.Where(c => c.type.Equals("X") /* X - Прочая деятельность*/ ).ToList())
                     : string.Empty
