@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Drawing.Imaging;
-using System.Linq;
-using System.Management.Instrumentation;
-using Microsoft.AspNet.Http;
 using Microsoft.AspNet.Mvc;
 using Microsoft.Framework.OptionsModel;
 using SciVacancies.Captcha;
@@ -33,7 +30,7 @@ namespace SciVacancies.WebApp.Controllers
             {
                 //NotFound(context);
                 //return;
-                throw new InstanceNotFoundException();
+                throw new Exception();
             }
             
             var text = CaptchaConfiguration.DefaultTextGeneratorFactory().GenerateText();
@@ -75,12 +72,12 @@ namespace SciVacancies.WebApp.Controllers
             //    b.Save(Context.Response.OutputStream, ImageFormat.Gif);
             //}
 
-            captchaContext.WriteCaptchaCookie(key, _captchaSettings.Options.CaptchaDurationSeconds);
-            Context.Response.ContentType = "image/gif";
-            Context.Response.StatusCode = 200;
-            //Context.Response.StatusDescription = "OK";
-            //Context.ApplicationInstance.CompleteRequest();
-            return null;
+            //captchaContext.WriteCaptchaCookie(key, _captchaSettings.Options.CaptchaDurationSeconds);
+            //Context.Response.ContentType = "image/gif";
+            //Context.Response.StatusCode = 200;
+            ////Context.Response.StatusDescription = "OK";
+            ////Context.ApplicationInstance.CompleteRequest();
+            //return null;
         }
 
         /// <summary>

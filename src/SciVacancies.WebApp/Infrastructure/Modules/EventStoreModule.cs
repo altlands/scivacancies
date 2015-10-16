@@ -6,7 +6,7 @@ using CommonDomain.Core;
 using CommonDomain.Persistence;
 using CommonDomain.Persistence.EventStore;
 using MediatR;
-using Microsoft.Framework.ConfigurationModel;
+using Microsoft.Framework.Configuration;
 using NEventStore;
 using NEventStore.Dispatcher;
 using NEventStore.Persistence.Sql;

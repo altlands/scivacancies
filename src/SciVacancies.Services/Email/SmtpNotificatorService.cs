@@ -1,6 +1,7 @@
-﻿using System;
+﻿using SciVacancies.Services.Email.Vendors;
+
+using System;
 using System.Net.Mail;
-using SciVacancies.Services.Email.Vendors;
 
 namespace SciVacancies.Services.Email
 {

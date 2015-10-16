@@ -217,7 +217,6 @@ namespace SciVacancies.WebApp.Controllers
             {
                 case AuthorizeUserTypes.Admin:
                     throw new NotImplementedException();
-                    break;
                 case AuthorizeUserTypes.Organization:
                     switch (authorizationCookies.Item2)
                     {
@@ -776,7 +775,9 @@ namespace SciVacancies.WebApp.Controllers
         [PageTitle("Выход")]
         public ActionResult Logout()
         {
-            Context.Response.SignOut(DefaultAuthenticationTypes.ApplicationCookie);
+            Context.Response.HttpContext.Authentication.SignOut(DefaultAuthenticationTypes.ApplicationCookie);
+            //Context.Response.Cookies.Delete(DefaultAuthenticationTypes.ApplicationCookie);
+            //Context.Response.SignOut(DefaultAuthenticationTypes.ApplicationCookie);
             return RedirectToHome();
         }
 

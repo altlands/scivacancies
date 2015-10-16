@@ -9,7 +9,7 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title>@ViewBag.Title - @AppSettings.Options.SiteTitle</title>
 
-    <environment names="Development">
+    @*<environment names="Development">*@
         <link rel="stylesheet" href="~/lib/bootstrap/css/bootstrap.css" />
         <link rel="stylesheet" href="~/lib/bootstrap-touch-carousel/css/bootstrap-touch-carousel.css" />
 
@@ -30,7 +30,7 @@
         <script src="~/js/jScrollPane.js" type="text/javascript"></script>
         
         <script src="~/js/script.js"></script>
-    </environment>
+    @*</environment>*@
     @*<environment names="Staging,Production">
             <link rel="stylesheet"
                   href="//ajax.aspnetcdn.com/ajax/bootstrap/3.0.0/css/bootstrap.min.css"
@@ -46,14 +46,14 @@
 </head>
 <body>
 
-    @Html.Partial("~/views/partials/header.cshtml")
+    @Html.Partial("~/Views/Partials/Header.cshtml")
 
     <div class="content">
         <div class="b-wrap">
             @RenderBody()
         </div>
     </div>
-    @Html.Partial("~/views/partials/footer.cshtml")
+    @Html.Partial("~/Views/Partials/Footer.cshtml")
     <div class="bg-window" style="display:none;"></div>
 
     <environment names="Development">

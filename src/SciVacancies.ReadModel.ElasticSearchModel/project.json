@@ -1,20 +1,21 @@
 {
-    "version": "1.0.0-*",
-    "description": "",
-    "authors": [ "" ],
-    "tags": [ "" ],
-    "projectUrl": "",
-    "licenseUrl": "",
+  "version": "1.0.0-*",
+  "description": "",
+  "authors": [ "" ],
+  "tags": [ "" ],
+  "projectUrl": "",
+  "licenseUrl": "",
 
-    "dependencies": {
-        "MediatR": "2.0.0-beta-004",
-        "SciVacancies.Domain.Events": "1.0.0-*",
-        "SciVacancies.Domain": "1.0.0-*",
-        "NEST": "1.5.1",
-        "AutoMapper": "3.3.1"
-    },
+  "dependencies": {
+    "SciVacancies.Domain.Events": "1.0.0-*",
+    "SciVacancies.Domain": "1.0.0-*",
 
-    "frameworks": {
-        "dnx451": { }
-    }
+    "MediatR": "2.0.0-beta-004",
+    "NEST": "1.5.1",
+    "AutoMapper": "3.3.1"
+  },
+
+  "frameworks": {
+    "dnx451": { }
+  }
 }

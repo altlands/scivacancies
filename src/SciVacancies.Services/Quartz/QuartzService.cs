@@ -1,8 +1,9 @@
 ﻿using System;
+
 using Quartz;
 using Quartz.Impl;
 using Quartz.Spi;
-using Microsoft.Framework.ConfigurationModel;
+using Microsoft.Framework.Configuration;
 using System.Collections.Specialized;
 using Newtonsoft.Json;
 

@@ -2,17 +2,19 @@
 using System.Collections;
 using System.Linq;
 using Autofac;
-using Autofac.Dnx;
+using Autofac.Framework.DependencyInjection;
 using Autofac.Features.Variance;
 using Microsoft.AspNet.Builder;
 using Microsoft.AspNet.Diagnostics;
 using Microsoft.AspNet.Hosting;
 using Microsoft.AspNet.Identity;
-using Microsoft.Framework.ConfigurationModel;
+using Microsoft.Framework.Configuration;
 using Microsoft.Framework.DependencyInjection;
 using Microsoft.Framework.Logging;
 using SciVacancies.Services.Quartz;
 using SciVacancies.WebApp.Infrastructure;
+using Microsoft.Framework.Runtime;
+using Microsoft.AspNet.StaticFiles;
 
 namespace SciVacancies.WebApp
 {
@@ -20,15 +22,17 @@ namespace SciVacancies.WebApp
     {
         private readonly string devEnv;
 
-        public Startup(IHostingEnvironment env)
+        public Startup(IHostingEnvironment env, IApplicationEnvironment appEnv)
         {
             var vars = Environment.GetEnvironmentVariables();
             devEnv = (string)vars.Cast<DictionaryEntry>().FirstOrDefault(e => e.Key.Equals("dev_env")).Value;
             // Setup configuration sources.
-            Configuration = new Configuration()
+            var configurationBuilder = new ConfigurationBuilder(appEnv.ApplicationBasePath)
                 .AddJsonFile("config.json")
                 .AddJsonFile($"config.{devEnv}.json", optional: true)
                 .AddEnvironmentVariables();
+
+            Configuration = configurationBuilder.Build();
         }
 
         public IConfiguration Configuration { get; set; }
@@ -36,17 +40,17 @@ namespace SciVacancies.WebApp
         // This method gets called by the runtime.
         public IServiceProvider ConfigureServices(IServiceCollection services)
         {
-            services.Configure<AppSettings>(Configuration.GetSubKey("AppSettings"));
-            services.Configure<DbSettings>(Configuration.GetSubKey("Data"));
-            services.Configure<OAuthSettings>(Configuration.GetSubKey("OAuthSettings"));
-            services.Configure<QuartzSettings>(Configuration.GetSubKey("QuartzSettings"));
-            services.Configure<ApiSettings>(Configuration.GetSubKey("ApiSettings"));
-            services.Configure<ElasticSettings>(Configuration.GetSubKey("ElasticSettings"));
-            services.Configure<AttachmentSettings>(Configuration.GetSubKey("AttachmentSettings"));
-            services.Configure<SiteFileSettings>(Configuration.GetSubKey("SiteFileSettings"));
-            services.Configure<VacancyLifeCycleSettings>(Configuration.GetSubKey("VacancyLifeCycleSettings"));
-            services.Configure<CaptchaSettings>(Configuration.GetSubKey("CaptchaSettings"));
-            services.Configure<SagaSettings>(Configuration.GetSubKey("SagaSettings"));
+            services.Configure<AppSettings>(Configuration.GetConfigurationSection("AppSettings"));
+            services.Configure<DbSettings>(Configuration.GetConfigurationSection("Data"));
+            services.Configure<OAuthSettings>(Configuration.GetConfigurationSection("OAuthSettings"));
+            services.Configure<QuartzSettings>(Configuration.GetConfigurationSection("QuartzSettings"));
+            services.Configure<ApiSettings>(Configuration.GetConfigurationSection("ApiSettings"));
+            services.Configure<ElasticSettings>(Configuration.GetConfigurationSection("ElasticSettings"));
+            services.Configure<AttachmentSettings>(Configuration.GetConfigurationSection("AttachmentSettings"));
+            services.Configure<SiteFileSettings>(Configuration.GetConfigurationSection("SiteFileSettings"));
+            services.Configure<VacancyLifeCycleSettings>(Configuration.GetConfigurationSection("VacancyLifeCycleSettings"));
+            services.Configure<CaptchaSettings>(Configuration.GetConfigurationSection("CaptchaSettings"));
+            services.Configure<SagaSettings>(Configuration.GetConfigurationSection("SagaSettings"));
 
             services.ConfigureCookieAuthentication(options =>
             {
@@ -118,7 +122,7 @@ namespace SciVacancies.WebApp
 
 
             // Add static files to the request pipeline.
-            app.UseStaticFiles();
+            app.UseMiddleware<StaticFileMiddleware>(new StaticFileOptions());
 
             // Add MVC to the request pipeline.
             app.UseMvc(routes =>

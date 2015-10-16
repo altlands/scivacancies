@@ -1,6 +1,7 @@
-﻿using System;
+﻿using SciVacancies.Domain.Enums;
+
+using System;
 using System.Collections.Generic;
-using SciVacancies.Domain.Enums;
 
 namespace SciVacancies.Services.Elastic
 {

@@ -61,9 +61,11 @@ namespace SciVacancies.WebApp.Infrastructure.WebAuthorize
         public ClaimsPrincipal LogOutAndLogInUser(HttpResponse response, ClaimsIdentity identity)
         {
             var cp = new ClaimsPrincipal(identity);
-            
-            response.SignOut(DefaultAuthenticationTypes.ApplicationCookie);
-            response.SignIn(DefaultAuthenticationTypes.ApplicationCookie, cp);
+
+            response.HttpContext.Authentication.SignOut(DefaultAuthenticationTypes.ApplicationCookie);
+            //response.SignOut(DefaultAuthenticationTypes.ApplicationCookie);
+            response.HttpContext.Authentication.SignIn(DefaultAuthenticationTypes.ApplicationCookie, cp);
+            //response.SignIn(DefaultAuthenticationTypes.ApplicationCookie, cp);
 
             return cp;
         }

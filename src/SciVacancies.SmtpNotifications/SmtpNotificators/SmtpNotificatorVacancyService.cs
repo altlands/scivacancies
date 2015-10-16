@@ -1,6 +1,7 @@
-﻿using System;
-using SciVacancies.ReadModel.Core;
+﻿using SciVacancies.ReadModel.Core;
 using SciVacancies.Services.Email;
+
+using System;
 
 namespace SciVacancies.SmtpNotifications.SmtpNotificators
 {
