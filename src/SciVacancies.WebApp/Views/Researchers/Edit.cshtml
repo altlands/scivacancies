@@ -28,9 +28,8 @@
     Model.OtherActivity.Insert(0, new ActivityEditViewModel());
     //перед отправкой формы эти элементы будут удалены с формы
 
-    var years = Enumerable.Range(DateTime.Now.Year - 150, 150 + 1).OrderByDescending(c => c).Select(c => new SelectListItem { Text = c.ToString(), Value = c.ToString() }).ToList();
-    var yearsZeroBased = Enumerable.Range(DateTime.Now.Year - 150, 150 + 1).OrderByDescending(c => c).Select(c => new SelectListItem { Text = c.ToString(), Value = c.ToString() }).ToList();
-    yearsZeroBased.Add(new SelectListItem { Text = "--", Value = "0" });
+    var yearsBirth = Enumerable.Range(DateTime.Now.Year - 100, 100).OrderByDescending(c => c).Select(c => new SelectListItem { Text = c.ToString(), Value = c.ToString() }).ToList();
+    var yearsActivity = Enumerable.Range(DateTime.Now.Year - 100, 110).OrderByDescending(c => c).Select(c => new SelectListItem { Text = c.ToString(), Value = c.ToString() }).ToList();
     var invisibleItemStyle = "display: none;";
     string useStyle;
 }
@@ -149,7 +148,7 @@
                 </div>
                 <div class="right-cell b-r-form w120">
                     <select asp-for="BirthYear"
-                            asp-items="years"></select>
+                            asp-items="yearsBirth"></select>
                     <span asp-validation-for="BirthYear"></span>
                 </div>
             </div>
@@ -287,7 +286,7 @@
                         <div class="right-cell b-r-form w120">
                             <select class="skip"
                                     asp-for="Educations[i].GraduationYear"
-                                    asp-items="years"></select>
+                                    asp-items="yearsActivity"></select>
                             <span asp-validation-for="Educations[i].GraduationYear"></span>
                         </div>
                     </div>
@@ -376,7 +375,7 @@
                         <div class="right-cell b-r-form w120">
                             <select class="skip"
                                     asp-for="ResearchActivity[i].yearFrom"
-                                    asp-items="years"></select>
+                                    asp-items="yearsActivity"></select>
                             <span asp-validation-for="ResearchActivity[i].yearFrom"></span>
                         </div>
                     </div>
@@ -389,7 +388,7 @@
                         <div class="right-cell b-r-form w120">
                             <select class="skip"
                                     asp-for="ResearchActivity[i].yearTo"
-                                    asp-items="years"></select>
+                                    asp-items="yearsActivity"></select>
                             <span asp-validation-for="ResearchActivity[i].yearTo"></span>
                         </div>
                     </div>
@@ -482,7 +481,7 @@
                         <div class="right-cell b-r-form w120">
                             <select class="skip"
                                     asp-for="TeachingActivity[i].yearFrom"
-                                    asp-items="years"></select>
+                                    asp-items="yearsActivity"></select>
                             <span asp-validation-for="TeachingActivity[i].yearFrom"></span>
                         </div>
                     </div>
@@ -495,7 +494,7 @@
                         <div class="right-cell b-r-form w120">
                             <select class="skip"
                                     asp-for="TeachingActivity[i].yearTo"
-                                    asp-items="years"></select>
+                                    asp-items="yearsActivity"></select>
                             <span asp-validation-for="TeachingActivity[i].yearTo"></span>
                         </div>
                     </div>
@@ -587,7 +586,7 @@
                         <div class="right-cell b-r-form w120">
                             <select class="skip"
                                     asp-for="OtherActivity[i].yearFrom"
-                                    asp-items="years"></select>
+                                    asp-items="yearsActivity"></select>
                             <span asp-validation-for="OtherActivity[i].yearFrom"></span>
                         </div>
                     </div>
@@ -600,7 +599,7 @@
                         <div class="right-cell b-r-form w120">
                             <select class="skip"
                                     asp-for="OtherActivity[i].yearTo"
-                                    asp-items="years"></select>
+                                    asp-items="yearsActivity"></select>
                             <span asp-validation-for="OtherActivity[i].yearTo"></span>
                         </div>
                     </div>

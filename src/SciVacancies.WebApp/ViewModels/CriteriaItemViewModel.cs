@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace SciVacancies.WebApp.ViewModels
 {
@@ -17,7 +18,8 @@ namespace SciVacancies.WebApp.ViewModels
         /// <summary>
         /// шт
         /// </summary>
-        public long? Count { get; set; }
+        [Range(0,int.MaxValue, ErrorMessage = "Критерий не может иметь отрицательное значение")]
+        public long Count { get; set; }
 
         /// <summary>
         /// Заголовок

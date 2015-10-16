@@ -324,8 +324,6 @@ namespace SciVacancies.WebApp.Controllers
                 }).MapToPagedList()
             };
 
-            var test = _mediator.Send(new SelectActiveSearchSubscriptionsQuery());
-            var er = test.Count();
             return View(model);
         }
 

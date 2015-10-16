@@ -64,7 +64,7 @@ namespace SciVacancies.WebApp.Controllers
             {
                 if (model.ContractType == ContractType.FixedTerm
                     && model.ContractTimeYears == 0
-                    && model.ContractTimeYears == 0)
+                    && model.ContractTimeMonths== 0)
                 {
                     ModelState.AddModelError("ContractTypeValue", $"Для договора типа \"{ContractType.FixedTerm.GetDescription()}\" укажите срок трудового договора");
                     model.InitDictionaries(_mediator);
@@ -888,6 +888,11 @@ namespace SciVacancies.WebApp.Controllers
             var preModel = (Vacancy)result;
 
             var model = Mapper.Map<VacancyDetailsViewModel>(preModel);
+            model.Criterias = _mediator.Send(new SelectVacancyCriteriasQuery { VacancyGuid = model.Guid });
+            model.CriteriasHierarchy =
+                    _mediator.Send(new SelectAllCriteriasQuery()).ToList().ToHierarchyCriteriaViewModelList(model.Criterias.ToList());
+            model.Attachments = _mediator.Send(new SelectAllExceptCommitteeVacancyAttachmentsQuery { VacancyGuid = model.Guid }).ToList();
+            model.ResearchDirection = _mediator.Send(new SelectResearchDirectionQuery { Id = preModel.researchdirection_id });
             return View(model);
         }
 
@@ -900,25 +905,30 @@ namespace SciVacancies.WebApp.Controllers
             var result = PublishPreValidation(id, organizationGuid);
             if (result is HttpNotFoundResult) return (HttpNotFoundResult)result;
             if (result is ViewResult) return (ViewResult)result;
-            var vacancy = (Vacancy)result;
+            var preModel = (Vacancy)result;
 
             DateTime inCommitteeDateValue;
             if (!DateTime.TryParse(inCommitteeDateString, new CultureInfo("ru-RU"), DateTimeStyles.NoCurrentDateDefault, out inCommitteeDateValue))
-                ModelState.AddModelError("InCommitteeDate", "Мы не смогли распознать дату перевода вакансии на рассмотрение комиссии");
+                ModelState.AddModelError("InCommitteeDateString", "Мы не смогли распознать дату перевода вакансии на рассмотрение комиссии");
 
             if (inCommitteeDateValue.ToUniversalTime() < DateTime.Now.ToUniversalTime())
-                ModelState.AddModelError("InCommitteeDate", "Вы установили дату ранее текущей");
+                ModelState.AddModelError("InCommitteeDateString", "Вы установили дату ранее текущей");
 
             if ((inCommitteeDateValue.ToUniversalTime() - DateTime.Now.ToUniversalTime()).Days < _vacancyLifeCycleSettings.Options.DeltaFromPublishToInCommitteeMinDays)
-                ModelState.AddModelError("InCommitteeDate", $"Вы не можете установить дату перевода вакансии на рассмотрение комиссии раньше, чем через {_vacancyLifeCycleSettings.Options.DeltaFromPublishToInCommitteeMinDays} дн.");
+                ModelState.AddModelError("InCommitteeDateString", $"Вы не можете установить дату перевода вакансии на рассмотрение комиссии раньше, чем через {_vacancyLifeCycleSettings.Options.DeltaFromPublishToInCommitteeMinDays} дн.");
 
             if (!ModelState.IsValid)
             {
-                var model = Mapper.Map<VacancyDetailsViewModel>(vacancy);
+                var model = Mapper.Map<VacancyDetailsViewModel>(preModel);
+                model.Criterias = _mediator.Send(new SelectVacancyCriteriasQuery { VacancyGuid = model.Guid });
+                model.CriteriasHierarchy =
+                        _mediator.Send(new SelectAllCriteriasQuery()).ToList().ToHierarchyCriteriaViewModelList(model.Criterias.ToList());
+                model.Attachments = _mediator.Send(new SelectAllExceptCommitteeVacancyAttachmentsQuery { VacancyGuid = model.Guid }).ToList();
+                model.ResearchDirection = _mediator.Send(new SelectResearchDirectionQuery { Id = preModel.researchdirection_id });
                 return View(model);
             }
 
-            var vacancyGuid = _mediator.Send(new PublishVacancyCommand
+            _mediator.Send(new PublishVacancyCommand
             {
                 VacancyGuid = id,
                 InCommitteeStartDate = inCommitteeDateValue,
