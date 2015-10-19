@@ -15,7 +15,6 @@ namespace SciVacancies.Services.Quartz
         bool CheckExists(JobKey jobKey);
         bool CheckExists(TriggerKey triggerKey);
         IJobDetail GetJobDetail(JobKey jobKey);
-        IList<ITrigger> GetTriggersOfJob(JobKey jobKey);
         bool DeleteJob(JobKey jobKey);
         void Shutdown();
     }

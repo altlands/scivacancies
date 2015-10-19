@@ -38,7 +38,7 @@ namespace SciVacancies.WebApp
             Configuration = configurationBuilder.Build();
         }
 
-        public IConfigurationRoot Configuration { get; set; }
+        public IConfiguration Configuration { get; set; }
 
         public IContainer Container { get; set; }
 

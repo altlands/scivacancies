@@ -123,11 +123,6 @@ namespace SciVacancies.Services.Quartz
             return _scheduler.GetJobDetail(jobKey);
         }
 
-        public IList<ITrigger> GetTriggersOfJob(JobKey jobKey)
-        {
-            return _scheduler.GetTriggersOfJob(jobKey);
-        }
-
         public bool DeleteJob(JobKey jobKey)
         {
             return _scheduler.DeleteJob(jobKey);
