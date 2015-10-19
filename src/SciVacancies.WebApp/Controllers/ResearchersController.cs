@@ -31,7 +31,7 @@ namespace SciVacancies.WebApp.Controllers
         private readonly IMediator _mediator;
         private readonly IHostingEnvironment _hostingEnvironment;
         private readonly IOptions<AttachmentSettings> _attachmentSettings;
-        private SciVacUserManager _userManager;
+        private readonly SciVacUserManager _userManager;
 
         public ResearchersController(IMediator mediator, IHostingEnvironment hostingEnvironment, IOptions<AttachmentSettings> attachmentSettings, SciVacUserManager userManager)
         {
@@ -110,7 +110,7 @@ namespace SciVacancies.WebApp.Controllers
             var data = Mapper.Map(model, dataModel);//маппинг игнорирует Индивидуальный номер учёного
             //отдельно обновляем для "своих" пользователей Инд.Номер учёного, и не обновляем для "чужих" пользователей
             if (!model.IsScienceMapUser)
-                data.ExtNumber =model.ExtNumber;
+                data.ExtNumber = model.ExtNumber;
 
             _mediator.Send(new UpdateResearcherCommand
             {
@@ -323,6 +323,9 @@ namespace SciVacancies.WebApp.Controllers
                     PageIndex = currentPage
                 }).MapToPagedList()
             };
+
+            var test = _mediator.Send(new SelectActiveSearchSubscriptionsQuery());
+            var er = test.Count();
             return View(model);
         }
 

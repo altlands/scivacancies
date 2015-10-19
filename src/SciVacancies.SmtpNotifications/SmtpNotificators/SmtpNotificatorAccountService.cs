@@ -51,7 +51,8 @@ namespace SciVacancies.SmtpNotifications.SmtpNotificators
 <div style=''>
     Уважаемый(-ая), {researcherFullName}, 
     <br/>
-    для активации вашей учётной записи перейдите, пожалуйста, по <a target='_blank' href='http://{_smtpNotificatorService.Domain}/account/activateaccount/?username={username}&token={token}'> ссылке</a>.
+    для активации вашей учётной записи перейдите, пожалуйста, по <a target='_blank' href='http://{_smtpNotificatorService.Domain}/account/activateaccount/?username={username}&token={token}'> ссылке</a>. 
+    Не забудьте выполнить вход на сайте 
     <br/>
 </div>
 <br/>

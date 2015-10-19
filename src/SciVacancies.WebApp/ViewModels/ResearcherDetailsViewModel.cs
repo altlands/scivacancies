@@ -35,9 +35,6 @@ namespace SciVacancies.WebApp.ViewModels
         public string Phone { get; set; }
         public string ExtraPhone { get; set;}
 
-        [Obsolete("гражданство планируется убрать")]
-        public string Nationality { get; set; }
-
         public List<ActivityEditViewModel> ResearchActivity { get; set; }
         public List<ActivityEditViewModel> TeachingActivity { get; set; }
         public List<ActivityEditViewModel> OtherActivity { get; set; }
@@ -46,7 +43,8 @@ namespace SciVacancies.WebApp.ViewModels
         public string ScienceRank { get; set; }
         public List<RewardDetailsViewModel> Rewards { get; set; } 
         public List<MembershipDetailsViewModel> Memberships { get; set; } 
-        public List<ConferenceEditViewModel> Conferences { get; set; }
+        public List<ConferenceDetailsViewModel> Conferences { get; set; }
+        public List<InterestDetailsViewModel> Interests { get; set; }
 
         public string ImageName { get; set; }
         public long? ImageSize { get; set; }
@@ -65,7 +63,6 @@ namespace SciVacancies.WebApp.ViewModels
 
         public List<EducationEditViewModel> Educations { get; set; }
         public List<PublicationEditViewModel> Publications { get; set; }
-        public List<InterestDetailsViewModel> Interests { get; set; }
 
         public ResearcherStatus Status { get; set; }
 

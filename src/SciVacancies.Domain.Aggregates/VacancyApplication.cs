@@ -32,7 +32,7 @@ namespace SciVacancies.Domain.Aggregates
             if (vacancyGuid.Equals(Guid.Empty)) throw new ArgumentNullException(nameof(vacancyGuid));
             if (data == null) throw new ArgumentNullException(nameof(data));
 
-            RaiseEvent(new VacancyApplicationCreated()
+            RaiseEvent(new VacancyApplicationCreated
             {
                 VacancyApplicationGuid = guid,
                 ResearcherGuid = researcherGuid,
@@ -48,7 +48,7 @@ namespace SciVacancies.Domain.Aggregates
             if (data == null) throw new ArgumentNullException(nameof(data));
             if (Status != VacancyApplicationStatus.InProcess) throw new InvalidOperationException("vacancyApplication state is invalid");
 
-            RaiseEvent(new VacancyApplicationUpdated()
+            RaiseEvent(new VacancyApplicationUpdated
             {
                 VacancyApplicationGuid = Id,
                 ResearcherGuid = ResearcherGuid,
@@ -60,7 +60,7 @@ namespace SciVacancies.Domain.Aggregates
         {
             if (Status != VacancyApplicationStatus.InProcess) throw new InvalidOperationException("vacancyApplication state is invalid");
 
-            RaiseEvent(new VacancyApplicationRemoved()
+            RaiseEvent(new VacancyApplicationRemoved
             {
                 VacancyApplicationGuid = Id,
                 VacancyGuid = VacancyGuid,
@@ -72,7 +72,7 @@ namespace SciVacancies.Domain.Aggregates
         {
             if (Status != VacancyApplicationStatus.InProcess) throw new InvalidOperationException("vacancyApplication state is invalid");
 
-            RaiseEvent(new VacancyApplicationApplied()
+            RaiseEvent(new VacancyApplicationApplied
             {
                 VacancyApplicationGuid = Id,
                 VacancyGuid = VacancyGuid,
@@ -83,7 +83,7 @@ namespace SciVacancies.Domain.Aggregates
         {
             if (!(Status == VacancyApplicationStatus.InProcess || Status == VacancyApplicationStatus.Applied)) throw new InvalidOperationException("vacancyApplication state is invalid");
 
-            RaiseEvent(new VacancyApplicationCancelled()
+            RaiseEvent(new VacancyApplicationCancelled
             {
                 VacancyApplicationGuid = Id,
                 VacancyGuid = VacancyGuid,

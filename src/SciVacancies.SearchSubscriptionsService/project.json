@@ -30,5 +30,10 @@
                 "System.ServiceProcess": "4.0.0.0"
             }
         }
+    },
+
+    "configurations": {
+        "net45": { },
+        "k10": { }
     }
 }

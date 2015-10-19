@@ -28,7 +28,9 @@ namespace SciVacancies.SearchSubscriptionsService.Jobs
         /// <param name="context"></param>
         public void Execute(IJobExecutionContext context)
         {
-            Console.WriteLine($"SearchSubscriptionJob: Executing at UTC time: {DateTime.Now.ToUniversalTime().ToLongTimeString()}");
+            Console.WriteLine();
+            Console.WriteLine("             SearchSubscriptionJob started");
+            Console.WriteLine($"             SearchSubscriptionJob: Executing at UTC time: {DateTime.Now.ToUniversalTime().ToLongTimeString()}");
 
             try
             {
@@ -37,12 +39,12 @@ namespace SciVacancies.SearchSubscriptionsService.Jobs
                 //TODO - загружать по частям, вызывая хранимую процедуру
                 Queue<SciVacancies.ReadModel.Core.SearchSubscription> subscriptionQueue = new Queue<ReadModel.Core.SearchSubscription>(dataBase.Fetch<SciVacancies.ReadModel.Core.SearchSubscription>(new Sql($"SELECT * FROM res_searchsubscriptions ss WHERE ss.status = @0", SearchSubscriptionStatus.Active)));
 
-                const int poolCount = 20;
+                int poolCount = 20;
                 var threadSize = subscriptionQueue.Count > poolCount
                     ? (subscriptionQueue.Count / poolCount) + 1
                     : 1;
 
-                Console.WriteLine($"threadSize = {threadSize}");
+                Console.WriteLine($"             SearchSubscriptionJob: threadSize = {threadSize}");
                 //var manualResetEventsArray = new EventWaitHandle[poolCount];
                 //var searchSubscriptionScannerArray = new ISearchSubscriptionScanner[poolCount];
 
@@ -61,7 +63,7 @@ namespace SciVacancies.SearchSubscriptionsService.Jobs
 
                 var actions = new List<Action>();
 
-                Console.WriteLine($"Нашли {subscriptionQueue.Count} подписок");
+                Console.WriteLine($"             SearchSubscriptionJob: Нашли {subscriptionQueue.Count} подписок");
 
                 while (subscriptionQueue.Skip(threadSize * i).Take(threadSize).Any())
                 {
@@ -76,16 +78,16 @@ namespace SciVacancies.SearchSubscriptionsService.Jobs
                 }
                 var actionsArray = actions.ToArray();
 
-                Console.WriteLine($"Обработка потоков началась в: {DateTime.Now.ToUniversalTime().ToLongTimeString()}");
+                Console.WriteLine($"             SearchSubscriptionJob: Обработка потоков началась в: {DateTime.Now.ToUniversalTime().ToLongTimeString()}");
 
                 Parallel.Invoke(actionsArray);
 
-                Console.WriteLine($"Обработка потоков завершена в: {DateTime.Now.ToUniversalTime().ToLongTimeString()}");
+                Console.WriteLine($"             SearchSubscriptionJob: Обработка потоков завершена в: {DateTime.Now.ToUniversalTime().ToLongTimeString()}");
 
             }
             catch (Exception exception)
             {
-                Console.WriteLine($"SearchSubscriptionJob: exception happend at UTC time: {DateTime.Now.ToUniversalTime().ToLongTimeString()}");
+                Console.WriteLine($"             SearchSubscriptionJob: exception happend at UTC time: {DateTime.Now.ToUniversalTime().ToLongTimeString()}");
                 Console.WriteLine($"{exception.Message}");
                 Console.WriteLine("");
             }
@@ -98,8 +100,9 @@ namespace SciVacancies.SearchSubscriptionsService.Jobs
             //{
             //    throw e;
             //}
-            Console.WriteLine($"SearchSubscriptionJob: Executed at UTC time: {DateTime.Now.ToUniversalTime().ToLongTimeString()}");
-            Console.WriteLine("");
+            Console.WriteLine($"             SearchSubscriptionJob: Executed at UTC time: {DateTime.Now.ToUniversalTime().ToLongTimeString()}");
+            Console.WriteLine("             SearchSubscriptionJob ended");
+            Console.WriteLine();
         }
 
     }

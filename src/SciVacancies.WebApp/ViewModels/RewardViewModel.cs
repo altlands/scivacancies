@@ -1,5 +1,15 @@
-﻿namespace SciVacancies.WebApp.ViewModels
+﻿using System;
+
+namespace SciVacancies.WebApp.ViewModels
 {
+    /// <summary>
+    /// награда
+    /// </summary>
+    public class RewardDetailsViewModel : RewardEditViewModel
+    {
+    }
+
+
     /// <summary>
     /// награды
     /// </summary>

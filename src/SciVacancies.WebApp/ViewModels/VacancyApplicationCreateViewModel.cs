@@ -18,6 +18,10 @@ namespace SciVacancies.WebApp.ViewModels
 
         public string PositionName { get; set; }
         public string ResearcherFullName { get; set; }
+        public string ResearcherFullNameEng { get; set; }
+
+        public DateTime BirthDate { get; set; }
+        public string ImageUrl { get; set; }
 
         public string Email { get; set; }
 
@@ -59,6 +63,11 @@ namespace SciVacancies.WebApp.ViewModels
             ? JsonConvert.DeserializeObject<List<ConferenceEditViewModel>>(Conferences)
             : new List<ConferenceEditViewModel>();
 
+        public string Interests { get; set; }
+        public List<InterestEditViewModel> InterestsDeserialized => !string.IsNullOrWhiteSpace(Interests)
+            ? JsonConvert.DeserializeObject<List<InterestEditViewModel>>(Interests)
+            : new List<InterestEditViewModel>();
+
         public string CoveringLetter { get; set; }
 
         public List<IFormFile> Attachments { get; set; }
@@ -67,5 +76,6 @@ namespace SciVacancies.WebApp.ViewModels
         /// Autoincrimented field in DB - может быть null
         /// </summary>
         public long? ReadId { get; set; }
+
     }
 }

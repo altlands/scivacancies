@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.Specialized;
 using Microsoft.Framework.Configuration;
 
@@ -115,6 +116,16 @@ namespace SciVacancies.Services.Quartz
         public bool CheckExists(TriggerKey triggerKey)
         {
             return _scheduler.CheckExists(triggerKey);
+        }
+
+        public IJobDetail GetJobDetail(JobKey jobKey)
+        {
+            return _scheduler.GetJobDetail(jobKey);
+        }
+
+        public IList<ITrigger> GetTriggersOfJob(JobKey jobKey)
+        {
+            return _scheduler.GetTriggersOfJob(jobKey);
         }
 
         public bool DeleteJob(JobKey jobKey)

@@ -173,19 +173,23 @@ namespace SciVacancies.WebApp.ViewModels
         /// Срок трудового договора (для срочного договора)
         /// </summary>
         [Range(minimum: 0, maximum: 100, ErrorMessage = "Вы ввели недопустимое значение. Допустимо от 0 до 100 лет.")]
-        public decimal? ContractTimeYears
+        public int? ContractTimeYears
         {
-            get { return Math.Truncate(ContractTime ?? 0); }
-            set { ContractTime = ContractTime - Math.Truncate(ContractTime ?? 0) + value; }
+            get { return int.Parse((ContractTime ?? 0).ToString(CultureInfo.InvariantCulture).Split('.')[0]); }
+            set { ContractTime = value + ((ContractTime ?? 0) - Math.Truncate(ContractTime ?? 0)); }
         }
         /// <summary>
         /// Срок трудового договора (для срочного договора)
         /// </summary>
         [Range(minimum: 0, maximum: 11, ErrorMessage = "Вы ввели недопустимое значение. Допустимо от 0 до 11 месяцев.")]
-        public decimal? ContractTimeMonths
+        public int? ContractTimeMonths
         {
-            get { return (ContractTime ??0) - Math.Truncate(ContractTime ?? 0); }
-            set { ContractTime = Math.Truncate(ContractTime ?? 0) + value; }
+            get
+            {
+                var splits = (ContractTime ?? 0).ToString(CultureInfo.InvariantCulture).Split('.');
+                return splits.Length == 1 ? 0 : int.Parse(splits[1]);
+            }
+            set { ContractTime = decimal.Parse($"{ Math.Truncate(ContractTime ?? 0)}.{value}", CultureInfo.InvariantCulture); }
         }
 
         /// <summary>

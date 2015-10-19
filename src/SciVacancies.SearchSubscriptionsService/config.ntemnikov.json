@@ -5,7 +5,8 @@
     },
     "ElasticSettings": {
         "ConnectionUrl": "http://alt-dev003:9200/",
-        "DefaultIndex": "scivacancies-ntemnikov"
+        "DefaultIndex": "scivacancies-ntemnikov",
+        "MinScore": 0.2
     },
     "QuartzSettings": {
         "Scheduler": {

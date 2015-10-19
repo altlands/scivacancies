@@ -1,5 +1,6 @@
 ﻿@using System.Threading.Tasks
 @using SciVacancies
+@using SciVacancies.Domain.Enums
 @using SciVacancies.WebApp.ViewModels
 @model VacancyDetailsViewModel
 
@@ -114,6 +115,10 @@
     </li>
     <li class="odd">
         <span>Трудовой договор:</span>@Model.ContractType.GetDescription()
+        @*@if (Model.ContractType == ContractType.FixedTerm)
+        {
+            @: - на период @Model.ContractTime.ToString("0.##") (годы и месяцы)
+        }*@
     </li>
     <li class="even">
         <span>Социальный пакет:</span>@(Model.SocialPackage ? "Да" : "Нет")
@@ -123,6 +128,9 @@
     </li>
     <li class="even">
         <span>Компенсация проезда:</span>@(Model.TransportCompensation ? "Да" : "Нет")
+    </li>
+    <li class="even">
+        <span>Служебное жилье:</span>@(Model.OfficeAccomodation ? "Да" : "Нет")
     </li>
 </ul>
 

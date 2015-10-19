@@ -23,7 +23,15 @@ namespace SciVacancies.WebApp.ViewModels
         public VacancyDetailsViewModel Vacancy { get; set; }
         [Required]
         public Guid ResearcherGuid { get; set; }
-        public ResearcherDetailsViewModel Researcher { get; set; }
+
+        public DateTime BirthDate { get; set; }
+
+        private string _imageUrl;
+        public string ImageUrl
+        {
+            get { return _imageUrl ?? string.Empty; }
+            set { _imageUrl = value; }
+        }
 
         /// <summary>
         /// Образование
@@ -38,6 +46,7 @@ namespace SciVacancies.WebApp.ViewModels
         public string PositionTypeName { get; set; }
 
         public string FullName { get; set; }
+        public string FullNameEng { get; set; }
         public string Email { get; set; }
         public string Phone { get; set; }
         public string ExtraPhone { get; set; }
@@ -51,6 +60,7 @@ namespace SciVacancies.WebApp.ViewModels
         public string Rewards { get; set; }
         public string Memberships { get; set; }
         public string Conferences { get; set; }
+        public string Interests { get; set; }
 
         public string CoveringLetter { get; set; }
 
@@ -64,5 +74,6 @@ namespace SciVacancies.WebApp.ViewModels
         /// кого выбираем - победителя или претендента
         /// </summary>
         public bool WinnerIsSetting { get; set; }
+
     }
 }

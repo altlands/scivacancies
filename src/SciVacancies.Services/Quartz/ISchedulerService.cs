@@ -1,5 +1,5 @@
 ﻿using System;
-
+using System.Collections.Generic;
 using Quartz;
 
 namespace SciVacancies.Services.Quartz
@@ -14,6 +14,8 @@ namespace SciVacancies.Services.Quartz
         void StopScheduler();
         bool CheckExists(JobKey jobKey);
         bool CheckExists(TriggerKey triggerKey);
+        IJobDetail GetJobDetail(JobKey jobKey);
+        IList<ITrigger> GetTriggersOfJob(JobKey jobKey);
         bool DeleteJob(JobKey jobKey);
         void Shutdown();
     }

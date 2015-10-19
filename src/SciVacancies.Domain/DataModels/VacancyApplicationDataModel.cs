@@ -10,7 +10,11 @@ namespace SciVacancies.Domain.DataModels
         /// Полное имя исследователя
         /// </summary>
         public string ResearcherFullName { get; set; }
+        public string ResearcherFullNameEng { get; set; }
         public string PositionName { get; set; }
+
+        public DateTime BirthDate { get; set; }
+        public string ImageUrl { get; set; }
 
         public string Email { get; set; }
 
@@ -26,6 +30,7 @@ namespace SciVacancies.Domain.DataModels
         public string Rewards { get; set; }
         public string Memberships { get; set; }
         public string Conferences { get; set; }
+        public string Interests { get; set; }
 
         public string CoveringLetter { get; set; }
 

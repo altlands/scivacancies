@@ -35,17 +35,20 @@ namespace SciVacancies.WebApp.Controllers
             _attachmentSettings = attachmentSettings;
         }
 
-        #region private CreateVacancyApplicationCreateViewModel
-        private VacancyApplicationCreateViewModel CreateVacancyApplicationCreateViewModel(Guid researcherGuid, Vacancy vacancy, VacancyApplicationCreateViewModel model)
+        #region private VacancyApplicationCreateViewModelHelper
+        private VacancyApplicationCreateViewModel VacancyApplicationCreateViewModelHelper(Guid researcherGuid, Vacancy vacancy, VacancyApplicationCreateViewModel model)
         {
             var researcher = _mediator.Send(new SingleResearcherQuery { ResearcherGuid = researcherGuid });
             model = model ?? new VacancyApplicationCreateViewModel();
             model.ResearcherGuid = researcherGuid;
             model.VacancyGuid = vacancy.guid;
             model.PositionName = vacancy.name;
+            model.BirthDate= researcher.birthdate;
+            model.ImageUrl= researcher.image_url;
             model.Email = researcher.email;
             model.Phone = researcher.phone;
             model.ResearcherFullName = $"{researcher.secondname} {researcher.firstname} {researcher.patronymic}";
+            model.ResearcherFullNameEng = $"{researcher.firstname_eng} {researcher.patronymic_eng} {researcher.secondname_eng}";
             model.Educations = Mapper.Map<List<EducationEditViewModel>>(_mediator.Send(new SelectResearcherEducationsQuery { ResearcherGuid = researcherGuid }).ToList());
             model.Publications = Mapper.Map<List<PublicationEditViewModel>>(_mediator.Send(new SelectResearcherPublicationsQuery { ResearcherGuid = researcherGuid }).ToList());
             model.ResearchActivity = researcher.research_activity;
@@ -56,6 +59,7 @@ namespace SciVacancies.WebApp.Controllers
             model.Rewards = researcher.rewards;
             model.Memberships = researcher.memberships;
             model.Conferences = researcher.conferences;
+            model.Interests= researcher.interests;
 
             model.ReadId = vacancy.read_id;
 
@@ -92,7 +96,7 @@ namespace SciVacancies.WebApp.Controllers
                 && appliedVacancyApplications.Items.Where(c => c.status == VacancyApplicationStatus.Applied).Select(c => c.researcher_guid).Distinct().ToList().Any(c => c == researcherGuid))
                 return View("Error", "Вы не можете подать повторную Заявку на Вакансию ");
 
-            var model = CreateVacancyApplicationCreateViewModel(researcherGuid, vacancy, null);
+            var model = VacancyApplicationCreateViewModelHelper(researcherGuid, vacancy, null);
             //TODO: Applications -> Create : вернуть добавление дополнительнительных публикаций
             return View(model);
         }
@@ -134,7 +138,7 @@ namespace SciVacancies.WebApp.Controllers
             }
 
             //с формы мы не получаем практически никаких данных, поэтому заново наполняем ViewModel
-            model = CreateVacancyApplicationCreateViewModel(researcherGuid, vacancy, model);
+            model = VacancyApplicationCreateViewModelHelper(researcherGuid, vacancy, model);
 
             if (!ModelState.IsValid)
                 return View(model);
@@ -245,7 +249,6 @@ namespace SciVacancies.WebApp.Controllers
                 return View("Error", "Вы не можете просматривать Заявки других соискателей.");
 
             var model = Mapper.Map<VacancyApplicationDetailsViewModel>(preModel);
-            model.Researcher = Mapper.Map<ResearcherDetailsViewModel>(_mediator.Send(new SingleResearcherQuery { ResearcherGuid = researcherGuid }));
             model.Vacancy = Mapper.Map<VacancyDetailsViewModel>(_mediator.Send(new SingleVacancyQuery { VacancyGuid = preModel.vacancy_guid }));
             model.Attachments = _mediator.Send(new SelectAllVacancyApplicationAttachmentsQuery { VacancyApplicationGuid = id });
             model.FolderApplicationsAttachmentsUrl = _attachmentSettings.Value.VacancyApplication.UrlPathPart;
@@ -282,7 +285,6 @@ namespace SciVacancies.WebApp.Controllers
                 return View("Error", "Вы не можете просматривать Заявки, поданные на вакансии других организаций.");
 
             var model = Mapper.Map<VacancyApplicationDetailsViewModel>(preModel);
-            model.Researcher = Mapper.Map<ResearcherDetailsViewModel>(_mediator.Send(new SingleResearcherQuery { ResearcherGuid = preModel.researcher_guid }));
             model.Vacancy = Mapper.Map<VacancyDetailsViewModel>(vacancy);
             model.Attachments = _mediator.Send(new SelectAllVacancyApplicationAttachmentsQuery { VacancyApplicationGuid = id });
             model.FolderApplicationsAttachmentsUrl = _attachmentSettings.Value.VacancyApplication.UrlPathPart;
@@ -350,7 +352,6 @@ namespace SciVacancies.WebApp.Controllers
                 return View("Error", "Вы не можете изменять Заявки, поданные на вакансии других организаций.");
 
             var model = Mapper.Map<VacancyApplicationDetailsViewModel>(preModel);
-            model.Researcher = Mapper.Map<ResearcherDetailsViewModel>(_mediator.Send(new SingleResearcherQuery { ResearcherGuid = preModel.researcher_guid }));
             model.Vacancy = Mapper.Map<VacancyDetailsViewModel>(vacancy);
             model.Attachments = _mediator.Send(new SelectAllVacancyApplicationAttachmentsQuery { VacancyApplicationGuid = id });
             model.FolderApplicationsAttachmentsUrl = _attachmentSettings.Value.VacancyApplication.UrlPathPart;

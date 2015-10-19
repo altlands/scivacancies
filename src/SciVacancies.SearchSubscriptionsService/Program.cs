@@ -29,14 +29,14 @@ namespace SciVacancies.SearchSubscriptionsService
                 .AddEnvironmentVariables();
             var builder = new ContainerBuilder();
             builder.Register(c => configuration).As<IConfiguration>().SingleInstance();
-            builder.RegisterType<SmtpNotificatorService>().As<ISmtpNotificatorService>().InstancePerLifetimeScope();
+            builder.RegisterType<SmtpNotificatorService>().As<ISmtpNotificatorService>().InstancePerDependency();
             builder.RegisterType<SearchSubscriptionService>().AsSelf();
             builder.RegisterType<QuartzService>().AsImplementedInterfaces();
 
             ConnectionSettings elasticConnectionSettings = new ConnectionSettings(new Uri(configuration.Get("ElasticSettings:ConnectionUrl")), defaultIndex: configuration.Get("ElasticSettings:DefaultIndex"));
-            builder.Register(c => new ElasticClient(elasticConnectionSettings)).As<IElasticClient>().SingleInstance();
+            builder.Register(c => new ElasticClient(elasticConnectionSettings)).As<IElasticClient>().InstancePerDependency();
             //TODO single instanse or not?
-            builder.Register(c => new SearchService(configuration, c.Resolve<IElasticClient>())).As<IElasticService>();
+            builder.Register(c => new SearchService(configuration, c.Resolve<IElasticClient>())).As<IElasticService>().InstancePerDependency();
 
             builder.RegisterType<AutofacJobFactory>().As<IJobFactory>().InstancePerLifetimeScope();
             builder.RegisterType<SearchSubscriptionJob>().As<IJob>().InstancePerLifetimeScope().AsSelf();
@@ -44,8 +44,8 @@ namespace SciVacancies.SearchSubscriptionsService
                 .Where(t => t != typeof(IJob) && typeof(IJob).IsAssignableFrom(t))
                 .AsSelf()
                 .InstancePerLifetimeScope();
-            builder.RegisterType<SearchSubscriptionScanner>().As<ISearchSubscriptionScanner>().InstancePerLifetimeScope();
-            builder.Register(c => new Database(configuration.Get("Data:ReadModelDb"), NpgsqlFactory.Instance)).As<IDatabase>();
+            builder.RegisterType<SearchSubscriptionScanner>().As<ISearchSubscriptionScanner>().InstancePerDependency();
+            builder.Register(c => new Database(configuration.Get("Data:ReadModelDb"), NpgsqlFactory.Instance)).As<IDatabase>().InstancePerDependency();
             //builder.Register(c => new Database(Config.Get("Data:ReadModelDb"), NpgsqlFactory.Instance)).As<IDatabase>().InstancePerLifetimeScope();
 
             var container = builder.Build();
@@ -81,13 +81,13 @@ namespace SciVacancies.SearchSubscriptionsService
             try
             {
                 searchSubscriptionService = container.Resolve<SearchSubscriptionService>();
-                Console.WriteLine("Programm: SearchSubscriptionService Resolved");
+                Console.WriteLine("Program: SearchSubscriptionService Resolved");
                 searchSubscriptionService.OnStart();
-                Console.WriteLine("Programm: SearchSubscriptionService Started");
+                Console.WriteLine("Program: SearchSubscriptionService Started");
             }
             catch (Exception exception)
             {
-                Console.WriteLine("Programm:" + exception.Message);
+                Console.WriteLine("Program:" + exception.Message);
                 Console.ReadLine();
                 return;
             }
@@ -106,9 +106,9 @@ namespace SciVacancies.SearchSubscriptionsService
                 Thread.Sleep(500);
             }
 
-            Console.WriteLine("Programm: Stopping");
+            Console.WriteLine("Program: Stopping");
             searchSubscriptionService.Stop();
-            Console.WriteLine("Programm: SearchSubscriptionService Stopped");
+            Console.WriteLine("Program: SearchSubscriptionService Stopped");
             Console.ReadLine();
 
         }

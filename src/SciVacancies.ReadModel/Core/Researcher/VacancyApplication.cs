@@ -9,7 +9,7 @@ namespace SciVacancies.ReadModel.Core
 {
     [TableName("res_vacancyapplications")]
     [PrimaryKey("guid", AutoIncrement = false)]
-    [ExplicitColumns()]
+    [ExplicitColumns]
     public class VacancyApplication : BaseEntity
     {
         /// <summary>
@@ -19,7 +19,15 @@ namespace SciVacancies.ReadModel.Core
         public long? read_id { get; set; }
 
         [Column]
+        public DateTime birthdate { get; set; }
+
+        [Column]
+        public string image_url { get; set; }
+
+        [Column]
         public string researcher_fullname { get; set; }
+        [Column]
+        public string researcher_fullname_eng { get; set; }
         [Column]
         public string position_name { get; set; }
 
@@ -50,6 +58,8 @@ namespace SciVacancies.ReadModel.Core
         public string memberships { get; set; }
         [Column]
         public string conferences { get; set; }
+        [Column]
+        public string interests { get; set; }
 
         [Column]
         public string covering_letter { get; set; }

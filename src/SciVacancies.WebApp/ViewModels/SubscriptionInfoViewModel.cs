@@ -2,6 +2,7 @@
 
 namespace SciVacancies.WebApp.ViewModels
 {
+
     public class SubscriptionInfoViewModel
     {
         /// <summary>

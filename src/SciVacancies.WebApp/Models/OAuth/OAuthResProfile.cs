@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace SciVacancies.WebApp.Models.OAuth
 {
@@ -41,7 +42,6 @@ namespace SciVacancies.WebApp.Models.OAuth
         public List<OAuthResMember> members { get; set; }
         public string middleName { get; set; }
         public string middleNameEn { get; set; }
-        public string nationality { get; set; }
         public string phone { get; set; }
         public OAuthResPhoto photo { get; set; }
         /// <summary>

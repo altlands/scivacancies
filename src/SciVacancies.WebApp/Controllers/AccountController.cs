@@ -60,13 +60,13 @@ namespace SciVacancies.WebApp.Controllers
             var cp = _authorizeService.LogOutAndLogInUser(Response, _userManager.CreateIdentity(user, DefaultAuthenticationTypes.ApplicationCookie));
             return RedirectToAccount(cp);
         }
-        public IActionResult LoginOrganization()
-        {
-            var user = _userManager.FindByName("organization2");
+        //public IActionResult LoginOrganization()
+        //{
+        //    var user = _userManager.FindByName("organization2");
 
-            var cp = _authorizeService.LogOutAndLogInUser(Response, _userManager.CreateIdentity(user, DefaultAuthenticationTypes.ApplicationCookie));
-            return RedirectToAccount(cp);
-        }
+        //    var cp = _authorizeService.LogOutAndLogInUser(Response, _userManager.CreateIdentity(user, DefaultAuthenticationTypes.ApplicationCookie));
+        //    return RedirectToAccount(cp);
+        //}
 
         [PageTitle("Вход")]
         [HttpPost]
@@ -79,6 +79,10 @@ namespace SciVacancies.WebApp.Controllers
                     switch (model.Resource)
                     {
                         case AuthorizeResourceTypes.OwnAuthorization:
+
+                            if (string.IsNullOrWhiteSpace(model.Login) || string.IsNullOrWhiteSpace(model.Password))
+                                return View("Error", "Вы не указали логин и/или пароль");
+
                             //ищем учётку по логину и паролю
                             var user = await _userManager.FindAsync(model.Login, model.Password);
 
@@ -266,7 +270,7 @@ namespace SciVacancies.WebApp.Controllers
 
 
                                             var user =
-                                                _mediator.Send(new RegisterUserOrganizationCommand {Data = orgModel});
+                                                _mediator.Send(new RegisterUserOrganizationCommand { Data = orgModel });
 
                                             claimsPrincipal = _authorizeService.LogOutAndLogInUser(Response,
                                                 _userManager.CreateIdentity(user,
@@ -410,15 +414,12 @@ namespace SciVacancies.WebApp.Controllers
             if (!model.Agreement)
                 ModelState.AddModelError("Agreement", "Нет согласия на обработку персональных данных");
 
-            SciVacUser existingUser = null;
-            existingUser = await _userManager.FindByNameAsync(model.UserName);
-            if (existingUser != null)
+            if (await _userManager.FindByNameAsync(model.UserName) != null)
                 ModelState.AddModelError("UserName", "Пользователь с таким логином уже существует");
 
-            //existingUser = await _userManager.FindByEmailAsync(model.Email);
-            //if (existingUser != null)
-            //    //TODO: что делать если пользователь еще не подтвердил email (удалить его?)
-            //    ModelState.AddModelError("Email", "Пользователь с таким Email уже существует");
+            if (await _userManager.FindByEmailAsync(model.Email) != null)
+                //TODO: что делать если пользователь еще не подтвердил email (удалить его?)
+                ModelState.AddModelError("Email", "Пользователь с таким Email уже существует");
 
             if (ModelState.ErrorCount > 0)
             {
@@ -465,7 +466,7 @@ namespace SciVacancies.WebApp.Controllers
             //return RedirectToAccount(claimsPrincipal);
         }
 
-        public IActionResult SuccessfulRegister () => View("SuccessfulRegister");
+        public IActionResult SuccessfulRegister() => View("SuccessfulRegister");
 
         #region restore password
         /// <summary>
@@ -496,6 +497,8 @@ namespace SciVacancies.WebApp.Controllers
             // !!! Восстанавливаем пароль даже на неактивированную учётную запись !!!
 
             #region validation
+            if (string.IsNullOrWhiteSpace(username))
+                return View("Error", model: "Вы не указали логин");
 
             var user = await _userManager.FindByNameAsync(username);
             if (user == null)
@@ -504,11 +507,7 @@ namespace SciVacancies.WebApp.Controllers
             //проверяем, что пользователь ЧУЖОЙ (и нам Не нужно подтверждать его Email)
             var logins = await _userManager.GetLoginsAsync(user.Id);
             if (logins != null && logins.Any())
-            {
-                return View("Error",
-                    model:
-                        $"Для восстановления пароля воспользуйтесь порталом (или сайтом), через который Вы выполнили авторизацию ({string.Join(", ", logins.Select(c => c.LoginProvider).ToList())}).");
-            }
+                return View("Error", $"Для восстановления пароля воспользуйтесь порталом (или сайтом), через который Вы выполнили авторизацию ({string.Join(", ", logins.Select(c => c.LoginProvider).ToList())}).");
 
             #endregion
 
@@ -748,7 +747,10 @@ namespace SciVacancies.WebApp.Controllers
                 return RedirectToAction("account", "researchers");
             }
 
-            var user = await _userManager.FindByIdAsync(User.Identity.GetUserId());
+            if (string.IsNullOrWhiteSpace(userName))
+                return View("Error", model: "Не указано имя пользователя");
+
+            var user = await _userManager.FindByNameAsync(userName);
             if (user == null)
                 return View("Error", model: "Мы не нашли пользователя");
 

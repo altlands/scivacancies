@@ -12,6 +12,10 @@ namespace SciVacancies.WebApp.ViewModels
             Title = "Личная карточка пользователя";
         }
         public PagedList<Vacancy> Vacancies { get; set; }
+        
+        /// <summary>
+        /// Поданные Исследователем вакансии. Используется для выбора какие действия показывать Исследователю, если он подал или не подал Заявку на Вакансию
+        /// </summary>
         public List<VacancyApplication> AppliedApplications { get; set; } = new List<VacancyApplication>();
     }
 }

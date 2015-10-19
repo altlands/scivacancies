@@ -34,6 +34,7 @@ namespace SciVacancies.ReadModel.Core
         public string phone { get; set; }
         public string extraphone { get; set; }
 
+        [Obsolete("отказываемся от свойства Национальность")]
         public string nationality { get; set; }
 
         public string research_activity { get; set; }
