@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Microsoft.AspNet.Http;
 using System.Linq;
 using SciVacancies.WebApp.Engine;
+using Microsoft.AspNet.WebUtilities;
 
 namespace SciVacancies.WebApp
 {
@@ -18,7 +19,7 @@ namespace SciVacancies.WebApp
         /// <returns></returns>
         public static IDictionary<string, string[]> ToQueryStringDictionary(this HttpRequest source)
         {
-            return Microsoft.AspNet.WebUtilities.QueryHelpers.ParseQuery(source.QueryString.Value);
+            return QueryHelpers.ParseQuery(source.QueryString.Value).ToDictionary(s => s.Key, s => s.Value.ToArray());
         }
 
         /// <summary>
@@ -166,11 +167,11 @@ namespace SciVacancies.WebApp
         {
             var queryDictionary = source.ToQueryStringDictionary();
             //если параметра в списке нет
-                if (queryDictionary.ContainsKey(ConstTerms.OrderDirectionFieldName)
-                    && queryDictionary[ConstTerms.OrderDirectionFieldName].Contains(ConstTerms.OrderByAscending))
-                {
-                    return "/images/icons/arrow-top-tab.png";
-                }
+            if (queryDictionary.ContainsKey(ConstTerms.OrderDirectionFieldName)
+                && queryDictionary[ConstTerms.OrderDirectionFieldName].Contains(ConstTerms.OrderByAscending))
+            {
+                return "/images/icons/arrow-top-tab.png";
+            }
             return "/images/icons/arrow-bottom-tab.png";
         }
     }

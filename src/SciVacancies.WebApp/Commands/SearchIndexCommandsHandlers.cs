@@ -17,7 +17,7 @@ namespace SciVacancies.WebApp.Commands
         }
         protected override void HandleCore(CreateSearchIndexCommand message)
         {
-         _elastic.CreateIndex(_elasticSettings.Options.DefaultIndex, c => c
+         _elastic.CreateIndex(_elasticSettings.Value.DefaultIndex, c => c
                                 .AddMapping<Vacancy>(am => am
                                     .MapFromAttributes()
                                 )
@@ -41,7 +41,7 @@ namespace SciVacancies.WebApp.Commands
         {
             try
             {
-                _elastic.DeleteIndex(s => s.Index(_elasticSettings.Options.DefaultIndex));
+                _elastic.DeleteIndex(s => s.Index(_elasticSettings.Value.DefaultIndex));
             }
             catch (System.Exception e)
             {

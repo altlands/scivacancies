@@ -17,7 +17,7 @@ namespace SciVacancies.WebApp.Infrastructure
 
         protected override void Load(ContainerBuilder builder)
         {
-            builder.Register(c => new Database(Config.Get("Data:ReadModelDb"), NpgsqlFactory.Instance))
+            builder.Register(c => new Database(Config["Data:ReadModelDb"], NpgsqlFactory.Instance))
             .As<IDatabase>()
             //.SingleInstance()
             //.AsSelf()

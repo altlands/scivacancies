@@ -9,7 +9,7 @@ namespace SciVacancies.WebApp.Infrastructure.Identity
     [DbConfigurationType(typeof(PostgresDbConfiguration))]
     public class PostgresSciVacUserDbContext : SciVacUserDbContext
     {
-        public PostgresSciVacUserDbContext(IOptions<DbSettings> dbOptions) : base(dbOptions.Options.ReadModelDb)
+        public PostgresSciVacUserDbContext(IOptions<DbSettings> dbOptions) : base(dbOptions.Value.ReadModelDb)
         {
         }
         public PostgresSciVacUserDbContext(string connectionString) : base(connectionString)

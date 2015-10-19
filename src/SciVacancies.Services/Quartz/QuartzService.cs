@@ -1,10 +1,10 @@
 ﻿using System;
+using System.Collections.Specialized;
+using Microsoft.Framework.Configuration;
 
 using Quartz;
 using Quartz.Impl;
 using Quartz.Spi;
-using Microsoft.Framework.Configuration;
-using System.Collections.Specialized;
 using Newtonsoft.Json;
 
 namespace SciVacancies.Services.Quartz
@@ -17,14 +17,14 @@ namespace SciVacancies.Services.Quartz
         {
             var properties = new NameValueCollection
             {
-                ["quartz.scheduler.instanceName"] = configuration.Get("QuartzSettings:Scheduler:InstanceName"),
-                ["quartz.jobStore.type"] = configuration.Get("QuartzSettings:JobStore:Type"),
-                ["quartz.jobStore.useProperties"] = configuration.Get("QuartzSettings:JobStore:UseProperties"),
-                ["quartz.jobStore.dataSource"] = configuration.Get("QuartzSettings:JobStore:DataSource"),
-                ["quartz.jobStore.tablePrefix"] = configuration.Get("QuartzSettings:JobStore:TablePrefix"),
-                ["quartz.jobStore.lockHandler.type"] = configuration.Get("QuartzSettings:JobStore:LockHandler:Type"),
-                ["quartz.dataSource.default.connectionString"] = configuration.Get("QuartzSettings:DataSource:Default:ConnectionString"),
-                ["quartz.dataSource.default.provider"] = configuration.Get("QuartzSettings:DataSource:Default:Provider"),
+                ["quartz.scheduler.instanceName"] = configuration["QuartzSettings:Scheduler:InstanceName"],
+                ["quartz.jobStore.type"] = configuration["QuartzSettings:JobStore:Type"],
+                ["quartz.jobStore.useProperties"] = configuration["QuartzSettings:JobStore:UseProperties"],
+                ["quartz.jobStore.dataSource"] = configuration["QuartzSettings:JobStore:DataSource"],
+                ["quartz.jobStore.tablePrefix"] = configuration["QuartzSettings:JobStore:TablePrefix"],
+                ["quartz.jobStore.lockHandler.type"] = configuration["QuartzSettings:JobStore:LockHandler:Type"],
+                ["quartz.dataSource.default.connectionString"] = configuration["QuartzSettings:DataSource:Default:ConnectionString"],
+                ["quartz.dataSource.default.provider"] = configuration["QuartzSettings:DataSource:Default:Provider"],
                 ["quartz.jobStore.misfireThreshold"] = "60000"
             };
 

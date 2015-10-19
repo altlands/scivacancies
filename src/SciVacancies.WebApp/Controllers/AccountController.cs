@@ -101,7 +101,7 @@ namespace SciVacancies.WebApp.Controllers
                             return RedirectToAccount(cp);
                         case AuthorizeResourceTypes.ScienceMap:
                             SetAuthorizationCookies(AuthorizeUserTypes.Researcher, AuthorizeResourceTypes.ScienceMap);
-                            return Redirect(GetOAuthAuthorizationUrl(_oauthSettings.Options.Mapofscience));
+                            return Redirect(GetOAuthAuthorizationUrl(_oauthSettings.Value.Mapofscience));
                     }
                     break;
                 case AuthorizeUserTypes.Organization:
@@ -110,7 +110,7 @@ namespace SciVacancies.WebApp.Controllers
                         case AuthorizeResourceTypes.Sciencemon:
                             SetAuthorizationCookies(AuthorizeUserTypes.Organization, AuthorizeResourceTypes.Sciencemon);
 
-                            return Redirect(GetOAuthAuthorizationUrl(_oauthSettings.Options.Sciencemon));
+                            return Redirect(GetOAuthAuthorizationUrl(_oauthSettings.Value.Sciencemon));
                     }
                     break;
             }
@@ -228,14 +228,14 @@ namespace SciVacancies.WebApp.Controllers
                                     var tokenResponse =
                                         await
                                             _authorizeService.GetOAuthAuthorizeTokenAsync(
-                                                _oauthSettings.Options.Sciencemon, GetCodeFromQuery());
+                                                _oauthSettings.Value.Sciencemon, GetCodeFromQuery());
 
                                     if (!string.IsNullOrEmpty(tokenResponse.AccessToken))
                                     {
                                         var claims =
                                             await
                                                 _authorizeService.GetOAuthUserAndTokensClaimsAsync(
-                                                    _oauthSettings.Options.Sciencemon, tokenResponse);
+                                                    _oauthSettings.Value.Sciencemon, tokenResponse);
 
                                         OAuthOrgClaim orgClaim =
                                             JsonConvert.DeserializeObject<OAuthOrgClaim>(
@@ -305,11 +305,11 @@ namespace SciVacancies.WebApp.Controllers
                             {
                                 if (!string.IsNullOrEmpty(GetCodeFromQuery()))
                                 {
-                                    var tokenResponse = await _authorizeService.GetOAuthAuthorizeTokenAsync(_oauthSettings.Options.Mapofscience, GetCodeFromQuery());
+                                    var tokenResponse = await _authorizeService.GetOAuthAuthorizeTokenAsync(_oauthSettings.Value.Mapofscience, GetCodeFromQuery());
 
                                     if (!string.IsNullOrEmpty(tokenResponse.AccessToken))
                                     {
-                                        var claims = await _authorizeService.GetOAuthUserAndTokensClaimsAsync(_oauthSettings.Options.Mapofscience, tokenResponse);
+                                        var claims = await _authorizeService.GetOAuthUserAndTokensClaimsAsync(_oauthSettings.Value.Mapofscience, tokenResponse);
 
                                         //ищем пользователя по Email в нашей БД
                                         var resUser = _userManager.FindByEmail(claims.Find(f => f.Type.Equals("email")).Value);
@@ -775,7 +775,7 @@ namespace SciVacancies.WebApp.Controllers
         [PageTitle("Выход")]
         public ActionResult Logout()
         {
-            Context.Response.HttpContext.Authentication.SignOut(DefaultAuthenticationTypes.ApplicationCookie);
+            HttpContext.Authentication.SignOutAsync(DefaultAuthenticationTypes.ApplicationCookie);
             //Context.Response.Cookies.Delete(DefaultAuthenticationTypes.ApplicationCookie);
             //Context.Response.SignOut(DefaultAuthenticationTypes.ApplicationCookie);
             return RedirectToHome();

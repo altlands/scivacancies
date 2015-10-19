@@ -162,9 +162,9 @@ namespace SciVacancies.WebApp.Controllers
                     .Last()
                     .ToUpper();
 
-                if (!_attachmentSettings.Options.Researcher.AllowExtensions.ToUpper().Contains(fileExtension.ToUpper()))
+                if (!_attachmentSettings.Value.Researcher.AllowExtensions.ToUpper().Contains(fileExtension.ToUpper()))
                     ModelState.AddModelError("PhotoFile",
-                        $"Можно добавить только изображение. Допустимые типы файлов: {_attachmentSettings.Options.Researcher.AllowExtensions}");
+                        $"Можно добавить только изображение. Допустимые типы файлов: {_attachmentSettings.Value.Researcher.AllowExtensions}");
 
                 if (ModelState.ErrorCount > 0)
                     return View(model);
@@ -173,16 +173,16 @@ namespace SciVacancies.WebApp.Controllers
                 {
                     var newFileName = $"{authorizedUserGuid}.{fileExtension}";
                     var filePath =
-                        $"{_hostingEnvironment.WebRootPath}{_attachmentSettings.Options.Researcher.PhisicalPathPart}\\{newFileName}";
+                        $"{_hostingEnvironment.WebRootPath}{_attachmentSettings.Value.Researcher.PhisicalPathPart}\\{newFileName}";
                     Directory.CreateDirectory(
-                        $"{_hostingEnvironment.WebRootPath}{_attachmentSettings.Options.Researcher.PhisicalPathPart}\\");
+                        $"{_hostingEnvironment.WebRootPath}{_attachmentSettings.Value.Researcher.PhisicalPathPart}\\");
 
                     using (var image = Image.FromStream(file.OpenReadStream()))
                     {
                         Image newImage = null;
-                        if (file.Length > _attachmentSettings.Options.Researcher.MaxItemSize)
+                        if (file.Length > _attachmentSettings.Value.Researcher.MaxItemSize)
                         {
-                            var scale = ((float)_attachmentSettings.Options.Researcher.MaxItemSize / file.Length);
+                            var scale = ((float)_attachmentSettings.Value.Researcher.MaxItemSize / file.Length);
                             var newWidth = image.Width * scale;
                             var newHeight = image.Height * scale;
                             newImage = ScaleImage(image, (int)newWidth, (int)newHeight);
@@ -372,7 +372,7 @@ namespace SciVacancies.WebApp.Controllers
                     _mediator.Send(new AddVacancyToFavoritesCommand { ResearcherGuid = researcherGuid, VacancyGuid = vacancyGuid });
             }
 
-            return Redirect(Context.Request.Headers["referer"]);
+            return Redirect(HttpContext.Request.Headers["referer"]);
         }
 
         [Authorize(Roles = ConstTerms.RequireRoleResearcher)]

@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel;
 using Microsoft.AspNet.Mvc;
+using Microsoft.AspNet.Mvc.Filters;
 
 namespace SciVacancies.WebApp.Controllers
 {

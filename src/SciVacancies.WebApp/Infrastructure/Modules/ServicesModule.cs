@@ -19,7 +19,7 @@ namespace SciVacancies.WebApp.Infrastructure
 
         protected override void Load(ContainerBuilder builder)
         {
-            ConnectionSettings elasticConnectionSettings = new ConnectionSettings(new Uri(_configuration.Get("ElasticSettings:ConnectionUrl")), defaultIndex: _configuration.Get("ElasticSettings:DefaultIndex"));
+            ConnectionSettings elasticConnectionSettings = new ConnectionSettings(new Uri(_configuration["ElasticSettings:ConnectionUrl"]), defaultIndex: _configuration["ElasticSettings:DefaultIndex"]);
 
             builder.Register(c => new ElasticClient(elasticConnectionSettings)).As<IElasticClient>().SingleInstance();
             //TODO single instanse or not?

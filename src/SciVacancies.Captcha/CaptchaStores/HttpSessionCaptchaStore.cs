@@ -1,5 +1,6 @@
 ﻿using System;
 using Microsoft.AspNet.Http;
+using Microsoft.AspNet.Http.Features;
 
 namespace SciVacancies.Captcha.CaptchaStores
 {
@@ -14,17 +15,17 @@ namespace SciVacancies.Captcha.CaptchaStores
 
         public void DeleteCaptcha(string captchaId)
         {
-            Session[captchaId] = null;
+            Session.Remove(captchaId);
         }
 
-        public ISessionCollection Session
+        public ISession Session
         {
             get
             {
                 if (Context?.Session == null) throw new InvalidOperationException("Http Sessions not available in this context");
                 return Context.Session;
             }
-        } 
+        }
 
         public string GetCaptcha(string captchaId)
         {
@@ -34,8 +35,8 @@ namespace SciVacancies.Captcha.CaptchaStores
         }
 
         public void PutCaptcha(string captchaId, string captchaText)
-        {            
-            Session.SetString(captchaId,captchaText);
+        {
+            Session.SetString(captchaId, captchaText);
         }
     }
 }

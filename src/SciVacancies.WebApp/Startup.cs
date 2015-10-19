@@ -3,7 +3,6 @@ using System.Collections;
 using System.Linq;
 using Autofac;
 using Autofac.Framework.DependencyInjection;
-using Autofac.Features.Variance;
 using Microsoft.AspNet.Builder;
 using Microsoft.AspNet.Diagnostics;
 using Microsoft.AspNet.Hosting;
@@ -13,8 +12,11 @@ using Microsoft.Framework.DependencyInjection;
 using Microsoft.Framework.Logging;
 using SciVacancies.Services.Quartz;
 using SciVacancies.WebApp.Infrastructure;
-using Microsoft.Framework.Runtime;
+using Microsoft.Dnx.Runtime;
 using Microsoft.AspNet.StaticFiles;
+using Microsoft.AspNet.Session;
+using System.Globalization;
+using Quartz.Spi;
 
 namespace SciVacancies.WebApp
 {
@@ -27,7 +29,8 @@ namespace SciVacancies.WebApp
             var vars = Environment.GetEnvironmentVariables();
             devEnv = (string)vars.Cast<DictionaryEntry>().FirstOrDefault(e => e.Key.Equals("dev_env")).Value;
             // Setup configuration sources.
-            var configurationBuilder = new ConfigurationBuilder(appEnv.ApplicationBasePath)
+            var configurationBuilder = new ConfigurationBuilder()
+                .SetBasePath(appEnv.ApplicationBasePath)
                 .AddJsonFile("config.json")
                 .AddJsonFile($"config.{devEnv}.json", optional: true)
                 .AddEnvironmentVariables();
@@ -35,50 +38,54 @@ namespace SciVacancies.WebApp
             Configuration = configurationBuilder.Build();
         }
 
-        public IConfiguration Configuration { get; set; }
+        public IConfigurationRoot Configuration { get; set; }
+
+        public IContainer Container { get; set; }
 
         // This method gets called by the runtime.
         public IServiceProvider ConfigureServices(IServiceCollection services)
         {
-            services.Configure<AppSettings>(Configuration.GetConfigurationSection("AppSettings"));
-            services.Configure<DbSettings>(Configuration.GetConfigurationSection("Data"));
-            services.Configure<OAuthSettings>(Configuration.GetConfigurationSection("OAuthSettings"));
-            services.Configure<QuartzSettings>(Configuration.GetConfigurationSection("QuartzSettings"));
-            services.Configure<ApiSettings>(Configuration.GetConfigurationSection("ApiSettings"));
-            services.Configure<ElasticSettings>(Configuration.GetConfigurationSection("ElasticSettings"));
-            services.Configure<AttachmentSettings>(Configuration.GetConfigurationSection("AttachmentSettings"));
-            services.Configure<SiteFileSettings>(Configuration.GetConfigurationSection("SiteFileSettings"));
-            services.Configure<VacancyLifeCycleSettings>(Configuration.GetConfigurationSection("VacancyLifeCycleSettings"));
-            services.Configure<CaptchaSettings>(Configuration.GetConfigurationSection("CaptchaSettings"));
-            services.Configure<SagaSettings>(Configuration.GetConfigurationSection("SagaSettings"));
+            services.Configure<AppSettings>(Configuration.GetSection("AppSettings"));
+            services.Configure<DbSettings>(Configuration.GetSection("Data"));
+            services.Configure<OAuthSettings>(Configuration.GetSection("OAuthSettings"));
+            services.Configure<QuartzSettings>(Configuration.GetSection("QuartzSettings"));
+            services.Configure<ApiSettings>(Configuration.GetSection("ApiSettings"));
+            services.Configure<ElasticSettings>(Configuration.GetSection("ElasticSettings"));
+            services.Configure<AttachmentSettings>(Configuration.GetSection("AttachmentSettings"));
+            services.Configure<SiteFileSettings>(Configuration.GetSection("SiteFileSettings"));
+            services.Configure<VacancyLifeCycleSettings>(Configuration.GetSection("VacancyLifeCycleSettings"));
+            services.Configure<CaptchaSettings>(Configuration.GetSection("CaptchaSettings"));
+            services.Configure<SagaSettings>(Configuration.GetSection("SagaSettings"));
 
-            services.ConfigureCookieAuthentication(options =>
+            services.AddCookieAuthentication(options =>
             {
                 options.AutomaticAuthentication = false;
             });
 
             services.AddMvc();
 
+
             //TODO -  remove
             services.AddSingleton(c => Configuration);
 
+
+            services.AddCaching();
+
+            services.AddSession(o => { o.IdleTimeout = TimeSpan.FromSeconds(10); });
+
             var builder = new ContainerBuilder();
-            builder.RegisterSource(new ContravariantRegistrationSource());
 
             ConfigureContainer(builder);
 
             builder.Populate(services);
-            var container = builder.Build();
 
-            SchedulerServiceInitialize(container.Resolve<ISchedulerService>());
+            Container = builder.Build();
 
-            return container.Resolve<IServiceProvider>();
+            return Container.Resolve<IServiceProvider>();
         }
 
         public void ConfigureContainer(ContainerBuilder builder)
         {
-            builder.RegisterSource(new ContravariantRegistrationSource());
-
             builder.RegisterModule(new EventStoreModule(Configuration));
             builder.RegisterModule(new EventBusModule());
             builder.RegisterModule(new EventHandlersModule());
@@ -99,7 +106,7 @@ namespace SciVacancies.WebApp
             });
             //app.UseOpenIdConnectAuthentication();
 
-            app.UseInMemorySession(configure: s => s.IdleTimeout = TimeSpan.FromMinutes(30));
+            app.UseSession();
             // Configure the HTTP request pipeline.          
 
             // Add the console logger.
@@ -108,21 +115,23 @@ namespace SciVacancies.WebApp
             // Add the following to the request pipeline only in development environment.
             if (env.IsEnvironment("Development"))
             {
-                app.UseErrorPage(ErrorPageOptions.ShowAll);
+                app.UseDeveloperExceptionPage();
             }
             else
             {
                 // Add Error handling middleware which catches all application specific errors and
                 // send the request to the following path or controller action.
-                app.UseErrorHandler("/Home/Error");
+                app.UseExceptionHandler("/Home/Error");
             }
 
             app.UseStatusCodePagesWithReExecute("/StatusCodes/StatusCode{0}");
             //app.UseMvcWithDefaultRoute();
 
 
+            app.UseIISPlatformHandler();
+
             // Add static files to the request pipeline.
-            app.UseMiddleware<StaticFileMiddleware>(new StaticFileOptions());
+            app.UseStaticFiles();
 
             // Add MVC to the request pipeline.
             app.UseMvc(routes =>
@@ -153,10 +162,8 @@ namespace SciVacancies.WebApp
             });
 
             MappingConfiguration.Initialize();
-        }
 
-        public void SchedulerServiceInitialize(ISchedulerService schedulerService)
-        {
+            var schedulerService = new QuartzService(Configuration, Container.Resolve<IJobFactory>());
             schedulerService.StartScheduler();
         }
     }

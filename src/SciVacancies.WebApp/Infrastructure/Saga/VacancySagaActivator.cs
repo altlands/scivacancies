@@ -53,7 +53,7 @@ namespace SciVacancies.WebApp.Infrastructure.Saga
                 SagaGuid = saga.Id
             };
 
-            _schedulerService.CreateSheduledJobWithStrongName(job, new JobKey(job.SagaGuid.ToString(), "VacancySagaTimeoutJob"), _settings.Options.Scheduler.ExecutionInterval);
+            _schedulerService.CreateSheduledJobWithStrongName(job, new JobKey(job.SagaGuid.ToString(), "VacancySagaTimeoutJob"), _settings.Value.Scheduler.ExecutionInterval);
         }
 
         public void Handle(VacancyProlongedInCommittee msg)
@@ -132,7 +132,7 @@ namespace SciVacancies.WebApp.Infrastructure.Saga
                 }
             }
 
-            _schedulerService.CreateSheduledJobWithStrongName(job, new JobKey(job.SagaGuid.ToString(), "VacancySagaTimeoutJob"), _settings.Options.Scheduler.ExecutionInterval);
+            _schedulerService.CreateSheduledJobWithStrongName(job, new JobKey(job.SagaGuid.ToString(), "VacancySagaTimeoutJob"), _settings.Value.Scheduler.ExecutionInterval);
         }
         public void Handle(VacancyOfferAcceptedByWinner msg)
         {
@@ -185,7 +185,7 @@ namespace SciVacancies.WebApp.Infrastructure.Saga
                 }
             }
 
-            _schedulerService.CreateSheduledJobWithStrongName(job, new JobKey(job.SagaGuid.ToString(), "VacancySagaTimeoutJob"), _settings.Options.Scheduler.ExecutionInterval);
+            _schedulerService.CreateSheduledJobWithStrongName(job, new JobKey(job.SagaGuid.ToString(), "VacancySagaTimeoutJob"), _settings.Value.Scheduler.ExecutionInterval);
         }
         public void Handle(VacancyOfferAcceptedByPretender msg)
         {

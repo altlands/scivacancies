@@ -14,7 +14,7 @@ namespace SciVacancies.WebApp.ViewComponents
         }
         public IViewComponentResult Invoke(VacancyDetailsViewModel model)
         {
-            model.FolderVacanciesAttachmentsUrl = _attachmentSettings.Options.Vacancy.UrlPathPart;
+            model.FolderVacanciesAttachmentsUrl = _attachmentSettings.Value.Vacancy.UrlPathPart;
             return View("/Views/Partials/_VacancyInfo", model);
         }
     }

@@ -511,7 +511,7 @@ namespace SciVacancies.WebApp.Controllers
             if (model.Attachments != null && model.Attachments.Any())
             {
                 var newFolderName = Guid.NewGuid();
-                var fullDirectoryPath = $"{_hostingEnvironment.WebRootPath}{_attachmentSettings.Options.Vacancy.PhisicalPathPart}\\{newFolderName}\\";
+                var fullDirectoryPath = $"{_hostingEnvironment.WebRootPath}{_attachmentSettings.Value.Vacancy.PhisicalPathPart}\\{newFolderName}\\";
 
                 foreach (var file in model.Attachments)
                 {
@@ -525,7 +525,7 @@ namespace SciVacancies.WebApp.Controllers
                         //TODO: Application -> Attachments : можно ли редактировать список файлов, или Заявки создаются разово и для каждой генеиртся новая папка с вложениями
                         Directory.CreateDirectory(fullDirectoryPath);
                         var filePath =
-                            $"{_hostingEnvironment.WebRootPath}{_attachmentSettings.Options.Vacancy.PhisicalPathPart}\\{newFolderName}\\{fileName}";
+                            $"{_hostingEnvironment.WebRootPath}{_attachmentSettings.Value.Vacancy.PhisicalPathPart}\\{newFolderName}\\{fileName}";
                         file.SaveAs(filePath);
                         attachmentsList.Add(new SciVacancies.Domain.Core.VacancyAttachment
                         {
@@ -921,8 +921,8 @@ namespace SciVacancies.WebApp.Controllers
             if (inCommitteeDateValue.ToUniversalTime() < DateTime.Now.ToUniversalTime())
                 ModelState.AddModelError("InCommitteeDate", "Вы установили дату ранее текущей");
 
-            if ((inCommitteeDateValue.ToUniversalTime() - DateTime.Now.ToUniversalTime()).Days < _vacancyLifeCycleSettings.Options.DeltaFromPublishToInCommitteeMinDays)
-                ModelState.AddModelError("InCommitteeDate", $"Вы не можете установить дату перевода вакансии на рассмотрение комиссии раньше, чем через {_vacancyLifeCycleSettings.Options.DeltaFromPublishToInCommitteeMinDays} дн.");
+            if ((inCommitteeDateValue.ToUniversalTime() - DateTime.Now.ToUniversalTime()).Days < _vacancyLifeCycleSettings.Value.DeltaFromPublishToInCommitteeMinDays)
+                ModelState.AddModelError("InCommitteeDate", $"Вы не можете установить дату перевода вакансии на рассмотрение комиссии раньше, чем через {_vacancyLifeCycleSettings.Value.DeltaFromPublishToInCommitteeMinDays} дн.");
 
             if (!ModelState.IsValid)
             {

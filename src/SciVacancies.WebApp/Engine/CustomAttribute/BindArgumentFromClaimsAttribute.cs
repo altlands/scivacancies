@@ -3,6 +3,7 @@ using System.Linq;
 using System.ComponentModel;
 using Microsoft.AspNet.Mvc;
 using SciVacancies.WebApp.Engine;
+using Microsoft.AspNet.Mvc.Filters;
 
 namespace SciVacancies.WebApp.Controllers
 {

@@ -74,7 +74,7 @@ namespace SciVacancies.WebApp.Controllers
                 var refreshToken = User.Claims.Single(c => c.Type.Equals("refresh_token")).Value;
 
                 //получили новые данные - и обновляем их у себя
-                var tokenResponse = await _authorizeService.GetOAuthRefreshTokenAsync(_oauthSettings.Options.Mapofscience, refreshToken);
+                var tokenResponse = await _authorizeService.GetOAuthRefreshTokenAsync(_oauthSettings.Value.Mapofscience, refreshToken);
 
                 if (tokenResponse.IsError)
                 {

@@ -8,6 +8,7 @@ using Microsoft.AspNet.Authorization;
 using Microsoft.AspNet.Hosting;
 using Microsoft.AspNet.Http;
 using Microsoft.AspNet.Mvc;
+using Microsoft.AspNet.Razor;
 using Microsoft.Framework.OptionsModel;
 using Microsoft.Net.Http.Headers;
 using SciVacancies.Domain.DataModels;
@@ -127,9 +128,9 @@ namespace SciVacancies.WebApp.Controllers
                 return View("Error", "Вы не можете подать повторную Заявку на Вакансию");
 
             //TODO: Application -> Attachments : как проверять безопасность, прикрепляемых файлов
-            if (model.Attachments != null && model.Attachments.Any(c => c.Length > _attachmentSettings.Options.VacancyApplication.MaxItemSize))
+            if (model.Attachments != null && model.Attachments.Any(c => c.Length > _attachmentSettings.Value.VacancyApplication.MaxItemSize))
             {
-                ModelState.AddModelError("Attachments", $"Размер одного из прикрепленных файлов превышает допустимый размер ({_attachmentSettings.Options.VacancyApplication.MaxItemSize / 1000}КБ). Повторите создания Заявки ещё раз.");
+                ModelState.AddModelError("Attachments", $"Размер одного из прикрепленных файлов превышает допустимый размер ({_attachmentSettings.Value.VacancyApplication.MaxItemSize / 1000}КБ). Повторите создания Заявки ещё раз.");
             }
 
             //с формы мы не получаем практически никаких данных, поэтому заново наполняем ViewModel
@@ -142,7 +143,7 @@ namespace SciVacancies.WebApp.Controllers
             var attachmentsList = new List<SciVacancies.Domain.Core.VacancyApplicationAttachment>();
             var newFolderName = Guid.NewGuid();
             //save attachments
-            var fullDirectoryPath = $"{_hostingEnvironment.WebRootPath}{_attachmentSettings.Options.VacancyApplication.PhisicalPathPart}\\{newFolderName}\\";
+            var fullDirectoryPath = $"{_hostingEnvironment.WebRootPath}{_attachmentSettings.Value.VacancyApplication.PhisicalPathPart}\\{newFolderName}\\";
 
             if (model.Attachments != null && model.Attachments.Any())
             {
@@ -158,7 +159,7 @@ namespace SciVacancies.WebApp.Controllers
                         //TODO: Application -> Attachments : можно ли редактировать список файлов, или Заявки создаются разово и для каждой генеиртся новая папка с вложениями
                         Directory.CreateDirectory(fullDirectoryPath);
                         var filePath =
-                            $"{_hostingEnvironment.WebRootPath}{_attachmentSettings.Options.VacancyApplication.PhisicalPathPart}\\{newFolderName}\\{fileName}";
+                            $"{_hostingEnvironment.WebRootPath}{_attachmentSettings.Value.VacancyApplication.PhisicalPathPart}\\{newFolderName}\\{fileName}";
                         file.SaveAs(filePath);
                         attachmentsList.Add(new SciVacancies.Domain.Core.VacancyApplicationAttachment
                         {
@@ -247,7 +248,7 @@ namespace SciVacancies.WebApp.Controllers
             model.Researcher = Mapper.Map<ResearcherDetailsViewModel>(_mediator.Send(new SingleResearcherQuery { ResearcherGuid = researcherGuid }));
             model.Vacancy = Mapper.Map<VacancyDetailsViewModel>(_mediator.Send(new SingleVacancyQuery { VacancyGuid = preModel.vacancy_guid }));
             model.Attachments = _mediator.Send(new SelectAllVacancyApplicationAttachmentsQuery { VacancyApplicationGuid = id });
-            model.FolderApplicationsAttachmentsUrl = _attachmentSettings.Options.VacancyApplication.UrlPathPart;
+            model.FolderApplicationsAttachmentsUrl = _attachmentSettings.Value.VacancyApplication.UrlPathPart;
             return View(model);
         }
 
@@ -284,7 +285,7 @@ namespace SciVacancies.WebApp.Controllers
             model.Researcher = Mapper.Map<ResearcherDetailsViewModel>(_mediator.Send(new SingleResearcherQuery { ResearcherGuid = preModel.researcher_guid }));
             model.Vacancy = Mapper.Map<VacancyDetailsViewModel>(vacancy);
             model.Attachments = _mediator.Send(new SelectAllVacancyApplicationAttachmentsQuery { VacancyApplicationGuid = id });
-            model.FolderApplicationsAttachmentsUrl = _attachmentSettings.Options.VacancyApplication.UrlPathPart;
+            model.FolderApplicationsAttachmentsUrl = _attachmentSettings.Value.VacancyApplication.UrlPathPart;
             return View(model);
         }
 
@@ -352,7 +353,7 @@ namespace SciVacancies.WebApp.Controllers
             model.Researcher = Mapper.Map<ResearcherDetailsViewModel>(_mediator.Send(new SingleResearcherQuery { ResearcherGuid = preModel.researcher_guid }));
             model.Vacancy = Mapper.Map<VacancyDetailsViewModel>(vacancy);
             model.Attachments = _mediator.Send(new SelectAllVacancyApplicationAttachmentsQuery { VacancyApplicationGuid = id });
-            model.FolderApplicationsAttachmentsUrl = _attachmentSettings.Options.VacancyApplication.UrlPathPart;
+            model.FolderApplicationsAttachmentsUrl = _attachmentSettings.Value.VacancyApplication.UrlPathPart;
             return View(model);
         }
 

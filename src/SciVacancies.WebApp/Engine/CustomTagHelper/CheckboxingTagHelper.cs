@@ -2,11 +2,13 @@
 using System.Linq;
 using System.Text;
 using Microsoft.AspNet.Mvc.Rendering;
+using Microsoft.AspNet.Mvc.ViewFeatures;
+using Microsoft.AspNet.Mvc.ViewComponents;
 using Microsoft.AspNet.Razor.Runtime.TagHelpers;
 
 namespace SciVacancies.WebApp
 {
-    [TargetElement("checkboxing", Attributes = "items, values, property")]
+    [HtmlTargetElement("checkboxing", Attributes = "items, values, property")]
     public class CheckboxingTagHelper : TagHelper
     {
         [HtmlAttributeName("items")]
@@ -76,16 +78,15 @@ namespace SciVacancies.WebApp
             }
 
             span.AddCssClass("checkbox");
-            span.InnerHtml = input.ToString(TagRenderMode.SelfClosing);
+            span.InnerHtml.Append(input);
 
             var label = new TagBuilder("label");
             label.Attributes.Add("for", input.Attributes["id"]);
-            label.SetInnerText(item.Text);
+            label.InnerHtml.AppendEncoded(item.Text);
 
-            var li = new TagBuilder("li")
-            {
-                InnerHtml = span.ToString() + label
-            };
+            var li = new TagBuilder("li");
+
+            li.InnerHtml.Append(span).Append(label);
             li.AddCssClass("li-checkbox");
 
             if (Showcount > 0 && i > Showcount)

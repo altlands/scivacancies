@@ -10,7 +10,7 @@ using SciVacancies.WebApp.Engine;
 
 namespace SciVacancies.WebApp
 {
-    [TargetElement("div", Attributes = "pagedlist")]
+    [HtmlTargetElement("div", Attributes = "pagedlist")]
     public class VacancypagerTagHelper : TagHelper
     {
         private IDictionary<string, string[]> _queryDictionary;
@@ -54,8 +54,8 @@ namespace SciVacancies.WebApp
                         sb.Append(" из ");
                         sb.Append(PagedList.TotalItems);
 
-                        div.InnerHtml = sb.ToString();
-                        divLeft.InnerHtml = div.ToString();
+                        div.InnerHtml.Append(sb.ToString());
+                        divLeft.InnerHtml.Append(div);
                     }
 
                     {
@@ -83,11 +83,11 @@ namespace SciVacancies.WebApp
                             inputHidden.Attributes.Add("id", ParameterNamePageNumber);
                             inputHidden.Attributes.Add("value", PagedList.CurrentPage.ToString());
 
-                            form.InnerHtml = input.ToString(TagRenderMode.SelfClosing)+ inputHidden.ToString(TagRenderMode.SelfClosing) /*+ submit.ToString(TagRenderMode.SelfClosing)*/;
+                            form.InnerHtml.Append(input).Append(inputHidden) /*+ submit.ToString(TagRenderMode.SelfClosing)*/;
                         }
 
-                        div.InnerHtml = form.ToString(TagRenderMode.Normal) + " записей на странице";
-                        divLeft.InnerHtml += div.ToString();
+                        div.InnerHtml.Append(form).Append(" записей на странице");
+                        divLeft.InnerHtml.Append(div);
                     }
 
                 }
@@ -105,8 +105,9 @@ namespace SciVacancies.WebApp
                                 var span = new TagBuilder("span");
                                 span.AddCssClass("prev");
                                 span.AddCssClass("disable");
-                                span.InnerHtml = new TagBuilder("span") {InnerHtml = "Первая"}.ToString();
-                                li1.InnerHtml = span.ToString();
+
+                                span.InnerHtml.Append(new TagBuilder("span").InnerHtml.Append("Первая"));
+                                li1.InnerHtml.Append(span);
                             }
                             else
                             {
@@ -114,8 +115,8 @@ namespace SciVacancies.WebApp
                                 a.AddCssClass("prev");
                                 SetPageNumberInQuery(1);
                                 a.Attributes.Add("href", GetNewUri());
-                                a.InnerHtml = new TagBuilder("span") { InnerHtml = "Первая" }.ToString();
-                                li1.InnerHtml = a.ToString();
+                                a.InnerHtml.Append(new TagBuilder("span").InnerHtml.Append("Первая"));
+                                li1.InnerHtml.Append(a);
                             }
                         }
 
@@ -126,8 +127,8 @@ namespace SciVacancies.WebApp
                                 var span = new TagBuilder("span");
                                 span.AddCssClass("first");
                                 span.AddCssClass("disable");
-                                span.InnerHtml = new TagBuilder("span") {InnerHtml = "Предыдущая"}.ToString();
-                                li2.InnerHtml = span.ToString();
+                                span.InnerHtml.Append(new TagBuilder("span").InnerHtml.Append("Предыдущая"));
+                                li2.InnerHtml.Append(span);
                             }
                             else
                             {
@@ -135,8 +136,8 @@ namespace SciVacancies.WebApp
                                 a.AddCssClass("first");
                                 SetPageNumberInQuery(PagedList.CurrentPage <= PagedList.TotalPages ? PagedList.CurrentPage - 1 : PagedList.TotalPages);
                                 a.Attributes.Add("href", GetNewUri());
-                                a.InnerHtml = new TagBuilder("span") { InnerHtml = "Предыдущая" }.ToString();
-                                li2.InnerHtml = a.ToString();
+                                a.InnerHtml.Append(new TagBuilder("span").InnerHtml.Append("Предыдущая"));
+                                li2.InnerHtml.Append(a);
                             }
                         }
 
@@ -147,8 +148,8 @@ namespace SciVacancies.WebApp
                                 var span = new TagBuilder("span");
                                 span.AddCssClass("count-page");
                                 span.AddCssClass("disable");
-                                span.InnerHtml = PagedList.CurrentPage + " из " + PagedList.TotalPages;
-                                li3.InnerHtml = span.ToString();
+                                span.InnerHtml.Append(PagedList.CurrentPage + " из " + PagedList.TotalPages);
+                                li3.InnerHtml.Append(span);
                             }
                             else
                             {
@@ -176,11 +177,11 @@ namespace SciVacancies.WebApp
                                     inputHidden.Attributes.Add("id", ParameterNamePageSize);
                                     inputHidden.Attributes.Add("value", PagedList.PageSize.ToString());
 
-                                    form.InnerHtml = input.ToString(TagRenderMode.SelfClosing) + inputHidden.ToString(TagRenderMode.SelfClosing) /*+ submit.ToString(TagRenderMode.SelfClosing)*/;
+                                    form.InnerHtml.Append(input).Append(inputHidden) /*+ submit.ToString(TagRenderMode.SelfClosing)*/;
                                 }
                                
-                                divMiddlePage.InnerHtml = form.ToString(TagRenderMode.Normal) + " из " + PagedList.TotalPages;
-                                li3.InnerHtml = divMiddlePage.ToString();
+                                divMiddlePage.InnerHtml.Append(form).Append(" из " + PagedList.TotalPages);
+                                li3.InnerHtml.Append(divMiddlePage);
                             }
                         }
 
@@ -191,8 +192,8 @@ namespace SciVacancies.WebApp
                                 var span = new TagBuilder("span");
                                 span.AddCssClass("next");
                                 span.AddCssClass("disable");
-                                span.InnerHtml = new TagBuilder("span") { InnerHtml = "Следующая" }.ToString();
-                                li4.InnerHtml = span.ToString();
+                                span.InnerHtml.Append(new TagBuilder("span").InnerHtml.Append("Следующая"));
+                                li4.InnerHtml.Append(span);
                             }
                             else
                             {
@@ -200,8 +201,8 @@ namespace SciVacancies.WebApp
                                 a.AddCssClass("next");
                                 SetPageNumberInQuery(PagedList.CurrentPage < 1 ? 1 : PagedList.CurrentPage + 1);
                                 a.Attributes.Add("href", GetNewUri());
-                                a.InnerHtml = new TagBuilder("span") { InnerHtml = "Следующая" }.ToString();
-                                li4.InnerHtml = a.ToString();
+                                a.InnerHtml.Append(new TagBuilder("span").InnerHtml.Append("Следующая"));
+                                li4.InnerHtml.Append(a);
                             }
                         }
 
@@ -212,8 +213,8 @@ namespace SciVacancies.WebApp
                                 var span = new TagBuilder("span");
                                 span.AddCssClass("latest");
                                 span.AddCssClass("disable");
-                                span.InnerHtml = new TagBuilder("span") { InnerHtml = "Последняя" }.ToString();
-                                li5.InnerHtml = span.ToString();
+                                span.InnerHtml.Append(new TagBuilder("span").InnerHtml.Append("Последняя"));
+                                li5.InnerHtml.Append(span);
                             }
                             else
                             {
@@ -221,19 +222,19 @@ namespace SciVacancies.WebApp
                                 a.AddCssClass("latest");
                                 SetPageNumberInQuery(PagedList.TotalPages);
                                 a.Attributes.Add("href", GetNewUri());
-                                a.InnerHtml = new TagBuilder("span") { InnerHtml = "Последняя" }.ToString();
-                                li5.InnerHtml = a.ToString();
+                                a.InnerHtml.Append(new TagBuilder("span").InnerHtml.Append("Последняя"));
+                                li5.InnerHtml.Append(a);
                             }
                         }
 
-                        ul.InnerHtml = li1.ToString() + li2 + li3 + li4 + li5;
+                        ul.InnerHtml.Append(li1).Append(li2).Append(li3).Append(li4).Append(li5);
                     }
 
-                    divRight.InnerHtml = ul.ToString();
+                    divRight.InnerHtml.Append(ul);
                 }
 
 
-                divParent.InnerHtml = divLeft.ToString() + divRight.ToString();
+                divParent.InnerHtml.Append(divLeft).Append(divRight);
             }
 
 

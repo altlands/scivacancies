@@ -22,7 +22,7 @@
 
 <div asp-validation-summary="ValidationSummary.All"></div>
 
-<form enctype="multipart/form-data">
+<form enctype="multipart/form-data" method="post">
 
     <input asp-for="ResearcherGuid" />
     <input asp-for="VacancyGuid" />
@@ -36,7 +36,14 @@
                         <label>ID вакансии:</label>
                     </div>
                     <div class="right-cell">
-                        <input type="text" value="@if (Model.ReadId == null){<text>VAC ...</text>}else{<text>VAC @Model.ReadId</text>}" disabled class="disabled big-input" />
+                        @if (Model.ReadId == null)
+                        {
+                            <input type="text" value="VAC ..." disabled class="disabled big-input" />
+                        }
+                        else
+                        {
+                            <input type="text" value="@Model.ReadId" disabled class="disabled big-input" />
+                        }
                     </div>
                 </div>
 

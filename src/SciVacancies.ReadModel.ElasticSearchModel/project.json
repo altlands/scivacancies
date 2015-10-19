@@ -11,7 +11,7 @@
     "SciVacancies.Domain": "1.0.0-*",
 
     "MediatR": "2.0.0-beta-004",
-    "NEST": "1.5.1",
+    "NEST": "1.6.1",
     "AutoMapper": "3.3.1"
   },
 

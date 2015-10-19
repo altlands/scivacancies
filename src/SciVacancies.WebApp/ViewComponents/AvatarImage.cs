@@ -17,8 +17,8 @@ namespace SciVacancies.WebApp.ViewComponents
         public IViewComponentResult Invoke(string imageUrl)
         {
             var model =  string.IsNullOrWhiteSpace(imageUrl)
-            ? _siteFileSettings.Options.PathToBlankAvatar
-            : (_attachmentSettings.Options.Researcher.UrlPathPart + imageUrl);
+            ? _siteFileSettings.Value.PathToBlankAvatar
+            : (_attachmentSettings.Value.Researcher.UrlPathPart + imageUrl);
 
             return View("/Views/Partials/_AvatarImage", model);
         }

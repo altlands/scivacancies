@@ -37,26 +37,26 @@ namespace SciVacancies.WebApp.Controllers
             var ci = new CaptchaImage(text);
 
             int imageWidth, imageHeight;
-            if (int.TryParse(Context.Request.Query["w"], out imageWidth))
+            if (int.TryParse(HttpContext.Request.Query["w"], out imageWidth))
             {
                 ci.Width = imageWidth;
             }
-            if (int.TryParse(Context.Request.Query["h"], out imageHeight))
+            if (int.TryParse(HttpContext.Request.Query["h"], out imageHeight))
             {
                 ci.Height = imageHeight;
             }
 
             bool renew;
-            bool.TryParse(Context.Request.Query["r"], out renew);
+            bool.TryParse(HttpContext.Request.Query["r"], out renew);
 
-            var captchaContext = new CaptchaContext(Context);
+            var captchaContext = new CaptchaContext(HttpContext);
 
             var key = renew ? captchaContext.GetCaptchaKey() : Guid.NewGuid().ToString();
 
-            var iCaptchaStore = CaptchaConfiguration.DefaultStoreFactory(Context);
+            var iCaptchaStore = CaptchaConfiguration.DefaultStoreFactory(HttpContext);
             iCaptchaStore.PutCaptcha(key, text);
 
-            captchaContext.WriteCaptchaCookie(key, _captchaSettings.Options.CaptchaDurationSeconds);
+            captchaContext.WriteCaptchaCookie(key, _captchaSettings.Value.CaptchaDurationSeconds);
 
             FileContentResult result;
             using (var b = ci.RenderImage())
@@ -89,7 +89,7 @@ namespace SciVacancies.WebApp.Controllers
         [HttpPost]
         public IActionResult IsValid(string captchaText)
         {
-            var verifier = new CaptchaVerifier(CaptchaConfiguration.DefaultStoreFactory(Context), Context);
+            var verifier = new CaptchaVerifier(CaptchaConfiguration.DefaultStoreFactory(HttpContext), HttpContext);
             var boolResult = verifier.IsValid(captchaText);
             return Json(boolResult);
         }

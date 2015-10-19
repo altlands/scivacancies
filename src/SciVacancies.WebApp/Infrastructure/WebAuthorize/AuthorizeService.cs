@@ -62,10 +62,8 @@ namespace SciVacancies.WebApp.Infrastructure.WebAuthorize
         {
             var cp = new ClaimsPrincipal(identity);
 
-            response.HttpContext.Authentication.SignOut(DefaultAuthenticationTypes.ApplicationCookie);
-            //response.SignOut(DefaultAuthenticationTypes.ApplicationCookie);
-            response.HttpContext.Authentication.SignIn(DefaultAuthenticationTypes.ApplicationCookie, cp);
-            //response.SignIn(DefaultAuthenticationTypes.ApplicationCookie, cp);
+            response.HttpContext.Authentication.SignOutAsync(DefaultAuthenticationTypes.ApplicationCookie);
+            response.HttpContext.Authentication.SignInAsync(DefaultAuthenticationTypes.ApplicationCookie, cp);
 
             return cp;
         }

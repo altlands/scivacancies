@@ -45,7 +45,7 @@ namespace SciVacancies.WebApp.Infrastructure
         private IStoreEvents GetEventStore(IMediator mediator)
         {
             return Wireup.Init()
-                .UsingSqlPersistence(new NpgsqlConnectionFactory(Config.Get("Data:EventStoreDb")))
+                .UsingSqlPersistence(new NpgsqlConnectionFactory(Config["Data:EventStoreDb"]))
                 .WithDialect(new PostgreSqlDialect())
                 .EnlistInAmbientTransaction()
                 .InitializeStorageEngine()
@@ -66,7 +66,7 @@ namespace SciVacancies.WebApp.Infrastructure
         private IStoreEvents GetEventStoreWithoutDispatchers()
         {
             return Wireup.Init()
-                .UsingSqlPersistence(new NpgsqlConnectionFactory(Config.Get("Data:EventStoreDb")))
+                .UsingSqlPersistence(new NpgsqlConnectionFactory(Config["Data:EventStoreDb"]))
                 .WithDialect(new PostgreSqlDialect())
                 .EnlistInAmbientTransaction()
                 .InitializeStorageEngine()

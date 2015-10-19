@@ -11,10 +11,10 @@
     "SciVacancies.ReadModel": "1.0.0-*",
     "SciVacancies.ReadModel.ElasticSearchModel": "1.0.0-*",
 
-    "Microsoft.Framework.OptionsModel": "1.0.0-beta5",
+    "Microsoft.Framework.OptionsModel": "1.0.0-beta8",
 
-    "Autofac": "4.0.0-beta5",
-    "Autofac.Framework.DependencyInjection": "4.0.0-beta5",
+    "Autofac": "4.0.0-beta8-157",
+    "Autofac.Framework.DependencyInjection": "4.0.0-beta8-157",
     "Quartz": "2.3.3"
   },
 

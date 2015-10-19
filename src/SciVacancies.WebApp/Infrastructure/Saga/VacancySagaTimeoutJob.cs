@@ -72,7 +72,7 @@ namespace SciVacancies.WebApp.Infrastructure
                     break;
 
                 case VacancyStatus.InCommittee:
-                    if (!saga.FirstInCommitteeNotificationSent && saga.InCommitteeEndDate.AddDays(settings.Options.Date.Committee.FirstNotificationDays) <= DateTime.UtcNow)
+                    if (!saga.FirstInCommitteeNotificationSent && saga.InCommitteeEndDate.AddDays(settings.Value.Date.Committee.FirstNotificationDays) <= DateTime.UtcNow)
                     {
                         saga.Transition(new VacancySagaFirstInCommitteeNotificationSent
                         {
@@ -82,7 +82,7 @@ namespace SciVacancies.WebApp.Infrastructure
                         });
                         sagaRepository.Save("vacancysaga", saga, Guid.NewGuid(), null);
                     }
-                    if (saga.InCommitteeEndDate.AddDays(settings.Options.Date.Committee.SecondNotificationDays) <= DateTime.UtcNow)
+                    if (saga.InCommitteeEndDate.AddDays(settings.Value.Date.Committee.SecondNotificationDays) <= DateTime.UtcNow)
                     {
                         saga.Transition(new VacancySagaSecondInCommitteeNotificationSent
                         {
@@ -104,7 +104,7 @@ namespace SciVacancies.WebApp.Infrastructure
 
                 case VacancyStatus.OfferResponseAwaitingFromWinner:
                     //высылаем победителю уведомление, что пора бы принять решение по предложению контракта
-                    if (!saga.OfferResponseNotificationSentToWinner && saga.OfferResponseAwaitingFromWinnerEndDate.AddDays(settings.Options.Date.OfferResponseAwaiting.WinnerNotificationDays) <= DateTime.UtcNow)
+                    if (!saga.OfferResponseNotificationSentToWinner && saga.OfferResponseAwaitingFromWinnerEndDate.AddDays(settings.Value.Date.OfferResponseAwaiting.WinnerNotificationDays) <= DateTime.UtcNow)
                     {
                         saga.Transition(new VacancySagaOfferResponseNotificationSentToWinner
                         {
@@ -145,7 +145,7 @@ namespace SciVacancies.WebApp.Infrastructure
 
                 case VacancyStatus.OfferResponseAwaitingFromPretender:
                     //высылаем претенденту уведомление, что пора бы принять решение по предложению контракта
-                    if (!saga.OfferResponseNotificationSentToPretender && saga.OfferResponseAwaitingFromPretenderEndDate.AddDays(settings.Options.Date.OfferResponseAwaiting.PretenderNotificationDays) <= DateTime.UtcNow)
+                    if (!saga.OfferResponseNotificationSentToPretender && saga.OfferResponseAwaitingFromPretenderEndDate.AddDays(settings.Value.Date.OfferResponseAwaiting.PretenderNotificationDays) <= DateTime.UtcNow)
                     {
                         saga.Transition(new VacancySagaOfferResponseNotificationSentToPretender
                         {

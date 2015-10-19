@@ -41,7 +41,7 @@ namespace SciVacancies.Services.Elastic
                 sdescriptor.Take((int)sq.PageSize);
             }
 
-            sdescriptor.MinScore(double.Parse(configuration.Get("ElasticSettings:MinScore")));
+            sdescriptor.MinScore(double.Parse(configuration["ElasticSettings:MinScore"]));
 
             switch (sq.OrderFieldByDirection)
             {
