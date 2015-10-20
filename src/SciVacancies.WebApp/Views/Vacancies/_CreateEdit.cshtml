@@ -4,7 +4,7 @@
 
 <div asp-validation-summary="ValidationSummary.All"></div>
 
-<form class="l-application b-app-rows">
+<form class="l-application b-app-rows" method="POST">
     <input type="hidden" asp-anti-forgery="true" />
     <input asp-for="ToPublish" />
     <input asp-for="OrganizationGuid" />
@@ -155,7 +155,8 @@
                                         <input type="hidden" asp-for="CriteriasHierarchy[groupIndex].Items[itemIndex].Title" />
 
                                         <div class="field">
-                                            <input type="number" asp-for="CriteriasHierarchy[groupIndex].Items[itemIndex].Count" />
+                                            <input type="number" asp-for="CriteriasHierarchy[groupIndex].Items[itemIndex].Count"/>
+                                            <span asp-validation-for="CriteriasHierarchy[groupIndex].Items[itemIndex].Count"></span>
                                             <span>@item.Title (шт.)</span>
                                         </div>
 
@@ -277,7 +278,7 @@
                     <label>Дополнительно:</label>
                 </div>
                 <div class="right-cell">
-                    <textarea as-for="details"></textarea>
+                    <textarea asp-for="Details"></textarea>
                 </div>
             </div>
 

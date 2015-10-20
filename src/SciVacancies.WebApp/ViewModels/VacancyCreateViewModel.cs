@@ -138,8 +138,10 @@ namespace SciVacancies.WebApp.ViewModels
         /// Зарплата в месяц
         /// </summary>
         [Required(ErrorMessage = "Укажите минимальную зарплату")]
+        [Range(0, int.MaxValue, ErrorMessage= "Зарплата не может иметь отрицательное значение")]
         public int SalaryFrom { get; set; }
         [Required(ErrorMessage = "Укажите максимальную зарплату")]
+        [Range(0, int.MaxValue, ErrorMessage= "Зарплата не может иметь отрицательное значение")]
         public int SalaryTo { get; set; }
         //public Currency SalaryCurrency { get; set; }
 
@@ -176,7 +178,7 @@ namespace SciVacancies.WebApp.ViewModels
         public int? ContractTimeYears
         {
             get { return int.Parse((ContractTime ?? 0).ToString(CultureInfo.InvariantCulture).Split('.')[0]); }
-            set { ContractTime = value + ((ContractTime ?? 0) - Math.Truncate(ContractTime ?? 0)); }
+            set { ContractTime = (value??0) + ((ContractTime ?? 0) - Math.Truncate(ContractTime ?? 0)); }
         }
         /// <summary>
         /// Срок трудового договора (для срочного договора)

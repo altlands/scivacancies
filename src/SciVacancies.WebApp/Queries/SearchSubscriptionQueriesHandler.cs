@@ -11,8 +11,7 @@ namespace SciVacancies.WebApp.Queries
 {
     public class SearchSubscriptionQueriesHandler :
         IRequestHandler<SingleSearchSubscriptionQuery, SearchSubscription>,
-        IRequestHandler<SelectPagedSearchSubscriptionsQuery, Page<SearchSubscription>>,
-        IRequestHandler<SelectActiveSearchSubscriptionsQuery, IEnumerable<SearchSubscription>>
+        IRequestHandler<SelectPagedSearchSubscriptionsQuery, Page<SearchSubscription>>
 
     {
         private readonly IDatabase _db;
@@ -39,12 +38,6 @@ namespace SciVacancies.WebApp.Queries
             Page<SearchSubscription> searchSubscriptions = _db.Page<SearchSubscription>(message.PageIndex, message.PageSize, new Sql($"SELECT s.* FROM res_searchsubscriptions s WHERE s.researcher_guid = @0 AND s.status != @1 ORDER BY s.guid DESC", message.ResearcherGuid, SearchSubscriptionStatus.Removed));
 
             return searchSubscriptions;
-        }
-        public IEnumerable<SearchSubscription> Handle(SelectActiveSearchSubscriptionsQuery msg)
-        {
-            IEnumerable<SearchSubscription> searchsubscriptions = _db.Fetch<SearchSubscription>(new Sql($"SELECT * FROM res_searchsubscriptions ss WHERE ss.status = @0 ORDER BY ss.processed_date DESC", SearchSubscriptionStatus.Active));
-
-            return searchsubscriptions;
         }
     }
 }

@@ -22,7 +22,4 @@ namespace SciVacancies.WebApp.Queries
 
         //TODO - добавить фильтр по колонкам
     }
-    public class SelectActiveSearchSubscriptionsQuery:IRequest<IEnumerable<SearchSubscription>>
-    {
-    }
 }

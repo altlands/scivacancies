@@ -57,7 +57,7 @@
                     <tr>
                         <td>@(Model.Applications.Items.IndexOf(item)+1)</td>
                         <td>@(item.SentDate?.ToLocalVacancyString())</td>
-                        <td class="pl0">@item.Researcher.FullName</td>
+                        <td class="pl0">@item.FullName</td>
                         <td class="pl0">
                             Телефон:@item.Phone  &nbsp;&nbsp;  @item.ExtraPhone
                             <br />
@@ -66,19 +66,11 @@
                         <td class="pl0 align-center">
                             @if (Model.WinnerResearcherGuid == item.ResearcherGuid)
                             {
-                                <text>
-                                <span class="status-request win">
-                                    1
-                                </span> Победитель
-                                </text>
+                                @:<span class="status-request win">1</span> Победитель
                             }
                             @if (Model.PretenderResearcherGuid == item.ResearcherGuid)
                             {
-                                <text>
-                                <span class="status-request win">
-                                    2
-                                </span> Претендент
-                                </text>
+                                @:<span class="status-request win">2</span> Претендент
                             }
                         </td>
                     </tr>
