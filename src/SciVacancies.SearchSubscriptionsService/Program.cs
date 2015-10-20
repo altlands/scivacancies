@@ -5,7 +5,6 @@ using System.ServiceProcess;
 using System.Threading;
 using Autofac;
 using Nest;
-using Microsoft.Framework.ConfigurationModel;
 using Npgsql;
 using NPoco;
 using Quartz;
@@ -14,6 +13,7 @@ using SciVacancies.SearchSubscriptionsService.Jobs;
 using SciVacancies.Services.Email;
 using SciVacancies.Services.Quartz;
 using SciVacancies.Services.Elastic;
+using Microsoft.Framework.Configuration;
 
 namespace SciVacancies.SearchSubscriptionsService
 {
@@ -23,17 +23,20 @@ namespace SciVacancies.SearchSubscriptionsService
         {
             var vars = Environment.GetEnvironmentVariables();
             var devEnv = (string)vars.Cast<DictionaryEntry>().FirstOrDefault(e => e.Key.Equals("dev_env")).Value;
-            var configuration = new Configuration()
+            var configuration = new ConfigurationBuilder()
                 .AddJsonFile("config.json")
                 .AddJsonFile($"config.{devEnv}.json", optional: true)
-                .AddEnvironmentVariables();
+                .AddEnvironmentVariables()
+                .Build()
+                ;
+            
             var builder = new ContainerBuilder();
             builder.Register(c => configuration).As<IConfiguration>().SingleInstance();
             builder.RegisterType<SmtpNotificatorService>().As<ISmtpNotificatorService>().InstancePerDependency();
             builder.RegisterType<SearchSubscriptionService>().AsSelf();
             builder.RegisterType<QuartzService>().AsImplementedInterfaces();
 
-            ConnectionSettings elasticConnectionSettings = new ConnectionSettings(new Uri(configuration.Get("ElasticSettings:ConnectionUrl")), defaultIndex: configuration.Get("ElasticSettings:DefaultIndex"));
+            ConnectionSettings elasticConnectionSettings = new ConnectionSettings(new Uri(configuration.Get<ElasticSettings>("ElasticSettings").ConnectionUrl), defaultIndex: configuration.Get<ElasticSettings>("ElasticSettings").DefaultIndex);
             builder.Register(c => new ElasticClient(elasticConnectionSettings)).As<IElasticClient>().InstancePerDependency();
             //TODO single instanse or not?
             builder.Register(c => new SearchService(configuration, c.Resolve<IElasticClient>())).As<IElasticService>().InstancePerDependency();
@@ -45,7 +48,7 @@ namespace SciVacancies.SearchSubscriptionsService
                 .AsSelf()
                 .InstancePerLifetimeScope();
             builder.RegisterType<SearchSubscriptionScanner>().As<ISearchSubscriptionScanner>().InstancePerDependency();
-            builder.Register(c => new Database(configuration.Get("Data:ReadModelDb"), NpgsqlFactory.Instance)).As<IDatabase>().InstancePerDependency();
+            builder.Register(c => new Database(configuration.Get<DataSettings>("Data").ReadModelDb, NpgsqlFactory.Instance)).As<IDatabase>().InstancePerDependency();
             //builder.Register(c => new Database(Config.Get("Data:ReadModelDb"), NpgsqlFactory.Instance)).As<IDatabase>().InstancePerLifetimeScope();
 
             var container = builder.Build();
