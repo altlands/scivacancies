@@ -32,6 +32,7 @@
     var yearsActivity = Enumerable.Range(DateTime.Now.Year - 100, 110).OrderByDescending(c => c).Select(c => new SelectListItem { Text = c.ToString(), Value = c.ToString() }).ToList();
     var invisibleItemStyle = "display: none;";
     string useStyle;
+    string cuselUniqueKey;
 }
 <div class="crumbs">
     <a href="/">Главная</a><span class="separator">/</span>
@@ -328,10 +329,11 @@
         <div class="bold">Исследовательская деятельность</div>
         <div class="table-form mt15 property-list-container" data-innercount="@(Model.ResearchActivity.Count - 1)">
             @for (var i = 0; i < Model.ResearchActivity.Count; i++)
-        {
-            useStyle = i == 0 ? invisibleItemStyle : string.Empty;
-                <text>
-                <div class="property-list-item" style="@useStyle" data-list-template="@(i == 0 ? "true" : "false")">
+            {
+                useStyle = i == 0 ? invisibleItemStyle : string.Empty;
+                cuselUniqueKey = i == 0 ? "js_add_guid_here" : Guid.NewGuid().ToString();
+                    <text>
+                        <div class="property-list-item" style="@useStyle" data-list-template="@(i == 0 ? "true" : "false")">
                     <input type="hidden" name="ResearchActivity.Index" value="@i" />
 
 
@@ -372,10 +374,11 @@
                         <div class="left-cell">
                             <label>Год начала:</label>
                         </div>
-                        <div class="right-cell b-r-form w120">
+                        <div class="right-cell b-r-form w120" data-cusel-number-parent="@cuselUniqueKey">
                             <select class="skip"
                                     asp-for="ResearchActivity[i].yearFrom"
-                                    asp-items="yearsActivity"></select>
+                                    asp-items="yearsActivity"
+                                    onchange="cuselValueChanged(this, '@cuselUniqueKey');"></select>
                             <span asp-validation-for="ResearchActivity[i].yearFrom"></span>
                         </div>
                     </div>
@@ -385,7 +388,7 @@
                         <div class="left-cell">
                             <label>Год окончания:</label>
                         </div>
-                        <div class="right-cell b-r-form w120">
+                        <div class="right-cell b-r-form w120" data-cusel-number-child="@cuselUniqueKey">
                             <select class="skip"
                                     asp-for="ResearchActivity[i].yearTo"
                                     asp-items="yearsActivity"></select>

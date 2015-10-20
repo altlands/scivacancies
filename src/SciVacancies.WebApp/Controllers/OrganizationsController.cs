@@ -43,7 +43,7 @@ namespace SciVacancies.WebApp.Controllers
             model.VacanciesInOrganization = new VacanciesInOrganizationIndexViewModel
             {
                 OrganizationGuid = id,
-                PagedVacancies = _mediator.Send(new SelectPagedVacanciesByOrganizationQuery { OrganizationGuid = id, PageSize = pageSize, PageIndex = currentPage }).MapToPagedList()
+                PagedVacancies = _mediator.Send(new SelectPagedVacanciesByOrganizationAndStatusesQuery { OrganizationGuid = id, PageSize = pageSize, PageIndex = currentPage, Statuses = new List<VacancyStatus> {VacancyStatus.Published, VacancyStatus.InCommittee} }).MapToPagedList()
             };
 
             return View(model);
