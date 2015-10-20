@@ -39,7 +39,7 @@
   "ElasticSettings": {
     "ConnectionUrl": "http://alt-dev003:9200/",
     "DefaultIndex": "scivacancies-dev",
-    "MinScore": 0.2
+    "MinScore": "0.2"
   },
   "SagaSettings": { //TODO сделать только с положительными днями, обозвать соответствующе
     "Date": {

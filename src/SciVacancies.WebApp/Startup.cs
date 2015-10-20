@@ -99,6 +99,11 @@ namespace SciVacancies.WebApp
         // Configure is called after ConfigureServices is called.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerfactory)
         {
+            //app.UseRequestLocalization(new RequestLocalizationOptions
+            //{
+            //    DefaultRequestCulture = new RequestCulture(CultureInfo.InvariantCulture)
+            //});
+
             app.UseCookieAuthentication(options =>
             {
                 options.AutomaticAuthentication = true;

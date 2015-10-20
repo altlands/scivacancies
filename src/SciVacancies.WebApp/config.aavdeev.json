@@ -36,7 +36,7 @@
   "ElasticSettings": {
     "ConnectionUrl": "http://localhost:9200/",
     "DefaultIndex": "scivacancies",
-    "MinScore": 0.3
+    "MinScore": "0.3"
   },
   "SagaSettings": {
     "Date": {

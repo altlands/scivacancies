@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Net;
 using System.Net.Mail;
+using System.Net.Security;
+using System.Security.Cryptography.X509Certificates;
 
 namespace SciVacancies.Services.Email
 {
@@ -15,7 +17,7 @@ namespace SciVacancies.Services.Email
             _login = login;
             _password = password;
 
-            _smtpClient = new Lazy<SmtpClient>(()=> new SmtpClient
+            _smtpClient = new Lazy<SmtpClient>(() => new SmtpClient
             {
                 Host = host,
                 Port = port,
@@ -24,6 +26,9 @@ namespace SciVacancies.Services.Email
                 UseDefaultCredentials = useDefaultCredentials,
                 Credentials = new NetworkCredential(_login, _password)
             });
+            //Неведомый костыль для работы с ssl сертификатами
+            ServicePointManager.ServerCertificateValidationCallback = delegate (object s, X509Certificate certificate, X509Chain chain, SslPolicyErrors sslPolicyErrors)
+            { return true; };
         }
 
         public virtual void SendEmail(MailMessage message)

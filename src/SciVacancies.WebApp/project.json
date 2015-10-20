@@ -37,9 +37,9 @@
     "Microsoft.AspNet.Razor": "4.0.0-beta8",
     "Microsoft.AspNet.Tooling.Razor": "1.0.0-beta8",
 
-    "Microsoft.Dnx.Runtime": "1.0.0-beta8-15736",
+    "Microsoft.Dnx.Runtime": "1.0.0-beta8",
+    "Microsoft.Dnx.Runtime.Abstractions": "1.0.0-beta8",
 
-    "Microsoft.Framework.CodeGenerators.Mvc": "1.0.0-beta8-15723",
     "Microsoft.Framework.Configuration": "1.0.0-beta8",
     "Microsoft.Framework.Configuration.Json": "1.0.0-beta8",
     "Microsoft.Framework.DependencyInjection": "1.0.0-beta8",
@@ -65,7 +65,7 @@
 
   "commands": {
     "web": "Microsoft.AspNet.Server.Kestrel",
-    "gen": "Microsoft.Framework.CodeGeneration"
+    "kestrel": "Microsoft.AspNet.Hosting --server Microsoft.AspNet.Server.Kestrel --server.urls http://*:5004"
   },
 
   "frameworks": {

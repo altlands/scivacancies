@@ -4,6 +4,7 @@ using SciVacancies.Domain.Enums;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Globalization;
 using Microsoft.Framework.Configuration;
 
 using Nest;
@@ -41,7 +42,7 @@ namespace SciVacancies.Services.Elastic
                 sdescriptor.Take((int)sq.PageSize);
             }
 
-            sdescriptor.MinScore(double.Parse(configuration["ElasticSettings:MinScore"]));
+            sdescriptor.MinScore(double.Parse(configuration["ElasticSettings:MinScore"], CultureInfo.InvariantCulture));
 
             switch (sq.OrderFieldByDirection)
             {

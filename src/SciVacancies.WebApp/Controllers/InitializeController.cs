@@ -47,7 +47,7 @@ namespace SciVacancies.WebApp.Controllers
                 {
                     Data = new ResearcherRegisterDataModel
                     {
-                        Email = $"researcher{rnd.Next(999)}@mailer.org",
+                        Email = $"scivac@yandex.ru",
                         Phone = "8-333-22-22",
                         UserName = "researcher1",
                         FirstName = "Генрих",
@@ -89,7 +89,7 @@ namespace SciVacancies.WebApp.Controllers
                 {
                     Data = new ResearcherRegisterDataModel
                     {
-                        Email = $"researcher{rnd.Next(999)}@mailer.org",
+                        Email = $"scivac@mail.ru",
                         Phone = "8-333-22-22",
                         UserName = "researcher2",
                         FirstName = "Анфиса",
