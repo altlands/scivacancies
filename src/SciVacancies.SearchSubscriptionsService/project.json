@@ -7,8 +7,8 @@
     "licenseUrl": "",
 
     "dependencies": {
-        "Autofac": "4.0.0-beta5",
-        "NEST": "1.5.1",
+        "Autofac": "4.0.0-beta8-157",
+        "NEST": "1.6.1",
         "Npgsql.EntityFramework": "2.2.5",
         "NPoco": "2.9.103",
         "Quartz": "2.3.3",
