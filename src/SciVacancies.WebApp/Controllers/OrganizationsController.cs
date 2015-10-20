@@ -91,7 +91,7 @@ namespace SciVacancies.WebApp.Controllers
                     OrderDirection = sortDirection,
                     Statuses = new List<VacancyStatus>
                     {
-                        VacancyStatus.Closed,
+                        //VacancyStatus.Closed,
                         VacancyStatus.InCommittee,
                         VacancyStatus.InProcess,
                         VacancyStatus.OfferAcceptedByPretender,
