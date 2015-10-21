@@ -13,7 +13,7 @@
 
 <h4> Вы действительно хотите удалить Вакансию?</h4>
 
-<form asp-controller="vacancies" asp-action="cancel" class="l-application">
+<form asp-controller="vacancies" asp-action="cancel" class="l-application" method="POST">
     <input type="hidden" asp-anti-forgery="true" />
     <input type="hidden" id="id" name="id" value="@Model" />
 
