@@ -19,7 +19,7 @@
     "Mapofscience": {
       "AuthorizationEndpoint": "http://scimap-sso.alt-lan.com/scimap-sso/oauth/authorize",
       "TokenEndpoint": "http://scimap-sso.alt-lan.com/scimap-sso/oauth/token",
-      "UserEndpoint": "http://scimap-sso.alt-lan.com/scimap-sso/user/account",
+      "UserEndpoint": "http://scimap-sso.alt-lan.com/scimap-sso/users/current/account",
       "ClientId": "my-trusted-client",
       "ClientSecret": "secret",
       "Scope": "",
@@ -33,7 +33,7 @@
       //"BasicAuthorization": "dev:informika"
     },
     "Mapofscience": {
-      "ResearcherProfile": "http://scimap-sso.alt-lan.com/user/profile"
+      "ResearcherProfile": "http://scimap-sso.alt-lan.com/users/current/profile"
     }
   },
   "ElasticSettings": {
