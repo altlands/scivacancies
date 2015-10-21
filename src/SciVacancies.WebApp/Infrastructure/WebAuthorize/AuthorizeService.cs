@@ -32,15 +32,13 @@ namespace SciVacancies.WebApp.Infrastructure.WebAuthorize
             _userManager = userManager;
             _smtpNotificatorAccountService = smtpNotificatorAccountService;
         }
-        
+
 
         //общаемся с картой науки
         public string GetResearcherProfile(string accessToken)
         {
             //TODO url move to config
-            var webRequest =
-                WebRequest.Create(@"http://scimap-sso.alt-lan.com/scimap-sso/user/profile" + "?access_token=" +
-                                  accessToken);
+            var webRequest = WebRequest.Create(@"http://scimap-sso.alt-lan.com/scimap-sso/users/current/profile" + "?access_token=" + accessToken);
             webRequest.Method = "GET";
             var httpWebResponse = webRequest.GetResponse() as HttpWebResponse;
             string responseString = "";
@@ -105,7 +103,7 @@ namespace SciVacancies.WebApp.Infrastructure.WebAuthorize
         public ClaimsPrincipal RefreshUserClaimTokensAndReauthorize(SciVacUser sciVacUser, List<Claim> claims, HttpResponse response)
         {
             var identity = RefreshClaimsTokens(sciVacUser, claims);
-            return LogOutAndLogInUser(response ,identity);
+            return LogOutAndLogInUser(response, identity);
         }
         public ClaimsIdentity RefreshClaimsTokens(SciVacUser sciVacUser, List<Claim> claims)
         {
@@ -136,7 +134,7 @@ namespace SciVacancies.WebApp.Infrastructure.WebAuthorize
             var token = await _userManager.GenerateEmailConfirmationTokenAsync(sciVacUser.Id);
             _smtpNotificatorAccountService.SendUserActivation(researcher, sciVacUser.UserName, sciVacUser.Email, token);
         }
-        
+
         public async Task CallPasswordResetAsync(SciVacUser sciVacUser, Researcher researcher)
         {
             var token = await _userManager.GenerateUserTokenAsync("ChangePa$$bord", sciVacUser.Id);

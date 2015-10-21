@@ -213,8 +213,6 @@ namespace SciVacancies.WebApp.Controllers
 
         #endregion
 
-
-        [PageTitle("Оставить отзыв")]
         //Сюда редиректит после OAuth авторизации
         public async Task<ActionResult> Callback()
         {

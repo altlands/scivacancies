@@ -13,7 +13,7 @@
 
 <h4>Вы действительно хотите отозвать свою Заявку?</h4>
 
-<form asp-controller="applications" asp-action="deletepost" class="l-application">
+<form asp-controller="applications" asp-action="deletepost" class="l-application" method="POST">
     <input type="hidden" asp-anti-forgery="true" />
     <input type="hidden" id="id" name="id" value="@Model.Guid" />
     <div class="row">
