@@ -2,6 +2,7 @@
 
 using System;
 using System.Net.Mail;
+using Microsoft.Framework.Configuration;
 
 namespace SciVacancies.Services.Email
 {
@@ -10,17 +11,17 @@ namespace SciVacancies.Services.Email
         private string p1;
         private string p2;
 
-        //public string Domain { get; } = "localhost:59075";
-        //public string PortalLink { get; } = "<a target='_blank' href='http://localhost:59075'>http://localhost:59075</a>";
+        public string Domain { get; } 
+        public string PortalLink { get; }
 
-        public string Domain { get; } = "scivac.test.alt-lan.com";
-        public string PortalLink { get; } = "<a target='_blank' href='http://scivac.test.alt-lan.com'>http://scivac.test.alt-lan.com</a>";
-
-
-        public SmtpNotificatorService()
+        public SmtpNotificatorService(IConfiguration configuration)
         {
             p1 = "mailer@alt-lan.com";
             p2 = "123456-mailer";
+
+            var smtpSettings = configuration.Get<SmtpSettings>("SmtpSettings");
+            Domain = smtpSettings.Domain;
+            PortalLink = smtpSettings.PortalLink;
 
             if (string.IsNullOrWhiteSpace(p1))
                 throw new Exception("Не указан логин для подключения в серверу рассылку email-уведомлений");

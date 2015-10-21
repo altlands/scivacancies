@@ -28,5 +28,9 @@
                 "Provider": "Npgsql-20"
             }
         }
+    },
+    "SmtpSettings": {
+        "Domain": "scivac.test.alt-lan.com",
+        "PortalLink": "<a target='_blank' href='http://scivac.test.alt-lan.com'>http://scivac.test.alt-lan.com</a>"
     }
 }

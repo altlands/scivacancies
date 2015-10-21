@@ -29,5 +29,9 @@
                 "Provider": "Npgsql-20"
             }
         }
+    },
+    "SmtpSettings": {
+        "Domain": "localhost:59075",
+        "PortalLink": "<a target='_blank' href='http://localhost:59075'>http://localhost:59075</a>"
     }
 }
