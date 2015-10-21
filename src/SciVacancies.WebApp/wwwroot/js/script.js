@@ -19,6 +19,15 @@
     }
 });
 
+function guid() {
+    function s4() {
+        return Math.floor((1 + Math.random()) * 0x10000)
+          .toString(16)
+          .substring(1);
+    }
+    return s4() + s4() + '-' + s4() + '-' + s4() + '-' +s4() + '-' + s4() + s4() + s4();
+}
+
 $(document).ready(function () {
     //select
     var params = {
@@ -299,13 +308,13 @@ $(document).ready(function () {
     //var buttonFile = $('a[data-selectorphoto="true"]');
     var buttonFile = document.getElementById('buttonFile');
     //var file = $('input[data-selectphoto="true"]');
-	var file = document.getElementById('files');
+    var file = document.getElementById('files');
     $(buttonFile).click(function () {
         file.click();
-		file.onchange = function(){	
-			$("#fileName").remove();
-			$(file).prev().after("<div class='italic mt10' id='fileName'>"+file.value+"</div>");	
-		}
+        file.onchange = function () {
+            $("#fileName").remove();
+            $(file).prev().after("<div class='italic mt10' id='fileName'>" + file.value + "</div>");
+        }
         return false;
     });
     /*
@@ -336,12 +345,11 @@ $(document).ready(function () {
 
         $(parent).find('input[type="checkbox"]').attr('checked', false);
         $(parent).find('span.checkbox.checked').removeClass('checked');
-        
+
         $(parent).find('input[type="text"]').val(null);
 
         //$(parent).parents('form').submit();
     });
-
     /*
      * сброс фильтра
      */
@@ -357,17 +365,67 @@ $(document).ready(function () {
         //$(parent).parents('form').submit();
     });
     /*
+     * Временно для переключателя
+     */
+    $(".tabs_after_title > li").click(function () {
+        $(".tabs_after_title > li").siblings().removeClass("active");
+        $(this).addClass("active");
+    });
+    /*
     end of the code
     */
-	
-	//Временно для переключателя
-	
-	$(".tabs_after_title > li").click(function(){
-		$(".tabs_after_title > li").siblings().removeClass("active");
-		$(this).addClass("active");
-	});
 });
+/*
+ * обработка каскадных выпадающих списков для Cusel (год окончания периода не может быть меньше года начала периода)
+ */
+function cuselValueChanged(source, key) {
+    var newValue = $(source).val();
+    //console.log(key + ' - ' + newValue);
 
+    //найти Зависимый элемент
+    var children = $('[data-cusel-number-child="' + key + '"');
+    if (children != undefined) {
+        //если есть Зависимый
+        //console.log(children);
+
+        var children_cuselText = $(children).find('.cuselText');
+        var childrenCurrentValue = children_cuselText[0].innerText;
+        if (childrenCurrentValue != undefined) {
+            //console.log(childrenCurrentValue);
+
+            if (childrenCurrentValue < newValue)
+                //если если значение Зависимого меньше значения Родительского
+            {
+                //то поставить родительское значение как новое значение Зависимого
+                //console.log("it is less then parent");
+                $(children_cuselText).html(newValue);
+
+                $(children).find('.cusel-scroll-pane').find('span.cuselActive').removeClass('cuselActive');
+                $(children).find('.cusel-scroll-pane').find('span[val="' + newValue + '"]').addClass('cuselActive');
+            }
+            /*
+            //урезать (скрыть) неподходящие значения потомков
+            //обновить вид потомка
+            */
+        }
+
+    }
+
+    /*
+
+    "data-cusel-number-parent";
+    "data-cusel-number-child";
+
+    var paramsSelect = {
+        changedEl: "select.newselect",
+        visRows: 12,
+        scrollArrows: true
+    }
+    cuSel(paramsSelect);
+
+    */
+
+}
 /*
  * каптча
  */
@@ -476,6 +534,7 @@ function addNewItemToList(source, prefix) {
         .replace(new RegExp(oldPrefixBracket, 'g'), newPrefixBracket)
         .replace(new RegExp(oldPrefixDash, 'g'), newPrefixDash)
         .replace(new RegExp(oldPrefixSharp, 'g'), newPrefixSharp)
+        .replace(new RegExp('js_add_guid_here', 'g'), guid()) //генерим новые гуиды для работы select'ов. (по этим Guid работают "каскады" для отработки правила "окончания периода не может быть раньше его начала")
     ;
     //обновляем шаблон
     templateDiv.html(templateDivInnerHtml);

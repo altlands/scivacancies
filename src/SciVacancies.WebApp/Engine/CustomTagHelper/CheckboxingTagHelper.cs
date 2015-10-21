@@ -95,7 +95,7 @@ namespace SciVacancies.WebApp
             }
             var t = new StringBuilder();
 
-            output.Content.Append(li.ToString());
+            output.Content.Append(li);
         }
     }
 

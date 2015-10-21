@@ -4,18 +4,20 @@
 @using SciVacancies.WebApp.ViewModels
 @model VacancyDetailsViewModel
 
-<div class="title-cat-inform">Специализация:</div>
-<ul class="list-information layout-inform">
-    <li class="even">
-        <span>Статус:</span>@Model.Status.GetDescription(User)
+@if (!string.IsNullOrWhiteSpace(Model.CommitteeReasolution)
+                || (Model.AttachmentsCommittee != null && Model.AttachmentsCommittee.Any()))
+{
+    <text>
 
-    </li>
-    <li class="odd">
-        
-        <div>
-            @if (!string.IsNullOrWhiteSpace(Model.CommitteeReasolution))
-            {
-                <text>
+    <div class="title-cat-inform">Решение комиссии:</div>
+    <ul class="list-information layout-inform">
+
+        <li class="odd">
+
+            <div>
+                @if (!string.IsNullOrWhiteSpace(Model.CommitteeReasolution))
+                {
+                    <text>
                     <div class="section-eval">
                         <span class="name-section">Решение комиссии:</span>
                         <div class="list-fields">
@@ -26,35 +28,44 @@
                             </div>
                         </div>
                     </div>
-                </text>
-            }
+                    </text>
+                }
 
-            <br/>
+                <br />
 
-            @if (Model.AttachmentsCommittee != null && Model.AttachmentsCommittee.Any())
-            {
-                <text>
+                @if (Model.AttachmentsCommittee != null && Model.AttachmentsCommittee.Any())
+                {
+                    <text>
                     <div class="section-eval">
                         <span class="name-section">Протокол(ы) решения комиссии:</span>
                         <div class="list-fields">
                             @foreach (var item in Model.AttachmentsCommittee)
                             {
                                 <text>
-                                    <div>
-                                        <div class="field">
-                                            <div class="section-eval">
-                                                @item.name <span class="small-icon icon-sm-download"><a href="@(Model.FolderVacanciesAttachmentsUrl + item.url)">Скачать</a></span>
-                                            </div>
+                                <div>
+                                    <div class="field">
+                                        <div class="section-eval">
+                                            @item.name <span class="small-icon icon-sm-download"><a href="@(Model.FolderVacanciesAttachmentsUrl + item.url)">Скачать</a></span>
                                         </div>
                                     </div>
+                                </div>
                                 </text>
                             }
                         </div>
                     </div>
-                </text>
-            }
+                    </text>
+                }
 
-        </div>
+            </div>
+        </li>
+    </ul>
+    </text>
+}
+
+<div class="title-cat-inform">Специализация:</div>
+<ul class="list-information layout-inform">
+    <li class="odd">
+        <span>Статус:</span>@Model.Status.GetDescription(User)
     </li>
     <li class="even">
         <span>Должность:</span>@Model.Name
@@ -116,9 +127,9 @@
     <li class="odd">
         <span>Трудовой договор:</span>@Model.ContractType.GetDescription()
         @*@if (Model.ContractType == ContractType.FixedTerm)
-        {
-            @: - на период @Model.ContractTime.ToString("0.##") (годы и месяцы)
-        }*@
+            {
+                @: - на период @Model.ContractTime.ToString("0.##") (годы и месяцы)
+            }*@
     </li>
     <li class="even">
         <span>Социальный пакет:</span>@(Model.SocialPackage ? "Да" : "Нет")
@@ -132,8 +143,10 @@
     <li class="even">
         <span>Служебное жилье:</span>@(Model.OfficeAccomodation ? "Да" : "Нет")
     </li>
+    <li class="odd">
+        <span>Дополнительно:</span>@Model.Details
+    </li>
 </ul>
-
 
 @if (Model.Attachments != null && Model.Attachments.Any())
 {
@@ -165,5 +178,8 @@
     </li>
     <li class="odd">
         <span>Телефон:</span>@Model.ContactPhone
+    </li>
+    <li class="even">
+        <span>Дополнительно:</span>@Model.ContactDetails
     </li>
 </ul>

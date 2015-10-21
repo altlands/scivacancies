@@ -9,7 +9,7 @@ namespace SciVacancies.WebApp.ViewModels
         [Required(ErrorMessage = "Требуется заполнить поле Логин (e-mail)")]
         public string Login { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "Требуется ввести пароль")]
         [DataType(DataType.Password)]
         public string Password { get; set; }
 

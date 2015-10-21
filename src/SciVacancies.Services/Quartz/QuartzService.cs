@@ -128,6 +128,11 @@ namespace SciVacancies.Services.Quartz
             return _scheduler.DeleteJob(jobKey);
         }
 
+        public IList<ITrigger> GetTriggersOfJob(JobKey jobKey)
+        {
+            return _scheduler.GetTriggersOfJob(jobKey);
+        }
+
         public void Shutdown()
         {
             _scheduler.Shutdown();

@@ -17,5 +17,6 @@ namespace SciVacancies.Services.Quartz
         IJobDetail GetJobDetail(JobKey jobKey);
         bool DeleteJob(JobKey jobKey);
         void Shutdown();
+        IList<ITrigger> GetTriggersOfJob(JobKey jobKey);
     }
 }

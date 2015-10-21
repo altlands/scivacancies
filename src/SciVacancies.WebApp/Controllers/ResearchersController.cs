@@ -324,8 +324,6 @@ namespace SciVacancies.WebApp.Controllers
                 }).MapToPagedList()
             };
 
-            var test = _mediator.Send(new SelectActiveSearchSubscriptionsQuery());
-            var er = test.Count();
             return View(model);
         }
 
@@ -404,7 +402,7 @@ namespace SciVacancies.WebApp.Controllers
 
         [Authorize(Roles = ConstTerms.RequireRoleResearcher)]
         [HttpPost]
-        [ValidateAntiForgeryToken]
+        //todo: ntemnikov [ValidateAntiForgeryToken]
         [BindResearcherIdFromClaims]
         [PageTitle("Избранная вакансия")]
         public IActionResult RemoveFavoritePost(Guid vacancyGuid, Guid researcherGuid)

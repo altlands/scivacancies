@@ -40,7 +40,7 @@ namespace SciVacancies.WebApp.Engine
                 {
                     if (usedCriterias != null && usedCriterias.Any(e => e.criteria_id == d.Id))
                     {
-                        d.Count = usedCriterias.First(e => e.criteria_id == d.Id).count;
+                        d.Count = usedCriterias.First(e => e.criteria_id == d.Id).count ?? 0;
                     }
                 });
             }

@@ -2,7 +2,7 @@
 using System.Linq;
 using System.ServiceProcess;
 using Autofac;
-using Microsoft.Framework.ConfigurationModel;
+using Microsoft.Framework.Configuration;
 using Quartz;
 using SciVacancies.SearchSubscriptionsService.Jobs;
 using SciVacancies.Services.Quartz;
@@ -20,7 +20,7 @@ namespace SciVacancies.SearchSubscriptionsService
             _lifetimeScope = lifetimeScope;
             _schedulerService = _lifetimeScope.Resolve<ISchedulerService>();
 
-            MinuteInterval = int.Parse(configuration.Get("QuartzSettings:Scheduler:ExecutionInterval"));
+            MinuteInterval = configuration.Get<QuartzSettings>("QuartzSettings").Scheduler.ExecutionInterval;
         }
 
         /// <summary>

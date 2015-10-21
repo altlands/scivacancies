@@ -238,7 +238,7 @@ namespace SciVacancies.WebApp
             }
 
 
-            output.Content.Append(divParent.ToString());
+            output.Content.Append(divParent);
         }
 
         private string GetNewUri()

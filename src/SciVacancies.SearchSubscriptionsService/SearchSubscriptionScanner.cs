@@ -1,9 +1,5 @@
-﻿using Nest;
-using Newtonsoft.Json;
-using Microsoft.Framework.ConfigurationModel;
-using Npgsql;
+﻿using Newtonsoft.Json;
 using NPoco;
-using Quartz;
 using SciVacancies.Domain.Enums;
 using System;
 using System.Collections.Generic;
@@ -14,7 +10,7 @@ using SciVacancies.ReadModel.Core;
 using SciVacancies.Services.Email;
 using SciVacancies.Services.Elastic;
 using SciVacancies.SmtpNotifications;
-using Vacancy = SciVacancies.ReadModel.ElasticSearchModel.Model.Vacancy;
+using Microsoft.Framework.Configuration;
 
 namespace SciVacancies.SearchSubscriptionsService
 {
@@ -33,13 +29,11 @@ namespace SciVacancies.SearchSubscriptionsService
         private IEnumerable<SearchSubscription> _subscriptionQueue;
         private EventWaitHandle _doneEvent;
         private readonly ILifetimeScope _lifetimeScope;
-        private readonly IConfiguration _configuration;
         readonly IElasticService _elasticService;
 
-        public SearchSubscriptionScanner(ILifetimeScope lifetimeScope, IConfiguration configuration, IElasticService elasticService)
+        public SearchSubscriptionScanner(ILifetimeScope lifetimeScope, IElasticService elasticService)
         {
             _lifetimeScope = lifetimeScope;
-            _configuration = configuration;
             _elasticService = elasticService;
         }
 
@@ -86,15 +80,6 @@ namespace SciVacancies.SearchSubscriptionsService
 
                 if (vacanciesList.Count > 0)
                 {
-                    //    using (var transaction = dataBase.GetTransaction())
-                    //    {
-                    //        dataBase.Execute(new Sql("UPDATE res_searchsubscriptions SET currenttotal_count = @0, currentcheck_date = @1, lasttotal_count = @2, lastcheck_date = @3 WHERE guid = @4", vacanciesList.Count, DateTime.UtcNow, searchSubscription.currenttotal_count, searchSubscription.currentcheck_date, searchSubscription.guid));
-                    //        transaction.Complete();
-                    //    }
-
-                    //    var researcher = dataBase.SingleOrDefaultById<SciVacancies.ReadModel.Core.Researcher>(searchSubscription.researcher_guid);
-                    //    winnerSetSmtpNotificator.Send(searchSubscription, researcher, vacanciesList);
-
                     #region SmtpNotifications
                     
                     using (var scopePerEmail = _lifetimeScope.BeginLifetimeScope("scopePerEmail"+ Guid.NewGuid()))

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Security.Claims;
 using MediatR;
 using Microsoft.AspNet.Identity;
@@ -60,19 +61,15 @@ namespace SciVacancies.WebApp.Controllers
             var cp = _authorizeService.LogOutAndLogInUser(Response, _userManager.CreateIdentity(user, DefaultAuthenticationTypes.ApplicationCookie));
             return RedirectToAccount(cp);
         }
-        //public IActionResult LoginOrganization()
-        //{
-        //    var user = _userManager.FindByName("organization2");
-
-        //    var cp = _authorizeService.LogOutAndLogInUser(Response, _userManager.CreateIdentity(user, DefaultAuthenticationTypes.ApplicationCookie));
-        //    return RedirectToAccount(cp);
-        //}
 
         [PageTitle("Вход")]
-        [HttpPost]
         [HttpGet]
+        [HttpPost]
         public async Task<IActionResult> Login(AccountLoginViewModel model)
         {
+            if (model == null)
+                return View(new AccountLoginViewModel());
+
             switch (model.User)
             {
                 case AuthorizeUserTypes.Researcher:
@@ -80,8 +77,11 @@ namespace SciVacancies.WebApp.Controllers
                     {
                         case AuthorizeResourceTypes.OwnAuthorization:
 
+                            if (!ModelState.IsValid)
+                                return View(model);
+
                             if (string.IsNullOrWhiteSpace(model.Login) || string.IsNullOrWhiteSpace(model.Password))
-                                return View("Error", "Вы не указали логин и/или пароль");
+                                ModelState.AddModelError("Login", "Вы не указали логин и/или пароль");
 
                             //ищем учётку по логину и паролю
                             var user = await _userManager.FindAsync(model.Login, model.Password);
@@ -96,11 +96,14 @@ namespace SciVacancies.WebApp.Controllers
                                     //if (userWithoutPassword.AccessFailedCount) { ...; }
 
                                     await _userManager.AccessFailedAsync(userWithoutPassword.Id);
-                                    return View("Error", model: "Вы ввели неверный пароль");
+                                    ModelState.AddModelError("Password", "Вы ввели неверный пароль");
                                 }
-
-                                return View("Error", model: "Пользователь не найден");
+                                ModelState.AddModelError("Login", "Пользователь не найден");
                             }
+
+                            if (!ModelState.IsValid)
+                                return View(model);
+
                             var cp = _authorizeService.LogOutAndLogInUser(Response, _userManager.CreateIdentity(user, DefaultAuthenticationTypes.ApplicationCookie));
                             return RedirectToAccount(cp);
                         case AuthorizeResourceTypes.ScienceMap:
@@ -404,7 +407,7 @@ namespace SciVacancies.WebApp.Controllers
 
         [PageTitle("Регистрация")]
         [HttpPost]
-        [ValidateAntiForgeryToken]
+        //todo: ntemnikov [ValidateAntiForgeryToken]
         public async Task<IActionResult> Register(AccountResearcherRegisterViewModel model)
         {
             if (!ModelState.IsValid)
@@ -461,9 +464,7 @@ namespace SciVacancies.WebApp.Controllers
             var researcher = _mediator.Send(new SingleResearcherQuery { ResearcherGuid = researcherGuid1 });
             await _authorizeService.CallUserActivationAsync(user, researcher);
 
-            return View("SuccessfulRegister");
-
-            //return RedirectToAccount(claimsPrincipal);
+            return RedirectToAction("SuccessfulRegister");
         }
 
         public IActionResult SuccessfulRegister() => View("SuccessfulRegister");
@@ -475,13 +476,13 @@ namespace SciVacancies.WebApp.Controllers
         /// <returns></returns>
         [PageTitle("Восстановление доступа к Системе")]
         [AllowAnonymous]
-        public async Task<IActionResult> ForgotPassword()
+        public IActionResult ForgotPassword()
         {
-            var userName = string.Empty;
+            var model = new ForgotPasswordViewModel();
             if (User.Identity.IsAuthenticated)
-                userName = User.Identity.Name;
+                model.UserName = User.Identity.Name;
 
-            return View(model: userName);
+            return View(model);
         }
 
         /// <summary>
@@ -491,24 +492,28 @@ namespace SciVacancies.WebApp.Controllers
         [PageTitle("Восстановление доступа к Системе")]
         [AllowAnonymous]
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> ForgotPassword(string username)
+        //todo: ntemnikov [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ForgotPassword(ForgotPasswordViewModel model)
         {
             // !!! Восстанавливаем пароль даже на неактивированную учётную запись !!!
-
             #region validation
-            if (string.IsNullOrWhiteSpace(username))
-                return View("Error", model: "Вы не указали логин");
+            if (!ModelState.IsValid)
+                return View(model);
 
-            var user = await _userManager.FindByNameAsync(username);
+            var user = await _userManager.FindByNameAsync(model.UserName);
             if (user == null)
-                return View("Error", model: "Мы не нашли пользователя");
+            {
+                ModelState.AddModelError("UserName", "Мы не нашли пользователя");
+                return View(model);
+            }
 
             //проверяем, что пользователь ЧУЖОЙ (и нам Не нужно подтверждать его Email)
             var logins = await _userManager.GetLoginsAsync(user.Id);
             if (logins != null && logins.Any())
-                return View("Error", $"Для восстановления пароля воспользуйтесь порталом (или сайтом), через который Вы выполнили авторизацию ({string.Join(", ", logins.Select(c => c.LoginProvider).ToList())}).");
+                ModelState.AddModelError("UserName", $"Для восстановления пароля воспользуйтесь порталом (или сайтом), через который Вы выполнили авторизацию ({string.Join(", ", logins.Select(c => c.LoginProvider).ToList())}).");
 
+            if (!ModelState.IsValid)
+                return View(model);
             #endregion
 
             var lastRequests = user.LastRequests;
@@ -520,9 +525,7 @@ namespace SciVacancies.WebApp.Controllers
             if (lockoutEnabled
                 && lockoutEndDate > DateTime.UtcNow)
             {
-                return View("Error",
-                    model:
-                        $"Ваш пользователь временно заблокирован. Повторите попытку через {Math.Round((lockoutEndDate - DateTime.UtcNow).TotalMinutes, 0)} минут");
+                return View("Error", $"Ваш пользователь временно заблокирован. Повторите попытку через {Math.Round((lockoutEndDate - DateTime.UtcNow).TotalMinutes, 0)} минут");
             }
 
             //сбросить блокировки
@@ -554,7 +557,7 @@ namespace SciVacancies.WebApp.Controllers
                         _userManager.SetLockoutEndDateAsync(user.Id,
                             new DateTimeOffset(DateTime.UtcNow.Add(tBlockPeriod)));
 
-                    return View("Error", model: "Ваш пользователь временно заблокирован.");
+                    return View("Error", "Ваш пользователь временно заблокирован.");
                 }
 
             }
@@ -578,11 +581,11 @@ namespace SciVacancies.WebApp.Controllers
 
                     //отправить письмо с новым кодом на восстановление пароля
                     await _authorizeService.CallPasswordResetAsync(user, researcher);
-                    return View("Success", model: "Для восстановления доступа к Порталу мы отправили вам письмо на электронную почту, указанную при регистрации.");
+                    return View("Success", "Для восстановления доступа к Порталу мы отправили вам письмо на электронную почту, указанную при регистрации.");
                 }
             }
 
-            return View("Error", model: "Мы не нашли ваш профиль, чтобы сгенерирвать вам письмо.");
+            return View("Error", "Мы не нашли ваш профиль, чтобы сгенерирвать вам письмо.");
         }
 
         /// <summary>
@@ -595,16 +598,12 @@ namespace SciVacancies.WebApp.Controllers
             #region validation
             var user = await _userManager.FindByNameAsync(userName);
             if (user == null)
-                return View("Error", model: "Мы не нашли пользователя");
+                return View("Error", "Мы не нашли пользователя");
 
             //проверяем, что пользователь ЧУЖОЙ (и нам Не нужно подтверждать его Email)
             var logins = await _userManager.GetLoginsAsync(user.Id);
             if (logins != null && logins.Any())
-            {
-                return View("Error",
-                    model:
-                        $"Для восстановления пароля воспользуйтесь порталом (или сайтом), через который Вы выполнили авторизацию ({string.Join(", ", logins.Select(c => c.LoginProvider).ToList())}).");
-            }
+                return View("Error", $"Для восстановления пароля воспользуйтесь порталом (или сайтом), через который Вы выполнили авторизацию ({string.Join(", ", logins.Select(c => c.LoginProvider).ToList())}).");
             #endregion
 
             if (await _userManager.VerifyUserTokenAsync(user.Id, "ChangePa$$bord", token))
@@ -622,33 +621,29 @@ namespace SciVacancies.WebApp.Controllers
                 return View(model);
             }
 
-            return View("Error", model: "Неверные данные для сброса пароля");
+            return View("Error", "Неверные данные для сброса пароля");
         }
 
         /// <summary>
         /// пользователь ввёл новые пароли
         /// </summary>
         /// <returns></returns>
-        [PageTitle("Восстановление доступа к Системе")]
         [HttpPost]
-        [ValidateAntiForgeryToken]
+        //todo: ntemnikov [ValidateAntiForgeryToken]
         public async Task<IActionResult> RestorePasswordConfirm(RestorePasswordViewModel model)
         {
             if (!ModelState.IsValid)
                 return View("RestorePassword", model);
+
             #region validation
             var user = await _userManager.FindByNameAsync(model.UserName);
             if (user == null)
-                return View("Error", model: "Мы не нашли пользователя");
+                return View("Error", "Мы не нашли пользователя");
 
             //проверяем, что пользователь ЧУЖОЙ (и нам Не нужно подтверждать его Email)
             var logins = await _userManager.GetLoginsAsync(user.Id);
             if (logins != null && logins.Any())
-            {
-                return View("Error",
-                    model:
-                        $"Для восстановления пароля воспользуйтесь порталом (или сайтом), через который Вы выполнили авторизацию ({string.Join(", ", logins.Select(c => c.LoginProvider).ToList())}).");
-            }
+                return View("Error", $"Для восстановления пароля воспользуйтесь порталом (или сайтом), через который Вы выполнили авторизацию ({string.Join(", ", logins.Select(c => c.LoginProvider).ToList())}).");
             #endregion
 
             //обновить ключ перед сменой пароля, чтобы куки авторизации в браузерах перестали быть валидными
@@ -658,9 +653,31 @@ namespace SciVacancies.WebApp.Controllers
             if (identityResult.Succeeded)
                 _authorizeService.LogOutAndLogInUser(Response, _userManager.CreateIdentity(user, DefaultAuthenticationTypes.ApplicationCookie));
 
-            return View(identityResult);
+            TempData["modelErrors"] = identityResult.Errors;
+            return RedirectToAction("RestorePasswordConfirmed");
+        }
+
+        /// <summary>
+        /// вспомогательный класс для отчета об успешной авторизации
+        /// </summary>
+        internal class SuccessfulIdentityResultViewModel : IdentityResult
+        {
+            public SuccessfulIdentityResultViewModel() : base(true) { }
+        }
+
+        [PageTitle("Восстановление доступа к системе")]
+        public IActionResult RestorePasswordConfirmed(List<string> errors)
+        {
+            if (TempData["modelErrors"] != null)
+            {
+                var errorsList = JsonConvert.DeserializeObject<List<string>>(TempData["modelErrors"].ToString());
+                return View(errorsList.Count == 0 ? new SuccessfulIdentityResultViewModel() : new IdentityResult(errorsList));
+            }
+
+            return Content("нет данных для отображения на форме");
         }
         #endregion
+
 
         #region account activation
         /// <summary>
@@ -681,13 +698,13 @@ namespace SciVacancies.WebApp.Controllers
 
             var user = await _userManager.FindByIdAsync(User.Identity.GetUserId());
             if (user == null)
-                return View("Error", model: "Мы не нашли пользователя");
+                return View("Error", "Мы не нашли пользователя");
 
             var logins = await _userManager.GetLoginsAsync(user.Id);
             //проверяем, что пользователь ЧУЖОЙ (и нам Не нужно подтверждать его Email)
             if (logins != null && logins.Any())
             {
-                return View("Error", model: "Ваша учётная запись должна была активироваться автоматически");
+                return View("Error", "Ваша учётная запись должна была активироваться автоматически");
             }
             #endregion
 
@@ -701,7 +718,7 @@ namespace SciVacancies.WebApp.Controllers
         [Authorize]
         [PageTitle("Запрошено письмо для активации учетной записи")]
         [HttpPost]
-        [ValidateAntiForgeryToken]
+        //todo: ntemnikov [ValidateAntiForgeryToken]
         [BindResearcherIdFromClaims]
         public async Task<IActionResult> ActivationRequestPost(Guid researcherGuid)
         {
@@ -714,19 +731,19 @@ namespace SciVacancies.WebApp.Controllers
 
             var user = await _userManager.FindByIdAsync(User.Identity.GetUserId());
             if (user == null)
-                return View("Error", model: "Мы не нашли пользователя");
+                return View("Error", "Мы не нашли пользователя");
 
             var logins = await _userManager.GetLoginsAsync(user.Id);
             //проверяем, что пользователь ЧУЖОЙ (и нам Не нужно подтверждать его Email)
             if (logins != null && logins.Any())
             {
-                return View("Error", model: "Ваша учётная запись должна была активироваться автоматически");
+                return View("Error", "Ваша учётная запись должна была активироваться автоматически");
             }
             #endregion
 
             var researcher = _mediator.Send(new SingleResearcherQuery { ResearcherGuid = researcherGuid });
             if (researcher == null)
-                return View("Error", model: "Мы не нашли исследователя");
+                return View("Error", "Мы не нашли исследователя");
 
             await _authorizeService.CallUserActivationAsync(user, researcher);
 
@@ -748,17 +765,17 @@ namespace SciVacancies.WebApp.Controllers
             }
 
             if (string.IsNullOrWhiteSpace(userName))
-                return View("Error", model: "Не указано имя пользователя");
+                return View("Error", "Не указано имя пользователя");
 
             var user = await _userManager.FindByNameAsync(userName);
             if (user == null)
-                return View("Error", model: "Мы не нашли пользователя");
+                return View("Error", "Мы не нашли пользователя");
 
             var logins = await _userManager.GetLoginsAsync(user.Id);
             //проверяем, что пользователь ЧУЖОЙ (и нам Не нужно подтверждать его Email)
             if (logins != null && logins.Any())
             {
-                return View("Error", model: "Ваша учётная запись должна была активироваться автоматически");
+                return View("Error", "Ваша учётная запись должна была активироваться автоматически");
             }
             #endregion
 

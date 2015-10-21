@@ -91,7 +91,7 @@
             @if (Model.VacanciesInOrganization.PagedVacancies != null)
             {
                 var i = Model.VacanciesInOrganization.PagedVacancies.FirstRowIndexOnPage - 1;
-                foreach (var item in Model.VacanciesInOrganization.PagedVacancies.Items.Where(c => c.status == VacancyStatus.Published || c.status == VacancyStatus.InCommittee))
+                foreach (var item in Model.VacanciesInOrganization.PagedVacancies.Items)
                 {
                     i += 1;
                     <text>
