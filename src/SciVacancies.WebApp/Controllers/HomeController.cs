@@ -26,11 +26,11 @@ namespace SciVacancies.WebApp.Controllers
         [PageTitle("Главная")]
         public IActionResult Index()
         {
-            //проверяем не инициализированную БД
-            var user = _userManager.FindByName("researcher1");
-            if (user == null)
-                //return Content("инициализация уже проходила");
-                return RedirectToAction("index", "initialize");
+            ////проверяем не инициализированную БД
+            //var user = _userManager.FindByName("researcher1");
+            //if (user == null)
+            //    //return Content("инициализация уже проходила");
+            //    return RedirectToAction("index", "initialize");
 
             var model = new IndexViewModel
             {
