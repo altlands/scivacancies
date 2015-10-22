@@ -2,9 +2,9 @@
 using System.Drawing.Imaging;
 using Microsoft.AspNet.Mvc;
 using Microsoft.Framework.OptionsModel;
-using SciVacancies.WebApp;
+using SciVacancies.Captcha;
 
-namespace SciVacancies.Captcha.Controllers
+namespace SciVacancies.WebApp.Controllers
 {
 
     public class AltLanDSCaptchaController : Controller
