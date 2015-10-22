@@ -20,9 +20,10 @@ namespace SciVacancies.WebApp.ViewModels
         //[PasswordPropertyText]
         [Compare("Password", ErrorMessage = "Пароли отличаются")]
         public string ConfirmPassword { get; set; }
-
-        [Required(ErrorMessage = "Требуется ввести код скартинки")]
-        public string Captcha { get; set; }
+        
+        //CAPTCHA_HIDDEN
+        //[Required(ErrorMessage = "Требуется ввести код скартинки")]
+        //public string Captcha { get; set; }
 
 
         [Required(ErrorMessage = "Требуется ввести логин")]

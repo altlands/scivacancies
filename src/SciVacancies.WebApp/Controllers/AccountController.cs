@@ -426,7 +426,8 @@ namespace SciVacancies.WebApp.Controllers
             {
                 ModelState.AddModelError("Password", "Введите еще раз пароль");
                 ModelState.AddModelError("ConfirmPassword", "Повторите ввод пароля");
-                model.Captcha = null;
+                //CAPTCHA_HIDDEN
+                //model.Captcha = null;
                 ModelState.AddModelError("Captcha", "Введите код");
                 return View(model);
             }
