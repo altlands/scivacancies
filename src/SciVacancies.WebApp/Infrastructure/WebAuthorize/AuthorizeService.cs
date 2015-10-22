@@ -38,7 +38,7 @@ namespace SciVacancies.WebApp.Infrastructure.WebAuthorize
         public string GetResearcherProfile(string accessToken)
         {
             //TODO url move to config
-            var webRequest = WebRequest.Create(@"http://scimap-sso.alt-lan.com/scimap-sso/users/current/profile" + "?access_token=" + accessToken);
+            var webRequest = WebRequest.Create(@"http://scimap-sso.alt-lan.com/scimap-sso/api/v1/users/current/profile" + "?access_token=" + accessToken);
             webRequest.Method = "GET";
             var httpWebResponse = webRequest.GetResponse() as HttpWebResponse;
             string responseString = "";

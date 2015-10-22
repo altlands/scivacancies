@@ -16,7 +16,7 @@
         "Mapofscience": {
             "AuthorizationEndpoint": "http://scimap-sso.alt-lan.com/scimap-sso/oauth/authorize",
             "TokenEndpoint": "http://scimap-sso.alt-lan.com/scimap-sso/oauth/token",
-            "UserEndpoint": "http://scimap-sso.alt-lan.com/scimap-sso/users/current/account",
+            "UserEndpoint": "http://scimap-sso.alt-lan.com/scimap-sso/api/v1/users/current/account",
             "ClientId": "my-trusted-client",
             "ClientSecret": "secret",
             "Scope": "",
