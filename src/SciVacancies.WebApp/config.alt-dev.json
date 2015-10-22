@@ -3,8 +3,8 @@
     "SiteTitle": "Портал вакансий"
   },
   "Data": {
-    "ReadModelDb": "Server=localhost;Database=scivacancies;User Id=postgres;Password=postgres",
-    "EventStoreDb": "Server=localhost;Database=scivacancies;User Id=postgres;Password=postgres"
+    "ReadModelDb": "Server=alt-dev002;Database=scivacancies;User Id=postgres;Password=postgres",
+    "EventStoreDb": "Server=alt-dev002;Database=scivacancies;User Id=postgres;Password=postgres"
   },
   "OAuthSettings": {
     "Sciencemon": {
@@ -14,7 +14,7 @@
       "ClientId": "1_ikniwc909y8kog4k4sc00oogg0g8scc8o4k0wocgw4cg84k00",
       "ClientSecret": "67sq61c6xekgw0wgkosg04gwo488osk48ogks4og40cgws8ook",
       "Scope": "",
-      "RedirectUrl": "http://xn----8sbfhdabdwf1afqu5baxe0f2d.xn--p1ai/account/callback"
+      "RedirectUrl": "http://scivac.test.alt-lan.com/account/callback"
     },
     "Mapofscience": {
       "AuthorizationEndpoint": "http://scimap-sso.alt-lan.com/scimap-sso/oauth/authorize",
@@ -23,7 +23,7 @@
       "ClientId": "my-trusted-client",
       "ClientSecret": "secret",
       "Scope": "",
-      "RedirectUrl": "http://xn----8sbfhdabdwf1afqu5baxe0f2d.xn--p1ai/account/callback"
+      "RedirectUrl": "http://scivac.test.alt-lan.com/account/callback"
     }
   },
   //TODO
@@ -37,9 +37,9 @@
     }
   },
   "ElasticSettings": {
-    "ConnectionUrl": "http://localhost:9200/",
+    "ConnectionUrl": "http://alt-dev003:9200/",
     "DefaultIndex": "scivacancies-dev",
-    "MinScore": 0.2
+    "MinScore": "0.2"
   },
   "SagaSettings": { //TODO сделать только с положительными днями, обозвать соответствующе
     "Date": {
@@ -70,7 +70,7 @@
     },
     "DataSource": {
       "Default": {
-        "ConnectionString": "Server=localhost; Database=scivacancies; User Id=postgres; Password=postgres",
+        "ConnectionString": "Server=alt-dev002; Database=scivacancies; User Id=postgres; Password=postgres",
         "Provider": "Npgsql-20"
       }
     }
@@ -109,7 +109,7 @@
     "CaptchaDurationSeconds": 180
   },
   "SmtpSettings": {
-    "Domain": "http://xn----8sbfhdabdwf1afqu5baxe0f2d.xn--p1ai/",
-    "PortalLink": "<a target='_blank' href='http://xn----8sbfhdabdwf1afqu5baxe0f2d.xn--p1ai/'>ученые-исследователи.рф</a>"
+    "Domain": "scivac.test.alt-lan.com",
+    "PortalLink": "<a target='_blank' href='http://scivac.test.alt-lan.com'>http://scivac.test.alt-lan.com</a>"
   }
 }
