@@ -173,9 +173,9 @@ namespace SciVacancies.WebApp.Controllers
                 {
                     var newFileName = $"{authorizedUserGuid}.{fileExtension}";
                     var filePath =
-                        $"{_hostingEnvironment.WebRootPath}{_attachmentSettings.Value.Researcher.PhisicalPathPart}\\{newFileName}";
+                        $"{_hostingEnvironment.WebRootPath}{_attachmentSettings.Value.Researcher.PhisicalPathPart}/{newFileName}";
                     Directory.CreateDirectory(
-                        $"{_hostingEnvironment.WebRootPath}{_attachmentSettings.Value.Researcher.PhisicalPathPart}\\");
+                        $"{_hostingEnvironment.WebRootPath}{_attachmentSettings.Value.Researcher.PhisicalPathPart}/");
 
                     using (var image = Image.FromStream(file.OpenReadStream()))
                     {

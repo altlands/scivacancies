@@ -502,7 +502,7 @@ namespace SciVacancies.WebApp.Controllers
             if (model.Attachments != null && model.Attachments.Any())
             {
                 var newFolderName = Guid.NewGuid();
-                var fullDirectoryPath = $"{_hostingEnvironment.WebRootPath}{_attachmentSettings.Value.Vacancy.PhisicalPathPart}\\{newFolderName}\\";
+                var fullDirectoryPath = $"{_hostingEnvironment.WebRootPath}{_attachmentSettings.Value.Vacancy.PhisicalPathPart}/{newFolderName}/";
 
                 foreach (var file in model.Attachments)
                 {
@@ -516,7 +516,7 @@ namespace SciVacancies.WebApp.Controllers
                         //TODO: Application -> Attachments : можно ли редактировать список файлов, или Заявки создаются разово и для каждой генеиртся новая папка с вложениями
                         Directory.CreateDirectory(fullDirectoryPath);
                         var filePath =
-                            $"{_hostingEnvironment.WebRootPath}{_attachmentSettings.Value.Vacancy.PhisicalPathPart}\\{newFolderName}\\{fileName}";
+                            $"{_hostingEnvironment.WebRootPath}{_attachmentSettings.Value.Vacancy.PhisicalPathPart}/{newFolderName}/{fileName}";
                         file.SaveAs(filePath);
                         attachmentsList.Add(new SciVacancies.Domain.Core.VacancyAttachment
                         {
