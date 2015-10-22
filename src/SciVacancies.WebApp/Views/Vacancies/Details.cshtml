@@ -201,7 +201,7 @@
 
 @if (Model.Applications != null && Model.Applications.Items != null && Model.Applications.Items.Any())
 {
-    @:<a asp-controller="vacancies" asp-action="print" asp-route-id="@Model.Guid" class="blue-btn middle-icon icon-print-button default-link" style="margin-right: 15px;" rel="tooltip" target="_blank" title="Распечатать все заявки">Распечатать все заявки</a>
+    <a asp-controller="vacancies" asp-action="print" asp-route-id="@Model.Guid" class="blue-btn middle-icon icon-print-button default-link" style="margin-right: 15px;" rel="tooltip" target="_blank" title="Распечатать все заявки">Распечатать все заявки</a>
 }
 <br />
 

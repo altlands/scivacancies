@@ -33,7 +33,14 @@ namespace SciVacancies.Services.Email
 
         public virtual void SendEmail(MailMessage message)
         {
-            _smtpClient.Value.Send(message);
+            try
+            {
+                _smtpClient.Value.Send(message);
+            }
+            catch (Exception exception)
+            {
+                //todo: логировать ошибки при отправке почты
+            }
         }
 
         public void Dispose()

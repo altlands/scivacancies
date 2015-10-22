@@ -95,7 +95,7 @@
       "MaxTotalSize": 500000,
       "PhisicalPathPart": "/uploads/researcherphoto",
       "UrlPathPart": "~/uploads/researcherphoto",
-      "AllowExtensions": "JPG,JPEG,PNG"
+      "AlalowExtensions": "JPG,JPEG,PNG"
     }
   },
   "SiteFileSettings": {
@@ -109,7 +109,7 @@
     "CaptchaDurationSeconds": 180
   },
   "SmtpSettings": {
-    "Domain": "http://xn----8sbfhdabdwf1afqu5baxe0f2d.xn--p1ai/",
-    "PortalLink": "<a target='_blank' href='http://xn----8sbfhdabdwf1afqu5baxe0f2d.xn--p1ai/'>ученые-исследователи.рф</a>"
+    "Domain": "xn----8sbfhdabdwf1afqu5baxe0f2d.xn--p1ai",
+    "PortalLink": "<a target='_blank' href='http://xn----8sbfhdabdwf1afqu5baxe0f2d.xn--p1ai'>ученые-исследователи.рф</a>"
   }
 }
