@@ -35,7 +35,8 @@
     },
     "ElasticSettings": {
         "ConnectionUrl": "http://alt-dev003:9200/",
-        "DefaultIndex": "scivacancies-ntemnikov"
+        "DefaultIndex": "scivacancies-ntemnikov",
+        "MinScore": "0.2"
     },
     "SagaSettings": {
         "Date": {
@@ -71,6 +72,39 @@
             }
         }
     },
+  "AttachmentSettings": {
+    "VacancyApplication": {
+      "MaxItemSize": 500000,
+      "MaxTotalSize": 1000000,
+      "PhisicalPathPart": "/uploads/applications/attachments",
+      "UrlPathPart": "~/uploads/applications/attachments",
+      "AllowExtensions": ""
+    },
+    "Vacancy": {
+      "MaxItemSize": 500000,
+      "MaxTotalSize": 1000000,
+      "PhisicalPathPart": "/uploads/vacancies/attachments",
+      "UrlPathPart": "~/uploads/vacancies/attachments",
+      "AllowExtensions": ""
+    },
+    "Researcher": {
+      "MaxItemSize": 500000,
+      "MaxTotalSize": 500000,
+      "PhisicalPathPart": "/uploads/researcherphoto",
+      "UrlPathPart": "~/uploads/researcherphoto",
+      "AllowExtensions": "JPG,JPEG,PNG"
+    }
+  },
+  "SiteFileSettings": {
+    "FavIconName": "",
+    "PathToBlankAvatar": "/images/profile-photo.png"
+  },
+  "VacancyLifeCycleSettings": {
+    "DeltaFromPublishToInCommitteeMinDays": 20
+  },
+  "CaptchaSettings": {
+    "CaptchaDurationSeconds": 180
+  },
     "SmtpSettings": {
         "Domain": "localhost:59075",
         "PortalLink": "<a target='_blank' href='http://localhost:59075'>http://localhost:59075</a>"
