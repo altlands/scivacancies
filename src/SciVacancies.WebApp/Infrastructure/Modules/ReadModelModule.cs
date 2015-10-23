@@ -21,10 +21,12 @@ namespace SciVacancies.WebApp.Infrastructure
             .As<IDatabase>()
             //.SingleInstance()
             //.AsSelf()
+            .InstancePerDependency()
             //.InstancePerRequest()
-            .InstancePerLifetimeScope();
+            //.InstancePerLifetimeScope();
             //.OnActivating(d => d.Instance.BeginTransaction())
-            //.OnRelease(d => d.CompleteTransaction());
+            //.OnRelease(d => d.CompleteTransaction())
+            ;
         }
     }
 }
