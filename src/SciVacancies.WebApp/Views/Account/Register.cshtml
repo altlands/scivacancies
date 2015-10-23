@@ -129,22 +129,22 @@
             </div>
         </div>
 
-        <div class="form-line mtop30 form-row">
-            <label>Введите текст с картинки</label>
-            <div class="b-r-form">
-                <div class="captcha captcha-img">
-                    <img id="captchaImage" src="/captcha/fetch?w=164&h=50" onclick="javascript: reloadImg('captchaImage');" />
+        @*//CAPTCHA_HIDDEN
+                <div class="form-line mtop30 form-row">
+                <label>Введите текст с картинки</label>
+                <div class="b-r-form">
+                    <div class="captcha captcha-img">
+                        <img id="captchaImage" src="/captcha/fetch?w=164&h=50" onclick="javascript: reloadImg('captchaImage');" />
+                    </div>
+                    <div class="form-line">
+                        <span class="small-icon icon-update" onclick="javascript: reloadImg('captchaImage');"><span>Обновить</span></span>
+                    </div>
+                    <div class="form-line">
+                        <input type="text" asp-for="Captcha" class="middle-input" />
+
+                    </div>
                 </div>
-                <div class="form-line">
-                    <span class="small-icon icon-update" onclick="javascript: reloadImg('captchaImage');"><span>Обновить</span></span>
-                </div>
-                <div class="form-line">
-                    <input type="text" asp-for="Captcha" class="middle-input" />
-                    
-                </div>
-                <!--<span asp-validation-for="Captcha" class="iblock-middle ml6"></span>-->
-            </div>
-        </div>
+            </div>*@
 
 
         <div class="form-line">
@@ -155,8 +155,11 @@
                     </span><label for="Agreement">Я согласен на обработку моих персональных данных</label>
                     <span asp-validation-for="Agreement"></span>
                 </div>
-                
-                <span class="mtop30 green-btn middle-icon icon-arr-right">Регистрация<input type="submit" class="bt-default" onclick="return beforeFormSubmitRegister(this, 'captchaImage', 'Captcha', event)" value="" /></span>
+
+                @*//CAPTCHA_HIDDEN
+                    <span class="mtop30 green-btn middle-icon icon-arr-right">Регистрация<input type="submit" class="bt-default" onclick="return beforeFormSubmitRegister(this, 'captchaImage', 'Captcha', event)" value="" /></span>*@
+                <span class="mtop30 green-btn middle-icon icon-arr-right">Регистрация<input type="submit" class="bt-default" value="" /></span>
+
             </div>
         </div>
     </form>

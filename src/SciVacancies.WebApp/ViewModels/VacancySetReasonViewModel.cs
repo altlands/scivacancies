@@ -10,7 +10,7 @@ namespace SciVacancies.WebApp.ViewModels
         [Required]
         public Guid Guid { get; set; }
         public VacancyDetailsViewModel Vacancy { get; set; }
-        [Required]
+        [Required(ErrorMessage="Укажите решение комиссии")]
         public string Reason { get; set; }
         public List<IFormFile> Attachments { get; set; }
     }

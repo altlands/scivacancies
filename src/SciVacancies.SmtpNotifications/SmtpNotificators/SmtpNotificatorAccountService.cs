@@ -84,7 +84,7 @@ namespace SciVacancies.SmtpNotifications.SmtpNotificators
 <div style=''>
     Здравствуйте, {fullName}
     <br/>
-    Вы успешно прошли регистрацию на портале http://scivac.ru/
+    Вы успешно прошли регистрацию на портале {_smtpNotificatorService.PortalLink}
     <br/>
     Ваш логин: {login}
 </div>

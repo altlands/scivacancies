@@ -429,42 +429,44 @@ function cuselValueChanged(source, key) {
 /*
  * каптча
  */
-function reloadImg(captchaImageFieldName) {
-    var d = new Date();
-    $('#' + captchaImageFieldName).attr("src", "/captcha/fetch?w=164&h=50" + d.getTime());
-}
+//CAPTCHA_HIDDEN
+//function reloadImg(captchaImageFieldName) {
+//    var d = new Date();
+//    $('#' + captchaImageFieldName).attr("src", "/captcha/fetch?w=164&h=50" + d.getTime());
+//}
 /*
  * сделать некоторую обработку перед отправкой формы Регистрации
  */
-function beforeFormSubmitRegister(source, captchaImageFieldName, captchaInputFieldName, event) {
-    var form = $('#' + captchaImageFieldName).parents('form')[0];
-    if (!$(form).hasClass('validated')) {
-        event.preventDefault();
+//CAPTCHA_HIDDEN
+//function beforeFormSubmitRegister(source, captchaImageFieldName, captchaInputFieldName, event) {
+//    var form = $('#' + captchaImageFieldName).parents('form')[0];
+//    if (!$(form).hasClass('validated')) {
+//        event.preventDefault();
 
 
-        var validData = {
-            captchaText: $('#' + captchaInputFieldName).val()
-        };
+//        var validData = {
+//            captchaText: $('#' + captchaInputFieldName).val()
+//        };
 
-        $.ajax({
-            url: '/captcha/isvalid',
-            type: 'POST' /*'GET'*/,
-            data: validData,
-            success: function (isCaptureValid) {
-                if (isCaptureValid) {
-                    $(form).addClass('validated');
-                    $(form).submit();
-                } else {
-                    reloadImg(captchaImageFieldName);
-                    return false;
-                }
-            },
-            error: function (error) {
-                return false;
-            }
-        });
-    }
-};
+//        $.ajax({
+//            url: '/captcha/isvalid',
+//            type: 'POST' /*'GET'*/,
+//            data: validData,
+//            success: function (isCaptureValid) {
+//                if (isCaptureValid) {
+//                    $(form).addClass('validated');
+//                    $(form).submit();
+//                } else {
+//                    reloadImg(captchaImageFieldName);
+//                    return false;
+//                }
+//            },
+//            error: function (error) {
+//                return false;
+//            }
+//        });
+//    }
+//};
 /*
  * на форме Регистрации регистрации нажатие по кнопке "Согласие на обработку персональным данных"
  */

@@ -60,6 +60,7 @@
     "Npgsql.EntityFramework": "2.2.5",
     "NPoco": "2.9.103",
     "Quartz": "2.3.3",
+    "Newtonsoft.Json": "7.0.1",
     "Thinktecture.IdentityModel.Client": "4.0.1"
   },
 

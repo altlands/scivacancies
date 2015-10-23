@@ -425,7 +425,7 @@ namespace SciVacancies.WebApp.Controllers
             {
                 var preModel = _mediator.Send(new SingleVacancyQuery { VacancyGuid = vacancyGuid });
                 var model = Mapper.Map<VacancyDetailsViewModel>(preModel);
-                return View("removefavorite", model);
+                return View("RemoveFavorite", model);
             }
 
             _mediator.Send(new RemoveVacancyFromFavoritesCommand { ResearcherGuid = researcherGuid, VacancyGuid = vacancyGuid });

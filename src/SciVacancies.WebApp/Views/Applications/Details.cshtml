@@ -22,9 +22,9 @@
 
     @Component.Invoke("VacancyApplicationInfo", Model)
 
-    <div>
+    <div class="ctr-buttons">
 
-        <br/>
+        <br />
 
         @if (Model.Vacancy.Status == VacancyStatus.OfferResponseAwaitingFromWinner)
         {
@@ -32,8 +32,8 @@
                 && Model.Vacancy.WinnerResearcherGuid == Model.ResearcherGuid)
             {
                 <text>
-                    <a asp-controller="applications" asp-action="offeracception" asp-route-id="@Model.Guid" asp-route-iswinner="true" asp-route-hasaccepted="true" class="btn btn-success">Принять предложение</a>
-                    <a asp-controller="applications" asp-action="offeracception" asp-route-id="@Model.Guid" asp-route-iswinner="true" asp-route-hasaccepted="false" class="btn btn-danger">Отказаться от предложения</a>
+                <a asp-controller="applications" asp-action="offeracception" asp-route-id="@Model.Guid" asp-route-iswinner="true" asp-route-hasaccepted="true" class="btn btn-success">Принять предложение</a>
+                <a asp-controller="applications" asp-action="offeracception" asp-route-id="@Model.Guid" asp-route-iswinner="true" asp-route-hasaccepted="false" class="btn btn-danger">Отказаться от предложения</a>
                 </text>
             }
         }
@@ -45,35 +45,35 @@
                 && Model.Vacancy.PretenderResearcherGuid == Model.ResearcherGuid)
             {
                 <text>
-                    <a asp-controller="applications" asp-action="offeracception" asp-route-id="@Model.Guid" asp-route-iswinner="false" asp-route-hasaccepted="true" class="btn btn-success">Принять предложение</a>
-                    <a asp-controller="applications" asp-action="offeracception" asp-route-id="@Model.Guid" asp-route-iswinner="false" asp-route-hasaccepted="false" class="btn btn-danger">Отказаться от предложения</a>
+                <a asp-controller="applications" asp-action="offeracception" asp-route-id="@Model.Guid" asp-route-iswinner="false" asp-route-hasaccepted="true" class="btn btn-success">Принять предложение</a>
+                <a asp-controller="applications" asp-action="offeracception" asp-route-id="@Model.Guid" asp-route-iswinner="false" asp-route-hasaccepted="false" class="btn btn-danger">Отказаться от предложения</a>
                 </text>
             }
         }
 
         @if (Model.Vacancy.Status == VacancyStatus.OfferResponseAwaitingFromWinner
-             || Model.Vacancy.Status == VacancyStatus.OfferResponseAwaitingFromPretender
-             || Model.Vacancy.Status == VacancyStatus.OfferAcceptedByWinner
-             || Model.Vacancy.Status == VacancyStatus.OfferAcceptedByPretender
-             || Model.Vacancy.Status == VacancyStatus.OfferRejectedByWinner
-             || Model.Vacancy.Status == VacancyStatus.OfferRejectedByPretender
-             || Model.Vacancy.Status == VacancyStatus.Cancelled
-             || Model.Vacancy.Status == VacancyStatus.Closed)
+                     || Model.Vacancy.Status == VacancyStatus.OfferResponseAwaitingFromPretender
+                     || Model.Vacancy.Status == VacancyStatus.OfferAcceptedByWinner
+                     || Model.Vacancy.Status == VacancyStatus.OfferAcceptedByPretender
+                     || Model.Vacancy.Status == VacancyStatus.OfferRejectedByWinner
+                     || Model.Vacancy.Status == VacancyStatus.OfferRejectedByPretender
+                     || Model.Vacancy.Status == VacancyStatus.Cancelled
+                     || Model.Vacancy.Status == VacancyStatus.Closed)
         {
             if (Model.Vacancy.IsWinnerAccept.HasValue && Model.Guid == Model.Vacancy.WinnerVacancyApplicationGuid)
             {
                 <text>
-                    <div class="alert @(Model.Vacancy.IsWinnerAccept.Value ? "alert-success" : "alert-danger")" style="padding: 15px;">
-                        Вы @(Model.Vacancy.IsWinnerAccept.Value ? "приняли предложение" : "отказались от предложения") на <a asp-controller="vacancies" asp-action="card" asp-route-id="@Model.VacancyGuid">вакансию</a>.
-                    </div>
+                <div class="alert @(Model.Vacancy.IsWinnerAccept.Value ? "alert-success" : "alert-danger")" style="padding: 15px;">
+                    Вы @(Model.Vacancy.IsWinnerAccept.Value ? "приняли предложение" : "отказались от предложения") на <a asp-controller="vacancies" asp-action="card" asp-route-id="@Model.VacancyGuid">вакансию</a>.
+                </div>
                 </text>
             }
             if (Model.Vacancy.IsPretenderAccept.HasValue && Model.Guid == Model.Vacancy.PretenderVacancyApplicationGuid)
             {
                 <text>
-                    <div class="alert @(Model.Vacancy.IsPretenderAccept.Value ? "alert-success" : "alert-danger")" style="padding: 15px;">
-                        Вы @(Model.Vacancy.IsPretenderAccept.Value ? "приняли предложение" : "отказались от предложения") на <a asp-controller="vacancies" asp-action="card" asp-route-id="@Model.VacancyGuid">вакансию</a>.
-                    </div>
+                <div class="alert @(Model.Vacancy.IsPretenderAccept.Value ? "alert-success" : "alert-danger")" style="padding: 15px;">
+                    Вы @(Model.Vacancy.IsPretenderAccept.Value ? "приняли предложение" : "отказались от предложения") на <a asp-controller="vacancies" asp-action="card" asp-route-id="@Model.VacancyGuid">вакансию</a>.
+                </div>
                 </text>
             }
 

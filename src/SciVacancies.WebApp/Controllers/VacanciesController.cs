@@ -68,7 +68,7 @@ namespace SciVacancies.WebApp.Controllers
                 {
                     ModelState.AddModelError("ContractTypeValue", $"Для договора типа \"{ContractType.FixedTerm.GetDescription()}\" укажите срок трудового договора");
                     model.InitDictionaries(_mediator);
-                    return View("create", model);
+                    return View("Create", model);
                 }
 
                 var vacancyDataModel = Mapper.Map<VacancyDataModel>(model);
@@ -79,7 +79,7 @@ namespace SciVacancies.WebApp.Controllers
                 if (ModelState.ErrorCount > 0)
                 {
                     model.InitDictionaries(_mediator);
-                    return View("create", model);
+                    return View("Create", model);
                 }
                 // раскоментировать когда будут прикреплённые файлы для вакансии
                 //присваиваем прикреплённым файлам тип "Прочее" (для соответствущей выборки)
@@ -92,7 +92,7 @@ namespace SciVacancies.WebApp.Controllers
                 return RedirectToAction("details", new { id = vacancyGuid });
             }
             model.InitDictionaries(_mediator);
-            return View("create", model);
+            return View("Create", model);
 
         }
 
@@ -958,7 +958,7 @@ namespace SciVacancies.WebApp.Controllers
             model.Guid = Guid.Empty;
             model.InitDictionaries(_mediator);
 
-            return View("create", model);
+            return View("Create", model);
         }
 
         [PageTitle("Новая вакансия")]
