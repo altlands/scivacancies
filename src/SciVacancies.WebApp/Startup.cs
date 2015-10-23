@@ -168,8 +168,9 @@ namespace SciVacancies.WebApp
 
             MappingConfiguration.Initialize();
 
-            var schedulerService = new QuartzService(Configuration, Container.Resolve<IJobFactory>());
-            schedulerService.StartScheduler();
+            //todo: SAGA_DISABLED
+            //var schedulerService = new QuartzService(Configuration, Container.Resolve<IJobFactory>());
+            //schedulerService.StartScheduler();
         }
     }
 
