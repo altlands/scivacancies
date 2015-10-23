@@ -37,8 +37,10 @@ namespace SciVacancies.Services.Email
             {
                 _smtpClient.Value.Send(message);
             }
-            catch (Exception exception)
+            catch (Exception e)
             {
+                throw e;
+                throw new NotImplementedException();
                 //todo: логировать ошибки при отправке почты
             }
         }
