@@ -70,7 +70,7 @@ namespace SciVacancies.WebApp.Models.OAuth
     public class OAuthResEntity
     {
         public string authors { get; set; }
-        public int? doi { get; set; }
+        public string doi { get; set; }
         public string ext_id { get; set; }
         public string name { get; set; }
         public string type { get; set; }
