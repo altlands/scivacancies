@@ -115,6 +115,7 @@ namespace SciVacancies.WebApp
             // Configure the HTTP request pipeline.          
 
             // Add the console logger.
+            loggerfactory.MinimumLevel = LogLevel.Information;
             loggerfactory.AddConsole();
 
             // Add the following to the request pipeline only in development environment.
@@ -168,9 +169,8 @@ namespace SciVacancies.WebApp
 
             MappingConfiguration.Initialize();
 
-            //todo: SAGA_DISABLED
-            //var schedulerService = new QuartzService(Configuration, Container.Resolve<IJobFactory>());
-            //schedulerService.StartScheduler();
+            var schedulerService = new QuartzService(Configuration, Container.Resolve<IJobFactory>());
+            schedulerService.StartScheduler();
         }
     }
 
