@@ -133,9 +133,9 @@ namespace SciVacancies.WebApp.Controllers
                 {
                     Email = "technobrowser@gmail.com",
                     UserName = "organization2",
-                    Name = "НИИ добра",
-                    ShortName = "Good Science",
-                    Address = "Луна, море спокойствия",
+                    Name = "Акционерное общество 'Океанприбор'-2",
+                    ShortName = "Company 'Okeanpribor-2'",
+                    Address = "Москва, Ленинградский проспект",
                     INN = "2332232332",
                     OGRN = "23111113",
                     OrgFormId = 2,
