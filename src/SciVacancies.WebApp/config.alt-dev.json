@@ -108,8 +108,15 @@
   "CaptchaSettings": {
     "CaptchaDurationSeconds": 180
   },
-  "SmtpSettings": {
-    "Domain": "scivac.test.alt-lan.com",
-    "PortalLink": "<a target='_blank' href='http://scivac.test.alt-lan.com'>http://scivac.test.alt-lan.com</a>"
+  "EmailSettings": {
+    "Login": "mailer@alt-lan.com",
+    "Password": "123456-mailer",
+    "Host": "smtp.gmail.com",
+    "Port": 587,
+    "EnableSSL": true,
+    "UseDefaultCredentials": false,
+
+    "Domain": "xn----8sbfhdabdwf1afqu5baxe0f2d.xn--p1ai",
+    "PortalLink": "<a target='_blank' href='http://xn----8sbfhdabdwf1afqu5baxe0f2d.xn--p1ai'>ученые-исследователи.рф</a>"
   }
 }

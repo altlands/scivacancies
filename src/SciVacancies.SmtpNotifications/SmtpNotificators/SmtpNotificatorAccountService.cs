@@ -1,15 +1,30 @@
 ﻿using SciVacancies.ReadModel.Core;
 using SciVacancies.Services.Email;
 
+using Microsoft.Framework.Configuration;
+using System;
+
 namespace SciVacancies.SmtpNotifications.SmtpNotificators
 {
     public class SmtpNotificatorAccountService : ISmtpNotificatorAccountService
     {
-        private readonly ISmtpNotificatorService _smtpNotificatorService;
+        readonly IEmailService EmailService;
 
-        public SmtpNotificatorAccountService(ISmtpNotificatorService smtpNotificatorService)
+        readonly string From;
+        readonly string Domain;
+        readonly string PortalLink;
+
+        public SmtpNotificatorAccountService(IEmailService emailService, IConfiguration configuration)
         {
-            _smtpNotificatorService = smtpNotificatorService;
+            this.EmailService = emailService;
+
+            this.From = configuration["EmailSettings:Login"];
+            this.Domain = configuration["EmailSettings:Domain"];
+            this.PortalLink = configuration["EmailSettings:PortalLink"];
+
+            if (string.IsNullOrEmpty(this.From)) throw new ArgumentNullException("From is null");
+            if (string.IsNullOrEmpty(this.Domain)) throw new ArgumentNullException("Domain is null");
+            if (string.IsNullOrEmpty(this.PortalLink)) throw new ArgumentNullException("PortalLink is null");
         }
 
         public void SendPasswordRestore(Researcher researcher, string username, string mailTo, string token)
@@ -20,11 +35,11 @@ namespace SciVacancies.SmtpNotifications.SmtpNotificators
 
     Здравствуйте, {researcherFullName}
     <br/>
-    Был получен ваш запрос на восстановление доступа к порталу {_smtpNotificatorService.PortalLink}.
+    Был получен ваш запрос на восстановление доступа к порталу {PortalLink}.
     <br/>
     Ваш логин: {username}
     <br/>
-    Для создания нового пароля для вашей учетной записи вам необходимо пройти по <a target='_blank' href='http://{_smtpNotificatorService.Domain}/account/restorepassword/?username={username}&token={token}'> ссылке</a>
+    Для создания нового пароля для вашей учетной записи вам необходимо пройти по <a target='_blank' href='http://{Domain}/account/restorepassword/?username={username}&token={token}'> ссылке</a>
     <br/>
 </div>
 <br/>
@@ -33,13 +48,13 @@ namespace SciVacancies.SmtpNotifications.SmtpNotificators
 
 <div style='color: lightgray; font-size: smaller;'>
     Это письмо создано автоматически с 
-    <a target='_blank' href='http://{_smtpNotificatorService.Domain}'>Портала вакансий</a>.
+    <a target='_blank' href='http://{Domain}'>Портала вакансий</a>.
     Чтобы не получать такие уведомления отключите их или смените email в 
-    <a target='_blank' href='http://{_smtpNotificatorService.Domain}/researchers/account/'>личном кабинете</a>.
+    <a target='_blank' href='http://{Domain}/researchers/account/'>личном кабинете</a>.
 </div>
 ";
 
-            _smtpNotificatorService.Send(new SciVacMailMessage(mailTo, "Сброс пароля для портала вакансий", body));
+            EmailService.Send(new SciVacMailMessage(From, mailTo, "Сброс пароля для портала вакансий", body));
         }
 
 
@@ -51,7 +66,7 @@ namespace SciVacancies.SmtpNotifications.SmtpNotificators
 <div style=''>
     Уважаемый(-ая), {researcherFullName}, 
     <br/>
-    для активации вашей учётной записи перейдите, пожалуйста, по <a target='_blank' href='http://{_smtpNotificatorService.Domain}/account/activateaccount/?username={username}&token={token}'> ссылке</a>. 
+    для активации вашей учётной записи перейдите, пожалуйста, по <a target='_blank' href='http://{Domain}/account/activateaccount/?username={username}&token={token}'> ссылке</a>. 
     Не забудьте выполнить вход на сайте 
     <br/>
 </div>
@@ -66,13 +81,13 @@ namespace SciVacancies.SmtpNotifications.SmtpNotificators
 
 <div style='color: lightgray; font-size: smaller;'>
     Это письмо создано автоматически с 
-    <a target='_blank' href='http://{_smtpNotificatorService.Domain}'>Портала вакансий</a>.
+    <a target='_blank' href='http://{Domain}'>Портала вакансий</a>.
     Чтобы не получать такие уведомления отключите их или смените email в 
-    <a target='_blank' href='http://{_smtpNotificatorService.Domain}/researchers/account/'>личном кабинете</a>.
+    <a target='_blank' href='http://{Domain}/researchers/account/'>личном кабинете</a>.
 </div>
 ";
 
-            _smtpNotificatorService.Send(new SciVacMailMessage(mailTo, "Подтверждение с портала вакансий", body));
+            EmailService.Send(new SciVacMailMessage(From, mailTo, "Подтверждение с портала вакансий", body));
         }
 
 
@@ -84,7 +99,7 @@ namespace SciVacancies.SmtpNotifications.SmtpNotificators
 <div style=''>
     Здравствуйте, {fullName}
     <br/>
-    Вы успешно прошли регистрацию на портале {_smtpNotificatorService.PortalLink}
+    Вы успешно прошли регистрацию на портале {PortalLink}
     <br/>
     Ваш логин: {login}
 </div>
@@ -95,13 +110,13 @@ namespace SciVacancies.SmtpNotifications.SmtpNotificators
 
 <div style='color: lightgray; font-size: smaller;'>
     Это письмо создано автоматически с 
-    <a target='_blank' href='http://{_smtpNotificatorService.Domain}'>Портала вакансий</a>.
+    <a target='_blank' href='http://{Domain}'>Портала вакансий</a>.
     Чтобы не получать такие уведомления отключите их или смените email в 
-    <a target='_blank' href='http://{_smtpNotificatorService.Domain}/researchers/account/'>личном кабинете</a>.
+    <a target='_blank' href='http://{Domain}/researchers/account/'>личном кабинете</a>.
 </div>
 ";
 
-            _smtpNotificatorService.Send(new SciVacMailMessage(mailTo, "Вы зарегистрированы на портале вакансий", body));
+            EmailService.Send(new SciVacMailMessage(From, mailTo, "Вы зарегистрированы на портале вакансий", body));
         }
 
 

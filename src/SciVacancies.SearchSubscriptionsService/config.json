@@ -1,36 +1,43 @@
 ﻿{
-    "Data": {
-        "ReadModelDb": "Server=alt-dev002;Database=scivacancies;User Id=scivacservice;Password=scivacservice",
-        "QuartzDb": ""
+  "Data": {
+    "ReadModelDb": "Server=alt-dev002;Database=scivacancies;User Id=scivacservice;Password=scivacservice",
+    "QuartzDb": ""
+  },
+  "ElasticSettings": {
+    "ConnectionUrl": "http://alt-dev003:9200/",
+    "DefaultIndex": "scivacancies-dev",
+    "MinScore": 0.2
+  },
+  "QuartzSettings": {
+    "Scheduler": {
+      "InstanceName": "SciVacancies.SearchSubscription",
+      "ExecutionInterval": 60
     },
-    "ElasticSettings": {
-        "ConnectionUrl": "http://alt-dev003:9200/",
-        "DefaultIndex": "scivacancies-dev",
-        "MinScore": 0.2
+    "JobStore": {
+      "Type": "Quartz.Impl.AdoJobStore.JobStoreTX, Quartz",
+      "UseProperties": "true",
+      "DataSource": "default",
+      "TablePrefix": "qrtz_",
+      "LockHandler": {
+        "Type": "Quartz.Impl.AdoJobStore.UpdateLockRowSemaphore, Quartz"
+      }
     },
-    "QuartzSettings": {
-        "Scheduler": {
-            "InstanceName": "SciVacancies.SearchSubscription",
-            "ExecutionInterval": 60
-        },
-        "JobStore": {
-            "Type": "Quartz.Impl.AdoJobStore.JobStoreTX, Quartz",
-            "UseProperties": "true",
-            "DataSource": "default",
-            "TablePrefix": "qrtz_",
-            "LockHandler": {
-                "Type": "Quartz.Impl.AdoJobStore.UpdateLockRowSemaphore, Quartz"
-            }
-        },
-        "DataSource": {
-            "Default": {
-                "ConnectionString": "Server=alt-dev002;Database=scivacancies;User Id=scivacservice;Password=scivacservice",
-                "Provider": "Npgsql-20"
-            }
-        }
-    },
-    "SmtpSettings": {
-        "Domain": "scivac.test.alt-lan.com",
-        "PortalLink": "<a target='_blank' href='http://scivac.test.alt-lan.com'>http://scivac.test.alt-lan.com</a>"
+    "DataSource": {
+      "Default": {
+        "ConnectionString": "Server=alt-dev002;Database=scivacancies;User Id=scivacservice;Password=scivacservice",
+        "Provider": "Npgsql-20"
+      }
     }
+  },
+  "EmailSettings": {
+    "Login": "mailer@alt-lan.com",
+    "Password": "123456-mailer",
+    "Host": "smtp.gmail.com",
+    "Port": 587,
+    "EnableSSL": true,
+    "UseDefaultCredentials": false,
+
+    "Domain": "xn----8sbfhdabdwf1afqu5baxe0f2d.xn--p1ai",
+    "PortalLink": "<a target='_blank' href='http://xn----8sbfhdabdwf1afqu5baxe0f2d.xn--p1ai'>ученые-исследователи.рф</a>"
+  }
 }

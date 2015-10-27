@@ -31,10 +31,23 @@ namespace SciVacancies.SearchSubscriptionsService
         private readonly ILifetimeScope _lifetimeScope;
         readonly IElasticService _elasticService;
 
-        public SearchSubscriptionScanner(ILifetimeScope lifetimeScope, IElasticService elasticService)
+        readonly string From;
+        readonly string Domain;
+        readonly string PortalLink;
+
+
+        public SearchSubscriptionScanner(ILifetimeScope lifetimeScope, IElasticService elasticService, IConfiguration configuration)
         {
             _lifetimeScope = lifetimeScope;
             _elasticService = elasticService;
+
+            this.From = configuration["EmailSettings:Login"];
+            this.Domain = configuration["EmailSettings:Domain"];
+            this.PortalLink = configuration["EmailSettings:PortalLink"];
+
+            if (string.IsNullOrEmpty(this.From)) throw new ArgumentNullException("From is null");
+            if (string.IsNullOrEmpty(this.Domain)) throw new ArgumentNullException("Domain is null");
+            if (string.IsNullOrEmpty(this.PortalLink)) throw new ArgumentNullException("PortalLink is null");
         }
 
         public void Initialize(EventWaitHandle doneEvent, IEnumerable<SearchSubscription> subscriptionQueue)
@@ -85,16 +98,16 @@ namespace SciVacancies.SearchSubscriptionsService
                     using (var scopePerEmail = _lifetimeScope.BeginLifetimeScope("scopePerEmail"+ Guid.NewGuid()))
                     {
                         var db = scopePerEmail.Resolve<IDatabase>();
-                        var smtpNotificatorService = scopePerEmail.Resolve<ISmtpNotificatorService>();
+                        var EmailService = scopePerEmail.Resolve<IEmailService>();
 
                         var researcher = db.SingleOrDefaultById<Researcher>(searchSubscription.researcher_guid);
                         var researcherFullName = $"{researcher.secondname} {researcher.firstname} {researcher.patronymic}";
                         var body = $@"
 <div style=''>
     Уважаемый(-ая), {researcherFullName}, по одной из ваших
-    <a target='_blank' href='http://{smtpNotificatorService.Domain}/researcher/subscriptions/'>подписок</a>
+    <a target='_blank' href='http://{Domain}/researcher/subscriptions/'>подписок</a>
      ('{searchSubscription.title}') подобраны следующие вакансии: <br/>
-    {vacanciesList.Aggregate(string.Empty, (current, vacancy) => current + $"<a target='_blank' href='http://{smtpNotificatorService.Domain}/vacancies/card/{vacancy.Id}'>{vacancy.FullName}</a> <br/>")}
+    {vacanciesList.Aggregate(string.Empty, (current, vacancy) => current + $"<a target='_blank' href='http://{Domain}/vacancies/card/{vacancy.Id}'>{vacancy.FullName}</a> <br/>")}
 </div>
 
 <br/>
@@ -103,12 +116,12 @@ namespace SciVacancies.SearchSubscriptionsService
 
 <div style='color: lightgray; font-size: smaller;'>
     Это письмо создано автоматически с 
-    <a target='_blank' href='http://{smtpNotificatorService.Domain}'>Портала вакансий</a>.
+    <a target='_blank' href='http://{Domain}'>Портала вакансий</a>.
     Чтобы не получать такие уведомления отключите их или смените email в 
-    <a target='_blank' href='http://{smtpNotificatorService.Domain}/researchers/account/'>личном кабинете</a>.
+    <a target='_blank' href='http://{Domain}/researchers/account/'>личном кабинете</a>.
 </div>
 ";
-                        smtpNotificatorService.Send(new SciVacMailMessage(researcher.email, "Уведомление с портала вакансий", body));
+                        EmailService.Send(new SciVacMailMessage(From,researcher.email, "Уведомление с портала вакансий", body));
 
                         Console.WriteLine($"                 SearchSubscriptionScanner: письмо {researcher.email} для {researcherFullName}");
                     }

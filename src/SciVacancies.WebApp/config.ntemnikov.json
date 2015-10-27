@@ -105,8 +105,15 @@
   "CaptchaSettings": {
     "CaptchaDurationSeconds": 180
   },
-    "SmtpSettings": {
-        "Domain": "localhost:59075",
-        "PortalLink": "<a target='_blank' href='http://localhost:59075'>http://localhost:59075</a>"
-    }
+  "EmailSettings": {
+    "Login": "mailer@alt-lan.com",
+    "Password": "123456-mailer",
+    "Host": "smtp.gmail.com",
+    "Port": 587,
+    "EnableSSL": true,
+    "UseDefaultCredentials": false,
+
+    "Domain": "xn----8sbfhdabdwf1afqu5baxe0f2d.xn--p1ai",
+    "PortalLink": "<a target='_blank' href='http://xn----8sbfhdabdwf1afqu5baxe0f2d.xn--p1ai'>ученые-исследователи.рф</a>"
+  }
 }

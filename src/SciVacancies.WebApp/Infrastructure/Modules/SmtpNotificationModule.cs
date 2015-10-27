@@ -9,7 +9,7 @@ namespace SciVacancies.WebApp.Infrastructure
     {
         protected override void Load(ContainerBuilder builder)
         {
-            builder.RegisterType<SmtpNotificatorService>().As<ISmtpNotificatorService>().InstancePerLifetimeScope();
+            builder.RegisterType<EmailService>().As<IEmailService>().InstancePerLifetimeScope();
             builder.RegisterType<SmtpNotificatorAccountService>().As<ISmtpNotificatorAccountService>().InstancePerLifetimeScope();
             builder.RegisterType<SmtpNotificatorVacancyService>().As<ISmtpNotificatorVacancyService>().InstancePerLifetimeScope();
             builder.RegisterType<SmtpNotificatorSearchSubscriptionService>().As<ISmtpNotificatorSearchSubscriptionService>().InstancePerLifetimeScope();

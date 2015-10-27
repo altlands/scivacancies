@@ -1,10 +1,12 @@
-﻿using System.Net.Mail;
+﻿using System;
+using System.Net.Mail;
+using Microsoft.Framework.Configuration;
 
 namespace SciVacancies.SmtpNotifications
 {
     public class SciVacMailMessage : MailMessage
     {
-        public SciVacMailMessage(string mailTo, string subject,string body) : base(@from: new MailAddress("mailer@alt-lan.com"), to: new MailAddress(mailTo))
+        public SciVacMailMessage(string from, string mailTo, string subject, string body) : base(@from: new MailAddress(from), to: new MailAddress(mailTo))
         {
             Subject = subject;
             IsBodyHtml = true;
