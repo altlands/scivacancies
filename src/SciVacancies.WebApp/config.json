@@ -17,9 +17,9 @@
       "RedirectUrl": "http://xn----8sbfhdabdwf1afqu5baxe0f2d.xn--p1ai/account/callback"
     },
     "Mapofscience": {
-      "AuthorizationEndpoint": "http://scimap-sso.alt-lan.com/scimap-sso/oauth/authorize",
-      "TokenEndpoint": "http://scimap-sso.alt-lan.com/scimap-sso/oauth/token",
-      "UserEndpoint": "http://scimap-sso.alt-lan.com/scimap-sso/api/v1/users/current/account",
+      "AuthorizationEndpoint": "https://mapofscience.ru/scimap-sso/oauth/authorize",
+      "TokenEndpoint": "https://mapofscience.ru/scimap-sso/oauth/token",
+      "UserEndpoint": "https://mapofscience.ru/scimap-sso/api/v1/users/current/account",
       "ClientId": "my-trusted-client",
       "ClientSecret": "secret",
       "Scope": "",
@@ -33,7 +33,7 @@
       //"BasicAuthorization": "dev:informika"
     },
     "Mapofscience": {
-      "ResearcherProfile": "http://scimap-sso.alt-lan.com/users/current/profile"
+      "ResearcherProfile": "https://mapofscience.ru/users/current/profile"
     }
   },
   "ElasticSettings": {
@@ -95,7 +95,7 @@
       "MaxTotalSize": 500000,
       "PhisicalPathPart": "/uploads/researcherphoto",
       "UrlPathPart": "~/uploads/researcherphoto",
-      "AlalowExtensions": "JPG,JPEG,PNG"
+      "AllowExtensions": "JPG,JPEG,PNG"
     }
   },
   "SiteFileSettings": {
