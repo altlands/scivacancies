@@ -2,16 +2,29 @@
 using SciVacancies.Services.Email;
 
 using System;
+using Microsoft.Framework.Configuration;
 
 namespace SciVacancies.SmtpNotifications.SmtpNotificators
 {
     public class SmtpNotificatorSearchSubscriptionService : ISmtpNotificatorSearchSubscriptionService
     {
-        private readonly ISmtpNotificatorService _smtpNotificatorService;
+        readonly IEmailService EmailService;
 
-        public SmtpNotificatorSearchSubscriptionService(ISmtpNotificatorService smtpNotificatorService)
+        readonly string From;
+        readonly string Domain;
+        readonly string PortalLink;
+
+        public SmtpNotificatorSearchSubscriptionService(IEmailService emailService, IConfiguration configuration)
         {
-            _smtpNotificatorService = smtpNotificatorService;
+            this.EmailService = emailService;
+
+            this.From = configuration["EmailSettings:Login"];
+            this.Domain = configuration["EmailSettings:Domain"];
+            this.PortalLink = configuration["EmailSettings:PortalLink"];
+
+            if (string.IsNullOrEmpty(this.From)) throw new ArgumentNullException("From is null");
+            if (string.IsNullOrEmpty(this.Domain)) throw new ArgumentNullException("Domain is null");
+            if (string.IsNullOrEmpty(this.PortalLink)) throw new ArgumentNullException("PortalLink is null");
         }
 
         public void SendCreated(Researcher researcher, Guid searchSubscriptionGuid, string title)
@@ -23,9 +36,9 @@ namespace SciVacancies.SmtpNotifications.SmtpNotificators
     <br/>
     Сообщаем, что Вы добавили Поисковую подписку '{title}'. 
     <br/>
-    <a target='_blank' href='http://{_smtpNotificatorService.Domain}/researchers/subscriptions/'>Здесь доступно управление подписками</a>.
+    <a target='_blank' href='http://{Domain}/researchers/subscriptions/'>Здесь доступно управление подписками</a>.
     <br/>
-    <a target='_blank' href='http://{_smtpNotificatorService.Domain}/subscriptions/details/{searchSubscriptionGuid}'>Обработать</a> подписку (выполнить поиск).
+    <a target='_blank' href='http://{Domain}/subscriptions/details/{searchSubscriptionGuid}'>Обработать</a> подписку (выполнить поиск).
     <br/>
 </div>
 <br/>
@@ -36,13 +49,13 @@ namespace SciVacancies.SmtpNotifications.SmtpNotificators
 
 <div style='color: lightgray; font-size: smaller;'>
     Это письмо создано автоматически с 
-    <a target='_blank' href='http://{_smtpNotificatorService.Domain}'>Портала вакансий</a>.
+    <a target='_blank' href='http://{Domain}'>Портала вакансий</a>.
     Чтобы не получать такие уведомления отключите их или смените email в 
-    <a target='_blank' href='http://{_smtpNotificatorService.Domain}/researchers/account/'>личном кабинете</a>.
+    <a target='_blank' href='http://{Domain}/researchers/account/'>личном кабинете</a>.
 </div>
 ";
 
-            _smtpNotificatorService.Send(new SciVacMailMessage(researcher.email, "Уведомление с портала вакансий", body));
+            EmailService.Send(new SciVacMailMessage(From, researcher.email, "Уведомление с портала вакансий", body));
         }
     }
 

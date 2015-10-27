@@ -2,16 +2,29 @@
 using SciVacancies.Services.Email;
 
 using System;
+using Microsoft.Framework.Configuration;
 
 namespace SciVacancies.SmtpNotifications.SmtpNotificators
 {
     public class SmtpNotificatorVacancyService : ISmtpNotificatorVacancyService
     {
-        private readonly ISmtpNotificatorService _smtpNotificatorService;
+        readonly IEmailService EmailService;
 
-        public SmtpNotificatorVacancyService(ISmtpNotificatorService smtpNotificatorService)
+        readonly string From;
+        readonly string Domain;
+        readonly string PortalLink;
+
+        public SmtpNotificatorVacancyService(IEmailService emailService, IConfiguration configuration)
         {
-            _smtpNotificatorService = smtpNotificatorService;
+            this.EmailService = emailService;
+
+            this.From = configuration["EmailSettings:Login"];
+            this.Domain = configuration["EmailSettings:Domain"];
+            this.PortalLink = configuration["EmailSettings:PortalLink"];
+
+            if (string.IsNullOrEmpty(this.From)) throw new ArgumentNullException("From is null");
+            if (string.IsNullOrEmpty(this.Domain)) throw new ArgumentNullException("Domain is null");
+            if (string.IsNullOrEmpty(this.PortalLink)) throw new ArgumentNullException("PortalLink is null");
         }
 
         public void SendVacancyApplicationAppliedForOrganization(Organization organization, Vacancy vacancy, VacancyApplication vacancyApplication)
@@ -21,9 +34,9 @@ namespace SciVacancies.SmtpNotifications.SmtpNotificators
 
     Здравствуйте, {vacancy.contact_name}
     <br/>
-    Для участия, в созданной вами вакансии <a target='_blank' href='http://{_smtpNotificatorService.Domain}/vacancies/details/{vacancy.guid}'>{vacancy.fullname}</a>,
+    Для участия, в созданной вами вакансии <a target='_blank' href='http://{Domain}/vacancies/details/{vacancy.guid}'>{vacancy.fullname}</a>,
     <br/>
-    подана новая <a target='_blank' href='http://{_smtpNotificatorService.Domain}/applications/preview/{vacancyApplication.guid}'>заявка</a>
+    подана новая <a target='_blank' href='http://{Domain}/applications/preview/{vacancyApplication.guid}'>заявка</a>
     <br/>
 </div>
 
@@ -33,19 +46,19 @@ namespace SciVacancies.SmtpNotifications.SmtpNotificators
 
 <div style='color: lightgray; font-size: smaller;'>
     Это письмо создано автоматически с 
-    <a target='_blank' href='http://{_smtpNotificatorService.Domain}'>Портала вакансий</a>.
+    <a target='_blank' href='http://{Domain}'>Портала вакансий</a>.
     Чтобы не получать такие уведомления отключите их или смените email в 
-    <a target='_blank' href='http://{_smtpNotificatorService.Domain}/organizations/account/'>личном кабинете</a>.
+    <a target='_blank' href='http://{Domain}/organizations/account/'>личном кабинете</a>.
 </div>
 ";
-            _smtpNotificatorService.Send(new SciVacMailMessage(vacancy.contact_email, "Уведомление с портала вакансий", body));
+            EmailService.Send(new SciVacMailMessage(From, vacancy.contact_email, "Уведомление с портала вакансий", body));
         }
         public void SendVacancyApplicationAppliedForResearcher(Researcher researcher, Vacancy vacancy, VacancyApplication vacancyApplication)
         {
             var body = $@"
 <div style=''>
-    Cообщаем, что на вакансию <a target='_blank' href='http://{_smtpNotificatorService.Domain}/vacancies/card/{vacancy.guid}'>{vacancy.fullname}</a> 
-    Вами подана новая <a target='_blank' href='http://{_smtpNotificatorService.Domain}/applications/details/{vacancyApplication.guid}'>заявка</a> 
+    Cообщаем, что на вакансию <a target='_blank' href='http://{Domain}/vacancies/card/{vacancy.guid}'>{vacancy.fullname}</a> 
+    Вами подана новая <a target='_blank' href='http://{Domain}/applications/details/{vacancyApplication.guid}'>заявка</a> 
 </div>
 
 <br/>
@@ -54,19 +67,19 @@ namespace SciVacancies.SmtpNotifications.SmtpNotificators
 
 <div style='color: lightgray; font-size: smaller;'>
     Это письмо создано автоматически с 
-    <a target='_blank' href='http://{_smtpNotificatorService.Domain}'>Портала вакансий</a>.
+    <a target='_blank' href='http://{Domain}'>Портала вакансий</a>.
     Чтобы не получать такие уведомления отключите их или смените email в 
-    <a target='_blank' href='http://{_smtpNotificatorService.Domain}/researchers/account/'>личном кабинете</a>.
+    <a target='_blank' href='http://{Domain}/researchers/account/'>личном кабинете</a>.
 </div>
 ";
-            _smtpNotificatorService.Send(new SciVacMailMessage(researcher.email, "Уведомление с портала вакансий", body));
+            EmailService.Send(new SciVacMailMessage(From, researcher.email, "Уведомление с портала вакансий", body));
         }
         public void SendVacancyStatusChangedForOrganization(Vacancy vacancy, Organization organization)
         {
             var body = $@"
 <div style=''>
     Cообщаем, что вакансия
-    <a target='_blank' href='http://{_smtpNotificatorService.Domain}/vacancies/card/{vacancy.guid}'>{vacancy.fullname}</a> получила новый статус: {vacancy.status.GetDescriptionByResearcher()}
+    <a target='_blank' href='http://{Domain}/vacancies/card/{vacancy.guid}'>{vacancy.fullname}</a> получила новый статус: {vacancy.status.GetDescriptionByResearcher()}
 </div>
 
 <br/>
@@ -75,13 +88,13 @@ namespace SciVacancies.SmtpNotifications.SmtpNotificators
 
 <div style='color: lightgray; font-size: smaller;'>
     Это письмо создано автоматически с 
-    <a target='_blank' href='http://{_smtpNotificatorService.Domain}'>Портала вакансий</a>.
+    <a target='_blank' href='http://{Domain}'>Портала вакансий</a>.
     Чтобы не получать такие уведомления отключите их или смените email в 
-    <a target='_blank' href='http://{_smtpNotificatorService.Domain}/organizations/account/'>личном кабинете</a>.
+    <a target='_blank' href='http://{Domain}/organizations/account/'>личном кабинете</a>.
 </div>
 ";
 
-            _smtpNotificatorService.Send(new SciVacMailMessage(vacancy.contact_email, "Уведомление с портала вакансий", body));
+            EmailService.Send(new SciVacMailMessage(From, vacancy.contact_email, "Уведомление с портала вакансий", body));
         }
         public void SendVacancyStatusChangedForResearcher(Vacancy vacancy, Researcher researcher)
         {
@@ -91,7 +104,7 @@ namespace SciVacancies.SmtpNotifications.SmtpNotificators
     <br/>
     У вакансии {vacancy.fullname}, на которую вы подали заявку, изменился статус ({vacancy.status.GetDescriptionByResearcher()})
     <br/>
-    Для просмотра обновлений перейдите, пожалуйста, по ссылке: <a target='_blank' href='http://{_smtpNotificatorService.Domain}/vacancies/card/{vacancy.guid}'>http://{_smtpNotificatorService.Domain}/vacancies/card/{vacancy.guid}</a>
+    Для просмотра обновлений перейдите, пожалуйста, по ссылке: <a target='_blank' href='http://{Domain}/vacancies/card/{vacancy.guid}'>http://{Domain}/vacancies/card/{vacancy.guid}</a>
 </div>
 
 <br/>
@@ -100,13 +113,13 @@ namespace SciVacancies.SmtpNotifications.SmtpNotificators
 
 <div style='color: lightgray; font-size: smaller;'>
     Это письмо создано автоматически с 
-    <a target='_blank' href='http://{_smtpNotificatorService.Domain}'>Портала вакансий</a>.
+    <a target='_blank' href='http://{Domain}'>Портала вакансий</a>.
     Чтобы не получать такие уведомления отключите их или смените email в 
-    <a target='_blank' href='http://{_smtpNotificatorService.Domain}/researchers/account/'>личном кабинете</a>.
+    <a target='_blank' href='http://{Domain}/researchers/account/'>личном кабинете</a>.
 </div>
 ";
 
-            _smtpNotificatorService.Send(new SciVacMailMessage(researcher.email, "Уведомление с портала вакансий", body));
+            EmailService.Send(new SciVacMailMessage(From, researcher.email, "Уведомление с портала вакансий", body));
         }
         //TODO брать дни из конфига
         public void SendVacancyProlongedForResearcher(Vacancy vacancy, Researcher researcher)
@@ -114,7 +127,7 @@ namespace SciVacancies.SmtpNotifications.SmtpNotificators
             var body = $@"
             <div style=''>
                 Уважаемый(-ая), {researcher.secondname} {researcher.firstname}, сообщаем, что по вакансии
-                <a target='_blank' href='http://{_smtpNotificatorService.Domain}/vacancies/card/{vacancy.guid}'>{vacancy.fullname}</a> дата принятия решения комиссией переносится на 15 дней вперёд.
+                <a target='_blank' href='http://{Domain}/vacancies/card/{vacancy.guid}'>{vacancy.fullname}</a> дата принятия решения комиссией переносится на 15 дней вперёд.
             </div>
 
             <br/>
@@ -123,13 +136,13 @@ namespace SciVacancies.SmtpNotifications.SmtpNotificators
 
             <div style='color: lightgray; font-size: smaller;'>
                 Это письмо создано автоматически с 
-                <a target='_blank' href='http://{_smtpNotificatorService.Domain}'>Портала вакансий</a>.
+                <a target='_blank' href='http://{Domain}'>Портала вакансий</a>.
                 Чтобы не получать такие уведомления отключите их или смените email в 
-                <a target='_blank' href='http://{_smtpNotificatorService.Domain}/researchers/account/'>личном кабинете</a>.
+                <a target='_blank' href='http://{Domain}/researchers/account/'>личном кабинете</a>.
             </div>
             ";
 
-            _smtpNotificatorService.Send(new SciVacMailMessage(researcher.email, "Уведомление с портала вакансий", body));
+            EmailService.Send(new SciVacMailMessage(From, researcher.email, "Уведомление с портала вакансий", body));
         }
         public void SendWinnerSet(Researcher researcher, Guid applicationGuid, Guid vacancyGuid)
         {
@@ -137,7 +150,7 @@ namespace SciVacancies.SmtpNotifications.SmtpNotificators
             <div style=''>
     Здравствуйте, {researcher.secondname} {researcher.firstname}
     <br/>
-    Вы выбраны в качестве победителя в конкурсе на <a target='_blank' href='http://{_smtpNotificatorService.Domain}/vacancies/details/{vacancyGuid}'>вакансию</a>
+    Вы выбраны в качестве победителя в конкурсе на <a target='_blank' href='http://{Domain}/vacancies/details/{vacancyGuid}'>вакансию</a>
     <br/>
     В течение 30-ти календарных дней (до {DateTime.Now.AddDays(30)}) вам необходимо подтвердить свое согласие на замещение должности и подписать трудовой договор.
 
@@ -149,13 +162,13 @@ namespace SciVacancies.SmtpNotifications.SmtpNotificators
 
             <div style='color: lightgray; font-size: smaller;'>
                 Это письмо создано автоматически с 
-                <a target='_blank' href='http://{_smtpNotificatorService.Domain}'>Портала вакансий</a>.
+                <a target='_blank' href='http://{Domain}'>Портала вакансий</a>.
                 Чтобы не получать такие уведомления отключите их или смените email в 
-                <a target='_blank' href='http://{_smtpNotificatorService.Domain}/researchers/account/'>личном кабинете</a>.
+                <a target='_blank' href='http://{Domain}/researchers/account/'>личном кабинете</a>.
             </div>
             ";
 
-            _smtpNotificatorService.Send(new SciVacMailMessage(researcher.email, "Уведомление с портала вакансий", body));
+            EmailService.Send(new SciVacMailMessage(From, researcher.email, "Уведомление с портала вакансий", body));
         }
 
         public void SendFirstCommitteeNotificationToOrganization(Organization organization, Vacancy vacancy)
@@ -167,7 +180,7 @@ namespace SciVacancies.SmtpNotifications.SmtpNotificators
     <br/>
     Напоминаем вам, что ({vacancy.committee_start_date?.ToShortDateString()}) заканчивается прием заявок для участия, в
     <br/>
-    созданной вами вакансии: <a target='_blank' href='http://{_smtpNotificatorService.Domain}/vacancies/details/{vacancy.guid}'>{vacancy.fullname}</a>
+    созданной вами вакансии: <a target='_blank' href='http://{Domain}/vacancies/details/{vacancy.guid}'>{vacancy.fullname}</a>
     <br/>
     Конкурс на вакансию автоматически перейдет в статус «рассмотрение заявок комиссией». 
     <br/>
@@ -182,12 +195,12 @@ namespace SciVacancies.SmtpNotifications.SmtpNotificators
 
             <div style='color: lightgray; font-size: smaller;'>
                 Это письмо создано автоматически с 
-                <a target='_blank' href='http://{_smtpNotificatorService.Domain}'>Портала вакансий</a>.
+                <a target='_blank' href='http://{Domain}'>Портала вакансий</a>.
                 Чтобы не получать такие уведомления отключите их или смените email в 
-                <a target='_blank' href='http://{_smtpNotificatorService.Domain}/organizations/account/'>личном кабинете</a>.
+                <a target='_blank' href='http://{Domain}/organizations/account/'>личном кабинете</a>.
             </div>
             ";
-            _smtpNotificatorService.Send(new SciVacMailMessage(vacancy.contact_email, "Уведомление с портала вакансий", body));
+            EmailService.Send(new SciVacMailMessage(From, vacancy.contact_email, "Уведомление с портала вакансий", body));
         }
         public void SendSecondCommitteeNotificationToOrganization(Organization organization, Vacancy vacancy)
         {
@@ -197,9 +210,9 @@ namespace SciVacancies.SmtpNotifications.SmtpNotificators
             <div style=''>
     Здравствуйте, {vacancy.contact_name}
     <br/>
-    Напоминаем вам, что  ({vacancy.committee_end_date?.ToShortDateString()}) заканчивается срок рассмотрения заявок, на созданную вами вакансию: <a target='_blank' href='http://{_smtpNotificatorService.Domain}/vacancies/details/{vacancy.guid}'>{vacancy.fullname}</a>
+    Напоминаем вам, что  ({vacancy.committee_end_date?.ToShortDateString()}) заканчивается срок рассмотрения заявок, на созданную вами вакансию: <a target='_blank' href='http://{Domain}/vacancies/details/{vacancy.guid}'>{vacancy.fullname}</a>
     <br/>
-    Вам необходимо в течение 3-х рабочих дней выбрать победителя и поместить решение конкурсной комиссии на портале {_smtpNotificatorService.PortalLink}.
+    Вам необходимо в течение 3-х рабочих дней выбрать победителя и поместить решение конкурсной комиссии на портале {PortalLink}.
     <br/>
 
             </div>
@@ -210,12 +223,12 @@ namespace SciVacancies.SmtpNotifications.SmtpNotificators
 
             <div style='color: lightgray; font-size: smaller;'>
                 Это письмо создано автоматически с 
-                <a target='_blank' href='http://{_smtpNotificatorService.Domain}'>Портала вакансий</a>.
+                <a target='_blank' href='http://{Domain}'>Портала вакансий</a>.
                 Чтобы не получать такие уведомления отключите их или смените email в 
-                <a target='_blank' href='http://{_smtpNotificatorService.Domain}/organizations/account/'>личном кабинете</a>.
+                <a target='_blank' href='http://{Domain}/organizations/account/'>личном кабинете</a>.
             </div>
             ";
-            _smtpNotificatorService.Send(new SciVacMailMessage(vacancy.contact_email, "Уведомление с портала вакансий", body));
+            EmailService.Send(new SciVacMailMessage(From, vacancy.contact_email, "Уведомление с портала вакансий", body));
         }
         public void SendOfferResponseAwaitingNotificationToWinner(Researcher researcher, Guid applicationGuid, Guid vacancyGuid)
         {
@@ -223,8 +236,8 @@ namespace SciVacancies.SmtpNotifications.SmtpNotificators
 
             var body = $@"
                 <div style=''>
-                    Уважаемый(-ая), {researcher.secondname} {researcher.firstname}, ваша <a target='_blank' href='http://{_smtpNotificatorService.Domain}/applications/details/{applicationGuid}'>зявка</a>
-                    победила в конкурсе на <a target='_blank' href='http://{_smtpNotificatorService.Domain}/vacancies/details/{vacancyGuid}'>вакансию</a>.
+                    Уважаемый(-ая), {researcher.secondname} {researcher.firstname}, ваша <a target='_blank' href='http://{Domain}/applications/details/{applicationGuid}'>зявка</a>
+                    победила в конкурсе на <a target='_blank' href='http://{Domain}/vacancies/details/{vacancyGuid}'>вакансию</a>.
 
                     Вам необходимо до конца сего дня подтвердить или отвергуть предложение контракта по этой вакансии.
                 </div>
@@ -235,13 +248,13 @@ namespace SciVacancies.SmtpNotifications.SmtpNotificators
 
                 <div style='color: lightgray; font-size: smaller;'>
                     Это письмо создано автоматически с 
-                    <a target='_blank' href='http://{_smtpNotificatorService.Domain}'>Портала вакансий</a>.
+                    <a target='_blank' href='http://{Domain}'>Портала вакансий</a>.
                     Чтобы не получать такие уведомления отключите их или смените email в 
-                    <a target='_blank' href='http://{_smtpNotificatorService.Domain}/researchers/account/'>личном кабинете</a>.
+                    <a target='_blank' href='http://{Domain}/researchers/account/'>личном кабинете</a>.
                 </div>
                 ";
 
-            _smtpNotificatorService.Send(new SciVacMailMessage(researcher.email, "Уведомление с портала вакансий", body));
+            EmailService.Send(new SciVacMailMessage(From, researcher.email, "Уведомление с портала вакансий", body));
         }
         public void SendOfferResponseAwaitingNotificationToPretender(Researcher researcher, Guid applicationGuid, Guid vacancyGuid)
         {
@@ -249,8 +262,8 @@ namespace SciVacancies.SmtpNotifications.SmtpNotificators
 
             var body = $@"
                 <div style=''>
-                    Уважаемый(-ая), {researcher.secondname} {researcher.firstname}, ваша <a target='_blank' href='http://{_smtpNotificatorService.Domain}/applications/details/{applicationGuid}'>зявка</a>
-                    заняла второе место в конкурсе на <a target='_blank' href='http://{_smtpNotificatorService.Domain}/vacancies/details/{vacancyGuid}'>вакансию</a>.
+                    Уважаемый(-ая), {researcher.secondname} {researcher.firstname}, ваша <a target='_blank' href='http://{Domain}/applications/details/{applicationGuid}'>зявка</a>
+                    заняла второе место в конкурсе на <a target='_blank' href='http://{Domain}/vacancies/details/{vacancyGuid}'>вакансию</a>.
                     
                     Вам необходимо до конца сего дня подтвердить или отвергуть предложение контракта по этой вакансии.
                 </div>
@@ -261,13 +274,13 @@ namespace SciVacancies.SmtpNotifications.SmtpNotificators
 
                 <div style='color: lightgray; font-size: smaller;'>
                     Это письмо создано автоматически с 
-                    <a target='_blank' href='http://{_smtpNotificatorService.Domain}'>Портала вакансий</a>.
+                    <a target='_blank' href='http://{Domain}'>Портала вакансий</a>.
                     Чтобы не получать такие уведомления отключите их или смените email в 
-                    <a target='_blank' href='http://{_smtpNotificatorService.Domain}/researchers/account/'>личном кабинете</a>.
+                    <a target='_blank' href='http://{Domain}/researchers/account/'>личном кабинете</a>.
                 </div>
                 ";
 
-            _smtpNotificatorService.Send(new SciVacMailMessage(researcher.email, "Уведомление с портала вакансий", body));
+            EmailService.Send(new SciVacMailMessage(From, researcher.email, "Уведомление с портала вакансий", body));
         }
 
         public void SendOfferRejectedByPretender(Vacancy vacancy, Organization organization)
@@ -276,7 +289,7 @@ namespace SciVacancies.SmtpNotifications.SmtpNotificators
 <div style=''>
     Здравствуйте, {vacancy.contact_name}
     <br />
-    Претендент отклонил ваше предложение по вакансии <a target='_blank' href='http://{_smtpNotificatorService.Domain}/vacancies/card/{vacancy.guid}'>{vacancy.fullname}</a>
+    Претендент отклонил ваше предложение по вакансии <a target='_blank' href='http://{Domain}/vacancies/card/{vacancy.guid}'>{vacancy.fullname}</a>
 </div>
 
 <br/>
@@ -285,12 +298,12 @@ namespace SciVacancies.SmtpNotifications.SmtpNotificators
 
 <div style='color: lightgray; font-size: smaller;'>
     Это письмо создано автоматически с 
-    <a target='_blank' href='http://{_smtpNotificatorService.Domain}'>Портала вакансий</a>.
+    <a target='_blank' href='http://{Domain}'>Портала вакансий</a>.
     Чтобы не получать такие уведомления отключите их или смените email в 
-    <a target='_blank' href='http://{_smtpNotificatorService.Domain}/organizations/account/'>личном кабинете</a>.
+    <a target='_blank' href='http://{Domain}/organizations/account/'>личном кабинете</a>.
 </div>
 ";
-            _smtpNotificatorService.Send(new SciVacMailMessage(vacancy.contact_email, "Уведомление с портала вакансий", body));
+            EmailService.Send(new SciVacMailMessage(From, vacancy.contact_email, "Уведомление с портала вакансий", body));
         }
 
         public void SendOfferRejectedByWinner(Vacancy vacancy, Organization organization)
@@ -299,7 +312,7 @@ namespace SciVacancies.SmtpNotifications.SmtpNotificators
 <div style=''>
     Здравствуйте, {vacancy.contact_name}
     <br />
-    Победитель отклонил ваше предложение по вакансии <a target='_blank' href='http://{_smtpNotificatorService.Domain}/vacancies/card/{vacancy.guid}'>{vacancy.fullname}</a>
+    Победитель отклонил ваше предложение по вакансии <a target='_blank' href='http://{Domain}/vacancies/card/{vacancy.guid}'>{vacancy.fullname}</a>
 </div>
 
 <br/>
@@ -308,12 +321,12 @@ namespace SciVacancies.SmtpNotifications.SmtpNotificators
 
 <div style='color: lightgray; font-size: smaller;'>
     Это письмо создано автоматически с 
-    <a target='_blank' href='http://{_smtpNotificatorService.Domain}'>Портала вакансий</a>.
+    <a target='_blank' href='http://{Domain}'>Портала вакансий</a>.
     Чтобы не получать такие уведомления отключите их или смените email в 
-    <a target='_blank' href='http://{_smtpNotificatorService.Domain}/organizations/account/'>личном кабинете</a>.
+    <a target='_blank' href='http://{Domain}/organizations/account/'>личном кабинете</a>.
 </div>
 ";
-            _smtpNotificatorService.Send(new SciVacMailMessage(vacancy.contact_email, "Уведомление с портала вакансий", body));
+            EmailService.Send(new SciVacMailMessage(From, vacancy.contact_email, "Уведомление с портала вакансий", body));
         }
 
         public void SendOfferAcceptedByPretender(Vacancy vacancy, Organization organization)
@@ -322,7 +335,7 @@ namespace SciVacancies.SmtpNotifications.SmtpNotificators
 <div style=''>
     Здравствуйте, {vacancy.contact_name}
     <br />
-    Претендент принял ваше предложение по вакансии <a target='_blank' href='http://{_smtpNotificatorService.Domain}/vacancies/card/{vacancy.guid}'>{vacancy.fullname}</a>
+    Претендент принял ваше предложение по вакансии <a target='_blank' href='http://{Domain}/vacancies/card/{vacancy.guid}'>{vacancy.fullname}</a>
 </div>
 
 <br/>
@@ -331,12 +344,12 @@ namespace SciVacancies.SmtpNotifications.SmtpNotificators
 
 <div style='color: lightgray; font-size: smaller;'>
     Это письмо создано автоматически с 
-    <a target='_blank' href='http://{_smtpNotificatorService.Domain}'>Портала вакансий</a>.
+    <a target='_blank' href='http://{Domain}'>Портала вакансий</a>.
     Чтобы не получать такие уведомления отключите их или смените email в 
-    <a target='_blank' href='http://{_smtpNotificatorService.Domain}/organizations/account/'>личном кабинете</a>.
+    <a target='_blank' href='http://{Domain}/organizations/account/'>личном кабинете</a>.
 </div>
 ";
-            _smtpNotificatorService.Send(new SciVacMailMessage(vacancy.contact_email, "Уведомление с портала вакансий", body));
+            EmailService.Send(new SciVacMailMessage(From, vacancy.contact_email, "Уведомление с портала вакансий", body));
         }
 
         public void SendOfferAcceptedByWinner(Vacancy vacancy, Organization organization)
@@ -345,7 +358,7 @@ namespace SciVacancies.SmtpNotifications.SmtpNotificators
 <div style=''>
     Здравствуйте, {vacancy.contact_name}
     <br />
-    Победитель принял ваше предложение по вакансии <a target='_blank' href='http://{_smtpNotificatorService.Domain}/vacancies/card/{vacancy.guid}'>{vacancy.fullname}</a>
+    Победитель принял ваше предложение по вакансии <a target='_blank' href='http://{Domain}/vacancies/card/{vacancy.guid}'>{vacancy.fullname}</a>
 </div>
 
 <br/>
@@ -354,12 +367,12 @@ namespace SciVacancies.SmtpNotifications.SmtpNotificators
 
 <div style='color: lightgray; font-size: smaller;'>
     Это письмо создано автоматически с 
-    <a target='_blank' href='http://{_smtpNotificatorService.Domain}'>Портала вакансий</a>.
+    <a target='_blank' href='http://{Domain}'>Портала вакансий</a>.
     Чтобы не получать такие уведомления отключите их или смените email в 
-    <a target='_blank' href='http://{_smtpNotificatorService.Domain}/organizations/account/'>личном кабинете</a>.
+    <a target='_blank' href='http://{Domain}/organizations/account/'>личном кабинете</a>.
 </div>
 ";
-            _smtpNotificatorService.Send(new SciVacMailMessage(vacancy.contact_email, "Уведомление с портала вакансий", body));
+            EmailService.Send(new SciVacMailMessage(From, vacancy.contact_email, "Уведомление с портала вакансий", body));
         }
     }
 }

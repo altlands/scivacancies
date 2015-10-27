@@ -4,6 +4,6 @@ namespace SciVacancies.Services.Email
 {
     public interface IEmailService
     {
-        void SendEmail(MailMessage message);
+        void Send(MailMessage message);
     }
 }

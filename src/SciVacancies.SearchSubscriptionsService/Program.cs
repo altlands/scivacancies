@@ -32,7 +32,7 @@ namespace SciVacancies.SearchSubscriptionsService
             
             var builder = new ContainerBuilder();
             builder.Register(c => configuration).As<IConfiguration>().SingleInstance();
-            builder.RegisterType<SmtpNotificatorService>().As<ISmtpNotificatorService>().InstancePerDependency();
+            builder.RegisterType<EmailService>().As<IEmailService>().InstancePerDependency();
             builder.RegisterType<SearchSubscriptionService>().AsSelf();
             builder.RegisterType<QuartzService>().AsImplementedInterfaces();
 
