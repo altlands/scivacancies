@@ -5,17 +5,17 @@
 
 <h4>@ViewBag.Title</h4>
 
-    <div class="b-tabs">
+    <div class="b-tabs b-tabs_page">
         <ul class="nav nav-tabs" id="tab">
-            <li>
-                <a href="#b-user">Пользователь</a>
+            <li class="active">
+                <a href="#b-user-second">Пользователь</a>
             </li>
             <li>
-                <a href="#b-organization">Организация</a>
+                <a href="#b-organization-second">Организация</a>
             </li>
         </ul>
         <div class="tab-content">
-            <div class="tab-pane" id="b-user" style="display: block;">
+            <div class="tab-pane active" id="b-user-second" >
                 <p>Для зарегистрированных пользователей (соискателей) - введите в форму входа логин и пароль, полученные при регистрации на Портале.</p>
 
                 <div class="mt7"><a href="/account/register" class="italic">Регистрация</a></div>
@@ -43,7 +43,7 @@
                     <a href="/account/login?user=@((int)AuthorizeUserTypes.Researcher)&resource=@((int)AuthorizeResourceTypes.ScienceMap)">Авторизоваться через Карту Науки</a>
                 </p>
             </div>
-            <div class="tab-pane" id="b-organization" style="display: block;">
+            <div class="tab-pane" id="b-organization-second">
                 <p>
                     Для входа в личный кабинет представителя Организации необходимо в соответствующие поля ввести логин и пароль, полученные на сайте <a href="#">Федеральной системы мониторинга результативности деятельности научных организаций</a> (ФСМНО)
                 </p>

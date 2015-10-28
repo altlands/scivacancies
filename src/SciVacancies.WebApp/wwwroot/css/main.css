@@ -168,7 +168,7 @@ label {
         background: url(../images/sprite.png) -135px -287px no-repeat;
     }
 
-.content-popup .b-tabs .nav-tabs {
+.b-tabs .nav-tabs {
     padding-left: 8px;
 }
 
@@ -1322,19 +1322,21 @@ span#buttonFile {
         width: 920px;
     }
 
-    .footer .footer-copyright,
-    .footer-items {
+    .footer .footer-copyright{
         margin: 18px 0 0 0;
     }
-
+.footer-items {
+    margin: 7px 0 0 0;
+}
     .footer .footer-copyright {
         color: #ffffff;
         float: left;
     }
 
 .footer-items {
+    text-align: right;
     float: right;
-    max-width: 250px;
+    max-width: 450px;
 }
 
 .footer .footer-copyright {
@@ -2286,11 +2288,6 @@ ol.content-list {
         padding: 5px 9px 9px;
     }
 
-    .window-popup .b-tabs p,
-    .window-popup .b-tabs a {
-        color: #041833;
-    }
-
 .mt40 {
     margin-top: 40px;
 }
@@ -2948,10 +2945,6 @@ h4 + .b-vacancies {
 .content-popup .b-tabs {
     margin: 40px 0 0 0;
 }
-
-    .content-popup .b-tabs .tab-content {
-        border: none;
-    }
 
 
 /* carousel */
@@ -4086,4 +4079,20 @@ input.sub-form-item__input {
     font-style: italic;
     font-weight: normal;
     font-family: Arial;
+}
+
+/*
+    заплатка для /account/login Это микс 
+*/
+.b-tabs_page p,
+.b-tabs_page a {
+    color: #041833;
+}
+.b-tabs_page .ctr-buttons{
+ margin:21px 0 0 0;
+}
+.b-tabs_page .tab-content{
+ border:none;
+ border-top:1px;
+ margin-right:0;
 }

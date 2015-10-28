@@ -81,7 +81,6 @@
 
                 <div class="b-items-category panel-group" id="accordion">
                     <cache expires-after="@TimeSpan.FromMinutes(90)">
-                        @DateTime.Now.ToLongTimeString()
                         @Html.Partial("HomeResearchDirections", Model)
                     </cache>
                 </div>
