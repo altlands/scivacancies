@@ -1320,27 +1320,19 @@ span#buttonFile {
 
     .footer .b-wrap {
         width: 920px;
+        display: table;
+        height: 100%;
     }
 
-    .footer .footer-copyright{
-        margin: 18px 0 0 0;
-    }
-.footer-items {
-    margin: 7px 0 0 0;
-}
     .footer .footer-copyright {
-        color: #ffffff;
-        float: left;
+        display: table-cell;
+        vertical-align:middle;
     }
 
 .footer-items {
     text-align: right;
-    float: right;
-    max-width: 450px;
-}
-
-.footer .footer-copyright {
-    max-width: 650px;
+    display: table-cell;
+    vertical-align:middle;
 }
 
 .footer a {
