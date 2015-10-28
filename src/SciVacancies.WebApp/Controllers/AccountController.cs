@@ -87,7 +87,7 @@ namespace SciVacancies.WebApp.Controllers
         [HttpPost]
         public async Task<IActionResult> Login(AccountLoginViewModel model)
         {
-            if (model == null)
+            if (model.Login == null && model.User == null && model.Password == null && model.Resource == null)
                 return View(new AccountLoginViewModel());
 
             switch (model.User)

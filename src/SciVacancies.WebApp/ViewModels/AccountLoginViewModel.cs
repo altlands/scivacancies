@@ -13,8 +13,8 @@ namespace SciVacancies.WebApp.ViewModels
         [DataType(DataType.Password)]
         public string Password { get; set; }
 
-        public AuthorizeUserTypes User { get; set; }
-        public AuthorizeResourceTypes Resource { get; set; }
+        public AuthorizeUserTypes? User { get; set; }
+        public AuthorizeResourceTypes? Resource { get; set; }
         public int UnreadNotificationCount { get; set; }
     }
 }
