@@ -113,7 +113,7 @@
     "EnableSSL": true,
     "UseDefaultCredentials": false,
 
-    "Domain": "xn----8sbfhdabdwf1afqu5baxe0f2d.xn--p1ai",
-    "PortalLink": "<a target='_blank' href='http://xn----8sbfhdabdwf1afqu5baxe0f2d.xn--p1ai'>ученые-исследователи.рф</a>"
+    "Domain": "localhost:59075",
+    "PortalLink": "<a target='_blank' href='http://localhost:59075'>localhost:59075</a>"
   }
 }
