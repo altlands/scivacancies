@@ -14,9 +14,9 @@
             "RedirectUrl": "http://localhost:59075/account/callback"
         },
         "Mapofscience": {
-            "AuthorizationEndpoint": "http://scimap-sso.alt-lan.com/scimap-sso/oauth/authorize",
-            "TokenEndpoint": "http://scimap-sso.alt-lan.com/scimap-sso/oauth/token",
-            "UserEndpoint": "http://scimap-sso.alt-lan.com/scimap-sso/api/v1/users/current/account",
+            "AuthorizationEndpoint": "https://mapofscience.ru/scimap-sso/oauth/authorize",
+            "TokenEndpoint": "https://mapofscience.ru/scimap-sso/oauth/token",
+            "UserEndpoint": "https://mapofscience.ru/scimap-sso/api/v1/users/current/account",
             "ClientId": "my-trusted-client",
             "ClientSecret": "secret",
             "Scope": "",
@@ -30,7 +30,7 @@
             //"BasicAuthorization": "dev:informika"
         },
         "Mapofscience": {
-            "ResearcherProfile": "http://scimap-sso.alt-lan.com/users/current/profile"
+            "ResearcherProfile": "https://mapofscience.ru/users/current/profile"
         }
     },
     "ElasticSettings": {
@@ -41,20 +41,20 @@
     "SagaSettings": {
         "Date": {
             "Committee": {
-                "FirstNotificationDays": -1,
-                "SecondNotificationDays": 2,
+                "FirstNotificationMinutes": -1,
+                "SecondNotificationMinutes": 2,
                 "ProlongingDays": 15
             },
             "OfferResponseAwaiting": {
-                "WinnerNotificationDays": -1,
-                "PretenderNotificationDays": -1
+                "WinnerNotificationMinutes": -1,
+                "PretenderNotificationMinutes": -1
             }
         }
     },
     "QuartzSettings": {
         "Scheduler": {
             "InstanceName": "SciVacanciesScheduler",
-            "ExecutionInterval": 10
+            "ExecutionInterval":1
         },
         "JobStore": {
             "Type": "Quartz.Impl.AdoJobStore.JobStoreTX, Quartz",
@@ -113,7 +113,7 @@
     "EnableSSL": true,
     "UseDefaultCredentials": false,
 
-    "Domain": "xn----8sbfhdabdwf1afqu5baxe0f2d.xn--p1ai",
-    "PortalLink": "<a target='_blank' href='http://xn----8sbfhdabdwf1afqu5baxe0f2d.xn--p1ai'>ученые-исследователи.рф</a>"
+    "Domain": "localhost:59075",
+    "PortalLink": "<a target='_blank' href='http://localhost:59075'>localhost:59075</a>"
   }
 }

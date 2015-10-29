@@ -4,8 +4,8 @@
     "QuartzDb": ""
   },
   "ElasticSettings": {
-    "ConnectionUrl": "http://alt-dev003:9200/",
-    "DefaultIndex": "scivacancies-dev",
+    "ConnectionUrl": "http://localhost:9200/",
+    "DefaultIndex": "scivacancies",
     "MinScore": 0.2
   },
   "QuartzSettings": {
@@ -24,7 +24,7 @@
     },
     "DataSource": {
       "Default": {
-        "ConnectionString": "Server=alt-dev002;Database=scivacancies;User Id=scivacservice;Password=scivacservice",
+        "ConnectionString": "Server=localhost;Database=scivacancies;User Id=scivacservice;Password=scivacservice",
         "Provider": "Npgsql-20"
       }
     }
@@ -37,7 +37,7 @@
     "EnableSSL": true,
     "UseDefaultCredentials": false,
 
-    "Domain": "localhost:59075",
-    "PortalLink": "<a target='_blank' href='http://localhost:59075'>localhost:59075</a>"
+    "Domain": "xn----8sbfhdabdwf1afqu5baxe0f2d.xn--p1ai",
+    "PortalLink": "<a target='_blank' href='http://xn----8sbfhdabdwf1afqu5baxe0f2d.xn--p1ai'>ученые-исследователи</a>"
   }
 }

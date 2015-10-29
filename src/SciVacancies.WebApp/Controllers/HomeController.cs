@@ -34,6 +34,7 @@ namespace SciVacancies.WebApp.Controllers
 
             var model = new IndexViewModel
             {
+                CurrentMediator = _mediator,
                 VacanciesList =
                     _mediator.Send(new SelectPagedVacanciesQuery
                     {
@@ -49,8 +50,7 @@ namespace SciVacancies.WebApp.Controllers
                         PageIndex = 1,
                         OrderBy = ConstTerms.OrderByVacancyCountDescending
                     })
-                        .MapToPagedList<Organization, OrganizationDetailsViewModel>(),
-                ResearchDirections = new VacanciesFilterSource(_mediator).ResearchDirections
+                        .MapToPagedList<Organization, OrganizationDetailsViewModel>()
             };
 
             //заполнить названия организаций

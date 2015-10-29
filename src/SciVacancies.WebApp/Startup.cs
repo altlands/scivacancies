@@ -129,9 +129,10 @@ namespace SciVacancies.WebApp
             //app.UseOpenIdConnectAuthentication();
 
             app.UseSession();
-            // Configure the HTTP request pipeline.       
-               
+            // Configure the HTTP request pipeline.          
+
             // Add the console logger.
+            loggerfactory.MinimumLevel = LogLevel.Information;
             loggerfactory.AddConsole();
 
             // Add the following to the request pipeline only in development environment.

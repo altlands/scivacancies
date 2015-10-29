@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using MediatR;
 using SciVacancies.ReadModel.Pager;
 
 namespace SciVacancies.WebApp.ViewModels
@@ -10,6 +11,6 @@ namespace SciVacancies.WebApp.ViewModels
     {
         public PagedList<OrganizationDetailsViewModel> OrganizationsList{ get; set; }
         public PagedList<VacancyDetailsViewModel> VacanciesList { get; set; }
-        public List<ResearchDirectionViewModel> ResearchDirections { get; set; }
+        public IMediator CurrentMediator { get; set; }
     }
 }
