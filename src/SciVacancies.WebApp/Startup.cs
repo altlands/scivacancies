@@ -17,6 +17,14 @@ using Microsoft.AspNet.StaticFiles;
 using Microsoft.AspNet.Session;
 using System.Globalization;
 using Quartz.Spi;
+using Microsoft.Practices.EnterpriseLibrary.SemanticLogging;
+using Microsoft.Practices.EnterpriseLibrary.SemanticLogging.Sinks;
+using System.Diagnostics.Tracing;
+using SciVacancies.Services.Logging;
+using AltLanDS.Logging;
+
+using EventSourceProxy;
+
 
 namespace SciVacancies.WebApp
 {
@@ -73,6 +81,8 @@ namespace SciVacancies.WebApp
 
             services.AddSession(o => { o.IdleTimeout = TimeSpan.FromSeconds(10); });
 
+            services.AddLogging();
+
             var builder = new ContainerBuilder();
 
             ConfigureContainer(builder);
@@ -86,6 +96,13 @@ namespace SciVacancies.WebApp
 
         public void ConfigureContainer(ContainerBuilder builder)
         {
+            //builder.Register(c => TracingProxy.CreateWithActivityScope<ICalculator>(new Calculator()))
+            //    .As<ICalculator>()
+            //    //.OnActivating(x => x.ReplaceInstance(TracingProxy.CreateWithActivityScope<ICalculator>(x.Instance)))
+            //    .SingleInstance();
+            //builder.Register<Calculator>(c => new Calculator()).AsSelf();
+            //builder.Register(c => TracingProxy.CreateWithActivityScope<ICalculator>(c.Resolve<Calculator>())).As<ICalculator>();
+
             builder.RegisterModule(new EventStoreModule(Configuration));
             builder.RegisterModule(new EventBusModule());
             builder.RegisterModule(new EventHandlersModule());
@@ -112,8 +129,8 @@ namespace SciVacancies.WebApp
             //app.UseOpenIdConnectAuthentication();
 
             app.UseSession();
-            // Configure the HTTP request pipeline.          
-
+            // Configure the HTTP request pipeline.       
+               
             // Add the console logger.
             loggerfactory.AddConsole();
 
@@ -168,9 +185,24 @@ namespace SciVacancies.WebApp
 
             MappingConfiguration.Initialize();
 
+            //Logs initialization
+            var observable = new ObservableEventListener();
+            observable.EnableEvents(
+                    LogEvents.LogEventSource,
+                    (EventLevel)Enum.Parse(typeof(EventLevel), Configuration["LogSettings:LogLevel"], true),
+                    (EventKeywords)(-1)
+                );
+            observable.LogToRollingFlatFile(
+                    Configuration["LogSettings:FileName"],
+                    int.Parse(Configuration["LogSettings:FileSizeKB"]),
+                    Configuration["LogSettings:TimeStampPattern"],
+                    (RollFileExistsBehavior)Enum.Parse(typeof(RollFileExistsBehavior), Configuration["LogSettings:RollFileExistsBehavior"], true),
+                    (RollInterval)Enum.Parse(typeof(RollInterval), Configuration["LogSettings:RollInterval"], true)
+                );
+
             //todo: SAGA_DISABLED
-            //var schedulerService = new QuartzService(Configuration, Container.Resolve<IJobFactory>());
-            //schedulerService.StartScheduler();
+            var schedulerService = new QuartzService(Configuration, Container.Resolve<IJobFactory>());
+            schedulerService.StartScheduler();
         }
     }
 
