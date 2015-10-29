@@ -44,13 +44,13 @@
   "SagaSettings": { //TODO сделать только с положительными днями, обозвать соответствующе
     "Date": {
       "Committee": {
-        "FirstNotificationDays": -1,
-        "SecondNotificationDays": 2,
+        "FirstNotificationMinutes": -1,
+        "SecondNotificationMinutes": 2,
         "ProlongingDays": 15
       },
       "OfferResponseAwaiting": {
-        "WinnerNotificationDays": -1,
-        "PretenderNotificationDays": -1
+        "WinnerNotificationMinutes": -1,
+        "PretenderNotificationMinutes": -1
       }
     }
   },
@@ -116,7 +116,7 @@
     "EnableSSL": true,
     "UseDefaultCredentials": false,
 
-    "Domain": "scivac.test.alt-lan.com/",
-    "PortalLink": "<a target='_blank' href='http://scivac.test.alt-lan.com/'>scivac.test.alt-lan.com/</a>"
+    "Domain": "scivac.test.alt-lan.com",
+    "PortalLink": "<a target='_blank' href='http://scivac.test.alt-lan.com'>scivac.test.alt-lan.com</a>"
   }
 }

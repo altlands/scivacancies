@@ -11,13 +11,13 @@
     }
     public class CommitteeDateSettings
     {
-        public int FirstNotificationDays { get; set; }
-        public int SecondNotificationDays { get; set; }
+        public int FirstNotificationMinutes { get; set; }
+        public int SecondNotificationMinutes { get; set; }
         public int ProlongingDays { get; set; }
     }
     public class OfferResponseAwaitingDateSettings
     {
-        public int WinnerNotificationDays { get; set; }
-        public int PretenderNotificationDays { get; set; }
+        public int WinnerNotificationMinutes { get; set; }
+        public int PretenderNotificationMinutes { get; set; }
     }
 }

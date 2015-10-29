@@ -41,20 +41,20 @@
     "SagaSettings": {
         "Date": {
             "Committee": {
-                "FirstNotificationDays": -1,
-                "SecondNotificationDays": 2,
+                "FirstNotificationMinutes": -1,
+                "SecondNotificationMinutes": 2,
                 "ProlongingDays": 15
             },
             "OfferResponseAwaiting": {
-                "WinnerNotificationDays": -1,
-                "PretenderNotificationDays": -1
+                "WinnerNotificationMinutes": -1,
+                "PretenderNotificationMinutes": -1
             }
         }
     },
     "QuartzSettings": {
         "Scheduler": {
             "InstanceName": "SciVacanciesScheduler",
-            "ExecutionInterval": 10
+            "ExecutionInterval":1
         },
         "JobStore": {
             "Type": "Quartz.Impl.AdoJobStore.JobStoreTX, Quartz",
