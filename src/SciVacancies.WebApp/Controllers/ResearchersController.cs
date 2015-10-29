@@ -162,9 +162,9 @@ namespace SciVacancies.WebApp.Controllers
                     .Last()
                     .ToUpper();
 
-                if (!_attachmentSettings.Value.Researcher.AllowExtensions.ToUpper().Contains(fileExtension.ToUpper()))
-                    ModelState.AddModelError("PhotoFile",
-                        $"Можно добавить только изображение. Допустимые типы файлов: {_attachmentSettings.Value.Researcher.AllowExtensions}");
+                    if (!_attachmentSettings.Value.Researcher.AllowExtensions.ToUpper().Contains(fileExtension.ToUpper()))
+                        ModelState.AddModelError("PhotoFile",
+                            $"Можно добавить только изображение. Допустимые типы файлов: {_attachmentSettings.Value.Researcher.AllowExtensions}");
 
                 if (ModelState.ErrorCount > 0)
                     return View(model);
@@ -210,23 +210,21 @@ namespace SciVacancies.WebApp.Controllers
 
                         newImage.Dispose();
                     }
+
+                    var preModel = _mediator.Send(new SingleResearcherQuery { ResearcherGuid = authorizedUserGuid });
+                    if (preModel == null)
+                        return HttpNotFound(); //throw new ObjectNotFoundException();
+                    var dataModel = Mapper.Map<ResearcherDataModel>(preModel);
+
+                    var data = Mapper.Map(model, dataModel);
+                    _mediator.Send(new UpdateResearcherCommand
+                    {
+                        Data = data,
+                        ResearcherGuid = authorizedUserGuid
+                    });
+
                 }
-
             }
-
-
-
-            var preModel = _mediator.Send(new SingleResearcherQuery { ResearcherGuid = authorizedUserGuid });
-            if (preModel == null)
-                return HttpNotFound(); //throw new ObjectNotFoundException();
-
-            var dataModel = Mapper.Map<ResearcherDataModel>(preModel);
-            var data = Mapper.Map(model, dataModel);
-            _mediator.Send(new UpdateResearcherCommand
-            {
-                Data = data,
-                ResearcherGuid = authorizedUserGuid
-            });
 
             return RedirectToAction("account");
         }
