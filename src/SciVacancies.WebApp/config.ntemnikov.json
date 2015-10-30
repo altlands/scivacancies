@@ -38,7 +38,7 @@
         "DefaultIndex": "scivacancies-ntemnikov",
         "MinScore": "0.2"
     },
-    "SagaSettings": {
+     "SagaSettings": { //TODO сделать только с положительными днями, обозвать соответствующе
         "Date": {
             "Committee": {
                 "FirstNotificationMinutes": -1,
@@ -46,15 +46,15 @@
                 "ProlongingDays": 15
             },
             "OfferResponseAwaiting": {
-                "WinnerNotificationMinutes": -1,
-                "PretenderNotificationMinutes": -1
+                "WinnerNotificationMinutes": -2,
+                "PretenderNotificationMinutes": -2
             }
         }
     },
     "QuartzSettings": {
         "Scheduler": {
             "InstanceName": "SciVacanciesScheduler",
-            "ExecutionInterval":1
+            "ExecutionInterval": 3
         },
         "JobStore": {
             "Type": "Quartz.Impl.AdoJobStore.JobStoreTX, Quartz",
@@ -100,7 +100,7 @@
     "PathToBlankAvatar": "/images/profile-photo.png"
   },
   "VacancyLifeCycleSettings": {
-    "DeltaFromPublishToInCommitteeMinDays": 20
+        "DeltaFromPublishToInCommitteeMinMinutes": 15 /* 20 days * (24 hours * 60 minutes = 1'440 minutes ) = 28'800 minutes*/
   },
   "CaptchaSettings": {
     "CaptchaDurationSeconds": 180

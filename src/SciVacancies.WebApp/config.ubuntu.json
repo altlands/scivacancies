@@ -103,7 +103,7 @@
     "PathToBlankAvatar": "/images/profile-photo.png"
   },
   "VacancyLifeCycleSettings": {
-    "DeltaFromPublishToInCommitteeMinDays": 20
+        "DeltaFromPublishToInCommitteeMinMinutes": 28800 /* 20 days * (24 hours * 60 minutes = 1'440 minutes ) = 28'800 minutes*/
   },
   "CaptchaSettings": {
     "CaptchaDurationSeconds": 180
