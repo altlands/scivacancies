@@ -44,7 +44,7 @@
     "SagaSettings": { //TODO сделать только с положительными днями, обозвать соответствующе
         "Date": {
             "Committee": {
-                "FirstNotificationMinutes": -1,
+                "FirstNotificationMinutes": -3,
                 "SecondNotificationMinutes": 2,
                 "ProlongingDays": 15
             },
@@ -57,7 +57,7 @@
     "QuartzSettings": {
         "Scheduler": {
             "InstanceName": "SciVacanciesScheduler",
-            "ExecutionInterval": 10
+            "ExecutionInterval": 3
         },
         "JobStore": {
             "Type": "Quartz.Impl.AdoJobStore.JobStoreTX, Quartz",

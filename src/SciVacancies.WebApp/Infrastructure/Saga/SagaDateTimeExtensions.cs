@@ -12,7 +12,7 @@ namespace SciVacancies.WebApp.Infrastructure.Saga
         public static DateTime AddPeriodToOfferResponseAwaitingFromWinner(this DateTime source)
         {
             //return source.AddDays(30);
-            return source.AddMinutes(5);
+            return source.AddMinutes(7);
         }
         /// <summary>
         /// Добавить период ожидания ответа для Претендента
@@ -22,7 +22,7 @@ namespace SciVacancies.WebApp.Infrastructure.Saga
         public static DateTime AddPeriodToOfferResponseAwaitingFromPretender(this DateTime source)
         {
             //return source.AddDays(30);
-            return source.AddMinutes(5);
+            return source.AddMinutes(7);
         }
     }
 }
