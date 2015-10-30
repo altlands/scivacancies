@@ -118,5 +118,13 @@
 
     "Domain": "xn----8sbfhdabdwf1afqu5baxe0f2d.xn--p1ai",
     "PortalLink": "<a target='_blank' href='http://xn----8sbfhdabdwf1afqu5baxe0f2d.xn--p1ai'>ученые-исследователи.рф</a>"
+  },
+  "LogSettings": {
+    "LogLevel": "Verbose",
+    "FileName": "F:/Logs/sci.log",
+    "FileSizeKB": "4096",
+    "TimeStampPattern": "yyyy - MM - dd hh.mm.ss",
+    "RollFileExistsBehavior": "Overwrite",
+    "RollInterval": "Midnight"
   }
 }

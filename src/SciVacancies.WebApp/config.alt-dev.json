@@ -118,5 +118,13 @@
 
         "Domain": "scivac.test.alt-lan.com",
         "PortalLink": "<a target='_blank' href='http://scivac.test.alt-lan.com'>scivac.test.alt-lan.com</a>"
-    }
+    },
+  "LogSettings": {
+    "LogLevel": "Verbose",
+    "FileName": "F:/Logs/sci.log",
+    "FileSizeKB": "4096",
+    "TimeStampPattern": "yyyy - MM - dd hh.mm.ss",
+    "RollFileExistsBehavior": "Overwrite",
+    "RollInterval": "Midnight"
+  }
 }
