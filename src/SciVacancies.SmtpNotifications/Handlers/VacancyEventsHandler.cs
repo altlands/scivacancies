@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using MediatR;
 using NPoco;
+using SciVacancies.Domain.Enums;
 using SciVacancies.Domain.Events;
 using SciVacancies.ReadModel.Core;
 using SciVacancies.SmtpNotifications.SmtpNotificators;
@@ -34,12 +35,12 @@ namespace SciVacancies.SmtpNotifications.Handlers
         }
         public void Handle(VacancyPublished msg)
         {
-            VacancyStatusChangedSmtpNotificationForResearcher(msg.VacancyGuid);
+            VacancyStatusChangedSmtpNotificationForResearcher(msg.VacancyGuid, VacancyStatus.Published);
         }
         public void Handle(VacancyInCommittee msg)
         {
-            //VacancyStatusChangedSmtpNotificationForOrganization(msg.VacancyGuid);
-            VacancyStatusChangedSmtpNotificationForResearcher(msg.VacancyGuid);
+            //VacancyStatusChangedSmtpNotificationForOrganization(msg.VacancyGuid, VacancyStatus.InCommittee);
+            VacancyStatusChangedSmtpNotificationForResearcher(msg.VacancyGuid, VacancyStatus.InCommittee);
         }
         public void Handle(VacancyProlongedInCommittee msg)
         {
@@ -62,7 +63,7 @@ namespace SciVacancies.SmtpNotifications.Handlers
         }
         public void Handle(VacancyInOfferResponseAwaitingFromWinner msg)
         {
-            VacancyStatusChangedSmtpNotificationForResearcher(msg.VacancyGuid);
+            VacancyStatusChangedSmtpNotificationForResearcher(msg.VacancyGuid, VacancyStatus.OfferResponseAwaitingFromWinner);
 
             Vacancy vacancy = _db.SingleOrDefault<Vacancy>(new Sql($"SELECT v.* FROM org_vacancies v WHERE v.guid = @0", msg.VacancyGuid));
 
@@ -104,16 +105,16 @@ namespace SciVacancies.SmtpNotifications.Handlers
                 };
             if (!researcherGuids.Any()) return;
 
-            VacancyStatusChangedSmtpNotificationForResearcher(researcherGuids.Where(guid => guid!= Guid.Empty).ToList(), vacancy);
+            VacancyStatusChangedSmtpNotificationForResearcher(researcherGuids.Where(guid => guid!= Guid.Empty).ToList(), vacancy, VacancyStatus.Closed);
         }
 
         public void Handle(VacancyCancelled msg)
         {
-            VacancyStatusChangedSmtpNotificationForResearcher(msg.VacancyGuid);
+            VacancyStatusChangedSmtpNotificationForResearcher(msg.VacancyGuid, VacancyStatus.Cancelled);
         }
 
 
-        private void VacancyStatusChangedSmtpNotificationForResearcher(Guid vacancyGuid)
+        private void VacancyStatusChangedSmtpNotificationForResearcher(Guid vacancyGuid, VacancyStatus status)
         {
             Vacancy vacancy = _db.SingleOrDefault<Vacancy>(new Sql($"SELECT v.* FROM org_vacancies v WHERE v.guid = @0", vacancyGuid));
             if (vacancy == null) return;
@@ -121,10 +122,10 @@ namespace SciVacancies.SmtpNotifications.Handlers
                 _db.Fetch<Guid>(new Sql("SELECT va.researcher_guid FROM res_vacancyapplications va WHERE va.vacancy_guid = @0", vacancyGuid));
             if (!researcherGuids.Any()) return;
 
-            VacancyStatusChangedSmtpNotificationForResearcher(researcherGuids, vacancy);
+            VacancyStatusChangedSmtpNotificationForResearcher(researcherGuids, vacancy, status);
         }
 
-        private void VacancyStatusChangedSmtpNotificationForResearcher(IList<Guid> researcherGuids, Vacancy vacancy)
+        private void VacancyStatusChangedSmtpNotificationForResearcher(IList<Guid> researcherGuids, Vacancy vacancy, VacancyStatus status)
         {
             if (researcherGuids == null)
                 return;
@@ -136,18 +137,18 @@ namespace SciVacancies.SmtpNotifications.Handlers
                 return;
 
             foreach (var researcher in researchers)
-                _smtpNotificatorVacancyService.SendVacancyStatusChangedForResearcher(vacancy, researcher);
+                _smtpNotificatorVacancyService.SendVacancyStatusChangedForResearcher(vacancy, researcher, status);
         }
 
 
-        private void VacancyStatusChangedSmtpNotificationForOrganization(Guid vacancyGuid)
+        private void VacancyStatusChangedSmtpNotificationForOrganization(Guid vacancyGuid, VacancyStatus status)
         {
             Vacancy vacancy = _db.SingleOrDefault<Vacancy>(new Sql($"SELECT v.* FROM org_vacancies v WHERE v.guid = @0", vacancyGuid));
             if (vacancy == null) return;
             var organization =
                 _db.SingleOrDefaultById<Organization>(vacancy.organization_guid);
 
-            _smtpNotificatorVacancyService.SendVacancyStatusChangedForOrganization(vacancy, organization);
+            _smtpNotificatorVacancyService.SendVacancyStatusChangedForOrganization(vacancy, organization,status);
         }
 
         private void OfferAcceptedByWinner(Guid vacancyGuid)

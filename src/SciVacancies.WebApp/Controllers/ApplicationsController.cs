@@ -43,8 +43,8 @@ namespace SciVacancies.WebApp.Controllers
             model.ResearcherGuid = researcherGuid;
             model.VacancyGuid = vacancy.guid;
             model.PositionName = vacancy.name;
-            model.BirthDate= researcher.birthdate;
-            model.ImageUrl= researcher.image_url;
+            model.BirthDate = researcher.birthdate;
+            model.ImageUrl = researcher.image_url;
             model.Email = researcher.email;
             model.Phone = researcher.phone;
             model.ResearcherFullName = $"{researcher.secondname} {researcher.firstname} {researcher.patronymic}";
@@ -59,7 +59,7 @@ namespace SciVacancies.WebApp.Controllers
             model.Rewards = researcher.rewards;
             model.Memberships = researcher.memberships;
             model.Conferences = researcher.conferences;
-            model.Interests= researcher.interests;
+            model.Interests = researcher.interests;
 
             model.ReadId = vacancy.read_id;
 
@@ -132,14 +132,34 @@ namespace SciVacancies.WebApp.Controllers
                 return View("Error", "Вы не можете подать повторную Заявку на Вакансию");
 
             //TODO: Application -> Attachments : как проверять безопасность, прикрепляемых файлов
-            if (model.Attachments != null && model.Attachments.Any(c => c.Length > _attachmentSettings.Value.VacancyApplication.MaxItemSize))
+            //todo: повторяющийся код
+            if (model.Attachments != null && model.Attachments.Any())
             {
-                ModelState.AddModelError("Attachments", $"Размер одного из прикрепленных файлов превышает допустимый размер ({_attachmentSettings.Value.VacancyApplication.MaxItemSize / 1000}КБ). Повторите создания Заявки ещё раз.");
-            }
+                //проверяем размеры файлов
+                if (model.Attachments.Any(c => c.Length > _attachmentSettings.Value.VacancyApplication.MaxItemSize))
+                    ModelState.AddModelError("Attachments", $"Размер одного из прикрепленных файлов превышает допустимый размер ({_attachmentSettings.Value.VacancyApplication.MaxItemSize / 1000}КБ).");
 
+                //проверяем расширения файлов, если они указаны
+                if (!string.IsNullOrWhiteSpace(_attachmentSettings.Value.VacancyApplication.AllowExtensions))
+                {
+                    var fileNames =
+                        model.Attachments.Select(
+                            c =>
+                                System.IO.Path.GetFileName(
+                                    ContentDispositionHeaderValue.Parse(c.ContentDisposition).FileName.Trim('"')));
+                    var fileExtensionsInUpper = fileNames.Select(c =>
+                        c.Split('.')
+                        .Last()
+                        .ToUpper()
+                        );
+                    var allowedExtenionsInUpper = _attachmentSettings.Value.Researcher.AllowExtensions.ToUpper();
+                    if (fileExtensionsInUpper.Any(c => !allowedExtenionsInUpper.Contains(c)))
+                        ModelState.AddModelError("Attachments", $"Расширение одного из прикрепленных файлов имеет недопустимое расширение. Допустимые типы файлов: {allowedExtenionsInUpper}");
+                }
+
+            }
             //с формы мы не получаем практически никаких данных, поэтому заново наполняем ViewModel
             model = VacancyApplicationCreateViewModelHelper(researcherGuid, vacancy, model);
-
             if (!ModelState.IsValid)
                 return View(model);
 

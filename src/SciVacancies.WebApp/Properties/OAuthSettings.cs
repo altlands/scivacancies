@@ -7,6 +7,8 @@
     }
     public class OAuthProviderSettings
     {
+        //todo: перейти на исопльзование этого параметра. позволит переключаться между доменами авторизации
+        public string ServiceDomain { get; set; }
         public string AuthorizationEndpoint { get; set; }
         public string TokenEndpoint { get; set; }
         public string UserEndpoint { get; set; }

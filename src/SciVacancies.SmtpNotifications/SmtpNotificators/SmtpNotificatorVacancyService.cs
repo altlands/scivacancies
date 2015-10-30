@@ -3,6 +3,7 @@ using SciVacancies.Services.Email;
 
 using System;
 using Microsoft.Framework.Configuration;
+using SciVacancies.Domain.Enums;
 
 namespace SciVacancies.SmtpNotifications.SmtpNotificators
 {
@@ -74,12 +75,12 @@ namespace SciVacancies.SmtpNotifications.SmtpNotificators
 ";
             EmailService.Send(new SciVacMailMessage(From, researcher.email, "Уведомление с портала вакансий", body));
         }
-        public void SendVacancyStatusChangedForOrganization(Vacancy vacancy, Organization organization)
+        public void SendVacancyStatusChangedForOrganization(Vacancy vacancy, Organization organization, VacancyStatus status)
         {
             var body = $@"
 <div style=''>
     Cообщаем, что вакансия
-    <a target='_blank' href='http://{Domain}/vacancies/card/{vacancy.guid}'>{vacancy.fullname}</a> получила новый статус: {vacancy.status.GetDescriptionByResearcher()}
+    <a target='_blank' href='http://{Domain}/vacancies/card/{vacancy.guid}'>{vacancy.fullname}</a> получила новый статус: {status.GetDescriptionByResearcher()}
 </div>
 
 <br/>
@@ -96,13 +97,13 @@ namespace SciVacancies.SmtpNotifications.SmtpNotificators
 
             EmailService.Send(new SciVacMailMessage(From, vacancy.contact_email, "Уведомление с портала вакансий", body));
         }
-        public void SendVacancyStatusChangedForResearcher(Vacancy vacancy, Researcher researcher)
+        public void SendVacancyStatusChangedForResearcher(Vacancy vacancy, Researcher researcher, VacancyStatus status)
         {
             var body = $@"
 <div style=''>
     Здравствуйте, {researcher.secondname} {researcher.firstname}
     <br/>
-    У вакансии {vacancy.fullname}, на которую вы подали заявку, изменился статус ({vacancy.status.GetDescriptionByResearcher()})
+    У вакансии {vacancy.fullname}, на которую вы подали заявку, изменился статус ({status.GetDescriptionByResearcher()})
     <br/>
     Для просмотра обновлений перейдите, пожалуйста, по ссылке: <a target='_blank' href='http://{Domain}/vacancies/card/{vacancy.guid}'>http://{Domain}/vacancies/card/{vacancy.guid}</a>
 </div>
@@ -150,7 +151,7 @@ namespace SciVacancies.SmtpNotifications.SmtpNotificators
             <div style=''>
     Здравствуйте, {researcher.secondname} {researcher.firstname}
     <br/>
-    Вы выбраны в качестве победителя в конкурсе на <a target='_blank' href='http://{Domain}/vacancies/details/{vacancyGuid}'>вакансию</a>
+    Вы выбраны в качестве победителя в конкурсе на <a target='_blank' href='http://{Domain}/vacancies/card/{vacancyGuid}'>вакансию</a>
     <br/>
     В течение 30-ти календарных дней (до {DateTime.Now.AddDays(30)}) вам необходимо подтвердить свое согласие на замещение должности и подписать трудовой договор.
 
@@ -173,20 +174,46 @@ namespace SciVacancies.SmtpNotifications.SmtpNotificators
 
         public void SendFirstCommitteeNotificationToOrganization(Organization organization, Vacancy vacancy)
         {
-            //TODO сколько осталось дней - брать из конфига
+            #region неверный текст
+            //            //TODO сколько осталось дней - брать из конфига
+            //            var body = $@"
+            //<div style=''>
+            //    Здравствуйте, {vacancy.contact_name}
+            //    <br/>
+            //    Напоминаем вам, что ({vacancy.committee_start_date?.ToShortDateString()}) заканчивается прием заявок для участия, в
+            //    <br/>
+            //    созданной вами вакансии: <a target='_blank' href='http://{Domain}/vacancies/details/{vacancy.guid}'>{vacancy.fullname}</a>
+            //    <br/>
+            //    Конкурс на вакансию автоматически перейдет в статус «рассмотрение заявок комиссией». 
+            //    <br/>
+            //    Вам необходимо выбрать победителя конкурса в течение 15-ти рабочих дней (до {vacancy.committee_end_date?.ToShortDateString()}) и разместить в течение 3-х рабочих дней решение конкурсной комиссии.
+            //    <br/>
+            //    При необходимости вы можете продлить срок рассмотрения еще на 15-ть рабочих дней.            
+            //            </div>
+
+            //            <br/>
+            //            <br/>
+            //            <hr/>
+
+            //            <div style='color: lightgray; font-size: smaller;'>
+            //                Это письмо создано автоматически с 
+            //                <a target='_blank' href='http://{Domain}'>Портала вакансий</a>.
+            //                Чтобы не получать такие уведомления отключите их или смените email в 
+            //                <a target='_blank' href='http://{Domain}/organizations/account/'>личном кабинете</a>.
+            //            </div>
+            //            ";
+            //            EmailService.Send(new SciVacMailMessage(From, vacancy.contact_email, "Уведомление с портала вакансий", body)); 
+            #endregion
+
             var body = $@"
-<div style=''>
+            <div style=''>
     Здравствуйте, {vacancy.contact_name}
     <br/>
-    Напоминаем вам, что ({vacancy.committee_start_date?.ToShortDateString()}) заканчивается прием заявок для участия, в
+    Напоминаем вам, что  ({vacancy.committee_end_date?.ToLocalTime().ToShortDateString()} {vacancy.committee_end_date?.ToLocalTime().ToShortTimeString()}) заканчивается срок рассмотрения заявок, на созданную вами вакансию: <a target='_blank' href='http://{Domain}/vacancies/details/{vacancy.guid}'>{vacancy.fullname}</a>
     <br/>
-    созданной вами вакансии: <a target='_blank' href='http://{Domain}/vacancies/details/{vacancy.guid}'>{vacancy.fullname}</a>
+    Вам необходимо в течение 3-х рабочих дней выбрать победителя и поместить решение конкурсной комиссии на портале {PortalLink}.
     <br/>
-    Конкурс на вакансию автоматически перейдет в статус «рассмотрение заявок комиссией». 
-    <br/>
-    Вам необходимо выбрать победителя конкурса в течение 15-ти рабочих дней (до {vacancy.committee_end_date?.ToShortDateString()}) и разместить в течение 3-х рабочих дней решение конкурсной комиссии.
-    <br/>
-    При необходимости вы можете продлить срок рассмотрения еще на 15-ть рабочих дней.            
+
             </div>
 
             <br/>
@@ -201,6 +228,8 @@ namespace SciVacancies.SmtpNotifications.SmtpNotificators
             </div>
             ";
             EmailService.Send(new SciVacMailMessage(From, vacancy.contact_email, "Уведомление с портала вакансий", body));
+
+
         }
         public void SendSecondCommitteeNotificationToOrganization(Organization organization, Vacancy vacancy)
         {
@@ -210,7 +239,7 @@ namespace SciVacancies.SmtpNotifications.SmtpNotificators
             <div style=''>
     Здравствуйте, {vacancy.contact_name}
     <br/>
-    Напоминаем вам, что  ({vacancy.committee_end_date?.ToShortDateString()}) заканчивается срок рассмотрения заявок, на созданную вами вакансию: <a target='_blank' href='http://{Domain}/vacancies/details/{vacancy.guid}'>{vacancy.fullname}</a>
+    Напоминаем вам, что срок рассмотрения заявок ({vacancy.committee_end_date?.ToLocalTime().ToShortDateString()} {vacancy.committee_end_date?.ToLocalTime().ToShortTimeString()}), на созданную вами вакансию: <a target='_blank' href='http://{Domain}/vacancies/details/{vacancy.guid}'>{vacancy.fullname}</a>, уже прошел.
     <br/>
     Вам необходимо в течение 3-х рабочих дней выбрать победителя и поместить решение конкурсной комиссии на портале {PortalLink}.
     <br/>
@@ -239,7 +268,7 @@ namespace SciVacancies.SmtpNotifications.SmtpNotificators
                     Уважаемый(-ая), {researcher.secondname} {researcher.firstname}, ваша <a target='_blank' href='http://{Domain}/applications/details/{applicationGuid}'>зявка</a>
                     победила в конкурсе на <a target='_blank' href='http://{Domain}/vacancies/details/{vacancyGuid}'>вакансию</a>.
 
-                    Вам необходимо до конца сего дня подтвердить или отвергуть предложение контракта по этой вакансии.
+                    Вам необходимо до конца этого дня подтвердить или отвергуть предложение контракта по этой вакансии.
                 </div>
 
                 <br/>

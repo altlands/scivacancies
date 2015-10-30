@@ -89,7 +89,17 @@ namespace SciVacancies.WebApp.Infrastructure.Saga
             //if (_streams[sagaKey] == null) throw new ArgumentNullException("Can't find the stream by sagaKey : {0}", sagaKey);
             if(!_streams.ContainsKey(sagaKey))
             {
-                _streams.Add(sagaKey, stream);
+                try
+                {
+                    _streams.Add(sagaKey, stream);
+                }
+                catch (Exception exception)
+                {
+                    if (!exception.Message.ToLower().Contains("contains") || !exception.Message.ToLower().Contains("already"))
+                    {
+                        throw exception;
+                    }
+                }
             }
 
             //return _streams[sagaKey] = stream;
