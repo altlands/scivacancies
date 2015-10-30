@@ -56,8 +56,8 @@ namespace SciVacancies.Captcha
         public static int TextLength = 4;
         public static int MaxShift;
         public static int MinShift;
-        public static int MaxAngle;
-        public static int MinAngle;
+        public static int MaxAngle = 30;
+        public static int MinAngle = -15;
         public static int FontSizeMin = 90;
         public static int FontSizeMax = 90;
         public static string Referer = "";

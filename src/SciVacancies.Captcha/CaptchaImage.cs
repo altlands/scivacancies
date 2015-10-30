@@ -236,8 +236,8 @@ namespace SciVacancies.Captcha
                 var rect = new Rectangle(new Point(0, 0), bmp.Size);
                 AddNoise(gr, rect);
 
-                double angle = _rand.Next(CaptchaConfiguration.MinAngle, CaptchaConfiguration.MaxAngle);
-                double angle2 = _rand.Next(CaptchaConfiguration.MinAngle, CaptchaConfiguration.MaxAngle);
+                float angle = _rand.Next(CaptchaConfiguration.MinAngle, CaptchaConfiguration.MaxAngle);
+                float angle2 = _rand.Next(CaptchaConfiguration.MinAngle, CaptchaConfiguration.MaxAngle);
                 if (angle * angle2 > 0) angle2 = -angle2;
                 angle2 = (angle2 - angle) / (TextLength - 1);
 
@@ -279,7 +279,7 @@ namespace SciVacancies.Captcha
         /// </summary>
         /// <param name="textPath">The text path.</param>
         /// <param name="rect">The rect.</param>
-        private float WarpText(GraphicsPath textPath, Rectangle rect, double angle)
+        private float WarpText(GraphicsPath textPath, Rectangle rect, float angle)
         {
             float warpDivisor;
             float rangeModifier;
@@ -312,7 +312,7 @@ namespace SciVacancies.Captcha
 
             int hrange = Convert.ToInt32(rect.Height / warpDivisor);
             int wrange = Convert.ToInt32(rect.Width / warpDivisor);
-            int left = rect.Left - Convert.ToInt32(wrange * rangeModifier);
+            int left = rect.Left + Convert.ToInt32(wrange * rangeModifier);
             int top = rect.Top - Convert.ToInt32(hrange * rangeModifier);
             int width = rect.Left + rect.Width + Convert.ToInt32(wrange * rangeModifier);
             int height = rect.Top + rect.Height + Convert.ToInt32(hrange * rangeModifier);
@@ -331,12 +331,13 @@ namespace SciVacancies.Captcha
             PointF leftBottom = RandomPoint(left, left + wrange, height - hrange, height);
             PointF rightBottom = RandomPoint(width - wrange, width, height - hrange, height);
 
-            var points = new PointF[] { leftTop, rightTop, leftBottom, rightBottom };
-            var m = new Matrix();
-            m.Translate(0, 0);
+            var pointFs = new[] { leftTop, rightTop, leftBottom, rightBottom };
+            var matrix = new Matrix();
+            matrix.Translate(0, 0);
 
-            m.RotateAt((float)angle, new PointF(rect.Left + rect.Width / 2, rect.Top + rect.Height / 2), MatrixOrder.Append);
-            textPath.Warp(points, rectF, m, WarpMode.Perspective, 0);
+            var newPointF = new PointF(rect.Left + (rect.Width / 2), rect.Top + (rect.Height / 2));
+            matrix.RotateAt(angle, newPointF, MatrixOrder.Append);
+            textPath.Warp(pointFs, rectF, matrix, WarpMode.Perspective, 1);
             return textPath.GetBounds().Width;
         }
 
