@@ -269,6 +269,8 @@ namespace SciVacancies.SmtpNotifications.SmtpNotificators
                     победила в конкурсе на <a target='_blank' href='http://{Domain}/vacancies/details/{vacancyGuid}'>вакансию</a>.
 
                     Вам необходимо до конца этого дня подтвердить или отвергуть предложение контракта по этой вакансии.
+
+                    Иначе сработает автоматический отказ от предложения.
                 </div>
 
                 <br/>
