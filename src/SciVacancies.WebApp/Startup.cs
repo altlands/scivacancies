@@ -24,6 +24,7 @@ using SciVacancies.Services.Logging;
 using AltLanDS.Logging;
 
 using EventSourceProxy;
+//using Autofac.Extras.DynamicProxy;
 
 
 namespace SciVacancies.WebApp
@@ -96,12 +97,14 @@ namespace SciVacancies.WebApp
 
         public void ConfigureContainer(ContainerBuilder builder)
         {
-            //builder.Register(c => TracingProxy.CreateWithActivityScope<ICalculator>(new Calculator()))
-            //    .As<ICalculator>()
-            //    //.OnActivating(x => x.ReplaceInstance(TracingProxy.CreateWithActivityScope<ICalculator>(x.Instance)))
-            //    .SingleInstance();
-            //builder.Register<Calculator>(c => new Calculator()).AsSelf();
-            //builder.Register(c => TracingProxy.CreateWithActivityScope<ICalculator>(c.Resolve<Calculator>())).As<ICalculator>();
+            //builder.RegisterType<Calculator>()
+            //    .AsImplementedInterfaces()
+            //    .OnActivating(x => x
+            //        .ReplaceInstance(TracingProxy.CreateWithActivityScope(x.Instance, x.Instance.GetType()))
+            //    )
+            //    //.OnPreparing(x=>x.)
+            //    ;
+
 
             builder.RegisterModule(new EventStoreModule(Configuration));
             builder.RegisterModule(new EventBusModule());
@@ -193,6 +196,17 @@ namespace SciVacancies.WebApp
                     (EventLevel)Enum.Parse(typeof(EventLevel), Configuration["LogSettings:LogLevel"], true),
                     (EventKeywords)(-1)
                 );
+
+
+            //var log = EventSourceImplementer.GetEventSource<IGeneric<string>>();
+
+            //observable.EnableEvents(
+            //    (EventSource)log,
+            //    (EventLevel.LogAlways),
+            //    (EventKeywords)(-1)
+            //    );
+
+
             observable.LogToRollingFlatFile(
                     Configuration["LogSettings:FileName"],
                     int.Parse(Configuration["LogSettings:FileSizeKB"]),
@@ -201,10 +215,40 @@ namespace SciVacancies.WebApp
                     (RollInterval)Enum.Parse(typeof(RollInterval), Configuration["LogSettings:RollInterval"], true)
                 );
 
+            //try
+            //{
+            //    var original = Container.Resolve<IGeneric<string>>();
+            //    //var original = (IGeneric<string>)new Calculator();
+            //    var proxy = TracingProxy.Create<IGeneric<string>>(original);
+
+            //    original.TypeName("Boobs");
+            //    proxy.TypeName("BigBoobs");
+            //}
+            //catch (Exception e)
+            //{
+            //    throw e;
+            //}
+
             //todo: SAGA_DISABLED
             var schedulerService = new QuartzService(Configuration, Container.Resolve<IJobFactory>());
             schedulerService.StartScheduler();
         }
     }
 
+    //public interface IGeneric<in T>
+    //{
+    //    string TypeName(T type);
+    //}
+
+    //public class Calculator : IGeneric<bool>, IGeneric<string>
+    //{
+    //    public string TypeName(bool booleanvalue)
+    //    {
+    //        return booleanvalue.GetType().ToString();
+    //    }
+    //    public string TypeName(string stringValue)
+    //    {
+    //        return stringValue.GetType().ToString();
+    //    }
+    //}
 }
