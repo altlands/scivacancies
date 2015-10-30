@@ -5,6 +5,7 @@ using System;
 using Nest;
 using Autofac;
 using Microsoft.Framework.Configuration;
+using EventSourceProxy;
 
 namespace SciVacancies.WebApp.Infrastructure
 {
@@ -21,7 +22,13 @@ namespace SciVacancies.WebApp.Infrastructure
         {
             ConnectionSettings elasticConnectionSettings = new ConnectionSettings(new Uri(_configuration["ElasticSettings:ConnectionUrl"]), defaultIndex: _configuration["ElasticSettings:DefaultIndex"]);
 
-            builder.Register(c => new ElasticClient(elasticConnectionSettings)).As<IElasticClient>().SingleInstance();
+            builder.Register(c => new ElasticClient(elasticConnectionSettings))
+                .As<IElasticClient>()
+                .SingleInstance()
+                //.OnActivating(x=>x
+                //    .ReplaceInstance(TracingProxy.CreateWithActivityScope<IElasticClient>(x.Instance))
+                //)
+                ;
             //TODO single instanse or not?
             builder.Register(c => new SearchService(_configuration, c.Resolve<IElasticClient>())).As<IElasticService>();
         }
