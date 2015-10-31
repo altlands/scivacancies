@@ -61,93 +61,94 @@ namespace SciVacancies.WebApp.Infrastructure.Saga
 
         public VacancyStatus State { get; private set; }
 
-        public VacancySaga() : base() { }
+        public VacancySaga()
+        { }
         public VacancySaga(Guid id) : base(id) { }
 
         public void Handle(VacancySagaCreated msg)
         {
-            this.VacancyGuid = Guid.NewGuid();
-            this.OrganizationGuid = msg.SagaGuid;
+            VacancyGuid = msg.VacancyGuid;
+            OrganizationGuid = msg.OrganizationGuid;
 
-            this.PublishStartDate = msg.TimeStamp;
-            this.PublishEndDate = msg.InCommitteeStartDate;
+            PublishStartDate = msg.TimeStamp;
+            PublishEndDate = msg.InCommitteeStartDate;
 
-            this.InCommitteeStartDate = msg.InCommitteeStartDate;
-            this.InCommitteeEndDate = msg.InCommitteeEndDate;
+            InCommitteeStartDate = msg.InCommitteeStartDate;
+            InCommitteeEndDate = msg.InCommitteeEndDate;
 
-            this.State = VacancyStatus.Published;
+            State = VacancyStatus.Published;
         }
         public void Handle(VacancySagaSwitchedInCommittee msg)
         {
-            this.State = VacancyStatus.InCommittee;
+            State = VacancyStatus.InCommittee;
         }
         public void Handle(VacancySagaProlongedInCommittee msg)
         {
-            this.InCommitteeEndDate = msg.InCommitteeEndDate;
+            InCommitteeEndDate = msg.InCommitteeEndDate;
         }
         public void Handle(VacancySagaWinnerSet msg)
         {
-            this.WinnerResearcherGuid = msg.WinnerReasearcherGuid;
-            this.WinnerVacancyApplicationGuid = msg.WinnerVacancyApplicationGuid;
+            WinnerResearcherGuid = msg.WinnerReasearcherGuid;
+            WinnerVacancyApplicationGuid = msg.WinnerVacancyApplicationGuid;
         }
         public void Handle(VacancySagaPretenderSet msg)
         {
-            this.PretenderResearcherGuid = msg.PretenderReasearcherGuid;
-            this.PretenderVacancyApplicationGuid = msg.PretenderVacancyApplicationGuid;
+            PretenderResearcherGuid = msg.PretenderReasearcherGuid;
+            PretenderVacancyApplicationGuid = msg.PretenderVacancyApplicationGuid;
         }
         public void Handle(VacancySagaFirstInCommitteeNotificationSent msg)
         {
-            this.FirstInCommitteeNotificationSent = true;
+            FirstInCommitteeNotificationSent = true;
         }
         public void Handle(VacancySagaSecondInCommitteeNotificationSent msg)
         {
-            this.SecondInCommitteeNotificationSent = true;
+            SecondInCommitteeNotificationSent = true;
         }
         public void Handle(VacancySagaSwitchedInOfferResponseAwaitingFromWinner msg)
         {
-            this.OfferResponseAwaitingFromWinnerStartDate = msg.TimeStamp;
-            this.OfferResponseAwaitingFromWinnerEndDate = this.OfferResponseAwaitingFromWinnerStartDate.AddDays(30);
-            this.State = VacancyStatus.OfferResponseAwaitingFromWinner;
+            OfferResponseAwaitingFromWinnerStartDate = msg.TimeStamp;
+            OfferResponseAwaitingFromWinnerEndDate = msg.OfferResponseAwaitingFromWinnerEndDate; //this.OfferResponseAwaitingFromWinnerStartDate.AddDays(30);
+            State = VacancyStatus.OfferResponseAwaitingFromWinner;
         }
         public void Handle(VacancySagaOfferResponseNotificationSentToWinner msg)
         {
-            this.OfferResponseNotificationSentToWinner = true;
+            OfferResponseNotificationSentToWinner = true;
         }
         public void Handle(VacancySagaOfferAcceptedByWinner msg)
         {
-            this.State = VacancyStatus.OfferAcceptedByWinner;
+            State = VacancyStatus.OfferAcceptedByWinner;
         }
         public void Handle(VacancySagaOfferRejectedByWinner msg)
         {
-            this.State = VacancyStatus.OfferRejectedByWinner;
+            State = VacancyStatus.OfferRejectedByWinner;
         }
         public void Handle(VacancySagaSwitchedInOfferResponseAwaitingFromPretender msg)
         {
-            this.OfferResponseAwaitingFromPretenderStartDate = msg.TimeStamp;
-            this.OfferResponseAwaitingFromPretenderEndDate = this.OfferResponseAwaitingFromPretenderStartDate.AddDays(30);
-            this.State = VacancyStatus.OfferResponseAwaitingFromPretender;
+            OfferResponseAwaitingFromPretenderStartDate = msg.TimeStamp;
+            OfferResponseAwaitingFromPretenderEndDate = msg.OfferResponseAwaitingFromPretenderEndDate; //this.OfferResponseAwaitingFromPretenderStartDate.AddDays(30);
+            State = VacancyStatus.OfferResponseAwaitingFromPretender;
         }
         public void Handle(VacancySagaOfferResponseNotificationSentToPretender msg)
         {
-            this.OfferResponseNotificationSentToPretender = true;
+            OfferResponseNotificationSentToPretender = true;
         }
         public void Handle(VacancySagaOfferAcceptedByPretender msg)
         {
-            this.State = VacancyStatus.OfferAcceptedByPretender;
+            State = VacancyStatus.OfferAcceptedByPretender;
         }
         public void Handle(VacancySagaOfferRejectedByPretender msg)
         {
-            this.State = VacancyStatus.OfferRejectedByPretender;
+            State = VacancyStatus.OfferRejectedByPretender;
         }
         public void Handle(VacancySagaCancelled msg)
         {
-            this.CancelDate = msg.TimeStamp;
-            this.State = VacancyStatus.Cancelled;
+            CancelDate = msg.TimeStamp;
+            State = VacancyStatus.Cancelled;
         }
         public void Handle(VacancySagaClosed msg)
         {
-            this.CloseDate = msg.TimeStamp;
-            this.State = VacancyStatus.Closed;
+            CloseDate = msg.TimeStamp;
+            State = VacancyStatus.Closed;
         }
     }
 }

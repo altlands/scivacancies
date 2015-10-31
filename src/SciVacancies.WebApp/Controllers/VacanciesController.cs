@@ -64,7 +64,7 @@ namespace SciVacancies.WebApp.Controllers
             {
                 if (model.ContractType == ContractType.FixedTerm
                     && model.ContractTimeYears == 0
-                    && model.ContractTimeMonths== 0)
+                    && model.ContractTimeMonths == 0)
                 {
                     ModelState.AddModelError("ContractTypeValue", $"Для договора типа \"{ContractType.FixedTerm.GetDescription()}\" укажите срок трудового договора");
                     model.InitDictionaries(_mediator);
@@ -406,9 +406,9 @@ namespace SciVacancies.WebApp.Controllers
             if (preModel.status != VacancyStatus.Published)
                 return View("Error", $"Вы не можете перевести Вакансию на рассмотрение комиссии со статусом: {preModel.status.GetDescription()}");
 
-            //TODO: Saga -> реализовать эту проверку при замуске Саг с таймерами
-            //if ((DateTime.Now - preModel.committee_date).Days < _vacancyLifeCycleSettings.Options.DeltaFromPublishToInCommitteeMinDays)
-            //    return View("Error", $"Вы не можете начать перевести вакансию на рассмотрение комиссии раньше чем через {_vacancyLifeCycleSettings.Options.DeltaFromPublishToInCommitteeMinDays} дн.");
+            //TODO: Saga -> реализовать эту проверку при запуске Саг с таймерами
+            //if ((DateTime.Now - preModel.committee_date).Days < _vacancyLifeCycleSettings.Options.DeltaFromPublishToInCommitteeMinMinutes)
+            //    return View("Error", $"Вы не можете начать перевести вакансию на рассмотрение комиссии раньше чем через {_vacancyLifeCycleSettings.Options.DeltaFromPublishToInCommitteeMinMinutes} дн.");
 
             var vacancyApplications = _mediator.Send(new CountVacancyApplicationInVacancyQuery
             {
@@ -489,6 +489,35 @@ namespace SciVacancies.WebApp.Controllers
 
             if (string.IsNullOrWhiteSpace(model.Reason) /* && (model.Attachments == null || !model.Attachments.Any())*/)
                 ModelState.AddModelError("Reason", "Укажите обоснование решения комиссии" /*либо прикрепите протоколы решения */);
+
+
+            //TODO: Application -> Attachments : как проверять безопасность, прикрепляемых файлов
+            //todo: повторяющийся код
+            if (model.Attachments != null && model.Attachments.Any())
+            {
+                //проверяем размеры файлов
+                if (model.Attachments.Any(c => c.Length > _attachmentSettings.Value.Vacancy.MaxItemSize))
+                    ModelState.AddModelError("Attachments", $"Размер одного из прикрепленных файлов превышает допустимый размер ({_attachmentSettings.Value.Vacancy.MaxItemSize / 1000}КБ).");
+
+                //проверяем расширения файлов, если они указаны
+                if (!string.IsNullOrWhiteSpace(_attachmentSettings.Value.Vacancy.AllowExtensions))
+                {
+                    var fileNames =
+                        model.Attachments.Select(
+                            c =>
+                                System.IO.Path.GetFileName(
+                                    ContentDispositionHeaderValue.Parse(c.ContentDisposition).FileName.Trim('"')));
+                    var fileExtensionsInUpper = fileNames.Select(c =>
+                        c.Split('.')
+                        .Last()
+                        .ToUpper()
+                        );
+                    var allowedExtenionsInUpper = _attachmentSettings.Value.Researcher.AllowExtensions.ToUpper();
+                    if (fileExtensionsInUpper.Any(c => !allowedExtenionsInUpper.Contains(c)))
+                        ModelState.AddModelError("Attachments", $"Расширение одного из прикрепленных файлов имеет недопустимое расширение. Допустимые типы файлов: {allowedExtenionsInUpper}");
+                }
+
+            }
 
             if (!ModelState.IsValid)
             {
@@ -914,8 +943,8 @@ namespace SciVacancies.WebApp.Controllers
             if (inCommitteeDateValue.ToUniversalTime() < DateTime.Now.ToUniversalTime())
                 ModelState.AddModelError("InCommitteeDateString", "Вы установили дату ранее текущей");
 
-            if ((inCommitteeDateValue.ToUniversalTime() - DateTime.Now.ToUniversalTime()).Days < _vacancyLifeCycleSettings.Value.DeltaFromPublishToInCommitteeMinDays)
-                ModelState.AddModelError("InCommitteeDateString", $"Вы не можете установить дату перевода вакансии на рассмотрение комиссии раньше, чем через {_vacancyLifeCycleSettings.Value.DeltaFromPublishToInCommitteeMinDays} дн.");
+            if ((inCommitteeDateValue.ToUniversalTime() - DateTime.Now.ToUniversalTime()).TotalMinutes < _vacancyLifeCycleSettings.Value.DeltaFromPublishToInCommitteeMinMinutes)
+                ModelState.AddModelError("InCommitteeDateString", $"Вы не можете установить дату перевода вакансии на рассмотрение комиссии раньше, чем через {_vacancyLifeCycleSettings.Value.DeltaFromPublishToInCommitteeMinMinutes / (24 * 60)} дн.");
 
             if (!ModelState.IsValid)
             {
@@ -932,7 +961,7 @@ namespace SciVacancies.WebApp.Controllers
             {
                 VacancyGuid = id,
                 InCommitteeStartDate = inCommitteeDateValue,
-                InCommitteeEndDate = inCommitteeDateValue.AddHours(25) /*TODO: вынести в конфиг: количество дней до окончания комиссии*/
+                InCommitteeEndDate = inCommitteeDateValue.AddMinutes(8) /*TODO: вынести в конфиг: количество дней до окончания комиссии*/
             });
 
             return RedirectToAction("details", new { id });

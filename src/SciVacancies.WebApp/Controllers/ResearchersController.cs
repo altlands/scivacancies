@@ -162,9 +162,13 @@ namespace SciVacancies.WebApp.Controllers
                     .Last()
                     .ToUpper();
 
-                    if (!_attachmentSettings.Value.Researcher.AllowExtensions.ToUpper().Contains(fileExtension.ToUpper()))
-                        ModelState.AddModelError("PhotoFile",
-                            $"Можно добавить только изображение. Допустимые типы файлов: {_attachmentSettings.Value.Researcher.AllowExtensions}");
+                //todo: повторяющийся код
+                //проверяем размеры файлов
+                if (file.Length > _attachmentSettings.Value.Researcher.MaxItemSize)
+                    ModelState.AddModelError("PhotoFile", $"Размер прикрепленного файла превышает допустимый размер ({_attachmentSettings.Value.Researcher.MaxItemSize / 1000}КБ).");
+                //проверяем расширения файлов
+                if (!string.IsNullOrWhiteSpace(_attachmentSettings.Value.Researcher.AllowExtensions) && !_attachmentSettings.Value.Researcher.AllowExtensions.ToUpper().Contains(fileExtension.ToUpper()))
+                    ModelState.AddModelError("PhotoFile", $"Можно добавить только изображение. Допустимые типы файлов: {_attachmentSettings.Value.Researcher.AllowExtensions}");
 
                 if (ModelState.ErrorCount > 0)
                     return View(model);

@@ -174,7 +174,8 @@ label {
 
 .content {
     margin: 0;
-    padding-bottom: 90px;
+    margin-top: -70px;
+    padding-bottom: 120px;
     -webkit-box-sizing: border-box;
     -moz-box-sizing: border-box;
     box-sizing: border-box;
@@ -1309,8 +1310,14 @@ span#buttonFile {
 .footer {
     color: #ffffff;
     font-size: 13px;
-    height: 50px;
-    background: #3669ce url(../images/bg-footer-r.jpg) repeat-x;
+    height: 70px;
+    background: #3366cc;
+    background: -moz-linear-gradient(top, #3366cc 0%, #6996f1 100%);
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#3366cc), color-stop(100%,#6996f1));
+    background: -webkit-linear-gradient(top, #3366cc 0%,#6996f1 100%);
+    background: -o-linear-gradient(top, #3366cc 0%,#6996f1 100%);
+    background: -ms-linear-gradient(top, #3366cc 0%,#6996f1 100%);
+    background: linear-gradient(to bottom, #3366cc 0%,#6996f1 100%);
     position: absolute;
     top: 100%;
     left: 0;
@@ -1326,13 +1333,13 @@ span#buttonFile {
 
     .footer .footer-copyright {
         display: table-cell;
-        vertical-align:middle;
+        vertical-align: middle;
     }
 
 .footer-items {
     text-align: right;
     display: table-cell;
-    vertical-align:middle;
+    vertical-align: middle;
 }
 
 .footer a {
@@ -4080,11 +4087,13 @@ input.sub-form-item__input {
 .b-tabs_page a {
     color: #041833;
 }
-.b-tabs_page .ctr-buttons{
- margin:21px 0 0 0;
+
+.b-tabs_page .ctr-buttons {
+    margin: 21px 0 0 0;
 }
-.b-tabs_page .tab-content{
- border:none;
- border-top:1px;
- margin-right:0;
+
+.b-tabs_page .tab-content {
+    border: none;
+    border-top: 1px;
+    margin-right: 0;
 }

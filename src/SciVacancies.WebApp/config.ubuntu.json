@@ -103,7 +103,7 @@
     "PathToBlankAvatar": "/images/profile-photo.png"
   },
   "VacancyLifeCycleSettings": {
-    "DeltaFromPublishToInCommitteeMinDays": 20
+        "DeltaFromPublishToInCommitteeMinMinutes": 28800 /* 20 days * (24 hours * 60 minutes = 1'440 minutes ) = 28'800 minutes*/
   },
   "CaptchaSettings": {
     "CaptchaDurationSeconds": 180
@@ -118,5 +118,13 @@
 
     "Domain": "xn----8sbfhdabdwf1afqu5baxe0f2d.xn--p1ai",
     "PortalLink": "<a target='_blank' href='http://xn----8sbfhdabdwf1afqu5baxe0f2d.xn--p1ai'>ученые-исследователи.рф</a>"
+  },
+  "LogSettings": {
+    "LogLevel": "Verbose",
+    "FileName": "F:/Logs/sci.log",
+    "FileSizeKB": "4096",
+    "TimeStampPattern": "yyyy - MM - dd hh.mm.ss",
+    "RollFileExistsBehavior": "Overwrite",
+    "RollInterval": "Midnight"
   }
 }

@@ -1,124 +1,124 @@
 ﻿{
-  "AppSettings": {
-    "SiteTitle": "Портал вакансий"
-  },
-  "Data": {
-    "ReadModelDb": "Server=alt-dev002;Database=scivacancies;User Id=postgres;Password=postgres",
-    "EventStoreDb": "Server=alt-dev002;Database=scivacancies;User Id=postgres;Password=postgres"
-  },
-  "OAuthSettings": {
-    "Sciencemon": {
-      "AuthorizationEndpoint": "http://www.sciencemon.ru/oauth/v2/auth",
-      "TokenEndpoint": "http://www.sciencemon.ru/oauth/v2/token",
-      "UserEndpoint": "http://www.sciencemon.ru/api/user",
-      "ClientId": "1_ikniwc909y8kog4k4sc00oogg0g8scc8o4k0wocgw4cg84k00",
-      "ClientSecret": "67sq61c6xekgw0wgkosg04gwo488osk48ogks4og40cgws8ook",
-      "Scope": "",
-      "RedirectUrl": "http://scivac.test.alt-lan.com/account/callback"
+    "AppSettings": {
+        "SiteTitle": "Портал вакансий"
     },
-    "Mapofscience": {
-      "AuthorizationEndpoint": "https://mapofscience.ru/scimap-sso/oauth/authorize",
-      "TokenEndpoint": "https://mapofscience.ru/scimap-sso/oauth/token",
-      "UserEndpoint": "https://mapofscience.ru/scimap-sso/api/v1/users/current/account",
-      "ClientId": "my-trusted-client",
-      "ClientSecret": "secret",
-      "Scope": "",
-      "RedirectUrl": "http://scivac.test.alt-lan.com/account/callback"
-    }
-  },
-  //TODO
-  "ApiSettings": {
-    "Sciencemon": {
-      //"Organization": "http://www.sciencemon.ru/ext-api/v1.0/org/",
-      //"BasicAuthorization": "dev:informika"
+    "Data": {
+        "ReadModelDb": "Server=alt-dev002;Database=scivacancies;User Id=postgres;Password=postgres",
+        "EventStoreDb": "Server=alt-dev002;Database=scivacancies;User Id=postgres;Password=postgres"
     },
-    "Mapofscience": {
-      "ResearcherProfile": "https://mapofscience.ru/users/current/profile"
-    }
-  },
-  "ElasticSettings": {
-    "ConnectionUrl": "http://alt-dev003:9200/",
-    "DefaultIndex": "scivacancies-dev",
-    "MinScore": "0.2"
-  },
-  "SagaSettings": { //TODO сделать только с положительными днями, обозвать соответствующе
-    "Date": {
-      "Committee": {
-        "FirstNotificationMinutes": -1,
-        "SecondNotificationMinutes": 2,
-        "ProlongingDays": 15
-      },
-      "OfferResponseAwaiting": {
-        "WinnerNotificationMinutes": -1,
-        "PretenderNotificationMinutes": -1
-      }
-    }
-  },
-  "QuartzSettings": {
-    "Scheduler": {
-      "InstanceName": "SciVacanciesScheduler",
-      "ExecutionInterval": 10
+    "OAuthSettings": {
+        "Sciencemon": {
+            "AuthorizationEndpoint": "http://www.sciencemon.ru/oauth/v2/auth",
+            "TokenEndpoint": "http://www.sciencemon.ru/oauth/v2/token",
+            "UserEndpoint": "http://www.sciencemon.ru/api/user",
+            "ClientId": "1_ikniwc909y8kog4k4sc00oogg0g8scc8o4k0wocgw4cg84k00",
+            "ClientSecret": "67sq61c6xekgw0wgkosg04gwo488osk48ogks4og40cgws8ook",
+            "Scope": "",
+            "RedirectUrl": "http://scivac.test.alt-lan.com/account/callback"
+        },
+        "Mapofscience": {
+            "AuthorizationEndpoint": "https://mapofscience.ru/scimap-sso/oauth/authorize",
+            "TokenEndpoint": "https://mapofscience.ru/scimap-sso/oauth/token",
+            "UserEndpoint": "https://mapofscience.ru/scimap-sso/api/v1/users/current/account",
+            "ClientId": "my-trusted-client",
+            "ClientSecret": "secret",
+            "Scope": "",
+            "RedirectUrl": "http://scivac.test.alt-lan.com/account/callback"
+        }
     },
-    "JobStore": {
-      "Type": "Quartz.Impl.AdoJobStore.JobStoreTX, Quartz",
-      "UseProperties": "true",
-      "DataSource": "default",
-      "TablePrefix": "qrtz_",
-      "LockHandler": {
-        "Type": "Quartz.Impl.AdoJobStore.UpdateLockRowSemaphore, Quartz"
-      }
+    //TODO
+    "ApiSettings": {
+        "Sciencemon": {
+            //"Organization": "http://www.sciencemon.ru/ext-api/v1.0/org/",
+            //"BasicAuthorization": "dev:informika"
+        },
+        "Mapofscience": {
+            "ResearcherProfile": "https://mapofscience.ru/users/current/profile"
+        }
     },
-    "DataSource": {
-      "Default": {
-        "ConnectionString": "Server=alt-dev002; Database=scivacancies; User Id=postgres; Password=postgres",
-        "Provider": "Npgsql-20"
-      }
-    }
-  },
-  "AttachmentSettings": {
-    "VacancyApplication": {
-      "MaxItemSize": 500000,
-      "MaxTotalSize": 1000000,
-      "PhisicalPathPart": "/uploads/applications/attachments",
-      "UrlPathPart": "~/uploads/applications/attachments",
-      "AllowExtensions": ""
+    "ElasticSettings": {
+        "ConnectionUrl": "http://alt-dev003:9200/",
+        "DefaultIndex": "scivacancies-dev",
+        "MinScore": "0.2"
     },
-    "Vacancy": {
-      "MaxItemSize": 500000,
-      "MaxTotalSize": 1000000,
-      "PhisicalPathPart": "/uploads/vacancies/attachments",
-      "UrlPathPart": "~/uploads/vacancies/attachments",
-      "AllowExtensions": ""
+    "SagaSettings": { //TODO сделать только с положительными днями, обозвать соответствующе
+        "Date": {
+            "Committee": {
+                "FirstNotificationMinutes": -3,
+                "SecondNotificationMinutes": 2,
+                "ProlongingDays": 15
+            },
+            "OfferResponseAwaiting": {
+                "WinnerNotificationMinutes": -1,
+                "PretenderNotificationMinutes": -1
+            }
+        }
     },
-    "Researcher": {
-      "MaxItemSize": 500000,
-      "MaxTotalSize": 500000,
-      "PhisicalPathPart": "/uploads/researcherphoto",
-      "UrlPathPart": "~/uploads/researcherphoto",
-      "AllowExtensions": "JPG,JPEG,PNG"
-    }
-  },
-  "SiteFileSettings": {
-    "FavIconName": "",
-    "PathToBlankAvatar": "/images/profile-photo.png"
-  },
-  "VacancyLifeCycleSettings": {
-    "DeltaFromPublishToInCommitteeMinDays": 20
-  },
-  "CaptchaSettings": {
-    "CaptchaDurationSeconds": 180
-  },
-  "EmailSettings": {
-    "Login": "mailer@alt-lan.com",
-    "Password": "123456-mailer",
-    "Host": "smtp.gmail.com",
-    "Port": 587,
-    "EnableSSL": true,
-    "UseDefaultCredentials": false,
+    "QuartzSettings": {
+        "Scheduler": {
+            "InstanceName": "SciVacanciesScheduler",
+            "ExecutionInterval": 3
+        },
+        "JobStore": {
+            "Type": "Quartz.Impl.AdoJobStore.JobStoreTX, Quartz",
+            "UseProperties": "true",
+            "DataSource": "default",
+            "TablePrefix": "qrtz_",
+            "LockHandler": {
+                "Type": "Quartz.Impl.AdoJobStore.UpdateLockRowSemaphore, Quartz"
+            }
+        },
+        "DataSource": {
+            "Default": {
+                "ConnectionString": "Server=alt-dev002; Database=scivacancies; User Id=postgres; Password=postgres",
+                "Provider": "Npgsql-20"
+            }
+        }
+    },
+    "AttachmentSettings": {
+        "VacancyApplication": {
+            "MaxItemSize": 500000,
+            "MaxTotalSize": 1000000,
+            "PhisicalPathPart": "/uploads/applications/attachments",
+            "UrlPathPart": "~/uploads/applications/attachments",
+            "AllowExtensions": ""
+        },
+        "Vacancy": {
+            "MaxItemSize": 500000,
+            "MaxTotalSize": 1000000,
+            "PhisicalPathPart": "/uploads/vacancies/attachments",
+            "UrlPathPart": "~/uploads/vacancies/attachments",
+            "AllowExtensions": ""
+        },
+        "Researcher": {
+            "MaxItemSize": 500000,
+            "MaxTotalSize": 500000,
+            "PhisicalPathPart": "/uploads/researcherphoto",
+            "UrlPathPart": "~/uploads/researcherphoto",
+            "AllowExtensions": "JPG,JPEG,PNG"
+        }
+    },
+    "SiteFileSettings": {
+        "FavIconName": "",
+        "PathToBlankAvatar": "/images/profile-photo.png"
+    },
+    "VacancyLifeCycleSettings": {
+        "DeltaFromPublishToInCommitteeMinMinutes": 28800 /* 20 days * (24 hours * 60 minutes = 1'440 minutes ) = 28'800 minutes*/
+    },
+    "CaptchaSettings": {
+        "CaptchaDurationSeconds": 180
+    },
+    "EmailSettings": {
+        "Login": "mailer@alt-lan.com",
+        "Password": "123456-mailer",
+        "Host": "smtp.gmail.com",
+        "Port": 587,
+        "EnableSSL": true,
+        "UseDefaultCredentials": false,
 
-    "Domain": "xn----8sbfhdabdwf1afqu5baxe0f2d.xn--p1ai",
-    "PortalLink": "<a target='_blank' href='http://xn----8sbfhdabdwf1afqu5baxe0f2d.xn--p1ai'>ученые-исследователи.рф</a>"
-  },
+        "Domain": "scivac.test.alt-lan.com",
+        "PortalLink": "<a target='_blank' href='http://scivac.test.alt-lan.com'>scivac.test.alt-lan.com</a>"
+    },
   "LogSettings": {
     "LogLevel": "Verbose",
     "FileName": "F:/Logs/sci.log",
