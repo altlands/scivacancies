@@ -100,7 +100,7 @@ namespace SciVacancies.WebApp
             //builder.RegisterType<Calculator>()
             //    .AsImplementedInterfaces()
             //    .OnActivating(x => x
-            //        .ReplaceInstance(TracingProxy.CreateWithActivityScope(x.Instance, x.Instance.GetType()))
+            //        .ReplaceInstance(TracingProxy.CreateWithActivityScope(x.Instance, x.Instance))
             //    )
             //    //.OnPreparing(x=>x.)
             //    ;
@@ -197,14 +197,21 @@ namespace SciVacancies.WebApp
                     (EventKeywords)(-1)
                 );
 
+            //try
+            //{
+            //    var log = EventSourceImplementer.GetEventSource<IGeneric<string>>();
 
-            //var log = EventSourceImplementer.GetEventSource<IGeneric<string>>();
+            //    observable.EnableEvents(
+            //        (EventSource)log,
+            //        (EventLevel.LogAlways),
+            //        (EventKeywords)(-1)
+            //        );
+            //}
+            //catch(Exception e)
+            //{
+            //    throw e;
+            //}
 
-            //observable.EnableEvents(
-            //    (EventSource)log,
-            //    (EventLevel.LogAlways),
-            //    (EventKeywords)(-1)
-            //    );
 
 
             observable.LogToRollingFlatFile(
