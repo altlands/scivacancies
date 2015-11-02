@@ -38,7 +38,7 @@
         "DefaultIndex": "scivacancies-ntemnikov",
         "MinScore": "0.2"
     },
-     "SagaSettings": { //TODO сделать только с положительными днями, обозвать соответствующе
+    "SagaSettings": { //TODO сделать только с положительными днями, обозвать соответствующе
         "Date": {
             "Committee": {
                 "FirstNotificationMinutes": -1,
@@ -48,7 +48,8 @@
             "OfferResponseAwaiting": {
                 "WinnerNotificationMinutes": -2,
                 "PretenderNotificationMinutes": -2
-            }
+            },
+            "DeltaFromPublishToInCommitteeMinMinutes": 15 /* 20 days * (24 hours * 60 minutes = 1'440 minutes ) = 28'800 minutes*/
         }
     },
     "QuartzSettings": {
@@ -72,48 +73,45 @@
             }
         }
     },
-  "AttachmentSettings": {
-    "VacancyApplication": {
-      "MaxItemSize": 500000,
-      "MaxTotalSize": 1000000,
-      "PhisicalPathPart": "/uploads/applications/attachments",
-      "UrlPathPart": "~/uploads/applications/attachments",
-      "AllowExtensions": ""
+    "AttachmentSettings": {
+        "VacancyApplication": {
+            "MaxItemSize": 500000,
+            "MaxTotalSize": 1000000,
+            "PhisicalPathPart": "/uploads/applications/attachments",
+            "UrlPathPart": "~/uploads/applications/attachments",
+            "AllowExtensions": ""
+        },
+        "Vacancy": {
+            "MaxItemSize": 500000,
+            "MaxTotalSize": 1000000,
+            "PhisicalPathPart": "/uploads/vacancies/attachments",
+            "UrlPathPart": "~/uploads/vacancies/attachments",
+            "AllowExtensions": ""
+        },
+        "Researcher": {
+            "MaxItemSize": 500000,
+            "MaxTotalSize": 500000,
+            "PhisicalPathPart": "/uploads/researcherphoto",
+            "UrlPathPart": "~/uploads/researcherphoto",
+            "AllowExtensions": "JPG,JPEG,PNG"
+        }
     },
-    "Vacancy": {
-      "MaxItemSize": 500000,
-      "MaxTotalSize": 1000000,
-      "PhisicalPathPart": "/uploads/vacancies/attachments",
-      "UrlPathPart": "~/uploads/vacancies/attachments",
-      "AllowExtensions": ""
+    "SiteFileSettings": {
+        "FavIconName": "",
+        "PathToBlankAvatar": "/images/profile-photo.png"
     },
-    "Researcher": {
-      "MaxItemSize": 500000,
-      "MaxTotalSize": 500000,
-      "PhisicalPathPart": "/uploads/researcherphoto",
-      "UrlPathPart": "~/uploads/researcherphoto",
-      "AllowExtensions": "JPG,JPEG,PNG"
-    }
-  },
-  "SiteFileSettings": {
-    "FavIconName": "",
-    "PathToBlankAvatar": "/images/profile-photo.png"
-  },
-  "VacancyLifeCycleSettings": {
-        "DeltaFromPublishToInCommitteeMinMinutes": 15 /* 20 days * (24 hours * 60 minutes = 1'440 minutes ) = 28'800 minutes*/
-  },
-  "CaptchaSettings": {
-    "CaptchaDurationSeconds": 180
-  },
-  "EmailSettings": {
-    "Login": "mailer@alt-lan.com",
-    "Password": "123456-mailer",
-    "Host": "smtp.gmail.com",
-    "Port": 587,
-    "EnableSSL": true,
-    "UseDefaultCredentials": false,
+    "CaptchaSettings": {
+        "CaptchaDurationSeconds": 180
+    },
+    "EmailSettings": {
+        "Login": "mailer@alt-lan.com",
+        "Password": "123456-mailer",
+        "Host": "smtp.gmail.com",
+        "Port": 587,
+        "EnableSSL": true,
+        "UseDefaultCredentials": false,
 
-    "Domain": "localhost:59075",
-    "PortalLink": "<a target='_blank' href='http://localhost:59075'>localhost:59075</a>"
-  }
+        "Domain": "localhost:59075",
+        "PortalLink": "<a target='_blank' href='http://localhost:59075'>localhost:59075</a>"
+    }
 }

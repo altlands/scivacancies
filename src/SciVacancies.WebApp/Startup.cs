@@ -62,7 +62,6 @@ namespace SciVacancies.WebApp
             services.Configure<ElasticSettings>(Configuration.GetSection("ElasticSettings"));
             services.Configure<AttachmentSettings>(Configuration.GetSection("AttachmentSettings"));
             services.Configure<SiteFileSettings>(Configuration.GetSection("SiteFileSettings"));
-            services.Configure<VacancyLifeCycleSettings>(Configuration.GetSection("VacancyLifeCycleSettings"));
             services.Configure<CaptchaSettings>(Configuration.GetSection("CaptchaSettings"));
             services.Configure<SagaSettings>(Configuration.GetSection("SagaSettings"));
 
@@ -236,7 +235,6 @@ namespace SciVacancies.WebApp
             //    throw e;
             //}
 
-            //todo: SAGA_DISABLED
             var schedulerService = new QuartzService(Configuration, Container.Resolve<IJobFactory>());
             schedulerService.StartScheduler();
         }

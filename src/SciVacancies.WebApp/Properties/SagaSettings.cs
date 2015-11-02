@@ -8,6 +8,11 @@
     {
         public CommitteeDateSettings Committee { get; set; } = new CommitteeDateSettings();
         public OfferResponseAwaitingDateSettings OfferResponseAwaiting { get; set; } = new OfferResponseAwaitingDateSettings();
+
+        /// <summary>
+        /// минимальный период от Публикации Вакансии до её перевода На Рассмотрение (в минутах)
+        /// </summary>
+        public int DeltaFromPublishToInCommitteeMinMinutes { get; set; }
     }
     public class CommitteeDateSettings
     {

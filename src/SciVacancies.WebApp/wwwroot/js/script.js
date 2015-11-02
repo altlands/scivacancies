@@ -25,7 +25,7 @@ function guid() {
           .toString(16)
           .substring(1);
     }
-    return s4() + s4() + '-' + s4() + '-' + s4() + '-' +s4() + '-' + s4() + s4() + s4();
+    return s4() + s4() + '-' + s4() + '-' + s4() + '-' + s4() + '-' + s4() + s4() + s4();
 }
 
 $(document).ready(function () {
@@ -410,63 +410,58 @@ function cuselValueChanged(source, key) {
         }
 
     }
-
-    /*
-
-    "data-cusel-number-parent";
-    "data-cusel-number-child";
-
-    var paramsSelect = {
-        changedEl: "select.newselect",
-        visRows: 12,
-        scrollArrows: true
-    }
-    cuSel(paramsSelect);
-
-    */
-
 }
 /*
  * каптча
  */
-//CAPTCHA_HIDDEN
-//function reloadImg(captchaImageFieldName) {
-//    var d = new Date();
-//    $('#' + captchaImageFieldName).attr("src", "/captcha/fetch?w=164&h=50" + d.getTime());
-//}
+function reloadImg(captchaImageFieldName) {
+    var d = new Date();
+    $('#' + captchaImageFieldName).attr("src", "/captcha/fetch?w=164&h=50" + d.getTime());
+}
 /*
  * сделать некоторую обработку перед отправкой формы Регистрации
  */
-//CAPTCHA_HIDDEN
-//function beforeFormSubmitRegister(source, captchaImageFieldName, captchaInputFieldName, event) {
-//    var form = $('#' + captchaImageFieldName).parents('form')[0];
-//    if (!$(form).hasClass('validated')) {
-//        event.preventDefault();
+function beforeFormSubmitRegister(source, captchaImageFieldName, captchaInputFieldName, captchaEmptyFieldName, captchaInvalidFieldName, event) {
+    var form = $('#' + captchaImageFieldName).parents('form')[0];
+    if (!$(form).hasClass('validated')) {
+        event.preventDefault();
 
 
-//        var validData = {
-//            captchaText: $('#' + captchaInputFieldName).val()
-//        };
+        var validData = {
+            captchaText: $('#' + captchaInputFieldName).val()
+        };
 
-//        $.ajax({
-//            url: '/captcha/isvalid',
-//            type: 'POST' /*'GET'*/,
-//            data: validData,
-//            success: function (isCaptureValid) {
-//                if (isCaptureValid) {
-//                    $(form).addClass('validated');
-//                    $(form).submit();
-//                } else {
-//                    reloadImg(captchaImageFieldName);
-//                    return false;
-//                }
-//            },
-//            error: function (error) {
-//                return false;
-//            }
-//        });
-//    }
-//};
+        $('#' + captchaInvalidFieldName).hide();
+        if (validData.captchaText === undefined || validData.captchaText === null || validData.captchaText === "") {
+            $('#' + captchaEmptyFieldName).show();
+            return false;
+        }
+        $('#' + captchaEmptyFieldName).hide();
+
+        $.ajax({
+            url: '/captcha/isvalid',
+            type: 'POST' /*'GET'*/,
+            data: validData,
+            success: function (isCaptureValid) {
+                if (isCaptureValid) {
+                    $('#' + captchaInvalidFieldName).hide();
+                    $(form).addClass('validated');
+                    //$(form).submit();
+                    return true;
+                } else {
+                    reloadImg(captchaImageFieldName);
+                    $('#' + captchaInvalidFieldName).show();
+                    return false;
+                }
+            },
+            error: function (error) {
+                reloadImg(captchaImageFieldName);
+                $('#' + captchaInvalidFieldName).show();
+                return false;
+            }
+        });
+    }
+};
 /*
  * на форме Регистрации регистрации нажатие по кнопке "Согласие на обработку персональным данных"
  */
