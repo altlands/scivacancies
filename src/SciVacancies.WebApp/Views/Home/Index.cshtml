@@ -25,55 +25,55 @@
 
         <div class="tab-content">
             <div class="tab-pane active" id="vac-day">
-                <h4>Вакансии дня</h4>
-                <div class="b-items">
+                    <h4>Вакансии дня @ViewBag.test</h4>
+                    <div class="b-items">
 
-                    @foreach (var item in Model.VacanciesList.Items)
-                    {
-                        <text>
-                        <a asp-controller="vacancies" asp-action="card" asp-route-id="@item.Guid" class="b-item bg_blue">
-                            <div class="b-item__title top_title bg_lblue">
-                                <div class="line_three">@item.Name.Substring(0, Math.Min(item.Name.Length, 50))@(item.Name.Length > 50 ? "..." : null)</div>
-                            </div>
-                            <div class="b-item__content vac_item">
-                                <div class="cell-middle">
-                                    <div class="b-vacan__price">@item.SalaryFrom – @item.SalaryTo руб.</div>
-                                    <span class="b-vacan__desc">@item.OrganizationName</span>
+                        @foreach (var item in Model.VacanciesList.Items)
+                        {
+                            <text>
+                            <a asp-controller="vacancies" asp-action="card" asp-route-id="@item.Guid" class="b-item bg_blue">
+                                <div class="b-item__title top_title bg_lblue">
+                                    <div class="line_three">@item.Name.Substring(0, Math.Min(item.Name.Length, 50))@(item.Name.Length > 50 ? "..." : null)</div>
                                 </div>
-                                <div class="helper"></div>
-                            </div>
-                        </a>
-                        </text>
-                    }
-                </div>
-                <a asp-controller="search" asp-route-order="">
-                    <span class="small-icon icon-sm-eye inline-block ml6"><span>Показать все</span></span>
-                </a>
+                                <div class="b-item__content vac_item">
+                                    <div class="cell-middle">
+                                        <div class="b-vacan__price">@item.SalaryFrom – @item.SalaryTo руб.</div>
+                                        <span class="b-vacan__desc">@item.OrganizationName</span>
+                                    </div>
+                                    <div class="helper"></div>
+                                </div>
+                            </a>
+                            </text>
+                        }
+                    </div>
+                    <a asp-controller="search" asp-route-order="">
+                        <span class="small-icon icon-sm-eye inline-block ml6"><span>Показать все</span></span>
+                    </a>
             </div>
             <div class="tab-pane" id="work-org">
-                <h4>Работа в организациях</h4>
-                <div class="b-items">
-                    @foreach (var item in Model.OrganizationsList.Items)
-                    {
-                        <text>
-                        <a asp-controller="organizations" asp-action="card" asp-route-id="@item.Guid" class="b-item bg_blue">
-                            <div class="b-item__content work_org_item">
-                                <img src="/images/mgu.png" alt="" class="cell-middle">
-                                <div class="helper"></div>
-                            </div>
-                            <div class="b-item__title bottom_title bg_lblue">
-                                <div class="line_four">
-                                    @item.Name
+                    <h4>Работа в организациях</h4>
+                    <div class="b-items">
+                        @foreach (var item in Model.OrganizationsList.Items)
+                        {
+                            <text>
+                            <a asp-controller="organizations" asp-action="card" asp-route-id="@item.Guid" class="b-item bg_blue">
+                                <div class="b-item__content work_org_item">
+                                    <img src="/images/mgu.png" alt="" class="cell-middle">
+                                    <div class="helper"></div>
                                 </div>
-                            </div>
-                        </a>
-                        </text>
-                    }
+                                <div class="b-item__title bottom_title bg_lblue">
+                                    <div class="line_four">
+                                        @item.Name
+                                    </div>
+                                </div>
+                            </a>
+                            </text>
+                        }
 
-                </div>
-                @*<a asp-controller="search" asp-route-order="">
-                        <span class="small-icon icon-sm-eye inline-block ml9 mt13"><span>Показать все</span></span>
-                    </a>*@
+                    </div>
+                    @*<a asp-controller="search" asp-route-order="">
+                            <span class="small-icon icon-sm-eye inline-block ml9 mt13"><span>Показать все</span></span>
+                        </a>*@
             </div>
 
             <div class="tab-pane" id="vac-sci">
@@ -81,7 +81,7 @@
 
                 <div class="b-items-category panel-group" id="accordion">
                     <cache expires-after="@TimeSpan.FromMinutes(90)">
-                        @Html.Partial("HomeResearchDirections", Model)
+                        @Html.Partial("_HomeIndexResearchDirections", Model)
                     </cache>
                 </div>
             </div>

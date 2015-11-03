@@ -8,18 +8,20 @@ using SciVacancies.WebApp.Models;
 using SciVacancies.WebApp.Queries;
 using SciVacancies.WebApp.ViewModels;
 
+using System;
+using SciVacancies.ReadModel.Pager;
+
+
 namespace SciVacancies.WebApp.Controllers
 {
     [ResponseCache(NoStore = true)]
     public class HomeController : Controller
     {
         private readonly IMediator _mediator;
-        private readonly SciVacUserManager _userManager;
 
-        public HomeController(SciVacUserManager userManager, IMediator mediator)
+        public HomeController(IMediator mediator)
         {
             _mediator = mediator;
-            _userManager = userManager;
         }
 
         [ResponseCache(NoStore = true)]
@@ -32,26 +34,20 @@ namespace SciVacancies.WebApp.Controllers
             //    //return Content("инициализация уже проходила");
             //    return RedirectToAction("index", "initialize");
 
-            var model = new IndexViewModel
+            var model = new IndexViewModel { CurrentMediator = _mediator };
+            model.VacanciesList = _mediator.Send(new SelectPagedVacanciesQuery
             {
-                CurrentMediator = _mediator,
-                VacanciesList =
-                    _mediator.Send(new SelectPagedVacanciesQuery
-                    {
-                        PageSize = 4,
-                        PageIndex = 1,
-                        OrderBy = ConstTerms.OrderByDateStartDescending,
-                        PublishedOnly = true
-                    }).MapToPagedList<Vacancy, VacancyDetailsViewModel>(),
-                OrganizationsList =
-                    _mediator.Send(new SelectPagedOrganizationsQuery
-                    {
-                        PageSize = 4,
-                        PageIndex = 1,
-                        OrderBy = ConstTerms.OrderByVacancyCountDescending
-                    })
-                        .MapToPagedList<Organization, OrganizationDetailsViewModel>()
-            };
+                PageSize = 4,
+                PageIndex = 1,
+                OrderBy = ConstTerms.OrderByDateStartDescending,
+                PublishedOnly = true
+            }).MapToPagedList<Vacancy, VacancyDetailsViewModel>();
+            model.OrganizationsList = _mediator.Send(new SelectPagedOrganizationsQuery
+            {
+                PageSize = 4,
+                PageIndex = 1,
+                OrderBy = ConstTerms.OrderByVacancyCountDescending
+            }).MapToPagedList<Organization, OrganizationDetailsViewModel>();
 
             //заполнить названия организаций
             var organizationGuids = model.VacanciesList.Items.Select(c => c.OrganizationGuid).Distinct().ToList();
@@ -69,9 +65,7 @@ namespace SciVacancies.WebApp.Controllers
                 });
             }
 
-            //todo: ntemnikov -> переименовать в IsMainPage
-            ViewBag.HideSearchPanel = true;
-
+            ViewBag.IsMainPage = true;
             return View(model);
         }
 
