@@ -1,11 +1,11 @@
-﻿using SciVacancies.Services.Logging;
+﻿//using SciVacancies.Services.Logging;
 
 using System;
 using System.Data;
 using Microsoft.Framework.Configuration;
 
 using Autofac;
-using Autofac.Extras.DynamicProxy;
+//using Autofac.Extras.DynamicProxy;
 using CommonDomain;
 using CommonDomain.Core;
 using CommonDomain.Persistence;

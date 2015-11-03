@@ -49,7 +49,6 @@
 
     "Autofac": "4.0.0-beta8-157",
     "Autofac.Extras.Quartz": "1.5.1",
-    "Autofac.Extras.DynamicProxy": "4.0.0-beta8-231",
     "Autofac.Framework.DependencyInjection": "4.0.0-beta8-157",
 
     "AutoMapper": "3.3.1",
@@ -62,10 +61,7 @@
     "NPoco": "2.9.103",
     "Quartz": "2.3.3",
     "Newtonsoft.Json": "7.0.1",
-    "Thinktecture.IdentityModel.Client": "4.0.1",
-
-    "AltLanDS.Common": "1.5.3",
-    "AltLanDS.Logging": "1.5.3"
+    "Thinktecture.IdentityModel.Client": "4.0.1"
   },
 
   "commands": {

@@ -11,7 +11,7 @@ using Microsoft.Framework.Configuration;
 using Microsoft.Framework.DependencyInjection;
 using Microsoft.Framework.Logging;
 using SciVacancies.Services.Quartz;
-using SciVacancies.Services.Logging;
+//using SciVacancies.Services.Logging;
 using SciVacancies.WebApp.Infrastructure;
 using Microsoft.Dnx.Runtime;
 
@@ -21,16 +21,16 @@ using System.Globalization;
 
 using Quartz.Spi;
 
-using Microsoft.Practices.EnterpriseLibrary.SemanticLogging;
-using Microsoft.Practices.EnterpriseLibrary.SemanticLogging.Sinks;
+//using Microsoft.Practices.EnterpriseLibrary.SemanticLogging;
+//using Microsoft.Practices.EnterpriseLibrary.SemanticLogging.Sinks;
 using System.Diagnostics.Tracing;
 using System.Diagnostics;
-using AltLanDS.Logging;
+//using AltLanDS.Logging;
 
-using EventSourceProxy;
-using Autofac.Extras.DynamicProxy;
-using Castle.Core.Internal;
-using Castle.DynamicProxy;
+//using EventSourceProxy;
+//using Autofac.Extras.DynamicProxy;
+//using Castle.Core.Internal;
+//using Castle.DynamicProxy;
 using System.IO;
 
 namespace SciVacancies.WebApp
@@ -110,7 +110,7 @@ namespace SciVacancies.WebApp
             builder.RegisterModule(new QuartzModule());
             builder.RegisterModule(new IdentityModule());
             builder.RegisterModule(new SmtpNotificationModule());
-            builder.RegisterModule(new LoggingModule());
+            //builder.RegisterModule(new LoggingModule());
         }
 
         // Configure is called after ConfigureServices is called.
@@ -188,26 +188,26 @@ namespace SciVacancies.WebApp
 
             //todo: LOGGING_COMMENTED_OUT
             //Logs initialization
-            var observable = new ObservableEventListener();
-            observable.EnableEvents(
-                    LogEvents.LogEventSource,
-                    (EventLevel)Enum.Parse(typeof(EventLevel), Configuration["LogSettings:LogLevel"], true),
-                    (EventKeywords)(-1)
-                );
+            //var observable = new ObservableEventListener();
+            //observable.EnableEvents(
+            //        LogEvents.LogEventSource,
+            //        (EventLevel)Enum.Parse(typeof(EventLevel), Configuration["LogSettings:LogLevel"], true),
+            //        (EventKeywords)(-1)
+            //    );
 
-            observable.EnableEvents(
-                (EventSource)TracingEventSource.LogTracing,
-                (EventLevel)Enum.Parse(typeof(EventLevel), Configuration["LogSettings:LogLevel"], true),
-                (EventKeywords)(-1)
-                );
+            //observable.EnableEvents(
+            //    (EventSource)TracingEventSource.LogTracing,
+            //    (EventLevel)Enum.Parse(typeof(EventLevel), Configuration["LogSettings:LogLevel"], true),
+            //    (EventKeywords)(-1)
+            //    );
 
-            observable.LogToRollingFlatFile(
-                    Configuration["LogSettings:FileName"],
-                    int.Parse(Configuration["LogSettings:FileSizeKB"]),
-                    Configuration["LogSettings:TimeStampPattern"],
-                    (RollFileExistsBehavior)Enum.Parse(typeof(RollFileExistsBehavior), Configuration["LogSettings:RollFileExistsBehavior"], true),
-                    (RollInterval)Enum.Parse(typeof(RollInterval), Configuration["LogSettings:RollInterval"], true)
-                );
+            //observable.LogToRollingFlatFile(
+            //        Configuration["LogSettings:FileName"],
+            //        int.Parse(Configuration["LogSettings:FileSizeKB"]),
+            //        Configuration["LogSettings:TimeStampPattern"],
+            //        (RollFileExistsBehavior)Enum.Parse(typeof(RollFileExistsBehavior), Configuration["LogSettings:RollFileExistsBehavior"], true),
+            //        (RollInterval)Enum.Parse(typeof(RollInterval), Configuration["LogSettings:RollInterval"], true)
+            //    );
 
 
             //todo: SAGA_DISABLED
