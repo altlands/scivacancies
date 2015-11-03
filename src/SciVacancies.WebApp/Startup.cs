@@ -11,6 +11,7 @@ using Microsoft.Framework.Configuration;
 using Microsoft.Framework.DependencyInjection;
 using Microsoft.Framework.Logging;
 using SciVacancies.Services.Quartz;
+using SciVacancies.Services.Logging;
 using SciVacancies.WebApp.Infrastructure;
 using Microsoft.Dnx.Runtime;
 
@@ -21,12 +22,11 @@ using Microsoft.Dnx.Runtime;
 
 using Quartz.Spi;
 
-//todo: LOGGING_COMMENTED_OUT
-//using Microsoft.Practices.EnterpriseLibrary.SemanticLogging;
-//using Microsoft.Practices.EnterpriseLibrary.SemanticLogging.Sinks;
-//using System.Diagnostics.Tracing;
-//using SciVacancies.Services.Logging;
-//using AltLanDS.Logging;
+using Microsoft.Practices.EnterpriseLibrary.SemanticLogging;
+using Microsoft.Practices.EnterpriseLibrary.SemanticLogging.Sinks;
+using System.Diagnostics.Tracing;
+using System.Diagnostics;
+using AltLanDS.Logging;
 
 using EventSourceProxy;
 using Autofac.Extras.DynamicProxy;
@@ -190,12 +190,12 @@ namespace SciVacancies.WebApp
 
             //todo: LOGGING_COMMENTED_OUT
             //Logs initialization
-            //var observable = new ObservableEventListener();
-            //observable.EnableEvents(
-            //        LogEvents.LogEventSource,
-            //        (EventLevel)Enum.Parse(typeof(EventLevel), Configuration["LogSettings:LogLevel"], true),
-            //        (EventKeywords)(-1)
-            //    );
+            var observable = new ObservableEventListener();
+            observable.EnableEvents(
+                    LogEvents.LogEventSource,
+                    (EventLevel)Enum.Parse(typeof(EventLevel), Configuration["LogSettings:LogLevel"], true),
+                    (EventKeywords)(-1)
+                );
 
             observable.EnableEvents(
                 (EventSource)TracingEventSource.LogTracing,
