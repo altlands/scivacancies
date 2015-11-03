@@ -1,12 +1,16 @@
-﻿using System;
+﻿using SciVacancies.Services.Logging;
+
+using System;
 using System.Data;
+using Microsoft.Framework.Configuration;
+
 using Autofac;
+using Autofac.Extras.DynamicProxy;
 using CommonDomain;
 using CommonDomain.Core;
 using CommonDomain.Persistence;
 using CommonDomain.Persistence.EventStore;
 using MediatR;
-using Microsoft.Framework.Configuration;
 using NEventStore;
 using NEventStore.Dispatcher;
 using NEventStore.Persistence.Sql;
@@ -28,18 +32,27 @@ namespace SciVacancies.WebApp.Infrastructure
 
         protected override void Load(ContainerBuilder builder)
         {
-            builder.Register(c => new AggregateFactory()).As<IConstructAggregates>().SingleInstance();
-            builder.Register(c => new ConflictDetector()).As<IDetectConflicts>().SingleInstance();
+            builder.Register(c => new AggregateFactory())
+                .As<IConstructAggregates>()
+                .SingleInstance();
+            builder.Register(c => new ConflictDetector())
+                .As<IDetectConflicts>()
+                .SingleInstance();
 
-            //builder.Register(c => GetStubEventStore()).As<IStoreEvents>().SingleInstance();
-            builder.Register(c => GetEventStore(c.Resolve<IMediator>())).As<IStoreEvents>().SingleInstance();
-            //builder.Register(c => GetEventStoreWithoutDispatchers()).As<IStoreEvents>().SingleInstance();
-            //builder.Register(c => new EventStoreRepository(c.Resolve<IStoreEvents>(), c.Resolve<IConstructAggregates>(), c.Resolve<IDetectConflicts>())).As<IRepository>();
-            builder.Register(c => new EventStoreRepository(c.Resolve<IStoreEvents>(), c.Resolve<IConstructAggregates>(), c.Resolve<IDetectConflicts>())).As<IRepository>().SingleInstance();
+            builder.Register(c => GetEventStore(c.Resolve<IMediator>()))
+                .As<IStoreEvents>()
+                .SingleInstance();
+            builder.Register(c => new EventStoreRepository(c.Resolve<IStoreEvents>(), c.Resolve<IConstructAggregates>(), c.Resolve<IDetectConflicts>()))
+                .As<IRepository>()
+                .SingleInstance();
 
             //sagas start
-            builder.Register(c => new SciVacancies.WebApp.Infrastructure.Saga.SagaFactory()).As<SciVacancies.WebApp.Infrastructure.Saga.IConstructSagas>().SingleInstance();
-            builder.Register(c => new SciVacancies.WebApp.Infrastructure.Saga.SagaEventStoreRepository(c.Resolve<IStoreEvents>(), c.Resolve<SciVacancies.WebApp.Infrastructure.Saga.IConstructSagas>())).As<SciVacancies.WebApp.Infrastructure.Saga.ISagaRepository>().SingleInstance();
+            builder.Register(c => new SciVacancies.WebApp.Infrastructure.Saga.SagaFactory())
+                .As<SciVacancies.WebApp.Infrastructure.Saga.IConstructSagas>()
+                .SingleInstance();
+            builder.Register(c => new SciVacancies.WebApp.Infrastructure.Saga.SagaEventStoreRepository(c.Resolve<IStoreEvents>(), c.Resolve<SciVacancies.WebApp.Infrastructure.Saga.IConstructSagas>()))
+                .As<SciVacancies.WebApp.Infrastructure.Saga.ISagaRepository>()
+                .SingleInstance();
             //sagas end
         }
         private IStoreEvents GetEventStore(IMediator mediator)

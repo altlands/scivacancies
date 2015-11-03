@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+
 using Autofac;
 using MediatR;
 
@@ -8,7 +9,8 @@ namespace SciVacancies.WebApp.Infrastructure
     {
         protected override void Load(ContainerBuilder builder)
         {
-            builder.RegisterAssemblyTypes(typeof(IMediator).Assembly).AsImplementedInterfaces();
+            builder.RegisterAssemblyTypes(typeof(IMediator).Assembly)
+                    .AsImplementedInterfaces();
             builder.Register<SingleInstanceFactory>(ctx =>
             {
                 var c = ctx.Resolve<IComponentContext>();

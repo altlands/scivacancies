@@ -24,8 +24,11 @@ using SciVacancies.Services.Logging;
 using AltLanDS.Logging;
 
 using EventSourceProxy;
-//using Autofac.Extras.DynamicProxy;
-
+using Autofac.Extras.DynamicProxy;
+using Castle.Core.Internal;
+using Castle.DynamicProxy;
+using System.IO;
+using System.Diagnostics;
 
 namespace SciVacancies.WebApp
 {
@@ -97,15 +100,6 @@ namespace SciVacancies.WebApp
 
         public void ConfigureContainer(ContainerBuilder builder)
         {
-            //builder.RegisterType<Calculator>()
-            //    .AsImplementedInterfaces()
-            //    .OnActivating(x => x
-            //        .ReplaceInstance(TracingProxy.CreateWithActivityScope(x.Instance, x.Instance))
-            //    )
-            //    //.OnPreparing(x=>x.)
-            //    ;
-
-
             builder.RegisterModule(new EventStoreModule(Configuration));
             builder.RegisterModule(new EventBusModule());
             builder.RegisterModule(new EventHandlersModule());
@@ -114,6 +108,7 @@ namespace SciVacancies.WebApp
             builder.RegisterModule(new QuartzModule());
             builder.RegisterModule(new IdentityModule());
             builder.RegisterModule(new SmtpNotificationModule());
+            builder.RegisterModule(new LoggingModule());
         }
 
         // Configure is called after ConfigureServices is called.
@@ -197,22 +192,11 @@ namespace SciVacancies.WebApp
                     (EventKeywords)(-1)
                 );
 
-            //try
-            //{
-            //    var log = EventSourceImplementer.GetEventSource<IGeneric<string>>();
-
-            //    observable.EnableEvents(
-            //        (EventSource)log,
-            //        (EventLevel.LogAlways),
-            //        (EventKeywords)(-1)
-            //        );
-            //}
-            //catch(Exception e)
-            //{
-            //    throw e;
-            //}
-
-
+            observable.EnableEvents(
+                (EventSource)TracingEventSource.LogTracing,
+                (EventLevel)Enum.Parse(typeof(EventLevel), Configuration["LogSettings:LogLevel"], true),
+                (EventKeywords)(-1)
+                );
 
             observable.LogToRollingFlatFile(
                     Configuration["LogSettings:FileName"],
@@ -222,40 +206,10 @@ namespace SciVacancies.WebApp
                     (RollInterval)Enum.Parse(typeof(RollInterval), Configuration["LogSettings:RollInterval"], true)
                 );
 
-            //try
-            //{
-            //    var original = Container.Resolve<IGeneric<string>>();
-            //    //var original = (IGeneric<string>)new Calculator();
-            //    var proxy = TracingProxy.Create<IGeneric<string>>(original);
-
-            //    original.TypeName("Boobs");
-            //    proxy.TypeName("BigBoobs");
-            //}
-            //catch (Exception e)
-            //{
-            //    throw e;
-            //}
 
             //todo: SAGA_DISABLED
             var schedulerService = new QuartzService(Configuration, Container.Resolve<IJobFactory>());
             schedulerService.StartScheduler();
         }
     }
-
-    //public interface IGeneric<in T>
-    //{
-    //    string TypeName(T type);
-    //}
-
-    //public class Calculator : IGeneric<bool>, IGeneric<string>
-    //{
-    //    public string TypeName(bool booleanvalue)
-    //    {
-    //        return booleanvalue.GetType().ToString();
-    //    }
-    //    public string TypeName(string stringValue)
-    //    {
-    //        return stringValue.GetType().ToString();
-    //    }
-    //}
 }

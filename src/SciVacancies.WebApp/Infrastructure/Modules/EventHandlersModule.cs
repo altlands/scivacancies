@@ -1,8 +1,11 @@
-﻿using System;
+﻿using SciVacancies.Services.Logging;
+
+using System;
 using System.Linq;
 using System.Reflection;
 using Autofac;
 using Autofac.Core;
+using Autofac.Extras.DynamicProxy;
 using FluentValidation;
 using MediatR;
 using SciVacancies.Domain.Events;
@@ -10,15 +13,20 @@ using SciVacancies.ReadModel.EventHandlers;
 using SciVacancies.WebApp.Commands;
 using SciVacancies.WebApp.Infrastructure.Saga;
 using Module = Autofac.Module;
+using Castle.Core.Internal;
 
 namespace SciVacancies.WebApp.Infrastructure
 {
+
     public class EventHandlersModule : Module
     {
         protected override void Load(ContainerBuilder builder)
         {
-            builder.RegisterAssemblyTypes(typeof(EventBase).Assembly).SingleInstance();
-            builder.RegisterAssemblyTypes(typeof(CommandBase).Assembly).AsClosedTypesOf(typeof(IRequest<>)).SingleInstance();
+            builder.RegisterAssemblyTypes(typeof(EventBase).Assembly)
+                .SingleInstance();
+            builder.RegisterAssemblyTypes(typeof(CommandBase).Assembly)
+                .AsClosedTypesOf(typeof(IRequest<>))
+                .SingleInstance();
 
             builder.RegisterAssemblyTypes(new Assembly[]
             {
@@ -30,7 +38,10 @@ namespace SciVacancies.WebApp.Infrastructure
                 Assembly.Load("SciVacancies.SmtpNotifications")
             })
                 .AsClosedTypesOf(typeof(INotificationHandler<>))
-                .AsImplementedInterfaces();
+                //.EnableInterfaceInterceptors()
+                //.InterceptedBy(typeof(CallLogger))
+                .AsImplementedInterfaces()
+                ;
 
             builder.RegisterAssemblyTypes(new Assembly[]
             {
@@ -42,6 +53,8 @@ namespace SciVacancies.WebApp.Infrastructure
             builder.RegisterAssemblyTypes()
                 .Where(t => !t.Name.StartsWith("ValidatorHandler"))
                 .AsClosedTypesOf(typeof(IRequestHandler<,>))
+                //.EnableInterfaceInterceptors()
+                //.InterceptedBy(typeof(CallLogger))
                 .AsImplementedInterfaces();
             //.Keyed("implementation", typeof(IRequestHandler<,>));
 
@@ -54,16 +67,15 @@ namespace SciVacancies.WebApp.Infrastructure
                     .Where(i => i.IsClosedTypeOf(typeof(IRequestHandler<,>)))
                     .Select(i => new KeyedService("handler-implementor", i))
                     .Cast<Service>())
-              .SingleInstance();
-
-            // builder.RegisterType<CreatePositionCommandHandler>().Named<IRequestHandler<CreatePositionCommand, Guid>>("implementation");
+              .SingleInstance()
+            //.EnableInterfaceInterceptors(new Castle.DynamicProxy.ProxyGenerationOptions { })
+            //.InterceptedBy(typeof(CallLogger))
+            ;
 
             builder.RegisterGenericDecorator(
                 typeof(ValidatorHandler<,>),
                 typeof(IRequestHandler<,>),
                 fromKey: "handler-implementor");
-
-            //builder.RegisterAssemblyTypes(typeof(CreateOrganizationCommandHandler).Assembly).AsClosedTypesOf(typeof(IRequestHandler<,>)).SingleInstance();
         }
     }
 }

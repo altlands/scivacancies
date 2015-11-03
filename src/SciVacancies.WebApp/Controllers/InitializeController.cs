@@ -67,8 +67,7 @@ namespace SciVacancies.WebApp.Controllers
                     }
                 };
                 var user1 = _mediator.Send(createUserResearcherCommand1);
-                researcherGuid1 =
-                    Guid.Parse(user1.Claims.Single(s => s.ClaimType.Equals(ConstTerms.ClaimTypeResearcherId)).ClaimValue);
+                researcherGuid1 = Guid.Parse(user1.Claims.Single(s => s.ClaimType.Equals(ConstTerms.ClaimTypeResearcherId)).ClaimValue);
                 if (!_userManager.IsInRole(user1.Id, ConstTerms.RequireRoleResearcher))
                     _userManager.AddToRole(user1.Id, ConstTerms.RequireRoleResearcher);
 
