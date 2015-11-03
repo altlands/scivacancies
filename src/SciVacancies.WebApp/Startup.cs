@@ -15,10 +15,9 @@ using SciVacancies.Services.Logging;
 using SciVacancies.WebApp.Infrastructure;
 using Microsoft.Dnx.Runtime;
 
-//todo: LOGGING_COMMENTED_OUT
-//using Microsoft.AspNet.StaticFiles;
-//using Microsoft.AspNet.Session;
-//using System.Globalization;
+using Microsoft.AspNet.StaticFiles;
+using Microsoft.AspNet.Session;
+using System.Globalization;
 
 using Quartz.Spi;
 
@@ -33,7 +32,6 @@ using Autofac.Extras.DynamicProxy;
 using Castle.Core.Internal;
 using Castle.DynamicProxy;
 using System.IO;
-using System.Diagnostics;
 
 namespace SciVacancies.WebApp
 {
