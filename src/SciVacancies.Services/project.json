@@ -16,6 +16,7 @@
     "Autofac": "4.0.0-beta8-157",
     "Autofac.Framework.DependencyInjection": "4.0.0-beta8-157",
     "Quartz": "2.3.3",
+    "Newtonsoft.Json": "7.0.1",
 
     "AltLanDS.Common": "1.5.3",
     "AltLanDS.Logging": "1.5.3"

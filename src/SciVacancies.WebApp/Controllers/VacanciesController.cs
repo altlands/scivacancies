@@ -961,7 +961,7 @@ namespace SciVacancies.WebApp.Controllers
             {
                 VacancyGuid = id,
                 InCommitteeStartDate = inCommitteeDateValue,
-                InCommitteeEndDate = inCommitteeDateValue.AddMinutes(8) /*TODO: вынести в конфиг: количество дней до окончания комиссии*/
+                InCommitteeEndDate = inCommitteeDateValue.AddMinutes(_sagaSettings.Value.Date.DeltaFromPublishToInCommitteeMinMinutes)
             });
 
             return RedirectToAction("details", new { id });

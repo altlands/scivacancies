@@ -13,15 +13,20 @@ using Microsoft.Framework.Logging;
 using SciVacancies.Services.Quartz;
 using SciVacancies.WebApp.Infrastructure;
 using Microsoft.Dnx.Runtime;
-using Microsoft.AspNet.StaticFiles;
-using Microsoft.AspNet.Session;
-using System.Globalization;
+
+//todo: LOGGING_COMMENTED_OUT
+//using Microsoft.AspNet.StaticFiles;
+//using Microsoft.AspNet.Session;
+//using System.Globalization;
+
 using Quartz.Spi;
-using Microsoft.Practices.EnterpriseLibrary.SemanticLogging;
-using Microsoft.Practices.EnterpriseLibrary.SemanticLogging.Sinks;
-using System.Diagnostics.Tracing;
-using SciVacancies.Services.Logging;
-using AltLanDS.Logging;
+
+//todo: LOGGING_COMMENTED_OUT
+//using Microsoft.Practices.EnterpriseLibrary.SemanticLogging;
+//using Microsoft.Practices.EnterpriseLibrary.SemanticLogging.Sinks;
+//using System.Diagnostics.Tracing;
+//using SciVacancies.Services.Logging;
+//using AltLanDS.Logging;
 
 using EventSourceProxy;
 //using Autofac.Extras.DynamicProxy;
@@ -188,13 +193,14 @@ namespace SciVacancies.WebApp
 
             MappingConfiguration.Initialize();
 
+            //todo: LOGGING_COMMENTED_OUT
             //Logs initialization
-            var observable = new ObservableEventListener();
-            observable.EnableEvents(
-                    LogEvents.LogEventSource,
-                    (EventLevel)Enum.Parse(typeof(EventLevel), Configuration["LogSettings:LogLevel"], true),
-                    (EventKeywords)(-1)
-                );
+            //var observable = new ObservableEventListener();
+            //observable.EnableEvents(
+            //        LogEvents.LogEventSource,
+            //        (EventLevel)Enum.Parse(typeof(EventLevel), Configuration["LogSettings:LogLevel"], true),
+            //        (EventKeywords)(-1)
+            //    );
 
             //try
             //{
@@ -212,14 +218,14 @@ namespace SciVacancies.WebApp
             //}
 
 
-
-            observable.LogToRollingFlatFile(
-                    Configuration["LogSettings:FileName"],
-                    int.Parse(Configuration["LogSettings:FileSizeKB"]),
-                    Configuration["LogSettings:TimeStampPattern"],
-                    (RollFileExistsBehavior)Enum.Parse(typeof(RollFileExistsBehavior), Configuration["LogSettings:RollFileExistsBehavior"], true),
-                    (RollInterval)Enum.Parse(typeof(RollInterval), Configuration["LogSettings:RollInterval"], true)
-                );
+            //todo: LOGGING_COMMENTED_OUT
+            //observable.LogToRollingFlatFile(
+            //        Configuration["LogSettings:FileName"],
+            //        int.Parse(Configuration["LogSettings:FileSizeKB"]),
+            //        Configuration["LogSettings:TimeStampPattern"],
+            //        (RollFileExistsBehavior)Enum.Parse(typeof(RollFileExistsBehavior), Configuration["LogSettings:RollFileExistsBehavior"], true),
+            //        (RollInterval)Enum.Parse(typeof(RollInterval), Configuration["LogSettings:RollInterval"], true)
+            //    );
 
             //try
             //{

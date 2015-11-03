@@ -52,7 +52,8 @@
                 "WinnerNotificationMinutes": -1440,
                 "PretenderNotificationMinutes": -1440
             },
-            "DeltaFromPublishToInCommitteeMinMinutes": 28800 /* 20 days * (24 hours * 60 minutes = 1'440 minutes ) = 28'800 minutes*/
+            "DeltaFromPublishToInCommitteeMinMinutes": 28800 /* 20 days * (24 hours * 60 minutes = 1'440 minutes ) = 28'800 minutes*/,
+            "DeltaFromInCommitteeStartToEndMinutes": 21600 /* 15 days * (24 hours * 60 minutes = 1'440 minutes ) = 21'600 minutes*/
         }
     },
     "QuartzSettings": {
@@ -119,7 +120,7 @@
     },
     "LogSettings": {
         "LogLevel": "Verbose",
-        "FileName": "F:/Logs/sci.log",
+        "FileName": "/var/log/scivac/sci.log",
         "FileSizeKB": "4096",
         "TimeStampPattern": "yyyy - MM - dd hh.mm.ss",
         "RollFileExistsBehavior": "Overwrite",

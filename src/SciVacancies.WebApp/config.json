@@ -14,7 +14,7 @@
             "ClientId": "1_ikniwc909y8kog4k4sc00oogg0g8scc8o4k0wocgw4cg84k00",
             "ClientSecret": "67sq61c6xekgw0wgkosg04gwo488osk48ogks4og40cgws8ook",
             "Scope": "",
-            "RedirectUrl": "http://xn----8sbfhdabdwf1afqu5baxe0f2d.xn--p1ai/account/callback"
+            "RedirectUrl": "http://192.168.10.141:5004/account/callback"
         },
         "Mapofscience": {
             "AuthorizationEndpoint": "https://mapofscience.ru/scimap-sso/oauth/authorize",
@@ -23,7 +23,7 @@
             "ClientId": "my-trusted-client",
             "ClientSecret": "secret",
             "Scope": "",
-            "RedirectUrl": "http://xn----8sbfhdabdwf1afqu5baxe0f2d.xn--p1ai/account/callback"
+            "RedirectUrl": "http://192.168.10.141:5004/account/callback"
         }
     },
     //TODO
@@ -52,7 +52,8 @@
                 "WinnerNotificationMinutes": -1440,
                 "PretenderNotificationMinutes": -1440
             },
-            "DeltaFromPublishToInCommitteeMinMinutes": 28800 /* 20 days * (24 hours * 60 minutes = 1'440 minutes ) = 28'800 minutes*/
+            "DeltaFromPublishToInCommitteeMinMinutes": 28800 /* 20 days * (24 hours * 60 minutes = 1'440 minutes ) = 28'800 minutes*/,
+            "DeltaFromInCommitteeStartToEndMinutes": 21600 /* 15 days * (24 hours * 60 minutes = 1'440 minutes ) = 21'600 minutes*/
         }
     },
     "QuartzSettings": {
@@ -114,12 +115,12 @@
         "EnableSSL": true,
         "UseDefaultCredentials": false,
 
-        "Domain": "xn----8sbfhdabdwf1afqu5baxe0f2d.xn--p1ai",
-        "PortalLink": "<a target='_blank' href='http://xn----8sbfhdabdwf1afqu5baxe0f2d.xn--p1ai'>ученые-исследователи.рф</a>"
+        "Domain": "192.168.10.141:5004",
+        "PortalLink": "<a target='_blank' href='http://192.168.10.141:5004'>192.168.10.141:5004</a>"
     },
     "LogSettings": {
         "LogLevel": "Verbose",
-        "FileName": "F:/Logs/sci.log",
+        "FileName": "/var/log/scivac/sci.log",
         "FileSizeKB": "4096",
         "TimeStampPattern": "yyyy - MM - dd hh.mm.ss",
         "RollFileExistsBehavior": "Overwrite",

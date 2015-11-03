@@ -13,6 +13,10 @@
         /// минимальный период от Публикации Вакансии до её перевода На Рассмотрение (в минутах)
         /// </summary>
         public int DeltaFromPublishToInCommitteeMinMinutes { get; set; }
+        /// <summary>
+        /// Период На Рассмотрение (в минутах) от начала до конца
+        /// </summary>
+        public int DeltaFromInCommitteeStartToEndMinutes { get; set; }
     }
     public class CommitteeDateSettings
     {
