@@ -462,25 +462,47 @@ namespace SciVacancies.WebApp.Controllers
             /* Validation end */
 
             //создаем Исследователя
-            var createUserResearcherCommand1 = new RegisterUserResearcherCommand
+            RegisterUserResearcherCommand createUserResearcherCommand1;
+
+            try
             {
-                Data = new ResearcherRegisterDataModel
+                createUserResearcherCommand1 = new RegisterUserResearcherCommand
                 {
-                    Email = model.Email,
-                    Phone = model.Phone,
-                    UserName = model.UserName,
-                    FirstName = model.FirstName,
-                    SecondName = model.SecondName,
-                    Patronymic = model.Patronymic,
-                    FirstNameEng = model.FirstNameEng,
-                    SecondNameEng = model.SecondNameEng,
-                    PatronymicEng = model.PatronymicEng,
-                    BirthYear = model.BirthYear,
-                    Password = model.Password,
-                    ConfirmPassword = model.ConfirmPassword
-                }
-            };
-            var user = _mediator.Send(createUserResearcherCommand1);
+                    Data = new ResearcherRegisterDataModel
+                    {
+                        Email = model.Email,
+                        Phone = model.Phone,
+                        UserName = model.UserName,
+                        FirstName = model.FirstName,
+                        SecondName = model.SecondName,
+                        Patronymic = model.Patronymic,
+                        FirstNameEng = model.FirstNameEng,
+                        SecondNameEng = model.SecondNameEng,
+                        PatronymicEng = model.PatronymicEng,
+                        BirthYear = model.BirthYear,
+                        Password = model.Password,
+                        ConfirmPassword = model.ConfirmPassword
+                    }
+                };
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("не удалось создать команду RegisterUserResearcherCommand");
+                throw e;
+            }
+
+            SciVacUser user;
+            try
+            {
+                user = _mediator.Send(createUserResearcherCommand1);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("не удалось отправить команду");
+                Console.WriteLine(e.Message);
+                throw e;
+            }
+
             var researcherGuid1 = Guid.Parse(user.Claims.Single(s => s.ClaimType.Equals(ConstTerms.ClaimTypeResearcherId)).ClaimValue);
 
             //выходим и входим заново
