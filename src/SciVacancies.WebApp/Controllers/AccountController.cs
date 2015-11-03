@@ -64,22 +64,10 @@ namespace SciVacancies.WebApp.Controllers
 
         [PageTitle("Вход")]
         [HttpGet]
-        public IActionResult LoginOrganization(AuthorizeUserTypes user, AuthorizeResourceTypes resource)
+        public IActionResult LoginOrganization()
         {
-            switch (user)
-            {
-                case AuthorizeUserTypes.Organization:
-                    switch (resource)
-                    {
-                        case AuthorizeResourceTypes.Sciencemon:
-                            SetAuthorizationCookies(AuthorizeUserTypes.Organization, AuthorizeResourceTypes.Sciencemon);
-
-                            return Redirect(GetOAuthAuthorizationUrl(_oauthSettings.Value.Sciencemon));
-                    }
-                    break;
-            }
-
-            return null;
+            SetAuthorizationCookies(AuthorizeUserTypes.Organization, AuthorizeResourceTypes.Sciencemon);
+            return Redirect(GetOAuthAuthorizationUrl(_oauthSettings.Value.Sciencemon));
         }
 
         [PageTitle("Вход")]
@@ -345,7 +333,7 @@ namespace SciVacancies.WebApp.Controllers
                                             Mapper.Map<ResearcherRegisterDataModel>(researcherProfile);
 
                                         if (resUser == null)
-                                            //в нашей БД пользователь по Email не найден
+                                        //в нашей БД пользователь по Email не найден
                                         {
 
                                             //TODO: что делать если у нас есть пользователь с таким же логином
@@ -408,8 +396,8 @@ namespace SciVacancies.WebApp.Controllers
                                                         UserId = resUser.Id,
                                                         SciMapNumber = accountResearcherRegisterDataModel.SciMapNumber,
                                                         Claims = claims.Where(w => //w.Type.Equals("lastName")
-                                                            //|| w.Type.Equals("firstName")
-                                                            //|| w.Type.Equals("patronymic")
+                                                                                   //|| w.Type.Equals("firstName")
+                                                                                   //|| w.Type.Equals("patronymic")
                                                             w.Type.Equals("access_token")
                                                             || w.Type.Equals("expires_in")
                                                             || w.Type.Equals("refresh_token")).ToList()
@@ -469,9 +457,6 @@ namespace SciVacancies.WebApp.Controllers
             {
                 ModelState.AddModelError("Password", "Введите еще раз пароль");
                 ModelState.AddModelError("ConfirmPassword", "Повторите ввод пароля");
-                //CAPTCHA_HIDDEN
-                //model.Captcha = null;
-                ModelState.AddModelError("Captcha", "Введите код");
                 return View(model);
             }
             /* Validation end */

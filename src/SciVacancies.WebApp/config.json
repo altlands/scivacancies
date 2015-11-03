@@ -3,8 +3,8 @@
         "SiteTitle": "Портал вакансий"
     },
     "Data": {
-        "ReadModelDb": "Server=alt-dev002;Database=scivacancies;User Id=postgres;Password=postgres",
-        "EventStoreDb": "Server=alt-dev002;Database=scivacancies;User Id=postgres;Password=postgres"
+        "ReadModelDb": "Server=localhost;Database=scivacancies;User Id=postgres;Password=postgres",
+        "EventStoreDb": "Server=localhost;Database=scivacancies;User Id=postgres;Password=postgres"
     },
     "OAuthSettings": {
         "Sciencemon": {
@@ -14,7 +14,7 @@
             "ClientId": "1_ikniwc909y8kog4k4sc00oogg0g8scc8o4k0wocgw4cg84k00",
             "ClientSecret": "67sq61c6xekgw0wgkosg04gwo488osk48ogks4og40cgws8ook",
             "Scope": "",
-            "RedirectUrl": "http://scivac.test.alt-lan.com/account/callback"
+            "RedirectUrl": "http://192.168.10.141:5004/account/callback"
         },
         "Mapofscience": {
             "AuthorizationEndpoint": "https://mapofscience.ru/scimap-sso/oauth/authorize",
@@ -23,7 +23,7 @@
             "ClientId": "my-trusted-client",
             "ClientSecret": "secret",
             "Scope": "",
-            "RedirectUrl": "http://scivac.test.alt-lan.com/account/callback"
+            "RedirectUrl": "http://192.168.10.141:5004/account/callback"
         }
     },
     //TODO
@@ -37,27 +37,29 @@
         }
     },
     "ElasticSettings": {
-        "ConnectionUrl": "http://alt-dev003:9200/",
+        "ConnectionUrl": "http://localhost:9200/",
         "DefaultIndex": "scivacancies-dev",
-        "MinScore": "0.2"
+        "MinScore": 0.2
     },
     "SagaSettings": { //TODO сделать только с положительными днями, обозвать соответствующе
         "Date": {
             "Committee": {
-                "FirstNotificationMinutes": -3,
-                "SecondNotificationMinutes": 2,
+                "FirstNotificationMinutes": -1440,
+                "SecondNotificationMinutes": 2880,
                 "ProlongingDays": 15
             },
             "OfferResponseAwaiting": {
-                "WinnerNotificationMinutes": -1,
-                "PretenderNotificationMinutes": -1
-            }
+                "WinnerNotificationMinutes": -1440,
+                "PretenderNotificationMinutes": -1440
+            },
+            "DeltaFromPublishToInCommitteeMinMinutes": 28800 /* 20 days * (24 hours * 60 minutes = 1'440 minutes ) = 28'800 minutes*/,
+            "DeltaFromInCommitteeStartToEndMinutes": 21600 /* 15 days * (24 hours * 60 minutes = 1'440 minutes ) = 21'600 minutes*/
         }
     },
     "QuartzSettings": {
         "Scheduler": {
             "InstanceName": "SciVacanciesScheduler",
-            "ExecutionInterval": 3
+            "ExecutionInterval": 10
         },
         "JobStore": {
             "Type": "Quartz.Impl.AdoJobStore.JobStoreTX, Quartz",
@@ -70,7 +72,7 @@
         },
         "DataSource": {
             "Default": {
-                "ConnectionString": "Server=alt-dev002; Database=scivacancies; User Id=postgres; Password=postgres",
+                "ConnectionString": "Server=localhost; Database=scivacancies; User Id=postgres; Password=postgres",
                 "Provider": "Npgsql-20"
             }
         }
@@ -102,11 +104,8 @@
         "FavIconName": "",
         "PathToBlankAvatar": "/images/profile-photo.png"
     },
-    "VacancyLifeCycleSettings": {
-        "DeltaFromPublishToInCommitteeMinMinutes": 28800 /* 20 days * (24 hours * 60 minutes = 1'440 minutes ) = 28'800 minutes*/
-    },
     "CaptchaSettings": {
-        "CaptchaDurationSeconds": 180
+        "CaptchaDurationSeconds": 240
     },
     "EmailSettings": {
         "Login": "mailer@alt-lan.com",
@@ -116,15 +115,15 @@
         "EnableSSL": true,
         "UseDefaultCredentials": false,
 
-        "Domain": "scivac.test.alt-lan.com",
-        "PortalLink": "<a target='_blank' href='http://scivac.test.alt-lan.com'>scivac.test.alt-lan.com</a>"
+        "Domain": "192.168.10.141:5004",
+        "PortalLink": "<a target='_blank' href='http://192.168.10.141:5004'>192.168.10.141:5004</a>"
     },
-  "LogSettings": {
-    "LogLevel": "Verbose",
-    "FileName": "F:/Logs/sci.log",
-    "FileSizeKB": "4096",
-    "TimeStampPattern": "yyyy - MM - dd hh.mm.ss",
-    "RollFileExistsBehavior": "Overwrite",
-    "RollInterval": "Midnight"
-  }
+    "LogSettings": {
+        "LogLevel": "Verbose",
+        "FileName": "/var/log/scivac/sci.log",
+        "FileSizeKB": "4096",
+        "TimeStampPattern": "yyyy - MM - dd hh.mm.ss",
+        "RollFileExistsBehavior": "Overwrite",
+        "RollInterval": "Midnight"
+    }
 }

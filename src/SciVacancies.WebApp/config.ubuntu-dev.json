@@ -1,4 +1,7 @@
 ﻿{
+    "AppSettings": {
+        "SiteTitle": "Портал вакансий"
+    },
     "Data": {
         "ReadModelDb": "Server=localhost;Database=scivacancies;User Id=postgres;Password=postgres",
         "EventStoreDb": "Server=localhost;Database=scivacancies;User Id=postgres;Password=postgres"
@@ -11,7 +14,7 @@
             "ClientId": "1_ikniwc909y8kog4k4sc00oogg0g8scc8o4k0wocgw4cg84k00",
             "ClientSecret": "67sq61c6xekgw0wgkosg04gwo488osk48ogks4og40cgws8ook",
             "Scope": "",
-            "RedirectUrl": "http://localhost:59075/account/callback"
+            "RedirectUrl": "http://192.168.10.141:5004/account/callback"
         },
         "Mapofscience": {
             "AuthorizationEndpoint": "https://mapofscience.ru/scimap-sso/oauth/authorize",
@@ -20,13 +23,13 @@
             "ClientId": "my-trusted-client",
             "ClientSecret": "secret",
             "Scope": "",
-            "RedirectUrl": "http://localhost:59075/account/callback"
+            "RedirectUrl": "http://192.168.10.141:5004/account/callback"
         }
     },
     //TODO
     "ApiSettings": {
         "Sciencemon": {
-            //"OrganizationProfile": "http://www.sciencemon.ru/ext-api/v1.0/org/",
+            //"Organization": "http://www.sciencemon.ru/ext-api/v1.0/org/",
             //"BasicAuthorization": "dev:informika"
         },
         "Mapofscience": {
@@ -34,11 +37,11 @@
         }
     },
     "ElasticSettings": {
-        "ConnectionUrl": "http://alt-dev003:9200/",
-        "DefaultIndex": "scivacancies-ntemnikov",
-        "MinScore": "0.2"
+        "ConnectionUrl": "http://localhost:9200/",
+        "DefaultIndex": "scivacancies-dev",
+        "MinScore": 0.2
     },
-    "SagaSettings": { //TODO сделать только с положительными днями, обозвать соответствующе
+   "SagaSettings": { //TODO сделать только с положительными днями, обозвать соответствующе
         "Date": {
             "Committee": {
                 "FirstNotificationMinutes": -1,
@@ -56,7 +59,7 @@
     "QuartzSettings": {
         "Scheduler": {
             "InstanceName": "SciVacanciesScheduler",
-            "ExecutionInterval": 3
+            "ExecutionInterval": 10
         },
         "JobStore": {
             "Type": "Quartz.Impl.AdoJobStore.JobStoreTX, Quartz",
@@ -69,7 +72,7 @@
         },
         "DataSource": {
             "Default": {
-                "ConnectionString": "Server = localhost; Database = scivacancies; User Id = postgres; Password = postgres",
+                "ConnectionString": "Server=localhost; Database=scivacancies; User Id=postgres; Password=postgres",
                 "Provider": "Npgsql-20"
             }
         }
@@ -102,7 +105,7 @@
         "PathToBlankAvatar": "/images/profile-photo.png"
     },
     "CaptchaSettings": {
-        "CaptchaDurationSeconds": 180
+        "CaptchaDurationSeconds": 240
     },
     "EmailSettings": {
         "Login": "mailer@alt-lan.com",
@@ -112,12 +115,12 @@
         "EnableSSL": true,
         "UseDefaultCredentials": false,
 
-        "Domain": "localhost:59075",
-        "PortalLink": "<a target='_blank' href='http://localhost:59075'>localhost:59075</a>"
+        "Domain": "192.168.10.141:5004",
+        "PortalLink": "<a target='_blank' href='http://192.168.10.141:5004'>192.168.10.141:5004</a>"
     },
     "LogSettings": {
         "LogLevel": "Verbose",
-        "FileName": "G:/Logs/sci.log",
+        "FileName": "/var/log/scivac/sci.log",
         "FileSizeKB": "4096",
         "TimeStampPattern": "yyyy - MM - dd hh.mm.ss",
         "RollFileExistsBehavior": "Overwrite",

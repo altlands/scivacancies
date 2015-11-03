@@ -29,14 +29,14 @@ namespace SciVacancies.WebApp.Controllers
     public class VacanciesController : Controller
     {
         private readonly IMediator _mediator;
-        private readonly IOptions<VacancyLifeCycleSettings> _vacancyLifeCycleSettings;
         private readonly IHostingEnvironment _hostingEnvironment;
         private readonly IOptions<AttachmentSettings> _attachmentSettings;
+        private readonly IOptions<SagaSettings> _sagaSettings;
 
-        public VacanciesController(IMediator mediator, IOptions<VacancyLifeCycleSettings> vacancyLifeCycleSettings, IHostingEnvironment hostingEnvironment, IOptions<AttachmentSettings> attachmentSettings)
+        public VacanciesController(IMediator mediator, IOptions<SagaSettings> sagaSettings, IHostingEnvironment hostingEnvironment, IOptions<AttachmentSettings> attachmentSettings)
         {
+            _sagaSettings = sagaSettings;
             _mediator = mediator;
-            _vacancyLifeCycleSettings = vacancyLifeCycleSettings;
             _hostingEnvironment = hostingEnvironment;
             _attachmentSettings = attachmentSettings;
         }
@@ -407,8 +407,8 @@ namespace SciVacancies.WebApp.Controllers
                 return View("Error", $"Вы не можете перевести Вакансию на рассмотрение комиссии со статусом: {preModel.status.GetDescription()}");
 
             //TODO: Saga -> реализовать эту проверку при запуске Саг с таймерами
-            //if ((DateTime.Now - preModel.committee_date).Days < _vacancyLifeCycleSettings.Options.DeltaFromPublishToInCommitteeMinMinutes)
-            //    return View("Error", $"Вы не можете начать перевести вакансию на рассмотрение комиссии раньше чем через {_vacancyLifeCycleSettings.Options.DeltaFromPublishToInCommitteeMinMinutes} дн.");
+            //if ((DateTime.UtcNow - preModel.committee_start_date.Value).TotalMinutes < _sagaSettings.Value.Date.DeltaFromPublishToInCommitteeMinMinutes)
+            //    return View("Error", $"Вы не можете начать перевести вакансию на рассмотрение комиссии раньше чем через {_sagaSettings.Value.Date.DeltaFromPublishToInCommitteeMinMinutes} дн.");
 
             var vacancyApplications = _mediator.Send(new CountVacancyApplicationInVacancyQuery
             {
@@ -943,8 +943,8 @@ namespace SciVacancies.WebApp.Controllers
             if (inCommitteeDateValue.ToUniversalTime() < DateTime.Now.ToUniversalTime())
                 ModelState.AddModelError("InCommitteeDateString", "Вы установили дату ранее текущей");
 
-            if ((inCommitteeDateValue.ToUniversalTime() - DateTime.Now.ToUniversalTime()).TotalMinutes < _vacancyLifeCycleSettings.Value.DeltaFromPublishToInCommitteeMinMinutes)
-                ModelState.AddModelError("InCommitteeDateString", $"Вы не можете установить дату перевода вакансии на рассмотрение комиссии раньше, чем через {_vacancyLifeCycleSettings.Value.DeltaFromPublishToInCommitteeMinMinutes / (24 * 60)} дн.");
+            if ((inCommitteeDateValue.ToUniversalTime() - DateTime.Now.ToUniversalTime()).TotalMinutes < _sagaSettings.Value.Date.DeltaFromPublishToInCommitteeMinMinutes)
+                ModelState.AddModelError("InCommitteeDateString", $"Вы не можете установить дату перевода вакансии на рассмотрение комиссии раньше, чем через {_sagaSettings.Value.Date.DeltaFromPublishToInCommitteeMinMinutes / (24 * 60)} дн.");
 
             if (!ModelState.IsValid)
             {
@@ -961,7 +961,7 @@ namespace SciVacancies.WebApp.Controllers
             {
                 VacancyGuid = id,
                 InCommitteeStartDate = inCommitteeDateValue,
-                InCommitteeEndDate = inCommitteeDateValue.AddMinutes(8) /*TODO: вынести в конфиг: количество дней до окончания комиссии*/
+                InCommitteeEndDate = inCommitteeDateValue.AddMinutes(_sagaSettings.Value.Date.DeltaFromPublishToInCommitteeMinMinutes)
             });
 
             return RedirectToAction("details", new { id });

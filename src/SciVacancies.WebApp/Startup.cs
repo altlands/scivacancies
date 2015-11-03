@@ -13,15 +13,20 @@ using Microsoft.Framework.Logging;
 using SciVacancies.Services.Quartz;
 using SciVacancies.WebApp.Infrastructure;
 using Microsoft.Dnx.Runtime;
-using Microsoft.AspNet.StaticFiles;
-using Microsoft.AspNet.Session;
-using System.Globalization;
+
+//todo: LOGGING_COMMENTED_OUT
+//using Microsoft.AspNet.StaticFiles;
+//using Microsoft.AspNet.Session;
+//using System.Globalization;
+
 using Quartz.Spi;
-using Microsoft.Practices.EnterpriseLibrary.SemanticLogging;
-using Microsoft.Practices.EnterpriseLibrary.SemanticLogging.Sinks;
-using System.Diagnostics.Tracing;
-using SciVacancies.Services.Logging;
-using AltLanDS.Logging;
+
+//todo: LOGGING_COMMENTED_OUT
+//using Microsoft.Practices.EnterpriseLibrary.SemanticLogging;
+//using Microsoft.Practices.EnterpriseLibrary.SemanticLogging.Sinks;
+//using System.Diagnostics.Tracing;
+//using SciVacancies.Services.Logging;
+//using AltLanDS.Logging;
 
 using EventSourceProxy;
 using Autofac.Extras.DynamicProxy;
@@ -65,7 +70,6 @@ namespace SciVacancies.WebApp
             services.Configure<ElasticSettings>(Configuration.GetSection("ElasticSettings"));
             services.Configure<AttachmentSettings>(Configuration.GetSection("AttachmentSettings"));
             services.Configure<SiteFileSettings>(Configuration.GetSection("SiteFileSettings"));
-            services.Configure<VacancyLifeCycleSettings>(Configuration.GetSection("VacancyLifeCycleSettings"));
             services.Configure<CaptchaSettings>(Configuration.GetSection("CaptchaSettings"));
             services.Configure<SagaSettings>(Configuration.GetSection("SagaSettings"));
 
@@ -184,13 +188,14 @@ namespace SciVacancies.WebApp
 
             MappingConfiguration.Initialize();
 
+            //todo: LOGGING_COMMENTED_OUT
             //Logs initialization
-            var observable = new ObservableEventListener();
-            observable.EnableEvents(
-                    LogEvents.LogEventSource,
-                    (EventLevel)Enum.Parse(typeof(EventLevel), Configuration["LogSettings:LogLevel"], true),
-                    (EventKeywords)(-1)
-                );
+            //var observable = new ObservableEventListener();
+            //observable.EnableEvents(
+            //        LogEvents.LogEventSource,
+            //        (EventLevel)Enum.Parse(typeof(EventLevel), Configuration["LogSettings:LogLevel"], true),
+            //        (EventKeywords)(-1)
+            //    );
 
             observable.EnableEvents(
                 (EventSource)TracingEventSource.LogTracing,

@@ -1,20 +1,20 @@
 ﻿@using System.Threading.Tasks
 @using SciVacancies;
-    @using SciVacancies.WebApp.Engine
-    @model SciVacancies.WebApp.ViewModels.AccountLoginViewModel
+@using SciVacancies.WebApp.Engine
+@model SciVacancies.WebApp.ViewModels.AccountLoginViewModel
 
-    @if (!User.Identity.IsAuthenticated)
-    {
+@if (!User.Identity.IsAuthenticated)
+{
 
-        <div class="control control-registration">
-            <a href="#" class="enter-head open-popup">
-                <span class="dashed italic">Вход в Личный кабинет</span>
-            </a>
-            <div class="sub-control">
-                <a class="sub-control__link" asp-controller="account" asp-action="register">Регистрация</a>
-                <a class="sub-control__link" asp-controller="account" asp-action="forgotpassword">Забыли пароль?</a>
-            </div>
+    <div class="control control-registration">
+        <a href="#" class="enter-head open-popup">
+            <span class="dashed italic">Вход в Личный кабинет</span>
+        </a>
+        <div class="sub-control">
+            <a class="sub-control__link" asp-controller="account" asp-action="register">Регистрация</a>
+            <a class="sub-control__link" asp-controller="account" asp-action="forgotpassword">Забыли пароль?</a>
         </div>
+    </div>
 
         <div class="window-popup middle" style="display:none;">
             <span class="close-popup"></span>
@@ -22,10 +22,10 @@
                 <h4>Вход в личный кабинет</h4>
             </div>
             <div class="content-popup">
-                @*<a class="researcherslogin" href="/account/loginuser/user1">Пользователь1.Вход</a><br />
-    <a class="researcherslogin" href="/account/loginuser/user2">Пользователь2.Вход</a><br />
-    <a class="researcherslogin" href="/account/loginuser/user3">Пользователь3.Вход</a><br />
-    <a class="researcherslogin" href="/account/loginorganization">Организация.Вход</a>*@<br />
+                @*<a class="researcherslogin" href="/account/logintestuser/user1">Пользователь1.Вход</a><br />
+                    <a class="researcherslogin" href="/account/logintestuser/user2">Пользователь2.Вход</a><br />
+                    <a class="researcherslogin" href="/account/logintestuser/user3">Пользователь3.Вход</a><br />
+                    <a class="researcherslogin" href="/account/loginorganization">Организация.Вход</a>*@<br />
 
 
                 <div class="b-tabs b-tabs_page">
@@ -70,7 +70,7 @@
                                 Для входа в личный кабинет представителя Организации необходимо в соответствующие поля ввести логин и пароль, полученные на сайте <a href="#">Федеральной системы мониторинга результативности деятельности научных организаций</a> (ФСМНО)
                             </p>
                             <p>
-                                <a href="/account/loginorganization?user=@((int)AuthorizeUserTypes.Organization)&resource=@((int)AuthorizeResourceTypes.Sciencemon)">Авторизоваться</a>
+                                <a href="/account/loginorganization">Авторизоваться</a>
                             </p>
                         </div>
                     </div>
@@ -78,48 +78,48 @@
 
             </div>
         </div>
+}
+else
+{
+    var controller = "researchers"; //default
+    if (User.IsInRole(ConstTerms.RequireRoleOrganizationAdmin))
+    {
+        controller = "organizations";
     }
     else
     {
-        var controller = "researchers"; //default 
-        if (User.IsInRole(ConstTerms.RequireRoleOrganizationAdmin))
+        if (User.HasClaim(c => c.Type == ConstTerms.RequireRoleResearcher))
         {
-            controller = "organizations";
+            controller = "researchers";
+        }
+    }
+    <text>
+    <div class="control">
+        @if (Model.UnreadNotificationCount > 0)
+        {
+            <text>
+            <a asp-controller="@controller" asp-action="notifications" class="">
+                <span class="lk-head-icon" id="lk" rel="tooltip"></span>
+            </a>
+            <div id="lk-popover" style="display: none; text-align: center;">
+                Есть непрочитанные (@Model.UnreadNotificationCount) уведомления!
+            </div>
+            </text>
         }
         else
         {
-            if (User.HasClaim(c => c.Type == ConstTerms.RequireRoleResearcher))
-            {
-                controller = "researchers";
-            }
-        }
-        <text>
-        <div class="control">
-            @if (Model.UnreadNotificationCount > 0)
-            {
-                <text>
-                <a asp-controller="@controller" asp-action="notifications" class="">
-                    <span class="lk-head-icon" id="lk" rel="tooltip"></span>
-                </a>
-                <div id="lk-popover" style="display: none; text-align: center;">
-                    Есть непрочитанные (@Model.UnreadNotificationCount) уведомления!
-                </div>
-                </text>
-            }
-            else
-            {
-                <text>
-                <a asp-controller="@controller" asp-action="notifications" class="">
-                    <span class="lk-icon-bl" id="lk" rel="tooltip"></span>
-                </a>
-                </text>
-            }
-
-            <a asp-controller="@controller" asp-action="account" class="cab-head">
-                <span class="underline italic">Личный кабинет</span>
+            <text>
+            <a asp-controller="@controller" asp-action="notifications" class="">
+                <span class="lk-icon-bl" id="lk" rel="tooltip"></span>
             </a>
-            
-            <span class="l-separate"><a asp-controller="account" asp-action="logout" class="close-head"><span class="dashed italic">Выход</span></a></span>
-        </div>
-        </text>
-    }
+            </text>
+        }
+
+        <a asp-controller="@controller" asp-action="account" class="cab-head">
+            <span class="underline italic">Личный кабинет</span>
+        </a>
+
+        <span class="l-separate"><a asp-controller="account" asp-action="logout" class="close-head"><span class="dashed italic">Выход</span></a></span>
+    </div>
+    </text>
+}
