@@ -12,17 +12,17 @@ namespace SciVacancies.Services.Logging
     {
         public static TracingEventSource LogTracing = new TracingEventSource();
 
-        [Event(1, Message = "Invoke : ", Level = EventLevel.Verbose)]
+        [Event(1, Message = "Invoke : ", Level = EventLevel.Informational)]
         public void Invoke(string _class, string method, string args)
         {
             this.WriteEvent(1, _class, method, args);
         }
-        [Event(2, Message = "Finally : ", Level = EventLevel.Verbose)]
+        [Event(2, Message = "Finally : ", Level = EventLevel.Informational)]
         public void Finish(string _class, string method, string output)
         {
             this.WriteEvent(2, _class, method, output);
         }
-        [Event(3, Message = "Exception : ", Level = EventLevel.Verbose)]
+        [Event(3, Message = "Exception : ", Level = EventLevel.Informational)]
         public void Error(string message)
         {
             this.WriteEvent(3, message);

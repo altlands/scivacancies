@@ -34,7 +34,7 @@
     }
   },
   "ElasticSettings": {
-    "ConnectionUrl": "http://localhost:9200/",
+    "ConnectionUrl": "http://altlandev05.cloudapp.net:9200/",
     "DefaultIndex": "scivacancies",
     "MinScore": "0.3"
   },
