@@ -34,25 +34,25 @@
     }
   },
   "ElasticSettings": {
-    "ConnectionUrl": "http://localhost:9200/",
+    "ConnectionUrl": "http://altlandev05.cloudapp.net:9200/",
     "DefaultIndex": "scivacancies",
     "MinScore": "0.3"
   },
   "SagaSettings": { //TODO сделать только с положительными днями, обозвать соответствующе
-        "Date": {
-            "Committee": {
-                "FirstNotificationMinutes": -3,
-                "SecondNotificationMinutes": 2,
-                "ProlongingDays": 15
-            },
-            "OfferResponseAwaiting": {
-                "WinnerNotificationMinutes": -1,
-                "PretenderNotificationMinutes": -1
-            },
-            "DeltaFromPublishToInCommitteeMinMinutes": 15,
-            "DeltaFromInCommitteeStartToEndMinutes": 8
-        }
-    },
+    "Date": {
+      "Committee": {
+        "FirstNotificationMinutes": -3,
+        "SecondNotificationMinutes": 2,
+        "ProlongingDays": 15
+      },
+      "OfferResponseAwaiting": {
+        "WinnerNotificationMinutes": -1,
+        "PretenderNotificationMinutes": -1
+      },
+      "DeltaFromPublishToInCommitteeMinMinutes": 15,
+      "DeltaFromInCommitteeStartToEndMinutes": 8
+    }
+  },
   "QuartzSettings": {
     "Scheduler": {
       "InstanceName": "SciVacanciesScheduler",
@@ -68,21 +68,29 @@
       }
     },
     "DataSource": {
-        "Default": {
-            "ConnectionString": "Server = localhost; Database = scivacancies; User Id = postgres; Password = postgres",
-            "Provider": "Npgsql-20"
-        }
+      "Default": {
+        "ConnectionString": "Server = localhost; Database = scivacancies; User Id = postgres; Password = postgres",
+        "Provider": "Npgsql-20"
+      }
     },
-  "EmailSettings": {
-    "Login": "mailer@alt-lan.com",
-    "Password": "123456-mailer",
-    "Host": "smtp.gmail.com",
-    "Port": 587,
-    "EnableSSL": true,
-    "UseDefaultCredentials": false,
-    
-    "Domain": "localhost:59075",
-    "PortalLink": "<a target='_blank' href='http://localhost:59075'>localhost:59075</a>"
-  }
+    "EmailSettings": {
+      "Login": "mailer@alt-lan.com",
+      "Password": "123456-mailer",
+      "Host": "smtp.gmail.com",
+      "Port": 587,
+      "EnableSSL": true,
+      "UseDefaultCredentials": false,
+
+      "Domain": "localhost:59075",
+      "PortalLink": "<a target='_blank' href='http://localhost:59075'>localhost:59075</a>"
+    },
+        "LogSettings": {
+        "LogLevel": "Verbose",
+        "FileName": "F:/Logs/sci.log",
+        "FileSizeKB": "4096",
+        "TimeStampPattern": "yyyy - MM - dd hh.mm.ss",
+        "RollFileExistsBehavior": "Overwrite",
+        "RollInterval": "Midnight"
+    }
   }
 }

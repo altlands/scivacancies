@@ -1,11 +1,12 @@
 ﻿using SciVacancies.Services.Elastic;
+using SciVacancies.Services.Logging;
 
 using System;
+using Microsoft.Framework.Configuration;
 
 using Nest;
 using Autofac;
-using Microsoft.Framework.Configuration;
-using EventSourceProxy;
+using Autofac.Extras.DynamicProxy;
 
 namespace SciVacancies.WebApp.Infrastructure
 {
@@ -25,12 +26,14 @@ namespace SciVacancies.WebApp.Infrastructure
             builder.Register(c => new ElasticClient(elasticConnectionSettings))
                 .As<IElasticClient>()
                 .SingleInstance()
-                //.OnActivating(x=>x
-                //    .ReplaceInstance(TracingProxy.CreateWithActivityScope<IElasticClient>(x.Instance))
-                //)
+                .EnableInterfaceInterceptors()
+                .InterceptedBy(typeof(CallLogger))
                 ;
-            //TODO single instanse or not?
-            builder.Register(c => new SearchService(_configuration, c.Resolve<IElasticClient>())).As<IElasticService>();
+            builder.Register(c => new SearchService(_configuration, c.Resolve<IElasticClient>()))
+                .As<IElasticService>()
+                .EnableInterfaceInterceptors()
+                .InterceptedBy(typeof(CallLogger))
+                ;
         }
     }
 }

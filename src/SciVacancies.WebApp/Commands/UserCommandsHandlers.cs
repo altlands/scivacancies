@@ -43,7 +43,14 @@ namespace SciVacancies.WebApp.Commands
             //researcherDataModel.UserId = user.Id;
 
             var researcher = new Researcher(Guid.NewGuid(), researcherDataModel);
-            _repository.Save(researcher, Guid.NewGuid(), null);
+            try
+            {
+                _repository.Save(researcher, Guid.NewGuid(), null);
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
 
             user.Claims.Add(new IdentityUserClaim
             {
