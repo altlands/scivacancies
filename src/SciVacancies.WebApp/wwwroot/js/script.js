@@ -446,7 +446,7 @@ function beforeFormSubmitRegister(source, captchaImageFieldName, captchaInputFie
                 if (isCaptureValid) {
                     $('#' + captchaInvalidFieldName).hide();
                     $(form).addClass('validated');
-                    //$(form).submit();
+                    $(form).submit();
                     return true;
                 } else {
                     reloadImg(captchaImageFieldName);
