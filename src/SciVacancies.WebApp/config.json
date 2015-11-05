@@ -14,7 +14,7 @@
             "ClientId": "1_ikniwc909y8kog4k4sc00oogg0g8scc8o4k0wocgw4cg84k00",
             "ClientSecret": "67sq61c6xekgw0wgkosg04gwo488osk48ogks4og40cgws8ook",
             "Scope": "",
-            "RedirectUrl": "http://192.168.10.141:5004/account/callback"
+            "RedirectUrl": "http://xn----8sbfhdabdwf1afqu5baxe0f2d.xn--p1ai/account/callback"
         },
         "Mapofscience": {
             "AuthorizationEndpoint": "https://mapofscience.ru/scimap-sso/oauth/authorize",
@@ -23,7 +23,7 @@
             "ClientId": "my-trusted-client",
             "ClientSecret": "secret",
             "Scope": "",
-            "RedirectUrl": "http://192.168.10.141:5004/account/callback"
+            "RedirectUrl": "http://xn----8sbfhdabdwf1afqu5baxe0f2d.xn--p1ai/account/callback"
         }
     },
     //TODO
@@ -115,8 +115,8 @@
         "EnableSSL": true,
         "UseDefaultCredentials": false,
 
-        "Domain": "192.168.10.141:5004",
-        "PortalLink": "<a target='_blank' href='http://192.168.10.141:5004'>192.168.10.141:5004</a>"
+        "Domain": "xn----8sbfhdabdwf1afqu5baxe0f2d.xn--p1ai",
+        "PortalLink": "<a target='_blank' href='http://xn----8sbfhdabdwf1afqu5baxe0f2d.xn--p1ai'>ученые-исследователи.рф</a>"
     },
     "LogSettings": {
         "LogLevel": "Verbose",
