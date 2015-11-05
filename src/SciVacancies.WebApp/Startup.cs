@@ -32,6 +32,7 @@ using Autofac.Extras.DynamicProxy;
 using Castle.Core.Internal;
 using Castle.DynamicProxy;
 using System.IO;
+using Microsoft.Extensions.Caching.Memory;
 
 namespace SciVacancies.WebApp
 {
@@ -70,6 +71,7 @@ namespace SciVacancies.WebApp
             services.Configure<SiteFileSettings>(Configuration.GetSection("SiteFileSettings"));
             services.Configure<CaptchaSettings>(Configuration.GetSection("CaptchaSettings"));
             services.Configure<SagaSettings>(Configuration.GetSection("SagaSettings"));
+            services.Configure<CacheSettings>(Configuration.GetSection("CacheSettings"));
 
             services.AddCookieAuthentication(options =>
             {
@@ -111,6 +113,7 @@ namespace SciVacancies.WebApp
             builder.RegisterModule(new IdentityModule());
             builder.RegisterModule(new SmtpNotificationModule());
             builder.RegisterModule(new LoggingModule());
+            builder.RegisterModule(new CacheModule());
         }
 
         // Configure is called after ConfigureServices is called.

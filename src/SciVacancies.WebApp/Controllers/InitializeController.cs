@@ -551,6 +551,13 @@ namespace SciVacancies.WebApp.Controllers
 
         }
 
+        public IActionResult removetestorganizations()
+        {
+            _mediator.Send(new RemoveOrganizationCommand() { OrganizationGuid = Guid.Parse("1f7872d8-0477-4387-861f-94dd15a27bed") });
+
+            return Content("TestOrganizations were removed");
+        }
+
         public IActionResult testclean()
         {
             //_mediator.Send(new RemoveVacancyCommand { VacancyGuid = Guid.Parse("35403c79-62fd-4b25-ab83-f60c6827db21") });
