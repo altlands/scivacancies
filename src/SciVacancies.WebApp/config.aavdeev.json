@@ -34,8 +34,8 @@
     }
   },
   "ElasticSettings": {
-    "ConnectionUrl": "http://altlandev05.cloudapp.net:9200/",
-    "DefaultIndex": "scivacancies",
+    "ConnectionUrl": "http://localhost:9200/",
+    "DefaultIndex": "scivacancies_1",
     "MinScore": "0.3"
   },
   "SagaSettings": { //TODO сделать только с положительными днями, обозвать соответствующе

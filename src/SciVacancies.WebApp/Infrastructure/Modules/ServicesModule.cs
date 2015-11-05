@@ -1,12 +1,12 @@
 ﻿using SciVacancies.Services.Elastic;
-//using SciVacancies.Services.Logging;
+using SciVacancies.Services.Logging;
 
 using System;
 using Microsoft.Framework.Configuration;
 
 using Nest;
 using Autofac;
-//using Autofac.Extras.DynamicProxy;
+using Autofac.Extras.DynamicProxy;
 
 namespace SciVacancies.WebApp.Infrastructure
 {
@@ -26,13 +26,13 @@ namespace SciVacancies.WebApp.Infrastructure
             builder.Register(c => new ElasticClient(elasticConnectionSettings))
                 .As<IElasticClient>()
                 .SingleInstance()
-                //.EnableInterfaceInterceptors()
-                //.InterceptedBy(typeof(CallLogger))
+                .EnableInterfaceInterceptors()
+                .InterceptedBy(typeof(CallLogger))
                 ;
             builder.Register(c => new SearchService(_configuration, c.Resolve<IElasticClient>()))
                 .As<IElasticService>()
-                //.EnableInterfaceInterceptors()
-                //.InterceptedBy(typeof(CallLogger))
+                .EnableInterfaceInterceptors()
+                .InterceptedBy(typeof(CallLogger))
                 ;
         }
     }

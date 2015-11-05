@@ -1,11 +1,11 @@
-﻿//using SciVacancies.Services.Logging;
+﻿using SciVacancies.Services.Logging;
 
 using System;
 using System.Data;
 using Microsoft.Framework.Configuration;
 
 using Autofac;
-//using Autofac.Extras.DynamicProxy;
+using Autofac.Extras.DynamicProxy;
 using CommonDomain;
 using CommonDomain.Core;
 using CommonDomain.Persistence;
@@ -16,6 +16,7 @@ using NEventStore.Dispatcher;
 using NEventStore.Persistence.Sql;
 using NEventStore.Persistence.Sql.SqlDialects;
 using Npgsql;
+using NPoco;
 
 namespace SciVacancies.WebApp.Infrastructure
 {
@@ -42,9 +43,14 @@ namespace SciVacancies.WebApp.Infrastructure
             builder.Register(c => GetEventStore(c.Resolve<IMediator>()))
                 .As<IStoreEvents>()
                 .SingleInstance();
-            builder.Register(c => new EventStoreRepository(c.Resolve<IStoreEvents>(), c.Resolve<IConstructAggregates>(), c.Resolve<IDetectConflicts>()))
-                .As<IRepository>()
-                .SingleInstance();
+
+            builder.Register(c => new SciVacancies.WebApp.Infrastructure.EventStoreRepository(c.Resolve<IStoreEvents>(), c.Resolve<IConstructAggregates>(), c.Resolve<IDetectConflicts>()))
+                    .As<IRepository>()
+                    .SingleInstance();
+
+            //builder.Register(c => new EventStoreRepository(c.Resolve<IStoreEvents>(), c.Resolve<IConstructAggregates>(), c.Resolve<IDetectConflicts>()))
+            //    .As<IRepository>()
+            //    .SingleInstance();
 
             //sagas start
             builder.Register(c => new SciVacancies.WebApp.Infrastructure.Saga.SagaFactory())
@@ -68,34 +74,37 @@ namespace SciVacancies.WebApp.Infrastructure
                 .UsingSynchronousDispatchScheduler()
                 .DispatchTo(new DelegateMessageDispatcher(commit =>
                 {
-                    foreach (var e in commit.Events)
+                    try
                     {
-                        //TODO : Log all failed meesages to special queue so they can be resend later
-                        mediator.Publish(e.Body as dynamic);
+                        foreach (var e in commit.Events)
+                        {
+                            //TODO : Log all failed meesages to special queue so they can be resend later
+                            mediator.Publish(e.Body as dynamic);
+                        }
+                    }
+                    catch (Exception exception)
+                    {
+                        LogEvents.Log.GeneralExceptionError(exception);
+
+                        try
+                        {
+                            using (var db = new Database(Config["Data:ReadModelDb"], NpgsqlFactory.Instance))
+                            {
+                                using (var transaction = db.GetTransaction())
+                                {
+                                    db.Execute("INSERT INTO undispatched_commits SELECT * FROM commits WHERE commitid = @0", commit.CommitId);
+                                    db.Execute("DELETE FROM commits WHERE commitid = @0", commit.CommitId);
+
+                                    transaction.Complete();
+                                }
+                            }
+                        }
+                        catch(Exception dbException)
+                        {
+                            LogEvents.Log.GeneralExceptionError(dbException);
+                        }
                     }
                 }))
-                .Build();
-        }
-        private IStoreEvents GetEventStoreWithoutDispatchers()
-        {
-            return Wireup.Init()
-                .UsingSqlPersistence(new NpgsqlConnectionFactory(Config["Data:EventStoreDb"]))
-                .WithDialect(new PostgreSqlDialect())
-                .EnlistInAmbientTransaction()
-                .InitializeStorageEngine()
-                .UsingJsonSerialization()
-                .Compress()
-                //.EncryptWith(encryptionKey)
-                .Build();
-        }
-        private IStoreEvents GetStubEventStore()
-        {
-            return Wireup.Init()
-                .UsingInMemoryPersistence()
-                .EnlistInAmbientTransaction()
-                .InitializeStorageEngine()
-                .UsingJsonSerialization()
-                .Compress()
                 .Build();
         }
     }
