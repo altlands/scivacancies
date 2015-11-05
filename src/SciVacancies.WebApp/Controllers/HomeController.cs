@@ -37,46 +37,45 @@ namespace SciVacancies.WebApp.Controllers
         public IActionResult Index()
         {
             IndexViewModel model;
-            bool isfound = cache.TryGetValue("HomeIndexViewModel", out model);
-            if (cache.TryGetValue("HomeIndexViewModel", out model))
+            //if (cache.TryGetValue("HomeIndexViewModel", out model))
+            //{
+            //    model = cache.Get<IndexViewModel>("HomeIndexViewModel");
+            //}
+            //else
+            //{
+            model = new IndexViewModel { CurrentMediator = _mediator };
+            model.VacanciesList = _mediator.Send(new SelectPagedVacanciesQuery
             {
-                model = cache.Get<IndexViewModel>("HomeIndexViewModel");
-            }
-            else
+                PageSize = 4,
+                PageIndex = 1,
+                OrderBy = ConstTerms.OrderByDateStartDescending,
+                PublishedOnly = true
+            }).MapToPagedList<Vacancy, VacancyDetailsViewModel>();
+            model.OrganizationsList = _mediator.Send(new SelectPagedOrganizationsQuery
             {
-                model = new IndexViewModel { CurrentMediator = _mediator };
-                model.VacanciesList = _mediator.Send(new SelectPagedVacanciesQuery
-                {
-                    PageSize = 4,
-                    PageIndex = 1,
-                    OrderBy = ConstTerms.OrderByDateStartDescending,
-                    PublishedOnly = true
-                }).MapToPagedList<Vacancy, VacancyDetailsViewModel>();
-                model.OrganizationsList = _mediator.Send(new SelectPagedOrganizationsQuery
-                {
-                    PageSize = 4,
-                    PageIndex = 1,
-                    OrderBy = ConstTerms.OrderByVacancyCountDescending
-                }).MapToPagedList<Organization, OrganizationDetailsViewModel>();
+                PageSize = 4,
+                PageIndex = 1,
+                OrderBy = ConstTerms.OrderByVacancyCountDescending
+            }).MapToPagedList<Organization, OrganizationDetailsViewModel>();
 
-                //заполнить названия организаций
-                var organizationGuids = model.VacanciesList.Items.Select(c => c.OrganizationGuid).Distinct().ToList();
-                if (organizationGuids.Any())
+            //заполнить названия организаций
+            var organizationGuids = model.VacanciesList.Items.Select(c => c.OrganizationGuid).Distinct().ToList();
+            if (organizationGuids.Any())
+            {
+                var organizations =
+                    _mediator.Send(new SelectOrganizationsByGuidsQuery { OrganizationGuids = organizationGuids });
+                model.VacanciesList.Items.ForEach(c =>
                 {
-                    var organizations =
-                        _mediator.Send(new SelectOrganizationsByGuidsQuery { OrganizationGuids = organizationGuids });
-                    model.VacanciesList.Items.ForEach(c =>
+                    var organization = organizations.SingleOrDefault(d => d.guid == c.OrganizationGuid);
+                    if (organization != null)
                     {
-                        var organization = organizations.SingleOrDefault(d => d.guid == c.OrganizationGuid);
-                        if (organization != null)
-                        {
-                            c.OrganizationName = organization.name;
-                        }
-                    });
-                }
-
-                cache.Set<IndexViewModel>("HomeIndexViewModel", model, new MemoryCacheEntryOptions().SetAbsoluteExpiration(DateTimeOffset.UtcNow.AddSeconds(cacheSettings.Value.ExpirationInSeconds)));
+                        c.OrganizationName = organization.name;
+                    }
+                });
             }
+
+            //    cache.Set<IndexViewModel>("HomeIndexViewModel", model, new MemoryCacheEntryOptions().SetAbsoluteExpiration(DateTimeOffset.UtcNow.AddSeconds(cacheSettings.Value.ExpirationInSeconds)));
+            //}
 
             ViewBag.IsMainPage = true;
             return View(model);
