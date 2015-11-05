@@ -1,11 +1,11 @@
-﻿//using SciVacancies.Services.Logging;
+﻿using SciVacancies.Services.Logging;
 using SciVacancies.WebApp.Infrastructure.Identity;
 using SciVacancies.WebApp.Infrastructure.WebAuthorize;
 
 using Microsoft.AspNet.Identity;
 
 using Autofac;
-//using Autofac.Extras.DynamicProxy;
+using Autofac.Extras.DynamicProxy;
 
 namespace SciVacancies.WebApp.Infrastructure
 {

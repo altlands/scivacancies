@@ -1,8 +1,8 @@
-﻿//using SciVacancies.Services.Logging;
+﻿using SciVacancies.Services.Logging;
 using SciVacancies.Services.Quartz;
 
 using Autofac;
-//using Autofac.Extras.DynamicProxy;
+using Autofac.Extras.DynamicProxy;
 using Quartz;
 using Quartz.Spi;
 
@@ -15,8 +15,8 @@ namespace SciVacancies.WebApp.Infrastructure
             builder.RegisterType<QuartzService>()
                 .As<ISchedulerService>()
                 .SingleInstance()
-                //.EnableInterfaceInterceptors()
-                //.InterceptedBy(typeof(CallLogger))
+                .EnableInterfaceInterceptors()
+                .InterceptedBy(typeof(CallLogger))
                 ;
             builder.RegisterType<AutofacJobFactory>()
                 .As<IJobFactory>()

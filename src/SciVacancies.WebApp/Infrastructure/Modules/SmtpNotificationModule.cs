@@ -1,9 +1,9 @@
-﻿//using SciVacancies.Services.Logging;
+﻿using SciVacancies.Services.Logging;
 using SciVacancies.Services.Email;
 using SciVacancies.SmtpNotifications.SmtpNotificators;
 
 using Autofac;
-//using Autofac.Extras.DynamicProxy;
+using Autofac.Extras.DynamicProxy;
 
 namespace SciVacancies.WebApp.Infrastructure
 {
@@ -14,8 +14,8 @@ namespace SciVacancies.WebApp.Infrastructure
             builder.RegisterType<EmailService>()
                 .As<IEmailService>()
                 .InstancePerLifetimeScope()
-                //.EnableInterfaceInterceptors()
-                //.InterceptedBy(typeof(CallLogger))
+                .EnableInterfaceInterceptors()
+                .InterceptedBy(typeof(CallLogger))
                 ;
             builder.RegisterType<SmtpNotificatorAccountService>()
                 .As<ISmtpNotificatorAccountService>()

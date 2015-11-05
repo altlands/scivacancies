@@ -1,9 +1,9 @@
-﻿//using SciVacancies.Services.Logging;
+﻿using SciVacancies.Services.Logging;
 
 using Microsoft.Framework.Configuration;
 
 using Autofac;
-//using Autofac.Extras.DynamicProxy;
+using Autofac.Extras.DynamicProxy;
 using Npgsql;
 using NPoco;
 
@@ -23,8 +23,8 @@ namespace SciVacancies.WebApp.Infrastructure
             builder.Register(c => new Database(Config["Data:ReadModelDb"], NpgsqlFactory.Instance))
             .As<IDatabase>()
             .InstancePerDependency()
-            //.EnableInterfaceInterceptors()
-            //.InterceptedBy(typeof(CallLogger))
+            .EnableInterfaceInterceptors()
+            .InterceptedBy(typeof(CallLogger))
             ;
         }
     }
