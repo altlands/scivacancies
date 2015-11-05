@@ -140,12 +140,35 @@ namespace SciVacancies.Services.Elastic
             }
             if (sq.SalaryFrom.HasValue && sq.SalaryFrom > 0)
             {
+                //filters.Add(new FilterDescriptor<Vacancy>().Bool(b => b
+                //                                                .Must(m => m
+                //                                                    .Range(r => r
+                //                                                        .GreaterOrEquals(sq.SalaryFrom)
+                //                                                        .OnField(of => of.SalaryFrom)
+                //                                                    )
+                //                                                )
+                //                                            )
+                //                                        );
+
                 filters.Add(new FilterDescriptor<Vacancy>().Bool(b => b
                                                                 .Must(m => m
-                                                                    .Range(r => r
-                                                                        .GreaterOrEquals(sq.SalaryFrom)
-                                                                        .OnField(of => of.SalaryFrom)
-                                                                    )
+                                                                        .Missing(ms => ms.SalaryFrom)
+                                                                        || m.Range(r => r
+                                                                             .GreaterOrEquals(sq.SalaryFrom)
+                                                                             .OnField(of => of.SalaryFrom)
+                                                                            )
+                                                                        || m.Bool(bb => bb
+                                                                                    .Must(mm => mm
+                                                                                        .Range(r => r
+                                                                                            .LowerOrEquals(sq.SalaryFrom)
+                                                                                            .OnField(of => of.SalaryFrom)
+                                                                                        )
+                                                                                        && mm.Range(r => r
+                                                                                             .GreaterOrEquals(sq.SalaryFrom)
+                                                                                             .OnField(of => of.SalaryTo)
+                                                                                        )
+                                                                                    )
+                                                                            )
                                                                 )
                                                             )
                                                         );
@@ -154,13 +177,36 @@ namespace SciVacancies.Services.Elastic
             {
                 filters.Add(new FilterDescriptor<Vacancy>().Bool(b => b
                                                                 .Must(m => m
-                                                                    .Range(r => r
-                                                                        .LowerOrEquals(sq.SalaryTo)
-                                                                        .OnField(of => of.SalaryTo)
-                                                                    )
+                                                                        .Missing(ms => ms.SalaryTo)
+                                                                        || m.Range(r => r
+                                                                             .LowerOrEquals(sq.SalaryTo)
+                                                                             .OnField(of => of.SalaryTo)
+                                                                            )
+                                                                        || m.Bool(bb => bb
+                                                                                    .Must(mm => mm
+                                                                                        .Range(r => r
+                                                                                            .GreaterOrEquals(sq.SalaryTo)
+                                                                                            .OnField(of => of.SalaryTo)
+                                                                                        )
+                                                                                        && mm.Range(r => r
+                                                                                             .LowerOrEquals(sq.SalaryTo)
+                                                                                             .OnField(of => of.SalaryFrom)
+                                                                                        )
+                                                                                    )
+                                                                            )
                                                                 )
                                                             )
                                                         );
+
+                //filters.Add(new FilterDescriptor<Vacancy>().Bool(b => b
+                //                                                .Must(m => m
+                //                                                    .Range(r => r
+                //                                                        .LowerOrEquals(sq.SalaryTo)
+                //                                                        .OnField(of => of.SalaryTo)
+                //                                                    )
+                //                                                )
+                //                                            )
+                //                                        );
             }
             if (sq.VacancyStatuses != null && sq.VacancyStatuses.Count() > 0)
             {

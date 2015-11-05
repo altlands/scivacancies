@@ -6,25 +6,25 @@
     @Context.User.Identity.Name
 </div>-->
 
-<div class="row-block">
-    <div class="row-2">
+    <div class="row-block">
+        <div class="row-2">
 
-        <div class="align-right f0">
-            <ul class="tabs-toggle inline-block">
-                <li class="tabs-toggle__item active">
-                    <a href="#vac-day" data-toggle="tab" class="vac-day tab_icon"></a>
-                </li>
-                <li class="tabs-toggle__item">
-                    <a href="#work-org" data-toggle="tab" class="work-org tab_icon"></a>
-                </li>
-                <li class="tabs-toggle__item">
-                    <a href="#vac-sci" data-toggle="tab" class="vac-sci tab_icon"></a>
-                </li>
-            </ul>
-        </div>
+            <div class="align-right f0">
+                <ul class="tabs-toggle inline-block">
+                    <li class="tabs-toggle__item active">
+                        <a href="#vac-day" data-toggle="tab" class="vac-day tab_icon"></a>
+                    </li>
+                    <li class="tabs-toggle__item">
+                        <a href="#work-org" data-toggle="tab" class="work-org tab_icon"></a>
+                    </li>
+                    <li class="tabs-toggle__item">
+                        <a href="#vac-sci" data-toggle="tab" class="vac-sci tab_icon"></a>
+                    </li>
+                </ul>
+            </div>
 
-        <div class="tab-content">
-            <div class="tab-pane active" id="vac-day">
+            <div class="tab-content">
+                <div class="tab-pane active" id="vac-day">
                     <h4>Вакансии дня @ViewBag.test</h4>
                     <div class="b-items">
 
@@ -49,8 +49,8 @@
                     <a asp-controller="search" asp-route-order="">
                         <span class="small-icon icon-sm-eye inline-block ml6"><span>Показать все</span></span>
                     </a>
-            </div>
-            <div class="tab-pane" id="work-org">
+                </div>
+                <div class="tab-pane" id="work-org">
                     <h4>Работа в организациях</h4>
                     <div class="b-items">
                         @foreach (var item in Model.OrganizationsList.Items)
@@ -74,76 +74,76 @@
                     @*<a asp-controller="search" asp-route-order="">
                             <span class="small-icon icon-sm-eye inline-block ml9 mt13"><span>Показать все</span></span>
                         </a>*@
-            </div>
+                </div>
 
-            <div class="tab-pane" id="vac-sci">
-                <h4>Вакансии по областям науки</h4>
+                <div class="tab-pane" id="vac-sci">
+                    <h4>Вакансии по областям науки</h4>
 
-                <div class="b-items-category panel-group" id="accordion">
-                    <cache expires-after="@TimeSpan.FromMinutes(90)">
-                        @Html.Partial("_HomeIndexResearchDirections", Model)
-                    </cache>
+                    <div class="b-items-category panel-group" id="accordion">
+                        <cache expires-after="@TimeSpan.FromMinutes(90)">
+                            @Html.Partial("_HomeIndexResearchDirections", Model)
+                        </cache>
+                    </div>
                 </div>
             </div>
         </div>
+
+
+        <div class="row-2">
+
+            <div class="b-search">
+                <form asp-controller="search" asp-action="index" method="GET">
+                    <input class="search-input" type="text" name="search" placeholder="поиск по порталу" value="@ViewBag.Search" />
+                    <span class="search-button search-button__icon">
+                        <input type="submit" value="" class="search-button__submit">
+                    </span>
+                </form>
+            </div>
+
+            <h4>Вакансии в графиках</h4>
+
+            <ul class="tabs tabs_after_title">
+                <li class="active">
+                    <span>День</span>
+                </li>
+                <li>
+                    <span>Неделя</span>
+                </li>
+                <li>
+                    <span>Месяц</span>
+                </li>
+            </ul>
+
+            <div class="graphics">
+                <div class="graphics-item">
+                    <div class="title-graphic">Число вакансий ( среднее предложение в месяц )</div>
+                    <div class="image">
+                        <img src="/images/index-gr1.jpg" style="margin-top: 5px;">
+                    </div>
+                    <ul class="graph-details">
+                        <li class="color1"><span>Руководители групп структурных подразделений</span></li>
+                        <li class="color2"><span>Руководители структурных подразделений</span></li>
+                        <li class="color3"><span>Сотрудники</span></li>
+                        <li class="color4"><span>Прочие</span></li>
+                    </ul>
+                </div>
+
+                <div class="graphics-item">
+                    <div class="title-graphic">Средняя зарплата и количество вакансий</div>
+                    <div class="image"><img src="/images/index-gr2.jpg"></div>
+                    <ul class="graph-details">
+                        <li class="color3"><span>Средняя заработная плата</span></li>
+                        <li class="color1"><span>Количество вакансий</span></li>
+                    </ul>
+                    <div class="graph-region-select-block">
+                        <select name="region" id="region">
+                            <option value="1">Выбор региона</option>
+                            <option value="2">Выбор региона 1</option>
+                            <option value="3">Выбор региона 2</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+
     </div>
-
-
-    <div class="row-2">
-
-        <div class="b-search">
-            <form asp-controller="search" asp-action="index" method="GET">
-                <input class="search-input" type="text" name="search" placeholder="поиск по порталу" value="@ViewBag.Search" />
-                <span class="search-button search-button__icon">
-                    <input type="submit" value="" class="search-button__submit">
-                </span>
-            </form>
-        </div>
-
-        <h4>Вакансии в графиках</h4>
-
-        <ul class="tabs tabs_after_title">
-            <li class="active">
-                <span>День</span>
-            </li>
-            <li>
-                <span>Неделя</span>
-            </li>
-            <li>
-                <span>Месяц</span>
-            </li>
-        </ul>
-
-        <div class="graphics">
-            <div class="graphics-item">
-                <div class="title-graphic">Число вакансий ( среднее предложение в месяц )</div>
-                <div class="image">
-                    <img src="/images/index-gr1.jpg" style="margin-top: 5px;">
-                </div>
-                <ul class="graph-details">
-                    <li class="color1"><span>Руководители групп структурных подразделений</span></li>
-                    <li class="color2"><span>Руководители структурных подразделений</span></li>
-                    <li class="color3"><span>Сотрудники</span></li>
-                    <li class="color4"><span>Прочие</span></li>
-                </ul>
-            </div>
-
-            <div class="graphics-item">
-                <div class="title-graphic">Средняя зарплата и количество вакансий</div>
-                <div class="image"><img src="/images/index-gr2.jpg"></div>
-                <ul class="graph-details">
-                    <li class="color3"><span>Средняя заработная плата</span></li>
-                    <li class="color1"><span>Количество вакансий</span></li>
-                </ul>
-                <div class="graph-region-select-block">
-                    <select name="region" id="region">
-                        <option value="1">Выбор региона</option>
-                        <option value="2">Выбор региона 1</option>
-                        <option value="3">Выбор региона 2</option>
-                    </select>
-                </div>
-            </div>
-        </div>
-    </div>
-
-</div>
