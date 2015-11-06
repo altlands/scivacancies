@@ -12,15 +12,13 @@
     "SciVacancies.ReadModel.ElasticSearchModel": "1.0.0-*",
 
     "Microsoft.Framework.OptionsModel": "1.0.0-beta8",
+    "Microsoft.Framework.Logging": "1.0.0-beta8",
 
     "Autofac": "4.0.0-beta8-157",
     "Autofac.Extras.DynamicProxy": "4.0.0-beta8-231",
     "Autofac.Framework.DependencyInjection": "4.0.0-beta8-157",
     "Quartz": "2.3.3",
-    "Newtonsoft.Json": "7.0.1",
-
-    "AltLanDS.Common": "1.5.3",
-    "AltLanDS.Logging": "1.5.3"
+    "Newtonsoft.Json": "7.0.1"
   },
 
   "frameworks": {

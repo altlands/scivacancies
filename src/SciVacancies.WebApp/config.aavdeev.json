@@ -1,7 +1,7 @@
 ﻿{
   "Data": {
-    "ReadModelDb": "Server=192.168.10.141;Database=scidump;User Id=postgres;Password=postgres",
-    "EventStoreDb": "Server=192.168.10.141;Database=scidump;User Id=postgres;Password=postgres"
+    "ReadModelDb": "Server=localhost;Database=scivacancies;User Id=postgres;Password=postgres",
+    "EventStoreDb": "Server=localhost;Database=scivacancies;User Id=postgres;Password=postgres"
   },
   "OAuthSettings": {
     "Sciencemon": {
@@ -69,7 +69,7 @@
     },
     "DataSource": {
       "Default": {
-        "ConnectionString": "Server = 192.168.10.141; Database = scidump; User Id = postgres; Password = postgres",
+        "ConnectionString": "Server = localhost; Database = scivacancies; User Id = postgres; Password = postgres",
         "Provider": "Npgsql-20"
       }
     },
@@ -89,12 +89,11 @@
       "PortalLink": "<a target='_blank' href='http://localhost:59075'>localhost:59075</a>"
     },
     "LogSettings": {
-      "LogLevel": "Verbose",
-      "FileName": "F:/Logs/sci.log",
-      "FileSizeKB": "4096",
-      "TimeStampPattern": "yyyy - MM - dd hh.mm.ss",
-      "RollFileExistsBehavior": "Overwrite",
-      "RollInterval": "Midnight"
+      "FileName": "F:/Logs/sci-{Date}.log",
+      "LogLevel": "Information",
+      "TimeStampPattern": "{Timestamp:yyyy-MM-dd HH:mm:ss.fff} [{Level}] {Message}{NewLine}{Exception}",
+      "FileSizeBytes": "1048576",
+      "FileCountLimit": "31"
     }
   }
 }

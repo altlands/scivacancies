@@ -3,32 +3,36 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
+using Microsoft.Framework.Logging;
+
 using Castle.DynamicProxy;
 
 namespace SciVacancies.Services.Logging
 {
     public class CallLogger : Castle.Core.Internal.InternalsVisible, IInterceptor
     {
+        private readonly ILogger _logger;
+
+        public CallLogger(ILoggerFactory loggerFactory)
+        {
+            _logger = loggerFactory.CreateLogger<CallLogger>();
+            _logger.LogInformation("Constructing CallLogger");
+        }
         public void Intercept(IInvocation invocation)
         {
-            TracingEventSource.LogTracing.Invoke(
-                invocation.TargetType != null ? invocation.TargetType.ToString() : "TargetType:NULL",
-                invocation.Method != null ? invocation.Method.Name : "MethodName:NULL",
-                string.Join(", ", invocation.Arguments.Select(a => (a ?? "").ToString()).ToArray())
-                );
+            string invokeMessage = "Invoke :" + " Class = " + invocation.TargetType.ToString() + ", Method = " + invocation.Method.Name + ", Args = " + string.Join(", ", invocation.Arguments.Select(a => (a ?? "").ToString()).ToArray());
+            _logger.LogInformation(invokeMessage);
             try
             {
                 invocation.Proceed();
             }
             catch (Exception e)
             {
-                TracingEventSource.LogTracing.Error(e.Message);
+                _logger.LogError("ERROR");
+                _logger.LogError(e.Message, e);
             }
-            TracingEventSource.LogTracing.Finish(
-                invocation.TargetType != null ? invocation.TargetType.ToString() : "TargetType:NULL",
-                invocation.Method != null ? invocation.Method.Name : "MethodName:NULL",
-                invocation.ReturnValue != null ? invocation.ReturnValue.ToString() : "ReturnValue:NULL"
-                );
+            string finishMessage = "Finish :" + " Class = " + invocation.TargetType.ToString() + ", Method = " + invocation.Method.Name + ", Output = " + invocation.ReturnValue.ToString();
+            _logger.LogInformation(finishMessage);
         }
     }
 }

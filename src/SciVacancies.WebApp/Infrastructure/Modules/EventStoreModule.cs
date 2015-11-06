@@ -3,9 +3,9 @@
 using System;
 using System.Data;
 using Microsoft.Framework.Configuration;
+using Microsoft.Framework.Logging;
 
 using Autofac;
-using Autofac.Extras.DynamicProxy;
 using CommonDomain;
 using CommonDomain.Core;
 using CommonDomain.Persistence;
@@ -25,10 +25,13 @@ namespace SciVacancies.WebApp.Infrastructure
         private readonly byte[] encryptionKey = new byte[] { 0x45, 0x1a, 0x5, 0xf3, 0x4b, 0x55, 0x21, 0xaf, 0x22, 0x9f, 0x11, 0x2, 0x4, 0x4, 0xde, 0x0 };
 
         public IConfiguration Config { get; set; }
+        private readonly ILogger _logger;
 
-        public EventStoreModule(IConfiguration cfg)
+        public EventStoreModule(IConfiguration cfg, ILoggerFactory loggerFactory)
         {
             Config = cfg;
+            _logger = loggerFactory.CreateLogger<EventBusModule>();
+            _logger.LogDebug("Constructing EventStoreModule");
         }
 
         protected override void Load(ContainerBuilder builder)
@@ -78,14 +81,13 @@ namespace SciVacancies.WebApp.Infrastructure
                     {
                         foreach (var e in commit.Events)
                         {
-                            //TODO : Log all failed meesages to special queue so they can be resend later
+                            _logger.LogInformation("Dispatching event " + e.Body.ToString());
                             mediator.Publish(e.Body as dynamic);
                         }
                     }
                     catch (Exception exception)
                     {
-                        LogEvents.Log.GeneralExceptionError(exception);
-
+                        _logger.LogError("Error during dispatching commit", exception);
                         try
                         {
                             using (var db = new Database(Config["Data:ReadModelDb"], NpgsqlFactory.Instance))
@@ -99,9 +101,9 @@ namespace SciVacancies.WebApp.Infrastructure
                                 }
                             }
                         }
-                        catch(Exception dbException)
+                        catch (Exception dbException)
                         {
-                            LogEvents.Log.GeneralExceptionError(dbException);
+                            _logger.LogError("Error during clearing undispatched commit in eventstore", dbException);
                         }
                     }
                 }))
