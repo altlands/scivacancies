@@ -1,14 +1,8 @@
 ﻿using SciVacancies.Services.Logging;
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using Microsoft.Framework.Logging;
 
 using Autofac;
-using Autofac.Framework.DependencyInjection;
-using Autofac.Extras.DynamicProxy;
-using MediatR;
 
 namespace SciVacancies.WebApp.Infrastructure
 {
@@ -16,7 +10,7 @@ namespace SciVacancies.WebApp.Infrastructure
     {
         protected override void Load(ContainerBuilder builder)
         {
-            builder.Register(c => new CallLogger());
+            builder.Register(c => new CallLogger(c.Resolve<ILoggerFactory>()));
         }
     }
 }

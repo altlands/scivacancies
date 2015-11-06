@@ -11,7 +11,6 @@ using Microsoft.Framework.Configuration;
 using Microsoft.Framework.DependencyInjection;
 using Microsoft.Framework.Logging;
 using SciVacancies.Services.Quartz;
-using SciVacancies.Services.Logging;
 using SciVacancies.WebApp.Infrastructure;
 using Microsoft.Dnx.Runtime;
 
@@ -21,18 +20,10 @@ using System.Globalization;
 
 using Quartz.Spi;
 
-using Microsoft.Practices.EnterpriseLibrary.SemanticLogging;
-using Microsoft.Practices.EnterpriseLibrary.SemanticLogging.Sinks;
 using System.Diagnostics.Tracing;
-using System.Diagnostics;
-using AltLanDS.Logging;
 
-using EventSourceProxy;
-using Autofac.Extras.DynamicProxy;
-using Castle.Core.Internal;
-using Castle.DynamicProxy;
-using System.IO;
-using Microsoft.Extensions.Caching.Memory;
+
+using Serilog;
 
 namespace SciVacancies.WebApp
 {
@@ -40,7 +31,7 @@ namespace SciVacancies.WebApp
     {
         private readonly string devEnv;
 
-        public Startup(IHostingEnvironment env, IApplicationEnvironment appEnv)
+        public Startup(IHostingEnvironment env, IApplicationEnvironment appEnv, ILoggerFactory loggerFactory)
         {
             var vars = Environment.GetEnvironmentVariables();
             devEnv = (string)vars.Cast<DictionaryEntry>().FirstOrDefault(e => e.Key.Equals("dev_env")).Value;
@@ -52,11 +43,31 @@ namespace SciVacancies.WebApp
                 .AddEnvironmentVariables();
 
             Configuration = configurationBuilder.Build();
+
+            
+            var serilogLogger = new LoggerConfiguration()
+                .WriteTo
+                .RollingFile(
+                    Configuration["LogSettings:FileName"],
+                    (Serilog.Events.LogEventLevel)Enum.Parse(typeof(Serilog.Events.LogEventLevel), Configuration["LogSettings:LogLevel"], true),
+                    Configuration["LogSettings:TimeStampPattern"],
+                    null,
+                    long.Parse(Configuration["LogSettings:FileSizeBytes"]),
+                    int.Parse(Configuration["LogSettings:FileCountLimit"])
+                )
+                .MinimumLevel.Information()
+                .CreateLogger();
+
+            loggerFactory.MinimumLevel = (LogLevel)Enum.Parse(typeof(LogLevel), Configuration["LogSettings:LogLevel"], true);
+            loggerFactory.AddSerilog(serilogLogger);
+
+            LoggerFactory = loggerFactory;
         }
 
         public IConfiguration Configuration { get; set; }
 
         public IContainer Container { get; set; }
+        public ILoggerFactory LoggerFactory { get; set; }
 
         // This method gets called by the runtime.
         public IServiceProvider ConfigureServices(IServiceCollection services)
@@ -87,7 +98,7 @@ namespace SciVacancies.WebApp
 
             services.AddCaching();
 
-            services.AddSession(o => { o.IdleTimeout = TimeSpan.FromSeconds(10); });
+            services.AddSession(o => { o.IdleTimeout = TimeSpan.FromSeconds(60); });
 
             services.AddLogging();
 
@@ -104,7 +115,7 @@ namespace SciVacancies.WebApp
 
         public void ConfigureContainer(ContainerBuilder builder)
         {
-            builder.RegisterModule(new EventStoreModule(Configuration));
+            builder.RegisterModule(new EventStoreModule(Configuration, LoggerFactory));
             builder.RegisterModule(new EventBusModule());
             builder.RegisterModule(new EventHandlersModule());
             builder.RegisterModule(new ReadModelModule(Configuration));
@@ -188,30 +199,6 @@ namespace SciVacancies.WebApp
             });
 
             MappingConfiguration.Initialize();
-
-            //todo: LOGGING_COMMENTED_OUT
-            //Logs initialization
-            var observable = new ObservableEventListener();
-            observable.EnableEvents(
-                    LogEvents.LogEventSource,
-                    (EventLevel)Enum.Parse(typeof(EventLevel), Configuration["LogSettings:LogLevel"], true),
-                    (EventKeywords)(-1)
-                );
-
-            observable.EnableEvents(
-                (EventSource)TracingEventSource.LogTracing,
-                (EventLevel)Enum.Parse(typeof(EventLevel), Configuration["LogSettings:LogLevel"], true),
-                (EventKeywords)(-1)
-                );
-
-            observable.LogToRollingFlatFile(
-                    Configuration["LogSettings:FileName"],
-                    int.Parse(Configuration["LogSettings:FileSizeKB"]),
-                    Configuration["LogSettings:TimeStampPattern"],
-                    (RollFileExistsBehavior)Enum.Parse(typeof(RollFileExistsBehavior), Configuration["LogSettings:RollFileExistsBehavior"], true),
-                    (RollInterval)Enum.Parse(typeof(RollInterval), Configuration["LogSettings:RollInterval"], true)
-                );
-
 
             //todo: SAGA_DISABLED
             var schedulerService = new QuartzService(Configuration, Container.Resolve<IJobFactory>());

@@ -73,6 +73,10 @@
         "Provider": "Npgsql-20"
       }
     },
+    "CacheSettings": {
+      "DictionaryExpiration": 20,
+      "MainPageExpiration": 20
+    },
     "EmailSettings": {
       "Login": "mailer@alt-lan.com",
       "Password": "123456-mailer",
@@ -84,13 +88,12 @@
       "Domain": "localhost:59075",
       "PortalLink": "<a target='_blank' href='http://localhost:59075'>localhost:59075</a>"
     },
-        "LogSettings": {
-        "LogLevel": "Verbose",
-        "FileName": "F:/Logs/sci.log",
-        "FileSizeKB": "4096",
-        "TimeStampPattern": "yyyy - MM - dd hh.mm.ss",
-        "RollFileExistsBehavior": "Overwrite",
-        "RollInterval": "Midnight"
+    "LogSettings": {
+      "FileName": "F:/Logs/sci-{Date}.log",
+      "LogLevel": "Information",
+      "TimeStampPattern": "{Timestamp:yyyy-MM-dd HH:mm:ss.fff} [{Level}] {Message}{NewLine}{Exception}",
+      "FileSizeBytes": "1048576",
+      "FileCountLimit": "31"
     }
   }
 }

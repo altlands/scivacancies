@@ -2,6 +2,7 @@
 {
     public class CacheSettings
     {
-        public int ExpirationInSeconds { get; set; }
+        public int DictionaryExpiration { get; set; }
+        public int MainPageExpiration { get; set; }
     }
 }
