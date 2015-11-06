@@ -32,7 +32,7 @@ using Autofac.Extras.DynamicProxy;
 using Castle.Core.Internal;
 using Castle.DynamicProxy;
 using System.IO;
-using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Framework.Caching.Memory;
 
 namespace SciVacancies.WebApp
 {
@@ -193,7 +193,7 @@ namespace SciVacancies.WebApp
             //Logs initialization
             var observable = new ObservableEventListener();
             observable.EnableEvents(
-                    LogEvents.LogEventSource,
+                    (EventSource)LogEvents.LogEventSource,
                     (EventLevel)Enum.Parse(typeof(EventLevel), Configuration["LogSettings:LogLevel"], true),
                     (EventKeywords)(-1)
                 );

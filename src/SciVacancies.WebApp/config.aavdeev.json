@@ -1,7 +1,7 @@
 ﻿{
   "Data": {
-    "ReadModelDb": "Server=localhost;Database=scivacancies;User Id=postgres;Password=postgres",
-    "EventStoreDb": "Server=localhost;Database=scivacancies;User Id=postgres;Password=postgres"
+    "ReadModelDb": "Server=192.168.10.141;Database=scidump;User Id=postgres;Password=postgres",
+    "EventStoreDb": "Server=192.168.10.141;Database=scidump;User Id=postgres;Password=postgres"
   },
   "OAuthSettings": {
     "Sciencemon": {
@@ -69,9 +69,13 @@
     },
     "DataSource": {
       "Default": {
-        "ConnectionString": "Server = localhost; Database = scivacancies; User Id = postgres; Password = postgres",
+        "ConnectionString": "Server = 192.168.10.141; Database = scidump; User Id = postgres; Password = postgres",
         "Provider": "Npgsql-20"
       }
+    },
+    "CacheSettings": {
+      "DictionaryExpiration": 20,
+      "MainPageExpiration": 20
     },
     "EmailSettings": {
       "Login": "mailer@alt-lan.com",
@@ -84,13 +88,13 @@
       "Domain": "localhost:59075",
       "PortalLink": "<a target='_blank' href='http://localhost:59075'>localhost:59075</a>"
     },
-        "LogSettings": {
-        "LogLevel": "Verbose",
-        "FileName": "F:/Logs/sci.log",
-        "FileSizeKB": "4096",
-        "TimeStampPattern": "yyyy - MM - dd hh.mm.ss",
-        "RollFileExistsBehavior": "Overwrite",
-        "RollInterval": "Midnight"
+    "LogSettings": {
+      "LogLevel": "Verbose",
+      "FileName": "F:/Logs/sci.log",
+      "FileSizeKB": "4096",
+      "TimeStampPattern": "yyyy - MM - dd hh.mm.ss",
+      "RollFileExistsBehavior": "Overwrite",
+      "RollInterval": "Midnight"
     }
   }
 }

@@ -1,10 +1,8 @@
 ﻿using System.Collections.Generic;
 
-using Microsoft.Extensions.Caching;
-using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Framework.Caching.Memory;
 
 using Autofac;
-using MediatR;
 
 
 namespace SciVacancies.WebApp.Infrastructure

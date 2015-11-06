@@ -108,7 +108,8 @@
     "CaptchaDurationSeconds": 240
   },
   "CacheSettings": {
-    "ExpirationInSeconds": 10
+    "DictionaryExpiration": 20,
+    "MainPageExpiration": 20
   },
   "EmailSettings": {
     "Login": "mailer@alt-lan.com",

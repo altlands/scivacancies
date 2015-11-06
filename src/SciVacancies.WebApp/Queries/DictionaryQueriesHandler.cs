@@ -1,13 +1,13 @@
 ﻿using SciVacancies.ReadModel.Core;
-using SciVacancies.ReadModel;
 
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.Framework.OptionsModel;
+using Microsoft.Framework.Caching.Memory;
 
 using MediatR;
 using NPoco;
-using Nest;
 
 namespace SciVacancies.WebApp.Queries
 {
@@ -38,15 +38,31 @@ namespace SciVacancies.WebApp.Queries
         IRequestHandler<SelectAllAttachmentTypesQuery, IEnumerable<AttachmentType>>
     {
         private readonly IDatabase _db;
+        private readonly IMemoryCache cache;
+        private readonly IOptions<CacheSettings> cacheSettings;
+        private MemoryCacheEntryOptions cacheOptions
+        {
+            get
+            {
+                return new MemoryCacheEntryOptions().SetAbsoluteExpiration(DateTimeOffset.UtcNow.AddSeconds(cacheSettings.Value.DictionaryExpiration));
+            }
+        }
 
-        public DictionaryQueriesHandler(IDatabase db)
+        public DictionaryQueriesHandler(IDatabase db, IMemoryCache cache, IOptions<CacheSettings> cacheSettings)
         {
             _db = db;
+            this.cache = cache;
+            this.cacheSettings = cacheSettings;
         }
 
         public IEnumerable<Criteria> Handle(SelectAllCriteriasQuery message)
         {
-            IEnumerable<Criteria> criterias = _db.Fetch<Criteria>();
+            IEnumerable<Criteria> criterias;
+            if (!cache.TryGetValue<IEnumerable<Criteria>>("d_criterias", out criterias))
+            {
+                criterias = _db.Fetch<Criteria>();
+                cache.Set<IEnumerable<Criteria>>("d_criterias", criterias, cacheOptions);
+            }
 
             return criterias;
         }
@@ -77,7 +93,12 @@ namespace SciVacancies.WebApp.Queries
 
         public IEnumerable<Foiv> Handle(SelectAllFoivsQuery message)
         {
-            IEnumerable<Foiv> foivs = _db.Fetch<Foiv>();
+            IEnumerable<Foiv> foivs;
+            if (!cache.TryGetValue<IEnumerable<Foiv>>("d_foivs", out foivs))
+            {
+                foivs = _db.Fetch<Foiv>();
+                cache.Set<IEnumerable<Foiv>>("d_foivs", foivs, cacheOptions);
+            }
 
             return foivs;
         }
@@ -108,7 +129,12 @@ namespace SciVacancies.WebApp.Queries
 
         public IEnumerable<OrgForm> Handle(SelectAllOrgFormsQuery message)
         {
-            IEnumerable<OrgForm> orgForms = _db.Fetch<OrgForm>();
+            IEnumerable<OrgForm> orgForms;
+            if (!cache.TryGetValue<IEnumerable<OrgForm>>("d_orgforms", out orgForms))
+            {
+                orgForms = _db.Fetch<OrgForm>();
+                cache.Set<IEnumerable<OrgForm>>("d_orgforms", orgForms, cacheOptions);
+            }
 
             return orgForms;
         }
@@ -131,7 +157,12 @@ namespace SciVacancies.WebApp.Queries
 
         public IEnumerable<PositionType> Handle(SelectAllPositionTypesQuery message)
         {
-            IEnumerable<PositionType> positionTypes = _db.Fetch<PositionType>();
+            IEnumerable<PositionType> positionTypes;
+            if (!cache.TryGetValue<IEnumerable<PositionType>>("d_positiontypes", out positionTypes))
+            {
+                positionTypes = _db.Fetch<PositionType>();
+                cache.Set<IEnumerable<PositionType>>("d_positiontypes", positionTypes, cacheOptions);
+            }
 
             return positionTypes;
         }
@@ -154,14 +185,27 @@ namespace SciVacancies.WebApp.Queries
 
         public IEnumerable<Region> Handle(SelectAllRegionsQuery message)
         {
-            IEnumerable<Region> regions = _db.Fetch<Region>();
+            IEnumerable<Region> regions;
+            if (!cache.TryGetValue<IEnumerable<Region>>("d_regions", out regions))
+            {
+                regions = _db.Fetch<Region>();
+                cache.Set<IEnumerable<Region>>("d_regions", regions, cacheOptions);
+            }
 
             return regions;
         }
 
         public IEnumerable<Region> Handle(SelectRegionsByGuidsQuery message)
         {
-            var regions = _db.Fetch<Region>(new Sql($"SELECT d.* FROM d_regions d WHERE d.id IN (@0) ORDER BY d.title DESC", message.RegionIds));
+            IEnumerable<Region> allRegions;
+            if (!cache.TryGetValue("d_regions", out allRegions))
+            {
+                allRegions = _db.Fetch<Region>();
+                cache.Set<IEnumerable<Region>>("d_regions", allRegions, cacheOptions);
+            }
+            var regions = allRegions.Where(w => message.RegionIds.Contains(w.id)).OrderByDescending(o => o.title).ToList();
+            //var regions = _db.Fetch<Region>(new Sql($"SELECT d.* FROM d_regions d WHERE d.id IN (@0) ORDER BY d.title DESC", message.RegionIds));
+
             return regions;
         }
         public IEnumerable<Region> Handle(SelectRegionsForAutocompleteQuery message)
@@ -183,7 +227,12 @@ namespace SciVacancies.WebApp.Queries
 
         public IEnumerable<ResearchDirection> Handle(SelectAllResearchDirectionsQuery message)
         {
-            IEnumerable<ResearchDirection> researchDirections = _db.Fetch<ResearchDirection>();
+            IEnumerable<ResearchDirection> researchDirections;
+            if (!cache.TryGetValue<IEnumerable<ResearchDirection>>("d_researchdirections", out researchDirections))
+            {
+                researchDirections = _db.Fetch<ResearchDirection>();
+                cache.Set<IEnumerable<ResearchDirection>>("d_researchdirections", researchDirections, cacheOptions);
+            }
 
             return researchDirections;
         }
@@ -219,7 +268,12 @@ namespace SciVacancies.WebApp.Queries
 
         public IEnumerable<AttachmentType> Handle(SelectAllAttachmentTypesQuery message)
         {
-            IEnumerable<AttachmentType> attachmentTypes = _db.Fetch<AttachmentType>();
+            IEnumerable<AttachmentType> attachmentTypes;
+            if (!cache.TryGetValue<IEnumerable<AttachmentType>>("d_attachmenttypes", out attachmentTypes))
+            {
+                attachmentTypes = _db.Fetch<AttachmentType>();
+                cache.Set<IEnumerable<AttachmentType>>("d_attachmenttypes", attachmentTypes, cacheOptions);
+            }
 
             return attachmentTypes;
         }

@@ -11,10 +11,7 @@ using SciVacancies.WebApp.ViewModels;
 using System;
 using SciVacancies.ReadModel.Pager;
 using Microsoft.Framework.OptionsModel;
-using Microsoft.Extensions.Caching;
-using Microsoft.Extensions.Caching.Memory;
-using Microsoft.Extensions.Primitives;
-using System.Threading;
+using Microsoft.Framework.Caching.Memory;
 
 namespace SciVacancies.WebApp.Controllers
 {
@@ -24,6 +21,13 @@ namespace SciVacancies.WebApp.Controllers
         private readonly IMediator _mediator;
         private readonly IMemoryCache cache;
         private readonly IOptions<CacheSettings> cacheSettings;
+        private MemoryCacheEntryOptions cacheOptions
+        {
+            get
+            {
+                return new MemoryCacheEntryOptions().SetAbsoluteExpiration(DateTimeOffset.UtcNow.AddSeconds(cacheSettings.Value.MainPageExpiration));
+            }
+        }
 
         public HomeController(IMediator mediator, IMemoryCache cache, IOptions<CacheSettings> cacheSettings)
         {
@@ -37,45 +41,49 @@ namespace SciVacancies.WebApp.Controllers
         public IActionResult Index()
         {
             IndexViewModel model;
-            //if (cache.TryGetValue("HomeIndexViewModel", out model))
-            //{
-            //    model = cache.Get<IndexViewModel>("HomeIndexViewModel");
-            //}
-            //else
-            //{
             model = new IndexViewModel { CurrentMediator = _mediator };
-            model.VacanciesList = _mediator.Send(new SelectPagedVacanciesQuery
-            {
-                PageSize = 4,
-                PageIndex = 1,
-                OrderBy = ConstTerms.OrderByDateStartDescending,
-                PublishedOnly = true
-            }).MapToPagedList<Vacancy, VacancyDetailsViewModel>();
-            model.OrganizationsList = _mediator.Send(new SelectPagedOrganizationsQuery
-            {
-                PageSize = 4,
-                PageIndex = 1,
-                OrderBy = ConstTerms.OrderByVacancyCountDescending
-            }).MapToPagedList<Organization, OrganizationDetailsViewModel>();
 
-            //заполнить названия организаций
-            var organizationGuids = model.VacanciesList.Items.Select(c => c.OrganizationGuid).Distinct().ToList();
-            if (organizationGuids.Any())
+            PagedList<OrganizationDetailsViewModel> organizationsList;
+            if (!cache.TryGetValue<PagedList<OrganizationDetailsViewModel>>("first_organizations_by_vacancycount", out organizationsList))
             {
-                var organizations =
-                    _mediator.Send(new SelectOrganizationsByGuidsQuery { OrganizationGuids = organizationGuids });
-                model.VacanciesList.Items.ForEach(c =>
+                organizationsList = _mediator.Send(new SelectPagedOrganizationsQuery
                 {
-                    var organization = organizations.SingleOrDefault(d => d.guid == c.OrganizationGuid);
-                    if (organization != null)
-                    {
-                        c.OrganizationName = organization.name;
-                    }
-                });
+                    PageSize = 4,
+                    PageIndex = 1,
+                    OrderBy = ConstTerms.OrderByVacancyCountDescending
+                }).MapToPagedList<Organization, OrganizationDetailsViewModel>();
+                cache.Set<PagedList<OrganizationDetailsViewModel>>("first_organizations_by_vacancycount", organizationsList, cacheOptions);
             }
+            model.OrganizationsList = organizationsList;
 
-            //    cache.Set<IndexViewModel>("HomeIndexViewModel", model, new MemoryCacheEntryOptions().SetAbsoluteExpiration(DateTimeOffset.UtcNow.AddSeconds(cacheSettings.Value.ExpirationInSeconds)));
-            //}
+            PagedList<VacancyDetailsViewModel> vacanciesList;
+            if (!cache.TryGetValue<PagedList<VacancyDetailsViewModel>>("last_published_vacancies", out vacanciesList))
+            {
+                vacanciesList = _mediator.Send(new SelectPagedVacanciesQuery
+                {
+                    PageSize = 4,
+                    PageIndex = 1,
+                    OrderBy = ConstTerms.OrderByDateStartDescending,
+                    PublishedOnly = true
+                }).MapToPagedList<Vacancy, VacancyDetailsViewModel>();
+
+                //заполнить названия организаций
+                var organizationGuids = vacanciesList.Items.Select(c => c.OrganizationGuid).Distinct().ToList();
+                if (organizationGuids.Any())
+                {
+                    var organizations = _mediator.Send(new SelectOrganizationsByGuidsQuery { OrganizationGuids = organizationGuids });
+                    vacanciesList.Items.ForEach(c =>
+                    {
+                        var organization = organizations.SingleOrDefault(d => d.guid == c.OrganizationGuid);
+                        if (organization != null)
+                        {
+                            c.OrganizationName = organization.name;
+                        }
+                    });
+                }
+                cache.Set<PagedList<VacancyDetailsViewModel>>("last_published_vacancies", vacanciesList, cacheOptions);
+            }
+            model.VacanciesList = vacanciesList;
 
             ViewBag.IsMainPage = true;
             return View(model);
