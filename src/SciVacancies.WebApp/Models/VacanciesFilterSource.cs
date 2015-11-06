@@ -85,22 +85,28 @@ namespace SciVacancies.WebApp.Models
             {
                 if (_researchDirections == null)
                 {
-                    var allResearchDirections = Mapper.Map<IEnumerable<ResearchDirectionViewModel>>(_mediator.Send(new SelectAllResearchDirectionsQuery())).ToList();
-                    _researchDirections = allResearchDirections.Where(c => c.ParentId == 0).ToList(); //заполнили первый уровень
-                    ResearchDirections.ForEach(firstLevelItem =>
+                    var source =
+                        Mapper.Map<IEnumerable<ResearchDirectionViewModel>>(
+                            _mediator.Send(new SelectAllResearchDirectionsQuery()));
+                    if (source != null)
                     {
-                        firstLevelItem.Childs = allResearchDirections.Where(secondLevelItem => secondLevelItem.ParentId == firstLevelItem.Id).ToList(); //заполнили второй уровень
-                        firstLevelItem.Childs.ForEach(secondLevelItem =>
+                        var allResearchDirections = source.ToList();
+                        _researchDirections = allResearchDirections.Where(c => c.ParentId == 0).ToList(); //заполнили первый уровень
+                        ResearchDirections.ForEach(firstLevelItem =>
                         {
-                            secondLevelItem.Childs = allResearchDirections.Where(f => f.ParentId == secondLevelItem.Id).ToList(); //заполнили третий уровень
+                            firstLevelItem.Childs = allResearchDirections.Where(secondLevelItem => secondLevelItem.ParentId == firstLevelItem.Id).ToList(); //заполнили второй уровень
+                        firstLevelItem.Childs.ForEach(secondLevelItem =>
+                            {
+                                secondLevelItem.Childs = allResearchDirections.Where(f => f.ParentId == secondLevelItem.Id).ToList(); //заполнили третий уровень
 
                             secondLevelItem.Childs.ForEach(thirdLevelItem =>
-                            {
-                                thirdLevelItem.Childs = allResearchDirections.Where(f => f.ParentId == thirdLevelItem.Id).ToList(); //заполнили четвертый уровень
+                                {
+                                    thirdLevelItem.Childs = allResearchDirections.Where(f => f.ParentId == thirdLevelItem.Id).ToList(); //заполнили четвертый уровень
                             });
 
+                            });
                         });
-                    });
+                    }
                 }
                 return _researchDirections;
             }

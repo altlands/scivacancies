@@ -59,19 +59,23 @@ namespace SciVacancies.WebApp.Controllers
             }).MapToPagedList<Organization, OrganizationDetailsViewModel>();
 
             //заполнить названия организаций
-            var organizationGuids = model.VacanciesList.Items.Select(c => c.OrganizationGuid).Distinct().ToList();
-            if (organizationGuids.Any())
+            if (model.VacanciesList != null)
             {
-                var organizations =
-                    _mediator.Send(new SelectOrganizationsByGuidsQuery { OrganizationGuids = organizationGuids });
-                model.VacanciesList.Items.ForEach(c =>
+                var organizationGuids = model.VacanciesList.Items.Select(c => c.OrganizationGuid).Distinct().ToList();
+                if (organizationGuids.Any())
                 {
-                    var organization = organizations.SingleOrDefault(d => d.guid == c.OrganizationGuid);
-                    if (organization != null)
+                    var organizations =
+                        _mediator.Send(new SelectOrganizationsByGuidsQuery { OrganizationGuids = organizationGuids });
+                    model.VacanciesList.Items.ForEach(c =>
                     {
-                        c.OrganizationName = organization.name;
-                    }
-                });
+                        var organization = organizations.SingleOrDefault(d => d.guid == c.OrganizationGuid);
+                        if (organization != null)
+                        {
+                            c.OrganizationName = organization.name;
+                        }
+                    });
+                }
+
             }
 
             //    cache.Set<IndexViewModel>("HomeIndexViewModel", model, new MemoryCacheEntryOptions().SetAbsoluteExpiration(DateTimeOffset.UtcNow.AddSeconds(cacheSettings.Value.ExpirationInSeconds)));
