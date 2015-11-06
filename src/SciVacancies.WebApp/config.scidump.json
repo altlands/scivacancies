@@ -120,7 +120,7 @@
     },
     "LogSettings": {
         "LogLevel": "Verbose",
-        "FileName": "/var/log/scivac/sci.log",
+        "FileName": "/var/log/scivacdump/sci.log",
         "FileSizeKB": "4096",
         "TimeStampPattern": "yyyy - MM - dd hh.mm.ss",
         "RollFileExistsBehavior": "Overwrite",
