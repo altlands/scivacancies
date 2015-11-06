@@ -29,7 +29,7 @@ namespace SciVacancies.WebApp.Controllers
             _mediator = mediator;
         }
 
-        public IActionResult Index()
+        public IActionResult FillDb()
         {
             Guid researcherGuid1;
             var rnd = new Random();
