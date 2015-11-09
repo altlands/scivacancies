@@ -14,6 +14,8 @@ using SciVacancies.WebApp.Models;
 using SciVacancies.WebApp.Queries;
 using SciVacancies.WebApp.ViewModels;
 
+using Microsoft.Framework.Logging;
+
 namespace SciVacancies.WebApp.Controllers
 {
 
@@ -21,24 +23,12 @@ namespace SciVacancies.WebApp.Controllers
     public class SearchController : Controller
     {
         private readonly IMediator _mediator;
+        private ILogger Logger;
 
-        public SearchController(IMediator mediator)
+        public SearchController(IMediator mediator,ILoggerFactory loggerFactory)
         {
             _mediator = mediator;
-        }
-
-        public IActionResult TestConvert(string id)
-        {
-            string result;
-            try
-            {
-                result = HttpUtility.UrlEncode(id);
-            }
-            catch (Exception e)
-            {
-                result = e.Message;
-            }
-            return Content(result);
+            this.Logger = loggerFactory.CreateLogger<SearchController>();
         }
 
         /// <summary>
@@ -53,6 +43,8 @@ namespace SciVacancies.WebApp.Controllers
         {
             if (TempData["VacanciesFilterModel"] != null)
                 model = JsonConvert.DeserializeObject<VacanciesFilterModel>(TempData["VacanciesFilterModel"].ToString());
+
+            Logger.LogInformation("");
 
             //если нужно добавить новую подписку
             if (researcherGuid != Guid.Empty && model.NewSubscriptionAdd)

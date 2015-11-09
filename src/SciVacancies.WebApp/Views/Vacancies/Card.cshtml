@@ -26,7 +26,10 @@
 </div>
 
 <div class="content-popup b-buttons">
-    @if (User.IsInRole(ConstTerms.RequireRoleOrganizationAdmin))
+    @if (User.IsInRole(ConstTerms.RequireRoleOrganizationAdmin) 
+        && User.Claims.Any(c=>c.Type == ConstTerms.ClaimTypeOrganizationId)
+        && User.Claims.Single(c=>c.Type == ConstTerms.ClaimTypeOrganizationId).Value == Model.OrganizationGuid.ToString()
+        )
     {
         <text>
             <a asp-controller="vacancies" asp-action="details" asp-route-id="@Model.Guid" class="green-btn middle-icon icon-arr-right default-link">Подробнее</a>
