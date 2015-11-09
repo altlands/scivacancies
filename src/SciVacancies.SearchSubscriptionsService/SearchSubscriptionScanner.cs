@@ -11,6 +11,7 @@ using SciVacancies.Services.Email;
 using SciVacancies.Services.Elastic;
 using SciVacancies.SmtpNotifications;
 using Microsoft.Framework.Configuration;
+using Microsoft.Framework.Logging;
 
 namespace SciVacancies.SearchSubscriptionsService
 {
@@ -31,15 +32,18 @@ namespace SciVacancies.SearchSubscriptionsService
         private readonly ILifetimeScope _lifetimeScope;
         readonly IElasticService _elasticService;
 
+        private readonly ILogger Logger;
+
         readonly string From;
         readonly string Domain;
         readonly string PortalLink;
 
 
-        public SearchSubscriptionScanner(ILifetimeScope lifetimeScope, IElasticService elasticService, IConfiguration configuration)
+        public SearchSubscriptionScanner(ILifetimeScope lifetimeScope, IElasticService elasticService, IConfiguration configuration, ILoggerFactory loggerFactory)
         {
             _lifetimeScope = lifetimeScope;
             _elasticService = elasticService;
+            this.Logger = loggerFactory.CreateLogger<SearchSubscriptionScanner>();
 
             this.From = configuration["EmailSettings:Login"];
             this.Domain = configuration["EmailSettings:Domain"];
@@ -66,7 +70,7 @@ namespace SciVacancies.SearchSubscriptionsService
             if (_subscriptionQueue == null || !_subscriptionQueue.Any())
                 return;
 
-            Console.WriteLine($"                 SearchSubscriptionScanner: список подписок содержит -{_subscriptionQueue.Count()}- записей");
+            Logger.LogInformation($"SearchSubscriptionScanner: список подписок содержит -{_subscriptionQueue.Count()}- записей");
 
             //todo добавить свойство int emailsToSentPerMinute
             //todo: написать sql-процедуру, которая будет блокировать обрабатываемые подписки
@@ -84,12 +88,12 @@ namespace SciVacancies.SearchSubscriptionsService
                     SalaryTo = searchSubscription.salary_to,
                     VacancyStatuses = JsonConvert.DeserializeObject<IEnumerable<VacancyStatus>>(searchSubscription.vacancy_statuses)
                 };
-                Console.WriteLine($"                 SearchSubscriptionScanner: searchQuery создан из подписки '{searchSubscription.guid}' ");
+                Logger.LogInformation($"SearchSubscriptionScanner: searchQuery создан из подписки '{searchSubscription.guid}' ");
 
                 var searchResults = _elasticService.VacancySearch(searchQuery);
 
                 var vacanciesList = searchResults.Documents.ToList();
-                Console.WriteLine($"                 SearchSubscriptionScanner: по подписке найдено {vacanciesList.Count} записей");
+                Logger.LogInformation($"SearchSubscriptionScanner: по подписке найдено {vacanciesList.Count} записей");
 
                 if (vacanciesList.Count > 0)
                 {
@@ -123,7 +127,7 @@ namespace SciVacancies.SearchSubscriptionsService
 ";
                         EmailService.Send(new SciVacMailMessage(From,researcher.email, "Уведомление с портала вакансий", body));
 
-                        Console.WriteLine($"                 SearchSubscriptionScanner: письмо {researcher.email} для {researcherFullName}");
+                        Logger.LogInformation($"SearchSubscriptionScanner: письмо {researcher.email} для {researcherFullName}");
                     }
                     #endregion
                 }

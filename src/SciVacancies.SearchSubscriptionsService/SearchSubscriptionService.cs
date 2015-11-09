@@ -3,6 +3,7 @@ using System.Linq;
 using System.ServiceProcess;
 using Autofac;
 using Microsoft.Framework.Configuration;
+using Microsoft.Framework.Logging;
 using Quartz;
 using SciVacancies.SearchSubscriptionsService.Jobs;
 using SciVacancies.Services.Quartz;
@@ -15,12 +16,15 @@ namespace SciVacancies.SearchSubscriptionsService
         private readonly ILifetimeScope _lifetimeScope;
         private readonly ISchedulerService _schedulerService;
 
-        public SearchSubscriptionService(IConfiguration configuration, ILifetimeScope lifetimeScope)
+        private readonly ILogger Logger;
+
+        public SearchSubscriptionService(IConfiguration configuration, ILifetimeScope lifetimeScope, ILoggerFactory loggerFactory)
         {
             _lifetimeScope = lifetimeScope;
             _schedulerService = _lifetimeScope.Resolve<ISchedulerService>();
 
             MinuteInterval = configuration.Get<QuartzSettings>("QuartzSettings").Scheduler.ExecutionInterval;
+            this.Logger = loggerFactory.CreateLogger<SearchSubscriptionService>();
         }
 
         /// <summary>
@@ -38,35 +42,18 @@ namespace SciVacancies.SearchSubscriptionsService
         {
             base.OnStart(args);
 
-            Console.WriteLine("SearchSubscriptionService: Starting");
-
-            //logging
-
+            Logger.LogInformation("Starting quartz scheduler...");
             //quartz
             try
             {
-                //ISchedulerFactory schedulerFactory = new StdSchedulerFactory();
-                //_schedulerService = schedulerFactory.GetScheduler();
                 var jobKey = new JobKey("SciVacancies.SearchSubscriptionJob", "SciVacancies.SearchSubscriptionService");
                 var triggerKey = new TriggerKey("SciVacancies.SearchSubscriptionJobTrigger", "SciVacancies.SearchSubscriptionService");
 
-
-                //var job = JobBuilder.Create<SearchSubscriptionJob>()
-                //                            .WithIdentity(jobKey)
-                //                            .Build();
-                //var trigger = TriggerBuilder.Create()
-                //                                .WithIdentity(triggerKey)
-                //                                .WithSimpleSchedule(s => s
-                //                                    .WithIntervalInMinutes(MinuteInterval)
-                //                                    .RepeatForever())
-                //                                .Build();
-                //_schedulerService.ScheduleJob(job, trigger);
-
                 if (!_schedulerService.CheckExists(jobKey))
                 {
-                    //_schedulerService.DeleteJob(jobKey);
-                    _schedulerService.CreateSheduledJobWithStrongName(_lifetimeScope.Resolve<SearchSubscriptionJob>(),
-                        jobKey, MinuteInterval);
+                    Logger.LogInformation("Creating quartz sheduled job");
+                    _schedulerService.CreateSheduledJobWithStrongName(_lifetimeScope.Resolve<SearchSubscriptionJob>(), jobKey, MinuteInterval);
+                    Logger.LogInformation("Sheduled job has been created");
                 }
                 else
                 {
@@ -80,10 +67,14 @@ namespace SciVacancies.SearchSubscriptionsService
                     if (triggerHasChanges)
                     //recreate trigger
                     {
+                        Logger.LogInformation("Recreating quartz sheduled job");
+
                         _schedulerService.DeleteJob(jobKey);
 
                         _schedulerService.CreateSheduledJobWithStrongName(_lifetimeScope.Resolve<SearchSubscriptionJob>(),
                             jobKey, MinuteInterval);
+
+                        Logger.LogInformation("Sheduled job has been recreated");
                     }
                 }
 
@@ -91,23 +82,27 @@ namespace SciVacancies.SearchSubscriptionsService
             }
             catch (Exception e)
             {
-                Console.WriteLine($"Exception happend: {e.Message}");
+                Logger.LogError(e.Message, e);
             }
 
-
-            Console.WriteLine("SearchSubscriptionService: Started");
-            Console.WriteLine("");
+            Logger.LogInformation("Quartz scheduler has been started");
         }
 
         protected override void OnStop()
         {
-            Console.WriteLine("SearchSubscriptionService: Stopping");
-            _schedulerService.Shutdown();
-            //...???
+            Logger.LogInformation("Quartz scheduler is stopping");
 
-            base.OnStop();
-            Console.WriteLine("SearchSubscriptionService: Stopped");
-            Console.WriteLine("");
+            try
+            {
+                _schedulerService.Shutdown();
+                base.OnStop();
+            }
+            catch (Exception e)
+            {
+                Logger.LogError(e.Message, e);
+            }
+
+            Logger.LogInformation("Quartz scheduler has been stopped");
         }
     }
 }
