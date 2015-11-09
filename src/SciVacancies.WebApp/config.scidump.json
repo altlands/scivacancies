@@ -1,128 +1,132 @@
 ﻿{
-    "AppSettings": {
-        "SiteTitle": "Портал вакансий"
+  "AppSettings": {
+    "SiteTitle": "Портал вакансий"
+  },
+  "Data": {
+    "ReadModelDb": "Server=localhost;Database=scidump;User Id=postgres;Password=postgres",
+    "EventStoreDb": "Server=localhost;Database=scidump;User Id=postgres;Password=postgres"
+  },
+  "OAuthSettings": {
+    "Sciencemon": {
+      "AuthorizationEndpoint": "http://www.sciencemon.ru/oauth/v2/auth",
+      "TokenEndpoint": "http://www.sciencemon.ru/oauth/v2/token",
+      "UserEndpoint": "http://www.sciencemon.ru/api/user",
+      "ClientId": "1_ikniwc909y8kog4k4sc00oogg0g8scc8o4k0wocgw4cg84k00",
+      "ClientSecret": "67sq61c6xekgw0wgkosg04gwo488osk48ogks4og40cgws8ook",
+      "Scope": "",
+      "RedirectUrl": "http://192.168.10.141:5004/account/callback"
     },
-    "Data": {
-        "ReadModelDb": "Server=localhost;Database=scidump;User Id=postgres;Password=postgres",
-        "EventStoreDb": "Server=localhost;Database=scidump;User Id=postgres;Password=postgres"
-    },
-    "OAuthSettings": {
-        "Sciencemon": {
-            "AuthorizationEndpoint": "http://www.sciencemon.ru/oauth/v2/auth",
-            "TokenEndpoint": "http://www.sciencemon.ru/oauth/v2/token",
-            "UserEndpoint": "http://www.sciencemon.ru/api/user",
-            "ClientId": "1_ikniwc909y8kog4k4sc00oogg0g8scc8o4k0wocgw4cg84k00",
-            "ClientSecret": "67sq61c6xekgw0wgkosg04gwo488osk48ogks4og40cgws8ook",
-            "Scope": "",
-            "RedirectUrl": "http://192.168.10.141:5004/account/callback"
-        },
-        "Mapofscience": {
-            "AuthorizationEndpoint": "https://mapofscience.ru/scimap-sso/oauth/authorize",
-            "TokenEndpoint": "https://mapofscience.ru/scimap-sso/oauth/token",
-            "UserEndpoint": "https://mapofscience.ru/scimap-sso/api/v1/users/current/account",
-            "ClientId": "my-trusted-client",
-            "ClientSecret": "secret",
-            "Scope": "",
-            "RedirectUrl": "http://192.168.10.141:5004/account/callback"
-        }
-    },
-    //TODO
-    "ApiSettings": {
-        "Sciencemon": {
-            //"Organization": "http://www.sciencemon.ru/ext-api/v1.0/org/",
-            //"BasicAuthorization": "dev:informika"
-        },
-        "Mapofscience": {
-            "ResearcherProfile": "https://mapofscience.ru/users/current/profile"
-        }
-    },
-    "ElasticSettings": {
-        "ConnectionUrl": "http://localhost:9200/",
-        "DefaultIndex": "scidump-dev",
-        "MinScore": 0.2
-    },
-   "SagaSettings": { //TODO сделать только с положительными днями, обозвать соответствующе
-        "Date": {
-            "Committee": {
-                "FirstNotificationMinutes": -1,
-                "SecondNotificationMinutes": 2,
-                "ProlongingDays": 15
-            },
-            "OfferResponseAwaiting": {
-                "WinnerNotificationMinutes": -2,
-                "PretenderNotificationMinutes": -2
-            },
-            "DeltaFromPublishToInCommitteeMinMinutes": 15,
-            "DeltaFromInCommitteeStartToEndMinutes": 8
-        }
-    },
-    "QuartzSettings": {
-        "Scheduler": {
-            "InstanceName": "SciVacanciesScheduler",
-            "ExecutionInterval": 10
-        },
-        "JobStore": {
-            "Type": "Quartz.Impl.AdoJobStore.JobStoreTX, Quartz",
-            "UseProperties": "true",
-            "DataSource": "default",
-            "TablePrefix": "qrtz_",
-            "LockHandler": {
-                "Type": "Quartz.Impl.AdoJobStore.UpdateLockRowSemaphore, Quartz"
-            }
-        },
-        "DataSource": {
-            "Default": {
-                "ConnectionString": "Server=localhost; Database=scidump; User Id=postgres; Password=postgres",
-                "Provider": "Npgsql-20"
-            }
-        }
-    },
-    "AttachmentSettings": {
-        "VacancyApplication": {
-            "MaxItemSize": 500000,
-            "MaxTotalSize": 1000000,
-            "PhisicalPathPart": "/uploads/applications/attachments",
-            "UrlPathPart": "~/uploads/applications/attachments",
-            "AllowExtensions": ""
-        },
-        "Vacancy": {
-            "MaxItemSize": 500000,
-            "MaxTotalSize": 1000000,
-            "PhisicalPathPart": "/uploads/vacancies/attachments",
-            "UrlPathPart": "~/uploads/vacancies/attachments",
-            "AllowExtensions": ""
-        },
-        "Researcher": {
-            "MaxItemSize": 500000,
-            "MaxTotalSize": 500000,
-            "PhisicalPathPart": "/uploads/researcherphoto",
-            "UrlPathPart": "~/uploads/researcherphoto",
-            "AllowExtensions": "JPG,JPEG,PNG"
-        }
-    },
-    "SiteFileSettings": {
-        "FavIconName": "",
-        "PathToBlankAvatar": "/images/profile-photo.png"
-    },
-    "CaptchaSettings": {
-        "CaptchaDurationSeconds": 240
-    },
-    "EmailSettings": {
-        "Login": "mailer@alt-lan.com",
-        "Password": "123456-mailer",
-        "Host": "smtp.gmail.com",
-        "Port": 587,
-        "EnableSSL": true,
-        "UseDefaultCredentials": false,
-
-        "Domain": "192.168.10.141:5004",
-        "PortalLink": "<a target='_blank' href='http://192.168.10.141:5004'>192.168.10.141:5004</a>"
-    },
-    "LogSettings": {
-        "FileName": "/home/vagrant/sci/logs/sci-{Date}.log",
-        "LogLevel": "Information",
-        "TimeStampPattern": "{Timestamp:yyyy-MM-dd HH:mm:ss.fff} [{Level}] {Message}{NewLine}{Exception}",
-        "FileSizeBytes": "1048576",
-        "FileCountLimit": "31"
+    "Mapofscience": {
+      "AuthorizationEndpoint": "https://mapofscience.ru/scimap-sso/oauth/authorize",
+      "TokenEndpoint": "https://mapofscience.ru/scimap-sso/oauth/token",
+      "UserEndpoint": "https://mapofscience.ru/scimap-sso/api/v1/users/current/account",
+      "ClientId": "my-trusted-client",
+      "ClientSecret": "secret",
+      "Scope": "",
+      "RedirectUrl": "http://192.168.10.141:5004/account/callback"
     }
+  },
+  //TODO
+  "ApiSettings": {
+    "Sciencemon": {
+      //"Organization": "http://www.sciencemon.ru/ext-api/v1.0/org/",
+      //"BasicAuthorization": "dev:informika"
+    },
+    "Mapofscience": {
+      "ResearcherProfile": "https://mapofscience.ru/users/current/profile"
+    }
+  },
+  "ElasticSettings": {
+    "ConnectionUrl": "http://localhost:9200/",
+    "DefaultIndex": "scidump-dev",
+    "MinScore": 0.2
+  },
+  "SagaSettings": { //TODO сделать только с положительными днями, обозвать соответствующе
+    "Date": {
+      "Committee": {
+        "FirstNotificationMinutes": -1,
+        "SecondNotificationMinutes": 2,
+        "ProlongingDays": 15
+      },
+      "OfferResponseAwaiting": {
+        "WinnerNotificationMinutes": -2,
+        "PretenderNotificationMinutes": -2
+      },
+      "DeltaFromPublishToInCommitteeMinMinutes": 15,
+      "DeltaFromInCommitteeStartToEndMinutes": 8
+    }
+  },
+  "QuartzSettings": {
+    "Scheduler": {
+      "InstanceName": "SciVacanciesScheduler",
+      "ExecutionInterval": 10
+    },
+    "JobStore": {
+      "Type": "Quartz.Impl.AdoJobStore.JobStoreTX, Quartz",
+      "UseProperties": "true",
+      "DataSource": "default",
+      "TablePrefix": "qrtz_",
+      "LockHandler": {
+        "Type": "Quartz.Impl.AdoJobStore.UpdateLockRowSemaphore, Quartz"
+      }
+    },
+    "DataSource": {
+      "Default": {
+        "ConnectionString": "Server=localhost; Database=scidump; User Id=postgres; Password=postgres",
+        "Provider": "Npgsql-20"
+      }
+    }
+  },
+  "AttachmentSettings": {
+    "VacancyApplication": {
+      "MaxItemSize": 500000,
+      "MaxTotalSize": 1000000,
+      "PhisicalPathPart": "/uploads/applications/attachments",
+      "UrlPathPart": "~/uploads/applications/attachments",
+      "AllowExtensions": ""
+    },
+    "Vacancy": {
+      "MaxItemSize": 500000,
+      "MaxTotalSize": 1000000,
+      "PhisicalPathPart": "/uploads/vacancies/attachments",
+      "UrlPathPart": "~/uploads/vacancies/attachments",
+      "AllowExtensions": ""
+    },
+    "Researcher": {
+      "MaxItemSize": 500000,
+      "MaxTotalSize": 500000,
+      "PhisicalPathPart": "/uploads/researcherphoto",
+      "UrlPathPart": "~/uploads/researcherphoto",
+      "AllowExtensions": "JPG,JPEG,PNG"
+    }
+  },
+  "SiteFileSettings": {
+    "FavIconName": "",
+    "PathToBlankAvatar": "/images/profile-photo.png"
+  },
+  "CaptchaSettings": {
+    "CaptchaDurationSeconds": 240
+  },
+  "CacheSettings": {
+    "DictionaryExpiration": 20,
+    "MainPageExpiration": 20
+  },
+  "EmailSettings": {
+    "Login": "mailer@alt-lan.com",
+    "Password": "123456-mailer",
+    "Host": "smtp.gmail.com",
+    "Port": 587,
+    "EnableSSL": true,
+    "UseDefaultCredentials": false,
+
+    "Domain": "192.168.10.141:5004",
+    "PortalLink": "<a target='_blank' href='http://192.168.10.141:5004'>192.168.10.141:5004</a>"
+  },
+  "LogSettings": {
+    "FileName": "/home/vagrant/sci/logs/sci-{Date}.log",
+    "LogLevel": "Information",
+    "TimeStampPattern": "{Timestamp:yyyy-MM-dd HH:mm:ss.fff} [{Level}] {Message}{NewLine}{Exception}",
+    "FileSizeBytes": "1048576",
+    "FileCountLimit": "31"
+  }
 }

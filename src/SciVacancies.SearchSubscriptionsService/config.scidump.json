@@ -1,17 +1,17 @@
 ﻿{
     "Data": {
-        "ReadModelDb": "Server=localhost;Database=scivacancies;User Id=postgres;Password=ekobka",
+        "ReadModelDb": "Server=alt-dev002;Database=scivacancies;User Id=scivacservice;Password=scivacservice",
         "QuartzDb": ""
     },
     "ElasticSettings": {
         "ConnectionUrl": "http://alt-dev003:9200/",
-        "DefaultIndex": "scivacancies-ekobka",
+        "DefaultIndex": "scidump-dev",
         "MinScore": 0.2
     },
     "QuartzSettings": {
         "Scheduler": {
             "InstanceName": "SciVacancies.SearchSubscription",
-            "ExecutionInterval": 2
+            "ExecutionInterval": 60
         },
         "JobStore": {
             "Type": "Quartz.Impl.AdoJobStore.JobStoreTX, Quartz",
@@ -24,13 +24,20 @@
         },
         "DataSource": {
             "Default": {
-                "ConnectionString": "Server=localhost;Database=scivacancies;User Id=postgres;Password=ekobka",
+                "ConnectionString": "Server=alt-dev002;Database=scidump;User Id=scivacservice;Password=scivacservice",
                 "Provider": "Npgsql-20"
             }
         }
     },
-    "SmtpSettings": {
-        "Domain": "localhost:59075",
-        "PortalLink": "<a target='_blank' href='http://localhost:59075'>http://localhost:59075</a>"
+    "EmailSettings": {
+        "Login": "mailer@alt-lan.com",
+        "Password": "123456-mailer",
+        "Host": "smtp.gmail.com",
+        "Port": 587,
+        "EnableSSL": true,
+        "UseDefaultCredentials": false,
+
+        "Domain": "192.168.10.141:5004",
+        "PortalLink": "<a target='_blank' href='http://192.168.10.141:5004'>192.168.10.141:5004</a>"
     }
 }
