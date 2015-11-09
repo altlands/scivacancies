@@ -1,10 +1,10 @@
 ﻿{
   "Data": {
-    "ReadModelDb": "Server=localhost;Database=scivacancies;User Id=scivacservice;Password=scivacservice",
+    "ReadModelDb": "Server=localhost;Database=scivacancies;User Id=postgres;Password=postgres",
     "QuartzDb": ""
   },
   "ElasticSettings": {
-    "ConnectionUrl": "http://alt-dev003:9200/",
+    "ConnectionUrl": "http://localhost:9200/",
     "DefaultIndex": "scivacancies-dev",
     "MinScore": 0.2
   },
@@ -24,7 +24,7 @@
     },
     "DataSource": {
       "Default": {
-        "ConnectionString": "Server=alt-dev002;Database=scivacancies;User Id=scivacservice;Password=scivacservice",
+        "ConnectionString": "Server=localhost;Database=scivacancies;User Id=postgres;Password=postgres",
         "Provider": "Npgsql-20"
       }
     }

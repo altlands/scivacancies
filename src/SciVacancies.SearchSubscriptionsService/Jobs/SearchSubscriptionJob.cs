@@ -8,18 +8,19 @@ using Autofac;
 using Npgsql;
 using NPoco;
 using SciVacancies.Domain.Enums;
+using Microsoft.Framework.Logging;
 
 namespace SciVacancies.SearchSubscriptionsService.Jobs
 {
     public class SearchSubscriptionJob : IJob
     {
-        //static readonly string ServiceId = "#1";
-        //static readonly int Seed = 1;
         private readonly ILifetimeScope _lifetimeScope;
+        private readonly ILogger Logger;
 
-        public SearchSubscriptionJob(ILifetimeScope lifetimeScope)
+        public SearchSubscriptionJob(ILifetimeScope lifetimeScope, ILoggerFactory loggerFactory)
         {
             _lifetimeScope = lifetimeScope;
+            this.Logger = loggerFactory.CreateLogger<SearchSubscriptionJob>();
         }
 
         /// <summary>
@@ -28,10 +29,7 @@ namespace SciVacancies.SearchSubscriptionsService.Jobs
         /// <param name="context"></param>
         public void Execute(IJobExecutionContext context)
         {
-            Console.WriteLine();
-            Console.WriteLine("             SearchSubscriptionJob started");
-            Console.WriteLine($"             SearchSubscriptionJob: Executing at UTC time: {DateTime.Now.ToUniversalTime().ToLongTimeString()}");
-
+            Logger.LogInformation("SearchSubscriptionJob started");
             try
             {
                 var dataBase = _lifetimeScope.Resolve<IDatabase>();
@@ -44,26 +42,12 @@ namespace SciVacancies.SearchSubscriptionsService.Jobs
                     ? (subscriptionQueue.Count / poolCount) + 1
                     : 1;
 
-                Console.WriteLine($"             SearchSubscriptionJob: threadSize = {threadSize}");
-                //var manualResetEventsArray = new EventWaitHandle[poolCount];
-                //var searchSubscriptionScannerArray = new ISearchSubscriptionScanner[poolCount];
-
+                Logger.LogInformation($"SearchSubscriptionJob: threadSize = {threadSize}");
                 var i = 0;
-                //while (subscriptionQueue.Skip(threadSize * i).Take(threadSize).Any())
-                //{
-                //    manualResetEventsArray[i] = new EventWaitHandle(false, EventResetMode.AutoReset);
-                //    searchSubscriptionScannerArray[i] = _lifetimeScope.Resolve<ISearchSubscriptionScanner>();
-                //    searchSubscriptionScannerArray[i].Initialize(manualResetEventsArray[i], subscriptionQueue.Skip(threadSize * i).Take(threadSize));
-
-                //    //todo ntemnikov parallel linq
-                //    ThreadPool.QueueUserWorkItem(searchSubscriptionScannerArray[i].PoolHandleSubscriptions);
-                //    //manualResetEventsArray[i].Set();
-                //    i++;
-                //}
 
                 var actions = new List<Action>();
 
-                Console.WriteLine($"             SearchSubscriptionJob: Нашли {subscriptionQueue.Count} подписок");
+                Logger.LogInformation($"SearchSubscriptionJob: Нашли {subscriptionQueue.Count} подписок");
 
                 while (subscriptionQueue.Skip(threadSize * i).Take(threadSize).Any())
                 {
@@ -78,32 +62,16 @@ namespace SciVacancies.SearchSubscriptionsService.Jobs
                 }
                 var actionsArray = actions.ToArray();
 
-                Console.WriteLine($"             SearchSubscriptionJob: Обработка потоков началась в: {DateTime.Now.ToUniversalTime().ToLongTimeString()}");
+                Logger.LogInformation("SearchSubscriptionJob: Обработка потоков началась");
 
                 Parallel.Invoke(actionsArray);
 
-                Console.WriteLine($"             SearchSubscriptionJob: Обработка потоков завершена в: {DateTime.Now.ToUniversalTime().ToLongTimeString()}");
-
+                Logger.LogInformation("SearchSubscriptionJob: Обработка потоков завершена");
             }
-            catch (Exception exception)
+            catch (Exception e)
             {
-                Console.WriteLine($"             SearchSubscriptionJob: exception happend at UTC time: {DateTime.Now.ToUniversalTime().ToLongTimeString()}");
-                Console.WriteLine($"{exception.Message}");
-                Console.WriteLine("");
+                Logger.LogError(e.Message, e);
             }
-            //try
-            //{
-            //    // Wait for all threads in pool to finish scanning.
-            //    WaitHandle.WaitAll(manualResetEventsArray);
-            //}
-            //catch (Exception e)
-            //{
-            //    throw e;
-            //}
-            Console.WriteLine($"             SearchSubscriptionJob: Executed at UTC time: {DateTime.Now.ToUniversalTime().ToLongTimeString()}");
-            Console.WriteLine("             SearchSubscriptionJob ended");
-            Console.WriteLine();
         }
-
     }
 }

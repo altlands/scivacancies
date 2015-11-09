@@ -31,7 +31,9 @@ namespace SciVacancies.SearchSubscriptionsService
 
         public IContainer Container { get; set; }
 
-        private string devEnv;
+        private string devEnv { get; set; }
+
+        private Microsoft.Framework.Logging.ILogger Logger { get; set; }
 
         public Program(IApplicationEnvironment appEnv)
         {
@@ -47,12 +49,11 @@ namespace SciVacancies.SearchSubscriptionsService
             Configuration = configurationBuilder.Build();
 
             var builder = new ContainerBuilder();
-
-
-
             ConfigureContainer(builder);
-
             Container = builder.Build();
+
+            ILoggerFactory loggerFactory = Container.Resolve<ILoggerFactory>();
+            this.Logger = loggerFactory.CreateLogger<Program>();
         }
 
         public void ConfigureContainer(ContainerBuilder builder)
@@ -68,25 +69,18 @@ namespace SciVacancies.SearchSubscriptionsService
 
         public void Main(string[] args)
         {
-            Console.WriteLine("Started");
+            Logger.LogInformation("Resolving from container");
 
-            SearchSubscriptionService searchSubscriptionService;
-            //service initializing
+            SearchSubscriptionService service;
+            service = Container.Resolve<SearchSubscriptionService>();
             try
             {
-                searchSubscriptionService = Container.Resolve<SearchSubscriptionService>();
-                Console.WriteLine("Program: SearchSubscriptionService Resolved");
-                searchSubscriptionService.OnStart();
-                Console.WriteLine("Program: SearchSubscriptionService Started");
+                service.OnStart();
             }
-            catch (Exception exception)
+            catch (Exception e)
             {
-                Console.WriteLine("Program:" + exception.Message);
-                Console.ReadLine();
-                return;
+                Logger.LogError(e.Message, e);
             }
-            //searchSubscriptionService.ServiceName = "SearchSubscriptionService";
-            //ServiceBase.Run(searchSubscriptionService);
 
             var wroteCommand = Console.ReadLine();
             while (wroteCommand == null || !wroteCommand.Equals("stop"))
@@ -95,15 +89,14 @@ namespace SciVacancies.SearchSubscriptionsService
                 wroteCommand = Console.ReadLine();
             }
 
-            while (!searchSubscriptionService.CanStop)
+            while (!service.CanStop)
             {
                 Thread.Sleep(500);
             }
 
-            Console.WriteLine("Program: Stopping");
-            searchSubscriptionService.Stop();
-            Console.WriteLine("Program: SearchSubscriptionService Stopped");
-            Console.ReadLine();
+            Logger.LogInformation("Service is stopping");
+            service.Stop();
+            Logger.LogInformation("Service has been stopped");
         }
     }
 }

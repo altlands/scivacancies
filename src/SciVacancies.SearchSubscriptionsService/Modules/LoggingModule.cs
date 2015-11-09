@@ -31,6 +31,8 @@ namespace SciVacancies.SearchSubscriptionsService.Modules
                 long.Parse(Configuration["LogSettings:FileSizeBytes"]),
                 int.Parse(Configuration["LogSettings:FileCountLimit"])
             )
+            .WriteTo
+            .ColoredConsole()
             .MinimumLevel.Information()
             .CreateLogger();
 

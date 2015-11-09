@@ -37,8 +37,9 @@ namespace SciVacancies.SearchSubscriptionsService.Modules
 
             builder.RegisterType<SearchSubscriptionService>()
                 .AsSelf()
-                .EnableInterfaceInterceptors()
-                .InterceptedBy(typeof(CallLogger));
+                //.EnableInterfaceInterceptors()
+                //.InterceptedBy(typeof(CallLogger))
+                ;
 
             builder.RegisterType<SearchSubscriptionScanner>()
                 .As<ISearchSubscriptionScanner>()
