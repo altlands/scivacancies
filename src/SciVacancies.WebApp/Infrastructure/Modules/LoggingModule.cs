@@ -10,7 +10,8 @@ namespace SciVacancies.WebApp.Infrastructure
     {
         protected override void Load(ContainerBuilder builder)
         {
-            builder.Register(c => new CallLogger(c.Resolve<ILoggerFactory>()));
+            builder.Register(c => new CallLogger(c.Resolve<ILoggerFactory>()))
+                .InstancePerDependency();
         }
     }
 }

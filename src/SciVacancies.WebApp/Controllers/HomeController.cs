@@ -25,7 +25,7 @@ namespace SciVacancies.WebApp.Controllers
         {
             get
             {
-                return new MemoryCacheEntryOptions().SetAbsoluteExpiration(DateTimeOffset.UtcNow.AddSeconds(cacheSettings.Value.MainPageExpiration));
+                return new MemoryCacheEntryOptions().SetAbsoluteExpiration(DateTimeOffset.Now.AddSeconds(cacheSettings.Value.MainPageExpiration));
             }
         }
 

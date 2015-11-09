@@ -44,7 +44,7 @@ namespace SciVacancies.WebApp.Queries
         {
             get
             {
-                return new MemoryCacheEntryOptions().SetAbsoluteExpiration(DateTimeOffset.UtcNow.AddSeconds(cacheSettings.Value.DictionaryExpiration));
+                return new MemoryCacheEntryOptions().SetAbsoluteExpiration(DateTimeOffset.Now.AddSeconds(cacheSettings.Value.DictionaryExpiration));
             }
         }
 
