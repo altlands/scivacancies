@@ -119,11 +119,10 @@
         "PortalLink": "<a target='_blank' href='http://192.168.10.141:5004'>192.168.10.141:5004</a>"
     },
     "LogSettings": {
-        "LogLevel": "Verbose",
-        "FileName": "/var/log/scivacdump/sci.log",
-        "FileSizeKB": "4096",
-        "TimeStampPattern": "yyyy - MM - dd hh.mm.ss",
-        "RollFileExistsBehavior": "Overwrite",
-        "RollInterval": "Midnight"
+        "FileName": "/home/vagrant/sci/logs/sci-{Date}.log",
+        "LogLevel": "Information",
+        "TimeStampPattern": "{Timestamp:yyyy-MM-dd HH:mm:ss.fff} [{Level}] {Message}{NewLine}{Exception}",
+        "FileSizeBytes": "1048576",
+        "FileCountLimit": "31"
     }
 }
