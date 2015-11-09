@@ -20,7 +20,9 @@ namespace SciVacancies.Services.Logging
         }
         public void Intercept(IInvocation invocation)
         {
-            string invokeMessage = "Invoke :" + " Class = " + invocation.TargetType.ToString() + ", Method = " + invocation.Method.Name + ", Args = " + string.Join(", ", invocation.Arguments.Select(a => (a ?? "").ToString()).ToArray());
+            //string invokeMessage = "Invoke :" + " Class = " + invocation.TargetType.ToString() + ", Method = " + invocation.Method.Name + ", Args = " + string.Join(", ", invocation.Arguments.Select(a => (a ?? "").ToString()).ToArray());
+            string invokeMessage = "Invoke :" + " Class = " + invocation.TargetType.ToString() + ", Method = " + invocation.Method.Name;
+
             _logger.LogInformation(invokeMessage);
             try
             {
@@ -31,7 +33,9 @@ namespace SciVacancies.Services.Logging
                 _logger.LogError("ERROR");
                 _logger.LogError(e.Message, e);
             }
-            string finishMessage = "Finish :" + " Class = " + invocation.TargetType.ToString() + ", Method = " + invocation.Method.Name + ", Output = " + invocation.ReturnValue.ToString();
+            //string finishMessage = "Finish :" + " Class = " + invocation.TargetType.ToString() + ", Method = " + invocation.Method.Name + ", Output = " + invocation.ReturnValue.ToString();
+            string finishMessage = "Finish :" + " Class = " + invocation.TargetType.ToString() + ", Method = " + invocation.Method.Name;
+
             _logger.LogInformation(finishMessage);
         }
     }

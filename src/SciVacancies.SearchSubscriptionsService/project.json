@@ -1,41 +1,51 @@
 {
-    "version": "1.0.0-*",
-    "description": "",
-    "authors": [ "" ],
-    "tags": [ "" ],
-    "projectUrl": "",
-    "licenseUrl": "",
+  "version": "1.0.0-*",
+  "description": "",
+  "authors": [ "" ],
+  "tags": [ "" ],
+  "projectUrl": "",
+  "licenseUrl": "",
 
-    "dependencies": {
-        "Autofac": "4.0.0-beta8-157",
-        "NEST": "1.6.1",
-        "Npgsql.EntityFramework": "2.2.5",
-        "NPoco": "2.9.103",
-        "Quartz": "2.3.3",
-        "SciVacancies.ReadModel": "1.0.0-*",
-        "SciVacancies.ReadModel.ElasticSearchModel": "1.0.0-*",
-        "SciVacancies.SmtpNotifications": "1.0.0-*",
+  "dependencies": {
+    "SciVacancies.ReadModel": "1.0.0-*",
+    "SciVacancies.ReadModel.ElasticSearchModel": "1.0.0-*",
+    "SciVacancies.SmtpNotifications": "1.0.0-*",
 
-        "Microsoft.Framework.Configuration.Json": "1.0.0-beta8",
+    "Microsoft.Framework.Configuration.EnvironmentVariables": "1.0.0-beta8",
+    "Microsoft.Framework.Configuration.Json": "1.0.0-beta8",
+    "Microsoft.Dnx.Runtime": "1.0.0-beta8",
+    "Microsoft.Dnx.Runtime.Abstractions": "1.0.0-beta8",
 
-        "Microsoft.AspNet.Server.Kestrel": "1.0.0-beta8"
-    },
+    "Autofac": "4.0.0-beta8-157",
+    "Autofac.Extras.Quartz": "1.5.1",
+    "Autofac.Extras.DynamicProxy": "4.0.0-beta8-231",
+    "Autofac.Framework.DependencyInjection": "4.0.0-beta8-157",
 
-    "commands": {
-        "SciVacancies.SearchSubscriptionsService": "SciVacancies.SearchSubscriptionsService"
-    },
+    "NEST": "1.6.1",
+    "Npgsql.EntityFramework": "2.2.5",
+    "NPoco": "2.9.103",
+    "Quartz": "2.3.3",
 
-    "frameworks": {
-        "dnx451": {
-            "frameworkAssemblies": {
-                "System.Data": "4.0.0.0",
-                "System.ServiceProcess": "4.0.0.0"
-            }
-        }
-    },
+    "Serilog": "1.5.12",
+    "Serilog.Framework.Logging": "1.0.0-beta8-10065"
 
-    "configurations": {
-        "net45": { },
-        "k10": { }
+  },
+
+  "commands": {
+    "SciVacancies.SearchSubscriptionsService": "SciVacancies.SearchSubscriptionsService"
+  },
+
+  "frameworks": {
+    "dnx451": {
+      "frameworkAssemblies": {
+        "System.Data": "4.0.0.0",
+        "System.ServiceProcess": "4.0.0.0"
+      }
     }
+  },
+
+  "configurations": {
+    "net45": { },
+    "k10": { }
+  }
 }

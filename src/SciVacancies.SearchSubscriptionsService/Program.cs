@@ -4,6 +4,7 @@ using System.Collections;
 using System.ServiceProcess;
 using System.Threading;
 using Autofac;
+using Autofac.Framework.DependencyInjection;
 using Nest;
 using Npgsql;
 using NPoco;
@@ -14,76 +15,66 @@ using SciVacancies.Services.Email;
 using SciVacancies.Services.Quartz;
 using SciVacancies.Services.Elastic;
 using Microsoft.Framework.Configuration;
+using Microsoft.Framework.Logging;
+using Microsoft.Framework.DependencyInjection;
+//using Microsoft.rd
+using SciVacancies.SearchSubscriptionsService.Modules;
+using Microsoft.Dnx.Runtime;
+
+using Serilog;
 
 namespace SciVacancies.SearchSubscriptionsService
 {
     public class Program
     {
-        public void Main(string[] args)
+        public IConfiguration Configuration { get; set; }
+
+        public IContainer Container { get; set; }
+
+        private string devEnv;
+
+        public Program(IApplicationEnvironment appEnv)
         {
             var vars = Environment.GetEnvironmentVariables();
-            var devEnv = (string)vars.Cast<DictionaryEntry>().FirstOrDefault(e => e.Key.Equals("dev_env")).Value;
-            var configuration = new ConfigurationBuilder()
+            devEnv = (string)vars.Cast<DictionaryEntry>().FirstOrDefault(e => e.Key.Equals("dev_env")).Value;
+
+            var configurationBuilder = new ConfigurationBuilder()
+                .SetBasePath(appEnv.ApplicationBasePath)
                 .AddJsonFile("config.json")
                 .AddJsonFile($"config.{devEnv}.json", optional: true)
-                .AddEnvironmentVariables()
-                .Build()
-                ;
-            
+                .AddEnvironmentVariables();
+
+            Configuration = configurationBuilder.Build();
+
             var builder = new ContainerBuilder();
-            builder.Register(c => configuration).As<IConfiguration>().SingleInstance();
-            builder.RegisterType<EmailService>().As<IEmailService>().InstancePerDependency();
-            builder.RegisterType<SearchSubscriptionService>().AsSelf();
-            builder.RegisterType<QuartzService>().AsImplementedInterfaces();
 
-            ConnectionSettings elasticConnectionSettings = new ConnectionSettings(new Uri(configuration.Get<ElasticSettings>("ElasticSettings").ConnectionUrl), defaultIndex: configuration.Get<ElasticSettings>("ElasticSettings").DefaultIndex);
-            builder.Register(c => new ElasticClient(elasticConnectionSettings)).As<IElasticClient>().InstancePerDependency();
-            //TODO single instanse or not?
-            builder.Register(c => new SearchService(configuration, c.Resolve<IElasticClient>())).As<IElasticService>().InstancePerDependency();
 
-            builder.RegisterType<AutofacJobFactory>().As<IJobFactory>().InstancePerLifetimeScope();
-            builder.RegisterType<SearchSubscriptionJob>().As<IJob>().InstancePerLifetimeScope().AsSelf();
-            builder.RegisterTypes(System.Reflection.Assembly.GetAssembly(typeof(Program)).GetTypes())
-                .Where(t => t != typeof(IJob) && typeof(IJob).IsAssignableFrom(t))
-                .AsSelf()
-                .InstancePerLifetimeScope();
-            builder.RegisterType<SearchSubscriptionScanner>().As<ISearchSubscriptionScanner>().InstancePerDependency();
-            builder.Register(c => new Database(configuration.Get<DataSettings>("Data").ReadModelDb, NpgsqlFactory.Instance)).As<IDatabase>().InstancePerDependency();
-            //builder.Register(c => new Database(Config.Get("Data:ReadModelDb"), NpgsqlFactory.Instance)).As<IDatabase>().InstancePerLifetimeScope();
 
-            var container = builder.Build();
+            ConfigureContainer(builder);
 
-            //HostFactory.Run(hostConfigurator =>
-            //{
-            //    hostConfigurator.StartAutomatically();
-            //    hostConfigurator.Service<SearchSubscriptionService>(serviceConfigurator =>
-            //    {
-            //        serviceConfigurator.ConstructUsing(() => new SearchSubscriptionService());
-            //        serviceConfigurator.WhenStarted((service, hostControl) => service.Start(hostControl));
-            //        serviceConfigurator.WhenStarted((service, hostControl) => service.Stop(hostControl));
-            //    });
+            Container = builder.Build();
+        }
 
-            //    if (ServiceConfiguration.UseCredentials)
-            //    {
-            //        hostConfigurator.RunAs(ServiceConfiguration.ServiceUserName, ServiceConfiguration.ServicePassword);
-            //    }
-            //    else
-            //    {
-            //        hostConfigurator.RunAsLocalSystem();
-            //    }
+        public void ConfigureContainer(ContainerBuilder builder)
+        {
+            builder.Register(c => Configuration).As<IConfiguration>().SingleInstance();
 
-            //    hostConfigurator.SetDescription("SciVacancies.SearchSubscriptionService: выполняет поиск Подписок, их обработку и рассылку уведомлений");
-            //    hostConfigurator.SetDisplayName("SciVacancies.SearchSubscriptionService");
-            //    hostConfigurator.SetServiceName("SciVacancies.SearchSubscriptionService");
-            //});
+            builder.RegisterModule(new ReadModelModule(Configuration));
+            builder.RegisterModule(new ServicesModule(Configuration));
+            builder.RegisterModule(new QuartzModule());
+            builder.RegisterModule(new SmtpNotificationModule());
+            builder.RegisterModule(new LoggingModule(Configuration));
+        }
 
+        public void Main(string[] args)
+        {
             Console.WriteLine("Started");
 
             SearchSubscriptionService searchSubscriptionService;
             //service initializing
             try
             {
-                searchSubscriptionService = container.Resolve<SearchSubscriptionService>();
+                searchSubscriptionService = Container.Resolve<SearchSubscriptionService>();
                 Console.WriteLine("Program: SearchSubscriptionService Resolved");
                 searchSubscriptionService.OnStart();
                 Console.WriteLine("Program: SearchSubscriptionService Started");
@@ -113,7 +104,6 @@ namespace SciVacancies.SearchSubscriptionsService
             searchSubscriptionService.Stop();
             Console.WriteLine("Program: SearchSubscriptionService Stopped");
             Console.ReadLine();
-
         }
     }
 }

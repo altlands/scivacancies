@@ -39,5 +39,12 @@
 
     "Domain": "localhost:59075",
     "PortalLink": "<a target='_blank' href='http://localhost:59075'>localhost:59075</a>"
+  },
+  "LogSettings": {
+    "FileName": "sci-{Date}.log",
+    "LogLevel": "Information",
+    "TimeStampPattern": "{Timestamp:yyyy-MM-dd HH:mm:ss.fff} [{Level}] {Message}{NewLine}{Exception}",
+    "FileSizeBytes": "1048576",
+    "FileCountLimit": "31"
   }
 }
