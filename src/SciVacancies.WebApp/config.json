@@ -123,7 +123,7 @@
     "PortalLink": "<a target='_blank' href='http://xn----8sbfhdabdwf1afqu5baxe0f2d.xn--p1ai'>ученые-исследователи.рф</a>"
   },
   "LogSettings": {
-    "FileName": "F:/Logs/{Date}-sci.log",
+    "FileName": "sci-{Date}.log",
     "LogLevel": "Information",
     "TimeStampPattern": "{Timestamp:yyyy-MM-dd HH:mm:ss.fff} [{Level}] {Message}{NewLine}{Exception}",
     "FileSizeBytes": "1048576",
