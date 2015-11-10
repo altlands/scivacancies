@@ -105,7 +105,7 @@
     "PathToBlankAvatar": "/images/profile-photo.png"
   },
   "CaptchaSettings": {
-    "CaptchaDurationSeconds": 240
+    "CaptchaDurationSeconds": 120
   },
   "CacheSettings": {
     "DictionaryExpiration": 20,
