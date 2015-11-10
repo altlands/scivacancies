@@ -558,7 +558,7 @@ namespace SciVacancies.WebApp.Controllers
             return Content("TestOrganizations were removed");
         }
 
-        public IActionResult testclean()
+        public IActionResult cleanit()
         {
             //_mediator.Send(new RemoveVacancyCommand { VacancyGuid = Guid.Parse("35403c79-62fd-4b25-ab83-f60c6827db21") });
             //_mediator.Send(new RemoveVacancyCommand { VacancyGuid = Guid.Parse("4d286586-81d4-461e-ad6d-097bed87389d") });
@@ -581,23 +581,24 @@ namespace SciVacancies.WebApp.Controllers
 
             var guids = new List<string>
             {
-               //"35403c79-62fd-4b25-ab83-f60c6827db21",
-               //"4d286586-81d4-461e-ad6d-097bed87389d",
-               //"9f044e73-05fc-4dc9-b4c5-6f0f598d1445",
-               //"4d4dc808-1d61-4a5a-8278-afd8ac7b74ac",
-               //"d3799cb7-f969-428b-a361-60e4af15ab50",
-               //"b1d25a03-7e80-4f89-86c8-c8e755a2f1a1",
-               //"de3d3974-b7fb-408f-9819-8d4c934c6dfd",
-               //"0360fa2a-9b8b-4651-920a-28d02ce60e93",
-               //"a790a5ec-5b0a-4248-8e7e-cb3a384f4a4f",
-               //"60f97a34-5226-4245-bf12-6c1f7ba42d22",
-               //"2187fe65-d2ca-437c-8704-8cf16f1332be",
-               //"8a1a27e4-1c85-436f-9a45-b229cb458149",
-               //"73fa44eb-00bb-4ce4-b657-4cebe8bf2423",
-               //"6b542b7f-d643-4936-8bcd-a387c03a6f4d",
-               //"c8541802-67ed-4e69-b7f4-b8168e65e3ea",
-               //"df38808f-a116-4a36-89c0-a251b4451140",
-               //"63d8dce5-af8f-4562-a231-54ac03d09a32"
+               "35403c79-62fd-4b25-ab83-f60c6827db21",
+               "4d286586-81d4-461e-ad6d-097bed87389d",
+               "9f044e73-05fc-4dc9-b4c5-6f0f598d1445",
+               "4d4dc808-1d61-4a5a-8278-afd8ac7b74ac",
+               "d3799cb7-f969-428b-a361-60e4af15ab50",
+               "b1d25a03-7e80-4f89-86c8-c8e755a2f1a1",
+               "de3d3974-b7fb-408f-9819-8d4c934c6dfd",
+               "0360fa2a-9b8b-4651-920a-28d02ce60e93",
+               "a790a5ec-5b0a-4248-8e7e-cb3a384f4a4f",
+               "60f97a34-5226-4245-bf12-6c1f7ba42d22",
+               "2187fe65-d2ca-437c-8704-8cf16f1332be",
+               "8a1a27e4-1c85-436f-9a45-b229cb458149",
+               "73fa44eb-00bb-4ce4-b657-4cebe8bf2423",
+               "6b542b7f-d643-4936-8bcd-a387c03a6f4d",
+               "c8541802-67ed-4e69-b7f4-b8168e65e3ea",
+               "df38808f-a116-4a36-89c0-a251b4451140",
+               "d85058df-6bb7-4745-ba01-f184bf794e3a",
+               "63d8dce5-af8f-4562-a231-54ac03d09a32"
             };
 
             foreach (var guid in guids.Select(Guid.Parse))
@@ -615,21 +616,29 @@ namespace SciVacancies.WebApp.Controllers
 
                 if (vacancy != null)
                 {
-                    _mediator.Send(new RemoveVacancyCommand { VacancyGuid = guid });
-                    Console.WriteLine($"{guid} +++ removed");
 
-                    try
-                    {
-                        vacancy = _mediator.Send(new SingleVacancyQuery { VacancyGuid = guid });
-                    }
-                    catch (Exception)
-                    {
-                        // ignored
-                    }
-                    if (vacancy == null)
-                        Console.WriteLine($"{guid} +++ not found after clear");
+                    if (vacancy.status == VacancyStatus.Removed)
+                        Console.WriteLine($"{guid} removed");
                     else
-                        Console.WriteLine($"{guid} --- found after clear");
+                    {
+
+                        _mediator.Send(new RemoveVacancyCommand { VacancyGuid = guid });
+                        Console.WriteLine($"{guid} +++ removed");
+
+                        try
+                        {
+                            vacancy = _mediator.Send(new SingleVacancyQuery { VacancyGuid = guid });
+                        }
+                        catch (Exception)
+                        {
+                            // ignored
+                        }
+                        if (vacancy.status == VacancyStatus.Removed)
+                            Console.WriteLine($"{guid} +++ found as removed");
+                        else
+                            Console.WriteLine($"{guid} --- found after clear");
+                    }
+
                     vacancy = null;
                 }
 
