@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Globalization;
 using Microsoft.Framework.Configuration;
+using Microsoft.Framework.Logging;
 
 using Nest;
 
@@ -15,11 +16,13 @@ namespace SciVacancies.Services.Elastic
     {
         readonly IElasticClient elastic;
         readonly IConfiguration configuration;
+        readonly ILogger Logger;
 
-        public SearchService(IConfiguration configuration, IElasticClient elastic)
+        public SearchService(IConfiguration configuration, IElasticClient elastic, ILoggerFactory loggerFactory)
         {
             this.configuration = configuration;
             this.elastic = elastic;
+            this.Logger = loggerFactory.CreateLogger<SearchService>();
         }
 
         public ISearchResponse<Vacancy> VacancySearch(SearchQuery sq)
@@ -42,6 +45,8 @@ namespace SciVacancies.Services.Elastic
                 sdescriptor.Take((int)sq.PageSize);
             }
 
+            var min = double.Parse(configuration["ElasticSettings:MinScore"], CultureInfo.InvariantCulture);
+            Logger.LogInformation($"Parsed minscore : {min}");
             sdescriptor.MinScore(double.Parse(configuration["ElasticSettings:MinScore"], CultureInfo.InvariantCulture));
 
             switch (sq.OrderFieldByDirection)

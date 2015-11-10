@@ -1,7 +1,7 @@
 ﻿{
   "Data": {
-    "ReadModelDb": "Server=localhost;Database=scivacancies;User Id=postgres;Password=postgres",
-    "EventStoreDb": "Server=localhost;Database=scivacancies;User Id=postgres;Password=postgres"
+    "ReadModelDb": "Server=192.168.10.141;Database=scivacancies;User Id=postgres;Password=postgres",
+    "EventStoreDb": "Server=192.168.10.141;Database=scivacancies;User Id=postgres;Password=postgres"
   },
   "OAuthSettings": {
     "Sciencemon": {
@@ -34,9 +34,9 @@
     }
   },
   "ElasticSettings": {
-    "ConnectionUrl": "http://localhost:9200/",
+    "ConnectionUrl": "http://192.168.10.141:9200/",
     "DefaultIndex": "scivacancies-dev",
-    "MinScore": 0.3
+    "MinScore": "0.3"
   },
   "SagaSettings": { //TODO сделать только с положительными днями, обозвать соответствующе
     "Date": {
@@ -69,31 +69,31 @@
     },
     "DataSource": {
       "Default": {
-        "ConnectionString": "Server = localhost; Database = scivacancies; User Id = postgres; Password = postgres",
+        "ConnectionString": "Server = 192.168.10.141; Database = scivacancies; User Id = postgres; Password = postgres",
         "Provider": "Npgsql-20"
       }
-    },
-    "CacheSettings": {
-      "DictionaryExpiration": 5,
-      "MainPageExpiration": 5
-    },
-    "EmailSettings": {
-      "Login": "mailer@alt-lan.com",
-      "Password": "123456-mailer",
-      "Host": "smtp.gmail.com",
-      "Port": 587,
-      "EnableSSL": true,
-      "UseDefaultCredentials": false,
-
-      "Domain": "localhost:59075",
-      "PortalLink": "<a target='_blank' href='http://localhost:59075'>localhost:59075</a>"
-    },
-    "LogSettings": {
-      "FileName": "F:/Logs/sci-{Date}.log",
-      "LogLevel": "Information",
-      "TimeStampPattern": "{Timestamp:yyyy-MM-dd HH:mm:ss.fff} [{Level}] {Message}{NewLine}{Exception}",
-      "FileSizeBytes": "1048576",
-      "FileCountLimit": "31"
     }
+  },
+  "CacheSettings": {
+    "DictionaryExpiration": 5,
+    "MainPageExpiration": 5
+  },
+  "EmailSettings": {
+    "Login": "mailer@alt-lan.com",
+    "Password": "123456-mailer",
+    "Host": "smtp.gmail.com",
+    "Port": 587,
+    "EnableSSL": true,
+    "UseDefaultCredentials": false,
+
+    "Domain": "localhost:59075",
+    "PortalLink": "<a target='_blank' href='http://localhost:59075'>localhost:59075</a>"
+  },
+  "LogSettings": {
+    "FileName": "F:/Logs/sci-{Date}.log",
+    "LogLevel": "Information",
+    "TimeStampPattern": "{Timestamp:yyyy-MM-dd HH:mm:ss.fff} [{Level}] {Message}{NewLine}{Exception}",
+    "FileSizeBytes": "1048576",
+    "FileCountLimit": "31"
   }
 }

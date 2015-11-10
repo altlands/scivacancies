@@ -3,6 +3,7 @@ using SciVacancies.Services.Logging;
 
 using System;
 using Microsoft.Framework.Configuration;
+using Microsoft.Framework.Logging;
 
 using Nest;
 using Autofac;
@@ -29,7 +30,7 @@ namespace SciVacancies.WebApp.Infrastructure
                 .EnableInterfaceInterceptors()
                 .InterceptedBy(typeof(CallLogger))
                 ;
-            builder.Register(c => new SearchService(_configuration, c.Resolve<IElasticClient>()))
+            builder.Register(c => new SearchService(_configuration, c.Resolve<IElasticClient>(), c.Resolve<ILoggerFactory>()))
                 .As<IElasticService>()
                 .EnableInterfaceInterceptors()
                 .InterceptedBy(typeof(CallLogger))
