@@ -36,15 +36,27 @@ namespace SciVacancies.WebApp
             var vars = Environment.GetEnvironmentVariables();
             devEnv = (string)vars.Cast<DictionaryEntry>().FirstOrDefault(e => e.Key.Equals("dev_env")).Value;
             // Setup configuration sources.
-            var configurationBuilder = new ConfigurationBuilder()
-                .SetBasePath(appEnv.ApplicationBasePath)
-                .AddJsonFile("config.json")
-                .AddJsonFile($"config.{devEnv}.json", optional: true)
-                .AddEnvironmentVariables();
+
+            IConfigurationBuilder configurationBuilder;
+
+            if (String.IsNullOrEmpty(devEnv))
+            {
+                configurationBuilder = new ConfigurationBuilder()
+                    .SetBasePath(appEnv.ApplicationBasePath)
+                    .AddJsonFile("config.json")
+                    .AddEnvironmentVariables();
+            }
+            else
+            {
+               configurationBuilder = new ConfigurationBuilder()
+                    .SetBasePath(appEnv.ApplicationBasePath)
+                    .AddJsonFile($"config.{devEnv}.json", optional: false)
+                    .AddEnvironmentVariables();
+            }
 
             Configuration = configurationBuilder.Build();
 
-            
+
             var serilogLogger = new LoggerConfiguration()
                 .WriteTo
                 .RollingFile(

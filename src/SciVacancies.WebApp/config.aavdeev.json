@@ -34,9 +34,9 @@
     }
   },
   "ElasticSettings": {
-    "ConnectionUrl": "http://altlandev05.cloudapp.net:9200/",
-    "DefaultIndex": "scivacancies_2",
-    "MinScore": "0.3"
+    "ConnectionUrl": "http://localhost:9200/",
+    "DefaultIndex": "scivacancies-dev",
+    "MinScore": 0.3
   },
   "SagaSettings": { //TODO сделать только с положительными днями, обозвать соответствующе
     "Date": {
@@ -74,8 +74,8 @@
       }
     },
     "CacheSettings": {
-      "DictionaryExpiration": 20,
-      "MainPageExpiration": 20
+      "DictionaryExpiration": 5,
+      "MainPageExpiration": 5
     },
     "EmailSettings": {
       "Login": "mailer@alt-lan.com",

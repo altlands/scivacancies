@@ -89,7 +89,7 @@ namespace SciVacancies.Domain.Aggregates
         }
         public void Remove()
         {
-            if (Status != VacancyStatus.InProcess) throw new InvalidOperationException("vacancy state is invalid");
+            //if (Status != VacancyStatus.InProcess) throw new InvalidOperationException("vacancy state is invalid");
 
             RaiseEvent(new VacancyRemoved
             {
