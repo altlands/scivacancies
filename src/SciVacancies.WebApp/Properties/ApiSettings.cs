@@ -7,6 +7,6 @@
     }
     public class ApiProviderSettings
     {
-        //TODO - 
+        public string UserProfile { get; set; }
     }
 }

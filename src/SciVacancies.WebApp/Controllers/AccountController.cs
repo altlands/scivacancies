@@ -32,13 +32,15 @@ namespace SciVacancies.WebApp.Controllers
         private readonly SciVacUserManager _userManager;
         private readonly IOptions<OAuthSettings> _oauthSettings;
         private readonly IAuthorizeService _authorizeService;
+        private readonly IOptions<ApiSettings> _apiSettings;
 
-        public AccountController(SciVacUserManager userManager, IMediator mediator, IOptions<OAuthSettings> oAuthSettings, IAuthorizeService authorizeService)
+        public AccountController(SciVacUserManager userManager, IMediator mediator, IOptions<OAuthSettings> oAuthSettings, IOptions<ApiSettings> apiSettings, IAuthorizeService authorizeService)
         {
             _mediator = mediator;
             _userManager = userManager;
             _oauthSettings = oAuthSettings;
             _authorizeService = authorizeService;
+            _apiSettings = apiSettings;
         }
 
         public IActionResult LoginUser(string id)
@@ -326,7 +328,7 @@ namespace SciVacancies.WebApp.Controllers
                                             _userManager.FindByEmail(claims.Find(f => f.Type.Equals("email")).Value);
 
                                         //получаем информацию о Пользователе с Карты Наук
-                                        var jsonUser = _authorizeService.GetResearcherProfile(tokenResponse.AccessToken);
+                                        var jsonUser = _authorizeService.GetResearcherProfile(tokenResponse.AccessToken, _apiSettings.Value.Mapofscience.UserProfile);
                                         OAuthResProfile researcherProfile =
                                             JsonConvert.DeserializeObject<OAuthResProfile>(jsonUser);
                                         var accountResearcherRegisterDataModel =

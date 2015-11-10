@@ -20,6 +20,7 @@
       "AuthorizationEndpoint": "https://mapofscience.ru/scimap-sso/oauth/authorize",
       "TokenEndpoint": "https://mapofscience.ru/scimap-sso/oauth/token",
       "UserEndpoint": "https://mapofscience.ru/scimap-sso/api/v1/users/current/account",
+      "UserProfile": "https://mapofscience.ru/scimap-sso/api/v1/users/current/profile",
       "ClientId": "my-trusted-client",
       "ClientSecret": "secret",
       "Scope": "",
@@ -33,7 +34,7 @@
       //"BasicAuthorization": "dev:informika"
     },
     "Mapofscience": {
-      "ResearcherProfile": "https://mapofscience.ru/users/current/profile"
+      "UserProfile": "https://mapofscience/scimap-sso/api/v1/users/current/profile"
     }
   },
   "ElasticSettings": {

@@ -17,13 +17,13 @@
       "RedirectUrl": "http://192.168.10.141:5004/account/callback"
     },
     "Mapofscience": {
-      "AuthorizationEndpoint": "https://mapofscience.ru/scimap-sso/oauth/authorize",
-      "TokenEndpoint": "https://mapofscience.ru/scimap-sso/oauth/token",
-      "UserEndpoint": "https://mapofscience.ru/scimap-sso/api/v1/users/current/account",
+      "AuthorizationEndpoint": "http://scimap-sso.alt-lan.com/scimap-sso/oauth/authorize",
+      "TokenEndpoint": "http://scimap-sso.alt-lan.com/scimap-sso/oauth/token",
+      "UserEndpoint": "http://scimap-sso.alt-lan.com/scimap-sso/api/v1/users/current/account",
       "ClientId": "my-trusted-client",
       "ClientSecret": "secret",
       "Scope": "",
-      "RedirectUrl": "http://192.168.10.141:5004/account/callback"
+      "RedirectUrl": "http://localhost:59075/account/callback"
     }
   },
   //TODO
@@ -33,7 +33,7 @@
       //"BasicAuthorization": "dev:informika"
     },
     "Mapofscience": {
-      "ResearcherProfile": "https://mapofscience.ru/users/current/profile"
+      "UserProfile": "http://scimap-sso.alt-lan.com/scimap-sso/api/v1/users/current/profile"
     }
   },
   "ElasticSettings": {
