@@ -45,9 +45,9 @@ namespace SciVacancies.Services.Elastic
                 sdescriptor.Take((int)sq.PageSize);
             }
 
-            var min = double.Parse(configuration["ElasticSettings:MinScore"], CultureInfo.InvariantCulture);
-            Logger.LogInformation($"Parsed minscore : {min}");
-            sdescriptor.MinScore(double.Parse(configuration["ElasticSettings:MinScore"], CultureInfo.InvariantCulture));
+            var minscore = double.Parse(configuration["ElasticSettings:MinScore"], CultureInfo.InvariantCulture);
+            Logger.LogInformation($" Parsed minscore from config : {minscore}");
+            sdescriptor.MinScore(minscore);
 
             switch (sq.OrderFieldByDirection)
             {

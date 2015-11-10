@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.Framework.Logging;
 
 using Castle.DynamicProxy;
+using Newtonsoft.Json;
 
 namespace SciVacancies.Services.Logging
 {
@@ -21,7 +22,8 @@ namespace SciVacancies.Services.Logging
         public void Intercept(IInvocation invocation)
         {
             //string invokeMessage = "Invoke :" + " Class = " + invocation.TargetType.ToString() + ", Method = " + invocation.Method.Name + ", Args = " + string.Join(", ", invocation.Arguments.Select(a => (a ?? "").ToString()).ToArray());
-            string invokeMessage = "Invoke :" + " Class = " + invocation.TargetType.ToString() + ", Method = " + invocation.Method.Name;
+            //string invokeMessage = "Invoke :" + " Class = " + invocation.TargetType.ToString() + ", Method = " + invocation.Method.Name;
+            string invokeMessage = "Invoke :" + " Class = " + invocation.TargetType.ToString() + ", Method = " + invocation.Method.Name + ", SerializedArguments = "+ JsonConvert.SerializeObject(invocation.Arguments);
 
             _logger.LogInformation(invokeMessage);
             try
@@ -33,8 +35,8 @@ namespace SciVacancies.Services.Logging
                 _logger.LogError("ERROR");
                 _logger.LogError(e.Message, e);
             }
-            //string finishMessage = "Finish :" + " Class = " + invocation.TargetType.ToString() + ", Method = " + invocation.Method.Name + ", Output = " + invocation.ReturnValue.ToString();
-            string finishMessage = "Finish :" + " Class = " + invocation.TargetType.ToString() + ", Method = " + invocation.Method.Name;
+            string finishMessage = "Finish :" + " Class = " + invocation.TargetType.ToString() + ", Method = " + invocation.Method.Name + ", Output = " + JsonConvert.SerializeObject(invocation.ReturnValue);
+            //string finishMessage = "Finish :" + " Class = " + invocation.TargetType.ToString() + ", Method = " + invocation.Method.Name;
 
             _logger.LogInformation(finishMessage);
         }
