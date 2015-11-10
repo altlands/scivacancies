@@ -26,9 +26,6 @@ namespace SciVacancies.WebApp.Infrastructure
 
             builder.Register(c => new ElasticClient(elasticConnectionSettings))
                 .As<IElasticClient>()
-                //.SingleInstance()
-                .EnableInterfaceInterceptors()
-                .InterceptedBy(typeof(CallLogger))
                 ;
             builder.Register(c => new SearchService(_configuration, c.Resolve<IElasticClient>(), c.Resolve<ILoggerFactory>()))
                 .As<IElasticService>()

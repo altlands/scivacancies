@@ -35,7 +35,7 @@ namespace SciVacancies.Services.Logging
                 _logger.LogError("ERROR");
                 _logger.LogError(e.Message, e);
             }
-            string finishMessage = "Finish :" + " Class = " + invocation.TargetType.ToString() + ", Method = " + invocation.Method.Name + ", Output = " + JsonConvert.SerializeObject(invocation.ReturnValue);
+            string finishMessage = "Finish :" + " Class = " + invocation.TargetType.ToString() + ", Method = " + invocation.Method.Name + ", Output = " + invocation.ReturnValue.GetType().ToString();
             //string finishMessage = "Finish :" + " Class = " + invocation.TargetType.ToString() + ", Method = " + invocation.Method.Name;
 
             _logger.LogInformation(finishMessage);
