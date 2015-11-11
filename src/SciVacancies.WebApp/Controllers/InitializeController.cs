@@ -57,6 +57,8 @@ namespace SciVacancies.WebApp.Controllers
                         SecondNameEng = "Pupkin",
                         PatronymicEng = "Ivanovich",
                         BirthYear = DateTime.Now.AddYears(-50).Year,
+                        Password="Scivac2015",
+                        ConfirmPassword="Scivac2015",
                         Interests = JsonConvert.SerializeObject(new List<InterestEditViewModel>
                         {
                             new InterestEditViewModel {IntName = "Научный интерес 1", IntNameEn = "Research Interest 1"},

@@ -5,7 +5,7 @@
   },
   "ElasticSettings": {
     "ConnectionUrl": "http://localhost:9200/",
-    "DefaultIndex": "scivacancies",
+    "DefaultIndex": "scivacancies-dev",
     "MinScore": 0.2
   },
   "QuartzSettings": {
@@ -37,7 +37,7 @@
     "EnableSSL": true,
     "UseDefaultCredentials": false,
 
-    "Domain": "xn----8sbfhdabdwf1afqu5baxe0f2d.xn--p1ai",
-    "PortalLink": "<a target='_blank' href='http://xn----8sbfhdabdwf1afqu5baxe0f2d.xn--p1ai'>ученые-исследователи</a>"
+    "Domain": "192.168.10.141:5004",
+    "PortalLink": "<a target='_blank' href='http://192.168.10.141:5004'>192.168.10.141:5004</a>"
   }
 }

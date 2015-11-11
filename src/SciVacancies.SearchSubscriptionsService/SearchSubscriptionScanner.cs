@@ -30,7 +30,9 @@ namespace SciVacancies.SearchSubscriptionsService
         private IEnumerable<SearchSubscription> _subscriptionQueue;
         private EventWaitHandle _doneEvent;
         private readonly ILifetimeScope _lifetimeScope;
-        readonly IElasticService _elasticService;
+        readonly ISearchService _elasticService;
+
+        private readonly IDatabase Db;
 
         private readonly ILogger Logger;
 
@@ -39,10 +41,11 @@ namespace SciVacancies.SearchSubscriptionsService
         readonly string PortalLink;
 
 
-        public SearchSubscriptionScanner(ILifetimeScope lifetimeScope, IElasticService elasticService, IConfiguration configuration, ILoggerFactory loggerFactory)
+        public SearchSubscriptionScanner(ILifetimeScope lifetimeScope, ISearchService elasticService, IDatabase db, IConfiguration configuration, ILoggerFactory loggerFactory)
         {
             _lifetimeScope = lifetimeScope;
             _elasticService = elasticService;
+            this.Db = db;
             this.Logger = loggerFactory.CreateLogger<SearchSubscriptionScanner>();
 
             this.From = configuration["EmailSettings:Login"];
@@ -92,6 +95,14 @@ namespace SciVacancies.SearchSubscriptionsService
 
                 var searchResults = _elasticService.VacancySearch(searchQuery);
 
+                var total = searchResults.Total;
+
+                searchSubscription.lastcheck_date = searchSubscription.currentcheck_date;
+                searchSubscription.lasttotal_count = searchSubscription.currenttotal_count;
+
+                searchSubscription.currentcheck_date = DateTime.UtcNow;
+                searchSubscription.currenttotal_count = total;
+
                 var vacanciesList = searchResults.Documents.ToList();
                 Logger.LogInformation($"SearchSubscriptionScanner: по подписке найдено {vacanciesList.Count} записей");
 
@@ -107,30 +118,40 @@ namespace SciVacancies.SearchSubscriptionsService
                         var researcher = db.SingleOrDefaultById<Researcher>(searchSubscription.researcher_guid);
                         var researcherFullName = $"{researcher.secondname} {researcher.firstname} {researcher.patronymic}";
                         var body = $@"
-<div style=''>
-    Уважаемый(-ая), {researcherFullName}, по одной из ваших
-    <a target='_blank' href='http://{Domain}/researcher/subscriptions/'>подписок</a>
-     ('{searchSubscription.title}') подобраны следующие вакансии: <br/>
-    {vacanciesList.Aggregate(string.Empty, (current, vacancy) => current + $"<a target='_blank' href='http://{Domain}/vacancies/card/{vacancy.Id}'>{vacancy.FullName}</a> <br/>")}
-</div>
+                                    <div style=''>
+                                        Уважаемый(-ая), {researcherFullName}, по одной из ваших
+                                        <a target='_blank' href='http://{Domain}/researcher/subscriptions/'>подписок</a>
+                                         ('{searchSubscription.title}') подобраны следующие вакансии: <br/>
+                                        {vacanciesList.Aggregate(string.Empty, (current, vacancy) => current + $"<a target='_blank' href='http://{Domain}/vacancies/card/{vacancy.Id}'>{vacancy.FullName}</a> <br/>")}
+                                    </div>
 
-<br/>
-<br/>
-<hr/>
+                                    <br/>
+                                    <br/>
+                                    <hr/>
 
-<div style='color: lightgray; font-size: smaller;'>
-    Это письмо создано автоматически с 
-    <a target='_blank' href='http://{Domain}'>Портала вакансий</a>.
-    Чтобы не получать такие уведомления отключите их или смените email в 
-    <a target='_blank' href='http://{Domain}/researchers/account/'>личном кабинете</a>.
-</div>
-";
+                                    <div style='color: lightgray; font-size: smaller;'>
+                                        Это письмо создано автоматически с 
+                                        <a target='_blank' href='http://{Domain}'>Портала вакансий</a>.
+                                        Чтобы не получать такие уведомления отключите их или смените email в 
+                                        <a target='_blank' href='http://{Domain}/researchers/account/'>личном кабинете</a>.
+                                    </div>
+                                    ";
                         EmailService.Send(new SciVacMailMessage(From,researcher.email, "Уведомление с портала вакансий", body));
 
                         Logger.LogInformation($"SearchSubscriptionScanner: письмо {researcher.email} для {researcherFullName}");
                     }
                     #endregion
                 }
+            }
+
+            using (var transaction = Db.GetTransaction())
+            {
+                foreach(SearchSubscription searchSubscription in _subscriptionQueue)
+                {
+                    Db.Update(searchSubscription);
+                }
+
+                transaction.Complete();
             }
 
             _doneEvent?.Set();

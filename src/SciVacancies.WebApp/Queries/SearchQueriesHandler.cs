@@ -15,9 +15,9 @@ namespace SciVacancies.WebApp.Queries
 {
     public class SearchQueriesHandler : IRequestHandler<SearchQuery, Page<Vacancy>>
     {
-        readonly IElasticService elasticService;
+        readonly ISearchService elasticService;
 
-        public SearchQueriesHandler(IElasticService elasticService)
+        public SearchQueriesHandler(ISearchService elasticService)
         {
             this.elasticService = elasticService;
         }
