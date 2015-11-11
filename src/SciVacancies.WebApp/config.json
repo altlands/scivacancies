@@ -34,7 +34,7 @@
       //"BasicAuthorization": "dev:informika"
     },
     "Mapofscience": {
-      "UserProfile": "https://mapofscience/scimap-sso/api/v1/users/current/profile"
+      "UserProfile": "https://mapofscience.ru/scimap-sso/api/v1/users/current/profile"
     }
   },
   "ElasticSettings": {
