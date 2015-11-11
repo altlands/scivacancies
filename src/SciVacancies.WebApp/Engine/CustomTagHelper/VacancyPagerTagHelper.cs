@@ -15,7 +15,7 @@ namespace SciVacancies.WebApp
     {
         private IDictionary<string, string[]> _queryDictionary;
         private const string ParameterNamePageNumber = "CurrentPage";
-        private const string ParameterNamePageSize= "PageSize";
+        private const string ParameterNamePageSize = "PageSize";
 
         [HtmlAttributeName("request")]
         public HttpRequest Request { get; set; }
@@ -34,9 +34,9 @@ namespace SciVacancies.WebApp
             PagedList.PageSize = PagedList.PageSize < 0 ? 10 : PagedList.PageSize;
 
             if (!_queryDictionary.ContainsKey(ParameterNamePageNumber))
-                _queryDictionary.Add(ParameterNamePageNumber,  new []{"1"});
+                _queryDictionary.Add(ParameterNamePageNumber, new[] { "1" });
             if (!_queryDictionary.ContainsKey(ParameterNamePageSize))
-                _queryDictionary.Add(ParameterNamePageSize, new []{"10"});
+                _queryDictionary.Add(ParameterNamePageSize, new[] { "10" });
 
             var divParent = new TagBuilder("div");
             divParent.AddCssClass("bottom-nav");
@@ -163,12 +163,20 @@ namespace SciVacancies.WebApp
                                 form.Attributes.Add("style", "display:inline;");
 
                                 {
-                            
+
                                     var input = new TagBuilder("input");
                                     input.Attributes.Add("type", "text");
                                     input.Attributes.Add("name", ParameterNamePageNumber);
                                     input.Attributes.Add("id", ParameterNamePageNumber);
-                                    input.Attributes.Add("value", PagedList.CurrentPage.ToString());
+                                    if (PagedList.TotalPages == 0)
+                                    {
+                                        input.Attributes.Add("value", "0");
+                                    }
+                                    else
+                                    {
+                                        input.Attributes.Add("value", PagedList.CurrentPage.ToString());
+                                    }
+
                                     input.Attributes.Add("changeaction", "true");
 
                                     var inputHidden = new TagBuilder("input");
@@ -179,7 +187,7 @@ namespace SciVacancies.WebApp
 
                                     form.InnerHtml.Append(input).Append(inputHidden) /*+ submit.ToString(TagRenderMode.SelfClosing)*/;
                                 }
-                               
+
                                 divMiddlePage.InnerHtml.Append(form).Append(" из " + PagedList.TotalPages);
                                 li3.InnerHtml.Append(divMiddlePage);
                             }
@@ -264,7 +272,7 @@ namespace SciVacancies.WebApp
         private void SetPageNumberInQuery(int pageNumber)
         {
             RemovePageNumberInQuery();
-            _queryDictionary.Add(ParameterNamePageNumber, new []{pageNumber.ToString()});
+            _queryDictionary.Add(ParameterNamePageNumber, new[] { pageNumber.ToString() });
         }
     }
 

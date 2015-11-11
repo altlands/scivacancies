@@ -70,6 +70,12 @@ namespace SciVacancies.WebApp.Controllers
                     model.InitDictionaries(_mediator);
                     return View("Create", model);
                 }
+                if (model.SalaryFrom != 0 && model.SalaryTo != 0 && model.SalaryFrom > model.SalaryTo)
+                {
+                    ModelState.AddModelError("SalaryFromValue", $"Значение зарплаты \"от\" не может быть выше значения \"до\"");
+                    model.InitDictionaries(_mediator);
+                    return View("Create", model);
+                }
 
                 var vacancyDataModel = Mapper.Map<VacancyDataModel>(model);
 

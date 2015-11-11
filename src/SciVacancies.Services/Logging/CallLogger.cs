@@ -21,9 +21,16 @@ namespace SciVacancies.Services.Logging
         }
         public void Intercept(IInvocation invocation)
         {
-            //string invokeMessage = "Invoke :" + " Class = " + invocation.TargetType.ToString() + ", Method = " + invocation.Method.Name + ", Args = " + string.Join(", ", invocation.Arguments.Select(a => (a ?? "").ToString()).ToArray());
-            //string invokeMessage = "Invoke :" + " Class = " + invocation.TargetType.ToString() + ", Method = " + invocation.Method.Name;
-            string invokeMessage = "Invoke :" + " Class = " + invocation.TargetType.ToString() + ", Method = " + invocation.Method.Name + ", SerializedArguments = "+ JsonConvert.SerializeObject(invocation.Arguments);
+            string invokeMessage = "Empty invocation message";
+            try
+            {
+                invokeMessage = "Invoke :" + " Class = " + invocation.TargetType.ToString() + ", Method = " + invocation.Method.Name + ", SerializedArguments = " + JsonConvert.SerializeObject(invocation.Arguments);
+            }
+            catch (Exception e)
+            {
+                _logger.LogError("ERROR while composing Invoke message");
+                _logger.LogError(e.Message, e);
+            }
 
             _logger.LogInformation(invokeMessage);
             try
@@ -32,14 +39,21 @@ namespace SciVacancies.Services.Logging
             }
             catch (Exception e)
             {
-                _logger.LogError("ERROR");
+                _logger.LogError("ERROR while invocation.proceed()");
                 _logger.LogError(e.Message, e);
             }
-            string output = invocation.ReturnValue != null ? invocation.ReturnValue.GetType().ToString() : "NULL";
-            string finishMessage = "Finish :" + " Class = " + invocation.TargetType.ToString() + ", Method = " + invocation.Method.Name + ", Output = " + output;
-
-            //string finishMessage = "Finish :" + " Class = " + invocation.TargetType.ToString() + ", Method = " + invocation.Method.Name + ", Output = " + invocation.ReturnValue.GetType().ToString();
-            //string finishMessage = "Finish :" + " Class = " + invocation.TargetType.ToString() + ", Method = " + invocation.Method.Name;
+            string finishMessage = "Empty finish message";
+        
+            try
+            {
+                string output = invocation.ReturnValue != null ? invocation.ReturnValue.GetType().ToString() : "NULL";
+                finishMessage = "Finish :" + " Class = " + invocation.TargetType.ToString() + ", Method = " + invocation.Method.Name + ", Output = " + output;
+            }
+            catch(Exception e)
+            {
+                _logger.LogError("ERROR while composing Finish message");
+                _logger.LogError(e.Message, e);
+            }
 
             _logger.LogInformation(finishMessage);
         }

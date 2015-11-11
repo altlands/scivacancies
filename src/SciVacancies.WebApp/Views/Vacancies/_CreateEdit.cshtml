@@ -156,8 +156,8 @@
 
                                         <div class="field">
                                             <input type="number" asp-for="CriteriasHierarchy[groupIndex].Items[itemIndex].Count"/>
-                                            <span asp-validation-for="CriteriasHierarchy[groupIndex].Items[itemIndex].Count"></span>
                                             <span>@item.Title (шт.)</span>
+                                            <span asp-validation-for="CriteriasHierarchy[groupIndex].Items[itemIndex].Count"></span>
                                         </div>
 
                                     </div>
@@ -188,9 +188,9 @@
                 </div>
                 <div class="right-cell interval">
                     <span class="italic fs14">от</span>
-                    <input type="text" asp-for="SalaryFrom" class="small-input" />
+                    <input type="number" asp-for="SalaryFrom" class="small-input" />
                     <span class="italic fs14">до</span>
-                    <input type="text" asp-for="SalaryTo" class="small-input" />
+                    <input type="number" asp-for="SalaryTo" class="small-input" />
                     <div class="inline-block w60 sorting va-top">
                         <select name="6" id="6" disabled="disabled">
                             <option value="руб." selected="selected">руб.</option>

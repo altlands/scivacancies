@@ -137,12 +137,15 @@ namespace SciVacancies.WebApp.ViewModels
         /// <summary>
         /// Зарплата в месяц
         /// </summary>
+
         [Required(ErrorMessage = "Укажите минимальную зарплату")]
         [Range(0, int.MaxValue, ErrorMessage= "Зарплата не может иметь отрицательное значение")]
-        public int SalaryFrom { get; set; }
+        public int? SalaryFrom { get; set; }
+
         [Required(ErrorMessage = "Укажите максимальную зарплату")]
         [Range(0, int.MaxValue, ErrorMessage= "Зарплата не может иметь отрицательное значение")]
-        public int SalaryTo { get; set; }
+        //[RegularExpression("([1-9][0-9]*)", ErrorMessage = "Значение должно состоять только из цифр")]
+        public int? SalaryTo { get; set; }
         //public Currency SalaryCurrency { get; set; }
 
         /// <summary>
