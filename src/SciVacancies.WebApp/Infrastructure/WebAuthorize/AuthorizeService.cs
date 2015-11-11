@@ -35,10 +35,10 @@ namespace SciVacancies.WebApp.Infrastructure.WebAuthorize
 
 
         //общаемся с картой науки
-        public string GetResearcherProfile(string accessToken)
+        public string GetResearcherProfile(string accessToken, string userProfile)
         {
             //TODO url move to config
-            var webRequest = WebRequest.Create(@"https://mapofscience.ru/scimap-sso/api/v1/users/current/profile" + "?access_token=" + accessToken);
+            var webRequest = WebRequest.Create(userProfile + "?access_token=" + accessToken);
             webRequest.Method = "GET";
             var httpWebResponse = webRequest.GetResponse() as HttpWebResponse;
             string responseString = "";
@@ -150,12 +150,14 @@ namespace SciVacancies.WebApp.Infrastructure.WebAuthorize
     {
         Task<TokenResponse> GetOAuthAuthorizeTokenAsync(OAuthProviderSettings oauth, string code);
         Task<TokenResponse> GetOAuthRefreshTokenAsync(OAuthProviderSettings oauth, string refreshToken);
+
         /// <summary>
         /// общаемся с картой науки
         /// </summary>
         /// <param name="accessToken"></param>
+        /// <param name="userProfile"></param>
         /// <returns></returns>
-        string GetResearcherProfile(string accessToken);
+        string GetResearcherProfile(string accessToken, string userProfile);
 
         /// <summary>
         /// выполнить переавторизацию пользователя (выйти и войти снова)

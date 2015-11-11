@@ -33,7 +33,7 @@
       //"BasicAuthorization": "dev:informika"
     },
     "Mapofscience": {
-      "ResearcherProfile": "https://mapofscience.ru/users/current/profile"
+      "UserProfile": "https://mapofscience.ru/scimap-sso/api/v1/users/current/profile"
     }
   },
   "ElasticSettings": {
@@ -105,7 +105,7 @@
     "PathToBlankAvatar": "/images/profile-photo.png"
   },
   "CaptchaSettings": {
-    "CaptchaDurationSeconds": 240
+    "CaptchaDurationSeconds": 120
   },
   "CacheSettings": {
     "DictionaryExpiration": 20,

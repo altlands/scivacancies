@@ -110,7 +110,7 @@ namespace SciVacancies.WebApp
 
             services.AddCaching();
 
-            services.AddSession(o => { o.IdleTimeout = TimeSpan.FromSeconds(60); });
+            services.AddSession(o => { o.IdleTimeout = TimeSpan.FromSeconds(120); });
 
             services.AddLogging();
 

@@ -33,13 +33,15 @@ namespace SciVacancies.WebApp.Controllers
         private readonly SciVacUserManager _userManager;
         private readonly IMediator _mediator;
         private readonly IAuthorizeService _authorizeService;
+        private readonly IOptions<ApiSettings> _apiSettings;
 
-        public AccountIntegrationController(SciVacUserManager userManager, IOptions<OAuthSettings> oAuthSettings, IMediator mediator, IAuthorizeService authorizeService)
+        public AccountIntegrationController(SciVacUserManager userManager, IOptions<OAuthSettings> oAuthSettings, IOptions<ApiSettings> apiSettings, IMediator mediator, IAuthorizeService authorizeService)
         {
             _userManager = userManager;
             _oauthSettings = oAuthSettings;
             _mediator = mediator;
             _authorizeService = authorizeService;
+            _apiSettings = apiSettings;
         }
 
         /// <summary>
@@ -96,7 +98,7 @@ namespace SciVacancies.WebApp.Controllers
 
             //3-отправляем запрос к api
             var profileAsString =
-                _authorizeService.GetResearcherProfile(User.Claims.Single(c => c.Type.Equals("access_token")).Value);
+                _authorizeService.GetResearcherProfile(User.Claims.Single(c => c.Type.Equals("access_token")).Value, _apiSettings.Value.Mapofscience.UserProfile);
 
             OAuthResProfile oAuthResProfile = JsonConvert.DeserializeObject<OAuthResProfile>(profileAsString);
             //4 - mapping
