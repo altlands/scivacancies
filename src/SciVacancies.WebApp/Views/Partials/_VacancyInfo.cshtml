@@ -5,7 +5,7 @@
 @model VacancyDetailsViewModel
 
 @if (!string.IsNullOrWhiteSpace(Model.CommitteeReasolution)
-                || (Model.AttachmentsCommittee != null && Model.AttachmentsCommittee.Any()))
+                                        || (Model.AttachmentsCommittee != null && Model.AttachmentsCommittee.Any()))
 {
     <text>
 
@@ -65,26 +65,26 @@
 <div class="title-cat-inform">Специализация:</div>
 <ul class="list-information layout-inform">
     <li class="odd">
-        <span>Статус:</span>@Model.Status.GetDescription(User)
+        <span>Статус:</span><div class="layout-inform__right-col">@Model.Status.GetDescription(User)</div>
     </li>
     <li class="even">
-        <span>Должность:</span>@Model.Name
+        <span>Должность:</span><div class="layout-inform__right-col">@Model.Name</div>
     </li>
     <li class="odd">
-        <span>Полное наименование:</span>@Model.FullName
+        <span>Полное наименование:</span><div class="layout-inform__right-col">@Model.FullName</div>
     </li>
     <li class="even">
-        <span>Отрасль науки:</span>@(Model.ResearchDirection?.title)
+        <span>Отрасль науки:</span><div class="layout-inform__right-col">@(Model.ResearchDirection?.title)</div>
     </li>
     <li class="odd">
-        <span>Тематика исследований:</span>@Model.ResearchTheme
+        <span>Тематика исследований:</span><div class="layout-inform__right-col">@Model.ResearchTheme</div>
     </li>
 </ul>
 
 <div class="title-cat-inform">Задачи и критерии:</div>
 <ul class="list-information layout-inform">
     <li class="odd">
-        <span>Задачи:</span>@Model.Tasks
+        <span>Задачи:</span><div class="layout-inform__right-col">@Model.Tasks</div>
     </li>
     <li class="even">
         <span>Критерии оценки:</span>
@@ -93,23 +93,23 @@
             {
                 foreach (CriteriaItemViewModel group in Model.CriteriasHierarchy.Where(c => c.Items.Sum(d => d.Count) > 0))
                 {
-                    <div class="section-eval">
-                        <span class="name-section">@(@group.Title) (@(@group.Items.Count(c => c.Count > 0)))</span>
-                        <div class="list-fields">
+            <div class="section-eval">
+                <span class="name-section">@(@group.Title) (@(@group.Items.Count(c => c.Count > 0)))</span>
+                <div class="list-fields">
 
-                            @foreach (CriteriaItemViewModel item in @group.Items.Where(c => c.Count > 0))
+                    @foreach (CriteriaItemViewModel item in @group.Items.Where(c => c.Count > 0))
                     {
-                                <div>
-                                    <div class="field">
-                                        &nbsp; &mdash; &nbsp;
-                                        @item.Title:
-                                        @item.Count шт.
-                                    </div>
+                            <div>
+                                <div class="field">
+                                    &nbsp; &mdash; &nbsp;
+                                    @item.Title:
+                                    @item.Count шт.
                                 </div>
+                            </div>
                             }
-                        </div>
+                </div>
 
-                    </div>
+            </div>
                 }
             }
         </div>
@@ -119,32 +119,32 @@
 <div class="title-cat-inform">Условия:</div>
 <ul class="list-information layout-inform">
     <li class="odd">
-        <span>Заработная плата:</span>@Model.SalaryFrom - @Model.SalaryTo рублей/месяц
+        <span>Заработная плата:</span><div class="layout-inform__right-col">@Model.SalaryFrom - @Model.SalaryTo рублей/месяц</div>
     </li>
     <li class="even">
-        <span>Стимулирующие выплаты:</span>@Model.Bonuses
+        <span>Стимулирующие выплаты:</span><div class="layout-inform__right-col">@Model.Bonuses</div>
     </li>
     <li class="odd">
-        <span>Трудовой договор:</span>@Model.ContractType.GetDescription()
+        <span>Трудовой договор:</span><div class="layout-inform__right-col">@Model.ContractType.GetDescription()</div>
         @*@if (Model.ContractType == ContractType.FixedTerm)
             {
                 @: - на период @Model.ContractTime.ToString("0.##") (годы и месяцы)
             }*@
     </li>
     <li class="even">
-        <span>Социальный пакет:</span>@(Model.SocialPackage ? "Да" : "Нет")
+        <span>Социальный пакет:</span><div class="layout-inform__right-col">@(Model.SocialPackage ? "Да" : "Нет")</div>
     </li>
     <li class="odd">
-        <span>Найм жилья:</span>@(Model.Rent ? "Да" : "Нет")
+        <span>Найм жилья:</span><div class="layout-inform__right-col">@(Model.Rent ? "Да" : "Нет")</div>
     </li>
     <li class="even">
-        <span>Компенсация проезда:</span>@(Model.TransportCompensation ? "Да" : "Нет")
+        <span>Компенсация проезда:</span><div class="layout-inform__right-col">@(Model.TransportCompensation ? "Да" : "Нет")</div>
     </li>
     <li class="even">
-        <span>Служебное жилье:</span>@(Model.OfficeAccomodation ? "Да" : "Нет")
+        <span>Служебное жилье:</span><div class="layout-inform__right-col">@(Model.OfficeAccomodation ? "Да" : "Нет")</div>
     </li>
     <li class="odd">
-        <span>Дополнительно:</span>@Model.Details
+        <span>Дополнительно:</span><div class="layout-inform__right-col">@Model.Details</div>
     </li>
 </ul>
 
