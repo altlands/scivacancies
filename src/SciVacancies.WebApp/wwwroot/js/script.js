@@ -372,6 +372,10 @@ $(document).ready(function () {
         $(this).addClass("active");
     });
     /*
+     * отрисовать графики
+     */
+
+    /*
     end of the code
     */
 });
