@@ -38,7 +38,7 @@ namespace SciVacancies.WebApp.Controllers
         /// Число вакансий (среднее предложение в месяц)
         /// </summary>
         /// <returns></returns>
-        public JsonResult VacancyPositions(Nest.DateInterval interval)
+        public JsonResult VacancyPositions(int? regionId, Nest.DateInterval interval)
         {
             List<int> model = new List<int>();
             var result = Mediator.Send(new AverageVacancyAndPositionAnalythicQuery { Interval = interval });

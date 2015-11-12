@@ -436,25 +436,23 @@ function refreshAllGraphicData() {
 
         var dataGraph1 = {
             regionId: graphs.regionId,
-            period: graphs.period
+            interval: graphs.period
         };
-        //$.get("/analytics/", dataGraph1, function (data) {
-        //    graphs.chart.options.data = [array]; // Set Array of dataSeries
-        //    graphs.chart.render();
-        //});
-        graphs.chart.render();
+        $.get("/analytics/VacancyPositions", dataGraph1, function (data) {
+            //graphs.chart.options.data = [array]; // Set Array of dataSeries
+            graphs.chart.render();
+        });
     }
 
     if (graphs.chart2 != null) {
         var dataGraph2 = {
             regionId: graphs.regionId,
-            period: graphs.period
+            interval: graphs.period
         };
-        //$.get("/analytics/", dataGraph2, function (data) {
-        //    graphs.chart2.options.data = [array]; // Set Array of dataSeries
-        //    graphs.chart2.render();
-        //});
-        graphs.chart2.render();
+        $.get("/analytics/VacancyPayments", dataGraph2, function (data) {
+            //graphs.chart2.options.data = [array]; // Set Array of dataSeries
+            graphs.chart2.render();
+        });
     }
 
     console.log(graphs);

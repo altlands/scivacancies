@@ -8,9 +8,9 @@
 @{
     ViewBag.RegionsList = Model.CurrentMediator.Send(new SelectAllRegionsQuery()).Select(c => new SelectListItem { Text = c.title, Value = c.id.ToString() }).ToList();
 
-    var dayPeriod = "day";
-    var weekPeriod = "week";
-    var monthPeriod = "month";
+    var dayPeriod = (int)Nest.DateInterval.Day;
+    var weekPeriod = (int)Nest.DateInterval.Week;
+    var monthPeriod = (int)Nest.DateInterval.Month;
 }
 
 <h4>Вакансии в графиках</h4>
