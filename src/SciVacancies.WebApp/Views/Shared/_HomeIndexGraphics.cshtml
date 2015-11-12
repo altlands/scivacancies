@@ -2,11 +2,12 @@
 @using System.Linq
 @using SciVacancies.WebApp.Queries
 @using SciVacancies.WebApp.ViewModels
-@using SciVacancies.ReadModel.Core
 @model IndexViewModel
 
 @{
-    ViewBag.RegionsList = Model.CurrentMediator.Send(new SelectAllRegionsQuery()).Select(c => new SelectListItem { Text = c.title, Value = c.id.ToString() }).ToList();
+    var regions = Model.CurrentMediator.Send(new SelectAllRegionsQuery()).Select(c => new SelectListItem {Text = c.title, Value = c.id.ToString()}).ToList();
+    regions.Insert(0, new SelectListItem{Text = "Все регионы", Value = "null" });
+    ViewBag.RegionsList = regions;
 
     var dayPeriod = (int)Nest.DateInterval.Day;
     var weekPeriod = (int)Nest.DateInterval.Week;
