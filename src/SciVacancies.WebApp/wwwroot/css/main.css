@@ -3265,7 +3265,7 @@ ul.tabs li.active span {
 }
 
 .field-validation-error {
-    color: #de2227;
+    color: #de2227 !important;
 }
 
 .table-row .field-validation-error {

@@ -31,7 +31,7 @@ namespace SciVacancies.SearchSubscriptionsService.Modules
                 .InterceptedBy(typeof(CallLogger))
                 ;
             builder.Register(c => new SearchService(_configuration, c.Resolve<IElasticClient>(), c.Resolve<ILoggerFactory>()))
-                .As<IElasticService>()
+                .As<ISearchService>()
                 .EnableInterfaceInterceptors()
                 .InterceptedBy(typeof(CallLogger))
                 ;

@@ -12,7 +12,7 @@ using Nest;
 
 namespace SciVacancies.Services.Elastic
 {
-    public class SearchService : IElasticService
+    public class SearchService : ISearchService
     {
         readonly IElasticClient elastic;
         readonly IConfiguration configuration;

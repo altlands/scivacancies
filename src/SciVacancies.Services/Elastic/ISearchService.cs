@@ -4,7 +4,7 @@ using Nest;
 
 namespace SciVacancies.Services.Elastic
 {
-    public interface IElasticService
+    public interface ISearchService
     {
         ISearchResponse<Vacancy> VacancySearch(SearchQuery sq);
     }
