@@ -49,8 +49,18 @@ namespace SciVacancies.WebApp.Controllers
             model.Phone = researcher.phone;
             model.ResearcherFullName = $"{researcher.secondname} {researcher.firstname} {researcher.patronymic}";
             model.ResearcherFullNameEng = $"{researcher.firstname_eng} {researcher.patronymic_eng} {researcher.secondname_eng}";
-            model.Educations = Mapper.Map<List<EducationEditViewModel>>(_mediator.Send(new SelectResearcherEducationsQuery { ResearcherGuid = researcherGuid }).ToList());
-            model.Publications = Mapper.Map<List<PublicationEditViewModel>>(_mediator.Send(new SelectResearcherPublicationsQuery { ResearcherGuid = researcherGuid }).ToList());
+
+            IEnumerable<Education> educations = _mediator.Send(new SelectResearcherEducationsQuery { ResearcherGuid = researcherGuid });
+            if (educations != null && educations.Count() > 0)
+            {
+                model.Educations = Mapper.Map<List<EducationEditViewModel>>(educations);
+            }
+            IEnumerable<Publication> publications = _mediator.Send(new SelectResearcherPublicationsQuery { ResearcherGuid = researcherGuid });
+            if (publications != null && publications.Count() > 0)
+            {
+                model.Publications = Mapper.Map<List<PublicationEditViewModel>>(publications);
+            }
+
             model.ResearchActivity = researcher.research_activity;
             model.TeachingActivity = researcher.teaching_activity;
             model.OtherActivity = researcher.other_activity;

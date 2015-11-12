@@ -2090,17 +2090,21 @@ ol.content-list {
 .layout-inform > li > span {
     width: 190px;
     margin-right: 10px;
-    display: inline-block;
+    display:table-cell;
     *display: inline;
     zoom: 1;
 }
 
-    .layout-inform > li > span + div {
-        display: inline-block;
-        *display: inline;
-        zoom: 1;
-        vertical-align: top;
-    }
+.layout-inform__right-col {
+    display: table-cell !important;
+}
+
+.layout-inform > li > span + div {
+    display: inline-block;
+    *display: inline;
+    zoom: 1;
+    vertical-align: top;
+}
 
 .list-information li span.name-section {
     font-size: 11px;

@@ -35,16 +35,16 @@ namespace SciVacancies.WebApp.ViewModels
         public string Phone { get; set; }
         public string ExtraPhone { get; set;}
 
-        public List<ActivityEditViewModel> ResearchActivity { get; set; }
-        public List<ActivityEditViewModel> TeachingActivity { get; set; }
-        public List<ActivityEditViewModel> OtherActivity { get; set; }
+        public List<ActivityEditViewModel> ResearchActivity { get; set; } = new List<ActivityEditViewModel>();
+        public List<ActivityEditViewModel> TeachingActivity { get; set; } = new List<ActivityEditViewModel>();
+        public List<ActivityEditViewModel> OtherActivity { get; set; } = new List<ActivityEditViewModel>();
 
         public string ScienceDegree { get; set; }
         public string ScienceRank { get; set; }
-        public List<RewardDetailsViewModel> Rewards { get; set; } 
-        public List<MembershipDetailsViewModel> Memberships { get; set; } 
-        public List<InterestDetailsViewModel> Interests { get; set; }
-        public List<ConferenceEditViewModel> Conferences { get; set; }
+        public List<RewardDetailsViewModel> Rewards { get; set; } = new List<RewardDetailsViewModel>();
+        public List<MembershipDetailsViewModel> Memberships { get; set; } = new List<MembershipDetailsViewModel>();
+        public List<InterestDetailsViewModel> Interests { get; set; } = new List<InterestDetailsViewModel>();
+        public List<ConferenceEditViewModel> Conferences { get; set; } = new List<ConferenceEditViewModel>();
 
         public string ImageName { get; set; }
         public long? ImageSize { get; set; }
@@ -61,8 +61,8 @@ namespace SciVacancies.WebApp.ViewModels
         /// </summary>
         public int ExtNumber { get; set; }
 
-        public List<EducationEditViewModel> Educations { get; set; }
-        public List<PublicationEditViewModel> Publications { get; set; }
+        public List<EducationEditViewModel> Educations { get; set; } = new List<EducationEditViewModel>();
+        public List<PublicationEditViewModel> Publications { get; set; } = new List<PublicationEditViewModel>();
 
         public ResearcherStatus Status { get; set; }
 

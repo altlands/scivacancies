@@ -28,8 +28,8 @@ namespace SciVacancies.WebApp.ViewModels
         public string Phone { get; set; }
         public string ExtraPhone { get; set; }
 
-        public List<EducationEditViewModel> Educations { get; set; }
-        public List<PublicationEditViewModel> Publications { get; set; }
+        public List<EducationEditViewModel> Educations { get; set; } = new List<EducationEditViewModel>();
+        public List<PublicationEditViewModel> Publications { get; set; } = new List<PublicationEditViewModel>();
 
         public string ResearchActivity { get; set; }
         public List<ActivityEditViewModel> ResearchActivityDeserialized => !string.IsNullOrWhiteSpace(ResearchActivity)
@@ -70,7 +70,7 @@ namespace SciVacancies.WebApp.ViewModels
 
         public string CoveringLetter { get; set; }
 
-        public List<IFormFile> Attachments { get; set; }
+        public List<IFormFile> Attachments { get; set; } = new List<IFormFile>();
 
         /// <summary>
         /// Autoincrimented field in DB - может быть null

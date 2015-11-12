@@ -108,8 +108,18 @@ namespace SciVacancies.WebApp.Controllers
 
             //get current profile
             var oldResearcherReadModel = _mediator.Send(new SingleResearcherQuery { ResearcherGuid = researcherGuid });
-            oldResearcherReadModel.educations = Mapper.Map<List<Education>>(_mediator.Send(new SelectResearcherEducationsQuery { ResearcherGuid = researcherGuid }));
-            oldResearcherReadModel.publications = Mapper.Map<List<Publication>>(_mediator.Send(new SelectResearcherPublicationsQuery { ResearcherGuid = researcherGuid }));
+
+            IEnumerable<Education> educations = _mediator.Send(new SelectResearcherEducationsQuery { ResearcherGuid = researcherGuid });
+            if (educations != null && educations.Count() > 0)
+            {
+                oldResearcherReadModel.educations = Mapper.Map<List<Education>>(educations);
+            }
+            IEnumerable<Publication> publications = _mediator.Send(new SelectResearcherPublicationsQuery { ResearcherGuid = researcherGuid });
+            if (publications != null && publications.Count() > 0)
+            {
+                oldResearcherReadModel.publications = Mapper.Map<List<Publication>>(publications);
+            }
+
             var oldResearcherDataModel = Mapper.Map<ResearcherDataModel>(oldResearcherReadModel);
             var researcherProfileEditModel = Mapper.Map<ResearcherProfileCompareModelItem>(oldResearcherDataModel);
 

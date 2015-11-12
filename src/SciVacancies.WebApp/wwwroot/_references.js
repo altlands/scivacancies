@@ -6,7 +6,6 @@
 /// <reference path="../bower_components/jquery-validation-unobtrusive/jquery.validate.unobtrusive.js" />
 /// <reference path="../gulpfile.js" />
 /// <reference path="js/canvasjs.min.js" />
-/// <reference path="js/chart.min.js" />
 /// <reference path="js/cusel.js" />
 /// <reference path="js/jquery.bxslider.min.js" />
 /// <reference path="js/jquery.mousewheel.js" />

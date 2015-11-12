@@ -72,8 +72,14 @@ namespace SciVacancies.WebApp.Queries
         public int Handle(CountOrganizationsQuery msg)
         {
             var organizations = _db.Fetch<Organization>(new Sql($"SELECT * FROM org_organizations"));
-
-            return organizations.Count();
+            if (organizations != null && organizations.Count > 0)
+            {
+                return organizations.Count();
+            }
+            else
+            {
+                return 0;
+            }
         }
     }
 }

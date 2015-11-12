@@ -67,11 +67,11 @@ namespace SciVacancies.ReadModel.Core
         #endregion
 
         [Ignore]
-        public List<Education> educations { get; set; }
+        public List<Education> educations { get; set; } = new List<Education>();
         [Ignore]
-        public List<Publication> publications { get; set; }
+        public List<Publication> publications { get; set; } = new List<Publication>();
         [Ignore]
-        public List<Vacancy> favoritevacancies { get; set; }
+        public List<Vacancy> favoritevacancies { get; set; } = new List<Vacancy>();
 
         public ResearcherStatus status { get; set; }
 
