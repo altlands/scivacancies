@@ -77,7 +77,7 @@ namespace SciVacancies.WebApp.Queries
             if (string.IsNullOrWhiteSpace(message.OrderBy))
                 message.OrderBy = nameof(Vacancy.creation_date);
 
-            var vacancies = _db.Page<Vacancy>(message.PageIndex, message.PageSize, new Sql($"SELECT v.* FROM org_vacancies v WHERE v.organization_guid = @0 AND v.status != @1 AND v.status in (@2) ORDER BY v.{message.OrderBy} {message.OrderDirection.ToUpper()}", message.OrganizationGuid, VacancyStatus.Removed, message.Statuses.Select(c=>(int)c).ToList()));
+            var vacancies = _db.Page<Vacancy>(message.PageIndex, message.PageSize, new Sql($"SELECT v.* FROM org_vacancies v WHERE v.organization_guid = @0 AND v.status != @1 AND v.status in (@2) ORDER BY v.{message.OrderBy} {message.OrderDirection.ToUpper()}", message.OrganizationGuid, VacancyStatus.Removed, message.Statuses.Select(c => (int)c).ToList()));
 
             return vacancies;
         }
@@ -148,7 +148,14 @@ namespace SciVacancies.WebApp.Queries
         {
             IEnumerable<Vacancy> vacancies = _db.Fetch<Vacancy>(new Sql("SELECT v.* FROM org_vacancies v "));
 
-            return vacancies.Count();
+            if (vacancies != null && vacancies.Count() > 0)
+            {
+                return vacancies.Count();
+            }
+            else
+            {
+                return 0;
+            }
         }
     }
 }

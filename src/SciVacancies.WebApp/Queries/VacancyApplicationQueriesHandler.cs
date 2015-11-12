@@ -73,11 +73,18 @@ namespace SciVacancies.WebApp.Queries
         }
         public int Handle(CountVacancyApplicationInVacancyQuery message)
         {
-            if (message.VacancyGuid== Guid.Empty) throw new ArgumentNullException($"{nameof(message.VacancyGuid)} is empty");
+            if (message.VacancyGuid == Guid.Empty) throw new ArgumentNullException($"{nameof(message.VacancyGuid)} is empty");
 
             var vacancyApplication = _db.Fetch<VacancyApplication>(new Sql($"Select * FROM res_vacancyapplications va WHERE va.vacancy_guid = @0 AND va.status = @1", message.VacancyGuid, (int)message.Status));
 
-            return vacancyApplication.Count();
+            if (vacancyApplication != null && vacancyApplication.Count > 0)
+            {
+                return vacancyApplication.Count();
+            }
+            else
+            {
+                return 0;
+            }
         }
 
         public IEnumerable<VacancyApplication> Handle(SelectVacancyApplicationInVacancyByStatusQuery message)
