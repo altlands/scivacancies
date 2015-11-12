@@ -81,7 +81,7 @@
                     </a>*@
             </div>
 
-            <div class="tab-pane" id="vac-sci">
+            @*<div class="tab-pane" id="vac-sci">
                 <h4>Вакансии по областям науки</h4>
 
                 <div class="b-items-category panel-group" id="accordion">
@@ -89,7 +89,7 @@
                         @Html.Partial("_HomeIndexResearchDirections", Model)
                     </cache>
                 </div>
-            </div>
+            </div>*@
         </div>
     </div>
 
@@ -105,242 +105,10 @@
             </form>
         </div>
 
-        <h4>Вакансии в графиках</h4>
+        <cache expires-after="@TimeSpan.FromSeconds(2)">
+            @Html.Partial("_HomeIndexGraphics", Model)
+        </cache>
 
-        <ul class="tabs tabs_after_title">
-            <li class="active">
-                <span>День</span>
-            </li>
-            <li>
-                <span>Неделя</span>
-            </li>
-            <li>
-                <span>Месяц</span>
-            </li>
-        </ul>
-
-        <div class="graphics">
-            <div class="graphics-item">
-                <div class="title-graphic">Число вакансий ( среднее предложение в месяц )</div>
-
-                <div id="chartContainer" style="height: 300px; width: 413px;">
-                </div>
-
-            </div>
-
-            <div class="graphics-item">
-                <div class="title-graphic">Средняя зарплата и количество вакансий</div>
-
-                <div id="chartContainer2" style="height: 300px; width: 413px;">
-                </div>
-
-                @*<div class="image"><img src="/images/index-gr2.jpg"></div>
-                <ul class="graph-details">
-                    <li class="color3"><span>Средняя заработная плата</span></li>
-                    <li class="color1"><span>Количество вакансий</span></li>
-                </ul>*@
-
-                <div class="graph-region-select-block">
-                    <select name="region" id="region">
-                        <option value="1">Выбор региона</option>
-                        <option value="2">Выбор региона 1</option>
-                        <option value="3">Выбор региона 2</option>
-                    </select>
-                </div>
-
-
-                <script type="text/javascript">
-                    window.onload = function () {
-
-
-                        CanvasJS.addColorSet("blueShades4",
-                                [//colorSet Array
-
-                                "#041833",
-                                "#06365c",
-                                "#3a5e90",
-                                "#d8e1e9"
-                                ]);
-                        CanvasJS.addColorSet("blueShades2",
-                                [//colorSet Array
-
-                                "#041833",
-                                //"#06365c",
-                                "#3a5e90"
-                                //"#d8e1e9"
-                                ]);
-
-
-                        var chart = new CanvasJS.Chart("chartContainer",
-                        {
-                            colorSet: "blueShades4",
-
-                            title: {
-                                //text: "Число вакансий ( среднее предложение в месяц )"
-                            },
-                            axisY: {
-                                title: "Вакансии"
-                            },
-                            animationEnabled: true,
-                            data: [
-                                {
-                                    type: "stackedColumn",
-                                    toolTipContent: "{label}<br/><span style='\"'color: {color};'\"'><strong>{name}</strong></span>: {y} вакансий",
-                                    name: "Руководители групп структурных подразделений",
-                                    showInLegend: "true",
-                                    dataPoints: [
-                                        { y: 38600, label: "Июль" },
-                                        { y: 11338, label: "Август" },
-                                        { y: 49088, label: "Сентябрь" },
-                                        { y: 62200, label: "Октябрь" },
-                                        { y: 90085, label: "Ноябрь" }
-
-                                    ]
-                                }, {
-                                    type: "stackedColumn",
-                                    toolTipContent: "{label}<br/><span style='\"'color: {color};'\"'><strong>{name}</strong></span>: {y} вакансий",
-                                    name: "Руководители структурных подразделений",
-                                    showInLegend: "true",
-                                    dataPoints: [
-                                        { y: 39900, label: "Июль" },
-                                        { y: 135305, label: "Август" },
-                                        { y: 107922, label: "Сентябрь" },
-                                        { y: 52300, label: "Октябрь" },
-                                        { y: 3360, label: "Ноябрь" }
-
-                                    ]
-                                }, {
-                                    type: "stackedColumn",
-                                    toolTipContent: "{label}<br/><span style='\"'color: {color};'\"'><strong>{name}</strong></span>: {y} вакансий",
-                                    name: "Сотрудники",
-                                    showInLegend: "true",
-                                    dataPoints: [
-                                        { y: 39900, label: "Июль" },
-                                        { y: 135305, label: "Август" },
-                                        { y: 107922, label: "Сентябрь" },
-                                        { y: 52300, label: "Октябрь" },
-                                        { y: 3360, label: "Ноябрь" }
-
-                                    ]
-                                }, {
-                                    type: "stackedColumn",
-                                    toolTipContent: "{label}<br/><span style='\"'color: {color};'\"'><strong>{name}</strong></span>: {y} вакансий",
-                                    name: "Прочие",
-                                    showInLegend: "true",
-                                    dataPoints: [
-                                        { y: 39900, label: "Июль" },
-                                        { y: 135305, label: "Август" },
-                                        { y: 107922, label: "Сентябрь" },
-                                        { y: 52300, label: "Октябрь" },
-                                        { y: 3360, label: "Ноябрь" }
-
-                                    ]
-                                }
-                            ]
-                            ,
-                            legend: {
-                                cursor: "pointer",
-                                itemclick: function (e) {
-                                    if (typeof (e.dataSeries.visible) === "undefined" || e.dataSeries.visible) {
-                                        e.dataSeries.visible = false;
-                                    }
-                                    else {
-                                        e.dataSeries.visible = true;
-                                    }
-                                    chart.render();
-                                }
-                            }
-                        });
-
-
-                        var chart2 = new CanvasJS.Chart("chartContainer2",
-                        {
-
-                            colorSet: "blueShades2",
-
-                            title: {
-                                //text: "Средняя зарплата и количество вакансий"
-                            },
-                            animationEnabled: true,
-                            toolTip: {
-                                shared: true,
-                                content: function (e) {
-                                    var body;
-                                    var head;
-                                    head = "<span style = 'color:DodgerBlue; '><strong>Месяц: " + (e.entries[0].dataPoint.label) + "</strong></span><br/>";
-                                    body = "<span style= 'color:" + e.entries[0].dataSeries.color + "'> " + e.entries[0].dataSeries.name + "</span>: <strong>" + e.entries[0].dataPoint.y + "</strong>  тыс.р.<br/> <span style= 'color:" + e.entries[1].dataSeries.color + "'> " + e.entries[1].dataSeries.name + "</span>: <strong>" + e.entries[1].dataPoint.y + "</strong>  шт";
-
-                                    return (head.concat(body));
-                                }
-                            },
-                            axisY: {
-                                title: "Средняя з/п. (тыс.р.)",
-                                includeZero: false,
-                                suffix: "",
-                                lineColor: "#041833"
-                            },
-                            axisY2: {
-                                title: "Количество (шт.)",
-                                includeZero: false,
-                                suffix: "",
-                                lineColor: "#3a5e90"
-                            },
-                            axisX: {
-                                //title: "Месяцы",
-                                //suffix: " мес"
-                            },
-                            data: [
-                            {
-                                type: "line",
-                                name: "Средняя зп",
-                                showInLegend: "true",
-                                dataPoints: [
-                                { x: 6, y: 0, label: "Июнь" },
-                                { x: 7, y: 8.2, label: "Июль" },
-                                { x: 8, y: 41.7, label: "Август" },
-                                { x: 9, y: 16.7, label: "Сентябрь" },
-                                { x: 10, y: 31.3, label: "Октябрь" }
-                                ]
-                            },
-                            {
-                                type: "line",
-                                axisYType: "secondary",
-                                name: "Вакансий",
-                                showInLegend: "true",
-                                dataPoints: [
-                                { x: 6, y: 0, label: "Июнь" },
-                                { x: 7, y: 90, label: "Июль" },
-                                { x: 8, y: 1590, label: "Август" },
-                                { x: 9, y: 1740, label: "Сентябрь" },
-                                { x: 10, y: 3740, label: "Октябрь" }
-                                ]
-                            }
-                            ]
-                            ,
-                            legend: {
-                                cursor: "pointer",
-                                itemclick: function (e) {
-                                    if (typeof (e.dataSeries.visible) === "undefined" || e.dataSeries.visible) {
-                                        e.dataSeries.visible = false;
-                                    }
-                                    else {
-                                        e.dataSeries.visible = true;
-                                    }
-                                    chart.render();
-                                }
-                            }
-                        });
-
-
-                        chart.render();
-                        chart2.render();
-                    }
-                </script>
-
-
-
-            </div>
-        </div>
     </div>
 
 </div>

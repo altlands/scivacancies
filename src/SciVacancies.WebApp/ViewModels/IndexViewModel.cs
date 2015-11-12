@@ -12,5 +12,6 @@ namespace SciVacancies.WebApp.ViewModels
         public PagedList<OrganizationDetailsViewModel> OrganizationsList{ get; set; }
         public PagedList<VacancyDetailsViewModel> VacanciesList { get; set; }
         public IMediator CurrentMediator { get; set; }
+        public int RegionId { get; set; }
     }
 }

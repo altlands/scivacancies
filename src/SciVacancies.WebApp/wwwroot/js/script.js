@@ -1,4 +1,5 @@
-﻿jQuery.extend(jQuery.expr[":"], {
+﻿var graphs = {}; //глобальная переменная для графиков
+jQuery.extend(jQuery.expr[":"], {
     attrStartsWith: function (el, _, b) {
         for (var i = 0, atts = el.attributes, n = atts.length; i < n; i++) {
             if (atts[i].nodeName.indexOf(b[3]) === 0) {
@@ -414,6 +415,49 @@ function cuselValueChanged(source, key) {
         }
 
     }
+}
+/*
+ * Графики. запросить новые данные
+ */
+function refreshAllGraphicData() {
+    graphs = graphs || {}; //глобальная переменная для графиков    
+
+    if (graphs.chart === undefined || graphs.chart2 === undefined)
+    { return; }
+
+    //refreshData
+    graphs.regionId = $('#RegionId').val();
+
+    graphs.period = $('#graphicPeriod').find('.active').attr('data-pariod-value');
+    //end: refreshData
+
+
+    if (graphs.chart !== null) {
+
+        var dataGraph1 = {
+            regionId: graphs.regionId,
+            period: graphs.period
+        };
+        //$.get("/analytics/", dataGraph1, function (data) {
+        //    graphs.chart.options.data = [array]; // Set Array of dataSeries
+        //    graphs.chart.render();
+        //});
+        graphs.chart.render();
+    }
+
+    if (graphs.chart2 != null) {
+        var dataGraph2 = {
+            regionId: graphs.regionId,
+            period: graphs.period
+        };
+        //$.get("/analytics/", dataGraph2, function (data) {
+        //    graphs.chart2.options.data = [array]; // Set Array of dataSeries
+        //    graphs.chart2.render();
+        //});
+        graphs.chart2.render();
+    }
+
+    console.log(graphs);
 }
 /*
  * каптча
