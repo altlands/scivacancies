@@ -6,7 +6,7 @@ namespace SciVacancies.WebApp.ViewModels
     public class AccountLoginViewModel
     {
 
-        [Required(ErrorMessage = "Требуется заполнить поле Логин (e-mail)")]
+        [Required(ErrorMessage = "Требуется заполнить поле Логин")]
         public string Login { get; set; }
 
         [Required(ErrorMessage = "Требуется ввести пароль")]
