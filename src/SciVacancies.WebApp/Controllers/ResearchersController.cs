@@ -57,8 +57,17 @@ namespace SciVacancies.WebApp.Controllers
                 return RedirectToAction("logout", "account");
 
             var model = Mapper.Map<ResearcherDetailsViewModel>(preModel);
-            model.Educations = Mapper.Map<List<EducationEditViewModel>>(_mediator.Send(new SelectResearcherEducationsQuery { ResearcherGuid = researcherGuid }));
-            model.Publications = Mapper.Map<List<PublicationEditViewModel>>(_mediator.Send(new SelectResearcherPublicationsQuery { ResearcherGuid = researcherGuid }));
+
+            IEnumerable<Education> educations = _mediator.Send(new SelectResearcherEducationsQuery { ResearcherGuid = researcherGuid });
+            if (educations != null && educations.Count() > 0)
+            {
+                model.Educations = Mapper.Map<List<EducationEditViewModel>>(educations);
+            }
+            IEnumerable<Publication> publications = _mediator.Send(new SelectResearcherPublicationsQuery { ResearcherGuid = researcherGuid });
+            if (publications != null && publications.Count() > 0)
+            {
+                model.Publications = Mapper.Map<List<PublicationEditViewModel>>(publications);
+            }
 
             return View(model);
         }
@@ -77,8 +86,18 @@ namespace SciVacancies.WebApp.Controllers
                 return HttpNotFound(); //throw new ObjectNotFoundException();
 
             var model = Mapper.Map<ResearcherEditViewModel>(preModel);
-            model.Educations = Mapper.Map<List<EducationEditViewModel>>(_mediator.Send(new SelectResearcherEducationsQuery { ResearcherGuid = researcherGuid }));
-            model.Publications = Mapper.Map<List<PublicationEditViewModel>>(_mediator.Send(new SelectResearcherPublicationsQuery { ResearcherGuid = researcherGuid }));
+
+            IEnumerable<Education> educations = _mediator.Send(new SelectResearcherEducationsQuery { ResearcherGuid = researcherGuid });
+            if (educations != null && educations.Count() > 0)
+            {
+                model.Educations = Mapper.Map<List<EducationEditViewModel>>(educations);
+            }
+            IEnumerable<Publication> publications = _mediator.Send(new SelectResearcherPublicationsQuery { ResearcherGuid = researcherGuid });
+            if (publications != null && publications.Count() > 0)
+            {
+                model.Publications = Mapper.Map<List<PublicationEditViewModel>>(publications);
+            }
+
             model.Logins = await _userManager.GetLoginsAsync(User.Identity.GetUserId());
 
             return View(model);
