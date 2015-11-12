@@ -40,17 +40,72 @@ namespace SciVacancies.WebApp.Controllers
         /// <returns></returns>
         public JsonResult VacancyPositions(int? regionId, Nest.DateInterval interval)
         {
-            List<int> model = new List<int>();
             var result = Mediator.Send(new AverageVacancyAndPositionAnalythicQuery { Interval = interval });
 
+            var model = new List<object>
+            {
+                new {
+                    type = "stackedColumn",
+                    toolTipContent = "{label}<br/><span style='\"'color: {color};'\"'><strong>{name}</strong></span>: {y} вакансий",
+                    name = "Руководители групп структурных подразделений",
+                    showInLegend = "true",
+                    dataPoints = new List<object>{
+                        new { y= 38600, label= "Июль" },
+                        new { y= 11338, label= "Август" },
+                        new { y= 49088, label= "Сентябрь" },
+                        new { y= 62200, label= "Октябрь" },
+                        new { y= 90085, label= "Ноябрь" }
+                    }
+                },
+                new {
+                    type = "stackedColumn",
+                    toolTipContent = "{label}<br/><span style='\"'color: {color};'\"'><strong>{name}</strong></span>: {y} вакансий",
+                    name = "Руководители структурных подразделений",
+                    showInLegend = "true",
+                    dataPoints = new List<object>{
+                        new { y= 39900, label= "Июль" },
+                        new { y= 135305, label= "Август" },
+                        new { y= 107922, label= "Сентябрь" },
+                        new { y= 52300, label= "Октябрь" },
+                        new { y= 3360, label= "Ноябрь" }
+                    }
+                }
+            };
             return Json(model);
         }
 
         public JsonResult VacancyPayments(int? regionId, Nest.DateInterval interval)
         {
-            List<int> model = new List<int>();
             var result = Mediator.Send(new AveragePaymentAndVacancyCountByRegionAnalythicQuery { RegionId = regionId, Interval = interval });
 
+            var model = new List<object>
+            {
+                 new {
+                     type = "line",
+                     name = "Средняя зп",
+                     showInLegend = "true",
+                     dataPoints = new List<object>{
+                         new   { x= 6, y= 0, label= "Июнь" },
+                         new   { x= 7, y= 8.2, label= "Июль" },
+                         new   { x= 8, y= 41.7, label= "Август" },
+                         new   { x= 9, y= 16.7, label= "Сентябрь" },
+                         new   { x= 10, y= 31.3, label= "Октябрь" }
+                     }
+                 },
+                new {
+                    type = "line",
+                    axisYType = "secondary",
+                    name = "Вакансий",
+                    showInLegend = "true",
+                    dataPoints = new List<object> {
+                        new {x = 6, y = 0, label = "Июнь"},
+                        new {x = 7, y = 90, label = "Июль"},
+                        new {x = 8, y = 1590, label = "Август"},
+                        new {x = 9, y = 1740, label = "Сентябрь"},
+                        new {x = 10, y = 3740, label = "Октябрь"}
+                    }
+                }
+            };
             return Json(model);
         }
     }

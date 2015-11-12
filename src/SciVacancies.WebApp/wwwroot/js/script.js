@@ -439,7 +439,7 @@ function refreshAllGraphicData() {
             interval: graphs.period
         };
         $.get("/analytics/VacancyPositions", dataGraph1, function (data) {
-            //graphs.chart.options.data = [array]; // Set Array of dataSeries
+            graphs.chart.options.data = data; // Set Array of dataSeries
             graphs.chart.render();
         });
     }
@@ -450,12 +450,10 @@ function refreshAllGraphicData() {
             interval: graphs.period
         };
         $.get("/analytics/VacancyPayments", dataGraph2, function (data) {
-            //graphs.chart2.options.data = [array]; // Set Array of dataSeries
+            graphs.chart2.options.data = data; // Set Array of dataSeries
             graphs.chart2.render();
         });
     }
-
-    console.log(graphs);
 }
 /*
  * каптча
