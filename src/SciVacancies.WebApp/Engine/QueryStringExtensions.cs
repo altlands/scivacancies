@@ -10,7 +10,7 @@ namespace SciVacancies.WebApp
     /// <summary>
     /// расширение позволяет модифицировать строку запроса
     /// </summary>
-    public static class QueryStringExtension
+    public static class QueryStringExtensions
     {
         /// <summary>
         /// получить список параметров в виде словаря

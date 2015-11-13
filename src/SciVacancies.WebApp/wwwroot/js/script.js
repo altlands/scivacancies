@@ -448,6 +448,8 @@ function refreshAllGraphicData() {
             regionId: graphs.regionId,
             interval: graphs.period
         };
+        graphs.chart.options.data = [];
+        graphs.chart.render();
         $.get("/analytics/VacancyPositions", dataGraph1, function (data) {
             graphs.chart.options.data = data; // Set Array of dataSeries
             graphs.chart.render();
@@ -459,6 +461,8 @@ function refreshAllGraphicData() {
             regionId: graphs.regionId,
             interval: graphs.period
         };
+        graphs.chart2.options.data = [];
+        graphs.chart2.render();
         $.get("/analytics/VacancyPayments", dataGraph2, function (data) {
             graphs.chart2.options.data = data; // Set Array of dataSeries
             graphs.chart2.render();

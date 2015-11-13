@@ -12,6 +12,7 @@ using MediatR;
 using Nest;
 using NPoco;
 using System.Globalization;
+using SciVacancies.WebApp.Engine;
 
 namespace SciVacancies.WebApp.Queries
 {
@@ -66,34 +67,47 @@ namespace SciVacancies.WebApp.Queries
                 };
 
                 Bucket dateBucket = keyItem.Aggregations["histogram"] as Bucket;
-                foreach (HistogramItem histogramItem in dateBucket.Items)
+
+                if (dateBucket != null)
                 {
-                    switch (message.Interval)
+                    var xIndex = 0;
+                    var source =
+                        dateBucket.Items.Select(c => c as HistogramItem)
+                            .OrderBy(c => c.Date.Ticks)
+                            .TakeLast(5);
+                    foreach (var histogramItem in source)
                     {
-                        case DateInterval.Month:
-                            histogram.dataPoints.Add(new PositionDataPoint
-                            {
-                                x = histogramItem.Date.Ticks,
-                                y = histogramItem.DocCount,
-                                label = histogramItem.Date.ToString("MMMM", new CultureInfo("ru-RU"))
-                            });
-                            break;
-                        case DateInterval.Week:
-                            histogram.dataPoints.Add(new PositionDataPoint
-                            {
-                                x = histogramItem.Date.Ticks,
-                                y = histogramItem.DocCount,
-                                label = histogramItem.Date.ToString("dd MMMM", new CultureInfo("ru-RU")) + " - " + histogramItem.Date.AddDays(6).ToString("dd MMMM", new CultureInfo("ru-RU"))
-                            });
-                            break;
-                        case DateInterval.Day:
-                            histogram.dataPoints.Add(new PositionDataPoint
-                            {
-                                x = histogramItem.Date.Ticks,
-                                y = histogramItem.DocCount,
-                                label = histogramItem.Date.ToString("dddd", new CultureInfo("ru-RU"))
-                            });
-                            break;
+                        switch (message.Interval)
+                        {
+                            case DateInterval.Month:
+                                histogram.dataPoints.Add(new PositionDataPoint
+                                {
+                                    //x = histogramItem.Date.Ticks,
+                                    x = xIndex,
+                                    y = histogramItem.DocCount,
+                                    label = histogramItem.Date.ToString("MMMM", new CultureInfo("ru-RU"))
+                                });
+                                break;
+                            case DateInterval.Week:
+                                histogram.dataPoints.Add(new PositionDataPoint
+                                {
+                                    //x = histogramItem.Date.Ticks,
+                                    x = xIndex,
+                                    y = histogramItem.DocCount,
+                                    label = histogramItem.Date.ToString("dd MMM", new CultureInfo("ru-RU")) + " - " + histogramItem.Date.AddDays(6).ToString("dd MMM", new CultureInfo("ru-RU"))
+                                });
+                                break;
+                            case DateInterval.Day:
+                                histogram.dataPoints.Add(new PositionDataPoint
+                                {
+                                    //x = histogramItem.Date.Ticks,
+                                    x = xIndex,
+                                    y = histogramItem.DocCount,
+                                    label = histogramItem.Date.ToString("dddd", new CultureInfo("ru-RU"))
+                                });
+                                break;
+                        }
+                        xIndex++;
                     }
                 }
 
@@ -127,59 +141,75 @@ namespace SciVacancies.WebApp.Queries
                 showInLegend = true
             };
 
-            foreach (HistogramItem histogramItem in dateBucket.Items)
+            if (dateBucket != null)
             {
-                ValueMetric salaryFrom = histogramItem.Aggregations["salary_from"] as ValueMetric;
-                ValueMetric salaryTo = histogramItem.Aggregations["salary_to"] as ValueMetric;
-
-                switch (message.Interval)
+                var xIndex = 0;
+                var source =
+                    dateBucket.Items.Select(c => c as HistogramItem)
+                        .OrderBy(c => c.Date.Ticks)
+                        .TakeLast(5);
+                foreach (var histogramItem in source)
                 {
-                    case DateInterval.Month:
-                        averageHistogram.dataPoints.Add(new PaymentDataPoint
-                        {
-                            x = histogramItem.Date.Ticks,
-                            y = (double)((salaryFrom.Value + salaryTo.Value) / 2),
-                            label = histogramItem.Date.ToString("MMMM", new CultureInfo("ru-RU"))
-                        });
+                    ValueMetric salaryFrom = histogramItem.Aggregations["salary_from"] as ValueMetric;
+                    ValueMetric salaryTo = histogramItem.Aggregations["salary_to"] as ValueMetric;
 
-                        countHistogram.dataPoints.Add(new PaymentDataPoint
-                        {
-                            x = histogramItem.Date.Ticks,
-                            y = histogramItem.DocCount,
-                            label = histogramItem.Date.ToString("MMMM", new CultureInfo("ru-RU"))
-                        });
-                        break;
-                    case DateInterval.Week:
-                        averageHistogram.dataPoints.Add(new PaymentDataPoint
-                        {
-                            x = histogramItem.Date.Ticks,
-                            y = (double)((salaryFrom.Value + salaryTo.Value) / 2),
-                            label = histogramItem.Date.ToString("dd MMMM", new CultureInfo("ru-RU")) + " - " + histogramItem.Date.AddDays(6).ToString("dd MMMM", new CultureInfo("ru-RU"))
-                        });
+                    switch (message.Interval)
+                    {
+                        case DateInterval.Month:
+                            averageHistogram.dataPoints.Add(new PaymentDataPoint
+                            {
+                                //x = histogramItem.Date.Ticks,
+                                x = xIndex,
+                                y = (double)((salaryFrom.Value + salaryTo.Value) / 2),
+                                label = histogramItem.Date.ToString("MMMM", new CultureInfo("ru-RU"))
+                            });
 
-                        countHistogram.dataPoints.Add(new PaymentDataPoint
-                        {
-                            x = histogramItem.Date.Ticks,
-                            y = histogramItem.DocCount,
-                            label = histogramItem.Date.ToString("dd MMMM", new CultureInfo("ru-RU")) + " - " + histogramItem.Date.AddDays(6).ToString("dd MMMM", new CultureInfo("ru-RU"))
-                        });
-                        break;
-                    case DateInterval.Day:
-                        averageHistogram.dataPoints.Add(new PaymentDataPoint
-                        {
-                            x = histogramItem.Date.Ticks,
-                            y = (double)((salaryFrom.Value + salaryTo.Value) / 2),
-                            label = histogramItem.Date.ToString("dddd", new CultureInfo("ru-RU"))
-                        });
+                            countHistogram.dataPoints.Add(new PaymentDataPoint
+                            {
+                                //x = histogramItem.Date.Ticks,
+                                x = xIndex,
+                                y = histogramItem.DocCount,
+                                label = histogramItem.Date.ToString("MMMM", new CultureInfo("ru-RU"))
+                            });
+                            break;
+                        case DateInterval.Week:
+                            averageHistogram.dataPoints.Add(new PaymentDataPoint
+                            {
+                                //x = histogramItem.Date.Ticks,
+                                x = xIndex,
+                                y = (double)((salaryFrom.Value + salaryTo.Value) / 2),
+                                label = histogramItem.Date.ToString("dd MMM", new CultureInfo("ru-RU")) + " - " + histogramItem.Date.AddDays(6).ToString("dd MMM", new CultureInfo("ru-RU"))
+                            });
 
-                        countHistogram.dataPoints.Add(new PaymentDataPoint
-                        {
-                            x = histogramItem.Date.Ticks,
-                            y = histogramItem.DocCount,
-                            label = histogramItem.Date.ToString("dddd", new CultureInfo("ru-RU"))
-                        });
-                        break;
+                            countHistogram.dataPoints.Add(new PaymentDataPoint
+                            {
+                                //x = histogramItem.Date.Ticks,
+                                x = xIndex,
+                                y = histogramItem.DocCount,
+                                label = histogramItem.Date.ToString("dd MMM", new CultureInfo("ru-RU")) + " - " + histogramItem.Date.AddDays(6).ToString("dd MMM", new CultureInfo("ru-RU"))
+                            });
+                            break;
+                        case DateInterval.Day:
+                            averageHistogram.dataPoints.Add(new PaymentDataPoint
+                            {
+                                //x = histogramItem.Date.Ticks,
+                                x = xIndex,
+                                y = (double)((salaryFrom.Value + salaryTo.Value) / 2),
+                                label = histogramItem.Date.ToString("dddd", new CultureInfo("ru-RU"))
+                            });
+
+                            countHistogram.dataPoints.Add(new PaymentDataPoint
+                            {
+                                //x = histogramItem.Date.Ticks,
+                                x = xIndex,
+                                y = histogramItem.DocCount,
+                                label = histogramItem.Date.ToString("dddd", new CultureInfo("ru-RU"))
+                            });
+                            break;
+                    }
+                    xIndex++;
                 }
+
             }
 
             histograms.Add(averageHistogram);
