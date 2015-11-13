@@ -74,6 +74,9 @@
       }
     }
   },
+  "CaptchaSettings": {
+    "CaptchaDurationSeconds": 120
+  },
   "CacheSettings": {
     "DictionaryExpiration": 5,
     "MainPageExpiration": 5

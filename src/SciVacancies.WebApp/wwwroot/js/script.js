@@ -475,6 +475,7 @@ function refreshAllGraphicData() {
 function reloadImg(captchaImageFieldName) {
     var d = new Date();
     $('#' + captchaImageFieldName).attr("src", "/captcha/fetch?w=164&h=50" + d.getTime());
+    $('#Captcha').val('');
 }
 /*
  * сделать некоторую обработку перед отправкой формы Регистрации
