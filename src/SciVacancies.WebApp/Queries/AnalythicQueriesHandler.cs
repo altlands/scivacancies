@@ -1,5 +1,6 @@
 ﻿using SciVacancies.ReadModel.Core;
 using SciVacancies.Services.Elastic;
+using SciVacancies.WebApp.Models.Analythic;
 
 using System;
 using System.Collections.Generic;
@@ -8,13 +9,17 @@ using Microsoft.Framework.OptionsModel;
 using Microsoft.Framework.Caching.Memory;
 
 using MediatR;
+using Nest;
+using NPoco;
+using System.Globalization;
 
 namespace SciVacancies.WebApp.Queries
 {
     public class AnalythicQueriesHandler :
-        IRequestHandler<AverageVacancyAndPositionAnalythicQuery, IDictionary<string, Nest.IAggregation>>,
-        IRequestHandler<AveragePaymentAndVacancyCountByRegionAnalythicQuery, IDictionary<string, Nest.IAggregation>>
+        IRequestHandler<AverageVacancyAndPositionAnalythicQuery, List<PositionsHistogram>>,
+        IRequestHandler<AveragePaymentAndVacancyCountByRegionAnalythicQuery, List<PaymentsHistogram>>
     {
+        private readonly IDatabase _db;
         private readonly IMemoryCache Cache;
         private readonly IAnalythicService AnalythicService;
         private readonly IOptions<CacheSettings> CacheSettings;
@@ -22,39 +27,165 @@ namespace SciVacancies.WebApp.Queries
         {
             get
             {
-                return new MemoryCacheEntryOptions().SetAbsoluteExpiration(DateTimeOffset.Now.AddSeconds(CacheSettings.Value.MainPageExpiration));
+                return new MemoryCacheEntryOptions().SetAbsoluteExpiration(DateTimeOffset.Now.AddSeconds(CacheSettings.Value.DictionaryExpiration));
             }
         }
 
-        public AnalythicQueriesHandler(IAnalythicService analythicService, IMemoryCache cache, IOptions<CacheSettings> cacheSettings)
+        public AnalythicQueriesHandler(IDatabase db, IAnalythicService analythicService, IMemoryCache cache, IOptions<CacheSettings> cacheSettings)
         {
+            this._db = db;
             this.AnalythicService = analythicService;
             this.Cache = cache;
             this.CacheSettings = cacheSettings;
         }
 
-        public IDictionary<string, Nest.IAggregation> Handle(AverageVacancyAndPositionAnalythicQuery message)
+        public List<PositionsHistogram> Handle(AverageVacancyAndPositionAnalythicQuery message)
         {
-            IDictionary<string, Nest.IAggregation> aggregations;
-            if (!Cache.TryGetValue<IDictionary<string, Nest.IAggregation>>("vacancy_position_analythic", out aggregations))
+            IEnumerable<PositionType> positionTypes;
+            if (!Cache.TryGetValue<IEnumerable<PositionType>>("d_positiontypes", out positionTypes))
             {
-                aggregations = AnalythicService.VacancyPositions(message);
-                Cache.Set<IDictionary<string, Nest.IAggregation>>("vacancy_position_analythic", aggregations);
+                positionTypes = _db.Fetch<PositionType>();
+                Cache.Set<IEnumerable<PositionType>>("d_positiontypes", positionTypes, CacheOptions);
             }
 
-            return aggregations;
+            IDictionary<string, Nest.IAggregation> aggregations;
+            aggregations = AnalythicService.VacancyPositions(message);
+
+            List<PositionsHistogram> histograms = new List<PositionsHistogram>();
+
+            Bucket positionsBucket = aggregations["position_ids"] as Bucket;
+
+            foreach (KeyItem keyItem in positionsBucket.Items)
+            {
+                PositionsHistogram histogram = new PositionsHistogram
+                {
+                    type = "stackedColumn",
+                    toolTipContent = "{label}<br/><span style='\"'color: {color};'\"'><strong>{name}</strong></span>: {y} вакансий",
+                    name = positionTypes.FirstOrDefault(f => f.id == Int32.Parse(keyItem.Key)).title,
+                    showInLegend = true
+                };
+
+                Bucket dateBucket = keyItem.Aggregations["histogram"] as Bucket;
+                foreach (HistogramItem histogramItem in dateBucket.Items)
+                {
+                    switch (message.Interval)
+                    {
+                        case DateInterval.Month:
+                            histogram.dataPoints.Add(new PositionDataPoint
+                            {
+                                x = histogramItem.Date.Ticks,
+                                y = histogramItem.DocCount,
+                                label = histogramItem.Date.ToString("MMMM", new CultureInfo("ru-RU"))
+                            });
+                            break;
+                        case DateInterval.Week:
+                            histogram.dataPoints.Add(new PositionDataPoint
+                            {
+                                x = histogramItem.Date.Ticks,
+                                y = histogramItem.DocCount,
+                                label = histogramItem.Date.ToString("dd MMMM", new CultureInfo("ru-RU")) + " - " + histogramItem.Date.AddDays(6).ToString("dd MMMM", new CultureInfo("ru-RU"))
+                            });
+                            break;
+                        case DateInterval.Day:
+                            histogram.dataPoints.Add(new PositionDataPoint
+                            {
+                                x = histogramItem.Date.Ticks,
+                                y = histogramItem.DocCount,
+                                label = histogramItem.Date.ToString("dddd", new CultureInfo("ru-RU"))
+                            });
+                            break;
+                    }
+                }
+
+                histograms.Add(histogram);
+            }
+
+            return histograms;
         }
 
-        public IDictionary<string, Nest.IAggregation> Handle(AveragePaymentAndVacancyCountByRegionAnalythicQuery message)
+        public List<PaymentsHistogram> Handle(AveragePaymentAndVacancyCountByRegionAnalythicQuery message)
         {
             IDictionary<string, Nest.IAggregation> aggregations;
-            if (!Cache.TryGetValue<IDictionary<string, Nest.IAggregation>>("vacancy_payment_analythic", out aggregations))
+            aggregations = AnalythicService.VacancyPayments(message);
+
+            List<PaymentsHistogram> histograms = new List<PaymentsHistogram>();
+
+            Bucket dateBucket = aggregations["histogram"] as Bucket;
+
+            PaymentsHistogram averageHistogram = new PaymentsHistogram
             {
-                aggregations = AnalythicService.VacancyPayments(message);
-                Cache.Set<IDictionary<string, Nest.IAggregation>>("vacancy_payment_analythic", aggregations);
+                type = "line",
+                axisYType = "primary",
+                name = "Средняя зп",
+                showInLegend = true
+            };
+            PaymentsHistogram countHistogram = new PaymentsHistogram
+            {
+                type = "line",
+                axisYType = "secondary",
+                name = "Вакансий",
+                showInLegend = true
+            };
+
+            foreach (HistogramItem histogramItem in dateBucket.Items)
+            {
+                ValueMetric salaryFrom = histogramItem.Aggregations["salary_from"] as ValueMetric;
+                ValueMetric salaryTo = histogramItem.Aggregations["salary_to"] as ValueMetric;
+
+                switch (message.Interval)
+                {
+                    case DateInterval.Month:
+                        averageHistogram.dataPoints.Add(new PaymentDataPoint
+                        {
+                            x = histogramItem.Date.Ticks,
+                            y = (double)((salaryFrom.Value + salaryTo.Value) / 2),
+                            label = histogramItem.Date.ToString("MMMM", new CultureInfo("ru-RU"))
+                        });
+
+                        countHistogram.dataPoints.Add(new PaymentDataPoint
+                        {
+                            x = histogramItem.Date.Ticks,
+                            y = histogramItem.DocCount,
+                            label = histogramItem.Date.ToString("MMMM", new CultureInfo("ru-RU"))
+                        });
+                        break;
+                    case DateInterval.Week:
+                        averageHistogram.dataPoints.Add(new PaymentDataPoint
+                        {
+                            x = histogramItem.Date.Ticks,
+                            y = (double)((salaryFrom.Value + salaryTo.Value) / 2),
+                            label = histogramItem.Date.ToString("dd MMMM", new CultureInfo("ru-RU")) + " - " + histogramItem.Date.AddDays(6).ToString("dd MMMM", new CultureInfo("ru-RU"))
+                        });
+
+                        countHistogram.dataPoints.Add(new PaymentDataPoint
+                        {
+                            x = histogramItem.Date.Ticks,
+                            y = histogramItem.DocCount,
+                            label = histogramItem.Date.ToString("dd MMMM", new CultureInfo("ru-RU")) + " - " + histogramItem.Date.AddDays(6).ToString("dd MMMM", new CultureInfo("ru-RU"))
+                        });
+                        break;
+                    case DateInterval.Day:
+                        averageHistogram.dataPoints.Add(new PaymentDataPoint
+                        {
+                            x = histogramItem.Date.Ticks,
+                            y = (double)((salaryFrom.Value + salaryTo.Value) / 2),
+                            label = histogramItem.Date.ToString("dddd", new CultureInfo("ru-RU"))
+                        });
+
+                        countHistogram.dataPoints.Add(new PaymentDataPoint
+                        {
+                            x = histogramItem.Date.Ticks,
+                            y = histogramItem.DocCount,
+                            label = histogramItem.Date.ToString("dddd", new CultureInfo("ru-RU"))
+                        });
+                        break;
+                }
             }
 
-            return aggregations;
+            histograms.Add(averageHistogram);
+            histograms.Add(countHistogram);
+
+            return histograms;
         }
     }
 }

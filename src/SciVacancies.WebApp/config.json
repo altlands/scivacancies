@@ -53,7 +53,7 @@
         "PretenderNotificationMinutes": -1440
       },
       "DeltaFromPublishToInCommitteeMinMinutes": 28800,
-      "DeltaFromInCommitteeStartToEndMinutes": 21600 
+      "DeltaFromInCommitteeStartToEndMinutes": 21600
     }
   },
   "QuartzSettings": {
@@ -128,5 +128,8 @@
     "TimeStampPattern": "{Timestamp:yyyy-MM-dd HH:mm:ss.fff} [{Level}] {Message}{NewLine}{Exception}",
     "FileSizeBytes": "1048576",
     "FileCountLimit": "31"
+  },
+  "AnalythicSettings": {
+    "BarsNumber": 5
   }
 }
