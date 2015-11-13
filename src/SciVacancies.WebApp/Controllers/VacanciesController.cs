@@ -317,9 +317,10 @@ namespace SciVacancies.WebApp.Controllers
                 || preModel.status == VacancyStatus.Closed
                 || preModel.status == VacancyStatus.Cancelled
                 || preModel.status == VacancyStatus.Removed
-              || preModel.status == VacancyStatus.InCommittee
-              || preModel.status == VacancyStatus.OfferResponseAwaitingFromWinner
-              || preModel.status == VacancyStatus.OfferResponseAwaitingFromPretender
+                || preModel.status == VacancyStatus.Published
+                || preModel.status == VacancyStatus.InCommittee
+                || preModel.status == VacancyStatus.OfferResponseAwaitingFromWinner
+                || preModel.status == VacancyStatus.OfferResponseAwaitingFromPretender
                 )
                 return View("Error", $"Вы не можете отменить вакансию со статусом: {preModel.status.GetDescription()}");
 
@@ -351,6 +352,7 @@ namespace SciVacancies.WebApp.Controllers
               || model.status == VacancyStatus.Closed
               || model.status == VacancyStatus.Cancelled
               || model.status == VacancyStatus.Removed
+              || model.status == VacancyStatus.Published
               || model.status == VacancyStatus.InCommittee
               || model.status == VacancyStatus.OfferResponseAwaitingFromWinner
               || model.status == VacancyStatus.OfferResponseAwaitingFromPretender

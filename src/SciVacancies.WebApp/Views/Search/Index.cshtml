@@ -1,6 +1,7 @@
 ﻿@using System.Linq
 @using System.Threading.Tasks
 @using SciVacancies.WebApp
+@using SciVacancies.WebApp.Engine
 @using SciVacancies.WebApp.ViewModels
 @model VacanciesFilterModel
 
@@ -47,18 +48,18 @@
                             {
                                 if (foivs[a].Childs.Any())
                                 {
-                                    var open= foivs[a].Childs.Count(level => (Model.Foivs !=null && Model.Foivs.Contains(level.Id))) > 0 ? "open" : string.Empty;
-                        <text>
-                        <li class="collapsible-filter-header @open">
-                            <span>@foivs[a].Title (@foivs[a].Childs.Count())</span>
-                            <ul class="list-checkboxes" style="display: none;">
-                                <checkboxing items="foivs[a].Items"
-                                             values="Model.Foivs"
-                                             property="Foivs"
-                                             labelforindex="@labelForIndex"></checkboxing>
-                            </ul>
-                        </li>
-                        </text>
+                                    var open = foivs[a].Childs.Count(level => (Model.Foivs != null && Model.Foivs.Contains(level.Id))) > 0 ? "open" : string.Empty;
+                                    <text>
+                                    <li class="collapsible-filter-header @open">
+                                        <span>@foivs[a].Title (@foivs[a].Childs.Count())</span>
+                                        <ul class="list-checkboxes" style="display: none;">
+                                            <checkboxing items="foivs[a].Items"
+                                                         values="Model.Foivs"
+                                                         property="Foivs"
+                                                         labelforindex="@labelForIndex"></checkboxing>
+                                        </ul>
+                                    </li>
+                                    </text>
                                     labelForIndex += foivs[a].Childs.Count();
                                 }
                             }
@@ -74,31 +75,31 @@
                             labelForIndex = 0;
                             for (a = 0; a < researchDirection.Childs.Count; a++)
                             {
-                                var openFirst = researchDirection.Childs[a].Childs.Sum(second => second.Childs.Count(third => (Model.ResearchDirections!=null && Model.ResearchDirections.Contains(third.Id)))) > 0 ? "open" : string.Empty;
-                        <text>
-                        <li class="collapsible-filter-header @openFirst">
-                            <span>@researchDirection.Childs[a].Title (@researchDirection.Childs[a].Childs.Count)</span>
-                            <ul class="sub-cat level-1" style="display: none;">
-                                @for (b = 0; b < researchDirection.Childs[a].Childs.Count; b++)
+                                var openFirst = researchDirection.Childs[a].Childs.Sum(second => second.Childs.Count(third => (Model.ResearchDirections != null && Model.ResearchDirections.Contains(third.Id)))) > 0 ? "open" : string.Empty;
+                                <text>
+                                <li class="collapsible-filter-header @openFirst">
+                                    <span>@researchDirection.Childs[a].Title (@researchDirection.Childs[a].Childs.Count)</span>
+                                    <ul class="sub-cat level-1" style="display: none;">
+                                        @for (b = 0; b < researchDirection.Childs[a].Childs.Count; b++)
                                         {
-                                            var openSecond = researchDirection.Childs[a].Childs[b].Childs.Count(third => (Model.ResearchDirections!=null && Model.ResearchDirections.Contains(third.Id)) )> 0 ? "open" : string.Empty;
-                                        <text>
-                                        <li class="collapsible-filter-header @openSecond">
-                                            <span>@researchDirection.Childs[a].Childs[b].Title (@researchDirection.Childs[a].Childs[b].Childs.Count)</span>
-                                            <ul class="list-checkboxes" style="display: none;">
-                                                <checkboxing items="researchDirection.Childs[a].Childs[b].Items"
-                                                             values="Model.ResearchDirections"
-                                                             property="ResearchDirections"
-                                                             showcount="-1"
-                                                             labelforindex="@labelForIndex"></checkboxing>
-                                            </ul>
-                                        </li>
-                                        </text>
+                                            var openSecond = researchDirection.Childs[a].Childs[b].Childs.Count(third => (Model.ResearchDirections != null && Model.ResearchDirections.Contains(third.Id))) > 0 ? "open" : string.Empty;
+                                            <text>
+                                            <li class="collapsible-filter-header @openSecond">
+                                                <span>@researchDirection.Childs[a].Childs[b].Title (@researchDirection.Childs[a].Childs[b].Childs.Count)</span>
+                                                <ul class="list-checkboxes" style="display: none;">
+                                                    <checkboxing items="researchDirection.Childs[a].Childs[b].Items"
+                                                                 values="Model.ResearchDirections"
+                                                                 property="ResearchDirections"
+                                                                 showcount="-1"
+                                                                 labelforindex="@labelForIndex"></checkboxing>
+                                                </ul>
+                                            </li>
+                                            </text>
                                             labelForIndex += researchDirection.Childs[a].Childs[b].Childs.Count;
                                         }
-                            </ul>
-                        </li>
-                        </text>
+                                    </ul>
+                                </li>
+                                </text>
                             }
                         }
                     </ul>
@@ -138,9 +139,9 @@
                     </ul>
                 </div>
 
-                
+
                 <input type="submit" class="blue-btn-sm small-icon icon-sm-eye-wh" value="Применить" />
-                
+
 
             </div>
         </div>
@@ -148,12 +149,12 @@
         <div class="b-search-result">
             <h4>@ViewBag.Title</h4>
 
-            
+
             @Html.Raw(!string.IsNullOrWhiteSpace(Model.Search) ? "<div class='comment-italic'>" + string.Format("По запросу «{1}» с учетм фильтрации найдено {0} записей.", Model.Items.TotalItems, Model.Search) + "</div>" : "")
 
             @*<div class="comment-italic">
-                @Html.Raw(!string.IsNullOrWhiteSpace(Model.Search) ? string.Format("По запросу «{1}» с учетом фильтрации найдено {0} записей.", Model.Items.TotalItems, Model.Search) : "&nbsp;")
-            </div>*@
+                    @Html.Raw(!string.IsNullOrWhiteSpace(Model.Search) ? string.Format("По запросу «{1}» с учетом фильтрации найдено {0} записей.", Model.Items.TotalItems, Model.Search) : "&nbsp;")
+                </div>*@
 
 
             @if (User.IsInRole(ConstTerms.RequireRoleResearcher))
@@ -210,7 +211,7 @@
                                             <div id="subscribed-popover" style="display: none; text-align: center;">
                                                 Поздравляем!<br />Вы добавили новую подписку «@Model.SubscriptionInfo.Title»
                                             </div>
-                                        
+
                                             <a asp-controller="subscriptions" asp-action="delete" asp-route-id="@Model.SubscriptionInfo.NewGuid" onclick="javascript: return confirm('Вы уверены что хотите удалить текущую подписку?');" class="blue-btn middle-icon icon-close" rel="tooltip" title="">Отменить подписку</a>
                                         </div>
                                         }
@@ -247,6 +248,9 @@
                                     <a asp-controller="vacancies" asp-action="card" asp-route-id="@item.Id" target="_blank">@item.Name</a>
                                 </div>
                                 <div class="inform">
+                                    <p>
+                                        <span class="status @item.Status.GetHtmlClass()">@item.Status.GetDescription()</span>
+                                    </p>
                                     <p>Дата размещения: @(item.PublishDate?.ToLocalVacancyString())</p>
                                     <p>
                                         Регион: <span>@item.Region</span>

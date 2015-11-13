@@ -28,7 +28,8 @@ namespace SciVacancies.WebApp.Controllers
         [AllowAnonymous]
         [PageTitle("Карточка организации")]
         [ValidatePagerParameters]
-        public IActionResult Card(Guid id, int pageSize = 10, int currentPage = 1)
+        public IActionResult Card(Guid id, int pageSize = 10, int currentPage = 1,
+            string sortField = ConstTerms.OrderByFieldPublishDate, string sortDirection = ConstTerms.OrderByDescending)
         {
             if (id == Guid.Empty)
                 throw new ArgumentNullException(nameof(id));
@@ -43,7 +44,21 @@ namespace SciVacancies.WebApp.Controllers
             model.VacanciesInOrganization = new VacanciesInOrganizationIndexViewModel
             {
                 OrganizationGuid = id,
-                PagedVacancies = _mediator.Send(new SelectPagedVacanciesByOrganizationAndStatusesQuery { OrganizationGuid = id, PageSize = pageSize, PageIndex = currentPage, Statuses = new List<VacancyStatus> {VacancyStatus.Published, VacancyStatus.InCommittee} }).MapToPagedList()
+                PagedVacancies = _mediator.Send(new SelectPagedVacanciesByOrganizationAndStatusesQuery
+                {
+                    OrganizationGuid = id,
+                    PageSize = pageSize,
+                    PageIndex = currentPage,
+                    OrderBy = new SortFilterHelper().GetSortField<Vacancy>(sortField),
+                    OrderDirection = sortDirection,
+                    Statuses = new List<VacancyStatus>
+                    {
+                        VacancyStatus.Published,
+                        VacancyStatus.InCommittee,
+                        VacancyStatus.Closed,
+                        VacancyStatus.Cancelled
+                    }
+                }).MapToPagedList()
             };
 
             return View(model);
