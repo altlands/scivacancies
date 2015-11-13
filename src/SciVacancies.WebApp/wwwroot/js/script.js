@@ -41,8 +41,8 @@ $(document).ready(function () {
     //jquery datepicker
     $(function () {
         $.datepicker.setDefaults(
-			$.extend($.datepicker.regional["ru"])
-		);
+            $.extend($.datepicker.regional["ru"])
+        );
         $(".datepicker-vacancy").datepicker({
             changeMonth: true,
             changeYear: true,
@@ -106,8 +106,7 @@ $(document).ready(function () {
         var source = this;
         if ($(source).attr("data-modal") != undefined) {
             $(".window-popup[data-name=\"" + $(source).attr("data-modal") + "\"]").fadeIn(300);
-        }
-        else {
+        } else {
             $(".popup-bg, .window-popup, .bg-window").fadeIn(300);
         }
         return false;
@@ -165,7 +164,7 @@ $(document).ready(function () {
         $(this).parents(".content-slide").find(".b-solution").slideToggle("fast", function () {
             var current = slider.getCurrentSlide();
             /*slider.reloadSlider();
-			slider.goToSlide(current);*/
+        slider.goToSlide(current);*/
             //slider.find("li").eq(current).css("height", "100%");
             $(".bx-viewport").css("height", "100%");
 
@@ -178,8 +177,8 @@ $(document).ready(function () {
     });
 
     /*
-     *  this code need for navigate by new pager values
-     */
+ *  this code need for navigate by new pager values
+ */
     // changeaction
     $("input[changeaction=true]").keypress(function (e) {
         if (e.which == 13) {
@@ -195,8 +194,8 @@ $(document).ready(function () {
     });
 
     /*
-     * показать все элементы в группе значений в поиске
-     */
+ * показать все элементы в группе значений в поиске
+ */
     $("div.filter-contents span.show-all-list").click(function () {
         var source = this;
         var parentContainer = $(source).parents('.cat-filter')[0];
@@ -207,8 +206,8 @@ $(document).ready(function () {
         });
     });
     /*
-     * скрыть невыбранные элементы в группе значений в поиске
-     */
+ * скрыть невыбранные элементы в группе значений в поиске
+ */
     $("div.filter-contents span.hide-unselected").click(function () {
         var source = this;
         var parentContainer = $(source).parents('.cat-filter')[0];
@@ -219,38 +218,37 @@ $(document).ready(function () {
         });
     });
     /*
-     * Исследователь редактирует аккаунт: удалить интерес из списка
-     */
+ * Исследователь редактирует аккаунт: удалить интерес из списка
+ */
     $(".list-tags.research-interests").find("a.link-remove").click(function () {
         var source = this;
         $($(source).parents("li")[0]).remove();
         return false;
     });
     /*
-     * развернуть/свернуть список значений в фильтре
-     */
+ * развернуть/свернуть список значений в фильтре
+ */
     $('.collapsible-filter-header').click(function (event) {
         event.stopPropagation();
         var source = this;
         if ($(source).hasClass('open')) {
             $(source).children('ul').hide();
             $(source).removeClass('open');
-        }
-        else {
+        } else {
             $(source).addClass('open');
             $(source).children('ul').show();
         }
     });
     $('li.collapsible-filter-header.open').children('ul').show(); //показать вложенные элементы если добавлен класс .open
     /*
-     * исправление распространения событий для списка фильтров при поиске
-     */
+ * исправление распространения событий для списка фильтров при поиске
+ */
     $('li.li-checkbox').click(function (event) {
         event.stopPropagation();
     });
     /*
-     * Управление внутренними вкладками в Областях науки
-     */
+ * Управление внутренними вкладками в Областях науки
+ */
     $('.jshelper-sub-research-directions').click(function () {
         var source = this;
 
@@ -261,16 +259,16 @@ $(document).ready(function () {
         $(parentContainer).siblings('.jshelper-list-sections-science[id="' + $(source).attr('data-tabname') + '"]').show();
     });
     /*
-     * закрывать модальное окно при нажатии кнопки Отмены
-     */
+ * закрывать модальное окно при нажатии кнопки Отмены
+ */
     $('span.icon-close').click(function () {
         var source = this;
         var parent = $(source).parents('.window-popup')[0];
         $(parent).find('span.close-popup').click();
     });
     /*
-     * редактирование Вакансии (развернуть/скрыть Критерии)
-     */
+ * редактирование Вакансии (развернуть/скрыть Критерии)
+ */
     //b-publication open
     $('span.name-section').click(function () {
         var source = this;
@@ -284,8 +282,8 @@ $(document).ready(function () {
         }
     });
     /*
-     * показать все элементы (в Вакансии развернуть/скрыть Критерии)
-     */
+ * показать все элементы (в Вакансии развернуть/скрыть Критерии)
+ */
     $("div.lnk-container span.icon-hsm-eye").click(function () {
         var source = this;
         var parentContainer = $(source).parents('.right-cell')[0];
@@ -294,8 +292,8 @@ $(document).ready(function () {
         $(source).siblings("span.icon-sm-eye").show();
     });
     /*
-     * скрыть все элементы (в Вакансии развернуть/скрыть Критерии)
-     */
+ * скрыть все элементы (в Вакансии развернуть/скрыть Критерии)
+ */
     $("div.lnk-container span.icon-sm-eye").click(function () {
         var source = this;
         var parentContainer = $(source).parents('.right-cell')[0];
@@ -318,12 +316,14 @@ $(document).ready(function () {
         }
         return false;
     });
+
     /*
-     * переключатели для главной страницы
-     */
+         * переключатели для главной страницы
+         */
     function toggleChevron(e) {
         $(e.target).prev('.panel-heading').parent().toggleClass('selected');
     }
+
     $('#accordion').on('hidden.bs.collapse', toggleChevron);
     $('#accordion').on('show.bs.collapse', toggleChevron);
 
@@ -333,13 +333,13 @@ $(document).ready(function () {
         $(this).tab('show');
     });
     /*
-     * «срок трудового договора» поля должны показываться только, если выбираешь «срочный»
-     */
+ * «срок трудового договора» поля должны показываться только, если выбираешь «срочный»
+ */
     $('#cusel-scroll-' + 'ContractTypeValue').find('span').click(toggleContractTime);
     toggleContractTime();
     /*
-     * сброс фильтра
-     */
+ * сброс фильтра
+ */
     $(".filter-link-uncheck-all").click(function () {
         var source = this;
         var parent = $(source).parents('.filter-contents')[0];
@@ -352,8 +352,8 @@ $(document).ready(function () {
         //$(parent).parents('form').submit();
     });
     /*
-     * сброс фильтра
-     */
+ * сброс фильтра
+ */
     $(".filter-link-check-all").click(function () {
         var source = this;
         var parent = $(source).parents('.filter-contents')[0];
@@ -366,19 +366,29 @@ $(document).ready(function () {
         //$(parent).parents('form').submit();
     });
     /*
-     * Временно для переключателя
-     */
+ * Временно для переключателя
+ */
     $(".tabs_after_title > li").click(function () {
         $(".tabs_after_title > li").siblings().removeClass("active");
         $(this).addClass("active");
     });
     /*
-     * отрисовать графики
-     */
+ * на форме редактирваония добавить объектыв 
+ */
+    $('.property-list-container').each(function () {
+        var parentDiv = this;
+        var prefix = $(parentDiv).attr('data-property-respocible');
 
+        if (prefix !== undefined && prefix != null) {
+            var count = $(parentDiv).find(":visible.property-list-item").length;
+            if (count === 0) {
+                addingNewItemToList(parentDiv, prefix);
+            }
+        }
+    });
     /*
-    end of the code
-    */
+        end of the code
+        */
 });
 /*
  * обработка каскадных выпадающих списков для Cusel (год окончания периода не может быть меньше года начала периода)
@@ -543,7 +553,6 @@ function selectedItemFromModalDictionary(hiddenInputName, textInput, newValue, d
 };
 /**
  * перед отправкой формы удалить шаблоны пополнения списков
- * @returns {} 
  */
 function beforeFormSubmit(source) {
     var form = $(source).parents("form")[0];
@@ -551,13 +560,40 @@ function beforeFormSubmit(source) {
     return true;
 };
 /**
- * добавить новый элемент к списку при редактировании
- * @returns {} 
+ * добавить новую форму к списку с объектами
  */
 function addNewItemToList(source, prefix) {
     //<div class="table-form mt15" data-innercount="@(Model.Educations.Count+1)">
     var parentDiv = $(source).parents(".property-list-container")[0];
+    addingNewItemToList(parentDiv, prefix);
+    return false;
+};
+/**
+ * удалить форму из списка с объектами
+ */
+function removeItemFromList(source, prefix) {
+    if (confirm("Вы уверены что хотите удалить эту запись?")) {
+        var parentDiv = $(source).parents(".property-list-item")[0];
 
+        var parentDivContainer = $(source).parents(".property-list-container")[0];
+
+        $(parentDiv).remove();
+
+        if (prefix !== undefined && prefix != null) {
+            var count = $(parentDivContainer).find(":visible.property-list-item").length;
+            if (count === 0) {
+                addingNewItemToList(parentDivContainer, prefix);
+            }
+        }
+
+        return false;
+    }
+    return false;
+};
+/**
+ * добавление формы к списку с объектами
+ */
+function addingNewItemToList(parentDiv, prefix) {
     //получаем текущий индекс количества строк
     var newIndex = parseInt($(parentDiv).attr("data-innercount")) + 1;
     var oldPrefixDash = prefix + "_0__",
@@ -586,7 +622,7 @@ function addNewItemToList(source, prefix) {
     $(templateDiv).removeAttr('data-list-template');
     $(templateDiv).find("input[name=\"" + prefix + '.Index"]').val(newIndex);
     $(lastItemRow).after(templateDiv);
-    $(templateDiv).fadeIn("slow");
+    $(templateDiv).fadeIn("fast");
 
     var paramsSelect = {
         changedEl: "select.newselect",
@@ -597,24 +633,7 @@ function addNewItemToList(source, prefix) {
 
     //сохранить новый индекс
     $(parentDiv).attr("data-innercount", newIndex);
-
-    return false;
-};
-/**
- * добавить новый элемент к списку при редактировании
- * @returns {} 
- */
-function removeItemFromList(source) {
-    if (confirm("Вы уверены что хотите удалить эту запись?")) {
-        var parentDiv = $(source).parents(".property-list-item")[0];
-        $(parentDiv).fadeOut(500, function () {
-            $(parentDiv).remove();
-            return false;
-        });
-        return false;
-    }
-    return false;
-};
+}
 /**
   * добавить метку о том что поискаовый запрос нужно сохранить в качестве подписки
   */

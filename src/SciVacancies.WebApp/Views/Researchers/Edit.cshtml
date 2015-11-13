@@ -210,7 +210,7 @@
 
                     <br />
 
-                    <div class="property-list-container" data-innercount="@(Model.Interests.Count - 1)">
+                    <div class="property-list-container" data-property-respocible="Interests" data-innercount="@(Model.Interests.Count - 1)">
                         <ul class="list-Interests content-list">
                             @for (var i = 0; i < Model.Interests.Count; i++)
                             {
@@ -228,7 +228,7 @@
                                     </div>
 
                                     <div class="buttons">
-                                        <span class="big-link-remove" onclick="return removeItemFromList(this);"></span>
+                                        <span class="big-link-remove" onclick="return removeItemFromList(this, 'Interests');"></span>
                                     </div>
 
                                 </li>
@@ -245,7 +245,7 @@
     </div>
     <div class="row mb13">
         <div class="bold">Образование</div>
-        <div class="table-form mt15 property-list-container" data-innercount="@(Model.Educations.Count - 1)">
+        <div class="table-form mt15 property-list-container" data-property-respocible="Educations" data-innercount="@(Model.Educations.Count - 1)">
             @for (var i = 0; i < Model.Educations.Count; i++)
         {
             useStyle = i == 0 ? invisibleItemStyle : string.Empty;
@@ -303,7 +303,7 @@
                     <div class="table-row form-row">
                         <div class="right-cell">
                             @*<button class="btn btn-warning btn-sm" onclick="return removeItemFromList(this);">Удалить</button>*@
-                            <span class="small-icon icon-sm-close" onclick="return removeItemFromList(this);">Очистить форму</span>
+                            <span class="small-icon icon-sm-close" onclick="return removeItemFromList(this, 'Educations');">Очистить форму</span>
                         </div>
                     </div>
                     <div class="right-cell property-list-item__separator"></div>
@@ -327,7 +327,7 @@
 
     <div class="row mb13">
         <div class="bold">Исследовательская деятельность</div>
-        <div class="table-form mt15 property-list-container" data-innercount="@(Model.ResearchActivity.Count - 1)">
+        <div class="table-form mt15 property-list-container" data-property-respocible="ResearchActivity" data-innercount="@(Model.ResearchActivity.Count - 1)">
             @for (var i = 0; i < Model.ResearchActivity.Count; i++)
             {
                 useStyle = i == 0 ? invisibleItemStyle : string.Empty;
@@ -410,7 +410,7 @@
                     <div class="table-row form-row">
                         <div class="right-cell">
                             @*<button class="btn btn-warning btn-sm" onclick="return removeItemFromList(this);">Удалить</button>*@
-                            <span class="small-icon icon-sm-close" onclick="return removeItemFromList(this);">Очистить форму</span>
+                            <span class="small-icon icon-sm-close" onclick="return removeItemFromList(this, 'ResearchActivity');">Очистить форму</span>
                         </div>
                     </div>
                     <div class="right-cell property-list-item__separator"></div>
@@ -435,7 +435,7 @@
 
     <div class="row mb13">
         <div class="bold">Преподавательская деятельность</div>
-        <div class="table-form mt15 property-list-container" data-innercount="@(Model.TeachingActivity.Count - 1)">
+        <div class="table-form mt15 property-list-container"  data-property-respocible="TeachingActivity" data-innercount="@(Model.TeachingActivity.Count - 1)">
             @for (var i = 0; i < Model.TeachingActivity.Count; i++)
         {
             useStyle = i == 0 ? invisibleItemStyle : string.Empty;
@@ -516,7 +516,7 @@
                     <div class="table-row form-row">
                         <div class="right-cell">
                             @*<button class="btn btn-warning btn-sm" onclick="return removeItemFromList(this);">Удалить</button>*@
-                            <span class="small-icon icon-sm-close" onclick="return removeItemFromList(this);">Очистить форму</span>
+                            <span class="small-icon icon-sm-close" onclick="return removeItemFromList(this, 'TeachingActivity');">Очистить форму</span>
                         </div>
                     </div>
                     <div class="right-cell property-list-item__separator"></div>
@@ -540,7 +540,7 @@
 
     <div class="row mb13">
         <div class="bold">Прочая деятельность</div>
-        <div class="table-form mt15 property-list-container" data-innercount="@(Model.OtherActivity.Count - 1)">
+        <div class="table-form mt15 property-list-container" data-property-respocible="OtherActivity" data-innercount="@(Model.OtherActivity.Count - 1)">
             @for (var i = 0; i < Model.OtherActivity.Count; i++)
         {
             useStyle = i == 0 ? invisibleItemStyle : string.Empty;
@@ -621,7 +621,7 @@
                     <div class="table-row form-row">
                         <div class="right-cell">
                             @*<button class="btn btn-warning btn-sm" onclick="return removeItemFromList(this);">Удалить</button>*@
-                            <span class="small-icon icon-sm-close" onclick="return removeItemFromList(this);">Очистить форму</span>
+                            <span class="small-icon icon-sm-close" onclick="return removeItemFromList(this, 'OtherActivity');">Очистить форму</span>
                         </div>
                     </div>
                     <div class="right-cell property-list-item__separator"></div>
@@ -667,7 +667,7 @@
                     <label>Награды:</label>
                 </div>
                 <div class="right-cell">
-                    <div class="property-list-container" data-innercount="@(Model.Rewards.Count-1)">
+                    <div class="property-list-container" data-property-respocible="Rewards" data-innercount="@(Model.Rewards.Count-1)">
 
                         <ul class="list-Rewards content-list">
                             @for (var i = 0; i < Model.Rewards.Count; i++)
@@ -693,7 +693,7 @@
                                     </div>
                                     
                                     <div class="buttons">
-                                        <span class="big-link-remove" onclick="return removeItemFromList(this);"></span>
+                                        <span class="big-link-remove" onclick="return removeItemFromList(this, 'Rewards');"></span>
                                     </div>
                                 </li>
                                 </text>
@@ -708,7 +708,7 @@
                     <label>Членство в профессиональных сообществах:</label>
                 </div>
                 <div class="right-cell">
-                    <div class="property-list-container" data-innercount="@(Model.Memberships.Count - 1)">
+                    <div class="property-list-container"data-property-respocible="Memberships" data-innercount="@(Model.Memberships.Count - 1)">
 
                         <ul class="list-Memberships content-list">
                             @for (var i = 0; i < Model.Memberships.Count; i++)
@@ -734,7 +734,7 @@
                                             </div>
 
                                             <div class="buttons">
-                                                <span class="big-link-remove" onclick="return removeItemFromList(this);"></span>
+                                                <span class="big-link-remove" onclick="return removeItemFromList(this, 'Memberships');"></span>
                                             </div>
 </li>
                                 </text>
@@ -752,7 +752,7 @@
                     <label>Конференции, симпозиумы, доклады:</label>
                 </div>
                 <div class="right-cell">
-                    <div class="property-list-container" data-innercount="@(Model.Conferences.Count - 1)">
+                    <div class="property-list-container" data-property-respocible="Conferences" data-innercount="@(Model.Conferences.Count - 1)">
 
                         <ul class="list-Conferences content-list">
                             @for (var i = 0; i < Model.Conferences.Count; i++)
@@ -782,7 +782,7 @@
 
                                     <div class="buttons">
                                         @*<span class="big-link-edit"></span>*@
-                                        <span class="big-link-remove" onclick="return removeItemFromList(this);"></span>
+                                        <span class="big-link-remove" onclick="return removeItemFromList(this, 'Conferences');"></span>
                                     </div>
                                 </li>
                                 </text>
@@ -803,7 +803,7 @@
                     <label>Публикации:</label>
                 </div>
                 <div class="right-cell">
-                    <div class="property-list-container" data-innercount="@(Model.Publications.Count - 1)">
+                    <div class="property-list-container" data-property-respocible="Publications" data-innercount="@(Model.Publications.Count - 1)">
 
                         <ul class="list-publications content-list">
                             @for (var i = 0; i < Model.Publications.Count; i++)
@@ -829,7 +829,7 @@
 
                                         <div class="buttons">
                                             @*<span class="big-link-edit"></span>*@
-                                            <span class="big-link-remove" onclick="return removeItemFromList(this);"></span>
+                                            <span class="big-link-remove" onclick="return removeItemFromList(this, 'Publications');"></span>
                                         </div>
                                     </li>
                                 </text>
