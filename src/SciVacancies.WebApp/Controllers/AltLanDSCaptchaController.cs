@@ -32,7 +32,7 @@ namespace SciVacancies.WebApp.Controllers
                 //return;
                 throw new Exception();
             }
-            
+
             var text = CaptchaConfiguration.DefaultTextGeneratorFactory().GenerateText();
             var ci = new CaptchaImage(text);
 
@@ -90,7 +90,16 @@ namespace SciVacancies.WebApp.Controllers
         public IActionResult IsValid(string captchaText)
         {
             var verifier = new CaptchaVerifier(CaptchaConfiguration.DefaultStoreFactory(HttpContext), HttpContext);
-            var boolResult = verifier.IsValid(captchaText);
+            bool boolResult = false;
+            try
+            {
+                boolResult = verifier.IsValid(captchaText);
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+
             return Json(boolResult);
         }
 
