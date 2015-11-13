@@ -86,6 +86,45 @@ namespace SciVacancies.Services.Elastic
 
             List<FilterContainer> filters = new List<FilterContainer>();
 
+            switch (q.Interval)
+            {
+                case DateInterval.Month:
+                    filters.Add(new FilterDescriptor<Vacancy>().Bool(b => b
+                                                                    .Must(m => m
+                                                                        .Range(r => r
+                                                                            .GreaterOrEquals(DateTime.UtcNow.AddMonths((-1) * q.BarsNumber))
+                                                                            .OnField(f => f.PublishDate)
+                                                                        )
+
+                                                                    )
+                                                                )
+                                                        );
+                    break;
+                case DateInterval.Week:
+                    filters.Add(new FilterDescriptor<Vacancy>().Bool(b => b
+                                                                    .Must(m => m
+                                                                        .Range(r => r
+                                                                            .GreaterOrEquals(DateTime.UtcNow.AddDays((-1) * q.BarsNumber * 7))
+                                                                            .OnField(f => f.PublishDate)
+                                                                        )
+                                                                    )
+                                                                )
+                                                        );
+                    break;
+
+                case DateInterval.Day:
+                    filters.Add(new FilterDescriptor<Vacancy>().Bool(b => b
+                                                                    .Must(m => m
+                                                                        .Range(r => r
+                                                                            .GreaterOrEquals(DateTime.UtcNow.AddDays((-1) * q.BarsNumber))
+                                                                            .OnField(f => f.PublishDate)
+                                                                        )
+                                                                    )
+                                                                )
+                                                        );
+                    break;
+            }
+
             if (q.RegionId != null)
             {
                 filters.Add(new FilterDescriptor<Vacancy>().Bool(b => b
@@ -140,15 +179,16 @@ namespace SciVacancies.Services.Elastic
         }
         public AggregationDescriptor<Vacancy> VacancyPositionAggregationDescriptor(AggregationDescriptor<Vacancy> aggDescriptor, VacancyPositionsAnalythicQuery q)
         {
-            aggDescriptor.DateHistogram("histogram", dt => dt
-                                 .Field(fd => fd.PublishDate)
-                                 .Interval(q.Interval)
-                                 .Aggregations(agg => agg
-                                    .Terms("position_ids", tm => tm
-                                         .Field(f => f.PositionTypeId)
+            aggDescriptor.Terms("position_ids", tm => tm
+                                    .Field(f => f.PositionTypeId)
+                                    .Aggregations(agg => agg
+                                            .DateHistogram("histogram", dt => dt
+                                                 .Field(fd => fd.PublishDate)
+                                                 .Interval(q.Interval)
+
+                                            )
                                     )
-                                 )
-                            );
+                        );
 
             return aggDescriptor;
         }
@@ -175,6 +215,55 @@ namespace SciVacancies.Services.Elastic
             FilterContainer filterContainer;
 
             List<FilterContainer> filters = new List<FilterContainer>();
+
+            switch (q.Interval)
+            {
+                case DateInterval.Month:
+                    filters.Add(new FilterDescriptor<Vacancy>().Bool(b => b
+                                                                    .Must(m => m
+                                                                        .Range(r => r
+                                                                            .GreaterOrEquals(DateTime.UtcNow.AddMonths((-1) * q.BarsNumber))
+                                                                            .OnField(f => f.PublishDate)
+                                                                        )
+
+                                                                    )
+                                                                )
+                                                        );
+                    break;
+                case DateInterval.Week:
+                    filters.Add(new FilterDescriptor<Vacancy>().Bool(b => b
+                                                                    .Must(m => m
+                                                                        .Range(r => r
+                                                                            .GreaterOrEquals(DateTime.UtcNow.AddDays((-1) * q.BarsNumber * 7))
+                                                                            .OnField(f => f.PublishDate)
+                                                                        )
+                                                                    )
+                                                                )
+                                                        );
+                    break;
+
+                case DateInterval.Day:
+                    filters.Add(new FilterDescriptor<Vacancy>().Bool(b => b
+                                                                    .Must(m => m
+                                                                        .Range(r => r
+                                                                            .GreaterOrEquals(DateTime.UtcNow.AddDays((-1) * q.BarsNumber))
+                                                                            .OnField(f => f.PublishDate)
+                                                                        )
+                                                                    )
+                                                                )
+                                                        );
+                    break;
+            }
+
+            if (q.RegionId != null)
+            {
+                filters.Add(new FilterDescriptor<Vacancy>().Bool(b => b
+                                                                .Must(m => m
+                                                                    .Term(t => t.RegionId, q.RegionId)
+                                                                )
+                                                            )
+                                                        );
+            }
 
             filters.Add(new FilterDescriptor<Vacancy>().Bool(b => b
                                                             .MustNot(mn => mn

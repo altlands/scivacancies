@@ -48,10 +48,10 @@ namespace SciVacancies.WebApp
             }
             else
             {
-               configurationBuilder = new ConfigurationBuilder()
-                    .SetBasePath(appEnv.ApplicationBasePath)
-                    .AddJsonFile($"config.{devEnv}.json", optional: false)
-                    .AddEnvironmentVariables();
+                configurationBuilder = new ConfigurationBuilder()
+                     .SetBasePath(appEnv.ApplicationBasePath)
+                     .AddJsonFile($"config.{devEnv}.json", optional: false)
+                     .AddEnvironmentVariables();
             }
 
             Configuration = configurationBuilder.Build();
@@ -95,6 +95,7 @@ namespace SciVacancies.WebApp
             services.Configure<CaptchaSettings>(Configuration.GetSection("CaptchaSettings"));
             services.Configure<SagaSettings>(Configuration.GetSection("SagaSettings"));
             services.Configure<CacheSettings>(Configuration.GetSection("CacheSettings"));
+            services.Configure<AnalythicSettings>(Configuration.GetSection("AnalythicSettings"));
 
             services.AddCookieAuthentication(options =>
             {

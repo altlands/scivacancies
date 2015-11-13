@@ -95,5 +95,8 @@
     "TimeStampPattern": "{Timestamp:yyyy-MM-dd HH:mm:ss.fff} [{Level}] {Message}{NewLine}{Exception}",
     "FileSizeBytes": "1048576",
     "FileCountLimit": "31"
+  },
+  "AnalythicSettings": {
+    "BarsNumber": 5
   }
 }
