@@ -3,8 +3,8 @@
     "SiteTitle": "Портал вакансий"
   },
   "Data": {
-    "ReadModelDb": "Server=localhost;Database=scivacancies;User Id=postgres;Password=postgres",
-    "EventStoreDb": "Server=localhost;Database=scivacancies;User Id=postgres;Password=postgres"
+    "ReadModelDb": "Server=192.168.10.141;Database=scivacancies;User Id=postgres;Password=postgres",
+    "EventStoreDb": "Server=192.168.10.141;Database=scivacancies;User Id=postgres;Password=postgres"
   },
   "OAuthSettings": {
     "Sciencemon": {
@@ -37,8 +37,8 @@
     }
   },
   "ElasticSettings": {
-    "ConnectionUrl": "http://alt-dev003:9200/",
-    "DefaultIndex": "scivacancies-ntemnikov",
+    "ConnectionUrl": "http://192.168.10.141:9200/",
+    "DefaultIndex": "scivacancies-dev",
     "MinScore": "0.2"
   },
   "SagaSettings": { //TODO сделать только с положительными днями, обозвать соответствующе
@@ -72,7 +72,7 @@
     },
     "DataSource": {
       "Default": {
-        "ConnectionString": "Server=localhost; Database=scivacancies; User Id=postgres; Password=postgres",
+        "ConnectionString": "Server=192.168.10.141; Database=scivacancies; User Id=postgres; Password=postgres",
         "Provider": "Npgsql-20"
       }
     }

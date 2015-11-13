@@ -5,8 +5,8 @@
 @model IndexViewModel
 
 @{
-    var regions = Model.CurrentMediator.Send(new SelectAllRegionsQuery()).Select(c => new SelectListItem {Text = c.title, Value = c.id.ToString()}).ToList();
-    regions.Insert(0, new SelectListItem{Text = "Все регионы", Value = "null" });
+    var regions = Model.CurrentMediator.Send(new SelectAllRegionsQuery()).Select(c => new SelectListItem { Text = c.title, Value = c.id.ToString() }).ToList();
+    regions.Insert(0, new SelectListItem { Text = "Все регионы", Value = "null" });
     ViewBag.RegionsList = regions;
 
     var dayPeriod = (int)Nest.DateInterval.Day;
@@ -34,7 +34,7 @@
     <div class="graphics-item">
         <div class="title-graphic">Число вакансий ( среднее предложение в месяц )</div>
 
-        <div id="chartContainer" style="height: 300px; width: 413px;">
+        <div id="chartContainer" style="height: 250px; width: 413px;">
         </div>
 
     </div>
@@ -42,7 +42,7 @@
     <div class="graphics-item">
         <div class="title-graphic">Средняя зарплата и количество вакансий</div>
 
-        <div id="chartContainer2" style="height: 300px; width: 413px;">
+        <div id="chartContainer2" style="height: 250px; width: 413px;">
         </div>
 
         <div class="graph-region-select-block">
@@ -83,12 +83,20 @@
                 {
                     colorSet: "blueShades4",
 
+                    dataPointMaxWidth: 35,
                     title: {
                         //text: "Число вакансий ( среднее предложение в месяц )"
-
+                    },
+                    axisX: {
+                        //text: "Число вакансий ( среднее предложение в месяц )"
+                        lineThickness: 1,
+                        tickLength: 0
                     },
                     axisY: {
-                        title: "Вакансии"
+                        //title: "Вакансии"
+                        lineThickness: 1,
+                        tickLength: 0,
+                        gridThickness: 1
                     },
                     animationEnabled: true,
                     data: [
@@ -180,17 +188,26 @@
                         title: "Средняя з/п. (тыс.р.)",
                         includeZero: false,
                         suffix: "",
-                        lineColor: "#041833"
+                        lineColor: "#041833",
+                        lineThickness: 1,
+                        tickLength: 0,
+                        gridThickness: 1
                     },
                     axisY2: {
                         title: "Количество (шт.)",
                         includeZero: false,
                         suffix: "",
-                        lineColor: "#3a5e90"
+                        lineColor: "#3a5e90",
+                        lineThickness: 1,
+                        tickLength: 0,
+                        gridThickness: 1
                     },
                     axisX: {
                         //title: "Месяцы",
-                        //suffix: " мес"
+                        //suffix: " мес",
+                        lineThickness: 1,
+                        tickLength: 0,
+                        gridThickness: 1
 
                     },
                     data: [

@@ -62,21 +62,25 @@
                 <th>
                     <div class="pl21 va-middle">Вакансия</div>
                 </th>
-                <th>
-                    <div class="inline-block">
-                        <!-- <img src="/images/icons/tab-head.png" class="va-middle"/> -->
-                    </div>
-                    <div class="inline-block ml6 va-middle">
-                        Дата<br /> публикации
-                    </div>
+                <th width="130">
+                    <a class="sort-order" href="@(Context.Request.Path.Value+"?"+Context.Request.ToQueryStringDictionary().SetDefaultOrInvertOrderParameter(ConstTerms.OrderByFieldPublishDate).CreateString())">
+                        <div class="inline-block">
+                            <img title="Сортировка" src="@Context.Request.GetOrderIcon(ConstTerms.OrderByFieldPublishDate)" class="va-middle" />
+                        </div>
+                        <div class="inline-block ml6 va-middle">
+                            Дата<br />публикации
+                        </div>
+                    </a>
                 </th>
                 <th width="110">
-                    <div class="inline-block">
-                        <!-- <img src="/images/icons/tab-head.png" class="va-middle"/> -->
-                    </div>
-                    <div class="inline-block ml6 va-middle">
-                        Статус<br /> вакансии
-                    </div>
+                    <a class="sort-order" href="@(Context.Request.Path.Value+"?"+Context.Request.ToQueryStringDictionary().SetDefaultOrInvertOrderParameter(ConstTerms.OrderByFieldVacancyStatus).CreateString())">
+                        <div class="inline-block">
+                            <img title="Сортировка" src="@Context.Request.GetOrderIcon(ConstTerms.OrderByFieldVacancyStatus)" class="va-middle" />
+                        </div>
+                        <div class="inline-block ml6 va-middle">
+                            Статус<br />вакансии
+                        </div>
+                    </a>
                 </th>
                 <th class="view-col">
                     <div class="pl21 va-middle"><span>Просмотр</span></div>
