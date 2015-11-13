@@ -85,11 +85,11 @@ namespace SciVacancies.WebApp.Controllers
                      name = "Средняя зп",
                      showInLegend = "true",
                      dataPoints = new List<object>{
-                         new   { x= 6, y= 0, label= "Июнь" },
+                         new   { x= 6, y= 7, label= "Июнь" },
                          new   { x= 7, y= 8.2, label= "Июль" },
                          new   { x= 8, y= 41.7, label= "Август" },
                          new   { x= 9, y= 16.7, label= "Сентябрь" },
-                         new   { x= 10, y= 31.3, label= "Октябрь" }
+                         new   { x= 10, y= 91.3, label= "Октябрь" }
                      }
                  },
                 new {
@@ -98,8 +98,8 @@ namespace SciVacancies.WebApp.Controllers
                     name = "Вакансий",
                     showInLegend = "true",
                     dataPoints = new List<object> {
-                        new {x = 6, y = 0, label = "Июнь"},
-                        new {x = 7, y = 90, label = "Июль"},
+                        new {x = 6, y = 1060, label = "Июнь"},
+                        new {x = 7, y = 1090, label = "Июль"},
                         new {x = 8, y = 1590, label = "Август"},
                         new {x = 9, y = 1740, label = "Сентябрь"},
                         new {x = 10, y = 3740, label = "Октябрь"}
