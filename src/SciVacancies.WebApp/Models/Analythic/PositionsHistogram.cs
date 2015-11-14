@@ -11,7 +11,7 @@ namespace SciVacancies.WebApp.Models.Analythic
         public string name { get; set; }
         public string toolTipContent { get; set; }
         public bool showInLegend { get; set; }
-        public List<PositionDataPoint> dataPoints { get; set; } = new List<PositionDataPoint>();
+        public PositionDataPoint[] dataPoints { get; set; }
     }
 
     public class PositionDataPoint

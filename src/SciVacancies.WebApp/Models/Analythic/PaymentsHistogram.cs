@@ -11,7 +11,7 @@ namespace SciVacancies.WebApp.Models.Analythic
         public string axisYType { get; set; }
         public string name { get; set; }
         public bool showInLegend { get; set; }
-        public List<PaymentDataPoint> dataPoints { get; set; } = new List<PaymentDataPoint>();
+        public PaymentDataPoint[] dataPoints { get; set; }
     }
 
     public class PaymentDataPoint

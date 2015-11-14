@@ -179,16 +179,26 @@ namespace SciVacancies.Services.Elastic
         }
         public AggregationDescriptor<Vacancy> VacancyPositionAggregationDescriptor(AggregationDescriptor<Vacancy> aggDescriptor, VacancyPositionsAnalythicQuery q)
         {
-            aggDescriptor.Terms("position_ids", tm => tm
-                                    .Field(f => f.PositionTypeId)
-                                    .Aggregations(agg => agg
-                                            .DateHistogram("histogram", dt => dt
-                                                 .Field(fd => fd.PublishDate)
-                                                 .Interval(q.Interval)
+            aggDescriptor.DateHistogram("histogram", dt => dt
+                     .Field(fd => fd.PublishDate)
+                     .Interval(q.Interval)
+                     .Aggregations(agg => agg
+                        .Terms("position_ids", tm => tm
+                                 .Field(f => f.PositionTypeId)
+                        )
+                     )
+                );
 
-                                            )
-                                    )
-                        );
+            //aggDescriptor.Terms("position_ids", tm => tm
+            //                        .Field(f => f.PositionTypeId)
+            //                        .Aggregations(agg => agg
+            //                                .DateHistogram("histogram", dt => dt
+            //                                     .Field(fd => fd.PublishDate)
+            //                                     .Interval(q.Interval)
+
+            //                                )
+            //                        )
+            //            );
 
             return aggDescriptor;
         }
