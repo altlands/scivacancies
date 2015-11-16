@@ -15,8 +15,8 @@
 
 <div class="text">
     <p>Уважаемые посетители Портала! На данной странице вы можете создать учетную запись пользователя Соискателя.<br /> Введенные данные будут сохранены в вашей личной карточке и использованы в качестве резюме при подаче заявок на вакансии.<br /> Впоследствии их можно будет отредактировать.</p>
-
     <p>Организациям и их представителям заполнять регистрационную форму не нужно - для входа в Личный кабинет необходимо использовать<br /> логин и пароль, полученные на сайте <a href="http://www.sciencemon.ru/oauth/v2/auth_login">Федеральной системы мониторинга результативности деятельности научных организаций</a>(ФСМНО).</p>
+    <p>Звездочкой <span class="require-marker" ></span> помечены поля обязательные для заполнения</p>
 </div>
 
 <a href="/account/login?user=@((int) AuthorizeUserTypes.Researcher)&resource=@((int) AuthorizeResourceTypes.ScienceMap)" class="middle-icon link-upload-s lk-icon"><span>Загрузить данные из системы «Карта науки»</span></a>
@@ -26,7 +26,7 @@
         <input type="hidden" asp-anti-forgery="true" />
 
         <div class="form-line form-row">
-            <label>Фамилия</label>
+            <label>Фамилия <span class="require-marker" /></label>
             <div class="b-r-form">
                 <div class="input">
                     <input asp-for="SecondName" type="text" />
@@ -36,7 +36,7 @@
         </div>
 
         <div class="form-line form-row">
-            <label>Имя</label>
+            <label>Имя <span class="require-marker" /></label>
             <div class="b-r-form">
                 <div class="input">
                     <input asp-for="FirstName" type="text" />
@@ -64,8 +64,8 @@
             </div>
         </div>
 
-        <div class="form-line mt27 form-row">
-            <label>Логин для входа</label>
+        <div class="form-line form-row">
+            <label>Логин для входа <span class="require-marker" /></label>
             <div class="b-r-form">
                 <div class="input">
                     <input asp-for="UserName" type="text" />
@@ -74,8 +74,8 @@
             </div>
         </div>
 
-        <div class="form-line mt27 form-row">
-            <label>E-mail</label>
+        <div class="form-line form-row">
+            <label>E-mail <span class="require-marker" /></label>
             <div class="b-r-form">
                 <div class="input">
                     <input asp-for="Email" type="text" />
@@ -85,7 +85,7 @@
         </div>
 
         <div class="form-line form-row">
-            <label>Контактный телефон</label>
+            <label>Контактный телефон <span class="require-marker" /></label>
             <div class="b-r-form">
                 <div class="input">
                     <input asp-for="Phone" type="text" />
@@ -94,18 +94,18 @@
             </div>
         </div>
 
-        <div class="form-line form-row">
-            <label>Добавить телефон</label>
-            <div class="b-r-form">
-                <div class="input">
-                    <input asp-for="ExtraPhone" type="text" />
-                    <span asp-validation-for="ExtraPhone" class="iblock-middle ml6"></span>
+        @*<div class="form-line form-row">
+                <label>Добавить телефон</label>
+                <div class="b-r-form">
+                    <div class="input">
+                        <input asp-for="ExtraPhone" type="text" />
+                        <span asp-validation-for="ExtraPhone" class="iblock-middle ml6"></span>
+                    </div>
                 </div>
-            </div>
-        </div>
+            </div>*@
 
         <div class="form-line mtop30 form-row">
-            <label>Пароль</label>
+            <label>Пароль <span class="require-marker" /></label>
             <div class="b-r-form">
                 <div class="input">
                     <input type="password" asp-for="Password" />
@@ -120,7 +120,7 @@
         </div>
 
         <div class="form-line form-row">
-            <label>Подтверждение пароля</label>
+            <label>Подтверждение пароля <span class="require-marker" /></label>
             <div class="b-r-form">
                 <div class="input">
                     <input type="password" asp-for="ConfirmPassword" />
@@ -130,13 +130,13 @@
         </div>
 
         <div class="form-line mtop30 form-row">
-            <label>Введите текст с картинки</label>
+            <label>Введите текст с картинки <span class="require-marker" /></label>
             <div class="b-r-form">
                 <div class="captcha captcha-img">
                     <img id="captchaImage" src="/captcha/fetch?w=164&h=50" onclick="javascript: reloadImg('captchaImage');" />
                 </div>
                 <div class="form-line">
-                    <span class="small-icon icon-update" onclick="javascript: reloadImg('captchaImage');">
+                     <span class="small-icon icon-update" onclick="javascript: reloadImg('captchaImage');">
                         <span>
                             Обновить
                         </span>
@@ -159,7 +159,7 @@
                 <div class="agree mtop30">
                     <span class="checkbox @(Model.Agreement ? "checked" : string.Empty)">
                         <input asp-for="Agreement" />
-                    </span><label for="Agreement">Я согласен(-на) на обработку моих персональных данных</label>
+                    </span><label for="Agreement">Я согласен(-на) на обработку моих персональных данных <span class="require-marker" /></label>
                     <span asp-validation-for="Agreement"></span>
                 </div>
                 <span class="mtop30 green-btn middle-icon icon-arr-right">Регистрация<input type="submit" class="bt-default" onclick="return beforeFormSubmitRegister(this, 'captchaImage', 'Captcha', 'captcha-empty-data', 'captcha-invalid-data', event)" value="" /></span>
