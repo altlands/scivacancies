@@ -2090,7 +2090,7 @@ ol.content-list {
 .layout-inform > li > span {
     width: 190px;
     margin-right: 10px;
-    display:table-cell;
+    display: table-cell;
     *display: inline;
     zoom: 1;
 }
@@ -4100,3 +4100,12 @@ input.sub-form-item__input {
     border-top: 1px;
     margin-right: 0;
 }
+
+/**/
+.require-marker {
+    color: red;
+}
+
+    .require-marker:after {
+        content: "*";
+    }

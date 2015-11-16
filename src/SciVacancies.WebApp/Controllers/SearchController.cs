@@ -25,7 +25,7 @@ namespace SciVacancies.WebApp.Controllers
         private readonly IMediator _mediator;
         private ILogger Logger;
 
-        public SearchController(IMediator mediator,ILoggerFactory loggerFactory)
+        public SearchController(IMediator mediator, ILoggerFactory loggerFactory)
         {
             _mediator = mediator;
             this.Logger = loggerFactory.CreateLogger<SearchController>();
@@ -95,7 +95,16 @@ namespace SciVacancies.WebApp.Controllers
             if (model.VacancyStates == null)
                 model.VacancyStates = filterSource.VacancyStates.Select(c => int.Parse(c.Value));
 
-            //проебразовать поисковую фразу в utf8, для его передачи по сети
+            //получить список дочерних ФОИВов
+            IEnumerable<int> subFoivs = null;
+            if (model.Foivs != null && model.Foivs.Any())
+            {
+                subFoivs =
+                    _mediator.Send(new SelectAllFoivsQuery())
+                        .Where(c => c.parent_id.HasValue && model.Foivs.Contains(c.parent_id.Value))
+                        .Select(c => c.id);
+                subFoivs = subFoivs.Union(model.Foivs);
+            }
 
             model.Items = _mediator.Send(new SearchQuery
             {
@@ -107,7 +116,7 @@ namespace SciVacancies.WebApp.Controllers
                 PositionTypeIds = model.PositionTypes,
                 //PublishDateFrom = DateTime.Now.AddDays(-10),
 
-                FoivIds = model.Foivs,
+                FoivIds = subFoivs,
                 RegionIds = model.Regions,
                 ResearchDirectionIds = model.ResearchDirections,
 
@@ -136,7 +145,7 @@ namespace SciVacancies.WebApp.Controllers
                     var regions = _mediator.Send(new SelectRegionsByIdsQuery { RegionIds = regionIds }).ToList();
                     model.Items.Items.Where(c => regions.Select(d => d.id).Contains(c.RegionId))
                         .ToList()
-                        .ForEach(c => c.Region= regions.First(d => d.id== c.RegionId).title);
+                        .ForEach(c => c.Region = regions.First(d => d.id == c.RegionId).title);
                 }
             }
 
