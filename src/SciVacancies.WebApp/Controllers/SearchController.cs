@@ -141,8 +141,8 @@ namespace SciVacancies.WebApp.Controllers
                 }
 
                 {   //заполняем 
-                    var regionsGuid = model.Items.Items.Select(c => c.RegionId).ToList();
-                    var regions = _mediator.Send(new SelectRegionsByGuidsQuery { RegionIds = regionsGuid }).ToList();
+                    var regionIds = model.Items.Items.Select(c => c.RegionId).ToList();
+                    var regions = _mediator.Send(new SelectRegionsByIdsQuery { RegionIds = regionIds }).ToList();
                     model.Items.Items.Where(c => regions.Select(d => d.id).Contains(c.RegionId))
                         .ToList()
                         .ForEach(c => c.Region = regions.First(d => d.id == c.RegionId).title);

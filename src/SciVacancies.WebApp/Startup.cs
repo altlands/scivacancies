@@ -67,7 +67,7 @@ namespace SciVacancies.WebApp
                     long.Parse(Configuration["LogSettings:FileSizeBytes"]),
                     int.Parse(Configuration["LogSettings:FileCountLimit"])
                 )
-                .MinimumLevel.Information()
+                //.MinimumLevel.Information()
                 .CreateLogger();
 
             loggerFactory.MinimumLevel = (LogLevel)Enum.Parse(typeof(LogLevel), Configuration["LogSettings:LogLevel"], true);

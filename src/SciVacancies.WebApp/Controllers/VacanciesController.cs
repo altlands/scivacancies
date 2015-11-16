@@ -390,7 +390,7 @@ namespace SciVacancies.WebApp.Controllers
 
             _mediator.Send(new RemoveVacancyCommand { VacancyGuid = id });
 
-            return View();
+            return View(model);
         }
 
         //[BindOrganizationIdFromClaims]

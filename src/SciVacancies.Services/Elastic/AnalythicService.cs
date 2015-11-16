@@ -24,7 +24,18 @@ namespace SciVacancies.Services.Elastic
         {
             Func<VacancyPaymentsAnalythicQuery, SearchDescriptor<Vacancy>> searchSelector = VacancyPaymentsSearchDescriptor;
 
-            return Elastic.Search<Vacancy>(searchSelector(q)).Aggregations;
+            IDictionary<string, IAggregation> aggregations;
+            try
+            {
+                aggregations = Elastic.Search<Vacancy>(searchSelector(q)).Aggregations;
+            }
+            catch (Exception e)
+            {
+                Logger.LogError(e.Message, e);
+                throw;
+            }
+
+            return aggregations;
         }
 
         #region VacancyPaymentsQueryContainers
@@ -70,7 +81,7 @@ namespace SciVacancies.Services.Elastic
             return Query<Vacancy>.Filtered(flt => flt
                                     .Query(flq => querySelector(flq, q))
                                     .Filter(flf => filterSelector(flf, q))
-            );
+                                );
         }
         QueryContainer VacancyPaymentsFilteredQueryContainer(QueryDescriptor<Vacancy> queryDescriptor, VacancyPaymentsAnalythicQuery q)
         {
@@ -155,7 +166,18 @@ namespace SciVacancies.Services.Elastic
         {
             Func<VacancyPositionsAnalythicQuery, SearchDescriptor<Vacancy>> searchSelector = VacancyPositionsSearchDescriptor;
 
-            return Elastic.Search<Vacancy>(searchSelector(q)).Aggregations;
+            IDictionary<string, IAggregation> aggregations;
+            try
+            {
+                aggregations = Elastic.Search<Vacancy>(searchSelector(q)).Aggregations;
+            }
+            catch (Exception e)
+            {
+                Logger.LogError(e.Message, e);
+                throw;
+            }
+
+            return aggregations;
         }
 
         #region VacancyPositionsQueryContainers
@@ -179,16 +201,15 @@ namespace SciVacancies.Services.Elastic
         }
         public AggregationDescriptor<Vacancy> VacancyPositionAggregationDescriptor(AggregationDescriptor<Vacancy> aggDescriptor, VacancyPositionsAnalythicQuery q)
         {
-            aggDescriptor.Terms("position_ids", tm => tm
-                                    .Field(f => f.PositionTypeId)
-                                    .Aggregations(agg => agg
-                                            .DateHistogram("histogram", dt => dt
-                                                 .Field(fd => fd.PublishDate)
-                                                 .Interval(q.Interval)
-
-                                            )
-                                    )
-                        );
+            aggDescriptor.DateHistogram("histogram", dt => dt
+                     .Field(fd => fd.PublishDate)
+                     .Interval(q.Interval)
+                     .Aggregations(agg => agg
+                        .Terms("position_ids", tm => tm
+                                 .Field(f => f.PositionTypeId)
+                        )
+                     )
+                );
 
             return aggDescriptor;
         }
@@ -234,7 +255,7 @@ namespace SciVacancies.Services.Elastic
                     filters.Add(new FilterDescriptor<Vacancy>().Bool(b => b
                                                                     .Must(m => m
                                                                         .Range(r => r
-                                                                            .GreaterOrEquals(DateTime.UtcNow.AddDays((-1) * q.BarsNumber * 7))
+                                                                            .GreaterOrEquals(DateTime.UtcNow.AddDays((-7) * q.BarsNumber))
                                                                             .OnField(f => f.PublishDate)
                                                                         )
                                                                     )

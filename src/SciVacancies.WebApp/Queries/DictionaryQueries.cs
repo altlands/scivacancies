@@ -63,7 +63,7 @@ namespace SciVacancies.WebApp.Queries
         public string Query { get; set; }
         public int Take { get; set; }
     }
-    public class SelectRegionsByGuidsQuery : IRequest<IEnumerable<Region>>
+    public class SelectRegionsByIdsQuery : IRequest<IEnumerable<Region>>
     {
         public List<int> RegionIds { get; set; }
     }
