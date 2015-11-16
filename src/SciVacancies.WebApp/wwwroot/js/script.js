@@ -352,8 +352,8 @@ $(document).ready(function () {
         //$(parent).parents('form').submit();
     });
     /*
- * сброс фильтра
- */
+     * сброс фильтра
+     */
     $(".filter-link-check-all").click(function () {
         var source = this;
         var parent = $(source).parents('.filter-contents')[0];
@@ -366,18 +366,18 @@ $(document).ready(function () {
         //$(parent).parents('form').submit();
     });
     /*
- * Временно для переключателя
- */
+     * Временно для переключателя
+     */
     $(".tabs_after_title > li").click(function () {
         $(".tabs_after_title > li").siblings().removeClass("active");
         $(this).addClass("active");
     });
     /*
- * на форме редактирваония добавить объектыв 
- */
+     *На форме редактирования списков добавить объект 
+     */
     $('.property-list-container').each(function () {
         var parentDiv = this;
-        var prefix = $(parentDiv).attr('data-property-respocible');
+        var prefix = $(parentDiv).attr('data-property-responsible');
 
         if (prefix !== undefined && prefix != null) {
             var count = $(parentDiv).find(":visible.property-list-item").length;
@@ -387,8 +387,8 @@ $(document).ready(function () {
         }
     });
     /*
-        end of the code
-        */
+    end of the code
+    */
 });
 /*
  * обработка каскадных выпадающих списков для Cusel (год окончания периода не может быть меньше года начала периода)
@@ -559,13 +559,61 @@ function selectedItemFromModalDictionary(hiddenInputName, textInput, newValue, d
 /**
  * перед отправкой формы удалить шаблоны пополнения списков
  */
-function beforeFormSubmit(source) {
+function isEmptyOrSpaces(str) {
+    return str === undefined || str === null || str.match(/^ *$/) !== null;
+}
+function beforeFormSubmit(source, key) {
     var form = $(source).parents("form")[0];
     $(form).find("[data-list-template=\"true\"]").remove();
+
+    //удалить незаполненные суб-формы с формы перед отправкой на сервер
+    if (key !== undefined && key === 'researcherEdit') {
+        var itemsToDelete = [];
+        //свойства-коллекции, в которых могут быть суб-формы, нужно проверить на пустые поля, и удалить эти суб-формы из списков если они не заполнены
+        var arrayProperties = [
+            { name: 'Educations', fieldsCouldBeEmpty: ['City', 'UniversityShortName', 'FacultyShortName', 'Degree'] },
+            { name: 'ResearchActivity', fieldsCouldBeEmpty: ['organization', 'position', 'title', 'type'] },
+            { name: 'TeachingActivity', fieldsCouldBeEmpty: ['organization', 'position', 'title', 'type'] },
+            { name: 'OtherActivity', fieldsCouldBeEmpty: ['organization', 'position', 'title', 'type'] },
+            { name: 'Rewards', fieldsCouldBeEmpty: ['title','org'] },
+            { name: 'Memberships', fieldsCouldBeEmpty: ['org', 'position'] },
+            { name: 'Conferences', fieldsCouldBeEmpty: ['conference', 'title', 'categoryType'] },
+            { name: 'Publications', fieldsCouldBeEmpty: ['Name', 'Authors'] }
+        ];
+        //проверяем каждое свойство-коллекцию
+        $(arrayProperties).each(function (index) {
+            var arrayProperty = arrayProperties[index];
+            var container = $(form).find('.property-list-container[data-property-responsible="' + arrayProperty.name + '"]');
+            var subForms = $(container).find('.property-list-item');
+
+            //проверяем каждый объект в свойстве-коллекции
+            for (var i = 0; i < subForms.length; i++) {
+                var subForm = subForms[i];
+                var counterOfEmptyFields = 0;
+                //проверяем, что все свойства в суб-форме, которые могут быть пустыми, - пустые
+                for (var fieldNameIndex = 0; fieldNameIndex < arrayProperty.fieldsCouldBeEmpty.length; fieldNameIndex++) {
+                    var fieldName = arrayProperty.fieldsCouldBeEmpty[fieldNameIndex];
+                    var fieldValueInObjectInArray = $(subForm).find("input[name^='" + arrayProperty.name + "'][name$='" + fieldName + "']").val();
+                    if (isEmptyOrSpaces(fieldValueInObjectInArray)) {
+                        counterOfEmptyFields++;
+                    }
+                }
+                //если все возможные поля в суб-форме пустые, то удалить суб-форму
+                if (counterOfEmptyFields === arrayProperty.fieldsCouldBeEmpty.length) {
+                    itemsToDelete.push(subForm);
+                }
+            }
+
+        });
+
+        $(itemsToDelete).remove();
+
+    }
+
     return true;
 };
 /**
- * добавить новую форму к списку с объектами
+ * добавить новую форму к списку с объектами (редактирование профиля)
  */
 function addNewItemToList(source, prefix) {
     //<div class="table-form mt15" data-innercount="@(Model.Educations.Count+1)">
@@ -574,7 +622,7 @@ function addNewItemToList(source, prefix) {
     return false;
 };
 /**
- * удалить форму из списка с объектами
+ * удалить форму из списка с объектами (редактирование профиля)
  */
 function removeItemFromList(source, prefix) {
     if (confirm("Вы уверены что хотите удалить эту запись?")) {
@@ -596,7 +644,7 @@ function removeItemFromList(source, prefix) {
     return false;
 };
 /**
- * добавление формы к списку с объектами
+ * добавление формы к списку с объектами (редактирование профиля)
  */
 function addingNewItemToList(parentDiv, prefix) {
     //получаем текущий индекс количества строк
@@ -640,7 +688,7 @@ function addingNewItemToList(parentDiv, prefix) {
     $(parentDiv).attr("data-innercount", newIndex);
 }
 /**
-  * добавить метку о том что поискаовый запрос нужно сохранить в качестве подписки
+  * добавить метку о том, что поисковый запрос нужно сохранить в качестве подписки
   */
 function isNullOrWhitespace(input) {
 
