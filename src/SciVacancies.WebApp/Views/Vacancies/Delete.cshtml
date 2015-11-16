@@ -1,6 +1,7 @@
 ﻿@using System
 @using System.Threading.Tasks
-@model System.Guid
+@*@model System.Guid*@
+@model SciVacancies.ReadModel.Core.Vacancy
 
 <div class="crumbs">
     <a  asp-controller="organizations" asp-action="vacancies">Назад</a><span class="separator">/</span>
@@ -9,7 +10,7 @@
 
 <h3>@ViewBag.Title</h3>
 
-Вакансия удалена
+Вакансия ID VAC @Model.read_id "@Model.name" удалена
 
 @*<form asp-action="undelete" method="POST">
         <input type="hidden" asp-anti-forgery="true" />

@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Framework.OptionsModel;
 using Microsoft.Framework.Caching.Memory;
+using Microsoft.Framework.Logging;
 
 using MediatR;
 using Nest;
@@ -20,8 +21,9 @@ namespace SciVacancies.WebApp.Queries
         IRequestHandler<AverageVacancyAndPositionAnalythicQuery, List<PositionsHistogram>>,
         IRequestHandler<AveragePaymentAndVacancyCountByRegionAnalythicQuery, List<PaymentsHistogram>>
     {
-        private readonly IDatabase _db;
+        private readonly IMediator _mediator;
         private readonly IMemoryCache Cache;
+        private readonly ILogger Logger;
         private readonly IOptions<AnalythicSettings> AnalythicSettings;
         private readonly IAnalythicService AnalythicService;
         private readonly IOptions<CacheSettings> CacheSettings;
@@ -29,20 +31,14 @@ namespace SciVacancies.WebApp.Queries
         {
             get
             {
-                return new MemoryCacheEntryOptions().SetAbsoluteExpiration(DateTimeOffset.Now.AddSeconds(CacheSettings.Value.DictionaryExpiration));
-            }
-        }
-        private MemoryCacheEntryOptions MainPageCacheOptions
-        {
-            get
-            {
                 return new MemoryCacheEntryOptions().SetAbsoluteExpiration(DateTimeOffset.Now.AddSeconds(CacheSettings.Value.MainPageExpiration));
             }
         }
 
-        public AnalythicQueriesHandler(IDatabase db, IOptions<AnalythicSettings> analythicSettings, IAnalythicService analythicService, IMemoryCache cache, IOptions<CacheSettings> cacheSettings)
+        public AnalythicQueriesHandler(IMediator mediator, ILoggerFactory loggerFactory, IOptions<AnalythicSettings> analythicSettings, IAnalythicService analythicService, IMemoryCache cache, IOptions<CacheSettings> cacheSettings)
         {
-            this._db = db;
+            this._mediator = mediator;
+            this.Logger = loggerFactory.CreateLogger<AnalythicQueriesHandler>();
             this.AnalythicSettings = analythicSettings;
             this.AnalythicService = analythicService;
             this.Cache = cache;
@@ -52,27 +48,39 @@ namespace SciVacancies.WebApp.Queries
         public List<PositionsHistogram> Handle(AverageVacancyAndPositionAnalythicQuery message)
         {
             List<PositionsHistogram> histograms;
-            string positionsCacheKey = "a_positions_" + message.Interval.ToString();
+            string positionsCacheKey = "a_positions_" + message.Interval.ToString() + "_region_" + message.RegionId.ToString();
             if (!Cache.TryGetValue<List<PositionsHistogram>>(positionsCacheKey, out histograms))
             {
                 IEnumerable<PositionType> positionTypes;
-                if (!Cache.TryGetValue<IEnumerable<PositionType>>("d_positiontypes", out positionTypes))
+                try
                 {
-                    positionTypes = _db.Fetch<PositionType>();
-                    Cache.Set<IEnumerable<PositionType>>("d_positiontypes", positionTypes, CacheOptions);
+                    positionTypes = _mediator.Send(new SelectAllPositionTypesQuery());
+                }
+                catch (Exception e)
+                {
+                    Logger.LogError(e.Message, e);
+                    throw;
                 }
 
-                IDictionary<string, Nest.IAggregation> aggregations;
-                aggregations = AnalythicService.VacancyPositions(message);
+                IDictionary<string, IAggregation> aggregations;
+                try
+                {
+                    aggregations = AnalythicService.VacancyPositions(message);
+                }
+                catch (Exception e)
+                {
+                    Logger.LogError(e.Message, e);
+                    throw;
+                }
 
                 histograms = new List<PositionsHistogram>();
                 Dictionary<string, PositionsHistogram> positionsDictionary = new Dictionary<string, PositionsHistogram>();
 
                 Bucket dateBucket = aggregations["histogram"] as Bucket;
 
+                int k = AnalythicSettings.Value.BarsNumber - 1;
                 if (dateBucket?.Items?.Count() > 0)
                 {
-                    int k = AnalythicSettings.Value.BarsNumber - 1;
                     for (int i = dateBucket.Items.Count() - 1; i >= 0 && k >= 0; i--, k--)
                     {
                         HistogramItem currentItem = dateBucket.Items.ElementAt(i) as HistogramItem;
@@ -151,7 +159,7 @@ namespace SciVacancies.WebApp.Queries
                                     }
                                     break;
                                 case DateInterval.Day:
-                                    while (dateTimeDifference.TotalDays > 1 && k > 0)
+                                    while (dateTimeDifference.TotalDays > 1 && k >= 0)
                                     {
                                         foreach (KeyItem keyItem in positionIds.Items)
                                         {
@@ -229,7 +237,7 @@ namespace SciVacancies.WebApp.Queries
                                     }
                                     break;
                                 case DateInterval.Day:
-                                    while (dateTimeDifference.TotalDays > 1 && k > 0)
+                                    while (dateTimeDifference.TotalDays > 1 && k >= 0)
                                     {
                                         foreach (KeyItem keyItem in positionIds.Items)
                                         {
@@ -324,12 +332,58 @@ namespace SciVacancies.WebApp.Queries
                         }
                     }
                 }
+                else
+                {
+                    //Если по региону пусто
+                    //Смотрим, чтобы последний столбец в гистограмме был за текущий период
+                    DateTime currentDate = DateTime.Now;
+                    int dm = 0;
+
+                    positionsDictionary.Add("empty", new PositionsHistogram
+                    {
+                        type = "stackedColumn",
+                        toolTipContent = "{label}<br/><span style='\"'color: {color};'\"'><strong>{name}</strong></span>: {y} вакансий",
+                        name = "Все должности",
+                        showInLegend = true,
+                        dataPoints = new PositionDataPoint[AnalythicSettings.Value.BarsNumber]
+                    });
+                    switch (message.Interval)
+                    {
+                        case DateInterval.Month:
+                            while (k >= 0)
+                            {
+                                AddPositionDataPoint(positionsDictionary["empty"], k, 0, currentDate.AddMonths(-dm), message.Interval);
+
+                                k--;
+                                dm++;
+                            }
+                            break;
+                        case DateInterval.Week:
+                            while (k >= 0)
+                            {
+                                AddPositionDataPoint(positionsDictionary["empty"], k, 0, currentDate.AddDays((-7) * dm), message.Interval);
+
+                                k--;
+                                dm++;
+                            }
+                            break;
+                        case DateInterval.Day:
+                            while (k >= 0)
+                            {
+                                AddPositionDataPoint(positionsDictionary["empty"], k, 0, currentDate.AddDays((-1) * dm), message.Interval);
+
+                                k--;
+                                dm++;
+                            }
+                            break;
+                    }
+                }
                 foreach (PositionsHistogram histogram in positionsDictionary.Values)
                 {
                     histograms.Add(histogram);
                 }
 
-                Cache.Set<List<PositionsHistogram>>(positionsCacheKey, histograms, MainPageCacheOptions);
+                Cache.Set<List<PositionsHistogram>>(positionsCacheKey, histograms, CacheOptions);
             }
 
             return histograms;
@@ -339,11 +393,19 @@ namespace SciVacancies.WebApp.Queries
         public List<PaymentsHistogram> Handle(AveragePaymentAndVacancyCountByRegionAnalythicQuery message)
         {
             List<PaymentsHistogram> histograms;
-            string paymentsCacheKey = "a_payments_" + message.Interval.ToString();
+            string paymentsCacheKey = "a_payments_" + message.Interval.ToString() + "_region_" + message.RegionId.ToString();
             if (!Cache.TryGetValue<List<PaymentsHistogram>>(paymentsCacheKey, out histograms))
             {
                 IDictionary<string, Nest.IAggregation> aggregations;
-                aggregations = AnalythicService.VacancyPayments(message);
+                try
+                {
+                    aggregations = AnalythicService.VacancyPayments(message);
+                }
+                catch (Exception e)
+                {
+                    Logger.LogError(e.Message, e);
+                    throw;
+                }
 
                 histograms = new List<PaymentsHistogram>();
 
@@ -365,10 +427,9 @@ namespace SciVacancies.WebApp.Queries
                     showInLegend = true,
                     dataPoints = new PaymentDataPoint[AnalythicSettings.Value.BarsNumber]
                 };
-
+                int k = AnalythicSettings.Value.BarsNumber - 1;
                 if (dateBucket?.Items?.Count() > 0)
                 {
-                    int k = AnalythicSettings.Value.BarsNumber - 1;
                     for (int i = dateBucket.Items.Count() - 1; i >= 0 && k >= 0; i--, k--)
                     {
                         HistogramItem currentItem = dateBucket.Items.ElementAt(i) as HistogramItem;
@@ -406,7 +467,7 @@ namespace SciVacancies.WebApp.Queries
                                     }
                                     break;
                                 case DateInterval.Day:
-                                    while (dateTimeDifference.TotalDays > 1 && k > 0)
+                                    while (dateTimeDifference.TotalDays > 1 && k >= 0)
                                     {
                                         AddPaymentDataPoint(averageHistogram, k, 0.0, lastItem.Date.AddDays((-1) * dm), message.Interval);
                                         AddPaymentDataPoint(countHistogram, k, 0.0, lastItem.Date.AddDays((-1) * dm), message.Interval);
@@ -459,7 +520,7 @@ namespace SciVacancies.WebApp.Queries
                                     }
                                     break;
                                 case DateInterval.Day:
-                                    while (dateTimeDifference.TotalDays > 1 && k > 0)
+                                    while (dateTimeDifference.TotalDays > 1 && k >= 0)
                                     {
                                         AddPaymentDataPoint(averageHistogram, k, 0.0, currentDate.AddDays((-1) * dm), message.Interval);
                                         AddPaymentDataPoint(countHistogram, k, 0.0, currentDate.AddDays((-1) * dm), message.Interval);
@@ -513,11 +574,51 @@ namespace SciVacancies.WebApp.Queries
                         }
                     }
                 }
+                else
+                {
+                    //Если по данному региону нет ничего
+                    //Смотрим, чтобы последний столбец в гистограмме был за текущий период
+                    DateTime currentDate = DateTime.Now;
+                    int dm = 0;
+                    switch (message.Interval)
+                    {
+                        case DateInterval.Month:
+                            while (k >= 0)
+                            {
+                                AddPaymentDataPoint(averageHistogram, k, 0.0, currentDate.AddMonths(-dm), message.Interval);
+                                AddPaymentDataPoint(countHistogram, k, 0.0, currentDate.AddMonths(-dm), message.Interval);
+
+                                k--;
+                                dm++;
+                            }
+                            break;
+                        case DateInterval.Week:
+                            while (k >= 0)
+                            {
+                                AddPaymentDataPoint(averageHistogram, k, 0.0, currentDate.AddDays((-7) * dm), message.Interval);
+                                AddPaymentDataPoint(countHistogram, k, 0.0, currentDate.AddDays((-7) * dm), message.Interval);
+
+                                k--;
+                                dm++;
+                            }
+                            break;
+                        case DateInterval.Day:
+                            while (k >= 0)
+                            {
+                                AddPaymentDataPoint(averageHistogram, k, 0.0, currentDate.AddDays((-1) * dm), message.Interval);
+                                AddPaymentDataPoint(countHistogram, k, 0.0, currentDate.AddDays((-1) * dm), message.Interval);
+
+                                k--;
+                                dm++;
+                            }
+                            break;
+                    }
+                }
 
                 histograms.Add(averageHistogram);
                 histograms.Add(countHistogram);
 
-                Cache.Set<List<PaymentsHistogram>>(paymentsCacheKey, histograms, MainPageCacheOptions);
+                Cache.Set<List<PaymentsHistogram>>(paymentsCacheKey, histograms, CacheOptions);
             }
 
             return histograms;
@@ -552,7 +653,8 @@ namespace SciVacancies.WebApp.Queries
             }
             catch (Exception e)
             {
-                throw e;
+                Logger.LogError(e.Message, e);
+                throw;
             }
         }
         private void AddPaymentDataPoint(PaymentsHistogram histogram, int index, double y, DateTime date, DateInterval interval)
@@ -584,7 +686,8 @@ namespace SciVacancies.WebApp.Queries
             }
             catch (Exception e)
             {
-                throw e;
+                Logger.LogError(e.Message, e);
+                throw;
             }
         }
     }

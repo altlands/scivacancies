@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Framework.OptionsModel;
 using Microsoft.Framework.Caching.Memory;
+using Microsoft.Framework.Logging;
 
 using MediatR;
 using NPoco;
@@ -28,7 +29,7 @@ namespace SciVacancies.WebApp.Queries
 
         IRequestHandler<SelectAllRegionsQuery, IEnumerable<Region>>,
         IRequestHandler<SelectRegionsForAutocompleteQuery, IEnumerable<Region>>,
-        IRequestHandler<SelectRegionsByGuidsQuery, IEnumerable<Region>>,
+        IRequestHandler<SelectRegionsByIdsQuery, IEnumerable<Region>>,
 
         IRequestHandler<SelectAllResearchDirectionsQuery, IEnumerable<ResearchDirection>>,
         IRequestHandler<SelectResearchDirectionsForAutocompleteQuery, IEnumerable<ResearchDirection>>,
@@ -47,37 +48,60 @@ namespace SciVacancies.WebApp.Queries
                 return new MemoryCacheEntryOptions().SetAbsoluteExpiration(DateTimeOffset.Now.AddSeconds(cacheSettings.Value.DictionaryExpiration));
             }
         }
+        private ILogger Logger;
 
-        public DictionaryQueriesHandler(IDatabase db, IMemoryCache cache, IOptions<CacheSettings> cacheSettings)
+        private readonly string CriteriasCacheKey = "d_criterias";
+        private readonly string FoivsCacheKey = "d_foivs";
+        private readonly string OrgFormsCacheKey = "d_orgforms";
+        private readonly string PositionTypesCacheKey = "d_positiontypes";
+        private readonly string RegionsCacheKey = "d_regions";
+        private readonly string ResearchDirectionsCacheKey = "d_researchdirections";
+        private readonly string AttachmentTypesCacheKey = "d_attachmenttypes";
+
+        public DictionaryQueriesHandler(IDatabase db, IMemoryCache cache, IOptions<CacheSettings> cacheSettings, ILoggerFactory loggerFactory)
         {
             _db = db;
             this.cache = cache;
             this.cacheSettings = cacheSettings;
+            this.Logger = loggerFactory.CreateLogger<DictionaryQueriesHandler>();
         }
 
-        public IEnumerable<Criteria> Handle(SelectAllCriteriasQuery message)
+        private IEnumerable<Criteria> GetCachedAllCriterias()
         {
             IEnumerable<Criteria> criterias;
-            if (!cache.TryGetValue<IEnumerable<Criteria>>("d_criterias", out criterias))
+            if (!cache.TryGetValue<IEnumerable<Criteria>>(CriteriasCacheKey, out criterias))
             {
-                criterias = _db.Fetch<Criteria>();
-                cache.Set<IEnumerable<Criteria>>("d_criterias", criterias, cacheOptions);
+                try
+                {
+                    criterias = _db.Fetch<Criteria>();
+                }
+                catch (Exception e)
+                {
+                    Logger.LogError(e.Message, e);
+                    throw;
+                }
+                if (criterias != null) cache.Set<IEnumerable<Criteria>>(CriteriasCacheKey, criterias, cacheOptions);
             }
 
             return criterias;
+        }
+        public IEnumerable<Criteria> Handle(SelectAllCriteriasQuery message)
+        {
+            return GetCachedAllCriterias();
         }
         public IEnumerable<Criteria> Handle(SelectCriteriasForAutocompleteQuery message)
         {
             if (String.IsNullOrEmpty(message.Query)) throw new ArgumentNullException($"Query is empty: {message.Query}");
 
             IEnumerable<Criteria> criterias;
+
             if (message.Take != 0)
             {
-                criterias = _db.FetchBy<Criteria>(f => f.Where(w => w.title.Contains(message.Query))).Take(message.Take);
+                criterias = GetCachedAllCriterias()?.Where(w => w.title.Contains(message.Query))?.Take(message.Take)?.ToList();
             }
             else
             {
-                criterias = _db.FetchBy<Criteria>(f => f.Where(w => w.title.Contains(message.Query)));
+                criterias = GetCachedAllCriterias()?.Where(w => w.title.Contains(message.Query))?.ToList();
             }
 
             return criterias;
@@ -86,34 +110,47 @@ namespace SciVacancies.WebApp.Queries
         {
             if (message.ParentId == 0) throw new ArgumentNullException($"ParentId is empty or 0: {message.ParentId}");
 
-            IEnumerable<Criteria> criterias = _db.FetchBy<Criteria>(f => f.Where(w => w.parent_id == message.ParentId));
+            IEnumerable<Criteria> criterias = GetCachedAllCriterias()?.Where(w => w.parent_id == message.ParentId)?.ToList();
 
             return criterias;
         }
 
-        public IEnumerable<Foiv> Handle(SelectAllFoivsQuery message)
+        private IEnumerable<Foiv> GetCachedAllFoivs()
         {
             IEnumerable<Foiv> foivs;
-            if (!cache.TryGetValue<IEnumerable<Foiv>>("d_foivs", out foivs))
+            if (!cache.TryGetValue<IEnumerable<Foiv>>(FoivsCacheKey, out foivs))
             {
-                foivs = _db.Fetch<Foiv>();
-                cache.Set<IEnumerable<Foiv>>("d_foivs", foivs, cacheOptions);
+                try
+                {
+                    foivs = _db.Fetch<Foiv>();
+                }
+                catch (Exception e)
+                {
+                    Logger.LogError(e.Message, e);
+                    throw;
+                }
+                if (foivs != null) cache.Set<IEnumerable<Foiv>>(FoivsCacheKey, foivs, cacheOptions);
             }
 
             return foivs;
+        }
+        public IEnumerable<Foiv> Handle(SelectAllFoivsQuery message)
+        {
+            return GetCachedAllFoivs();
         }
         public IEnumerable<Foiv> Handle(SelectFoivsForAutocompleteQuery message)
         {
             if (String.IsNullOrEmpty(message.Query)) throw new ArgumentNullException($"Query is empty: {message.Query}");
 
             IEnumerable<Foiv> foivs;
+
             if (message.Take != 0)
             {
-                foivs = _db.FetchBy<Foiv>(f => f.Where(w => w.title.Contains(message.Query))).Take(message.Take);
+                foivs = GetCachedAllFoivs()?.Where(w => w.title.Contains(message.Query))?.Take(message.Take)?.ToList();
             }
             else
             {
-                foivs = _db.FetchBy<Foiv>(f => f.Where(w => w.title.Contains(message.Query)));
+                foivs = GetCachedAllFoivs()?.Where(w => w.title.Contains(message.Query))?.ToList();
             }
 
             return foivs;
@@ -122,89 +159,125 @@ namespace SciVacancies.WebApp.Queries
         {
             if (message.ParentId == 0) throw new ArgumentNullException($"ParentId is empty or 0: {message.ParentId}");
 
-            IEnumerable<Foiv> foivs = _db.FetchBy<Foiv>(f => f.Where(w => w.parent_id == message.ParentId));
+            IEnumerable<Foiv> foivs;
+
+            foivs = GetCachedAllFoivs()?.Where(w => w.parent_id == message.ParentId)?.ToList();
 
             return foivs;
         }
 
-        public IEnumerable<OrgForm> Handle(SelectAllOrgFormsQuery message)
+        private IEnumerable<OrgForm> GetCachedAllOrgForms()
         {
             IEnumerable<OrgForm> orgForms;
-            if (!cache.TryGetValue<IEnumerable<OrgForm>>("d_orgforms", out orgForms))
+            if (!cache.TryGetValue(OrgFormsCacheKey, out orgForms))
             {
-                orgForms = _db.Fetch<OrgForm>();
-                cache.Set<IEnumerable<OrgForm>>("d_orgforms", orgForms, cacheOptions);
+                try
+                {
+                    orgForms = _db.Fetch<OrgForm>();
+                }
+                catch (Exception e)
+                {
+                    Logger.LogError(e.Message, e);
+                    throw;
+                }
+                if (orgForms != null) cache.Set<IEnumerable<OrgForm>>(OrgFormsCacheKey, orgForms, cacheOptions);
             }
 
             return orgForms;
+        }
+        public IEnumerable<OrgForm> Handle(SelectAllOrgFormsQuery message)
+        {
+            return GetCachedAllOrgForms();
         }
         public IEnumerable<OrgForm> Handle(SelectOrgFormsForAutocompleteQuery message)
         {
             if (String.IsNullOrEmpty(message.Query)) throw new ArgumentNullException($"Query is empty: {message.Query}");
 
             IEnumerable<OrgForm> orgForms;
+
             if (message.Take != 0)
             {
-                orgForms = _db.FetchBy<OrgForm>(f => f.Where(w => w.title.Contains(message.Query))).Take(message.Take);
+                orgForms = GetCachedAllOrgForms()?.Where(w => w.title.Contains(message.Query))?.Take(message.Take)?.ToList();
             }
             else
             {
-                orgForms = _db.FetchBy<OrgForm>(f => f.Where(w => w.title.Contains(message.Query)));
+                orgForms = GetCachedAllOrgForms()?.Where(w => w.title.Contains(message.Query))?.ToList();
             }
 
             return orgForms;
         }
 
-        public IEnumerable<PositionType> Handle(SelectAllPositionTypesQuery message)
+        private IEnumerable<PositionType> GetCachedAllPositionTypes()
         {
             IEnumerable<PositionType> positionTypes;
-            if (!cache.TryGetValue<IEnumerable<PositionType>>("d_positiontypes", out positionTypes))
+            if (!cache.TryGetValue(PositionTypesCacheKey, out positionTypes))
             {
-                positionTypes = _db.Fetch<PositionType>();
-                cache.Set<IEnumerable<PositionType>>("d_positiontypes", positionTypes, cacheOptions);
+                try
+                {
+                    positionTypes = _db.Fetch<PositionType>();
+                }
+                catch (Exception e)
+                {
+                    Logger.LogError(e.Message, e);
+                    throw;
+                }
+                if (positionTypes != null) cache.Set<IEnumerable<PositionType>>(PositionTypesCacheKey, positionTypes, cacheOptions);
             }
 
             return positionTypes;
+        }
+        public IEnumerable<PositionType> Handle(SelectAllPositionTypesQuery message)
+        {
+            return GetCachedAllPositionTypes();
         }
         public IEnumerable<PositionType> Handle(SelectPositionTypesForAutocompleteQuery message)
         {
             if (string.IsNullOrEmpty(message.Query)) throw new ArgumentNullException($"Query is empty: {message.Query}");
 
             IEnumerable<PositionType> positionTypes;
+
             if (message.Take != 0)
             {
-                positionTypes = _db.FetchBy<PositionType>(f => f.Where(w => w.title.Contains(message.Query))).Take(message.Take);
+                positionTypes = GetCachedAllPositionTypes()?.Where(w => w.title.Contains(message.Query))?.Take(message.Take)?.ToList();
             }
             else
             {
-                positionTypes = _db.FetchBy<PositionType>(f => f.Where(w => w.title.Contains(message.Query)));
+                positionTypes = GetCachedAllPositionTypes()?.Where(w => w.title.Contains(message.Query))?.ToList();
             }
 
             return positionTypes;
         }
 
-        public IEnumerable<Region> Handle(SelectAllRegionsQuery message)
+        private IEnumerable<Region> GetCachedAllRegions()
         {
             IEnumerable<Region> regions;
-            if (!cache.TryGetValue<IEnumerable<Region>>("d_regions", out regions))
+            if (!cache.TryGetValue(RegionsCacheKey, out regions))
             {
-                regions = _db.Fetch<Region>();
-                cache.Set<IEnumerable<Region>>("d_regions", regions, cacheOptions);
+                try
+                {
+                    regions = _db.Fetch<Region>();
+                }
+                catch (Exception e)
+                {
+                    Logger.LogError(e.Message, e);
+                    throw;
+                }
+                if (regions != null) cache.Set<IEnumerable<Region>>(RegionsCacheKey, regions, cacheOptions);
             }
 
             return regions;
         }
-
-        public IEnumerable<Region> Handle(SelectRegionsByGuidsQuery message)
+        public IEnumerable<Region> Handle(SelectAllRegionsQuery message)
         {
-            IEnumerable<Region> allRegions;
-            if (!cache.TryGetValue("d_regions", out allRegions))
-            {
-                allRegions = _db.Fetch<Region>();
-                cache.Set<IEnumerable<Region>>("d_regions", allRegions, cacheOptions);
-            }
-            var regions = allRegions.Where(w => message.RegionIds.Contains(w.id)).OrderByDescending(o => o.title).ToList();
-            //var regions = _db.Fetch<Region>(new Sql($"SELECT d.* FROM d_regions d WHERE d.id IN (@0) ORDER BY d.title DESC", message.RegionIds));
+            return GetCachedAllRegions();
+        }
+        public IEnumerable<Region> Handle(SelectRegionsByIdsQuery message)
+        {
+            if (message.RegionIds == null || message.RegionIds.Count == 0) throw new ArgumentNullException($"RegionIds is null or empty: {message.RegionIds}");
+
+            IEnumerable<Region> regions;
+
+            regions = GetCachedAllRegions()?.Where(w => message.RegionIds.Contains(w.id))?.OrderByDescending(o => o.title).ToList();
 
             return regions;
         }
@@ -213,41 +286,55 @@ namespace SciVacancies.WebApp.Queries
             if (String.IsNullOrEmpty(message.Query)) throw new ArgumentNullException($"Query is empty: {message.Query}");
 
             IEnumerable<Region> regions;
+
             if (message.Take != 0)
             {
-                regions = _db.FetchBy<Region>(f => f.Where(w => w.title.Contains(message.Query))).Take(message.Take);
+                regions = GetCachedAllRegions()?.Where(w => w.title.Contains(message.Query))?.Take(message.Take)?.ToList();
             }
             else
             {
-                regions = _db.FetchBy<Region>(f => f.Where(w => w.title.Contains(message.Query)));
+                regions = GetCachedAllRegions()?.Where(w => w.title.Contains(message.Query))?.ToList();
             }
 
             return regions;
         }
 
-        public IEnumerable<ResearchDirection> Handle(SelectAllResearchDirectionsQuery message)
+        private IEnumerable<ResearchDirection> GetCachedAllResearchDirections()
         {
             IEnumerable<ResearchDirection> researchDirections;
-            if (!cache.TryGetValue<IEnumerable<ResearchDirection>>("d_researchdirections", out researchDirections))
+            if (!cache.TryGetValue(ResearchDirectionsCacheKey, out researchDirections))
             {
-                researchDirections = _db.Fetch<ResearchDirection>();
-                cache.Set<IEnumerable<ResearchDirection>>("d_researchdirections", researchDirections, cacheOptions);
+                try
+                {
+                    researchDirections = _db.Fetch<ResearchDirection>();
+                }
+                catch (Exception e)
+                {
+                    Logger.LogError(e.Message, e);
+                    throw;
+                }
+                if (researchDirections != null) cache.Set<IEnumerable<ResearchDirection>>(ResearchDirectionsCacheKey, researchDirections, cacheOptions);
             }
 
             return researchDirections;
+        }
+        public IEnumerable<ResearchDirection> Handle(SelectAllResearchDirectionsQuery message)
+        {
+            return GetCachedAllResearchDirections();
         }
         public IEnumerable<ResearchDirection> Handle(SelectResearchDirectionsForAutocompleteQuery message)
         {
             if (String.IsNullOrEmpty(message.Query)) throw new ArgumentNullException($"Query is empty: {message.Query}");
 
             IEnumerable<ResearchDirection> researchDirections;
+
             if (message.Take != 0)
             {
-                researchDirections = _db.FetchBy<ResearchDirection>(f => f.Where(w => w.title.Contains(message.Query))).Take(message.Take);
+                researchDirections = GetCachedAllResearchDirections()?.Where(w => w.title.Contains(message.Query))?.Take(message.Take)?.ToList();
             }
             else
             {
-                researchDirections = _db.FetchBy<ResearchDirection>(f => f.Where(w => w.title.Contains(message.Query)));
+                researchDirections = GetCachedAllResearchDirections()?.Where(w => w.title.Contains(message.Query))?.ToList();
             }
 
             return researchDirections;
@@ -256,26 +343,44 @@ namespace SciVacancies.WebApp.Queries
         {
             if (message.ParentId == 0) throw new ArgumentNullException($"ParentId is empty or 0: {message.ParentId}");
 
-            IEnumerable<ResearchDirection> researchDirections = _db.FetchBy<ResearchDirection>(f => f.Where(w => w.parent_id == message.ParentId));
+            IEnumerable<ResearchDirection> researchDirections;
+
+            researchDirections = GetCachedAllResearchDirections()?.Where(w => w.parent_id == message.ParentId)?.ToList();
 
             return researchDirections;
         }
         public ResearchDirection Handle(SelectResearchDirectionQuery message)
         {
             if (message.Id == 0) throw new ArgumentNullException(nameof(message.Id));
-            return _db.SingleById<ResearchDirection>(message.Id);
+            ResearchDirection researchDirection;
+
+            researchDirection = GetCachedAllResearchDirections()?.First(f => f.id == message.Id);
+
+            return researchDirection;
         }
 
-        public IEnumerable<AttachmentType> Handle(SelectAllAttachmentTypesQuery message)
+        private IEnumerable<AttachmentType> GetCachedAllAttachmentTypes()
         {
             IEnumerable<AttachmentType> attachmentTypes;
-            if (!cache.TryGetValue<IEnumerable<AttachmentType>>("d_attachmenttypes", out attachmentTypes))
+            if (!cache.TryGetValue(AttachmentTypesCacheKey, out attachmentTypes))
             {
-                attachmentTypes = _db.Fetch<AttachmentType>();
-                cache.Set<IEnumerable<AttachmentType>>("d_attachmenttypes", attachmentTypes, cacheOptions);
+                try
+                {
+                    attachmentTypes = _db.Fetch<AttachmentType>();
+                }
+                catch (Exception e)
+                {
+                    Logger.LogError(e.Message, e);
+                    throw;
+                }
+                if (attachmentTypes != null) cache.Set<IEnumerable<AttachmentType>>(AttachmentTypesCacheKey, attachmentTypes, cacheOptions);
             }
 
             return attachmentTypes;
+        }
+        public IEnumerable<AttachmentType> Handle(SelectAllAttachmentTypesQuery message)
+        {
+            return GetCachedAllAttachmentTypes();
         }
     }
 
