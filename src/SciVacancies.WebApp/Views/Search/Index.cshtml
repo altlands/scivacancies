@@ -41,30 +41,14 @@
 
                 <div class="cat-filter">
                     <div class="title"><span>ФОИВ</span></div>
-                    <ul class="sub-cat level-1">
-                        @{
-                            var foivs = (List<FoivViewModel>)ViewBag.FilterSource.Foivs;
-                            for (a = 0; a < foivs.Count; a++)
-                            {
-                                if (foivs[a].Childs.Any())
-                                {
-                                    var open = foivs[a].Childs.Count(level => (Model.Foivs != null && Model.Foivs.Contains(level.Id))) > 0 ? "open" : string.Empty;
-                                    <text>
-                                    <li class="collapsible-filter-header @open">
-                                        <span>@foivs[a].Title (@foivs[a].Childs.Count())</span>
-                                        <ul class="list-checkboxes" style="display: none;">
-                                            <checkboxing items="foivs[a].Items"
-                                                         values="Model.Foivs"
-                                                         property="Foivs"
-                                                         labelforindex="@labelForIndex"></checkboxing>
-                                        </ul>
-                                    </li>
-                                    </text>
-                                    labelForIndex += foivs[a].Childs.Count();
-                                }
-                            }
-                        }
+                    <ul class="list-checkboxes">
+                        <checkboxing items="ViewBag.FilterSource.Foivs"
+                                     values="Model.Foivs"
+                                     property="Foivs"
+                                     showcount="10"></checkboxing>
                     </ul>
+                    <span class="small-icon icon-sm-eye show-all-list"><span>Показать все</span></span>
+                    <span class="small-icon icon-sm-eye hide-unselected" style="display: none;"><span>Только выбранные</span></span>
                 </div>
 
                 <div class="cat-filter">

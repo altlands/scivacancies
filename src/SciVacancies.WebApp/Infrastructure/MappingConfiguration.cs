@@ -277,11 +277,6 @@ namespace SciVacancies.WebApp.Infrastructure
         }
         public static void InitializeDictionaries()
         {
-            Mapper.CreateMap<Foiv, FoivViewModel>()
-                .ForMember(d => d.Id, o => o.MapFrom(s => s.id))
-                .ForMember(d => d.ParentId, o => o.MapFrom(s => s.parent_id))
-                .ForMember(d => d.Title, o => o.MapFrom(s => s.title))
-                .ForMember(d => d.ShortTitle, o => o.MapFrom(s => s.shorttitle));
             Mapper.CreateMap<ResearchDirection, ResearchDirectionViewModel>()
                 .ForMember(d => d.Id, o => o.MapFrom(s => s.id))
                 .ForMember(d => d.ParentId, o => o.MapFrom(s => s.parent_id))

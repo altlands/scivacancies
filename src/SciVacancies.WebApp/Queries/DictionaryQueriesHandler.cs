@@ -94,7 +94,7 @@ namespace SciVacancies.WebApp.Queries
         public IEnumerable<Foiv> Handle(SelectAllFoivsQuery message)
         {
             IEnumerable<Foiv> foivs;
-            if (!cache.TryGetValue<IEnumerable<Foiv>>("d_foivs", out foivs))
+            if (!cache.TryGetValue("d_foivs", out foivs))
             {
                 foivs = _db.Fetch<Foiv>();
                 cache.Set<IEnumerable<Foiv>>("d_foivs", foivs, cacheOptions);
