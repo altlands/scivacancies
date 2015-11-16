@@ -78,7 +78,7 @@ namespace SciVacancies.WebApp.Commands
                 : _userManager.Create(user, message.Data.Password)
                 ;
 
-            if (!identity.Succeeded) throw new ArgumentException("UserManager failed to create identity");
+            if (!identity.Succeeded) throw new ArgumentException("UserManager failed to create identity: " + string.Join(",", identity.Errors));
 
 
             if (!string.IsNullOrWhiteSpace(message.Data.SciMapNumber))
@@ -207,7 +207,7 @@ namespace SciVacancies.WebApp.Commands
 
             //_userManager.CreateAsync(user).Wait();
             var identity = _userManager.Create(user);
-            if (!identity.Succeeded) throw new ArgumentException("UserManager failed to create identity");
+            if (!identity.Succeeded) throw new ArgumentException("UserManager failed to create identity : " + string.Join(",", identity.Errors));
 
             //_userManager.AddClaim(user.Id, new System.Security.Claims.Claim(ConstTerms.ClaimTypeOrganizationId, organizationGuid.ToString()));
             //_userManager.AddClaim(user.Id, new System.Security.Claims.Claim("Email", organizationDataModel.Email));
