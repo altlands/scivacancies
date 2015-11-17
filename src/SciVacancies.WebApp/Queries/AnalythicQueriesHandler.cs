@@ -680,7 +680,7 @@ namespace SciVacancies.WebApp.Queries
                 histogram.dataPoints[index] = new PaymentDataPoint
                 {
                     x = index,
-                    y = y,
+                    y = Math.Round(y, 2),
                     label = label
                 };
             }

@@ -32,7 +32,7 @@
 
 
     <div class="graphics-item">
-        <div class="title-graphic">Число вакансий ( среднее предложение в месяц )</div>
+        <div class="title-graphic">Число вакансий ( среднее предложение )</div>
 
         <div id="chartContainer" style="min-height: 250px; width: 413px;">
         </div>
@@ -183,7 +183,7 @@
                         content: function (e) {
                             var body;
                             var head;
-                            head = "<span style = 'color:DodgerBlue; '><strong>Месяц: " + (e.entries[0].dataPoint.label) + "</strong></span><br/>";
+                            head = "<span style = 'color:DodgerBlue; '><strong>Дата: " + (e.entries[0].dataPoint.label) + "</strong></span><br/>";
                             body = "<span style= 'color:" + e.entries[0].dataSeries.color + "'> " + e.entries[0].dataSeries.name + "</span>: <strong>" + e.entries[0].dataPoint.y + "</strong>  тыс.р.<br/> <span style= 'color:" + e.entries[1].dataSeries.color + "'> " + e.entries[1].dataSeries.name + "</span>: <strong>" + e.entries[1].dataPoint.y + "</strong>  шт";
 
                             return (head.concat(body));
