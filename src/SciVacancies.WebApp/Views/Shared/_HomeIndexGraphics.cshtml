@@ -34,7 +34,7 @@
     <div class="graphics-item">
         <div class="title-graphic">Число вакансий ( среднее предложение в месяц )</div>
 
-        <div id="chartContainer" style="height: 250px; width: 413px;">
+        <div id="chartContainer" style="min-height: 250px; width: 413px;">
         </div>
 
     </div>
@@ -42,7 +42,7 @@
     <div class="graphics-item">
         <div class="title-graphic">Средняя зарплата и количество вакансий</div>
 
-        <div id="chartContainer2" style="height: 250px; width: 413px;">
+        <div id="chartContainer2" style="min-height: 250px; width: 413px;">
         </div>
 
         <div class="graph-region-select-block">
@@ -88,7 +88,6 @@
                         //text: "Число вакансий ( среднее предложение в месяц )"
                     },
                     axisX: {
-                        //text: "Число вакансий ( среднее предложение в месяц )"
                         lineThickness: 1,
                         tickLength: 0,
                         labelMaxWidth: 50
@@ -153,13 +152,18 @@
                     ],
                     legend: {
                         cursor: "pointer",
+
+                        fontSize: 12,
+                        fontFamily: "tahoma",
+                        maxWidth: 400,
+
                         itemclick: function (e) {
                             if (typeof (e.dataSeries.visible) === "undefined" || e.dataSeries.visible) {
                                 e.dataSeries.visible = false;
                             } else {
                                 e.dataSeries.visible = true;
                             }
-                            chart.render();
+                            graphs.chart.render();
                         }
                     }
                 });
@@ -208,7 +212,8 @@
                         //suffix: " мес",
                         lineThickness: 1,
                         tickLength: 0,
-                        gridThickness: 1
+                        gridThickness: 1,
+                        labelMaxWidth: 50
 
                     },
                     data: [
@@ -240,13 +245,18 @@
                     ],
                     legend: {
                         cursor: "pointer",
+
+                        fontSize: 12,
+                        fontFamily: "tahoma",
+                        maxWidth: 400,
+
                         itemclick: function (e) {
                             if (typeof (e.dataSeries.visible) === "undefined" || e.dataSeries.visible) {
                                 e.dataSeries.visible = false;
                             } else {
                                 e.dataSeries.visible = true;
                             }
-                            chart.render();
+                            graphs.chart2.render();
                         }
                     }
                 });
