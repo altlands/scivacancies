@@ -16,7 +16,7 @@ namespace SciVacancies.WebApp.Queries
         IRequestHandler<SelectPagedVacancyApplicationsByVacancyQuery, Page<VacancyApplication>>,
         IRequestHandler<SelectAllVacancyApplicationAttachmentsQuery, IEnumerable<VacancyApplicationAttachment>>,
         IRequestHandler<CountVacancyApplicationInVacancyQuery, int>,
-        IRequestHandler<SelectVacancyApplicationInVacancyByStatusQuery, IEnumerable<VacancyApplication>>
+        IRequestHandler<SelectVacancyApplicationInVacancyByStatusesQuery, IEnumerable<VacancyApplication>>
     {
         private readonly IDatabase _db;
 
@@ -75,23 +75,20 @@ namespace SciVacancies.WebApp.Queries
         {
             if (message.VacancyGuid == Guid.Empty) throw new ArgumentNullException($"{nameof(message.VacancyGuid)} is empty");
 
-            var vacancyApplication = _db.Fetch<VacancyApplication>(new Sql($"Select * FROM res_vacancyapplications va WHERE va.vacancy_guid = @0 AND va.status = @1", message.VacancyGuid, (int)message.Status));
+            var vacancyApplication = _db.Fetch<VacancyApplication>(new Sql("Select * FROM res_vacancyapplications va WHERE va.vacancy_guid = @0 AND va.status = @1", message.VacancyGuid, (int)message.Status));
 
             if (vacancyApplication != null && vacancyApplication.Count > 0)
             {
                 return vacancyApplication.Count();
             }
-            else
-            {
-                return 0;
-            }
+            return 0;
         }
 
-        public IEnumerable<VacancyApplication> Handle(SelectVacancyApplicationInVacancyByStatusQuery message)
+        public IEnumerable<VacancyApplication> Handle(SelectVacancyApplicationInVacancyByStatusesQuery message)
         {
             if (message.VacancyGuid == Guid.Empty) throw new ArgumentNullException($"{nameof(message.VacancyGuid)} is empty");
 
-            var vacancyApplications = _db.Fetch<VacancyApplication>(new Sql($"Select * FROM res_vacancyapplications va WHERE va.vacancy_guid = @0 AND va.status = @1", message.VacancyGuid, (int)message.Status));
+            var vacancyApplications = _db.Fetch<VacancyApplication>(new Sql("Select * FROM res_vacancyapplications va WHERE va.vacancy_guid = @0 AND va.status in (@1)", message.VacancyGuid, message.Statuses.Select(c => (int)c).ToList()));
 
             return vacancyApplications;
         }
