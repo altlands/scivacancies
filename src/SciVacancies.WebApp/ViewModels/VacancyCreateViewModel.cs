@@ -177,7 +177,7 @@ namespace SciVacancies.WebApp.ViewModels
         /// <summary>
         /// Срок трудового договора (для срочного договора)
         /// </summary>
-        [Range(minimum: 0, maximum: 100, ErrorMessage = "Вы ввели недопустимое значение. Допустимо от 0 до 100 лет.")]
+        [Range(minimum: 0, maximum: 50, ErrorMessage = "Вы ввели недопустимое значение. Допустимо от 0 до 50 лет.")]
         public int? ContractTimeYears
         {
             get { return int.Parse((ContractTime ?? 0).ToString(CultureInfo.InvariantCulture).Split('.')[0]); }
