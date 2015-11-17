@@ -630,13 +630,13 @@ namespace SciVacancies.WebApp.Queries
             switch (interval)
             {
                 case DateInterval.Month:
-                    label = date.ToString("MMMM", new CultureInfo("ru-RU"));
+                    label = date.ToString("MMM", new CultureInfo("ru-RU"));
                     break;
                 case DateInterval.Week:
                     label = date.ToString("dd MMM", new CultureInfo("ru-RU")) + " - " + date.AddDays(6).ToString("dd MMM", new CultureInfo("ru-RU"));
                     break;
                 case DateInterval.Day:
-                    label = date.ToString("dddd", new CultureInfo("ru-RU"));
+                    label = date.ToString("ddd", new CultureInfo("ru-RU"));
                     break;
                 default:
                     label = "";
@@ -663,13 +663,13 @@ namespace SciVacancies.WebApp.Queries
             switch (interval)
             {
                 case DateInterval.Month:
-                    label = date.ToString("MMMM", new CultureInfo("ru-RU"));
+                    label = date.ToString("MMM", new CultureInfo("ru-RU"));
                     break;
                 case DateInterval.Week:
                     label = date.ToString("dd MMM", new CultureInfo("ru-RU")) + " - " + date.AddDays(6).ToString("dd MMM", new CultureInfo("ru-RU"));
                     break;
                 case DateInterval.Day:
-                    label = date.ToString("dddd", new CultureInfo("ru-RU"));
+                    label = date.ToString("ddd", new CultureInfo("ru-RU"));
                     break;
                 default:
                     label = "";

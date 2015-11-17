@@ -393,45 +393,45 @@ namespace SciVacancies.WebApp.Controllers
             return View(model);
         }
 
-        //[BindOrganizationIdFromClaims]
-        //[Authorize(Roles = ConstTerms.RequireRoleOrganizationAdmin)]
-        //public IActionResult StartInCommittee(Guid id, Guid organizationGuid)
-        //{
-        //    if (id == Guid.Empty)
-        //        throw new ArgumentNullException(nameof(id));
+        [BindOrganizationIdFromClaims]
+        [Authorize(Roles = ConstTerms.RequireRoleOrganizationAdmin)]
+        public IActionResult StartInCommittee(Guid id, Guid organizationGuid)
+        {
+            //if (id == Guid.Empty)
+            //    throw new ArgumentNullException(nameof(id));
 
-        //    if (organizationGuid == Guid.Empty)
-        //        throw new ArgumentNullException(nameof(organizationGuid));
+            //if (organizationGuid == Guid.Empty)
+            //    throw new ArgumentNullException(nameof(organizationGuid));
 
-        //    var preModel = _mediator.Send(new SingleVacancyQuery { VacancyGuid = id });
+            //var preModel = _mediator.Send(new SingleVacancyQuery { VacancyGuid = id });
 
-        //    if (preModel == null)
-        //        return HttpNotFound(); //throw new ObjectNotFoundException($"Не найдена вакансия с идентификатором: {id}");
+            //if (preModel == null)
+            //    return HttpNotFound(); //throw new ObjectNotFoundException($"Не найдена вакансия с идентификатором: {id}");
 
-        //    if (preModel.organization_guid != organizationGuid)
-        //        return View("Error", "Вы не можете менять Вакансии других организаций");
+            //if (preModel.organization_guid != organizationGuid)
+            //    return View("Error", "Вы не можете менять Вакансии других организаций");
 
-        //    if (preModel.status != VacancyStatus.Published)
-        //        return View("Error", $"Вы не можете перевести Вакансию на рассмотрение комиссии со статусом: {preModel.status.GetDescription()}");
+            //if (preModel.status != VacancyStatus.Published)
+            //    return View("Error", $"Вы не можете перевести Вакансию на рассмотрение комиссии со статусом: {preModel.status.GetDescription()}");
 
-        //    //TODO: Saga -> реализовать эту проверку при запуске Саг с таймерами
-        //    //if ((DateTime.UtcNow - preModel.committee_start_date.Value).TotalMinutes < _sagaSettings.Value.Date.DeltaFromPublishToInCommitteeMinMinutes)
-        //    //    return View("Error", $"Вы не можете начать перевести вакансию на рассмотрение комиссии раньше чем через {_sagaSettings.Value.Date.DeltaFromPublishToInCommitteeMinMinutes} дн.");
+            ////TODO: Saga -> реализовать эту проверку при запуске Саг с таймерами
+            ////if ((DateTime.UtcNow - preModel.committee_start_date.Value).TotalMinutes < _sagaSettings.Value.Date.DeltaFromPublishToInCommitteeMinMinutes)
+            ////    return View("Error", $"Вы не можете начать перевести вакансию на рассмотрение комиссии раньше чем через {_sagaSettings.Value.Date.DeltaFromPublishToInCommitteeMinMinutes} дн.");
 
-        //    var vacancyApplications = _mediator.Send(new CountVacancyApplicationInVacancyQuery
-        //    {
-        //        VacancyGuid = preModel.guid,
-        //        Status = VacancyApplicationStatus.Applied
-        //    });
+            //var vacancyApplications = _mediator.Send(new CountVacancyApplicationInVacancyQuery
+            //{
+            //    VacancyGuid = preModel.guid,
+            //    Status = VacancyApplicationStatus.Applied
+            //});
 
-        //    if (vacancyApplications == 0)
-        //        //если нет заявок, то закрыть вакансию
-        //        _mediator.Send(new CancelVacancyCommand { VacancyGuid = preModel.guid, Reason = "На Вакансию не подано ни одной Заявки." });
-        //    else
-        //        _mediator.Send(new SwitchVacancyInCommitteeCommand { VacancyGuid = id });
+            //if (vacancyApplications == 0)
+            //    //если нет заявок, то закрыть вакансию
+            //    _mediator.Send(new CancelVacancyCommand { VacancyGuid = preModel.guid, Reason = "На Вакансию не подано ни одной Заявки." });
+            //else
+            //    _mediator.Send(new SwitchVacancyInCommitteeCommand { VacancyGuid = id });
 
-        //    return RedirectToAction("details", new { id });
-        //}
+            return RedirectToAction("details", new { id });
+        }
 
         private object SetCommitteeReasonPreValidation(Guid vacancyGuid, Guid organizationGuid)
         {
@@ -450,6 +450,27 @@ namespace SciVacancies.WebApp.Controllers
             if (!string.IsNullOrWhiteSpace(vacancy.committee_resolution)
                 || (vacancyInCommitteeAttachments != null && vacancyInCommitteeAttachments.Any()))
                 return View("Error", "В вакансии УЖЕ УКАЗАНО конкурсное обоснование выбора победителя (и претендента).");
+
+
+            var appliedVacancyApplications = _mediator.Send(new SelectVacancyApplicationInVacancyByStatusesQuery
+            {
+                VacancyGuid = vacancyGuid,
+                Statuses = new List<VacancyApplicationStatus> { VacancyApplicationStatus.Applied, VacancyApplicationStatus.Won, VacancyApplicationStatus.Pretended }
+            });
+            if (appliedVacancyApplications == null || !appliedVacancyApplications.Any())
+                return View("Error", "Для данной Вакансии не подано ни одной действующей заявки.");
+
+            if (appliedVacancyApplications.Count() == 1) //подана всего 1 заявка
+            {
+                if (vacancy.winner_researcher_guid == Guid.Empty)
+                    return View("Warning", "Для данной Вакансии еще не выбран Победитель.");
+            }
+            else
+            {
+                //if (appliedVacancyApplications.Count() > 1) // подано несколько заявок
+                if (vacancy.winner_researcher_guid == Guid.Empty || vacancy.pretender_researcher_guid == Guid.Empty)
+                    return View("Warning", "Для данной Вакансии еще не выбран Победитель и/или Претендент.");
+            }
 
             return vacancy;
         }
@@ -598,6 +619,7 @@ namespace SciVacancies.WebApp.Controllers
             }
             #endregion
 
+            //задать решение/обоснование комиссии
             _mediator.Send(new SetVacancyCommitteeResolutionCommand
             {
                 Resolution = model.Reason,
@@ -605,13 +627,39 @@ namespace SciVacancies.WebApp.Controllers
                 VacancyGuid = model.Guid
             });
 
-            if (applicationGuid != Guid.Empty)
-                return RedirectToAction(actionName: "setwinner", routeValues: new { id = applicationGuid, isWinner = true });
+            vacancy = _mediator.Send(new SingleVacancyQuery {VacancyGuid = vacancy.guid});
+
+            //пометить Заявку как Победитель
+            _mediator.Send(new MakeVacancyApplicationWinnerCommand
+            {
+                ResearcherGuid = vacancy.winner_researcher_guid,
+                VacancyApplicationGuid = vacancy.winner_vacancyapplication_guid,
+                Reason = vacancy.committee_resolution
+            });
+            //пометить Заявку как Претендент
+            _mediator.Send(new MakeVacancyApplicationPretenderCommand
+            {
+                ResearcherGuid = vacancy.pretender_researcher_guid,
+                VacancyApplicationGuid = vacancy.pretender_vacancyapplication_guid,
+                Reason = vacancy.committee_resolution
+            });
+
+            //отметить лузеров
+            var stillAppliedApplications = _mediator.Send(new SelectVacancyApplicationInVacancyByStatusesQuery { VacancyGuid = model.Guid, Statuses = new List<VacancyApplicationStatus> { VacancyApplicationStatus.Applied } });
+            stillAppliedApplications?.ToList().ForEach(c => _mediator.Send(new MakeVacancyApplicationLooserCommand
+            {
+                ResearcherGuid = c.researcher_guid,
+                VacancyApplicationGuid = c.guid
+            }));
+
+            //переключить вакансию в статус ожидания ответа от победителя
+            _mediator.Send(new SetVacancyToResponseAwaitingFromWinnerCommand
+            {
+                VacancyGuid = model.Guid
+            });
 
             return RedirectToAction(actionName: "details", routeValues: new { id = model.Guid });
         }
-
-
 
         private object SetWinnerPreValidation(Guid vacancyApplicationGuid, Guid organizationGuid, bool isWinner, out Vacancy vacancy, out VacancyApplication vacancyApplication)
         {
@@ -640,16 +688,12 @@ namespace SciVacancies.WebApp.Controllers
                 return View("Error", "Для данной Вакансии еще не выбран Победитель.");
 
             if (vacancy.winner_researcher_guid != Guid.Empty && vacancy.pretender_researcher_guid != Guid.Empty)
-                return View("Error", "Для данной Вакансии уже выбраны Победитель и Претендент.");
+                //return View("Error", "Для данной Вакансии уже выбраны Победитель и Претендент.");
+                return RedirectToAction("setcommitteereason", new { id = vacancy.guid, applicationGuid = vacancyApplication.guid });
 
             if (vacancy.status != VacancyStatus.InCommittee)
                 return View("Error",
                     $"Вы не можете выбирать победителя для Заявки со статусом: {vacancy.status.GetDescription()}");
-
-            var vacancyInCommitteeAttachments = _mediator.Send(new SelectCommitteeVacancyAttachmentsQuery { VacancyGuid = vacancy.guid });
-            if (string.IsNullOrWhiteSpace(vacancy.committee_resolution)
-                && (vacancyInCommitteeAttachments == null || !vacancyInCommitteeAttachments.Any()))
-                return RedirectToAction("setcommitteereason", new { id = vacancy.guid, applicationGuid = vacancyApplicationGuid });
 
             return null;
         }
@@ -703,101 +747,54 @@ namespace SciVacancies.WebApp.Controllers
                 return View(model);
             }
 
+            //количество поданнных заявок
+            var appliedVacancyApplicationsCount = _mediator.Send(new CountVacancyApplicationInVacancyQuery
+            {
+                VacancyGuid = model.VacancyGuid,
+                Status = VacancyApplicationStatus.Applied
+            });
+
             if (model.WinnerIsSetting)
             {
-                //добавить инфу о победителе в вакансию
-                _mediator.Send(new SetVacancyWinnerCommand
+                if (vacancy.winner_researcher_guid == Guid.Empty)
                 {
-                    VacancyGuid = model.VacancyGuid,
-                    ResearcherGuid = model.ResearcherGuid,
-                    VacancyApplicationGuid = model.Guid
-                });
-
-
-                //пометить Заявку как Победитель
-                _mediator.Send(new MakeVacancyApplicationWinnerCommand
-                {
-                    ResearcherGuid = model.ResearcherGuid,
-                    VacancyApplicationGuid = model.Guid,
-                    Reason = vacancy.committee_resolution
-                });
-
-                //если не осталось не обработанных заявок, т.е. Заявка была всего одна...
-                var appliedVacancyApplications = _mediator.Send(new CountVacancyApplicationInVacancyQuery
-                {
-                    VacancyGuid = model.VacancyGuid,
-                    Status = VacancyApplicationStatus.Applied
-                });
-                //...то переключить вакансию в статус ожидания ответа от победителя
-                if (appliedVacancyApplications == 0)
-                    GoOutFromInCommittee(model.VacancyGuid);
+                    //добавить инфу о победителе в вакансию
+                    _mediator.Send(new SetVacancyWinnerCommand
+                    {
+                        VacancyGuid = model.VacancyGuid,
+                        ResearcherGuid = model.ResearcherGuid,
+                        VacancyApplicationGuid = model.Guid
+                    });
+                }
             }
             else
             {
-                //добавить инфу о претенденте в вакансию
-                _mediator.Send(new SetVacancyPretenderCommand
+                if (appliedVacancyApplicationsCount > 1 && vacancy.winner_researcher_guid != Guid.Empty && vacancy.pretender_researcher_guid == Guid.Empty)
                 {
-                    VacancyGuid = model.VacancyGuid,
-                    ResearcherGuid = model.ResearcherGuid,
-                    VacancyApplicationGuid = model.Guid
-                });
+                    //добавить инфу о претенденте в вакансию
+                    _mediator.Send(new SetVacancyPretenderCommand
+                    {
+                        VacancyGuid = model.VacancyGuid,
+                        ResearcherGuid = model.ResearcherGuid,
+                        VacancyApplicationGuid = model.Guid
+                    });
 
+                }
+            }
 
-                //пометить Заявку как Претендент
-                _mediator.Send(new MakeVacancyApplicationPretenderCommand
-                {
-                    ResearcherGuid = model.ResearcherGuid,
-                    VacancyApplicationGuid = model.Guid,
-                    Reason = vacancy.committee_resolution
-                });
-
-                //после выбора победителя
-                GoOutFromInCommittee(model.VacancyGuid);
+            //если Победитель (и претендент) заданы, то переадресовать на страницу с Обоснованием
+            if (
+                (appliedVacancyApplicationsCount == 1 && vacancy.winner_researcher_guid != Guid.Empty)
+                || (appliedVacancyApplicationsCount > 1 && vacancy.winner_researcher_guid != Guid.Empty && vacancy.pretender_researcher_guid != Guid.Empty)
+                )
+            {
+                var vacancyInCommitteeAttachments = _mediator.Send(new SelectCommitteeVacancyAttachmentsQuery { VacancyGuid = vacancy.guid });
+                if (string.IsNullOrWhiteSpace(vacancy.committee_resolution)
+                    && (vacancyInCommitteeAttachments == null || !vacancyInCommitteeAttachments.Any()))
+                    return RedirectToAction("setcommitteereason", new { id = vacancy.guid, applicationGuid = vacancyApplication.guid });
             }
 
             return RedirectToAction("preview", "applications", new { id = model.Guid });
-        }
-
-        private object VacancyClosePrevalidation(Guid id, Guid organizationGuid, out Vacancy preModel)
-        {
-            if (id == Guid.Empty)
-                throw new ArgumentNullException(nameof(id));
-
-            if (organizationGuid == Guid.Empty)
-                throw new ArgumentNullException(nameof(organizationGuid));
-
-            preModel = _mediator.Send(new SingleVacancyQuery { VacancyGuid = id });
-
-            if (preModel == null)
-                return HttpNotFound(); //throw new ObjectNotFoundException($"Не найдена вакансия с идентификатором: {id}");
-
-            if (preModel.organization_guid != organizationGuid)
-                return View("Error", "Вы не можете менять Вакансии других организаций");
-
-            if (preModel.status != VacancyStatus.OfferAcceptedByWinner && preModel.status != VacancyStatus.OfferAcceptedByPretender)
-                return View("Error", "Вы не можете закрыть вакансию, пока кто-то из победителей не даст согласится");
-            return null;
-        }
-
-        /// <summary>
-        /// обработать выход из Рассмотрения комиссии
-        /// </summary>
-        /// <param name="vacancyGuid"></param>
-        private void GoOutFromInCommittee(Guid vacancyGuid)
-        {
-            //переключить вакансию в статус ожидания ответа от победителя
-            _mediator.Send(new SetVacancyToResponseAwaitingFromWinnerCommand
-            {
-                VacancyGuid = vacancyGuid
-            });
-
-            //отметить лузеров
-            var stillAppliedApplications = _mediator.Send(new SelectVacancyApplicationInVacancyByStatusQuery { VacancyGuid = vacancyGuid, Status = VacancyApplicationStatus.Applied });
-            stillAppliedApplications?.ToList().ForEach(c => _mediator.Send(new MakeVacancyApplicationLooserCommand
-            {
-                ResearcherGuid = c.researcher_guid,
-                VacancyApplicationGuid = c.guid
-            }));
         }
 
         [PageTitle("Предложить вакансию претенденту")]
@@ -892,6 +889,27 @@ namespace SciVacancies.WebApp.Controllers
             });
 
             return RedirectToAction("vacancies", "organizations");
+        }
+
+        private object VacancyClosePrevalidation(Guid id, Guid organizationGuid, out Vacancy preModel)
+        {
+            if (id == Guid.Empty)
+                throw new ArgumentNullException(nameof(id));
+
+            if (organizationGuid == Guid.Empty)
+                throw new ArgumentNullException(nameof(organizationGuid));
+
+            preModel = _mediator.Send(new SingleVacancyQuery { VacancyGuid = id });
+
+            if (preModel == null)
+                return HttpNotFound(); //throw new ObjectNotFoundException($"Не найдена вакансия с идентификатором: {id}");
+
+            if (preModel.organization_guid != organizationGuid)
+                return View("Error", "Вы не можете менять Вакансии других организаций");
+
+            if (preModel.status != VacancyStatus.OfferAcceptedByWinner && preModel.status != VacancyStatus.OfferAcceptedByPretender)
+                return View("Error", "Вы не можете закрыть вакансию, пока кто-то из победителей не даст согласится");
+            return null;
         }
 
         private object PublishPreValidation(Guid id, Guid organizationGuid)
