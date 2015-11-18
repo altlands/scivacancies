@@ -70,7 +70,7 @@
         </tr>
     </thead>
     <tbody>
-        @if (Model.Vacancies != null)
+        @if (Model.Vacancies != null && Model.Vacancies.Items!=null)
         {
             var i = Model.Vacancies.FirstRowIndexOnPage - 1;
             var appliedAppliedVacanciesGuids = Model.AppliedApplications.Select(c => c.vacancy_guid).ToList();

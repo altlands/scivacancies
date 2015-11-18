@@ -92,7 +92,7 @@
         </thead>
         <tbody>
 
-            @if (Model.VacanciesInOrganization.PagedVacancies != null)
+            @if (Model.VacanciesInOrganization!=null && Model.VacanciesInOrganization.PagedVacancies != null)
             {
                 var i = Model.VacanciesInOrganization.PagedVacancies.FirstRowIndexOnPage - 1;
                 foreach (var item in Model.VacanciesInOrganization.PagedVacancies.Items)
@@ -101,7 +101,7 @@
                     <text>
                     <tr>
                         <td>@i</td>
-                        <td>ГНС600001</td>
+                        <td>VAC @item.read_id</td>
                         <td>@item.name</td>
                         <td>@(item.publish_date?.ToLocalVacancyString())</td>
                         <td><span class="status @item.status.GetHtmlClass()">@item.status.GetDescriptionByResearcher()</span></td>

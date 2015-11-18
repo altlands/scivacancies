@@ -28,7 +28,7 @@
                 <h4>Вакансии дня @ViewBag.test</h4>
                 <div class="b-items">
 
-                    @if (Model.VacanciesList != null)
+                    @if (Model.VacanciesList != null && Model.VacanciesList.Items!=null)
                     {
                         foreach (var item in Model.VacanciesList.Items)
                         {

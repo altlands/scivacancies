@@ -397,38 +397,38 @@ namespace SciVacancies.WebApp.Controllers
         [Authorize(Roles = ConstTerms.RequireRoleOrganizationAdmin)]
         public IActionResult StartInCommittee(Guid id, Guid organizationGuid)
         {
-            //if (id == Guid.Empty)
-            //    throw new ArgumentNullException(nameof(id));
+            if (id == Guid.Empty)
+                throw new ArgumentNullException(nameof(id));
 
-            //if (organizationGuid == Guid.Empty)
-            //    throw new ArgumentNullException(nameof(organizationGuid));
+            if (organizationGuid == Guid.Empty)
+                throw new ArgumentNullException(nameof(organizationGuid));
 
-            //var preModel = _mediator.Send(new SingleVacancyQuery { VacancyGuid = id });
+            var preModel = _mediator.Send(new SingleVacancyQuery { VacancyGuid = id });
 
-            //if (preModel == null)
-            //    return HttpNotFound(); //throw new ObjectNotFoundException($"Не найдена вакансия с идентификатором: {id}");
+            if (preModel == null)
+                return HttpNotFound(); //throw new ObjectNotFoundException($"Не найдена вакансия с идентификатором: {id}");
 
-            //if (preModel.organization_guid != organizationGuid)
-            //    return View("Error", "Вы не можете менять Вакансии других организаций");
+            if (preModel.organization_guid != organizationGuid)
+                return View("Error", "Вы не можете менять Вакансии других организаций");
 
-            //if (preModel.status != VacancyStatus.Published)
-            //    return View("Error", $"Вы не можете перевести Вакансию на рассмотрение комиссии со статусом: {preModel.status.GetDescription()}");
+            if (preModel.status != VacancyStatus.Published)
+                return View("Error", $"Вы не можете перевести Вакансию на рассмотрение комиссии со статусом: {preModel.status.GetDescription()}");
 
-            ////TODO: Saga -> реализовать эту проверку при запуске Саг с таймерами
-            ////if ((DateTime.UtcNow - preModel.committee_start_date.Value).TotalMinutes < _sagaSettings.Value.Date.DeltaFromPublishToInCommitteeMinMinutes)
-            ////    return View("Error", $"Вы не можете начать перевести вакансию на рассмотрение комиссии раньше чем через {_sagaSettings.Value.Date.DeltaFromPublishToInCommitteeMinMinutes} дн.");
+            //TODO: Saga -> реализовать эту проверку при запуске Саг с таймерами
+            if ((DateTime.UtcNow - preModel.committee_start_date.Value).TotalMinutes < _sagaSettings.Value.Date.DeltaFromPublishToInCommitteeMinMinutes)
+                return View("Error", $"Вы не можете начать перевести вакансию на рассмотрение комиссии раньше чем через {_sagaSettings.Value.Date.DeltaFromPublishToInCommitteeMinMinutes} дн.");
 
-            //var vacancyApplications = _mediator.Send(new CountVacancyApplicationInVacancyQuery
-            //{
-            //    VacancyGuid = preModel.guid,
-            //    Status = VacancyApplicationStatus.Applied
-            //});
+            var vacancyApplications = _mediator.Send(new CountVacancyApplicationInVacancyQuery
+            {
+                VacancyGuid = preModel.guid,
+                Status = VacancyApplicationStatus.Applied
+            });
 
-            //if (vacancyApplications == 0)
-            //    //если нет заявок, то закрыть вакансию
-            //    _mediator.Send(new CancelVacancyCommand { VacancyGuid = preModel.guid, Reason = "На Вакансию не подано ни одной Заявки." });
-            //else
-            //    _mediator.Send(new SwitchVacancyInCommitteeCommand { VacancyGuid = id });
+            if (vacancyApplications == 0)
+                //если нет заявок, то закрыть вакансию
+                _mediator.Send(new CancelVacancyCommand { VacancyGuid = preModel.guid, Reason = "На Вакансию не подано ни одной Заявки." });
+            else
+                _mediator.Send(new SwitchVacancyInCommitteeCommand { VacancyGuid = id });
 
             return RedirectToAction("details", new { id });
         }
@@ -627,7 +627,7 @@ namespace SciVacancies.WebApp.Controllers
                 VacancyGuid = model.Guid
             });
 
-            vacancy = _mediator.Send(new SingleVacancyQuery {VacancyGuid = vacancy.guid});
+            vacancy = _mediator.Send(new SingleVacancyQuery { VacancyGuid = vacancy.guid });
 
             //пометить Заявку как Победитель
             _mediator.Send(new MakeVacancyApplicationWinnerCommand
@@ -965,6 +965,9 @@ namespace SciVacancies.WebApp.Controllers
             DateTime inCommitteeDateValue;
             if (!DateTime.TryParse(inCommitteeDateString, new CultureInfo("ru-RU"), DateTimeStyles.NoCurrentDateDefault, out inCommitteeDateValue))
                 ModelState.AddModelError("InCommitteeDateString", "Мы не смогли распознать дату перевода вакансии на рассмотрение комиссии");
+
+            //make date correction
+            inCommitteeDateValue = new DateTime(inCommitteeDateValue.Year, inCommitteeDateValue.Month, inCommitteeDateValue.Day, inCommitteeDateValue.Hour, inCommitteeDateValue.Minute, inCommitteeDateValue.Second, DateTimeKind.Utc);
 
             if (inCommitteeDateValue.ToUniversalTime() < DateTime.Now.ToUniversalTime())
                 ModelState.AddModelError("InCommitteeDateString", "Вы установили дату ранее текущей");

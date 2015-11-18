@@ -59,7 +59,7 @@
     </thead>
     <tbody>
 
-        @if (Model.PagedVacancies != null)
+        @if (Model.PagedVacancies != null && Model.PagedVacancies.Items!=null)
         {
             var i = Model.PagedVacancies.FirstRowIndexOnPage - 1;
             foreach (var item in Model.PagedVacancies.Items)

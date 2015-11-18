@@ -49,7 +49,7 @@
         </thead>
         <tbody>
 
-            @if (Model.Applications != null)
+            @if (Model.Applications != null && Model.Applications.Items!=null)
             {
                 foreach (var item in Model.Applications.Items.Where(c => c.Status != VacancyApplicationStatus.Removed && c.Status != VacancyApplicationStatus.Cancelled && c.Status != VacancyApplicationStatus.InProcess))
                 {

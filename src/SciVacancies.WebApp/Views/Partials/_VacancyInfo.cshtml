@@ -5,7 +5,7 @@
 @model VacancyDetailsViewModel
 
 @if (!string.IsNullOrWhiteSpace(Model.CommitteeReasolution)
-                                        || (Model.AttachmentsCommittee != null && Model.AttachmentsCommittee.Any()))
+                                                    || (Model.AttachmentsCommittee != null && Model.AttachmentsCommittee.Any()))
 {
     <text>
 
@@ -93,23 +93,23 @@
             {
                 foreach (CriteriaItemViewModel group in Model.CriteriasHierarchy.Where(c => c.Items.Sum(d => d.Count) > 0))
                 {
-            <div class="section-eval">
-                <span class="name-section">@(@group.Title) (@(@group.Items.Count(c => c.Count > 0)))</span>
-                <div class="list-fields">
+                    <div class="section-eval">
+                        <span class="name-section">@(@group.Title) (@(@group.Items.Count(c => c.Count > 0)))</span>
+                        <div class="list-fields">
 
-                    @foreach (CriteriaItemViewModel item in @group.Items.Where(c => c.Count > 0))
+                            @foreach (CriteriaItemViewModel item in @group.Items.Where(c => c.Count > 0))
                     {
-                            <div>
-                                <div class="field">
-                                    &nbsp; &mdash; &nbsp;
-                                    @item.Title:
-                                    @item.Count шт.
+                                <div>
+                                    <div class="field">
+                                        &nbsp; &mdash; &nbsp;
+                                        @item.Title:
+                                        @item.Count шт.
+                                    </div>
                                 </div>
-                            </div>
                             }
-                </div>
+                        </div>
 
-            </div>
+                    </div>
                 }
             }
         </div>
@@ -172,14 +172,14 @@
 <ul class="list-information layout-inform">
     <li class="odd">
         <span>Фамилия, имя, отчество:</span><div class="layout-inform__right-col">@Model.ContactName</div>
-</li>
+    </li>
     <li class="even">
         <span>E-mail:</span><div class="layout-inform__right-col">@Model.ContactEmail</div>
-</li>
+    </li>
     <li class="odd">
         <span>Телефон:</span><div class="layout-inform__right-col">@Model.ContactPhone</div>
-</li>
+    </li>
     <li class="even">
         <span>Дополнительно:</span><div class="layout-inform__right-col">@Model.ContactDetails</div>
-</li>
+    </li>
 </ul>
