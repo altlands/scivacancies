@@ -690,11 +690,19 @@ function addingNewItemToList(parentDiv, prefix) {
 
 function DisplayShowButton(e) {
     var showButton = document.getElementById("search-show-button");
-    if (showButton != null && showButton.style.display == 'none') {
+    if (showButton != null && showButton.style.display == "none") {
         showButton.style.display = 'inline-block';
     }
     else {
         console.log("ERROR search-show-button");
+    }
+    var subscribeButton = document.getElementById("subscribe");
+    if (subscribeButton != null && subscribeButton.style.display == "none") {
+        subscribeButton.style.display = 'inline-block';
+    }
+    else
+    {
+        console.log("ERROR subscribe-button-show");
     }
 }
 
