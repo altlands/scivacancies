@@ -26,7 +26,7 @@
         <div class="b-wrap">
             <form asp-controller="search" asp-action="index" method="GET">
                 <div class="b-search-blue__box">
-                    <input class="search-input search-input_blue" type="text" name="search" placeholder="поиск по порталу" value="@ViewBag.Search" />
+                    <input class="search-input search-input_blue" type="text" name="search" placeholder="поиск по порталу" value="@ViewBag.Search" onkeyup="DisplayShowButton(event)"/>
                 </div>
                 <span class="search-button search-button__icon search-button_blue">
                     <input type="submit" value="" class="search-button__submit">
