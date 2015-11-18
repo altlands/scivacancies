@@ -67,7 +67,7 @@
         </tr>
     </thead>
     <tbody>
-        @if (Model.Applications != null)
+        @if (Model.Applications != null && Model.Applications.Items!=null)
         {
             foreach (var item in Model.Applications.Items)
             {

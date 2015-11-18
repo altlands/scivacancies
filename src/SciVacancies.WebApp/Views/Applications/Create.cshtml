@@ -121,12 +121,12 @@
                         <label>Научные интересы:</label>
                     </div>
                     <div class="right-cell">
-                        @if (!string.IsNullOrEmpty(Model.Interests))
+                        @if (!string.IsNullOrEmpty(Model.Interests) && Model.InterestsDeserialized != null)
                         {
                             foreach (var item in Model.InterestsDeserialized)
                             {
                                 <text>
-                                    <input type="text" class="disabled big-input" value="@item.IntName"/>
+                                <input type="text" class="disabled big-input" value="@item.IntName" />
                                 </text>
                             }
                         }
@@ -143,54 +143,54 @@
             {
                 for (int index = 0; index < Model.Educations.Count; index++)
                 {
-            <div class="table-form">
-                <div class="table-row form-row">
-                    <div class="left-cell">
-                        <label>Город:</label>
-                    </div>
-                    <div class="right-cell">
-                        <input asp-for="Educations[index].City" class="disabled big-input" />
-                    </div>
-                </div>
+                    <div class="table-form">
+                        <div class="table-row form-row">
+                            <div class="left-cell">
+                                <label>Город:</label>
+                            </div>
+                            <div class="right-cell">
+                                <input asp-for="Educations[index].City" class="disabled big-input" />
+                            </div>
+                        </div>
 
-                <div class="table-row form-row">
-                    <div class="left-cell">
-                        <label>ВУЗ:</label>
-                    </div>
-                    <div class="right-cell">
-                        <input asp-for="Educations[index].UniversityShortName" class="disabled big-input" />
-                    </div>
-                </div>
+                        <div class="table-row form-row">
+                            <div class="left-cell">
+                                <label>ВУЗ:</label>
+                            </div>
+                            <div class="right-cell">
+                                <input asp-for="Educations[index].UniversityShortName" class="disabled big-input" />
+                            </div>
+                        </div>
 
-                <div class="table-row form-row">
-                    <div class="left-cell">
-                        <label>Факультет:</label>
-                    </div>
-                    <div class="right-cell">
-                        <input asp-for="Educations[index].FacultyShortName" class="disabled big-input" />
-                    </div>
-                </div>
+                        <div class="table-row form-row">
+                            <div class="left-cell">
+                                <label>Факультет:</label>
+                            </div>
+                            <div class="right-cell">
+                                <input asp-for="Educations[index].FacultyShortName" class="disabled big-input" />
+                            </div>
+                        </div>
 
-                <div class="table-row form-row">
-                    <div class="left-cell">
-                        <label>Ученая степень:</label>
-                    </div>
-                    <div class="right-cell">
-                        <input asp-for="Educations[index].Degree" class="disabled big-input" />
-                    </div>
-                </div>
+                        <div class="table-row form-row">
+                            <div class="left-cell">
+                                <label>Ученая степень:</label>
+                            </div>
+                            <div class="right-cell">
+                                <input asp-for="Educations[index].Degree" class="disabled big-input" />
+                            </div>
+                        </div>
 
-                <div class="table-row form-row">
-                    <div class="left-cell">
-                        <label>Год окончания:</label>
+                        <div class="table-row form-row">
+                            <div class="left-cell">
+                                <label>Год окончания:</label>
+                            </div>
+                            <div class="right-cell">
+                                <input type="text" asp-for="Educations[index].GraduationYear" class="disabled big-input" />
+                                @*value="@(Model.Educations[index].GraduationYear.HasValue ? Model.Educations[index].GraduationYear.Value.ToString() : string.Empty)"*@
+                            </div>
+                        </div>
+                        <hr />
                     </div>
-                    <div class="right-cell">
-                        <input type="text" asp-for="Educations[index].GraduationYear" class="disabled big-input" />
-                        @*value="@(Model.Educations[index].GraduationYear.HasValue ? Model.Educations[index].GraduationYear.Value.ToString() : string.Empty)"*@
-                    </div>
-                </div>
-                <hr />
-            </div>
                 }
             }
         </div>
@@ -208,13 +208,16 @@
                     <div class="right-cell">
                         <div class="property-list-container">
                             <ol class="content-list">
-                                @foreach (var item in Model.ResearchActivityDeserialized)
+                                @if (Model.ResearchActivityDeserialized != null)
                                 {
-                                    <text>
-                                    <li class="property-list-item">
-                                        Организация "@item.organization", на должности "@item.position" (период с @item.yearFrom по @item.yearTo; род деятельности @item.title)
-                                    </li>
-                                    </text>
+                                    foreach (var item in Model.ResearchActivityDeserialized)
+                                    {
+                                        <text>
+                                        <li class="property-list-item">
+                                            Организация "@item.organization", на должности "@item.position" (период с @item.yearFrom по @item.yearTo; род деятельности @item.title)
+                                        </li>
+                                        </text>
+                                    }
                                 }
                             </ol>
                         </div>
@@ -227,13 +230,16 @@
                     <div class="right-cell">
                         <div class="property-list-container">
                             <ol class="content-list">
-                                @foreach (var item in Model.TeachingActivityDeserialized)
+                                @if (Model.TeachingActivityDeserialized != null)
                                 {
-                                    <text>
-                                    <li class="property-list-item">
-                                        Организация "@item.organization", на должности "@item.position" (период с @item.yearFrom по @item.yearTo; род деятельности @item.title)
-                                    </li>
-                                    </text>
+                                    foreach (var item in Model.TeachingActivityDeserialized)
+                                    {
+                                        <text>
+                                        <li class="property-list-item">
+                                            Организация "@item.organization", на должности "@item.position" (период с @item.yearFrom по @item.yearTo; род деятельности @item.title)
+                                        </li>
+                                        </text>
+                                    }
                                 }
                             </ol>
                         </div>
@@ -246,13 +252,16 @@
                     <div class="right-cell">
                         <div class="property-list-container">
                             <ol class="content-list">
-                                @foreach (var item in Model.OtherActivityDeserialized)
+                                @if (Model.OtherActivityDeserialized!=null)
                                 {
-                                    <text>
-                                    <li class="property-list-item">
-                                        Организация "@item.organization", на должности "@item.position" (период с @item.yearFrom по @item.yearTo; род деятельности @item.title)
-                                    </li>
-                                    </text>
+                                    foreach (var item in Model.OtherActivityDeserialized)
+                                    {
+                                        <text>
+                                        <li class="property-list-item">
+                                            Организация "@item.organization", на должности "@item.position" (период с @item.yearFrom по @item.yearTo; род деятельности @item.title)
+                                        </li>
+                                        </text>
+                                    }
                                 }
                             </ol>
                         </div>
@@ -292,13 +301,16 @@
                     <div class="right-cell">
                         <div class="property-list-container">
                             <ol class="content-list">
-                                @foreach (var item in Model.RewardsDeserialized.OrderBy(c => c.year))
+                                @if (Model.RewardsDeserialized!=null)
                                 {
-                                    <text>
-                                    <li class="property-list-item">
-                                        (@item.year) @item.title @item.org
-                                    </li>
-                                    </text>
+                                    foreach (var item in Model.RewardsDeserialized.OrderBy(c => c.year))
+                                    {
+                                        <text>
+                                        <li class="property-list-item">
+                                            (@item.year) @item.title @item.org
+                                        </li>
+                                        </text>
+                                    }
                                 }
                             </ol>
                         </div>
@@ -311,13 +323,16 @@
                     <div class="right-cell">
                         <div class="property-list-container">
                             <ol class="content-list">
-                                @foreach (var item in Model.MembershipsDeserialized)
+                                @if (Model.MembershipsDeserialized!=null)
                                 {
-                                    <text>
-                                    <li class="property-list-item">
-                                        @item.org - @item.position с @item.year_from по @item.year_to
-                                    </li>
-                                    </text>
+                                    foreach (var item in Model.MembershipsDeserialized)
+                                    {
+                                        <text>
+                                        <li class="property-list-item">
+                                            @item.org - @item.position с @item.year_from по @item.year_to
+                                        </li>
+                                        </text>
+                                    }
                                 }
                             </ol>
                         </div>
@@ -353,13 +368,16 @@
                     <div class="right-cell">
                         <div class="property-list-container">
                             <ol class="content-list">
-                                @foreach (var item in Model.ConferencesDeserialized)
+                                @if (Model.ConferencesDeserialized!=null)
                                 {
-                                    <text>
-                                    <li class="property-list-item">
-                                        @item.conference - доклад "@item.title" (год @item.year, тип @item.categoryType)
-                                    </li>
-                                    </text>
+                                    foreach (var item in Model.ConferencesDeserialized)
+                                    {
+                                        <text>
+                                        <li class="property-list-item">
+                                            @item.conference - доклад "@item.title" (год @item.year, тип @item.categoryType)
+                                        </li>
+                                        </text>
+                                    }
                                 }
                             </ol>
                         </div>

@@ -219,7 +219,7 @@
 
             <div class="list-results">
 
-                @if (Model.Items.Items != null)
+                @if (Model.Items!=null && Model.Items.Items != null)
                 {
                     var index = 0;
                     foreach (var item in Model.Items.Items)

@@ -92,7 +92,7 @@
         </thead>
         <tbody>
 
-            @if (Model.VacanciesInOrganization.PagedVacancies != null)
+            @if (Model.VacanciesInOrganization!=null && Model.VacanciesInOrganization.PagedVacancies != null)
             {
                 var i = Model.VacanciesInOrganization.PagedVacancies.FirstRowIndexOnPage - 1;
                 foreach (var item in Model.VacanciesInOrganization.PagedVacancies.Items)

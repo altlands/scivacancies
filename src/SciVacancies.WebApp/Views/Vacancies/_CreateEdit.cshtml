@@ -372,17 +372,20 @@
     </div>
     <div class="content-popup" style="overflow-y: scroll;">
         <div>
-            @foreach (var item in Model.PositionTypes.OrderBy(c => c.Text))
+            @if (Model.PositionTypes!=null)
             {
-                <text>
-                <a href="#" onclick="javascript: return selectedItemFromModalDictionary('PositionTypeId', 'PositionType','@item.Value', '@item.Text');">
-                    @item.Text
-                </a>
+                foreach (var item in Model.PositionTypes.OrderBy(c => c.Text))
+                {
+                    <text>
+                    <a href="#" onclick="javascript: return selectedItemFromModalDictionary('PositionTypeId', 'PositionType','@item.Value', '@item.Text');">
+                        @item.Text
+                    </a>
 
-                <br />
-                <br />
+                    <br />
+                    <br />
 
-                </text>
+                    </text>
+                }
             }
         </div>
     </div>
@@ -395,17 +398,20 @@
     </div>
     <div class="content-popup" style="overflow-y: scroll;">
         <div>
-            @foreach (var item in Model.ResearchDirections.OrderBy(c => c.Text))
+            @if (Model.ResearchDirections!=null)
             {
-                <text>
-                <a href="#" onclick="javascript: return selectedItemFromModalDictionary('ResearchDirectionId', 'ResearchDirection','@item.Value', '@item.Text');">
-                    @item.Text
-                </a>
+                foreach (var item in Model.ResearchDirections.OrderBy(c => c.Text))
+                {
+                    <text>
+                    <a href="#" onclick="javascript: return selectedItemFromModalDictionary('ResearchDirectionId', 'ResearchDirection','@item.Value', '@item.Text');">
+                        @item.Text
+                    </a>
 
-                <br />
-                <br />
+                    <br />
+                    <br />
 
-                </text>
+                    </text>
+                }
             }
         </div>
     </div>
@@ -418,17 +424,20 @@
     </div>
     <div class="content-popup" style="overflow-y: scroll;">
         <div>
-            @foreach (var item in Model.Regions)
+            @if (Model.Regions!=null)
             {
-                <text>
-                <a href="#" onclick="javascript: return selectedItemFromModalDictionary('RegionId', 'Region','@item.Value', '@item.Text');">
-                    @item.Text
-                </a>
+                foreach (var item in Model.Regions)
+                {
+                    <text>
+                    <a href="#" onclick="javascript: return selectedItemFromModalDictionary('RegionId', 'Region','@item.Value', '@item.Text');">
+                        @item.Text
+                    </a>
 
-                <br />
-                <br />
+                    <br />
+                    <br />
 
-                </text>
+                    </text>
+                }
             }
         </div>
     </div>
