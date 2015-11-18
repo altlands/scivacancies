@@ -687,6 +687,15 @@ function addingNewItemToList(parentDiv, prefix) {
     //сохранить новый индекс
     $(parentDiv).attr("data-innercount", newIndex);
 }
+
+function AddSubscriptionByEnter(source,e)
+{
+    if (event.keyCode == 13) {
+        return addNewSubscription(source);
+    }
+    return true;
+}
+
 /**
   * добавить метку о том, что поисковый запрос нужно сохранить в качестве подписки
   */
@@ -697,6 +706,7 @@ function isNullOrWhitespace(input) {
     return input.replace(/\s/g, '').length < 1;
 }
 function addNewSubscription(source) {
+
     var parentForm = $(source).parents("form")[0];
 
     var titleValue = $(parentForm).find("input[name=\"NewSubscriptionTitle\"]").val();

@@ -163,7 +163,7 @@
                         <div class="content-popup">
                             <p class="fs14 arial">Подписываясь на запрос, вы сможете быстро перейти к соответствующим результатам из Личного кабинета, а также будете получать электронные уведомления обо всех обновлениях по теме данного запроса</p>
                             <div class="form-line">
-                                <input type="text" asp-for="NewSubscriptionTitle" style="width: 340px;" placeholder="Название запроса" />
+                                <input type="text" asp-for="NewSubscriptionTitle" style="width: 340px;" placeholder="Название запроса" onkeypress="javascript: return AddSubscriptionByEnter(this, event);"/>
                             </div>
 
                             @*<div class="form-line">
