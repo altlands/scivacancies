@@ -66,7 +66,7 @@
                 && (Model.AttachmentsCommittee == null || !Model.AttachmentsCommittee.Any())
                 )
         {
-            <a asp-controller="vacancies" asp-action="setcommitteereason" asp-route-id="@Model.Guid" class="btn btn-success" title="Указать решение комиссии">Указать решение комиссии</a>
+            <a asp-controller="vacancies" asp-action="addcommitteereason" asp-route-id="@Model.Guid" class="btn btn-success" title="Указать решение комиссии">Указать решение комиссии</a>
         }
         @if (Model.Status == VacancyStatus.OfferAcceptedByWinner)
         {

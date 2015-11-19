@@ -433,7 +433,7 @@ namespace SciVacancies.WebApp.Controllers
             return RedirectToAction("details", new { id });
         }
 
-        private object SetCommitteeReasonPreValidation(Guid vacancyGuid, Guid organizationGuid)
+        private object AddCommitteeReasonPreValidation(Guid vacancyGuid, Guid organizationGuid)
         {
             var vacancy = _mediator.Send(new SingleVacancyQuery { VacancyGuid = vacancyGuid });
 
@@ -478,14 +478,14 @@ namespace SciVacancies.WebApp.Controllers
         [PageTitle("Обоснование решения комиссии")]
         [BindOrganizationIdFromClaims]
         [Authorize(Roles = ConstTerms.RequireRoleOrganizationAdmin)]
-        public IActionResult SetCommitteeReason(Guid id, Guid organizationGuid)
+        public IActionResult AddCommitteeReason(Guid id, Guid organizationGuid)
         {
             if (id == Guid.Empty)
                 throw new ArgumentNullException(nameof(id));
             if (organizationGuid == Guid.Empty)
                 throw new ArgumentNullException(nameof(organizationGuid));
 
-            var result = SetCommitteeReasonPreValidation(id, organizationGuid);
+            var result = AddCommitteeReasonPreValidation(id, organizationGuid);
             if (result is HttpNotFoundResult) return (HttpNotFoundResult)result;
             if (result is ViewResult) return (ViewResult)result;
             var vacancy = (Vacancy)result;
@@ -504,14 +504,14 @@ namespace SciVacancies.WebApp.Controllers
         [BindOrganizationIdFromClaims]
         [Authorize(Roles = ConstTerms.RequireRoleOrganizationAdmin)]
         //todo: ntemnikov [ValidateAntiForgeryToken]
-        public IActionResult SetCommitteeReason(VacancySetReasonViewModel model, Guid organizationGuid)
+        public IActionResult AddCommitteeReason(VacancySetReasonViewModel model, Guid organizationGuid)
         {
             if (model.Guid == Guid.Empty)
                 throw new ArgumentNullException(nameof(model.Guid));
             if (organizationGuid == Guid.Empty)
                 throw new ArgumentNullException(nameof(organizationGuid));
 
-            var result = SetCommitteeReasonPreValidation(model.Guid, organizationGuid);
+            var result = AddCommitteeReasonPreValidation(model.Guid, organizationGuid);
             if (result is HttpNotFoundResult) return (HttpNotFoundResult)result;
             if (result is ViewResult) return (ViewResult)result;
             var vacancy = (Vacancy)result;
@@ -692,7 +692,7 @@ namespace SciVacancies.WebApp.Controllers
 
             if (vacancy.winner_researcher_guid != Guid.Empty && vacancy.pretender_researcher_guid != Guid.Empty)
                 //return View("Error", "Для данной Вакансии уже выбраны Победитель и Претендент.");
-                return RedirectToAction("setcommitteereason", new { id = vacancy.guid, applicationGuid = vacancyApplication.guid });
+                return RedirectToAction("addcommitteereason", new { id = vacancy.guid, applicationGuid = vacancyApplication.guid });
 
             if (vacancy.status != VacancyStatus.InCommittee)
                 return View("Error",
@@ -794,7 +794,7 @@ namespace SciVacancies.WebApp.Controllers
                 var vacancyInCommitteeAttachments = _mediator.Send(new SelectCommitteeVacancyAttachmentsQuery { VacancyGuid = vacancy.guid });
                 if (string.IsNullOrWhiteSpace(vacancy.committee_resolution)
                     && (vacancyInCommitteeAttachments == null || !vacancyInCommitteeAttachments.Any()))
-                    return RedirectToAction("setcommitteereason", new { id = vacancy.guid, applicationGuid = vacancyApplication.guid });
+                    return RedirectToAction("addcommitteereason", new { id = vacancy.guid, applicationGuid = vacancyApplication.guid });
             }
 
             return RedirectToAction("preview", "applications", new { id = model.Guid });
