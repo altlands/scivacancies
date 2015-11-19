@@ -415,8 +415,8 @@ namespace SciVacancies.WebApp.Controllers
                 return View("Error", $"Вы не можете перевести Вакансию на рассмотрение комиссии со статусом: {preModel.status.GetDescription()}");
 
             //TODO: Saga -> реализовать эту проверку при запуске Саг с таймерами
-            if ((DateTime.UtcNow - preModel.committee_start_date.Value).TotalMinutes < _sagaSettings.Value.Date.DeltaFromPublishToInCommitteeMinMinutes)
-                return View("Error", $"Вы не можете начать перевести вакансию на рассмотрение комиссии раньше чем через {_sagaSettings.Value.Date.DeltaFromPublishToInCommitteeMinMinutes} дн.");
+            if ((DateTime.UtcNow - preModel.committee_start_date.Value.ToUniversalTime()).TotalMinutes < _sagaSettings.Value.Date.DeltaFromPublishToInCommitteeMinMinutes)
+                return View("Error", $"Вы не можете начать перевести вакансию на рассмотрение комиссии раньше чем через {_sagaSettings.Value.Date.DeltaFromPublishToInCommitteeMinMinutes} мин. Текущее время сервера в UTC: {DateTime.UtcNow}, Время начала комиссии в UTC: {preModel.committee_start_date.Value.ToUniversalTime()}");
 
             var vacancyApplications = _mediator.Send(new CountVacancyApplicationInVacancyQuery
             {
@@ -478,7 +478,7 @@ namespace SciVacancies.WebApp.Controllers
         [PageTitle("Обоснование решения комиссии")]
         [BindOrganizationIdFromClaims]
         [Authorize(Roles = ConstTerms.RequireRoleOrganizationAdmin)]
-        public IActionResult SetCommitteeReason(Guid id, Guid organizationGuid, Guid applicationGuid)
+        public IActionResult SetCommitteeReason(Guid id, Guid organizationGuid)
         {
             if (id == Guid.Empty)
                 throw new ArgumentNullException(nameof(id));
@@ -504,7 +504,7 @@ namespace SciVacancies.WebApp.Controllers
         [BindOrganizationIdFromClaims]
         [Authorize(Roles = ConstTerms.RequireRoleOrganizationAdmin)]
         //todo: ntemnikov [ValidateAntiForgeryToken]
-        public IActionResult SetCommitteeReason(VacancySetReasonViewModel model, Guid organizationGuid, Guid applicationGuid)
+        public IActionResult SetCommitteeReason(VacancySetReasonViewModel model, Guid organizationGuid)
         {
             if (model.Guid == Guid.Empty)
                 throw new ArgumentNullException(nameof(model.Guid));
@@ -637,12 +637,15 @@ namespace SciVacancies.WebApp.Controllers
                 Reason = vacancy.committee_resolution
             });
             //пометить Заявку как Претендент
-            _mediator.Send(new MakeVacancyApplicationPretenderCommand
+            if (vacancy.pretender_researcher_guid != Guid.Empty)
             {
-                ResearcherGuid = vacancy.pretender_researcher_guid,
-                VacancyApplicationGuid = vacancy.pretender_vacancyapplication_guid,
-                Reason = vacancy.committee_resolution
-            });
+                _mediator.Send(new MakeVacancyApplicationPretenderCommand
+                {
+                    ResearcherGuid = vacancy.pretender_researcher_guid,
+                    VacancyApplicationGuid = vacancy.pretender_vacancyapplication_guid,
+                    Reason = vacancy.committee_resolution
+                });
+            }
 
             //отметить лузеров
             var stillAppliedApplications = _mediator.Send(new SelectVacancyApplicationInVacancyByStatusesQuery { VacancyGuid = model.Guid, Statuses = new List<VacancyApplicationStatus> { VacancyApplicationStatus.Applied } });
