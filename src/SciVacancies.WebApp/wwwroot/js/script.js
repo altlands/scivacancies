@@ -575,7 +575,7 @@ function beforeFormSubmit(source, key) {
             { name: 'ResearchActivity', fieldsCouldBeEmpty: ['organization', 'position', 'title', 'type'] },
             { name: 'TeachingActivity', fieldsCouldBeEmpty: ['organization', 'position', 'title', 'type'] },
             { name: 'OtherActivity', fieldsCouldBeEmpty: ['organization', 'position', 'title', 'type'] },
-            { name: 'Rewards', fieldsCouldBeEmpty: ['title','org'] },
+            { name: 'Rewards', fieldsCouldBeEmpty: ['title', 'org'] },
             { name: 'Memberships', fieldsCouldBeEmpty: ['org', 'position'] },
             { name: 'Conferences', fieldsCouldBeEmpty: ['conference', 'title', 'categoryType'] },
             { name: 'Publications', fieldsCouldBeEmpty: ['Name', 'Authors'] }
@@ -688,8 +688,25 @@ function addingNewItemToList(parentDiv, prefix) {
     $(parentDiv).attr("data-innercount", newIndex);
 }
 
-function AddSubscriptionByEnter(source,e)
-{
+function DisplayShowButton(e) {
+    var showButton = document.getElementById("search-show-button");
+    if (showButton != null && showButton.style.display == "none") {
+        showButton.style.display = 'inline-block';
+    }
+    else {
+        console.log("ERROR search-show-button");
+    }
+    var subscribeButton = document.getElementById("subscribe");
+    if (subscribeButton != null && subscribeButton.style.display == "none") {
+        subscribeButton.style.display = 'inline-block';
+    }
+    else
+    {
+        console.log("ERROR subscribe-button-show");
+    }
+}
+
+function AddSubscriptionByEnter(source, e) {
     if (event.keyCode == 13) {
         return addNewSubscription(source);
     }

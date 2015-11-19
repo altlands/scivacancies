@@ -66,6 +66,7 @@ namespace SciVacancies.WebApp.Controllers
             model.OrderBy = searchSubscription.@orderby;
             model.Regions = JsonConvert.DeserializeObject<IEnumerable<int>>(searchSubscription.region_ids);
             model.Foivs = JsonConvert.DeserializeObject<IEnumerable<int>>(searchSubscription.foiv_ids);
+            model.IsSubscription = true;
 
             TempData["VacanciesFilterModel"] = JsonConvert.SerializeObject(model);
 

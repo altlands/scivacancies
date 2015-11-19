@@ -56,18 +56,40 @@ namespace SciVacancies.WebApp.Infrastructure
                 case VacancyStatus.Published:
                     if (saga.PublishEndDate.ToUniversalTime() <= DateTime.UtcNow)
                     {
-                        saga.Transition(new VacancySagaSwitchedInCommittee
+                        var vacancyApplicationsCount = mediator.Send(new CountVacancyApplicationInVacancyQuery { VacancyGuid = saga.VacancyGuid, Status = VacancyApplicationStatus.Applied });
+                        if (vacancyApplicationsCount == null) throw new NullReferenceException("Can't retrive data from Database");
+                        if (vacancyApplicationsCount == 0)
                         {
-                            SagaGuid = saga.Id,
-                            VacancyGuid = saga.VacancyGuid,
-                            OrganizationGuid = saga.OrganizationGuid
-                        });
-                        sagaRepository.Save("vacancysaga", saga, Guid.NewGuid(), null);
+                            saga.Transition(new VacancySagaCancelled
+                            {
+                                SagaGuid = saga.Id,
+                                VacancyGuid = saga.VacancyGuid,
+                                OrganizationGuid = saga.OrganizationGuid
+                            });
+                            sagaRepository.Save("vacancysaga", saga, Guid.NewGuid(), null);
 
-                        mediator.Send(new SwitchVacancyInCommitteeCommand
+                            mediator.Send(new CancelVacancyCommand
+                            {
+                                VacancyGuid = saga.VacancyGuid,
+                                Reason = "На вакансию не было подано ни одной заявки"
+                            });
+                        }
+                        else
                         {
-                            VacancyGuid = SagaGuid
-                        });
+                            saga.Transition(new VacancySagaSwitchedInCommittee
+                            {
+                                SagaGuid = saga.Id,
+                                VacancyGuid = saga.VacancyGuid,
+                                OrganizationGuid = saga.OrganizationGuid
+                            });
+                            sagaRepository.Save("vacancysaga", saga, Guid.NewGuid(), null);
+
+                            mediator.Send(new SwitchVacancyInCommitteeCommand
+                            {
+                                VacancyGuid = SagaGuid
+                            });
+                        }
+
                     }
                     break;
 

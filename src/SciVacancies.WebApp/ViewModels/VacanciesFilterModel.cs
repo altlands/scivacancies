@@ -7,6 +7,8 @@ namespace SciVacancies.WebApp.ViewModels
 
     public class VacanciesFilterModel
     {
+        public bool IsSubscription { get; set; }
+
         public PagedList<VacancyElasticResult> Items { get; set; }
         public IEnumerable<int> Regions { get; set; }
         public IEnumerable<int> Foivs { get; set; }

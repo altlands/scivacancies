@@ -23,8 +23,8 @@
 
             <div class="filter-contents">
                 <div class="ctr-filter">
-                    <span class="small-icon icon-sm-ok filter-link-check-all" onclick="javascript: void (0);">Выбрать все</span>
-                    <span class="small-icon icon-sm-close filter-link-uncheck-all">Очистить фильтр</span>
+                    <span class="small-icon icon-sm-ok filter-link-check-all" onclick="javascript: DisplayShowButton(event); void (0);">Выбрать все</span>
+                    <span class="small-icon icon-sm-close filter-link-uncheck-all" onclick="javascript: DisplayShowButton(event);">Очистить фильтр</span>
                 </div>
 
                 <div class="cat-filter">
@@ -33,7 +33,8 @@
                         <checkboxing items="ViewBag.FilterSource.Regions"
                                      values="Model.Regions"
                                      property="Regions"
-                                     showcount="10"></checkboxing>
+                                     showcount="10"
+                                     onchange="DisplayShowButton(event)"></checkboxing>
                     </ul>
                     <span class="small-icon icon-sm-eye show-all-list"><span>Показать все</span></span>
                     <span class="small-icon icon-sm-eye hide-unselected" style="display: none;"><span>Только выбранные</span></span>
@@ -45,7 +46,8 @@
                         <checkboxing items="ViewBag.FilterSource.Foivs"
                                      values="Model.Foivs"
                                      property="Foivs"
-                                     showcount="10"></checkboxing>
+                                     showcount="10"
+                                     onchange="DisplayShowButton(event)"></checkboxing>
                     </ul>
                     <span class="small-icon icon-sm-eye show-all-list"><span>Показать все</span></span>
                     <span class="small-icon icon-sm-eye hide-unselected" style="display: none;"><span>Только выбранные</span></span>
@@ -75,7 +77,8 @@
                                                                  values="Model.ResearchDirections"
                                                                  property="ResearchDirections"
                                                                  showcount="-1"
-                                                                 labelforindex="@labelForIndex"></checkboxing>
+                                                                 labelforindex="@labelForIndex"
+                                                                 onchange="DisplayShowButton(event)"></checkboxing>
                                                 </ul>
                                             </li>
                                             </text>
@@ -95,7 +98,8 @@
                         <checkboxing items="ViewBag.FilterSource.PositionTypes"
                                      values="Model.PositionTypes"
                                      property="PositionTypes"
-                                     showcount="3"></checkboxing>
+                                     showcount="3"
+                                     onchange="DisplayShowButton(event)"></checkboxing>
                     </ul>
                     <span class="small-icon icon-sm-eye show-all-list"><span>Показать все</span></span>
                     <span class="small-icon icon-sm-eye hide-unselected" style="display: none;"><span>Только выбранные</span></span>
@@ -105,10 +109,10 @@
                     <div class="title"><span>Заработная плата</span></div>
                     <div class="b-wages">
                         <div class="inline-block">
-                            От <input type="text" asp-for="SalaryMin" class="small-input b-wages__input" />
+                            От <input type="text" asp-for="SalaryMin" class="small-input b-wages__input" onkeyup="DisplayShowButton(event)" />
                         </div>
                         <div class="inline-block ml9">
-                            До <input type="text" asp-for="SalaryMax" class="small-input b-wages__input" />
+                            До <input type="text" asp-for="SalaryMax" class="small-input b-wages__input" onkeyup="DisplayShowButton(event)" />
                         </div>
                     </div>
                 </div>
@@ -119,7 +123,8 @@
                         <checkboxing items="ViewBag.FilterSource.VacancyStates"
                                      values="Model.VacancyStates"
                                      property="VacancyStates"
-                                     showcount="10"></checkboxing>
+                                     showcount="10"
+                                     onchange="DisplayShowButton(event)"></checkboxing>
                     </ul>
                 </div>
 
@@ -147,7 +152,14 @@
                 {
                     <text>
                     <div class="ctr-buttons" style="margin-top: 20px;">
-                        <a class="green-btn middle-icon icon-ok open-popup" id="subscribe" rel="tooltip">Подписаться</a>
+                        @if (Model.IsSubscription)
+                        {
+                            <a class="green-btn middle-icon icon-ok open-popup" id="subscribe" rel="tooltip" style="display:none;">Подписаться</a>
+                        }
+                        else
+                        {
+                            <a class="green-btn middle-icon icon-ok open-popup" id="subscribe" rel="tooltip">Подписаться</a>
+                        }
 
                         <div id="subscribe-popover" style="display: none;">
                             Задав поисковый запрос и выбрав необходимые критерии поиска в фильтре результатов, вы можете подписаться на данную конфигурацию запроса.
@@ -163,7 +175,7 @@
                         <div class="content-popup">
                             <p class="fs14 arial">Подписываясь на запрос, вы сможете быстро перейти к соответствующим результатам из Личного кабинета, а также будете получать электронные уведомления обо всех обновлениях по теме данного запроса</p>
                             <div class="form-line">
-                                <input type="text" asp-for="NewSubscriptionTitle" style="width: 340px;" placeholder="Название запроса" onkeypress="javascript: return AddSubscriptionByEnter(this, event);"/>
+                                <input type="text" asp-for="NewSubscriptionTitle" style="width: 340px;" placeholder="Название запроса" onkeypress="javascript: return AddSubscriptionByEnter(this, event);" />
                             </div>
 
                             @*<div class="form-line">
@@ -212,14 +224,14 @@
                     <select asp-for="OrderBy"
                             asp-items="ViewBag.FilterSource.OrderBys"></select>
                 </div>
-                <span class="blue-btn-sm small-icon icon-sm-eye-wh">
+                <span id="search-show-button" class="blue-btn-sm small-icon icon-sm-eye-wh" style="display:none;">
                     Показать<input type="submit" class="bt-default" value="" />
                 </span>
             </div>
 
             <div class="list-results">
 
-                @if (Model.Items!=null && Model.Items.Items != null)
+                @if (Model.Items != null && Model.Items.Items != null)
                 {
                     var index = 0;
                     foreach (var item in Model.Items.Items)

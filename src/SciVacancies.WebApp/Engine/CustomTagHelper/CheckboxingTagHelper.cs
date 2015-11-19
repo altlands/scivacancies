@@ -8,7 +8,7 @@ using Microsoft.AspNet.Razor.Runtime.TagHelpers;
 
 namespace SciVacancies.WebApp
 {
-    [HtmlTargetElement("checkboxing", Attributes = "items, values, property")]
+    [HtmlTargetElement("checkboxing", Attributes = "items, values, property, onchange")]
     public class CheckboxingTagHelper : TagHelper
     {
         [HtmlAttributeName("items")]
@@ -17,6 +17,8 @@ namespace SciVacancies.WebApp
         public IEnumerable<int> Values { get; set; }
         [HtmlAttributeName("property")]
         public string Property { get; set; }
+        [HtmlAttributeName("onchange")]
+        public string OnChange { get; set; }
         /// <summary>
         /// количество отображаемых значений для выбора (список ComboBox'ов), где (-1) - показывать все значения, (0) - значение по-умолчанию, (n) - показать минимум 'n'-значений, или все выбранные значения.
         /// </summary>
@@ -70,6 +72,10 @@ namespace SciVacancies.WebApp
             input.Attributes.Add("name", Property);
             input.Attributes.Add("id", Property + i);
             input.Attributes.Add("value", item.Value);
+            if(!string.IsNullOrEmpty(OnChange))
+            {
+                input.Attributes.Add("onchange", OnChange);
+            }
 
             if (itemIsChecked)
             {
@@ -78,6 +84,10 @@ namespace SciVacancies.WebApp
             }
 
             span.AddCssClass("checkbox");
+            if(!string.IsNullOrEmpty(OnChange))
+            {
+                span.Attributes.Add("onclick", OnChange);
+            }
             span.InnerHtml.Append(input);
 
             var label = new TagBuilder("label");
