@@ -12,6 +12,10 @@ namespace SciVacancies.WebApp.Models.Analythic
         public string name { get; set; }
         public bool showInLegend { get; set; }
         public PaymentDataPoint[] dataPoints { get; set; }
+        public string legendMarkerColor { get; set; }
+        public string legendMarkerBorderThickness { get; set; }
+        public string legendMarkerBorderColor { get; set; }
+        public string legendText { get; set; }
     }
 
     public class PaymentDataPoint

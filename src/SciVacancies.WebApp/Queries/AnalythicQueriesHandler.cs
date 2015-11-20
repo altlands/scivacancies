@@ -102,7 +102,6 @@ namespace SciVacancies.WebApp.Queries
                                     positionsDictionary.Add(keyItem.Key, new PositionsHistogram
                                     {
                                         type = "stackedColumn",
-                                        toolTipContent = "{label}<br/><span style='\"'color: {color};'\"'><strong>{name}</strong></span>: {y} вакансий",
                                         name = positionTypes.FirstOrDefault(f => f.id == Int32.Parse(keyItem.Key)).title,
                                         showInLegend = true,
                                         dataPoints = new PositionDataPoint[AnalythicSettings.Value.BarsNumber]
@@ -342,7 +341,6 @@ namespace SciVacancies.WebApp.Queries
                     positionsDictionary.Add("empty", new PositionsHistogram
                     {
                         type = "stackedColumn",
-                        toolTipContent = "{label}<br/><span style='\"'color: {color};'\"'><strong>{name}</strong></span>: {y} вакансий",
                         name = "Все должности",
                         showInLegend = true,
                         dataPoints = new PositionDataPoint[AnalythicSettings.Value.BarsNumber]
@@ -413,16 +411,24 @@ namespace SciVacancies.WebApp.Queries
 
                 PaymentsHistogram averageHistogram = new PaymentsHistogram
                 {
-                    type = "line",
+                    legendMarkerColor= "#041833",
+					legendMarkerBorderThickness= "3",
+					legendMarkerBorderColor= "#041833",
+					type = "line",
                     axisYType = "primary",
+                    legendText = "Средняя зп",
                     name = "Средняя зп",
                     showInLegend = true,
                     dataPoints = new PaymentDataPoint[AnalythicSettings.Value.BarsNumber]
                 };
                 PaymentsHistogram countHistogram = new PaymentsHistogram
                 {
+                    legendMarkerColor = "#3a5e90",
+                    legendMarkerBorderThickness = "3",
+                    legendMarkerBorderColor = "#3a5e90",
                     type = "line",
                     axisYType = "secondary",
+                    legendText= "Вакансии",
                     name = "Вакансий",
                     showInLegend = true,
                     dataPoints = new PaymentDataPoint[AnalythicSettings.Value.BarsNumber]

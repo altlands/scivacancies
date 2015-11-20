@@ -34,7 +34,7 @@
     <div class="graphics-item">
         <div class="title-graphic">Число вакансий ( среднее предложение )</div>
 
-        <div id="chartContainer" style="min-height: 250px; width: 413px;">
+        <div id="chartContainer" style="height: 450px; width: 413px;">
         </div>
 
     </div>
@@ -48,11 +48,7 @@
         <div class="graph-region-select-block">
             <select asp-for="RegionId"
                     asp-items="ViewBag.RegionsList"
-                    onchange="refreshAllGraphicData()">
-                @*<option value="1">Выбор региона</option>
-                    <option value="2">Выбор региона 1</option>
-                    <option value="3">Выбор региона 2</option>*@
-            </select>
+                    onchange="refreshAllGraphicData()"></select>
         </div>
 
 
@@ -86,23 +82,59 @@
                     dataPointMaxWidth: 35,
                     title: {
                         //text: "Число вакансий ( среднее предложение в месяц )"
+                    
                     },
                     axisX: {
+                        titleFontSize: "12",
+                        titleFontColor: "#3a5e90 ",
+                        titleFontFamily: "Arial",
+
+                        labelFontSize: "12",
+                        labelFontColor: "#3a5e90 ",
+                        labelFontFamily: "Arial",
+
                         lineThickness: 1,
                         tickLength: 0,
                         labelMaxWidth: 50
                     },
                     axisY: {
+                        titleFontSize: "12",
+                        titleFontColor: "#3a5e90 ",
+                        titleFontFamily: "Arial",
+
+                        labelFontSize: "12",
+                        labelFontColor: "#3a5e90 ",
+                        labelFontFamily: "Arial",
+
                         //title: "Вакансии"
                         lineThickness: 1,
                         tickLength: 0,
                         gridThickness: 1
                     },
                     animationEnabled: true,
+
+
+                    toolTip: {
+                        //shared: true,
+                        content: function(e) {
+                            var body;
+                            var head;
+                            var name = e.entries[0].dataSeries.name.length <= 25 ? e.entries[0].dataSeries.name : (e.entries[0].dataSeries.name.substring(0, 24) + "...");
+                            head = "<span style = 'color:DodgerBlue; '><strong>Дата: " + (e.entries[0].dataPoint.label) + "</strong></span><br/>";
+                            body = "<span style='\"'color: {color};'\"'><strong>"
+                                + name
+                                + "</strong></span>: "
+                                + e.entries[0].dataPoint.y
+                                + " вак.";
+                            return (head.concat(body));
+                        }
+                    },
+
+
                     data: [
                         {
                             type: "stackedColumn",
-                            toolTipContent: "{label}<br/><span style='\"'color: {color};'\"'><strong>{name}</strong></span>: {y} вакансий",
+                            //toolTipContent: "{label}<br/><span style='\"'color: {color};'\"'><strong>{name}</strong></span>: {y} вакансий",
                             name: "Руководители групп структурных подразделений",
                             showInLegend: "true",
                             dataPoints: [
@@ -114,7 +146,7 @@
                             ]
                         }, {
                             type: "stackedColumn",
-                            toolTipContent: "{label}<br/><span style='\"'color: {color};'\"'><strong>{name}</strong></span>: {y} вакансий",
+                            //toolTipContent: "{label}<br/><span style='\"'color: {color};'\"'><strong>{name}</strong></span>: {y} вакансий",
                             name: "Руководители структурных подразделений",
                             showInLegend: "true",
                             dataPoints: [
@@ -126,7 +158,7 @@
                             ]
                         }, {
                             type: "stackedColumn",
-                            toolTipContent: "{label}<br/><span style='\"'color: {color};'\"'><strong>{name}</strong></span>: {y} вакансий",
+                            //toolTipContent: "{label}<br/><span style='\"'color: {color};'\"'><strong>{name}</strong></span>: {y} вакансий",
                             name: "Сотрудники",
                             showInLegend: "true",
                             dataPoints: [
@@ -138,7 +170,7 @@
                             ]
                         }, {
                             type: "stackedColumn",
-                            toolTipContent: "{label}<br/><span style='\"'color: {color};'\"'><strong>{name}</strong></span>: {y} вакансий",
+                            //toolTipContent: "{label}<br/><span style='\"'color: {color};'\"'><strong>{name}</strong></span>: {y} вакансий",
                             name: "Прочие",
                             showInLegend: "true",
                             dataPoints: [
@@ -184,13 +216,23 @@
                             var body;
                             var head;
                             head = "<span style = 'color:DodgerBlue; '><strong>Дата: " + (e.entries[0].dataPoint.label) + "</strong></span><br/>";
-                            body = "<span style= 'color:" + e.entries[0].dataSeries.color + "'> " + e.entries[0].dataSeries.name + "</span>: <strong>" + e.entries[0].dataPoint.y + "</strong>  тыс.р.<br/> <span style= 'color:" + e.entries[1].dataSeries.color + "'> " + e.entries[1].dataSeries.name + "</span>: <strong>" + e.entries[1].dataPoint.y + "</strong>  шт";
+                            body = "<span style= 'color:" + e.entries[0].dataSeries.color + "'> "
+                                + (e.entries[0].dataSeries.name)
+                                + "</span>: <strong>" + e.entries[0].dataPoint.y + "</strong>  тыс.р.<br/> <span style= 'color:" + e.entries[1].dataSeries.color + "'> " + e.entries[1].dataSeries.name + "</span>: <strong>" + e.entries[1].dataPoint.y + "</strong>  шт";
 
                             return (head.concat(body));
                         }
                     },
                     axisY: {
+                        titleFontSize: "12",
+                        titleFontColor: "#041833 ",
+                        titleFontFamily: "Arial",
                         title: "Средняя з/п. (тыс.р.)",
+
+                        labelFontSize: "12",
+                        labelFontColor: "#3a5e90 ",
+                        labelFontFamily: "Arial",
+
                         includeZero: false,
                         suffix: "",
                         lineColor: "#041833",
@@ -199,6 +241,9 @@
                         gridThickness: 1
                     },
                     axisY2: {
+                        titleFontSize: "12",
+                        titleFontColor: "#3a5e90 ",
+                        titleFontFamily: "Arial",
                         title: "Количество (шт.)",
                         includeZero: false,
                         suffix: "",
@@ -208,48 +253,64 @@
                         gridThickness: 1
                     },
                     axisX: {
+                        titleFontSize: "12",
+                        titleFontColor: "#3a5e90 ",
+                        titleFontFamily: "Arial",
+
+                        labelFontSize: "12",
+                        labelFontColor: "#3a5e90 ",
+                        labelFontFamily: "Arial",
+
                         //title: "Месяцы",
                         //suffix: " мес",
                         lineThickness: 1,
                         tickLength: 0,
                         gridThickness: 1,
                         labelMaxWidth: 50
-
                     },
                     data: [
-                        {
-                            type: "line",
-                            name: "Средняя зп",
-                            showInLegend: "true",
-                            dataPoints: [
-                                { x: 6, y: 0, label: "Июнь" },
-                                { x: 7, y: 8.2, label: "Июль" },
-                                { x: 8, y: 41.7, label: "Август" },
-                                { x: 9, y: 16.7, label: "Сентябрь" },
-                                { x: 10, y: 31.3, label: "Октябрь" }
-                            ]
-                        },
-                        {
-                            type: "line",
-                            axisYType: "secondary",
-                            name: "Вакансий",
-                            showInLegend: "true",
-                            dataPoints: [
-                                { x: 6, y: 0, label: "Июнь" },
-                                { x: 7, y: 90, label: "Июль" },
-                                { x: 8, y: 1590, label: "Август" },
-                                { x: 9, y: 1740, label: "Сентябрь" },
-                                { x: 10, y: 3740, label: "Октябрь" }
-                            ]
-                        }
+                        //{
+                        //    legendMarkerColor: "#041833",
+                        //    legendMarkerBorderThickness: "3",
+                        //    legendMarkerBorderColor: "#041833",
+                        //    type: "line",
+                        //    legendText: "Средняя зп",
+                        //    name: "Средняя зп",
+                        //    showInLegend: true,
+                        //    dataPoints: [
+                        //    { x: 6, y: 0, label: "Июнь" },
+                        //    { x: 7, y: 8.2, label: "Июль" },
+                        //    { x: 8, y: 41.7, label: "Август" },
+                        //    { x: 9, y: 16.7, label: "Сентябрь" },
+                        //    { x: 10, y: 31.3, label: "Октябрь" }
+                        //    ]
+                        //},
+                        //{
+                        //    legendMarkerColor: "#3a5e90",
+                        //    legendMarkerBorderThickness: "3",
+                        //    legendMarkerBorderColor: "#3a5e90",
+                        //    type: "line",
+                        //    axisYType: "secondary",
+                        //    name: "Вакансий",
+                        //    legendText: "Вакансий",
+                        //    showInLegend: true,
+                        //    dataPoints: [
+                        //    { x: 6, y: 0, label: "Июнь" },
+                        //    { x: 7, y: 90, label: "Июль" },
+                        //    { x: 8, y: 1590, label: "Август" },
+                        //    { x: 9, y: 1740, label: "Сентябрь" },
+                        //    { x: 10, y: 3740, label: "Октябрь" }
+                        //    ]
+                        //}
                     ],
                     legend: {
                         cursor: "pointer",
 
+                        fontFamily: "Arial",
                         fontSize: 12,
-                        fontFamily: "tahoma",
-                        maxWidth: 400,
+                        color: "#041833",
 
+                        maxWidth: 400,
                         itemclick: function (e) {
                             if (typeof (e.dataSeries.visible) === "undefined" || e.dataSeries.visible) {
                                 e.dataSeries.visible = false;

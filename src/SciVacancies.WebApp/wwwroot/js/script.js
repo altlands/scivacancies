@@ -31,6 +31,15 @@ function guid() {
 
 $(document).ready(function () {
     //select
+    //для регионов под графиками
+    var paramsRegions = {
+        changedEl: "select#RegionId",
+        visRows: 6,
+        scrollArrows: true
+    }
+    cuSel(paramsRegions);
+    //select
+    //
     var params = {
         changedEl: "select:not(.skip)",
         visRows: 12,
@@ -51,7 +60,7 @@ $(document).ready(function () {
         });
     });
 
-    // Checkbox
+    //checkbox
     $(".checkbox").not(".disabled").click(function () {
         if ($(this).parent().find("input").attr("checked")) {
             $(this).removeClass("checked");
@@ -443,7 +452,6 @@ function refreshAllGraphicData() {
 
 
     if (graphs.chart !== null) {
-
         var dataGraph1 = {
             regionId: graphs.regionId,
             interval: graphs.period
@@ -700,8 +708,7 @@ function DisplayShowButton(e) {
     if (subscribeButton != null && subscribeButton.style.display == "none") {
         subscribeButton.style.display = 'inline-block';
     }
-    else
-    {
+    else {
         console.log("ERROR subscribe-button-show");
     }
 }
