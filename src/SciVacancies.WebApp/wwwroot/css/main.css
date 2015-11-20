@@ -4109,3 +4109,8 @@ input.sub-form-item__input {
     .require-marker:after {
         content: "*";
     }
+
+/**/
+.canvasjs-chart-tooltip > div {
+    white-space: normal !important;
+}
