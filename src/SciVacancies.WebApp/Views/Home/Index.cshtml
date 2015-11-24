@@ -35,7 +35,8 @@
                             <text>
                             <a asp-controller="vacancies" asp-action="card" asp-route-id="@item.Guid" class="b-item bg_blue">
                                 <div class="b-item__title top_title bg_lblue">
-                                    <div class="line_three">@item.Name.Substring(0, Math.Min(item.Name.Length, 50))@(item.Name.Length > 50 ? "..." : null)</div>
+                                    <div class="line_three">@item.Name</div>
+                                    @*<div class="line_three">@item.Name.Substring(0, Math.Min(item.Name.Length, 50))@(item.Name.Length > 50 ? "..." : null)</div>*@
                                 </div>
                                 <div class="b-item__content vac_item">
                                     <div class="cell-middle">

@@ -8,6 +8,7 @@
 /// <reference path="js/canvasjs.min.js" />
 /// <reference path="js/cusel.js" />
 /// <reference path="js/jquery.bxslider.min.js" />
+/// <reference path="js/jquery.dotdotdot.min.js" />
 /// <reference path="js/jquery.mousewheel.js" />
 /// <reference path="js/jquery.tipTip.js" />
 /// <reference path="js/jquery.ui.datepicker-ru.js" />
