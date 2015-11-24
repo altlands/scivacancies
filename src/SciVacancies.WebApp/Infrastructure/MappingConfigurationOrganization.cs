@@ -173,7 +173,7 @@ namespace SciVacancies.WebApp.Infrastructure
                 .ForMember(d => d.Guid, o => o.MapFrom(s => s.guid))
                 .ForMember(d => d.ReadId, o => o.MapFrom(s => s.read_id))
                 .ForMember(d => d.Name, o => o.MapFrom(s => s.name))
-                .ForMember(d => d.FullName, o => o.MapFrom(s => s.fullname))
+                //.ForMember(d => d.FullName, o => o.MapFrom(s => s.fullname))
                 .ForMember(d => d.Tasks, o => o.MapFrom(s => s.tasks))
                 .ForMember(d => d.ResearchTheme, o => o.MapFrom(s => s.researchtheme))
                 .ForMember(d => d.CityName, o => o.MapFrom(s => s.cityname))
