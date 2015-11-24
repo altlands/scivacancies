@@ -1,36 +1,50 @@
 ﻿{
-    "Data": {
-        "ReadModelDb": "Server=localhost;Database=scivacancies;User Id=postgres;Password=postgres",
-        "QuartzDb": ""
+  "Data": {
+    "ReadModelDb": "Server=192.168.10.141;Database=scivacanciestest;User Id=postgres;Password=postgres",
+    "QuartzDb": ""
+  },
+  "ElasticSettings": {
+    "ConnectionUrl": "http://192.168.10.141:9200/",
+    "DefaultIndex": "scivacancies-devtest",
+    "MinScore": "0.2"
+  },
+  "QuartzSettings": {
+    "Scheduler": {
+      "InstanceName": "SciVacancies.SearchSubscription",
+      "ExecutionInterval": 1
     },
-    "ElasticSettings": {
-        "ConnectionUrl": "http://alt-dev003:9200/",
-        "DefaultIndex": "scivacancies-ntemnikov",
-        "MinScore": 0.2
+    "JobStore": {
+      "Type": "Quartz.Impl.AdoJobStore.JobStoreTX, Quartz",
+      "UseProperties": "true",
+      "DataSource": "default",
+      "TablePrefix": "qrtz_",
+      "LockHandler": {
+        "Type": "Quartz.Impl.AdoJobStore.UpdateLockRowSemaphore, Quartz"
+      }
     },
-    "QuartzSettings": {
-        "Scheduler": {
-            "InstanceName": "SciVacancies.SearchSubscription",
-            "ExecutionInterval": 1
-        },
-        "JobStore": {
-            "Type": "Quartz.Impl.AdoJobStore.JobStoreTX, Quartz",
-            "UseProperties": "true",
-            "DataSource": "default",
-            "TablePrefix": "qrtz_",
-            "LockHandler": {
-                "Type": "Quartz.Impl.AdoJobStore.UpdateLockRowSemaphore, Quartz"
-            }
-        },
-        "DataSource": {
-            "Default": {
-                "ConnectionString": "Server=localhost;Database=scivacancies;User Id=postgres;Password=postgres",
-                "Provider": "Npgsql-20"
-            }
-        }
-    },
-    "SmtpSettings": {
-        "Domain": "localhost:59075",
-        "PortalLink": "<a target='_blank' href='http://localhost:59075'>http://localhost:59075</a>"
+    "DataSource": {
+      "Default": {
+        "ConnectionString": "Server=192.168.10.141;Database=scivacanciestest;User Id=postgres;Password=postgres",
+        "Provider": "Npgsql-20"
+      }
     }
+  },
+  "EmailSettings": {
+    "Login": "mailer@alt-lan.com",
+    "Password": "123456-mailer",
+    "Host": "smtp.gmail.com",
+    "Port": 587,
+    "EnableSSL": true,
+    "UseDefaultCredentials": false,
+
+    "Domain": "192.168.10.141:5004",
+    "PortalLink": "<a target='_blank' href='http://192.168.10.141:5004'>192.168.10.141:5004</a>"
+  },
+  "LogSettings": {
+    "FileName": "scitest-{Date}.log",
+    "LogLevel": "Information",
+    "TimeStampPattern": "{Timestamp:yyyy-MM-dd HH:mm:ss.fff} [{Level}] {Message}{NewLine}{Exception}",
+    "FileSizeBytes": "1048576",
+    "FileCountLimit": "31"
+  }
 }

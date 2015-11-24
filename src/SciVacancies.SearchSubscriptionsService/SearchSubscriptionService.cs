@@ -46,39 +46,48 @@ namespace SciVacancies.SearchSubscriptionsService
             //quartz
             try
             {
-                var jobKey = new JobKey("SciVacancies.SearchSubscriptionJob", "SciVacancies.SearchSubscriptionService");
-                var triggerKey = new TriggerKey("SciVacancies.SearchSubscriptionJobTrigger", "SciVacancies.SearchSubscriptionService");
+                Logger.LogInformation("Resolving quartz sheduled job");
+                var searchSubscriptionJob = _lifetimeScope.Resolve<SearchSubscriptionJob>();
+                Logger.LogInformation("Resolved quartz sheduled job");
 
-                if (!_schedulerService.CheckExists(jobKey))
-                {
-                    Logger.LogInformation("Creating quartz sheduled job");
-                    _schedulerService.CreateSheduledJobWithStrongName(_lifetimeScope.Resolve<SearchSubscriptionJob>(), jobKey, MinuteInterval);
-                    Logger.LogInformation("Sheduled job has been created");
-                }
-                else
-                {
-                    //если job существует, то сравнить параметры его работы с настройками в config'e.
+                //var jobKey = new JobKey("SciVacancies.SearchSubscriptionJob", "SciVacancies.SearchSubscriptionService");
+                //var triggerKey = new TriggerKey("SciVacancies.SearchSubscriptionJobTrigger", "SciVacancies.SearchSubscriptionService");
 
-                    var savedTriggersOfJobs = _schedulerService.GetTriggersOfJob(jobKey);
-                    var triggerHasChanges = savedTriggersOfJobs
-                        .Select(c => c as Quartz.Impl.Triggers.SimpleTriggerImpl)
-                        .Any(c => c.RepeatInterval.Minutes != MinuteInterval);
 
-                    if (triggerHasChanges)
-                    //recreate trigger
-                    {
-                        Logger.LogInformation("Recreating quartz sheduled job");
+                //if (!_schedulerService.CheckExists(jobKey))
+                //{
+                //    Logger.LogInformation("Creating quartz sheduled job");
+                //    _schedulerService.CreateSheduledJobWithStrongName(searchSubscriptionJob, jobKey, MinuteInterval);
+                //    Logger.LogInformation("Sheduled job has been created");
+                //}
+                //else
+                //{
+                //    //если job существует, то сравнить параметры его работы с настройками в config'e.
 
-                        _schedulerService.DeleteJob(jobKey);
+                //    var savedTriggersOfJobs = _schedulerService.GetTriggersOfJob(jobKey);
+                //    var triggerHasChanges = savedTriggersOfJobs
+                //        .Select(c => c as Quartz.Impl.Triggers.SimpleTriggerImpl)
+                //        .Any(c => c.RepeatInterval.Minutes != MinuteInterval);
 
-                        _schedulerService.CreateSheduledJobWithStrongName(_lifetimeScope.Resolve<SearchSubscriptionJob>(),
-                            jobKey, MinuteInterval);
+                //    if (triggerHasChanges)
+                //    //recreate trigger
+                //    {
+                //        Logger.LogInformation("Recreating quartz sheduled job");
 
-                        Logger.LogInformation("Sheduled job has been recreated");
-                    }
-                }
+                //        _schedulerService.DeleteJob(jobKey);
 
-                _schedulerService.StartScheduler();
+                //        _schedulerService.CreateSheduledJobWithStrongName(searchSubscriptionJob, jobKey, MinuteInterval);
+
+                //        Logger.LogInformation("Sheduled job has been recreated");
+                //    }
+                //}
+
+                //_schedulerService.StartScheduler();
+
+                Logger.LogInformation("Starting quartz sheduled job ExecuteJob");
+                searchSubscriptionJob.ExecuteJob();
+                Logger.LogInformation("Finnished quartz sheduled job ExecuteJob");
+
             }
             catch (Exception e)
             {
