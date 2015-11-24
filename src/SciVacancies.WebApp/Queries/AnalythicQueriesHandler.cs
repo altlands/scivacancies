@@ -102,7 +102,8 @@ namespace SciVacancies.WebApp.Queries
                                     positionsDictionary.Add(keyItem.Key, new PositionsHistogram
                                     {
                                         type = "stackedColumn",
-                                        name = positionTypes.FirstOrDefault(f => f.id == Int32.Parse(keyItem.Key)).title,
+                                        name = keyItem.Key,
+                                        //name = positionTypes.FirstOrDefault(f => f.id == Int32.Parse(keyItem.Key)).title,
                                         showInLegend = true,
                                         dataPoints = new PositionDataPoint[AnalythicSettings.Value.BarsNumber]
                                     });
@@ -376,10 +377,53 @@ namespace SciVacancies.WebApp.Queries
                             break;
                     }
                 }
+                PositionsHistogram managementHistogram = new PositionsHistogram
+                {
+                    type = "stackedColumn",
+                    name = "Руководящие должности",
+                    showInLegend = true,
+                    dataPoints = new PositionDataPoint[AnalythicSettings.Value.BarsNumber]
+                };
+                for (int n = 0; n < AnalythicSettings.Value.BarsNumber; n++)
+                {
+                    managementHistogram.dataPoints[n] = new PositionDataPoint();
+                }
+                PositionsHistogram employeeHistogram = new PositionsHistogram
+                {
+                    type = "stackedColumn",
+                    name = "Сотрудники",
+                    showInLegend = true,
+                    dataPoints = new PositionDataPoint[AnalythicSettings.Value.BarsNumber]
+                };
+                for (int n = 0; n < AnalythicSettings.Value.BarsNumber; n++)
+                {
+                    employeeHistogram.dataPoints[n] = new PositionDataPoint();
+                }
                 foreach (PositionsHistogram histogram in positionsDictionary.Values)
                 {
-                    histograms.Add(histogram);
+                    string id = histogram.name;
+                    if (id == "1" || id == "2" || id == "3" || id == "4" || id == "5" || id == "6" || id == "7")
+                    {
+                        for (int n = 0; n < AnalythicSettings.Value.BarsNumber; n++)
+                        {
+                            managementHistogram.dataPoints[n].x = histogram.dataPoints[n].x;
+                            managementHistogram.dataPoints[n].y += histogram.dataPoints[n].y;
+                            managementHistogram.dataPoints[n].label = histogram.dataPoints[n].label;
+                        }
+                    }
+                    if (id == "8" || id == "9" || id == "10" || id == "11" || id == "12")
+                    {
+                        for (int n = 0; n < AnalythicSettings.Value.BarsNumber; n++)
+                        {
+                            employeeHistogram.dataPoints[n].x = histogram.dataPoints[n].x;
+                            employeeHistogram.dataPoints[n].y += histogram.dataPoints[n].y;
+                            employeeHistogram.dataPoints[n].label = histogram.dataPoints[n].label;
+                        }
+                    }
+                    //histograms.Add(histogram);
                 }
+                histograms.Add(managementHistogram);
+                histograms.Add(employeeHistogram);
 
                 Cache.Set<List<PositionsHistogram>>(positionsCacheKey, histograms, CacheOptions);
             }
@@ -411,10 +455,10 @@ namespace SciVacancies.WebApp.Queries
 
                 PaymentsHistogram averageHistogram = new PaymentsHistogram
                 {
-                    legendMarkerColor= "#041833",
-					legendMarkerBorderThickness= "3",
-					legendMarkerBorderColor= "#041833",
-					type = "line",
+                    legendMarkerColor = "#041833",
+                    legendMarkerBorderThickness = "3",
+                    legendMarkerBorderColor = "#041833",
+                    type = "line",
                     axisYType = "primary",
                     legendText = "Средняя зп",
                     name = "Средняя зп",
@@ -428,7 +472,7 @@ namespace SciVacancies.WebApp.Queries
                     legendMarkerBorderColor = "#3a5e90",
                     type = "line",
                     axisYType = "secondary",
-                    legendText= "Вакансии",
+                    legendText = "Вакансии",
                     name = "Вакансий",
                     showInLegend = true,
                     dataPoints = new PaymentDataPoint[AnalythicSettings.Value.BarsNumber]
