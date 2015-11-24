@@ -106,10 +106,23 @@ $(document).ready(function () {
             height: (modalHeight - 100 - 50) + "px"
         });
     }
+    function alignCenterLoginPopup(elem) {
+        var modalHeight = ($(window).height() - 40 * 10);
+        elem.css({
+            height: modalHeight + "px",
+            left: ($(window).width() - elem.outerWidth()) / 2 + "px",
+            top: /*($(window).height() - elem.outerHeight()) / 2*/ 20 + "px"
+        });
+        $(elem).find("div.content-popup").css({
+            height: (modalHeight - 100 - 50) + "px"
+        });
+    }
 
     alignCenter($(".window-popup"));
+    alignCenterLoginPopup($("#login-popup"));
     $(window).resize(function () {
         alignCenter($(".window-popup"));
+        alignCenterLoginPopup($("#login-popup"));
     });
     $(".open-popup").click(function () {
         var source = this;

@@ -112,10 +112,10 @@
     "MainPageExpiration": 20
   },
   "EmailSettings": {
-    "Login": "mailer@alt-lan.com",
-    "Password": "123456-mailer",
-    "Host": "smtp.gmail.com",
-    "Port": 587,
+    "Login": "mailer@ученые-исследователи.рф",
+    "Password": "",
+    "Host": "relay.informika.ru",
+    "Port": 25,
     "EnableSSL": true,
     "UseDefaultCredentials": false,
 

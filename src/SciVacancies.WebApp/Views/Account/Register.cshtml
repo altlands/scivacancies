@@ -5,7 +5,9 @@
 @using SciVacancies.WebApp.Engine
 @model SciVacancies.WebApp.ViewModels.AccountResearcherRegisterViewModel
 @{
-    var years = Enumerable.Range(DateTime.Now.Year - 100, 100).OrderByDescending(c => c).Select(c => new SelectListItem { Text = c.ToString(), Value = c.ToString() });
+    int maxYear = DateTime.Now.Year;
+    int minYear = maxYear - 100;
+    var years = Enumerable.Range(minYear, maxYear - minYear + 1).OrderByDescending(c => c).Select(c => new SelectListItem { Text = c.ToString(), Value = c.ToString() });
 }
 <div class="crumbs">
     <a href="/">Главная</a><span class="separator">/</span>Регистрация
@@ -16,7 +18,7 @@
 <div class="text">
     <p>Уважаемые посетители Портала! На данной странице вы можете создать учетную запись пользователя Соискателя.<br /> Введенные данные будут сохранены в вашей личной карточке и использованы в качестве резюме при подаче заявок на вакансии.<br /> Впоследствии их можно будет отредактировать.</p>
     <p>Организациям и их представителям заполнять регистрационную форму не нужно - для входа в Личный кабинет необходимо использовать<br /> логин и пароль, полученные на сайте <a href="http://www.sciencemon.ru/oauth/v2/auth_login">Федеральной системы мониторинга результативности деятельности научных организаций</a>(ФСМНО).</p>
-    <p>Звездочкой <span class="require-marker" ></span> помечены поля обязательные для заполнения</p>
+    <p>Звездочкой <span class="require-marker"></span> помечены поля обязательные для заполнения</p>
 </div>
 
 <a href="/account/login?user=@((int) AuthorizeUserTypes.Researcher)&resource=@((int) AuthorizeResourceTypes.ScienceMap)" class="middle-icon link-upload-s lk-icon"><span>Загрузить данные из системы «Карта науки»</span></a>
@@ -136,7 +138,7 @@
                     <img id="captchaImage" src="/captcha/fetch?w=164&h=50" onclick="javascript: reloadImg('captchaImage');" />
                 </div>
                 <div class="form-line">
-                     <span class="small-icon icon-update" onclick="javascript: reloadImg('captchaImage');">
+                    <span class="small-icon icon-update" onclick="javascript: reloadImg('captchaImage');">
                         <span>
                             Обновить
                         </span>
