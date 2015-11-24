@@ -87,7 +87,7 @@ namespace SciVacancies.Services.Elastic
                 queryContainer = queryDescriptor.MultiMatch(m => m
                                                  .Query(sq.Query)
                                                  .OnFieldsWithBoost(fb => fb
-                                                     .Add(f => f.FullName, 10.0)
+                                                     //.Add(f => f.FullName, 10.0)
                                                      .Add(f => f.Name, 10.0)
                                                      .Add(f => f.Tasks, 7.0)
                                                      .Add(f => f.Criterias.FirstOrDefault().CriteriaTitle, 7.0)

@@ -17,7 +17,7 @@
     заявки: <a asp-controller="applications" asp-action="preview" asp-route-id="@Model.Guid">@Model.FullName</a>
 </div>
 <div>
-    для вакансии: <a asp-controller="vacancies" asp-action="details" asp-route-id="@Model.VacancyGuid">@Model.Vacancy.FullName</a>
+    для вакансии: <a asp-controller="vacancies" asp-action="details" asp-route-id="@Model.VacancyGuid">@Model.Vacancy.Name</a>
 </div>
 
 <div class="content-slide">

@@ -132,7 +132,7 @@ namespace SciVacancies.SearchSubscriptionsService
                                         Уважаемый(-ая), {researcherFullName}, по одной из ваших
                                         <a target='_blank' href='http://{_domain}/researcher/subscriptions/'>подписок</a>
                                          ('{searchSubscription.title}') подобраны следующие вакансии: <br/>
-                                        {vacanciesList.Aggregate(string.Empty, (current, vacancy) => current + $"<a target='_blank' href='http://{_domain}/vacancies/card/{vacancy.Id}'>{vacancy.FullName}</a> <br/>")}
+                                        {vacanciesList.Aggregate(string.Empty, (current, vacancy) => current + $"<a target='_blank' href='http://{_domain}/vacancies/card/{vacancy.Id}'>{vacancy.Name}</a> <br/>")}
                                     </div>
 
                                     <br/>
