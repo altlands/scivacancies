@@ -82,8 +82,7 @@ namespace SciVacancies.SearchSubscriptionsService
         {
             Logger.LogInformation("Resolving from container");
 
-            SearchSubscriptionService service;
-            service = Container.Resolve<SearchSubscriptionService>();
+            var service = Container.Resolve<SearchSubscriptionService>();
             try
             {
                 service.OnStart();
@@ -93,17 +92,17 @@ namespace SciVacancies.SearchSubscriptionsService
                 Logger.LogError(e.Message, e);
             }
 
-            var wroteCommand = Console.ReadLine();
-            while (wroteCommand == null || !wroteCommand.Equals("stop"))
-            {
-                Thread.Sleep(2000);
-                wroteCommand = Console.ReadLine();
-            }
+            //var wroteCommand = Console.ReadLine();
+            //while (wroteCommand == null || !wroteCommand.Equals("stop"))
+            //{
+            //    Thread.Sleep(2000);
+            //    wroteCommand = Console.ReadLine();
+            //}
 
-            while (!service.CanStop)
-            {
-                Thread.Sleep(500);
-            }
+            //while (!service.CanStop)
+            //{
+            //    Thread.Sleep(500);
+            //}
 
             Logger.LogInformation("Service is stopping");
             service.Stop();

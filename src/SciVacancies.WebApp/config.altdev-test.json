@@ -3,8 +3,8 @@
     "SiteTitle": "Портал вакансий"
   },
   "Data": {
-    "ReadModelDb": "Server=localhost;Database=scivacancies;User Id=postgres;Password=postgres",
-    "EventStoreDb": "Server=localhost;Database=scivacancies;User Id=postgres;Password=postgres"
+    "ReadModelDb": "Server=localhost;Database=scivacanciestest;User Id=postgres;Password=postgres",
+    "EventStoreDb": "Server=localhost;Database=scivacanciestest;User Id=postgres;Password=postgres"
   },
   "OAuthSettings": {
     "Sciencemon": {
@@ -23,7 +23,7 @@
       "ClientId": "my-trusted-client",
       "ClientSecret": "secret",
       "Scope": "",
-      "RedirectUrl": "http://localhost:59075/account/callback"
+      "RedirectUrl": "http://192.168.10.141:5004/account/callback"
     }
   },
   //TODO
@@ -38,7 +38,7 @@
   },
   "ElasticSettings": {
     "ConnectionUrl": "http://localhost:9200/",
-    "DefaultIndex": "scivacancies-dev",
+    "DefaultIndex": "scivacancies-devtest",
     "MinScore": 0.2
   },
   "SagaSettings": { //TODO сделать только с положительными днями, обозвать соответствующе
@@ -59,7 +59,7 @@
   "QuartzSettings": {
     "Scheduler": {
       "InstanceName": "SciVacanciesScheduler",
-      "ExecutionInterval": 1
+      "ExecutionInterval": 10
     },
     "JobStore": {
       "Type": "Quartz.Impl.AdoJobStore.JobStoreTX, Quartz",
@@ -72,7 +72,7 @@
     },
     "DataSource": {
       "Default": {
-        "ConnectionString": "Server=localhost; Database=scivacancies; User Id=postgres; Password=postgres",
+        "ConnectionString": "Server=localhost; Database=scivacanciestest; User Id=postgres; Password=postgres",
         "Provider": "Npgsql-20"
       }
     }
@@ -123,7 +123,7 @@
     "PortalLink": "<a target='_blank' href='http://192.168.10.141:5004'>192.168.10.141:5004</a>"
   },
   "LogSettings": {
-    "FileName": "sci-{Date}.log",
+    "FileName": "scitest-{Date}.log",
     "LogLevel": "Information",
     "TimeStampPattern": "{Timestamp:yyyy-MM-dd HH:mm:ss.fff} [{Level}] {Message}{NewLine}{Exception}",
     "FileSizeBytes": "1048576",

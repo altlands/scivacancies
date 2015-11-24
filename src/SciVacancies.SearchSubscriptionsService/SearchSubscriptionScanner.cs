@@ -32,29 +32,39 @@ namespace SciVacancies.SearchSubscriptionsService
         private readonly ILifetimeScope _lifetimeScope;
         readonly ISearchService _elasticService;
 
-        private readonly IDatabase Db;
+        private readonly IDatabase _db;
 
-        private readonly ILogger Logger;
+        private readonly ILogger _logger;
 
-        readonly string From;
-        readonly string Domain;
-        readonly string PortalLink;
+        readonly string _from;
+        readonly string _domain;
+        readonly string _portalLink;
 
 
         public SearchSubscriptionScanner(ILifetimeScope lifetimeScope, ISearchService elasticService, IDatabase db, IConfiguration configuration, ILoggerFactory loggerFactory)
         {
+            this._logger = loggerFactory.CreateLogger<SearchSubscriptionScanner>();
+            _logger.LogInformation("SearchSubscriptionScanner: ctor initializing");
             _lifetimeScope = lifetimeScope;
             _elasticService = elasticService;
-            this.Db = db;
-            this.Logger = loggerFactory.CreateLogger<SearchSubscriptionScanner>();
+            this._db = db;
 
-            this.From = configuration["EmailSettings:Login"];
-            this.Domain = configuration["EmailSettings:Domain"];
-            this.PortalLink = configuration["EmailSettings:PortalLink"];
+            if(configuration==null)
+            _logger.LogInformation("SearchSubscriptionScanner: configuration is null ");
 
-            if (string.IsNullOrEmpty(this.From)) throw new ArgumentNullException("From is null");
-            if (string.IsNullOrEmpty(this.Domain)) throw new ArgumentNullException("Domain is null");
-            if (string.IsNullOrEmpty(this.PortalLink)) throw new ArgumentNullException("PortalLink is null");
+            _logger.LogInformation("SearchSubscriptionScanner: getting EmailSettings:Login");
+            this._from = configuration["EmailSettings:Login"];
+            _logger.LogInformation("SearchSubscriptionScanner: getting EmailSettings:Domain");
+            this._domain = configuration["EmailSettings:Domain"];
+            _logger.LogInformation("SearchSubscriptionScanner: getting EmailSettings:PortalLink");
+            this._portalLink = configuration["EmailSettings:PortalLink"];
+
+            if (string.IsNullOrEmpty(this._from)) throw new ArgumentNullException("From is null");
+            _logger.LogInformation("SearchSubscriptionScanner: got From");
+            if (string.IsNullOrEmpty(this._domain)) throw new ArgumentNullException("Domain is null");
+            _logger.LogInformation("SearchSubscriptionScanner: got Domain");
+            if (string.IsNullOrEmpty(this._portalLink)) throw new ArgumentNullException("PortalLink is null");
+            _logger.LogInformation("SearchSubscriptionScanner: got PortalLink");
         }
 
         public void Initialize(EventWaitHandle doneEvent, IEnumerable<SearchSubscription> subscriptionQueue)
@@ -73,7 +83,7 @@ namespace SciVacancies.SearchSubscriptionsService
             if (_subscriptionQueue == null || !_subscriptionQueue.Any())
                 return;
 
-            Logger.LogInformation($"SearchSubscriptionScanner: список подписок содержит -{_subscriptionQueue.Count()}- записей");
+            _logger.LogInformation($"SearchSubscriptionScanner: список подписок содержит -{_subscriptionQueue.Count()}- записей");
 
             //todo добавить свойство int emailsToSentPerMinute
             //todo: написать sql-процедуру, которая будет блокировать обрабатываемые подписки
@@ -91,7 +101,7 @@ namespace SciVacancies.SearchSubscriptionsService
                     SalaryTo = searchSubscription.salary_to,
                     VacancyStatuses = JsonConvert.DeserializeObject<IEnumerable<VacancyStatus>>(searchSubscription.vacancy_statuses)
                 };
-                Logger.LogInformation($"SearchSubscriptionScanner: searchQuery создан из подписки '{searchSubscription.guid}' ");
+                _logger.LogInformation($"SearchSubscriptionScanner: searchQuery создан из подписки '{searchSubscription.guid}' ");
 
                 var searchResults = _elasticService.VacancySearch(searchQuery);
 
@@ -104,25 +114,25 @@ namespace SciVacancies.SearchSubscriptionsService
                 searchSubscription.currenttotal_count = total;
 
                 var vacanciesList = searchResults.Documents.ToList();
-                Logger.LogInformation($"SearchSubscriptionScanner: по подписке найдено {vacanciesList.Count} записей");
+                _logger.LogInformation($"SearchSubscriptionScanner: по подписке найдено {vacanciesList.Count} записей");
 
                 if (vacanciesList.Count > 0)
                 {
                     #region SmtpNotifications
-                    
-                    using (var scopePerEmail = _lifetimeScope.BeginLifetimeScope("scopePerEmail"+ Guid.NewGuid()))
+
+                    using (var scopePerEmail = _lifetimeScope.BeginLifetimeScope("scopePerEmail" + Guid.NewGuid()))
                     {
                         var db = scopePerEmail.Resolve<IDatabase>();
-                        var EmailService = scopePerEmail.Resolve<IEmailService>();
+                        var emailService = scopePerEmail.Resolve<IEmailService>();
 
                         var researcher = db.SingleOrDefaultById<Researcher>(searchSubscription.researcher_guid);
                         var researcherFullName = $"{researcher.secondname} {researcher.firstname} {researcher.patronymic}";
                         var body = $@"
                                     <div style=''>
                                         Уважаемый(-ая), {researcherFullName}, по одной из ваших
-                                        <a target='_blank' href='http://{Domain}/researcher/subscriptions/'>подписок</a>
+                                        <a target='_blank' href='http://{_domain}/researcher/subscriptions/'>подписок</a>
                                          ('{searchSubscription.title}') подобраны следующие вакансии: <br/>
-                                        {vacanciesList.Aggregate(string.Empty, (current, vacancy) => current + $"<a target='_blank' href='http://{Domain}/vacancies/card/{vacancy.Id}'>{vacancy.FullName}</a> <br/>")}
+                                        {vacanciesList.Aggregate(string.Empty, (current, vacancy) => current + $"<a target='_blank' href='http://{_domain}/vacancies/card/{vacancy.Id}'>{vacancy.FullName}</a> <br/>")}
                                     </div>
 
                                     <br/>
@@ -131,24 +141,24 @@ namespace SciVacancies.SearchSubscriptionsService
 
                                     <div style='color: lightgray; font-size: smaller;'>
                                         Это письмо создано автоматически с 
-                                        <a target='_blank' href='http://{Domain}'>Портала вакансий</a>.
+                                        <a target='_blank' href='http://{_domain}'>Портала вакансий</a>.
                                         Чтобы не получать такие уведомления отключите их или смените email в 
-                                        <a target='_blank' href='http://{Domain}/researchers/account/'>личном кабинете</a>.
+                                        <a target='_blank' href='http://{_domain}/researchers/account/'>личном кабинете</a>.
                                     </div>
                                     ";
-                        EmailService.Send(new SciVacMailMessage(From,researcher.email, "Уведомление с портала вакансий", body));
+                        emailService.Send(new SciVacMailMessage(_from, researcher.email, "Уведомление с портала вакансий по Вашей поисковой подписке", body));
 
-                        Logger.LogInformation($"SearchSubscriptionScanner: письмо {researcher.email} для {researcherFullName}");
+                        _logger.LogInformation($"SearchSubscriptionScanner: письмо {researcher.email} для {researcherFullName} отправлено");
                     }
                     #endregion
                 }
             }
 
-            using (var transaction = Db.GetTransaction())
+            using (var transaction = _db.GetTransaction())
             {
-                foreach(SearchSubscription searchSubscription in _subscriptionQueue)
+                foreach (SearchSubscription searchSubscription in _subscriptionQueue)
                 {
-                    Db.Update(searchSubscription);
+                    _db.Update(searchSubscription);
                 }
 
                 transaction.Complete();

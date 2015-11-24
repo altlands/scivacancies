@@ -106,7 +106,7 @@
             </form>
         </div>
 
-        <cache expires-after="@TimeSpan.FromSeconds(2)">
+        <cache expires-after="@TimeSpan.FromSeconds(60)">
             @Html.Partial("_HomeIndexGraphics", Model)
         </cache>
 

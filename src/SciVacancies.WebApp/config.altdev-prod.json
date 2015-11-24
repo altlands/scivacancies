@@ -123,7 +123,7 @@
     "PortalLink": "<a target='_blank' href='http://192.168.10.141:5004'>192.168.10.141:5004</a>"
   },
   "LogSettings": {
-    "FileName": "scidump-{Date}.log",
+    "FileName": "sci-{Date}.log",
     "LogLevel": "Information",
     "TimeStampPattern": "{Timestamp:yyyy-MM-dd HH:mm:ss.fff} [{Level}] {Message}{NewLine}{Exception}",
     "FileSizeBytes": "1048576",
