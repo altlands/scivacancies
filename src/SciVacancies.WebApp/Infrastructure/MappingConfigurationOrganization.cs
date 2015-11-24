@@ -245,7 +245,8 @@ namespace SciVacancies.WebApp.Infrastructure
                 ;
             Mapper.CreateMap<VacancyCreateViewModel, VacancyDataModel>()
                 .ForMember(d => d.Name, o => o.MapFrom(s => s.Name))
-                .ForMember(d => d.FullName, o => o.MapFrom(s => s.FullName))
+                .ForMember(d => d.FullName, o => o.MapFrom(s => s.Name))
+                //.ForMember(d => d.FullName, o => o.MapFrom(s => s.FullName))
                 .ForMember(d => d.Tasks, o => o.MapFrom(s => s.Tasks))
                 .ForMember(d => d.ResearchTheme, o => o.MapFrom(s => s.ResearchTheme))
                 .ForMember(d => d.CityName, o => o.MapFrom(s => s.CityName))

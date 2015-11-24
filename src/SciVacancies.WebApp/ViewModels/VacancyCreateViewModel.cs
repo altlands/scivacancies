@@ -108,11 +108,11 @@ namespace SciVacancies.WebApp.ViewModels
         [Required(ErrorMessage = "Требуется заполнить поле Наименование")]
         public string Name { get; set; }
 
-        /// <summary>
-        /// Должность (Полное наименование)
-        /// </summary>
-        [Required(ErrorMessage = "Требуется заполнить поле Полное наименование")]
-        public string FullName { get; set; }
+        ///// <summary>
+        ///// Должность (Полное наименование)
+        ///// </summary>
+        //[Required(ErrorMessage = "Требуется заполнить поле Полное наименование")]
+        //public string FullName { get; set; }
 
         /// <summary>
         /// Отрасль науки

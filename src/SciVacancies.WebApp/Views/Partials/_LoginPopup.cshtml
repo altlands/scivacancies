@@ -1,0 +1,70 @@
+﻿@using System.Threading.Tasks
+@using SciVacancies;
+@using SciVacancies.WebApp.Engine
+@model SciVacancies.WebApp.ViewModels.AccountLoginViewModel
+
+@if (!User.Identity.IsAuthenticated)
+{
+    <div class="window-popup middle" id="login-popup" style="display:none;">
+        <span class="close-popup"></span>
+        <div class="title-popup">
+            <h4>Вход в личный кабинет</h4>
+        </div>
+        <div class="content-popup">
+            @*<a class="researcherslogin" href="/account/logintestuser/user1">Пользователь1.Вход</a><br />
+                <a class="researcherslogin" href="/account/logintestuser/user2">Пользователь2.Вход</a><br />
+                <a class="researcherslogin" href="/account/logintestuser/user3">Пользователь3.Вход</a><br />
+                <a class="researcherslogin" href="/account/loginorganization">Организация.Вход</a>*@<br />
+
+
+            <div class="b-tabs b-tabs_page">
+                <ul class="nav nav-tabs" id="tab">
+                    <li>
+                        <a href="#b-user">Пользователь</a>
+                    </li>
+                    <li>
+                        <a href="#b-organization">Организация</a>
+                    </li>
+                </ul>
+                <div class="tab-content">
+                    <div class="tab-pane" id="b-user">
+                        <p>Для зарегистрированных пользователей (соискателей) - введите в форму входа логин и пароль, полученные при регистрации на Портале.</p>
+
+                        <div class="mt7"><a href="/account/register" class="italic">Регистрация</a></div>
+                        <div class="mt5"><a href="/account/forgotpassword" class="italic">Забыли пароль?</a></div>
+
+
+                        <form asp-controller="account" asp-action="login" method="POST" class="mt27">
+                            <input type="hidden" id="Resource" name="Resource" value="@((int)AuthorizeResourceTypes.OwnAuthorization)" />
+                            <input type="hidden" id="User" name="User" value="@((int)AuthorizeUserTypes.Researcher)" />
+                            <div class="form-line">
+                                <input asp-for="Login" class="middle-popup-input" placeholder="Логин" />
+                            </div>
+
+                            <div class="form-line">
+                                <input asp-for="Password" type="password" class="middle-popup-input" placeholder="Пароль" />
+                            </div>
+
+                            <div class="ctr-buttons">
+                                <span class="green-btn middle-icon icon-arr-right pr28">Войти<input type="submit" class="bt-default" value="" /></span><span id="cancellogin" class="blue-btn middle-icon icon-close">Отмена</span>
+                            </div>
+                        </form>
+
+                        <p>
+                            <a href="/account/login?user=@((int)AuthorizeUserTypes.Researcher)&resource=@((int)AuthorizeResourceTypes.ScienceMap)">Авторизоваться через Карту Науки</a>
+                        </p>
+                    </div>
+                    <div class="tab-pane" id="b-organization">
+                        <p>
+                            Для входа в личный кабинет представителя Организации необходимо в соответствующие поля ввести логин и пароль, полученные на сайте <a href="http://www.sciencemon.ru/">Федеральной системы мониторинга результативности деятельности научных организаций</a> (ФСМНО)
+                        </p>
+                        <p>
+                            <a href="/account/loginorganization">Авторизоваться</a>
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+}
