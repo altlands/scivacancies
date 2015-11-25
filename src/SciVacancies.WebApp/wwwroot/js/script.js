@@ -181,7 +181,8 @@ $(document).ready(function () {
         });
     }
     function alignCenterLoginPopup(elem) {
-        var modalHeight = ($(window).height() - 40 * 10);
+        //var modalHeight = ($(window).height() - 40 * 4);
+        var modalHeight = 500;
         elem.css({
             height: modalHeight + "px",
             left: ($(window).width() - elem.outerWidth()) / 2 + "px",

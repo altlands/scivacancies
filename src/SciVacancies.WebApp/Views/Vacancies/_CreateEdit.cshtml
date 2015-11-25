@@ -272,15 +272,17 @@
                     </ul>
                 </div>
             </div>
-
-            <div class="table-row form-row">
-                <div class="left-cell">
-                    <label>Дополнительно:</label>
+            @if (!String.IsNullOrEmpty(Model.Details))
+            {
+                <div class="table-row form-row">
+                    <div class="left-cell">
+                        <label>Дополнительно:</label>
+                    </div>
+                    <div class="right-cell">
+                        <textarea asp-for="Details"></textarea>
+                    </div>
                 </div>
-                <div class="right-cell">
-                    <textarea asp-for="Details"></textarea>
-                </div>
-            </div>
+            }
 
             <div class="table-row form-row">
                 <div class="left-cell">
