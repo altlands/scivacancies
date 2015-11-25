@@ -132,12 +132,14 @@ namespace SciVacancies.WebApp.Controllers
                 {
                     //заполняем Организации в Вакансиях
                     var organizaitonsGuid = model.Items.Items.Select(c => c.OrganizationGuid).ToList();
-                    var organizations =
-                        _mediator.Send(new SelectOrganizationsByGuidsQuery { OrganizationGuids = organizaitonsGuid })
-                            .ToList();
-                    model.Items.Items.Where(c => organizations.Select(d => d.guid).Contains(c.OrganizationGuid))
+                    var organizationsSource =
+                        _mediator.Send(new SelectOrganizationsByGuidsQuery { OrganizationGuids = organizaitonsGuid });
+                    if (organizationsSource != null)
+                    {
+                        model.Items.Items.Where(c => organizationsSource.Select(d => d.guid).Contains(c.OrganizationGuid))
                         .ToList()
-                        .ForEach(c => c.OrganizationName = organizations.First(d => d.guid == c.OrganizationGuid).name);
+                        .ForEach(c => c.OrganizationName = organizationsSource.First(d => d.guid == c.OrganizationGuid).name);
+                    }
                 }
 
                 {   //заполняем 

@@ -5,9 +5,13 @@
 @model IndexViewModel
 
 @{
-    var regions = Model.CurrentMediator.Send(new SelectAllRegionsQuery()).Select(c => new SelectListItem { Text = c.title, Value = c.id.ToString() }).ToList();
-    regions.Insert(0, new SelectListItem { Text = "Все регионы", Value = "null" });
-    ViewBag.RegionsList = regions;
+    var source = Model.CurrentMediator.Send(new SelectAllRegionsQuery());
+    if (source != null)
+    {
+        var regions = source.Select(c => new SelectListItem { Text = c.title, Value = c.id.ToString() }).ToList();
+        regions.Insert(0, new SelectListItem { Text = "Все регионы", Value = "null" });
+        ViewBag.RegionsList = regions;
+    }
 
     var dayPeriod = (int)Nest.DateInterval.Day;
     var weekPeriod = (int)Nest.DateInterval.Week;
@@ -45,11 +49,16 @@
         <div id="chartContainer2" style="min-height: 250px; width: 413px;">
         </div>
 
-        <div class="graph-region-select-block">
-            <select asp-for="RegionId"
-                    asp-items="ViewBag.RegionsList"
-                    onchange="refreshAllGraphicData()"></select>
-        </div>
+        @if (ViewBag.RegionsList != null)
+        {
+            <text>
+            <div class="graph-region-select-block">
+                <select asp-for="RegionId"
+                        asp-items="ViewBag.RegionsList"
+                        onchange="refreshAllGraphicData()"></select>
+            </div>
+            </text>
+        }
 
 
         <script type="text/javascript">
@@ -82,7 +91,7 @@
                     dataPointMaxWidth: 35,
                     title: {
                         //text: "Число вакансий ( среднее предложение в месяц )"
-                    
+
                     },
                     axisX: {
                         titleFontFamily: "arial",
@@ -117,7 +126,7 @@
                     toolTip: {
                         //shared: true,
                         cornerRadius: 0,
-                        content: function(e) {
+                        content: function (e) {
                             var body;
                             var head;
                             var name = e.entries[0].dataSeries.name.length <= 25 ? e.entries[0].dataSeries.name : (e.entries[0].dataSeries.name.substring(0, 24) + "...");
@@ -247,7 +256,7 @@
                         labelFontFamily: "arial",
                         labelFontSize: 11,
                         labelFontColor: "#041833 ",
-                        
+
                         includeZero: false,
                         suffix: "",
                         lineColor: "#3a5e90",

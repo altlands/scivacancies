@@ -24,6 +24,7 @@ namespace SciVacancies.ReadModel.ElasticSearchModel.Model
         /// <summary>
         /// Наименование должности полностью
         /// </summary>
+        [Obsolete("устаревшее свойство")]
         public string FullName { get; set; }
 
         /// <summary>
