@@ -420,6 +420,22 @@ namespace SciVacancies.WebApp.Queries
                             employeeHistogram.dataPoints[n].label = histogram.dataPoints[n].label;
                         }
                     }
+                    if (histogram.name == "Все должности")
+                    {
+                        for (int n = 0; n < AnalythicSettings.Value.BarsNumber; n++)
+                        {
+                            managementHistogram.dataPoints[n].x = histogram.dataPoints[n].x;
+                            managementHistogram.dataPoints[n].y += histogram.dataPoints[n].y;
+                            managementHistogram.dataPoints[n].label = histogram.dataPoints[n].label;
+                        }
+                        for (int n = 0; n < AnalythicSettings.Value.BarsNumber; n++)
+                        {
+                            employeeHistogram.dataPoints[n].x = histogram.dataPoints[n].x;
+                            employeeHistogram.dataPoints[n].y += histogram.dataPoints[n].y;
+                            employeeHistogram.dataPoints[n].label = histogram.dataPoints[n].label;
+                        }
+                    }
+
                     //histograms.Add(histogram);
                 }
                 histograms.Add(managementHistogram);
