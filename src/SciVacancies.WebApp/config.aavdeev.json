@@ -74,6 +74,33 @@
       }
     }
   },
+    "AttachmentSettings": {
+    "VacancyApplication": {
+      "MaxItemSize": 500000,
+      "MaxTotalSize": 1000000,
+      "PhisicalPathPart": "/uploads/applications/attachments",
+      "UrlPathPart": "~/uploads/applications/attachments",
+      "AllowExtensions": "JPG,JPEG,PNG,DOC,XSLX,PDF"
+    },
+    "Vacancy": {
+      "MaxItemSize": 500000,
+      "MaxTotalSize": 1000000,
+      "PhisicalPathPart": "/uploads/vacancies/attachments",
+      "UrlPathPart": "~/uploads/vacancies/attachments",
+      "AllowExtensions": "JPG,JPEG,PNG,DOC,XSLX,PDF"
+    },
+    "Researcher": {
+      "MaxItemSize": 500000,
+      "MaxTotalSize": 500000,
+      "PhisicalPathPart": "/uploads/researcherphoto",
+      "UrlPathPart": "~/uploads/researcherphoto",
+      "AllowExtensions": "JPG,JPEG,PNG"
+    }
+  },
+  "SiteFileSettings": {
+    "FavIconName": "",
+    "PathToBlankAvatar": "/images/profile-photo.png"
+  },
   "CaptchaSettings": {
     "CaptchaDurationSeconds": 120
   },
