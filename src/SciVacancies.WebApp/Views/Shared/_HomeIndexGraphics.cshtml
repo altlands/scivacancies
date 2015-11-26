@@ -38,8 +38,13 @@
     <div class="graphics-item">
         <div class="title-graphic">Число вакансий ( среднее предложение )</div>
 
-        <div id="chartContainer" style="height: 300px; width: 413px;">
+        <div id="chartContainer" style="height: 250px; width: 413px;">
         </div>
+
+        <ul class="graph-details">
+            <li class="color1"><span>Руководящие должности</span></li>
+            <li class="color3"><span>Сотрудники</span></li>
+        </ul>
 
     </div>
 
@@ -49,7 +54,12 @@
         <div id="chartContainer2" style="min-height: 250px; width: 413px;">
         </div>
 
-        @if (ViewBag.RegionsList != null)
+        <ul class="graph-details">
+            <li class="color1 marker-circle"><span>Средняя зарплата</span></li>
+            <li class="color3 marker-circle"><span>Вакансии</span></li>
+        </ul>
+
+    @if (ViewBag.RegionsList != null)
         {
             <text>
             <div class="graph-region-select-block">
@@ -70,9 +80,9 @@
                 [
                     //colorSet Array
                     "#041833",
-                    "#06365c",
-                    "#3a5e90",
-                    "#d8e1e9"
+                    "#06365c"
+                    //"#3a5e90",
+                    //"#d8e1e9"
                 ]);
                 CanvasJS.addColorSet("blueShades2",
                 [
@@ -95,27 +105,34 @@
                     },
                     axisX: {
                         titleFontFamily: "arial",
-                        titleFontSize: "11",
-                        titleFontColor: "#3a5e90 ",
+                        titleFontSize: 12,
+                        titleFontColor: "#041833",
 
                         labelFontFamily: "arial",
-                        labelFontSize: 11,
-                        labelFontColor: "#041833 ",
+                        labelFontSize: 12,
+                        labelFontColor: "#041833",
 
+                        //title: "Месяцы",
+                        //suffix: " мес",
                         lineThickness: 1,
-                        tickLength: 0,
-                        labelMaxWidth: 55
+                        tickLength: 6,
+                        tickColor: "transparent",
+                        gridThickness: 1,
+                        labelMaxWidth: 58
                     },
                     axisY: {
+
                         titleFontFamily: "arial",
-                        titleFontSize: 11,
-                        titleFontColor: "#3a5e90 ",
+                        titleFontSize: 12,
+                        titleFontColor: "#041833",
 
                         labelFontFamily: "arial",
-                        labelFontSize: 11,
-                        labelFontColor: "#3a5e90 ",
+                        labelFontSize: 12,
+                        labelFontColor: "#041833",
 
-                        //title: "Вакансии"
+                        includeZero: false,
+                        suffix: "",
+                        lineColor: "#d1d1d1",
                         lineThickness: 1,
                         tickLength: 0,
                         gridThickness: 1
@@ -126,11 +143,19 @@
                     toolTip: {
                         //shared: true,
                         cornerRadius: 0,
+
+                        borderThickness: 1,
+                        borderColor: "#d1d1d1",
+                        fontSize: 12,
+                        fontFamily: "arial",
+                        fontStyle: "normal",
+                        backgroundColor: "#ffffff",
+
                         content: function (e) {
                             var body;
                             var head;
                             var name = e.entries[0].dataSeries.name.length <= 25 ? e.entries[0].dataSeries.name : (e.entries[0].dataSeries.name.substring(0, 24) + "...");
-                            head = "<span style = 'color:DodgerBlue; '><strong>Дата: " + (e.entries[0].dataPoint.label) + "</strong></span><br/>";
+                            head = "<span style = 'color:{color}; '><strong>Дата: " + (e.entries[0].dataPoint.label) + "</strong></span><br/>";
                             body = "<span style='\"'color: {color};'\"'><strong>"
                                 + name
                                 + "</strong></span>: "
@@ -144,8 +169,8 @@
                     data: [
                         {
                             type: "stackedColumn",
-                            name: "Руководители групп структурных подразделений",
-                            showInLegend: "true",
+                            name: "Руководители",
+                            //showInLegend: "true",
                             dataPoints: [
                                 { y: 38600, label: "Июль" },
                                 { y: 11338, label: "Август" },
@@ -153,21 +178,21 @@
                                 { y: 62200, label: "Октябрь" },
                                 { y: 90085, label: "Ноябрь" }
                             ]
-                        }, {
-                            type: "stackedColumn",
-                            name: "Руководители структурных подразделений",
-                            showInLegend: "true",
-                            dataPoints: [
-                                { y: 39900, label: "Июль" },
-                                { y: 135305, label: "Август" },
-                                { y: 107922, label: "Сентябрь" },
-                                { y: 52300, label: "Октябрь" },
-                                { y: 3360, label: "Ноябрь" }
-                            ]
+                            //}, {
+                            //    type: "stackedColumn",
+                            //    name: "Руководители структурных подразделений",
+                            //    showInLegend: "true",
+                            //    dataPoints: [
+                            //        { y: 39900, label: "Июль" },
+                            //        { y: 135305, label: "Август" },
+                            //        { y: 107922, label: "Сентябрь" },
+                            //        { y: 52300, label: "Октябрь" },
+                            //        { y: 3360, label: "Ноябрь" }
+                            //    ]
                         }, {
                             type: "stackedColumn",
                             name: "Сотрудники",
-                            showInLegend: "true",
+                            //showInLegend: "true",
                             dataPoints: [
                                 { y: 39900, label: "Июль" },
                                 { y: 135305, label: "Август" },
@@ -175,35 +200,40 @@
                                 { y: 52300, label: "Октябрь" },
                                 { y: 3360, label: "Ноябрь" }
                             ]
-                        }, {
-                            type: "stackedColumn",
-                            name: "Прочие",
-                            showInLegend: "true",
-                            dataPoints: [
-                                { y: 39900, label: "Июль" },
-                                { y: 135305, label: "Август" },
-                                { y: 107922, label: "Сентябрь" },
-                                { y: 52300, label: "Октябрь" },
-                                { y: 3360, label: "Ноябрь" }
-                            ]
+                            //}, {
+                            //    type: "stackedColumn",
+                            //    name: "Прочие",
+                            //    showInLegend: "true",
+                            //    dataPoints: [
+                            //        { y: 39900, label: "Июль" },
+                            //        { y: 135305, label: "Август" },
+                            //        { y: 107922, label: "Сентябрь" },
+                            //        { y: 52300, label: "Октябрь" },
+                            //        { y: 3360, label: "Ноябрь" }
+                            //    ]
                         }
                     ],
-                    legend: {
-                        cursor: "pointer",
+                    //legend: {
+                    //    //cursor: "pointer",
 
-                        fontFamily: "arial",
-                        fontSize: 10,
-                        fontColor: "#041833",
+                    //    horizontalAlign: 'center',
 
-                        itemclick: function (e) {
-                            if (typeof (e.dataSeries.visible) === "undefined" || e.dataSeries.visible) {
-                                e.dataSeries.visible = false;
-                            } else {
-                                e.dataSeries.visible = true;
-                            }
-                            graphs.chart.render();
-                        }
-                    }
+                    //    maxWidth: 400,
+                    //    itemWidth: 300,
+
+                    //    fontFamily: "arial",
+                    //    fontSize: 10,
+                    //    fontColor: "#041833"
+
+                    //    //itemclick: function (e) {
+                    //    //    if (typeof (e.dataSeries.visible) === "undefined" || e.dataSeries.visible) {
+                    //    //        e.dataSeries.visible = false;
+                    //    //    } else {
+                    //    //        e.dataSeries.visible = true;
+                    //    //    }
+                    //    //    graphs.chart.render();
+                    //    //}
+                    //}
                 });
 
 
@@ -219,10 +249,18 @@
                     toolTip: {
                         shared: true,
                         cornerRadius: 0,
+
+                        borderThickness: 1,
+                        borderColor: "#d1d1d1",
+                        fontSize: 12,
+                        fontFamily: "arial",
+                        fontStyle: "normal",
+                        backgroundColor: "#ffffff",
+
                         content: function (e) {
                             var body;
                             var head;
-                            head = "<span style = 'color:DodgerBlue; '><strong>Дата: " + (e.entries[0].dataPoint.label) + "</strong></span><br/>";
+                            head = "<span style = 'color:" + e.entries[0].dataSeries.color + "; '><strong>Дата: " + (e.entries[0].dataPoint.label) + "</strong></span><br/>";
                             body = "<span style= 'color:" + e.entries[0].dataSeries.color + "'> "
                                 + (e.entries[0].dataSeries.name)
                                 + "</span>: <strong>" + e.entries[0].dataPoint.y + "</strong>  тыс.р.<br/> <span style= 'color:" + e.entries[1].dataSeries.color + "'> " + e.entries[1].dataSeries.name + "</span>: <strong>" + e.entries[1].dataPoint.y + "</strong>  шт";
@@ -231,54 +269,56 @@
                         }
                     },
                     axisY: {
-                        titleFontFamily: "arial",
-                        titleFontSize: 11,
-                        titleFontColor: "#041833 ",
                         title: "Средняя з/п. (тыс.р.)",
 
+                        titleFontFamily: "arial",
+                        titleFontSize: 12,
+                        titleFontColor: "#041833",
+
                         labelFontFamily: "arial",
-                        labelFontSize: 11,
+                        labelFontSize: 12,
                         labelFontColor: "#041833",
 
                         includeZero: false,
                         suffix: "",
-                        lineColor: "#041833",
+                        lineColor: "#d1d1d1",
                         lineThickness: 1,
                         tickLength: 0,
                         gridThickness: 1
                     },
                     axisY2: {
                         titleFontFamily: "arial",
-                        titleFontSize: 11,
-                        titleFontColor: "#3a5e90 ",
+                        titleFontSize: 12,
+                        titleFontColor: "#041833",
                         title: "Количество (шт.)",
 
                         labelFontFamily: "arial",
-                        labelFontSize: 11,
-                        labelFontColor: "#041833 ",
+                        labelFontSize: 12,
+                        labelFontColor: "#041833",
 
                         includeZero: false,
                         suffix: "",
-                        lineColor: "#3a5e90",
+                        lineColor: "#d1d1d1",
                         lineThickness: 1,
                         tickLength: 0,
                         gridThickness: 1
                     },
                     axisX: {
                         titleFontFamily: "arial",
-                        titleFontSize: 11,
-                        titleFontColor: "#3a5e90 ",
+                        titleFontSize: 12,
+                        titleFontColor: "#041833",
 
                         labelFontFamily: "arial",
-                        labelFontSize: 11,
-                        labelFontColor: "#041833 ",
+                        labelFontSize: 12,
+                        labelFontColor: "#041833",
 
                         //title: "Месяцы",
                         //suffix: " мес",
                         lineThickness: 1,
-                        tickLength: 0,
+                        tickLength: 6,
+                        tickColor: "transparent",
                         gridThickness: 1,
-                        labelMaxWidth: 55
+                        labelMaxWidth: 58
                     },
                     data: [
                         {
@@ -288,7 +328,7 @@
                             type: "line",
                             legendText: "Средняя зп",
                             name: "Средняя зп",
-                            showInLegend: true,
+                            //showInLegend: true,
                             dataPoints: [
                             { x: 6, y: 0, label: "Июнь" },
                             { x: 7, y: 8.2, label: "Июль" },
@@ -305,7 +345,7 @@
                             axisYType: "secondary",
                             name: "Вакансий",
                             legendText: "Вакансий",
-                            showInLegend: true,
+                            //showInLegend: true,
                             dataPoints: [
                             { x: 6, y: 0, label: "Июнь" },
                             { x: 7, y: 90, label: "Июль" },
@@ -315,29 +355,31 @@
                             ]
                         }
                     ],
-                    legend: {
-                        cursor: "pointer",
+                    //legend: {
+                    //    //cursor: "pointer",
 
-                        fontFamily: "arial",
-                        fontSize: 10,
-                        fontColor: "#041833",
+                    //    fontFamily: "arial",
+                    //    fontSize: 10,
+                    //    fontColor: "#041833",
 
-                        maxWidth: 400,
-                        itemclick: function (e) {
-                            if (typeof (e.dataSeries.visible) === "undefined" || e.dataSeries.visible) {
-                                e.dataSeries.visible = false;
-                            } else {
-                                e.dataSeries.visible = true;
-                            }
-                            graphs.chart2.render();
-                        }
-                    }
+                    //    maxWidth: 400,
+                    //    itemWidth: 300
+
+                    //    //itemclick: function (e) {
+                    //    //    if (typeof (e.dataSeries.visible) === "undefined" || e.dataSeries.visible) {
+                    //    //        e.dataSeries.visible = false;
+                    //    //    } else {
+                    //    //        e.dataSeries.visible = true;
+                    //    //    }
+                    //    //    graphs.chart2.render();
+                    //    //}
+                    //}
                 });
 
 
-                //graphs.chart.render();
-                //graphs.chart2.render();
-                refreshAllGraphicData();
+                graphs.chart.render();
+                graphs.chart2.render();
+                //refreshAllGraphicData();
             }
         </script>
 

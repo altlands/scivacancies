@@ -3148,9 +3148,10 @@ ul.tabs li.active span {
     .graph-details li:before {
         content: "";
         display: inline-block;
+        vertical-align: top;
         width: 10px;
         height: 10px;
-        margin-right: 8px;
+        margin: 5px 8px 0 0;
     }
 
     .graph-details li.color1:before {
@@ -3169,11 +3170,19 @@ ul.tabs li.active span {
         background-color: #d8e1e9;
     }
 
-    .graph-details li span {
-        font-size: 10px;
-        font-family: Arial;
-        line-height: 16px;
-    }
+
+.graph-details .marker-circle:before {
+    -moz-border-radius: 10px;
+    -webkit-border-radius: 10px;
+    -khtml-border-radius: 10px;
+    border-radius: 10px;
+}
+
+.graph-details li span {
+    font-size: 10px;
+    font-family: Arial;
+    line-height: 16px;
+}
 
 .graph-region-select-block {
     margin: 10px 0 0 28px;

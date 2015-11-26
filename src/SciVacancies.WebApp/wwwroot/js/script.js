@@ -120,6 +120,10 @@ $(document).ready(function () {
         scrollArrows: true
     }
     cuSel(params);
+    //удаляет классы
+    $(".cusel").click(function () {
+        $(".cusel").removeClass("cuselOpen");
+    });
 
     //jquery datepicker
     $(function () {
@@ -827,6 +831,8 @@ function addNewSubscription(source) {
         return false;
     }
     $(parentForm).find("input[name=\"NewSubscriptionAdd\"]").val(true);
+
+    //document.myform.action = "/search/addsubscription";
     return true;
 }
 /*

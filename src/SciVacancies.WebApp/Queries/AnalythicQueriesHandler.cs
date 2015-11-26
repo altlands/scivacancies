@@ -104,7 +104,6 @@ namespace SciVacancies.WebApp.Queries
                                         type = "stackedColumn",
                                         name = keyItem.Key,
                                         //name = positionTypes.FirstOrDefault(f => f.id == Int32.Parse(keyItem.Key)).title,
-                                        showInLegend = true,
                                         dataPoints = new PositionDataPoint[AnalythicSettings.Value.BarsNumber]
                                     });
                                 }
@@ -343,7 +342,6 @@ namespace SciVacancies.WebApp.Queries
                     {
                         type = "stackedColumn",
                         name = "Все должности",
-                        showInLegend = true,
                         dataPoints = new PositionDataPoint[AnalythicSettings.Value.BarsNumber]
                     });
                     switch (message.Interval)
@@ -381,7 +379,6 @@ namespace SciVacancies.WebApp.Queries
                 {
                     type = "stackedColumn",
                     name = "Руководящие должности",
-                    showInLegend = true,
                     dataPoints = new PositionDataPoint[AnalythicSettings.Value.BarsNumber]
                 };
                 for (int n = 0; n < AnalythicSettings.Value.BarsNumber; n++)
@@ -392,7 +389,6 @@ namespace SciVacancies.WebApp.Queries
                 {
                     type = "stackedColumn",
                     name = "Сотрудники",
-                    showInLegend = true,
                     dataPoints = new PositionDataPoint[AnalythicSettings.Value.BarsNumber]
                 };
                 for (int n = 0; n < AnalythicSettings.Value.BarsNumber; n++)
@@ -478,7 +474,7 @@ namespace SciVacancies.WebApp.Queries
                     axisYType = "primary",
                     legendText = "Средняя зп",
                     name = "Средняя зп",
-                    showInLegend = true,
+                    showInLegend = false,
                     dataPoints = new PaymentDataPoint[AnalythicSettings.Value.BarsNumber]
                 };
                 PaymentsHistogram countHistogram = new PaymentsHistogram
@@ -490,7 +486,7 @@ namespace SciVacancies.WebApp.Queries
                     axisYType = "secondary",
                     legendText = "Вакансии",
                     name = "Вакансий",
-                    showInLegend = true,
+                    showInLegend = false,
                     dataPoints = new PaymentDataPoint[AnalythicSettings.Value.BarsNumber]
                 };
                 int k = AnalythicSettings.Value.BarsNumber - 1;
