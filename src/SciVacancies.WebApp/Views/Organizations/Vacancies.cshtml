@@ -102,8 +102,8 @@
                     </span>
                 </td>
                 <!--TODO: проверить правильность информации-->
-                <td>@(item.creation_date.ToLocalVacancyString())</td>
-                <td>@(item.publish_date?.ToLocalVacancyString())</td>
+                <td>@(item.creation_date.ToLocalMoscowVacancyDateTimeString())</td>
+                <td>@(item.publish_date?.ToLocalMoscowVacancyDateTimeString())</td>
                 <td>
                     <span class="status @item.status.GetHtmlClass()">
                         @if (item.status == VacancyStatus.Closed)

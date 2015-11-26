@@ -247,7 +247,7 @@
                                     <p>
                                         <span class="status @item.Status.GetHtmlClass()">@item.Status.GetDescription()</span>
                                     </p>
-                                    <p>Дата размещения: @(item.PublishDate?.ToLocalVacancyString())</p>
+                                    <p>Дата размещения: @(item.PublishDate?.ToLocalMoscowVacancyDateTimeString())</p>
                                     <p>
                                         Регион: <span>@item.Region</span>
                                     </p>

@@ -66,7 +66,7 @@
                 <text>
                 <tr>
                     <td class="@unreadClass">@i</td>
-                    <td class="@unreadClass">@item.creation_date.ToLocalVacancyString()</td>
+                    <td class="@unreadClass">@item.creation_date.ToLocalMoscowVacancyDateTimeString()</td>
                     <td class="bold">
                         <a asp-controller="applications" asp-action="preview" asp-route-id="@item.vacancyapplication_guid">заявка</a>
                     </td>

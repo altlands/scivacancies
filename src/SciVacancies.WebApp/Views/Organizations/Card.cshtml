@@ -103,7 +103,7 @@
                         <td>@i</td>
                         <td>VAC @item.read_id</td>
                         <td>@item.name</td>
-                        <td>@(item.publish_date?.ToLocalVacancyString())</td>
+                        <td>@(item.publish_date?.ToLocalMoscowVacancyDateTimeString())</td>
                         <td><span class="status @item.status.GetHtmlClass()">@item.status.GetDescriptionByResearcher()</span></td>
                         <td>
                             <a asp-controller="vacancies" asp-action="card" asp-route-id="@item.guid" class="view-td-icon" title="Просмотр вакансии"></a>

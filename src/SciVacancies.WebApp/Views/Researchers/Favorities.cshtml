@@ -96,7 +96,7 @@
                             (@item.salary_from - @item.salary_to руб.)
                         </span>
                     </td>
-                    <td>@(item.publish_date?.ToLocalVacancyString())</td>
+                    <td>@(item.publish_date?.ToLocalMoscowVacancyDateTimeString())</td>
                     <td>
                         <span class="status @item.status.GetHtmlClass()">
                             @item.status.GetDescriptionByResearcher()

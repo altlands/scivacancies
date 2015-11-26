@@ -56,7 +56,7 @@
                     <text>
                     <tr>
                         <td>@(Model.Applications.Items.IndexOf(item)+1)</td>
-                        <td>@(item.SentDate?.ToLocalVacancyString())</td>
+                        <td>@(item.SentDate?.ToLocalMoscowVacancyDateTimeString())</td>
                         <td class="pl0">@item.FullName</td>
                         <td class="pl0">
                             Телефон:@item.Phone  &nbsp;&nbsp;  @item.ExtraPhone
