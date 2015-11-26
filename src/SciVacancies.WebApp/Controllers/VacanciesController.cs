@@ -393,6 +393,7 @@ namespace SciVacancies.WebApp.Controllers
             return View(model);
         }
 
+        //TODO: удалить этот метод в действующем сайте
         [BindOrganizationIdFromClaims]
         [Authorize(Roles = ConstTerms.RequireRoleOrganizationAdmin)]
         public IActionResult StartInCommittee(Guid id, Guid organizationGuid)
