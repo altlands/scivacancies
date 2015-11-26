@@ -85,7 +85,7 @@
                     </td>
                     <td>@item.PositionTypeName</td>
                     <td>@item.Vacancy.SalaryFrom-@item.Vacancy.SalaryTo руб.</td>
-                    <td>@(item.SentDate?.ToLocalVacancyString())</td>
+                    <td>@(item.SentDate?.ToLocalMoscowVacancyDateTimeString())</td>
                     <td><span class="status @item.Vacancy.Status.GetHtmlClass()">@item.Vacancy.Status.GetDescriptionByResearcher()</span></td>
                     <td><span class="status @item.StatusDescription.Item2">@item.StatusDescription.Item1</span></td>
                     <td>

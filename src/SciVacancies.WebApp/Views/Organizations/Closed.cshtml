@@ -78,7 +78,7 @@
                         <text>VAC @item.read_id</text>
                     }</a></td>
                     <td>@item.name</td>
-                    <td>@(item.announcement_date?.ToLocalVacancyString()) <!--01-09-14, 16:04--></td>
+                    <td>@(item.announcement_date?.ToLocalMoscowVacancyDateTimeString()) <!--01-09-14, 16:04--></td>
                     <td class="view-col">
                         <a asp-controller="vacancies" asp-action="details" asp-route-id="@item.guid" class="view-td-icon" title="Просмотр вакансии"></a>
                         <a asp-controller="vacancies" asp-action="copy" asp-route-id="@item.guid" class="pages-td-icon" title="Копировать вакансию"></a>

@@ -135,7 +135,7 @@
                     <text>
                     <tr>
                         <td>@(Model.Applications.Items.IndexOf(item) + 1)</td>
-                        <td>@(item.SentDate?.ToLocalVacancyString())</td>
+                        <td>@(item.SentDate?.ToLocalMoscowVacancyDateTimeString())</td>
                         <td class="pl0">@item.FullName</td>
                         <td class="pl0 align-center">
                             @if (Model.WinnerVacancyApplicationGuid == item.Guid)

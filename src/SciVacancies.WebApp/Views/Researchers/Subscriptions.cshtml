@@ -53,7 +53,7 @@
                 <tr>
                     <td>@i</td>
                     <td>@item.title</td>
-                    <td>@item.creation_date.ToLocalVacancyString()</td>
+                    <td>@item.creation_date.ToLocalMoscowVacancyDateTimeString()</td>
                     <td class="align-center pl0">
                         @if (item.status == SearchSubscriptionStatus.Active)
                         {
