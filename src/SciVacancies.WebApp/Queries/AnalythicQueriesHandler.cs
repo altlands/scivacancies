@@ -546,7 +546,7 @@ namespace SciVacancies.WebApp.Queries
                                 ValueMetric salaryFrom = currentItem.Aggregations["salary_from"] as ValueMetric;
                                 ValueMetric salaryTo = currentItem.Aggregations["salary_to"] as ValueMetric;
 
-                                AddPaymentDataPoint(averageHistogram, k, (double)((((salaryFrom.Value ?? 0 + salaryTo.Value ?? 0) / 2) / 1000D)), currentItem.Date, message.Interval);
+                                AddPaymentDataPoint(averageHistogram, k, (double)(((((salaryFrom.Value ?? 0) + (salaryTo.Value ?? 0)) / 2) / 1000D)), currentItem.Date, message.Interval);
                                 AddPaymentDataPoint(countHistogram, k, currentItem.DocCount, currentItem.Date, message.Interval);
                             }
                         }
@@ -599,7 +599,7 @@ namespace SciVacancies.WebApp.Queries
                                 ValueMetric salaryFrom = currentItem.Aggregations["salary_from"] as ValueMetric;
                                 ValueMetric salaryTo = currentItem.Aggregations["salary_to"] as ValueMetric;
 
-                                AddPaymentDataPoint(averageHistogram, k, (double)((((salaryFrom.Value ?? 0 + salaryTo.Value ?? 0) / 2) / 1000D)), currentItem.Date, message.Interval);
+                                AddPaymentDataPoint(averageHistogram, k, (double)(((((salaryFrom.Value ?? 0) + (salaryTo.Value ?? 0)) / 2) / 1000D)), currentItem.Date, message.Interval);
                                 AddPaymentDataPoint(countHistogram, k, currentItem.DocCount, currentItem.Date, message.Interval);
                             }
                         }
