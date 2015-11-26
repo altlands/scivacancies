@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Web;
 using MediatR;
+using Microsoft.AspNet.Authorization;
 using Microsoft.AspNet.Mvc;
 using Newtonsoft.Json;
 using SciVacancies.Domain.DataModels;
@@ -43,8 +44,6 @@ namespace SciVacancies.WebApp.Controllers
         {
             if (TempData["VacanciesFilterModel"] != null)
                 model = JsonConvert.DeserializeObject<VacanciesFilterModel>(TempData["VacanciesFilterModel"].ToString());
-
-            Logger.LogInformation("");
 
             //если нужно добавить новую подписку
             if (researcherGuid != Guid.Empty && model.NewSubscriptionAdd)
@@ -152,6 +151,61 @@ namespace SciVacancies.WebApp.Controllers
             }
 
             return View(model);
+        }
+
+
+
+        /// <summary>
+        /// фильтрация, страницы, сортировка 
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet]
+        [HttpPost]
+        [PageTitle("Результаты поиска")]
+        [BindResearcherIdFromClaims]
+        [Authorize(Roles = ConstTerms.RequireRoleResearcher)]
+        public ActionResult AddSubscription(VacanciesFilterModel model, Guid researcherGuid)
+        {
+            if (TempData["VacanciesFilterModel"] != null)
+                model = JsonConvert.DeserializeObject<VacanciesFilterModel>(TempData["VacanciesFilterModel"].ToString());
+
+
+                var newSubscriptionGuid = _mediator.Send(new CreateSearchSubscriptionCommand
+                {
+                    ResearcherGuid = researcherGuid,
+                    Data = new SearchSubscriptionDataModel
+                    {
+                        OrderBy = model.OrderBy,
+                        Query = model.Search ?? string.Empty,
+                        Title = model.NewSubscriptionTitle,
+                        FoivIds = model.Foivs,
+                        PositionTypeIds = model.PositionTypes,
+                        RegionIds = model.Regions,
+                        ResearchDirectionIds = model.ResearchDirections,
+                        VacancyStatuses = model.VacancyStates?.Select(c => (VacancyStatus)c).ToList(),
+                        SalaryFrom = model.SalaryMin,
+                        SalaryTo = model.SalaryMax
+                    }
+                });
+
+                if (!model.NewSubscriptionNotifyByEmail)
+                    _mediator.Send(new CancelSearchSubscriptionCommand { ResearcherGuid = researcherGuid, SearchSubscriptionGuid = newSubscriptionGuid });
+
+                model.SubscriptionInfo = new SubscriptionInfoViewModel
+                {
+                    NewGuid = newSubscriptionGuid,
+                    Title = model.NewSubscriptionTitle,
+                    NewJustAdded = true
+                };
+                //перезугружаем страницу с инофрмацией о добавленной подписке
+                model.NewSubscriptionTitle = string.Empty;
+                model.NewSubscriptionNotifyByEmail = false;
+
+                //var modelBase = Mapper.Map<VacanciesFilterModelBase>(model);
+                TempData["VacanciesFilterModel"] = JsonConvert.SerializeObject(model);
+
+                return RedirectToAction("index");
+
         }
     }
 }
