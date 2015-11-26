@@ -218,11 +218,11 @@
             <div class="sorting">
                 <div class="inline-block w120">
                     <select asp-for="Period"
-                            asp-items="ViewBag.FilterSource.Periods"></select>
+                            asp-items="ViewBag.FilterSource.Periods" onchange="DisplayShowButton(event)"></select>
                 </div>
                 <div class="inline-block w160">
                     <select asp-for="OrderBy"
-                            asp-items="ViewBag.FilterSource.OrderBys"></select>
+                            asp-items="ViewBag.FilterSource.OrderBys" onchange="DisplayShowButton(event)"></select>
                 </div>
                 <span id="search-show-button" class="blue-btn-sm small-icon icon-sm-eye-wh" style="display:none;">
                     Показать<input type="submit" class="bt-default" value="" />
