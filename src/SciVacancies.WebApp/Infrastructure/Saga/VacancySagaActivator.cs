@@ -114,7 +114,7 @@ namespace SciVacancies.WebApp.Infrastructure.Saga
                 VacancyGuid = msg.VacancyGuid,
                 OrganizationGuid = msg.OrganizationGuid,
 
-                OfferResponseAwaitingFromWinnerEndDate = msg.TimeStamp.AddPeriodToOfferResponseAwaitingFromWinner()
+                OfferResponseAwaitingFromWinnerEndDate = msg.TimeStamp.AddDays(30)
             });
 
             _sagaRepository.Save("vacancysaga", saga, Guid.NewGuid(), null);
@@ -167,7 +167,7 @@ namespace SciVacancies.WebApp.Infrastructure.Saga
                 VacancyGuid = msg.VacancyGuid,
                 OrganizationGuid = msg.OrganizationGuid,
 
-                OfferResponseAwaitingFromPretenderEndDate = msg.TimeStamp.AddPeriodToOfferResponseAwaitingFromPretender()
+                OfferResponseAwaitingFromPretenderEndDate = msg.TimeStamp.AddDays(30)
             });
 
             _sagaRepository.Save("vacancysaga", saga, Guid.NewGuid(), null);

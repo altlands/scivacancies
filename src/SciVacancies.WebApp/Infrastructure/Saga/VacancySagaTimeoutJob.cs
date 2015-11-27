@@ -54,7 +54,7 @@ namespace SciVacancies.WebApp.Infrastructure
             switch (saga.State)
             {
                 case VacancyStatus.Published:
-                    if (saga.PublishEndDate.ToUniversalTime() <= DateTime.UtcNow)
+                    if (saga.PublishEndDate <= DateTime.UtcNow)
                     {
                         var vacancyApplicationsCount = mediator.Send(new CountVacancyApplicationInVacancyQuery { VacancyGuid = saga.VacancyGuid, Status = VacancyApplicationStatus.Applied });
                         if (vacancyApplicationsCount == null) throw new NullReferenceException("Can't retrive data from Database");
@@ -94,7 +94,7 @@ namespace SciVacancies.WebApp.Infrastructure
                     break;
 
                 case VacancyStatus.InCommittee:
-                    if (!saga.FirstInCommitteeNotificationSent && saga.InCommitteeEndDate.ToUniversalTime().AddMinutes(settings.Value.Date.Committee.FirstNotificationMinutes) <= DateTime.UtcNow)
+                    if (!saga.FirstInCommitteeNotificationSent && saga.InCommitteeEndDate.AddMinutes(settings.Value.Date.Committee.FirstNotificationMinutes) <= DateTime.UtcNow)
                     {
                         saga.Transition(new VacancySagaFirstInCommitteeNotificationSent
                         {
@@ -104,7 +104,7 @@ namespace SciVacancies.WebApp.Infrastructure
                         });
                         sagaRepository.Save("vacancysaga", saga, Guid.NewGuid(), null);
                     }
-                    if (saga.InCommitteeEndDate.ToUniversalTime().AddMinutes(settings.Value.Date.Committee.SecondNotificationMinutes) <= DateTime.UtcNow)
+                    if (saga.InCommitteeEndDate.AddMinutes(settings.Value.Date.Committee.SecondNotificationMinutes) <= DateTime.UtcNow)
                     {
                         saga.Transition(new VacancySagaSecondInCommitteeNotificationSent
                         {
@@ -126,7 +126,7 @@ namespace SciVacancies.WebApp.Infrastructure
 
                 case VacancyStatus.OfferResponseAwaitingFromWinner:
                     //высылаем победителю уведомление, что пора бы принять решение по предложению контракта
-                    if (!saga.OfferResponseNotificationSentToWinner && saga.OfferResponseAwaitingFromWinnerEndDate.ToUniversalTime().AddMinutes(settings.Value.Date.OfferResponseAwaiting.WinnerNotificationMinutes) <= DateTime.UtcNow)
+                    if (!saga.OfferResponseNotificationSentToWinner && saga.OfferResponseAwaitingFromWinnerEndDate.AddMinutes(settings.Value.Date.OfferResponseAwaiting.WinnerNotificationMinutes) <= DateTime.UtcNow)
                     {
                         saga.Transition(new VacancySagaOfferResponseNotificationSentToWinner
                         {
@@ -140,7 +140,7 @@ namespace SciVacancies.WebApp.Infrastructure
 
                         sagaRepository.Save("vacancysaga", saga, Guid.NewGuid(), null);
                     }
-                    if (saga.OfferResponseAwaitingFromWinnerEndDate.ToUniversalTime() <= DateTime.UtcNow)
+                    if (saga.OfferResponseAwaitingFromWinnerEndDate <= DateTime.UtcNow)
                     {
                         saga.Transition(new VacancySagaOfferRejectedByWinner
                         {
@@ -167,7 +167,7 @@ namespace SciVacancies.WebApp.Infrastructure
 
                 case VacancyStatus.OfferResponseAwaitingFromPretender:
                     //высылаем претенденту уведомление, что пора бы принять решение по предложению контракта
-                    if (!saga.OfferResponseNotificationSentToPretender && saga.OfferResponseAwaitingFromPretenderEndDate.ToUniversalTime().AddMinutes(settings.Value.Date.OfferResponseAwaiting.PretenderNotificationMinutes) <= DateTime.UtcNow)
+                    if (!saga.OfferResponseNotificationSentToPretender && saga.OfferResponseAwaitingFromPretenderEndDate.AddMinutes(settings.Value.Date.OfferResponseAwaiting.PretenderNotificationMinutes) <= DateTime.UtcNow)
                     {
                         saga.Transition(new VacancySagaOfferResponseNotificationSentToPretender
                         {
@@ -180,7 +180,7 @@ namespace SciVacancies.WebApp.Infrastructure
                         });
                         sagaRepository.Save("vacancysaga", saga, Guid.NewGuid(), null);
                     }
-                    if (saga.OfferResponseAwaitingFromPretenderEndDate.ToUniversalTime() <= DateTime.UtcNow)
+                    if (saga.OfferResponseAwaitingFromPretenderEndDate <= DateTime.UtcNow)
                     {
                         saga.Transition(new VacancySagaOfferRejectedByPretender
                         {
