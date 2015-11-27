@@ -2,6 +2,7 @@
 using SciVacancies.Services.Email;
 
 using System;
+using System.Globalization;
 using Microsoft.Framework.Configuration;
 using SciVacancies.Domain.Enums;
 
@@ -153,7 +154,7 @@ namespace SciVacancies.SmtpNotifications.SmtpNotificators
     <br/>
     Вы выбраны в качестве победителя в конкурсе на <a target='_blank' href='http://{Domain}/vacancies/card/{vacancyGuid}'>вакансию</a>
     <br/>
-    В течение 30-ти календарных дней (до {DateTime.Now.AddDays(30)}) вам необходимо подтвердить свое согласие на замещение должности и подписать трудовой договор.
+    В течение 30-ти календарных дней (до {DateTime.Now.AddDays(30).ToString("d",new CultureInfo("ru-RU"))}) вам необходимо подтвердить свое согласие на замещение должности и подписать трудовой договор.
 
             </div>
 
