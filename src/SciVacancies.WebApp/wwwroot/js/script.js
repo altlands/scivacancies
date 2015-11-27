@@ -436,7 +436,9 @@ $(document).ready(function () {
     /*
  * «срок трудового договора» поля должны показываться только, если выбираешь «срочный»
  */
-    $('#cusel-scroll-' + 'ContractTypeValue').find('span').click(toggleContractTime);
+    $('#ContractTypeValue').change(function () {
+        toggleContractTime();
+    });
     toggleContractTime();
     /*
  * сброс фильтра
