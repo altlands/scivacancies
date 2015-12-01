@@ -566,14 +566,15 @@ namespace SciVacancies.WebApp.Controllers
                 foreach (var file in model.Attachments)
                 {
                     var fileName = System.IO.Path.GetFileName(ContentDispositionHeaderValue.Parse(file.ContentDisposition).FileName.Trim('"'));
-
+                    var isExists = Directory.Exists(fullDirectoryPath);
                     //сценарий-А: сохранить файл на диск
                     try
                     {
                         //TODO: Application -> Attachments : что делать с Директорией при удалении(отмене, отклонении) Заявки
                         //TODO: Application -> Attachments : как искать Текущую директорию при повторном добавлении(изменении текущего списка) файлов
                         //TODO: Application -> Attachments : можно ли редактировать список файлов, или Заявки создаются разово и для каждой генеиртся новая папка с вложениями
-                        Directory.CreateDirectory(fullDirectoryPath);
+                        if (!isExists)
+                            Directory.CreateDirectory(fullDirectoryPath);
                         var filePath =
                             $"{_hostingEnvironment.WebRootPath}{_attachmentSettings.Value.Vacancy.PhisicalPathPart}/{newFolderName}/{fileName}";
                         file.SaveAs(filePath);
@@ -589,7 +590,8 @@ namespace SciVacancies.WebApp.Controllers
                     }
                     catch (Exception)
                     {
-                        RemoveAttachmentDirectory(fullDirectoryPath);
+                        if (!isExists)
+                            RemoveAttachmentDirectory(fullDirectoryPath);
                         return View("Error", "Ошибка при сохранении прикреплённых файлов");
                     }
 
@@ -973,10 +975,10 @@ namespace SciVacancies.WebApp.Controllers
             //make date correction
             inCommitteeDateValue = new DateTime(inCommitteeDateValue.Year, inCommitteeDateValue.Month, inCommitteeDateValue.Day, inCommitteeDateValue.Hour, inCommitteeDateValue.Minute, inCommitteeDateValue.Second, DateTimeKind.Utc);
 
-            if (inCommitteeDateValue.ToUniversalTime() < DateTime.Now.ToUniversalTime())
+            if (inCommitteeDateValue < DateTime.UtcNow)
                 ModelState.AddModelError("InCommitteeDateString", "Вы установили дату ранее текущей");
 
-            if ((inCommitteeDateValue.ToUniversalTime() - DateTime.Now.ToUniversalTime()).TotalMinutes < _sagaSettings.Value.Date.DeltaFromPublishToInCommitteeMinMinutes)
+            if ((inCommitteeDateValue - DateTime.UtcNow).TotalMinutes < _sagaSettings.Value.Date.DeltaFromPublishToInCommitteeMinMinutes)
                 ModelState.AddModelError("InCommitteeDateString", $"Вы не можете установить дату перевода вакансии на рассмотрение комиссии раньше, чем через {_sagaSettings.Value.Date.DeltaFromPublishToInCommitteeMinMinutes / (24 * 60)} дн.");
 
             if (!ModelState.IsValid)

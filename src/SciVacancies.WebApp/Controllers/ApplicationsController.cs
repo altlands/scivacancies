@@ -184,14 +184,15 @@ namespace SciVacancies.WebApp.Controllers
                 foreach (var file in model.Attachments)
                 {
                     var fileName = System.IO.Path.GetFileName(ContentDispositionHeaderValue.Parse(file.ContentDisposition).FileName.Trim('"'));
-
+                    var isExists = Directory.Exists(fullDirectoryPath);
                     //сценарий-А: сохранить файл на диск
                     try
                     {
                         //TODO: Application -> Attachments : что делать с Директорией при удалении(отмене, отклонении) Заявки
                         //TODO: Application -> Attachments : как искать Текущую директорию при повторном добавлении(изменении текущего списка) файлов
                         //TODO: Application -> Attachments : можно ли редактировать список файлов, или Заявки создаются разово и для каждой генеиртся новая папка с вложениями
-                        Directory.CreateDirectory(fullDirectoryPath);
+                        if (!isExists)
+                            Directory.CreateDirectory(fullDirectoryPath);
                         var filePath =
                             $"{_hostingEnvironment.WebRootPath}{_attachmentSettings.Value.VacancyApplication.PhisicalPathPart}/{newFolderName}/{fileName}";
                         file.SaveAs(filePath);
@@ -207,7 +208,8 @@ namespace SciVacancies.WebApp.Controllers
                     }
                     catch (Exception)
                     {
-                        RemoveAttachmentDirectory(fullDirectoryPath);
+                        if (!isExists)
+                            RemoveAttachmentDirectory(fullDirectoryPath);
                         return View("Error", "Ошибка при сохранении прикреплённых файлов");
                     }
 
