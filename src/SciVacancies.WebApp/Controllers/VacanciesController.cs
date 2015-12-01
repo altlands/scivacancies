@@ -542,7 +542,7 @@ namespace SciVacancies.WebApp.Controllers
                         .Last()
                         .ToUpper()
                         );
-                    var allowedExtenionsInUpper = _attachmentSettings.Value.Researcher.AllowExtensions.ToUpper();
+                    var allowedExtenionsInUpper = _attachmentSettings.Value.Vacancy.AllowExtensions.ToUpper();
                     if (fileExtensionsInUpper.Any(c => !allowedExtenionsInUpper.Contains(c)))
                         ModelState.AddModelError("Attachments", $"Расширение одного из прикрепленных файлов имеет недопустимое расширение. Допустимые типы файлов: {allowedExtenionsInUpper}");
                 }
