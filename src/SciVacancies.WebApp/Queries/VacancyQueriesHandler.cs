@@ -25,8 +25,8 @@ namespace SciVacancies.WebApp.Queries
         IRequestHandler<SelectPagedVacanciesByGuidsQuery, Page<Vacancy>>,
         IRequestHandler<SelectAllVacancyAttachmentsQuery, IEnumerable<VacancyAttachment>>,
         IRequestHandler<SelectAllExceptCommitteeVacancyAttachmentsQuery, IEnumerable<VacancyAttachment>>,
-        IRequestHandler<SelectCommitteeVacancyAttachmentsQuery, IEnumerable<VacancyAttachment>>
-
+        IRequestHandler<SelectCommitteeVacancyAttachmentsQuery, IEnumerable<VacancyAttachment>>,
+        IRequestHandler<SingleVacancyAttachmentByPathGuidQuery, VacancyAttachment>
     {
         private readonly IDatabase _db;
 
@@ -144,11 +144,17 @@ namespace SciVacancies.WebApp.Queries
 
             return vaAttachments;
         }
+        public VacancyAttachment Handle(SingleVacancyAttachmentByPathGuidQuery msg)
+        {
+            VacancyAttachment vaAttachment = _db.FirstOrDefault<VacancyAttachment>(new Sql($"SELECT * FROM org_vacancy_attachments ra WHERE ra.url LIKE @0 and ra.name LIKE @1", "%" + msg.UrlPath+ "%", "%" + msg.FileName + "%"));
+
+            return vaAttachment;
+        }
         public int Handle(CountVacanciesQuery msg)
         {
             IEnumerable<Vacancy> vacancies = _db.Fetch<Vacancy>(new Sql("SELECT v.* FROM org_vacancies v "));
 
-            if (vacancies != null && vacancies.Count() > 0)
+            if (vacancies != null && vacancies.Any())
             {
                 return vacancies.Count();
             }

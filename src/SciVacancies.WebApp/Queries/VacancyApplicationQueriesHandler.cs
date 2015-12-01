@@ -16,7 +16,8 @@ namespace SciVacancies.WebApp.Queries
         IRequestHandler<SelectPagedVacancyApplicationsByVacancyQuery, Page<VacancyApplication>>,
         IRequestHandler<SelectAllVacancyApplicationAttachmentsQuery, IEnumerable<VacancyApplicationAttachment>>,
         IRequestHandler<CountVacancyApplicationInVacancyQuery, int>,
-        IRequestHandler<SelectVacancyApplicationInVacancyByStatusesQuery, IEnumerable<VacancyApplication>>
+        IRequestHandler<SelectVacancyApplicationInVacancyByStatusesQuery, IEnumerable<VacancyApplication>>,
+        IRequestHandler<SingleVacancyApplicationAttachmentByPathGuidQuery, VacancyApplicationAttachment>
     {
         private readonly IDatabase _db;
 
@@ -91,6 +92,14 @@ namespace SciVacancies.WebApp.Queries
             var vacancyApplications = _db.Fetch<VacancyApplication>(new Sql("Select * FROM res_vacancyapplications va WHERE va.vacancy_guid = @0 AND va.status in (@1)", message.VacancyGuid, message.Statuses.Select(c => (int)c).ToList()));
 
             return vacancyApplications;
+        }
+
+
+        public VacancyApplicationAttachment Handle(SingleVacancyApplicationAttachmentByPathGuidQuery msg)
+        {
+            VacancyApplicationAttachment vacancyApplicatioAttachment = _db.FirstOrDefault<VacancyApplicationAttachment>(new Sql($"SELECT * FROM res_vacancyapplication_attachments ra WHERE ra.url LIKE @0 and ra.name LIKE @1", "%" + msg.UrlPath + "%", "%" + msg.FileName + "%"));
+
+            return vacancyApplicatioAttachment;
         }
     }
 }

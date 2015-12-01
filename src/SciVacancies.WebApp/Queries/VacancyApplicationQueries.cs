@@ -55,4 +55,10 @@ namespace SciVacancies.WebApp.Queries
     {
         public Guid VacancyApplicationGuid { get; set; }
     }
+
+    public class SingleVacancyApplicationAttachmentByPathGuidQuery : IRequest<VacancyApplicationAttachment>
+    {
+        public string FileName { get; set; }
+        public string UrlPath { get; set; }
+    }
 }
