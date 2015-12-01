@@ -210,6 +210,7 @@ namespace SciVacancies.WebApp.Infrastructure
                 .ForMember(d => d.Tasks, o => o.MapFrom(s => s.tasks))
                 .ForMember(d => d.CancelReason, o => o.MapFrom(s => s.cancel_reason))
                 .ForMember(d => d.CommitteeReasolution, o => o.MapFrom(s => s.committee_resolution))
+                .ForMember(d => d.InCommitteeDate, o => o.MapFrom(s => s.committee_start_date))
                 .ForMember(d => d.Attachments, o => o.MapFrom(s => s.attachments))
                 .ForMember(d => d.ResearchTheme, o => o.MapFrom(s => s.researchtheme))
                 .ForMember(d => d.CityName, o => o.MapFrom(s => s.cityname))
