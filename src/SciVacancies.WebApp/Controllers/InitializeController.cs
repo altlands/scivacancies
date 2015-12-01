@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using MediatR;
+using Microsoft.AspNet.Authorization;
 using Microsoft.AspNet.Mvc;
 using SciVacancies.Domain.DataModels;
 using SciVacancies.Domain.Enums;
@@ -27,6 +28,16 @@ namespace SciVacancies.WebApp.Controllers
         {
             _userManager = userManager;
             _mediator = mediator;
+        }
+
+        /// <summary>
+        /// вспомогательный метод для тестировщиков.
+        /// </summary>
+        /// <returns></returns>
+        [Authorize]
+        public ContentResult UtcNow()
+        {
+            return Content(DateTime.UtcNow.ToLocalMoscowVacancyDateTimeString());
         }
 
         //public IActionResult FillDb()
