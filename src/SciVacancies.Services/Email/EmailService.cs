@@ -20,8 +20,8 @@ namespace SciVacancies.Services.Email
 
             if (string.IsNullOrWhiteSpace(Configuration["EmailSettings:Login"]))
                 throw new ArgumentNullException("Не указан логин для подключения к серверу рассылку email-уведомлений");
-            if (string.IsNullOrWhiteSpace(Configuration["EmailSettings:Password"]))
-                throw new ArgumentNullException("Не указан пароль для подключения к серверу рассылку email-уведомлений");
+            //if (string.IsNullOrWhiteSpace(Configuration["EmailSettings:Password"]))
+            //    throw new ArgumentNullException("Не указан пароль для подключения к серверу рассылку email-уведомлений");
 
             this.SmtpClient = new Lazy<SmtpClient>(() => new SmtpClient
             {
