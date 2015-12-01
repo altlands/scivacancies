@@ -47,7 +47,9 @@ namespace SciVacancies.WebApp.Models
         {
             get
             {
-                return _mediator.Send(new SelectAllFoivsQuery())?.Where(c => c.parent_id == null)
+                return _mediator.Send(new SelectAllFoivsQuery())?
+                    .Where(c => c.parent_id == null)
+                    .Where(c=>!c.title.ToLower().Contains("не") && !c.title.ToLower().Contains("указан"))
                     .Select(c => new SelectListItem { Value = c.id.ToString(), Text = c.title }).OrderBy(c=>c.Text);
             }
         }
