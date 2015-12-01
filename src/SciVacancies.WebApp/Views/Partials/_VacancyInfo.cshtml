@@ -1,11 +1,11 @@
 ﻿@using System.Threading.Tasks
 @using SciVacancies
 @using SciVacancies.Domain.Enums
+@using SciVacancies.WebApp
 @using SciVacancies.WebApp.ViewModels
 @model VacancyDetailsViewModel
 
-@if (!string.IsNullOrWhiteSpace(Model.CommitteeReasolution)
-                                                    || (Model.AttachmentsCommittee != null && Model.AttachmentsCommittee.Any()))
+@if (!string.IsNullOrWhiteSpace(Model.CommitteeReasolution) || (Model.AttachmentsCommittee != null && Model.AttachmentsCommittee.Any()))
 {
     <text>
 
@@ -45,7 +45,7 @@
                                 <div>
                                     <div class="field">
                                         <div class="section-eval">
-                                            @item.name <span class="small-icon icon-sm-download"><a href="@(Model.FolderVacanciesAttachmentsUrl + item.url)">Скачать</a></span>
+                                            @item.name <span class="small-icon icon-sm-download"><a filelink=@item.url pathtocatalog=@Model.FolderVacanciesAttachmentsUrl  href="@(Model.FolderVacanciesAttachmentsUrl + item.url)">Скачать</a></span>
                                         </div>
                                     </div>
                                 </div>
@@ -66,6 +66,14 @@
 <ul class="list-information layout-inform">
     <li class="odd">
         <span>Статус:</span><div class="layout-inform__right-col">@Model.Status.GetDescription(User)</div>
+        @if (Model.Status == VacancyStatus.Published)
+        {
+            <text>
+                <div>
+                    Дата окончания публикации вакансии: @Model.InCommitteeDate.ToLocalMoscowVacancyDateTimeString()
+                </div>
+            </text>
+        }
     </li>
     <li class="even">
         <span>Должность:</span><div class="layout-inform__right-col">@Model.Name</div>
@@ -159,7 +167,7 @@
                 @foreach (var item in Model.Attachments)
                 {
                     <div class="section-eval">
-                        @item.name <span class="small-icon icon-sm-download"><a href="@(Model.FolderVacanciesAttachmentsUrl + item.url)">Скачать</a></span>
+                        @item.name <span class="small-icon icon-sm-download"><a filelink=@item.url pathtocatalog=@Model.FolderVacanciesAttachmentsUrl  href="@(Model.FolderVacanciesAttachmentsUrl + item.url)">Скачать</a></span>
                     </div>
                 }
             </div>

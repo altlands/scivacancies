@@ -214,7 +214,7 @@
                     <text>
                         <li>
                             @item.name<br />
-                            <span class="small-icon icon-sm-download"><a href="@(Model.FolderApplicationsAttachmentsUrl + item.url)">Скачать</a></span>
+                            <span class="small-icon icon-sm-download"><a filelink=@item.url pathtocatalog=@Model.FolderApplicationsAttachmentsUrl   href="@(Model.FolderApplicationsAttachmentsUrl + item.url)">Скачать</a></span>
                         </li>
                     </text>
                     }
