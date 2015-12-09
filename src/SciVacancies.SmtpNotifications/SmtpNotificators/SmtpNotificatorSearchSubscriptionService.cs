@@ -16,15 +16,14 @@ namespace SciVacancies.SmtpNotifications.SmtpNotificators
 
         public SmtpNotificatorSearchSubscriptionService(IEmailService emailService, IConfiguration configuration)
         {
-            this.EmailService = emailService;
+            EmailService = emailService;
+            From = configuration["EmailSettings:Login"];
+            Domain = configuration["EmailSettings:Domain"];
+            PortalLink = configuration["EmailSettings:PortalLink"];
 
-            this.From = configuration["EmailSettings:Login"];
-            this.Domain = configuration["EmailSettings:Domain"];
-            this.PortalLink = configuration["EmailSettings:PortalLink"];
-
-            if (string.IsNullOrEmpty(this.From)) throw new ArgumentNullException("From is null");
-            if (string.IsNullOrEmpty(this.Domain)) throw new ArgumentNullException("Domain is null");
-            if (string.IsNullOrEmpty(this.PortalLink)) throw new ArgumentNullException("PortalLink is null");
+            if (string.IsNullOrEmpty(From)) throw new ArgumentNullException("From is null");
+            if (string.IsNullOrEmpty(Domain)) throw new ArgumentNullException("Domain is null");
+            if (string.IsNullOrEmpty(PortalLink)) throw new ArgumentNullException("PortalLink is null");
         }
 
         public void SendCreated(Researcher researcher, Guid searchSubscriptionGuid, string title)

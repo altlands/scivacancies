@@ -91,8 +91,6 @@ namespace SciVacancies.WebApp.ViewModels
 
         }
 
-
-
         /// <summary>
         /// Guid должности из справочника
         /// </summary>
@@ -139,14 +137,12 @@ namespace SciVacancies.WebApp.ViewModels
         /// </summary>
 
         [Required(ErrorMessage = "Укажите минимальную зарплату")]
-        [Range(0, int.MaxValue, ErrorMessage= "Зарплата не может иметь отрицательное значение")]
+        [Range(0, int.MaxValue, ErrorMessage= "Зарплата не может быть ниже установленного значения")]
         public int? SalaryFrom { get; set; }
 
         [Required(ErrorMessage = "Укажите максимальную зарплату")]
-        [Range(0, int.MaxValue, ErrorMessage= "Зарплата не может иметь отрицательное значение")]
-        //[RegularExpression("([1-9][0-9]*)", ErrorMessage = "Значение должно состоять только из цифр")]
+        [Range(0, int.MaxValue, ErrorMessage = "Зарплата не может быть ниже установленного значения")]
         public int? SalaryTo { get; set; }
-        //public Currency SalaryCurrency { get; set; }
 
         /// <summary>
         /// Стимулирующие выплаты

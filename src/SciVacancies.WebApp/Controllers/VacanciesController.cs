@@ -33,6 +33,11 @@ namespace SciVacancies.WebApp.Controllers
         private readonly IOptions<AttachmentSettings> _attachmentSettings;
         private readonly IOptions<SagaSettings> _sagaSettings;
 
+        /// <summary>
+        /// минимальное значнеие ЗП
+        /// </summary>
+        private int _salaryMinValue = 5965;
+
         public VacanciesController(IMediator mediator, IOptions<SagaSettings> sagaSettings, IHostingEnvironment hostingEnvironment, IOptions<AttachmentSettings> attachmentSettings)
         {
             _sagaSettings = sagaSettings;
@@ -49,7 +54,7 @@ namespace SciVacancies.WebApp.Controllers
             if (organizationGuid == Guid.Empty)
                 throw new ArgumentNullException($"{nameof(organizationGuid)}");
 
-            var model = new VacancyCreateViewModel(organizationGuid);
+            var model = new VacancyCreateViewModel(organizationGuid) { SalaryFrom = _salaryMinValue };
             model.InitDictionaries(_mediator);
             return View(model);
         }
@@ -65,14 +70,16 @@ namespace SciVacancies.WebApp.Controllers
                 if (model.ContractType == ContractType.FixedTerm
                     && model.ContractTimeYears == 0
                     && model.ContractTimeMonths == 0)
-                {
                     ModelState.AddModelError("ContractTypeValue", $"Для договора типа \"{ContractType.FixedTerm.GetDescription()}\" укажите срок трудового договора");
-                    model.InitDictionaries(_mediator);
-                    return View("Create", model);
-                }
-                if (model.SalaryFrom != 0 && model.SalaryTo != 0 && model.SalaryFrom > model.SalaryTo)
+                if (model.SalaryFrom < _salaryMinValue)
+                    ModelState.AddModelError("SalaryFrom", $"Значение зарплаты \"от\" не может быть меньше {_salaryMinValue}");
+                if (model.SalaryTo < _salaryMinValue)
+                    ModelState.AddModelError("SalaryTo", $"Значение зарплаты \"до\" не может быть меньше {_salaryMinValue}");
+                if (model.SalaryFrom > model.SalaryTo)
+                    ModelState.AddModelError("SalaryFrom", "Значение зарплаты \"от\" не может быть выше значения \"до\"");
+
+                if (ModelState.ErrorCount > 0)
                 {
-                    ModelState.AddModelError("SalaryFromValue", $"Значение зарплаты \"от\" не может быть выше значения \"до\"");
                     model.InitDictionaries(_mediator);
                     return View("Create", model);
                 }
@@ -145,10 +152,18 @@ namespace SciVacancies.WebApp.Controllers
                 if (model.ContractType == ContractType.FixedTerm
                     && model.ContractTimeYears == 0
                     && model.ContractTimeMonths == 0)
-                {
                     ModelState.AddModelError("ContractTypeValue", $"Для договора типа \"{ContractType.FixedTerm.GetDescription()}\" укажите срок трудового договора");
+                if (model.SalaryFrom < _salaryMinValue)
+                    ModelState.AddModelError("SalaryFrom", $"Значение зарплаты \"от\" не может быть меньше {_salaryMinValue}");
+                if (model.SalaryTo < _salaryMinValue)
+                    ModelState.AddModelError("SalaryTo", $"Значение зарплаты \"до\" не может быть меньше {_salaryMinValue}");
+                if (model.SalaryFrom > model.SalaryTo)
+                    ModelState.AddModelError("SalaryFrom", "Значение зарплаты \"от\" не может быть выше значения \"до\"");
+
+                if (ModelState.ErrorCount > 0)
+                {
                     model.InitDictionaries(_mediator);
-                    return View(model);
+                    return View("Create", model);
                 }
 
                 var vacancy = _mediator.Send(new SingleVacancyQuery { VacancyGuid = model.Guid });
@@ -157,6 +172,7 @@ namespace SciVacancies.WebApp.Controllers
 
                 if (vacancy.status != VacancyStatus.InProcess)
                     return View("Error", $"Вы не можете изменить вакансию с текущим статусом: {vacancy.status.GetDescription()}");
+
 
                 if (ModelState.ErrorCount > 0)
                 {
@@ -987,12 +1003,16 @@ namespace SciVacancies.WebApp.Controllers
 
             if (!ModelState.IsValid)
             {
-                var model = Mapper.Map<VacancyDetailsViewModel>(preModel);
-                model.Criterias = _mediator.Send(new SelectVacancyCriteriasQuery { VacancyGuid = model.Guid });
-                model.CriteriasHierarchy =
-                        _mediator.Send(new SelectAllCriteriasQuery()).ToList().ToHierarchyCriteriaViewModelList(model.Criterias.ToList());
-                model.Attachments = _mediator.Send(new SelectAllExceptCommitteeVacancyAttachmentsQuery { VacancyGuid = model.Guid }).ToList();
-                model.ResearchDirection = _mediator.Send(new SelectResearchDirectionQuery { Id = preModel.researchdirection_id });
+                var model = new VacancyPublishModel
+                {
+                    Guid = id,
+                    Details = Mapper.Map<VacancyDetailsViewModel>(preModel)
+                };
+                model.Details.Criterias = _mediator.Send(new SelectVacancyCriteriasQuery { VacancyGuid = model.Details.Guid });
+                model.Details.CriteriasHierarchy = _mediator.Send(new SelectAllCriteriasQuery()).ToList().ToHierarchyCriteriaViewModelList(model.Details.Criterias.ToList());
+                model.Details.Attachments = _mediator.Send(new SelectAllExceptCommitteeVacancyAttachmentsQuery { VacancyGuid = model.Details.Guid }).ToList();
+                model.Details.ResearchDirection = _mediator.Send(new SelectResearchDirectionQuery { Id = preModel.researchdirection_id });
+
                 return View(model);
             }
 

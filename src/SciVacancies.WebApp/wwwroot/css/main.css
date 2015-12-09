@@ -140,7 +140,7 @@ label {
     display: inline-block;
     vertical-align: middle;
     cursor: pointer;
-    width: 14px;
+    width: 15px;
     height: 15px;
     margin: 0 10px 0 0;
     padding: 0;
@@ -3171,18 +3171,18 @@ ul.tabs li.active span {
     }
 
 
-.graph-details .marker-circle:before {
-    -moz-border-radius: 10px;
-    -webkit-border-radius: 10px;
-    -khtml-border-radius: 10px;
-    border-radius: 10px;
-}
+    .graph-details .marker-circle:before {
+        -moz-border-radius: 10px;
+        -webkit-border-radius: 10px;
+        -khtml-border-radius: 10px;
+        border-radius: 10px;
+    }
 
-.graph-details li span {
-    font-size: 10px;
-    font-family: Arial;
-    line-height: 16px;
-}
+    .graph-details li span {
+        font-size: 10px;
+        font-family: Arial;
+        line-height: 16px;
+    }
 
 .graph-region-select-block {
     margin: 10px 0 0 28px;
@@ -4126,4 +4126,65 @@ input.sub-form-item__input {
 /**/
 .canvasjs-chart-tooltip > div {
     white-space: normal !important;
+}
+
+
+/*для обновления профиля со стороннего ресурса*/
+.row-block-item + .row-block-item {
+    margin: 35px 0 0 0;
+}
+
+.row-block-item {
+    margin: 30px 0 0 0;
+}
+
+.row-item {
+    font-size: 0;
+    display: table;
+    padding: 10px 0 0 0;
+}
+
+    .row-item > * {
+        display: inline-block;
+        vertical-align: middle;
+        width: 300px;
+        box-sizing: border-box;
+        -moz-box-sizing: border-box;
+        -webkit-box-sizing: border-box;
+        padding-left: 20px;
+    }
+
+        .row-item:first-child,
+        .row-item > *:first-child {
+            padding: 0;
+        }
+
+.row-item-label {
+    font: italic 14px Arial;
+    color: #06365c;
+}
+
+    .row-item-label .checkbox {
+        vertical-align: top;
+    }
+
+    .row-item-label label {
+        font: bold 13px Arial;
+        color: #06365c;
+        display: inline-block;
+        vertical-align: top;
+        text-align: left;
+        max-width: 80%;
+    }
+
+.row-block-item input {
+    width: 100%;
+}
+
+.row-item-data .row {
+    margin: 0;
+}
+
+.row-item-top {
+    padding-top: 30px;
 }

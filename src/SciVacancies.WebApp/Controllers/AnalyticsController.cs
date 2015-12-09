@@ -11,13 +11,13 @@ namespace SciVacancies.WebApp.Controllers
 {
     public class AnalyticsController : Controller
     {
-        private readonly IOptions<AnalythicSettings> AnalythicSettings;
-        private readonly IMediator Mediator;
+        private readonly IOptions<AnalythicSettings> _analythicSettings;
+        private readonly IMediator _mediator;
 
         public AnalyticsController(IOptions<AnalythicSettings> analythicSettings, IMediator mediator)
         {
-            this.AnalythicSettings = analythicSettings;
-            this.Mediator = mediator;
+            _analythicSettings = analythicSettings;
+            _mediator = mediator;
         }
 
         /// <summary>
@@ -26,11 +26,11 @@ namespace SciVacancies.WebApp.Controllers
         /// <returns></returns>
         public JsonResult VacancyPositions(int? regionId, Nest.DateInterval interval)
         {
-            var result = Mediator.Send(new AverageVacancyAndPositionAnalythicQuery
+            var result = _mediator.Send(new AverageVacancyAndPositionAnalythicQuery
             {
                 RegionId = regionId,
                 Interval = interval,
-                BarsNumber = AnalythicSettings.Value.BarsNumber
+                BarsNumber = _analythicSettings.Value.BarsNumber
             });
 
             return Json(result);
@@ -38,11 +38,11 @@ namespace SciVacancies.WebApp.Controllers
 
         public JsonResult VacancyPayments(int? regionId, Nest.DateInterval interval)
         {
-            var result = Mediator.Send(new AveragePaymentAndVacancyCountByRegionAnalythicQuery
+            var result = _mediator.Send(new AveragePaymentAndVacancyCountByRegionAnalythicQuery
             {
                 RegionId = regionId,
                 Interval = interval,
-                BarsNumber = AnalythicSettings.Value.BarsNumber
+                BarsNumber = _analythicSettings.Value.BarsNumber
             });
 
             return Json(result);
