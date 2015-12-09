@@ -123,7 +123,7 @@ namespace SciVacancies.Domain.Aggregates
         public void ProlongInCommittee(string reason, DateTime inCommitteeEndDate)
         {
             if (string.IsNullOrEmpty(reason)) throw new ArgumentNullException(nameof(reason));
-            if (InCommitteeEndDate >= inCommitteeEndDate) throw new ArgumentException("invalid inCommitteeEndDate");
+            if (InCommitteeEndDate >= inCommitteeEndDate) throw new ArgumentException("new inCommitteeEndDate is equals or before the current InCommitteeEndDate value");
             if (Status != VacancyStatus.InCommittee) throw new InvalidOperationException("vacancy state is invalid");
 
             RaiseEvent(new VacancyProlongedInCommittee
