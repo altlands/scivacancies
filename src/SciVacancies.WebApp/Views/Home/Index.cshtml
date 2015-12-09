@@ -36,12 +36,11 @@
                             <a asp-controller="vacancies" asp-action="card" asp-route-id="@item.Guid" class="b-item bg_blue">
                                 <div class="b-item__title top_title bg_lblue">
                                     <div class="line_three">@item.Name</div>
-                                    @*<div class="line_three">@item.Name.Substring(0, Math.Min(item.Name.Length, 50))@(item.Name.Length > 50 ? "..." : null)</div>*@
                                 </div>
                                 <div class="b-item__content vac_item">
                                     <div class="cell-middle">
                                         <div class="b-vacan__price">@item.SalaryFrom – @item.SalaryTo руб.</div>
-                                        <span class="b-vacan__desc">@item.OrganizationName</span>
+                                        <div class="b-vacan__desc line_five_content">@item.OrganizationName</div>
                                     </div>
                                     <div class="helper"></div>
                                 </div>

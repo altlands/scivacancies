@@ -3701,6 +3701,10 @@ table.table.request-table a.sort-order {
     height: 65px;
     overflow: hidden;
 }
+.line_five_content{
+    height: 100px;
+    overflow: hidden;
+}
 
 .b-vacan__price {
     font-size: 25px;
