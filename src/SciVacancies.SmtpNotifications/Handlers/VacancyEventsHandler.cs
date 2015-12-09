@@ -105,12 +105,18 @@ namespace SciVacancies.SmtpNotifications.Handlers
                 };
             if (!researcherGuids.Any()) return;
 
-            VacancyStatusChangedSmtpNotificationForResearcher(researcherGuids.Where(guid => guid!= Guid.Empty).ToList(), vacancy, VacancyStatus.Closed);
+            VacancyStatusChangedSmtpNotificationForResearcher(researcherGuids.Where(guid => guid != Guid.Empty).ToList(), vacancy, VacancyStatus.Closed);
         }
 
         public void Handle(VacancyCancelled msg)
         {
             VacancyStatusChangedSmtpNotificationForResearcher(msg.VacancyGuid, VacancyStatus.Cancelled);
+
+            Vacancy vacancy = _db.SingleOrDefault<Vacancy>(new Sql($"SELECT v.* FROM org_vacancies v WHERE v.guid = @0", msg.VacancyGuid));
+            if (vacancy == null) return;
+            VacancyApplication vacancyapplicaiton = _db.FirstOrDefault<VacancyApplication>(new Sql($"SELECT va.* FROM res_vacancyapplications va WHERE va.vacancy_guid = @0", msg.VacancyGuid));
+            if (vacancyapplicaiton == null)
+                VacancyStatusChangedSmtpNotificationForOrganization(msg.VacancyGuid, VacancyStatus.Cancelled);
         }
 
 
@@ -148,7 +154,7 @@ namespace SciVacancies.SmtpNotifications.Handlers
             var organization =
                 _db.SingleOrDefaultById<Organization>(vacancy.organization_guid);
 
-            _smtpNotificatorVacancyService.SendVacancyStatusChangedForOrganization(vacancy, organization,status);
+            _smtpNotificatorVacancyService.SendVacancyStatusChangedForOrganization(vacancy, organization, status);
         }
 
         private void OfferAcceptedByWinner(Guid vacancyGuid)
