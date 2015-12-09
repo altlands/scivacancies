@@ -127,7 +127,7 @@
     "FileName": "sci-{Date}.log",
     "LogLevel": "Information",
     "TimeStampPattern": "{Timestamp:yyyy-MM-dd HH:mm:ss.fff} [{Level}] {Message}{NewLine}{Exception}",
-    "FileSizeBytes": "1048576",
+    "FileSizeBytes": "3145728",
     "FileCountLimit": "31"
   },
   "AnalythicSettings": {
