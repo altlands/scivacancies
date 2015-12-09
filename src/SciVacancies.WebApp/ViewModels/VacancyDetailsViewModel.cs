@@ -146,14 +146,14 @@ namespace SciVacancies.WebApp.ViewModels
         [Obsolete("Дублируется с DateStart")]
         public DateTime CreationDate { get; set; }
 
-
-
-        public DateTime InCommitteeDate { get; set; }
-        public string InCommitteeDateString
-        {
-            get { return InCommitteeDate.ToString("dd.MM.yy"); }
-            set { InCommitteeDate = DateTime.Parse(value, new CultureInfo("ru-RU")); }
-        }
+        /// <summary>
+        /// Дата начала рассмотрения комиссией
+        /// </summary>
+        public DateTime? InCommitteeStartDate { get; set; }
+        /// <summary>
+        /// Дата окончания рассмотрения комиссией
+        /// </summary>
+        public DateTime? InCommitteeEndDate { get; set; }
 
         /// <summary>
         /// Заявки на вакансию

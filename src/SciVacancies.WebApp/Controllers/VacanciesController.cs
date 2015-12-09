@@ -948,12 +948,16 @@ namespace SciVacancies.WebApp.Controllers
             if (result is ViewResult) return (ViewResult)result;
             var preModel = (Vacancy)result;
 
-            var model = Mapper.Map<VacancyDetailsViewModel>(preModel);
-            model.Criterias = _mediator.Send(new SelectVacancyCriteriasQuery { VacancyGuid = model.Guid });
-            model.CriteriasHierarchy =
-                    _mediator.Send(new SelectAllCriteriasQuery()).ToList().ToHierarchyCriteriaViewModelList(model.Criterias.ToList());
-            model.Attachments = _mediator.Send(new SelectAllExceptCommitteeVacancyAttachmentsQuery { VacancyGuid = model.Guid }).ToList();
-            model.ResearchDirection = _mediator.Send(new SelectResearchDirectionQuery { Id = preModel.researchdirection_id });
+            var model = new VacancyPublishModel
+            {
+                Guid = id,
+                Details = Mapper.Map<VacancyDetailsViewModel>(preModel)
+            };
+            model.Details.Criterias = _mediator.Send(new SelectVacancyCriteriasQuery { VacancyGuid = model.Details.Guid });
+            model.Details.CriteriasHierarchy = _mediator.Send(new SelectAllCriteriasQuery()).ToList().ToHierarchyCriteriaViewModelList(model.Details.Criterias.ToList());
+            model.Details.Attachments = _mediator.Send(new SelectAllExceptCommitteeVacancyAttachmentsQuery { VacancyGuid = model.Details.Guid }).ToList();
+            model.Details.ResearchDirection = _mediator.Send(new SelectResearchDirectionQuery { Id = preModel.researchdirection_id });
+
             return View(model);
         }
 

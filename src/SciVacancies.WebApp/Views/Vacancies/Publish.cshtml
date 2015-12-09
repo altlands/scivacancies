@@ -1,11 +1,11 @@
 ﻿@using System.Threading.Tasks
-@model SciVacancies.WebApp.ViewModels.VacancyDetailsViewModel
+@model SciVacancies.WebApp.ViewModels.VacancyPublishModel
 
 <div class="crumbs">
     <a href="/">Главная</a><span class="separator">/</span>
     <a asp-controller="organizations" asp-action="account">Карточка организации</a><span class="separator">/</span>
     <a asp-controller="organizations" asp-action="vacancies">Вакансии</a><span class="separator">/</span>
-    <a asp-controller="vacancies" asp-action="details" asp-route-id="@Model.Guid">@Model.Name</a><span class="separator">/</span>
+    <a asp-controller="vacancies" asp-action="details" asp-route-id="@Model.Guid">@(Model.Details?.Name)</a><span class="separator">/</span>
     @ViewBag.Title
 </div>
 
@@ -43,11 +43,11 @@
     <h4>Описание Вакансии:</h4>
 </div>
 
-@Component.Invoke("VacancyInfo", Model)
+@Component.Invoke("VacancyInfo", Model.Details)
 
 <div class="b-bottom-nav">
     <a href="/" class="small-icon icon-prev">Главная</a>
     <a asp-controller="organizations" asp-action="account" class="small-icon icon-prev">Карточка организации</a>
     <a asp-controller="organizations" asp-action="vacancies" class="small-icon icon-prev">Вакансии</a>
-    <a asp-controller="vacancies" asp-action="details" asp-route-id="@Model.Guid" class="small-icon icon-prev">@Model.Name</a>
+    <a asp-controller="vacancies" asp-action="details" asp-route-id="@Model.Guid" class="small-icon icon-prev">@(Model.Details?.Name)</a>
 </div>
