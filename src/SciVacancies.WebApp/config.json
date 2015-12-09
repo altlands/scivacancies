@@ -112,11 +112,12 @@
     "MainPageExpiration": 20
   },
   "EmailSettings": {
-    "Login": "mailer@ученые-исследователи.рф",
+    "Login": "noreply@informika.ru",
     "Password": "",
+
     "Host": "relay.informika.ru",
     "Port": 25,
-    "EnableSSL": true,
+    "EnableSSL": false,
     "UseDefaultCredentials": false,
 
     "Domain": "xn----8sbfhdabdwf1afqu5baxe0f2d.xn--p1ai",
