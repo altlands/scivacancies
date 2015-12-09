@@ -22,7 +22,7 @@
     {
         public int FirstNotificationMinutes { get; set; }
         public int SecondNotificationMinutes { get; set; }
-        public int ProlongingDays { get; set; }
+        public int ProlongingMinutes { get; set; }
     }
     public class OfferResponseAwaitingDateSettings
     {

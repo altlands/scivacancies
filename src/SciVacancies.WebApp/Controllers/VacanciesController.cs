@@ -1082,6 +1082,81 @@ namespace SciVacancies.WebApp.Controllers
             return View(model);
         }
 
+        [HttpGet]
+        [PageTitle("Продление срока рассмотрения вакансии")]
+        [Authorize(Roles = ConstTerms.RequireRoleOrganizationAdmin)]
+        [BindOrganizationIdFromClaims]
+        public IActionResult ProlongInCommittee(Guid id, Guid organizationGuid)
+        {
+            if (id == Guid.Empty)
+                throw new ArgumentNullException(nameof(id));
+            if (organizationGuid == Guid.Empty)
+                throw new ArgumentNullException(nameof(organizationGuid));
+
+            var preModel = _mediator.Send(new SingleVacancyQuery { VacancyGuid = id });
+
+            if (preModel == null)
+                return HttpNotFound();
+
+            if (preModel.organization_guid != organizationGuid)
+                return View("Error", "Продлять рассмотрение можно только для своих вакансий");
+
+            if (preModel.status != VacancyStatus.InCommittee)
+                return View("Error", "Продлять рассмотрение можно только для вакансий, находящихся на рассмотрении");
+
+            if (preModel.committee_start_date.HasValue
+                && preModel.committee_end_date.HasValue
+                && (preModel.committee_end_date.Value - preModel.committee_start_date.Value).Days >= 29)
+                return View("Error", "Вы не можете продлить рассмотрение до более чем 30 дней");
+
+            var model = Mapper.Map<VacancyDetailsViewModel>(preModel);
+
+            return View(model);
+        }
+        [HttpPost]
+        [Authorize(Roles = ConstTerms.RequireRoleOrganizationAdmin)]
+        [BindOrganizationIdFromClaims]
+        public IActionResult ProlongInCommitteeSubmit(Guid id, string reason, Guid organizationGuid)
+        {
+            if (id == Guid.Empty)
+                throw new ArgumentNullException(nameof(id));
+            if (organizationGuid == Guid.Empty)
+                throw new ArgumentNullException(nameof(organizationGuid));
+            if (string.IsNullOrWhiteSpace(reason))
+                throw new ArgumentNullException(nameof(reason));
+
+            var preModel = _mediator.Send(new SingleVacancyQuery { VacancyGuid = id });
+
+            if (preModel == null)
+                return HttpNotFound();
+
+            if (preModel.organization_guid != organizationGuid)
+                return View("Error", "Продлять рассмотрение можно только для своих вакансий");
+
+            if (preModel.status != VacancyStatus.InCommittee)
+                return View("Error", "Продлять рассмотрение можно только для вакансий, находящихся на рассмотрении");
+
+            if (preModel.committee_start_date.HasValue
+                && preModel.committee_end_date.HasValue
+                && (preModel.committee_end_date.Value - preModel.committee_start_date.Value).Days >= 29)
+                return View("Error", "Вы не можете продлить рассмотрение до более чем 30 дней");
+
+            try
+            {
+                if (preModel.committee_end_date.HasValue)
+                    _mediator.Send(new ProlongVacancyInCommitteeCommand { VacancyGuid = id, Reason = reason, InCommitteeEndDate = preModel.committee_end_date.Value.AddMinutes(_sagaSettings.Value.Date.Committee.ProlongingMinutes) });
+                else
+                    _mediator.Send(new ProlongVacancyInCommitteeCommand { VacancyGuid = id, Reason = reason, InCommitteeEndDate = DateTime.UtcNow.AddMinutes(_sagaSettings.Value.Date.Committee.ProlongingMinutes) });
+            }
+            catch (Exception exception)
+            {
+
+            }
+
+            return RedirectToAction("details", new { id });
+        }
+
+
 
         private void RemoveAttachmentDirectory(string fullpath)
         {

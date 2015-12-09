@@ -1,0 +1,55 @@
+﻿@using System.Threading.Tasks
+@model SciVacancies.WebApp.ViewModels.VacancyDetailsViewModel
+
+<div class="crumbs">
+    <a href="/">Главная</a><span class="separator">/</span>
+    <a asp-controller="organizations" asp-action="account">Карточка организации</a><span class="separator">/</span>
+    <a asp-controller="organizations" asp-action="vacancies">Вакансии</a><span class="separator">/</span>
+    <a asp-controller="vacancies" asp-action="details" asp-route-id="@Model.Guid">@Model.Name</a><span class="separator">/</span>
+    @ViewBag.Title
+</div>
+
+<h3>Продлить срок</h3>
+
+<h4>Продлить срок рассмотрения вакансии</h4>
+
+<form asp-controller="vacancies" asp-action="prolongincommitteesubmit" class="l-application" method="POST">
+    <input type="hidden" asp-anti-forgery="true" />
+    <input type="hidden" id="id" name="id" value="@Model.Guid" />
+
+    <div class="row">
+        <div class="table-form">
+
+            <div class="table-row form-row">
+                <div class="left-cell">
+                    <label>Причина продления:</label>
+                </div>
+                <div class="right-cell">
+                    <input type="text" id="Reason" name="Reason" class="big-input" />
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="ctr-buttons button-align">
+            <input type="submit" class="blue-btn" value="Подтвердить" />
+        </div>
+    </div>
+
+</form>
+
+
+<div class="title-popup">
+    <h4>Описание Вакансии:</h4>
+</div>
+
+@Component.Invoke("VacancyInfo", Model)
+
+<div class="b-bottom-nav">
+    <a href="/" class="small-icon icon-prev">Главная</a>
+    <a asp-controller="organizations" asp-action="account" class="small-icon icon-prev">Карточка организации</a>
+    <a asp-controller="organizations" asp-action="vacancies" class="small-icon icon-prev">Вакансии</a>
+    <a asp-controller="vacancies" asp-action="details" asp-route-id="@Model.Guid" class="small-icon icon-prev">@Model.Name</a>
+</div>

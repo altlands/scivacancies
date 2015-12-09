@@ -43,7 +43,7 @@
       "Committee": {
         "FirstNotificationMinutes": -3,
         "SecondNotificationMinutes": 2,
-        "ProlongingDays": 15
+        "ProlongingMinutes": 15
       },
       "OfferResponseAwaiting": {
         "WinnerNotificationMinutes": -1,

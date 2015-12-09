@@ -68,6 +68,12 @@
         {
             <a asp-controller="vacancies" asp-action="addcommitteereason" asp-route-id="@Model.Guid" class="btn btn-success" title="Указать решение комиссии">Указать решение комиссии</a>
         }
+        @if (Model.Status == VacancyStatus.InCommittee
+            && Model.InCommitteeStartDate.HasValue && Model.InCommitteeEndDate.HasValue
+            && (Model.InCommitteeEndDate.Value - Model.InCommitteeStartDate.Value).Days < 16)
+        {
+            <a asp-controller="vacancies" asp-action="prolongincommittee" asp-route-id="@Model.Guid" class="btn btn-default" title="Продлить рассмотрение">Продлить рассмотрение</a>
+        }
         @if (Model.Status == VacancyStatus.OfferAcceptedByWinner)
         {
             <a asp-controller="vacancies" asp-action="close" asp-route-id="@Model.Guid" class="btn btn-success" title="Закрыть вакансию">Победитель принял предложение. Закрыть вакансию</a>
