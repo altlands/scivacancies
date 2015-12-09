@@ -546,7 +546,7 @@ namespace SciVacancies.WebApp.Controllers
         //todo: ntemnikov [ValidateAntiForgeryToken]
         public async Task<IActionResult> ForgotPassword(ForgotPasswordViewModel model)
         {
-            // !!! Восстанавливаем пароль даже на неактивированную учётную запись !!!
+            // Восстанавливаем пароль даже на неактивированную учётную запись
             #region validation
             if (!ModelState.IsValid)
                 return View(model);
@@ -563,7 +563,7 @@ namespace SciVacancies.WebApp.Controllers
             if (logins != null && logins.Any())
                 ModelState.AddModelError("UserName", $"Для восстановления пароля воспользуйтесь порталом (или сайтом), через который Вы выполнили авторизацию ({string.Join(", ", logins.Select(c => c.LoginProvider).ToList())}).");
 
-            if (!ModelState.IsValid)
+            if (ModelState.ErrorCount > 0)
                 return View(model);
             #endregion
 
@@ -632,11 +632,18 @@ namespace SciVacancies.WebApp.Controllers
 
                     //отправить письмо с новым кодом на восстановление пароля
                     await _authorizeService.CallPasswordResetAsync(user, researcher);
-                    return View("Success", "Для восстановления доступа к Порталу мы отправили вам письмо на электронную почту, указанную при регистрации.");
+
+                    //return View("Success", "Для восстановления доступа к Порталу мы отправили вам письмо на электронную почту, указанную при регистрации.");
+                    return RedirectToAction("ForgotPasswordEmailSent");
                 }
             }
 
-            return View("Error", "Мы не нашли ваш профиль, чтобы сгенерирвать вам письмо.");
+            return View("Error", "Мы не нашли ваш профиль, чтобы отправить вам письмо.");
+        }
+
+        public ViewResult ForgotPasswordEmailSent()
+        {
+            return View("Success", "Для восстановления доступа к Порталу мы отправили вам письмо на электронную почту, указанную при регистрации.");
         }
 
         /// <summary>
@@ -718,15 +725,15 @@ namespace SciVacancies.WebApp.Controllers
         }
 
         [PageTitle("Восстановление доступа к Системе")]
-        public IActionResult RestorePasswordConfirmed(List<string> errors)
+        public IActionResult RestorePasswordConfirmed()
         {
-            if (TempData["modelErrors"] != null)
+            var errorsList = new List<string>();
+            var errors = TempData["modelErrors"] as string[];
+            if (errors != null && errors.Any())
             {
-                var errorsList = JsonConvert.DeserializeObject<List<string>>(TempData["modelErrors"].ToString());
-                return View(errorsList.Count == 0 ? new SuccessfulIdentityResultViewModel() : new IdentityResult(errorsList));
+                errorsList.AddRange(errors);
             }
-
-            return Content("нет данных для отображения на форме");
+            return View(errorsList.Count == 0 ? new SuccessfulIdentityResultViewModel() : new IdentityResult(errorsList));
         }
         #endregion
 
