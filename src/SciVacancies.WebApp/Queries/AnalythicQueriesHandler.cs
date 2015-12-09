@@ -76,6 +76,9 @@ namespace SciVacancies.WebApp.Queries
                 histograms = new List<PositionsHistogram>();
                 Dictionary<string, PositionsHistogram> positionsDictionary = new Dictionary<string, PositionsHistogram>();
 
+                if (aggregations == null)
+                    throw new Exception($"{nameof(aggregations)} is null");
+
                 Bucket dateBucket = aggregations["histogram"] as Bucket;
 
                 int k = AnalythicSettings.Value.BarsNumber - 1;
@@ -462,6 +465,9 @@ namespace SciVacancies.WebApp.Queries
                 }
 
                 histograms = new List<PaymentsHistogram>();
+
+                if (aggregations == null)
+                    throw new Exception($"{nameof(aggregations)} is null");
 
                 Bucket dateBucket = aggregations["histogram"] as Bucket;
 

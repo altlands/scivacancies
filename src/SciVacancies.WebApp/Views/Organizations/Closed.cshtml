@@ -59,7 +59,7 @@
     </thead>
     <tbody>
 
-        @if (Model.PagedVacancies != null && Model.PagedVacancies.Items!=null)
+        @if (Model.PagedVacancies != null && Model.PagedVacancies.Items != null)
         {
             var i = Model.PagedVacancies.FirstRowIndexOnPage - 1;
             foreach (var item in Model.PagedVacancies.Items)
@@ -68,15 +68,18 @@
                 <text>
                 <tr>
                     <td>@i</td>
-                    <td><a asp-controller="vacancies" asp-action="details" asp-route-id="@item.guid" title="Просмотр вакансии">
-                    @if (item.read_id == null)
+                    <td>
+                        <a asp-controller="vacancies" asp-action="details" asp-route-id="@item.guid" title="Просмотр вакансии">
+                            @if (item.read_id == null)
                     {
-                        <text>VAC ...</text>
-                    }
-                    else
-                    {
-                        <text>VAC @item.read_id</text>
-                    }</a></td>
+                                <text>VAC ...</text>
+                            }
+                            else
+                            {
+                                <text>VAC @item.read_id</text>
+                            }
+                        </a>
+                    </td>
                     <td>@item.name</td>
                     <td>@(item.announcement_date?.ToLocalMoscowVacancyDateTimeString()) <!--01-09-14, 16:04--></td>
                     <td class="view-col">
@@ -90,6 +93,7 @@
                         }
                         @if (item.pretender_researcher_guid != Guid.Empty)
                         {
+                            <br />
                             <a asp-controller="applications" asp-action="preview" asp-route-id="@item.pretender_vacancyapplication_guid" class="success-request-icon"><span class="italic bold">Претендент</span></a>
                         }
                     </td>

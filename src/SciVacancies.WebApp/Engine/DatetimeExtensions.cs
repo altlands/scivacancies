@@ -33,6 +33,17 @@ namespace SciVacancies.WebApp
             return $"{mscSource.Day.ToString("00")}-{mscSource.Month.ToString("00")}-{mscSource.Year.ToString("0000")}, {mscSource.Hour.ToString("00")}:{mscSource.Minute.ToString("00")}";
         }
 
+        /// <summary>
+        /// показать дату и время в формате для сайта в московском часовом поясе
+        /// </summary>
+        /// <param name="source"></param>
+        /// <returns></returns>
+        public static string ToLocalMoscowVacancyDateString(this DateTime source)
+        {
+            var mscSource = source.AddHours(3);
+            return $"{mscSource.Day.ToString("00")}-{mscSource.Month.ToString("00")}-{mscSource.Year.ToString("0000")}";
+        }
+
 
     }
 }

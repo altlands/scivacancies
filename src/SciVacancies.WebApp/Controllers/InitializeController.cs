@@ -37,7 +37,7 @@ namespace SciVacancies.WebApp.Controllers
         [Authorize]
         public ContentResult UtcNow()
         {
-            return Content(DateTime.UtcNow.ToLocalMoscowVacancyDateTimeString());
+            return Content(DateTime.UtcNow.ToLocalVacancyDateTimeString());
         }
 
         //public IActionResult FillDb()

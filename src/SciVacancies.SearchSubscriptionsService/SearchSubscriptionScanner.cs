@@ -49,8 +49,8 @@ namespace SciVacancies.SearchSubscriptionsService
             _elasticService = elasticService;
             this._db = db;
 
-            if(configuration==null)
-            _logger.LogInformation("SearchSubscriptionScanner: configuration is null ");
+            if (configuration == null)
+                _logger.LogInformation("SearchSubscriptionScanner: configuration is null ");
 
             _logger.LogInformation("SearchSubscriptionScanner: getting EmailSettings:Login");
             this._from = configuration["EmailSettings:Login"];
@@ -146,7 +146,12 @@ namespace SciVacancies.SearchSubscriptionsService
                                         <a target='_blank' href='http://{_domain}/researchers/account/'>личном кабинете</a>.
                                     </div>
                                     ";
-                        emailService.Send(new SciVacMailMessage(_from, researcher.email, "Уведомление с портала вакансий по Вашей поисковой подписке", body));
+                        using (
+                            var message = new SciVacMailMessage(_from, researcher.email,
+                                "Уведомление с портала вакансий по Вашей поисковой подписке", body))
+                        {
+                            emailService.Send(message);
+                        }
 
                         _logger.LogInformation($"SearchSubscriptionScanner: письмо {researcher.email} для {researcherFullName} отправлено");
                     }

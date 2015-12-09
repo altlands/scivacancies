@@ -11,12 +11,6 @@
             <h4>Вход в личный кабинет</h4>
         </div>
         <div class="content-popup">
-            @*<a class="researcherslogin" href="/account/logintestuser/user1">Пользователь1.Вход</a><br />
-                <a class="researcherslogin" href="/account/logintestuser/user2">Пользователь2.Вход</a><br />
-                <a class="researcherslogin" href="/account/logintestuser/user3">Пользователь3.Вход</a><br />
-                <a class="researcherslogin" href="/account/loginorganization">Организация.Вход</a>*@<br />
-
-
             <div class="b-tabs b-tabs_page">
                 <ul class="nav nav-tabs" id="tab">
                     <li>
@@ -51,7 +45,9 @@
                         </form>
 
                         <p>
-                            <a href="/account/login?user=@((int)AuthorizeUserTypes.Researcher)&resource=@((int)AuthorizeResourceTypes.ScienceMap)">Авторизоваться через Карту Науки</a>
+                            <div class="mt10">
+                             <a href="/account/login?user=@((int)AuthorizeUserTypes.Researcher)&resource=@((int)AuthorizeResourceTypes.ScienceMap)">Авторизоваться через Карту Науки</a>
+                            </div>
                         </p>
                     </div>
                     <div class="tab-pane" id="b-organization">

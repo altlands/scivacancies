@@ -28,7 +28,7 @@
                 <h4>Вакансии дня @ViewBag.test</h4>
                 <div class="b-items">
 
-                    @if (Model.VacanciesList != null && Model.VacanciesList.Items!=null)
+                    @if (Model.VacanciesList != null && Model.VacanciesList.Items != null)
                     {
                         foreach (var item in Model.VacanciesList.Items)
                         {
@@ -56,7 +56,7 @@
             <div class="tab-pane" id="work-org">
                 <h4>Работа в организациях</h4>
                 <div class="b-items">
-                    @if (Model.OrganizationsList != null && Model.OrganizationsList.Items!=null)
+                    @if (Model.OrganizationsList != null && Model.OrganizationsList.Items != null)
                     {
                         foreach (var item in Model.OrganizationsList.Items)
                         {

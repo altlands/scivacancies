@@ -5,7 +5,7 @@
 @using SciVacancies.WebApp.ViewModels
 @model VacancyDetailsViewModel
 
-@if (!string.IsNullOrWhiteSpace(Model.CommitteeReasolution) || (Model.AttachmentsCommittee != null && Model.AttachmentsCommittee.Any()))
+@if (User.Identity.IsAuthenticated &&  !string.IsNullOrWhiteSpace(Model.CommitteeReasolution) || (Model.AttachmentsCommittee != null && Model.AttachmentsCommittee.Any()))
 {
     <text>
 
@@ -62,19 +62,24 @@
     </text>
 }
 
-<div class="title-cat-inform">Специализация:</div>
+
 <ul class="list-information layout-inform">
     <li class="odd">
         <span>Статус:</span><div class="layout-inform__right-col">@Model.Status.GetDescription(User)</div>
         @if (Model.Status == VacancyStatus.Published)
         {
             <text>
-                <div>
-                    Дата окончания публикации вакансии: @Model.InCommitteeDate.ToLocalMoscowVacancyDateTimeString()
-                </div>
+            <div>
+                Дата окончания публикации вакансии: @(Model.InCommitteeStartDate?.ToLocalMoscowVacancyDateString())
+            </div>
             </text>
         }
     </li>
+</ul>
+
+
+<div class="title-cat-inform">Специализация:</div>
+<ul class="list-information layout-inform">
     <li class="even">
         <span>Должность:</span><div class="layout-inform__right-col">@Model.Name</div>
     </li>
