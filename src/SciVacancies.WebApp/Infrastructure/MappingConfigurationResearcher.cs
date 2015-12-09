@@ -223,45 +223,44 @@ namespace SciVacancies.WebApp.Infrastructure
                 .ForMember(d => d.MiddleNameEng, o => o.MapFrom(s => s.PatronymicEng))
                 .ForMember(d => d.LastNameEng, o => o.MapFrom(s => s.SecondNameEng))
                 .ForMember(d => d.PreviousLastNameEng, o => o.MapFrom(s => s.PreviousSecondNameEng))
-                .ForMember(d => d.Educations, o => o.MapFrom(s =>
-                    s.Educations.Select(c => new CheckableListItem<EducationEditViewModel> { This = Mapper.Map<EducationEditViewModel>(c) })))
-                .ForMember(d => d.Publications, o => o.MapFrom(s => s.Publications.Select(c => new CheckableListItem<PublicationEditViewModel> { This = Mapper.Map<PublicationEditViewModel>(c) })))
+                .ForMember(d => d.Educations, o => o.MapFrom(s => s.Educations.Select(c => Mapper.Map<EducationEditViewModel>(c)).ToList()))
+                .ForMember(d => d.Publications, o => o.MapFrom(s => s.Publications.Select(c => Mapper.Map<PublicationEditViewModel>(c)).ToList()))
 
                 .ForMember(d => d.Conferences, o => o.MapFrom(s =>
                     !string.IsNullOrWhiteSpace(s.Conferences)
-                    ? JsonConvert.DeserializeObject<List<ConferenceEditViewModel>>(s.Conferences).Select(c => new CheckableListItem<ConferenceEditViewModel> { This = c })
-                    : new CheckableItemsList<ConferenceEditViewModel>()
+                    ? JsonConvert.DeserializeObject<List<ConferenceEditViewModel>>(s.Conferences).ToList()
+                    : new List<ConferenceEditViewModel>()
                     ))
 
                     .ForMember(d => d.Rewards, o => o.MapFrom(s =>
                     !string.IsNullOrWhiteSpace(s.Rewards)
-                    ? JsonConvert.DeserializeObject<List<RewardEditViewModel>>(s.Rewards).Select(c => new CheckableListItem<RewardEditViewModel> { This = c })
-                    : new CheckableItemsList<RewardEditViewModel>()
+                    ? JsonConvert.DeserializeObject<List<RewardEditViewModel>>(s.Rewards).ToList()
+                    : new List<RewardEditViewModel>()
                     ))
                 .ForMember(d => d.Memberships, o => o.MapFrom(s =>
                     !string.IsNullOrWhiteSpace(s.Memberships)
-                    ? JsonConvert.DeserializeObject<List<MembershipEditViewModel>>(s.Memberships).Select(c => new CheckableListItem<MembershipEditViewModel> { This = c })
-                    : new CheckableItemsList<MembershipEditViewModel>()
+                    ? JsonConvert.DeserializeObject<List<MembershipEditViewModel>>(s.Memberships).ToList()
+                    : new List<MembershipEditViewModel>()
                     ))
                 .ForMember(d => d.Interests, o => o.MapFrom(s =>
                     !string.IsNullOrWhiteSpace(s.Interests)
-                    ? JsonConvert.DeserializeObject<List<InterestEditViewModel>>(s.Interests).Select(c => new CheckableListItem<InterestEditViewModel> { This = c })
-                    : new CheckableItemsList<InterestEditViewModel>()
+                    ? JsonConvert.DeserializeObject<List<InterestEditViewModel>>(s.Interests).ToList()
+                    : new List<InterestEditViewModel>()
                     ))
                 .ForMember(d => d.ResearchActivity, o => o.MapFrom(s =>
                     !string.IsNullOrWhiteSpace(s.ResearchActivity)
-                    ? JsonConvert.DeserializeObject<List<ActivityEditViewModel>>(s.ResearchActivity).Select(c => new CheckableListItem<ActivityEditViewModel> { This = c })
-                    : new CheckableItemsList<ActivityEditViewModel>()
+                    ? JsonConvert.DeserializeObject<List<ActivityEditViewModel>>(s.ResearchActivity).ToList()
+                    : new List<ActivityEditViewModel>()
                     ))
                 .ForMember(d => d.TeachingActivity, o => o.MapFrom(s =>
                     !string.IsNullOrWhiteSpace(s.TeachingActivity)
-                    ? JsonConvert.DeserializeObject<List<ActivityEditViewModel>>(s.TeachingActivity).Select(c => new CheckableListItem<ActivityEditViewModel> { This = c })
-                    : new CheckableItemsList<ActivityEditViewModel>()
+                    ? JsonConvert.DeserializeObject<List<ActivityEditViewModel>>(s.TeachingActivity).ToList()
+                    : new List<ActivityEditViewModel>()
                     ))
                 .ForMember(d => d.OtherActivity, o => o.MapFrom(s =>
                     !string.IsNullOrWhiteSpace(s.OtherActivity)
-                    ? JsonConvert.DeserializeObject<List<ActivityEditViewModel>>(s.OtherActivity).Select(c => new CheckableListItem<ActivityEditViewModel> { This = c })
-                    : new CheckableItemsList<ActivityEditViewModel>()
+                    ? JsonConvert.DeserializeObject<List<ActivityEditViewModel>>(s.OtherActivity).ToList()
+                    : new List<ActivityEditViewModel>()
                     ))
                 ;
 

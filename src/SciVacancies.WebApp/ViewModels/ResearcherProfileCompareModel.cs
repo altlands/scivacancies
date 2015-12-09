@@ -1,5 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-using SciVacancies.WebApp.Models;
+﻿using System.Collections.Generic;
 
 namespace SciVacancies.WebApp.ViewModels
 {
@@ -24,8 +23,8 @@ namespace SciVacancies.WebApp.ViewModels
 
     public class ResearcherProfileCompareModelItem
     {
-        /*Names*/
-        public bool SelectNames { get; set; }
+        /*Common*/
+        public bool SelectCommon { get; set; }
         public string FirstName { get; set; }
         public string MiddleName { get; set; }
         public string LastName { get; set; }
@@ -34,43 +33,36 @@ namespace SciVacancies.WebApp.ViewModels
         public string MiddleNameEng { get; set; }
         public string LastNameEng { get; set; }
         public string PreviousLastNameEng { get; set; }
-
-        /*Numbers*/
-        public bool SelectExtNumber { get; set; }
         public int ExtNumber { get; set; }
-
-        public bool SelectBirthYear { get; set; }
         public int BirthYear { get; set; }
-
-
-        /*Contacts*/
-        public bool SelectEmail { get; set; }
         public string Email { get; set; }
-
-        public bool SelectPhone { get; set; }
         public string Phone { get; set; }
-
-        /*Activity*/
-
-        public bool SelectScienceDegree { get; set; }
         public string ScienceDegree { get; set; }
-
-        public bool SelectScienceRank { get; set; }
         public string ScienceRank { get; set; }
 
         /*Collections*/
 
-        public CheckableItemsList<ConferenceEditViewModel> Conferences { get; set; }
 
-        public CheckableItemsList<RewardEditViewModel> Rewards { get; set; }
-        public CheckableItemsList<MembershipEditViewModel> Memberships { get; set; }
-        public CheckableItemsList<EducationEditViewModel> Educations { get; set; }
-        public CheckableItemsList<PublicationEditViewModel> Publications { get; set; }
-        public CheckableItemsList<InterestEditViewModel> Interests { get; set; }
+        public List<ConferenceEditViewModel> Conferences { get; set; }
+        public bool ConferencesChecked { get; set; }
 
-        public CheckableItemsList<ActivityEditViewModel> ResearchActivity { get; set; }
-        public CheckableItemsList<ActivityEditViewModel> TeachingActivity { get; set; }
-        public CheckableItemsList<ActivityEditViewModel> OtherActivity { get; set; }
+        public List<RewardEditViewModel> Rewards { get; set; }
+        public bool RewardsChecked { get; set; }
+        public List<MembershipEditViewModel> Memberships { get; set; }
+        public bool MembershipsChecked { get; set; }
+        public List<EducationEditViewModel> Educations { get; set; }
+        public bool EducationsChecked { get; set; }
+        public List<PublicationEditViewModel> Publications { get; set; }
+        public bool PublicationsChecked { get; set; }
+        public List<InterestEditViewModel> Interests { get; set; }
+        public bool InterestsChecked { get; set; }
+
+        public List<ActivityEditViewModel> ResearchActivity { get; set; }
+        public bool ResearchActivityChecked { get; set; }
+        public List<ActivityEditViewModel> TeachingActivity { get; set; }
+        public bool TeachingActivityChecked { get; set; }
+        public List<ActivityEditViewModel> OtherActivity { get; set; }
+        public bool OtherActivityChecked { get; set; }
 
     }
 }

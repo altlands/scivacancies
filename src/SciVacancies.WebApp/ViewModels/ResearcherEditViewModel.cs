@@ -47,15 +47,15 @@ namespace SciVacancies.WebApp.ViewModels
 
         public string ScienceDegree { get; set; }
         public string ScienceRank { get; set; }
-        public List<RewardEditViewModel> Rewards { get; set; } = new CheckableList<RewardEditViewModel>();
-        public List<MembershipEditViewModel> Memberships { get; set; } = new CheckableList<MembershipEditViewModel>();
-        public List<ConferenceEditViewModel> Conferences { get; set; } = new CheckableList<ConferenceEditViewModel>();
-        public List<EducationEditViewModel> Educations { get; set; } = new CheckableList<EducationEditViewModel>();
-        public List<PublicationEditViewModel> Publications { get; set; } = new CheckableList<PublicationEditViewModel>();
-        public List<InterestEditViewModel> Interests { get; set; } = new CheckableList<InterestEditViewModel>();
-        public List<ActivityEditViewModel> ResearchActivity { get; set; } = new CheckableList<ActivityEditViewModel>();
-        public List<ActivityEditViewModel> TeachingActivity { get; set; } = new CheckableList<ActivityEditViewModel>();
-        public List<ActivityEditViewModel> OtherActivity { get; set; } = new CheckableList<ActivityEditViewModel>();
+        public List<RewardEditViewModel> Rewards { get; set; } = new List<RewardEditViewModel>();
+        public List<MembershipEditViewModel> Memberships { get; set; } = new List<MembershipEditViewModel>();
+        public List<ConferenceEditViewModel> Conferences { get; set; } = new List<ConferenceEditViewModel>();
+        public List<EducationEditViewModel> Educations { get; set; } = new List<EducationEditViewModel>();
+        public List<PublicationEditViewModel> Publications { get; set; } = new List<PublicationEditViewModel>();
+        public List<InterestEditViewModel> Interests { get; set; } = new List<InterestEditViewModel>();
+        public List<ActivityEditViewModel> ResearchActivity { get; set; } = new List<ActivityEditViewModel>();
+        public List<ActivityEditViewModel> TeachingActivity { get; set; } = new List<ActivityEditViewModel>();
+        public List<ActivityEditViewModel> OtherActivity { get; set; } = new List<ActivityEditViewModel>();
 
         public IList<UserLoginInfo> Logins { get; set; }
 
