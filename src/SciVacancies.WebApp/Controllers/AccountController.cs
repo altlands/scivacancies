@@ -18,6 +18,7 @@ using SciVacancies.WebApp.Models.OAuth;
 using Microsoft.Framework.OptionsModel;
 using AutoMapper;
 using Microsoft.AspNet.Authorization;
+using Microsoft.Framework.Logging;
 using SciVacancies.WebApp.Engine;
 using SciVacancies.WebApp.Infrastructure.WebAuthorize;
 using SciVacancies.WebApp.Models.DataModels;
@@ -33,14 +34,16 @@ namespace SciVacancies.WebApp.Controllers
         private readonly IOptions<OAuthSettings> _oauthSettings;
         private readonly IAuthorizeService _authorizeService;
         private readonly IOptions<ApiSettings> _apiSettings;
+        private readonly ILogger _loggerFactory;
 
-        public AccountController(SciVacUserManager userManager, IMediator mediator, IOptions<OAuthSettings> oAuthSettings, IOptions<ApiSettings> apiSettings, IAuthorizeService authorizeService)
+        public AccountController(SciVacUserManager userManager, IMediator mediator, IOptions<OAuthSettings> oAuthSettings, IOptions<ApiSettings> apiSettings, IAuthorizeService authorizeService, ILoggerFactory loggerFactory)
         {
             _mediator = mediator;
             _userManager = userManager;
             _oauthSettings = oAuthSettings;
             _authorizeService = authorizeService;
             _apiSettings = apiSettings;
+            _loggerFactory = loggerFactory.CreateLogger<AccountController>();
         }
 
         public IActionResult LoginUser(string id)
@@ -285,21 +288,33 @@ namespace SciVacancies.WebApp.Controllers
                                                     Response);
                                         }
                                     }
-                                    else throw new ArgumentNullException("Token response is null");
+                                    else
+                                    {
+                                        _loggerFactory.LogError("Token response is null");
+                                        throw new ArgumentNullException("Token response is null");
+                                    }
                                 }
                                 else
                                 {
                                     if (!string.IsNullOrWhiteSpace(GetErrorFromQuery()))
                                     {
                                         if (!string.IsNullOrWhiteSpace(GetErrorDescriptionFromQuery()))
+                                        {
+                                            _loggerFactory.LogError(GetErrorDescriptionFromQuery());
                                             return View("Error", GetErrorDescriptionFromQuery());
+                                        }
+                                        _loggerFactory.LogError(GetErrorFromQuery());
                                         return View("Error", GetErrorFromQuery());
                                     }
-
+                                    _loggerFactory.LogError("Oauth authorization code is null or empty");
                                     throw new ArgumentNullException("Oauth authorization code is null or empty");
                                 }
                             }
-                            else throw new ArgumentException("Oauth state mismatch");
+                            else
+                            {
+                                _loggerFactory.LogError("Oauth state mismatch");
+                                throw new ArgumentException("Oauth state mismatch");
+                            }
                             break;
                     }
                     break;
