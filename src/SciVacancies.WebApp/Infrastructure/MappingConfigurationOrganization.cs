@@ -1,9 +1,11 @@
-﻿using AutoMapper;
+﻿using System.Collections.Generic;
+using AutoMapper;
 using SciVacancies.Domain.DataModels;
 using SciVacancies.Domain.Events;
 using SciVacancies.ReadModel.Core;
 using SciVacancies.WebApp.ViewModels;
 using System.Linq;
+using Newtonsoft.Json;
 
 namespace SciVacancies.WebApp.Infrastructure
 {
@@ -116,6 +118,7 @@ namespace SciVacancies.WebApp.Infrastructure
                 .ForMember(d => d.region_id, o => o.MapFrom(s => s.Data.RegionId))
                 .ForMember(d => d.researchdirection_id, o => o.MapFrom(s => s.Data.ResearchDirectionId))
                 .ForMember(d => d.criterias, o => o.MapFrom(s => s.Data.Criterias))
+                .ForMember(d => d.custom_criterias, o => o.MapFrom(s => s.Data.CustomCriterias))
                 .ForMember(d => d.attachments, o => o.MapFrom(s => s.Data.Attachments))
                 .ForMember(d => d.organization_guid, o => o.MapFrom(s => s.OrganizationGuid))
                 .ForMember(d => d.creation_date, o => o.MapFrom(s => s.TimeStamp));
@@ -148,6 +151,7 @@ namespace SciVacancies.WebApp.Infrastructure
                 .ForMember(d => d.region_id, o => o.MapFrom(s => s.Data.RegionId))
                 .ForMember(d => d.researchdirection_id, o => o.MapFrom(s => s.Data.ResearchDirectionId))
                 .ForMember(d => d.criterias, o => o.MapFrom(s => s.Data.Criterias))
+                .ForMember(d => d.custom_criterias, o => o.MapFrom(s => s.Data.CustomCriterias))
                 .ForMember(d => d.attachments, o => o.MapFrom(s => s.Data.Attachments))
                 .ForMember(d => d.organization_guid, o => o.MapFrom(s => s.OrganizationGuid))
                 .ForMember(d => d.update_date, o => o.MapFrom(s => s.TimeStamp));
@@ -199,6 +203,7 @@ namespace SciVacancies.WebApp.Infrastructure
                 .ForMember(d => d.RegionId, o => o.MapFrom(s => s.region_id))
                 .ForMember(d => d.ResearchDirectionId, o => o.MapFrom(s => s.researchdirection_id))
                 .ForMember(d => d.Criterias, o => o.MapFrom(s => s.criterias))
+                .ForMember(d => d.CustomCriterias, o => o.MapFrom(s => !string.IsNullOrWhiteSpace(s.custom_criterias) ? JsonConvert.DeserializeObject<List<CustomCriteriaViewModel>>(s.custom_criterias) : new List<CustomCriteriaViewModel>()))
                 //.ForMember(d => d, o => o.MapFrom(s => s.attachments))
                 .ForMember(d => d.OrganizationGuid, o => o.MapFrom(s => s.organization_guid))
                 ;
@@ -235,6 +240,7 @@ namespace SciVacancies.WebApp.Infrastructure
                 .ForMember(d => d.RegionId, o => o.MapFrom(s => s.region_id))
                 .ForMember(d => d.ResearchDirectionId, o => o.MapFrom(s => s.researchdirection_id))
                 //.ForMember(d => d., o => o.MapFrom(s => s.criterias))
+                .ForMember(d => d.CustomCriterias, o => o.MapFrom(s => !string.IsNullOrWhiteSpace(s.custom_criterias) ? JsonConvert.DeserializeObject<List<CustomCriteriaViewModel>>(s.custom_criterias) : new List<CustomCriteriaViewModel>()))
                 .ForMember(d => d.OrganizationGuid, o => o.MapFrom(s => s.organization_guid))
                 .ForMember(d => d.IsWinnerAccept, o => o.MapFrom(s => s.is_winner_accept))
                 .ForMember(d => d.WinnerResearcherGuid, o => o.MapFrom(s => s.winner_researcher_guid))
@@ -277,6 +283,7 @@ namespace SciVacancies.WebApp.Infrastructure
                 .ForMember(d => d.ResearchDirection, o => o.MapFrom(s => s.ResearchDirection))
                 .ForMember(d => d.ResearchDirectionId, o => o.MapFrom(s => s.ResearchDirectionId))
                 .ForMember(d => d.Criterias, o => o.MapFrom(s => s.CriteriasHierarchy.SelectMany(c => c.Items.Where(d => d.Count > 0))))
+                .ForMember(d => d.CustomCriterias, src => src.MapFrom(c => c.CustomCriterias.Any() ? JsonConvert.SerializeObject(c.CustomCriterias) : string.Empty))
                 //.ForMember(d => d.OrganizationFoiv, o => o.MapFrom(s => s))
                 //.ForMember(d => d.OrganizationFoivId, o => o.MapFrom(s => s))
                 ;

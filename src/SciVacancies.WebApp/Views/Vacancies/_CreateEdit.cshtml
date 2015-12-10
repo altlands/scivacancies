@@ -2,6 +2,16 @@
 @using SciVacancies.WebApp.ViewModels
 @model VacancyCreateViewModel
 
+@{
+    Model.CustomCriterias = Model.CustomCriterias ?? new List<CustomCriteriaViewModel>();
+    Model.CustomCriterias.Insert(0, new CustomCriteriaViewModel());
+
+    var invisibleItemStyle = "display: none;";
+    string useStyle;
+    string cuselUniqueKey;
+}
+
+
 <div asp-validation-summary="ValidationSummary.All"></div>
 
 <form class="l-application b-app-rows" method="POST">
@@ -137,9 +147,9 @@
                         var @group = Model.CriteriasHierarchy[groupIndex];
                         <div class="b-publication">
 
-                            <input type="hidden" name="CriteriasHierarchy.Index" value="@groupIndex" />
-                            <input type="hidden" asp-for="CriteriasHierarchy[groupIndex].Id" />
-                            <input type="hidden" asp-for="CriteriasHierarchy[groupIndex].Title" />
+                            <input type="hidden" name="CriteriasHierarchy.Index" value="@groupIndex"/>
+                            <input type="hidden" asp-for="CriteriasHierarchy[groupIndex].Id"/>
+                            <input type="hidden" asp-for="CriteriasHierarchy[groupIndex].Title"/>
 
                             <div class="b-publication__name"><span class="name-section">@group.Title (@group.Items.Count)</span></div>
                             <div class="list-fields">
@@ -148,28 +158,64 @@
                                 {
                                     var item = @group.Items[itemIndex];
                                     <div>
-                                        <input type="hidden" name="CriteriasHierarchy[groupIndex].Items.Index" value="@itemIndex" />
-                                        <input type="hidden" asp-for="CriteriasHierarchy[groupIndex].Items[itemIndex].Id" />
-                                        <input type="hidden" asp-for="CriteriasHierarchy[groupIndex].Items[itemIndex].ParentId" />
-                                        <input type="hidden" asp-for="CriteriasHierarchy[groupIndex].Items[itemIndex].Code" />
-                                        <input type="hidden" asp-for="CriteriasHierarchy[groupIndex].Items[itemIndex].Title" />
-
+                                        <input type="hidden" name="CriteriasHierarchy[groupIndex].Items.Index" value="@itemIndex"/>
+                                        <input type="hidden" asp-for="CriteriasHierarchy[groupIndex].Items[itemIndex].Id"/>
+                                        <input type="hidden" asp-for="CriteriasHierarchy[groupIndex].Items[itemIndex].ParentId"/>
+                                        <input type="hidden" asp-for="CriteriasHierarchy[groupIndex].Items[itemIndex].Code"/>
+                                        <input type="hidden" asp-for="CriteriasHierarchy[groupIndex].Items[itemIndex].Title"/>
                                         <div class="field">
                                             <input type="number" asp-for="CriteriasHierarchy[groupIndex].Items[itemIndex].Count"/>
                                             <span>@item.Title (шт.)</span>
                                             <span asp-validation-for="CriteriasHierarchy[groupIndex].Items[itemIndex].Count"></span>
                                         </div>
-
                                     </div>
                                 }
                             </div>
-
                         </div>
                     }
-
-
                 </div>
             </div>
+
+            <div class="table-row form-row">
+                <div class="left-cell">
+                    <label>Квалификационное требование:</label>
+                </div>
+                <div class="right-cell">
+                    <div class="property-list-container" data-property-responsible="CustomCriterias" data-innercount="@(Model.CustomCriterias.Count-1)">
+
+                        <ul class="list-CustomCriterias content-list">
+                            @for (var i = 0; i < Model.CustomCriterias.Count; i++)
+                            {
+                                useStyle = i == 0 ? invisibleItemStyle : string.Empty;
+                                <text>
+                                <li style="@useStyle" class="property-list-item sub-form-item" data-list-template="@(i == 0 ? "true" : "false")">
+                                    <input type="hidden" name="CustomCriterias.Index" value="@i" />
+
+                                    <div>
+                                        <div class="sub-form-item__title-field"><span>Название</span></div>
+                                        <input asp-for="CustomCriterias[i].Title" class="w366"/>
+                                        <span asp-validation-for="CustomCriterias[i].Title"></span>
+                                    </div>
+
+                                    <div class="mt10">
+                                        <div class="sub-form-item__title-field"><span>Количество</span></div>
+                                        <input asp-for="CustomCriterias[i].Count" class="sub-form-item__input" />
+                                        <span asp-validation-for="CustomCriterias[i].Count"></span>
+                                    </div>
+
+                                    <div class="buttons">
+                                        <span class="big-link-remove" onclick="return removeItemFromList(this, 'CustomCriterias');"></span>
+                                    </div>
+                                </li>
+                                </text>
+                            }
+                        </ul>
+                        <a onclick="return addNewItemToList(this, 'CustomCriterias')" class="link-add lk-icon italic link-add-field" href="#">Добавить требование</a>
+                    </div>
+                </div>
+            </div>
+
+
 
         </div>
     </div>
@@ -359,7 +405,9 @@
 
     <div class="row without-border">
         <div class="ctr-buttons button-align">
-            <span class="green-btn middle-icon icon-ok">Сохранить и опубликовать<input type="submit" class="bt-default" onclick="javascript: vacancySaveOptions({ publish: true });" value="" /></span><span class="blue-btn middle-icon icon-ok">Сохранить как черновик<input type="submit" class="bt-default" onclick="javascript: vacancySaveOptions({ saveDraft: true });" value="" /></span><a asp-controller="organizations" asp-action="vacancies"><span class="blue-btn middle-icon icon-close">Закрыть</span>
+            <span class="green-btn middle-icon icon-ok">Сохранить и опубликовать<input type="submit" class="bt-default" onclick="javascript: vacancySaveOptions({ publish: true }); return beforeFormSubmit(this, 'vacancyEdit');"  value="" /></span>
+            <span class="blue-btn middle-icon icon-ok">Сохранить как черновик<input type="submit" class="bt-default" onclick="javascript: vacancySaveOptions({ saveDraft: true }); return beforeFormSubmit(this, 'vacancyEdit');" value="" /></span>
+            <a asp-controller="organizations" asp-action="vacancies"><span class="blue-btn middle-icon icon-close">Закрыть</span>
             </a>
         </div>
     </div>

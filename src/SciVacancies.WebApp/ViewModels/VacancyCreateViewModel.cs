@@ -241,17 +241,23 @@ namespace SciVacancies.WebApp.ViewModels
         public string Region { get; set; }
         public IEnumerable<SelectListItem> Regions { get; set; }
 
+
         public string CityName { get; set; }
 
         /// <summary>
-        /// Притерии
+        /// Критерии
         /// </summary>
         public List<CriteriaItemViewModel> CriteriasHierarchy { get; set; } = new List<CriteriaItemViewModel>();
         public List<VacancyCriteria> Criterias { get; set; }
+        /// <summary>
+        /// Критерии, которые организация добавляет по своему усмотрению
+        /// </summary>
+        public List<CustomCriteriaViewModel> CustomCriterias { get; set; } = new List<CustomCriteriaViewModel>();
 
         /// <summary>
         /// Autoincrimented field in DB - может быть null
         /// </summary>
         public long? ReadId { get; set; }
+
     }
 }

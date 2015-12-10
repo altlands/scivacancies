@@ -181,7 +181,11 @@ namespace SciVacancies.WebApp.ViewModels
 
         public IEnumerable<VacancyCriteria> Criterias { get; set; }
         public List<CriteriaItemViewModel> CriteriasHierarchy { get; set; }
-        
+        /// <summary>
+        /// Критерии, которые организация добавляет по своему усмотрению
+        /// </summary>
+        public List<CustomCriteriaViewModel> CustomCriterias { get; set; } = new List<CustomCriteriaViewModel>();
+
         /// <summary>
         /// причина отмены
         /// </summary>

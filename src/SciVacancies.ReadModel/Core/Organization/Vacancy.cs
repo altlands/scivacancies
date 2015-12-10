@@ -209,6 +209,14 @@ namespace SciVacancies.ReadModel.Core
 
         [Ignore]
         public List<VacancyCriteria> criterias { get; set; }
+
+        /// <summary>
+        /// Дополнительные критерии
+        /// </summary>
+        [Column]
+        public string custom_criterias { get; set; }
+
+
         [Ignore]
         public List<VacancyAttachment> attachments { get; set; }
 

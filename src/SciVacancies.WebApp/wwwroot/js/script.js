@@ -698,31 +698,18 @@ function selectedItemFromModalDictionary(hiddenInputName, textInput, newValue, d
  * перед отправкой формы удалить шаблоны пополнения списков
  */
 function isEmptyOrSpaces(str) {
-    return str === undefined || str === null || str.match(/^ *$/) !== null;
+    return str === undefined || str === null || str === 0 || str === "0" || str.match(/^ *$/) !== null;
 }
-function beforeFormSubmit(source, key) {
-    var form = $(source).parents("form")[0];
-    $(form).find("[data-list-template=\"true\"]").remove();
+function checkEmptyProperties(form, arrayProperties)
+{
+    var itemsToDelete = [];
+    //проверяем каждое свойство-коллекцию
+    $(arrayProperties).each(function (index) {
+        var arrayProperty = arrayProperties[index];
+        var container = $(form).find('.property-list-container[data-property-responsible="' + arrayProperty.name + '"]');
+        var subForms = $(container).find('.property-list-item');
 
-    //удалить незаполненные суб-формы с формы перед отправкой на сервер
-    if (key !== undefined && key === 'researcherEdit') {
-        var itemsToDelete = [];
-        //свойства-коллекции, в которых могут быть суб-формы, нужно проверить на пустые поля, и удалить эти суб-формы из списков если они не заполнены
-        var arrayProperties = [
-            { name: 'Educations', fieldsCouldBeEmpty: ['City', 'UniversityShortName', 'FacultyShortName', 'Degree'] },
-            { name: 'ResearchActivity', fieldsCouldBeEmpty: ['organization', 'position', 'title', 'type'] },
-            { name: 'TeachingActivity', fieldsCouldBeEmpty: ['organization', 'position', 'title', 'type'] },
-            { name: 'OtherActivity', fieldsCouldBeEmpty: ['organization', 'position', 'title', 'type'] },
-            { name: 'Rewards', fieldsCouldBeEmpty: ['title', 'org'] },
-            { name: 'Memberships', fieldsCouldBeEmpty: ['org', 'position'] },
-            { name: 'Conferences', fieldsCouldBeEmpty: ['conference', 'title', 'categoryType'] },
-            { name: 'Publications', fieldsCouldBeEmpty: ['Name', 'Authors'] }
-        ];
-        //проверяем каждое свойство-коллекцию
-        $(arrayProperties).each(function (index) {
-            var arrayProperty = arrayProperties[index];
-            var container = $(form).find('.property-list-container[data-property-responsible="' + arrayProperty.name + '"]');
-            var subForms = $(container).find('.property-list-item');
+        if (arrayProperty.fieldsCouldBeEmpty.length > 0) {
 
             //проверяем каждый объект в свойстве-коллекции
             for (var i = 0; i < subForms.length; i++) {
@@ -741,11 +728,57 @@ function beforeFormSubmit(source, key) {
                     itemsToDelete.push(subForm);
                 }
             }
+        } else {
 
-        });
+            //проверяем каждый объект в свойстве-коллекции
+            for (var i = 0; i < subForms.length; i++) {
+                var subForm = subForms[i];
+                var counterOfNonEmptyFields = 0;
+                var inputsInSubForm = $(subForm).find("input:not(:hidden)");
+                //проверяем, что все свойства в суб-форме, которые могут быть пустыми, - пустые
+                $(inputsInSubForm).each(function () {
+                    var source = $(this).val();
+                    if (!isEmptyOrSpaces(source)) {
+                        counterOfNonEmptyFields++;
+                    }
+                });
+                //если все возможные поля в суб-форме пустые, то удалить суб-форму
+                if (counterOfNonEmptyFields === 0) {
+                    itemsToDelete.push(subForm);
+                }
+            }
+        }
+    });
+    $(itemsToDelete).remove();
+}
+function beforeFormSubmit(source, key) {
+    var form = $(source).parents("form")[0];
+    $(form).find("[data-list-template=\"true\"]").remove();
 
-        $(itemsToDelete).remove();
+    //удалить незаполненные суб-формы с формы перед отправкой на сервер
+    if (key !== undefined && key === 'researcherEdit') {
+        //свойства-коллекции, в которых могут быть суб-формы, нужно проверить на пустые поля, и удалить эти суб-формы из списков если они не заполнены
+        var arrayProperties = [
+            { name: 'Educations', fieldsCouldBeEmpty: ['City', 'UniversityShortName', 'FacultyShortName', 'Degree'] },
+            { name: 'ResearchActivity', fieldsCouldBeEmpty: ['organization', 'position', 'title', 'type'] },
+            { name: 'TeachingActivity', fieldsCouldBeEmpty: ['organization', 'position', 'title', 'type'] },
+            { name: 'OtherActivity', fieldsCouldBeEmpty: ['organization', 'position', 'title', 'type'] },
+            { name: 'Rewards', fieldsCouldBeEmpty: ['title', 'org'] },
+            { name: 'Memberships', fieldsCouldBeEmpty: ['org', 'position'] },
+            { name: 'Conferences', fieldsCouldBeEmpty: ['conference', 'title', 'categoryType'] },
+            { name: 'Publications', fieldsCouldBeEmpty: ['Name', 'Authors'] }
+        ];
+        checkEmptyProperties(form, arrayProperties);
 
+    }
+
+    //удалить незаполненные суб-формы с формы перед отправкой на сервер
+    if (key !== undefined && key === 'vacancyEdit') {
+        //свойства-коллекции, в которых могут быть суб-формы, нужно проверить на пустые поля, и удалить эти суб-формы из списков если они не заполнены
+        var arrayProperties = [
+            { name: 'CustomCriterias', fieldsCouldBeEmpty: [] }
+        ];
+        checkEmptyProperties(form, arrayProperties);
     }
 
     return true;

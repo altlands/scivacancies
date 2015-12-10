@@ -127,6 +127,22 @@
             }
         </div>
     </li>
+    @if (Model.CustomCriterias != null)
+            {
+        <li class="odd">
+            <span>Квалифицированные требования:</span>
+            <div>
+                @foreach (var item in Model.CustomCriterias)
+                {
+                    <div class="field">
+                        &nbsp; &mdash; &nbsp;
+                        @item.Title:
+                        @item.Count шт.
+                    </div>
+                }
+            </div>
+        </li>
+    }
 </ul>
 
 <div class="title-cat-inform">Условия:</div>
