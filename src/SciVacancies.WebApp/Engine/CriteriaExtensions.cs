@@ -18,7 +18,10 @@ namespace SciVacancies.WebApp.Engine
         {
             var result = new List<CriteriaItemViewModel>();
 
-            result.AddRange(source.Where(c => !c.parent_id.HasValue || c.parent_id.Value == 0).Select(c => new CriteriaItemViewModel
+            var afterSource = source.Where(c => !c.title.Contains("совокупная") && !c.title.Contains("цитируемост"));
+
+
+            result.AddRange(afterSource.Where(c => !c.parent_id.HasValue || c.parent_id.Value == 0).Select(c => new CriteriaItemViewModel
             {
                 Id = c.id,
                 Title = c.title
@@ -27,7 +30,7 @@ namespace SciVacancies.WebApp.Engine
             result.ForEach(c =>
             {
                 c.Items =
-                    source.Where(d => d.parent_id.HasValue && d.parent_id.Value == c.Id)
+                    afterSource.Where(d => d.parent_id.HasValue && d.parent_id.Value == c.Id)
                         .Select(d => new CriteriaItemViewModel
                         {
                             Id = d.id,
