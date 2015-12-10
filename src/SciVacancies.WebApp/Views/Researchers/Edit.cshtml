@@ -18,8 +18,6 @@
     Model.Conferences.Insert(0, new ConferenceEditViewModel());
     Model.Memberships = Model.Memberships ?? new List<MembershipEditViewModel>();
     Model.Memberships.Insert(0, new MembershipEditViewModel());
-    Model.Interests = Model.Interests ?? new List<InterestEditViewModel>();
-    Model.Interests.Insert(0, new InterestEditViewModel());
     Model.ResearchActivity = Model.ResearchActivity ?? new List<ActivityEditViewModel>();
     Model.ResearchActivity.Insert(0, new ActivityEditViewModel());
     Model.TeachingActivity = Model.TeachingActivity ?? new List<ActivityEditViewModel>();
@@ -787,7 +785,7 @@
     </div>
     <div class="row">
         <div class="ctr-buttons button-align mt12 mb5">
-            <span class="save-button">Сохранить изменения<input type="submit" class="bt-default" onclick=" return beforeFormSubmit(this, 'researcherEdit');" value="" /></span>
+            <span class="save-button">Сохранить изменения<input type="submit" class="bt-default" onclick="return beforeFormSubmit(this, 'researcherEdit');" value="" /></span>
             <a asp-controller="researchers" asp-action="account" class="close-button">Закрыть</a>
         </div>
     </div>
