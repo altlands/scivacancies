@@ -281,7 +281,14 @@
                         <label>Ученая степень:</label>
                     </div>
                     <div class="right-cell">
-                        <input asp-for="ScienceDegree" value="без степени" disabled class="disabled big-input" />
+                        @if (string.IsNullOrWhiteSpace(Model.ScienceDegree))
+                        {
+                            <input type="text" value="без степени" disabled="disabled" class="disabled big-input" />
+                        }
+                        else
+                        {
+                            <input asp-for="ScienceDegree" disabled="disabled" class="disabled big-input" />
+                        }
                     </div>
                 </div>
 
@@ -290,7 +297,15 @@
                         <label>Ученые звания:</label>
                     </div>
                     <div class="right-cell">
-                        <input asp-for="ScienceRank" value="без звания" disabled class="disabled big-input" />
+                        @if (string.IsNullOrWhiteSpace(Model.ScienceRank))
+                        {
+                            <input type="text" value="без звания" disabled="disabled" class="disabled big-input" />
+                        }
+                        else
+                        {
+                            <input asp-for="ScienceRank" disabled="disabled" class="disabled big-input" />
+                        }
+
                     </div>
                 </div>
 
@@ -301,7 +316,7 @@
                     <div class="right-cell">
                         <div class="property-list-container">
                             <ol class="content-list">
-                                @if (Model.RewardsDeserialized!=null)
+                                @if (Model.RewardsDeserialized != null)
                                 {
                                     foreach (var item in Model.RewardsDeserialized.OrderBy(c => c.year))
                                     {
@@ -323,7 +338,7 @@
                     <div class="right-cell">
                         <div class="property-list-container">
                             <ol class="content-list">
-                                @if (Model.MembershipsDeserialized!=null)
+                                @if (Model.MembershipsDeserialized != null)
                                 {
                                     foreach (var item in Model.MembershipsDeserialized)
                                     {
@@ -368,7 +383,7 @@
                     <div class="right-cell">
                         <div class="property-list-container">
                             <ol class="content-list">
-                                @if (Model.ConferencesDeserialized!=null)
+                                @if (Model.ConferencesDeserialized != null)
                                 {
                                     foreach (var item in Model.ConferencesDeserialized)
                                     {
