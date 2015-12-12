@@ -74,6 +74,14 @@
             </div>
             </text>
         }
+        @if (Model.Status == VacancyStatus.InCommittee)
+        {
+            <text>
+            <div>
+                Дата окончания публикации вакансии: @(Model.InCommitteeEndDate?.ToLocalMoscowVacancyDateString())
+            </div>
+            </text>
+        }
     </li>
 </ul>
 
