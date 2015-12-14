@@ -137,7 +137,7 @@ namespace SciVacancies.Domain.DataModels
         /// <summary>
         /// Идентификатор позиции
         /// </summary>
-        public int PositionTypeId { get; set; }
+        public int? PositionTypeId { get; set; }
 
         /// <summary>
         /// Название региона
@@ -147,7 +147,7 @@ namespace SciVacancies.Domain.DataModels
         /// <summary>
         /// Идентфикатор региона
         /// </summary>
-        public int RegionId { get; set; }
+        public int? RegionId { get; set; }
 
         /// <summary>
         /// Наименование отрасли науки
@@ -157,7 +157,7 @@ namespace SciVacancies.Domain.DataModels
         /// <summary>
         /// Идентификатор отрасли науки
         /// </summary>
-        public int ResearchDirectionId { get; set; }
+        public int? ResearchDirectionId { get; set; }
 
         #endregion
 

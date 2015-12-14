@@ -423,7 +423,6 @@ namespace SciVacancies.WebApp.Controllers
 
         [Authorize(Roles = ConstTerms.RequireRoleResearcher)]
         [HttpPost]
-        //todo: ntemnikov [ValidateAntiForgeryToken]
         [BindResearcherIdFromClaims]
         [PageTitle("Избранная вакансия")]
         public IActionResult RemoveFavoritePost(Guid vacancyGuid, Guid researcherGuid)

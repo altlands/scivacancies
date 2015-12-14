@@ -54,7 +54,7 @@ namespace SciVacancies.WebApp.Controllers
             if (organizationGuid == Guid.Empty)
                 throw new ArgumentNullException($"{nameof(organizationGuid)}");
 
-            var model = new VacancyCreateViewModel(organizationGuid) { SalaryFrom = _salaryMinValue };
+            var model = new VacancyCreateViewModel(organizationGuid);
             model.InitDictionaries(_mediator);
             return View(model);
         }
@@ -62,10 +62,9 @@ namespace SciVacancies.WebApp.Controllers
         [PageTitle("Новая вакансия")]
         [HttpPost]
         [Authorize(Roles = ConstTerms.RequireRoleOrganizationAdmin)]
-        //todo: ntemnikov [ValidateAntiForgeryToken]
         public ActionResult Create(VacancyCreateViewModel model)
         {
-            if (ModelState.IsValid)
+            if (model.ToPublish)
             {
                 if (model.ContractType == ContractType.FixedTerm
                     && model.ContractTimeYears == 0
@@ -77,35 +76,51 @@ namespace SciVacancies.WebApp.Controllers
                     ModelState.AddModelError("SalaryTo", $"Значение зарплаты \"до\" не может быть меньше {_salaryMinValue}");
                 if (model.SalaryFrom > model.SalaryTo)
                     ModelState.AddModelError("SalaryFrom", "Значение зарплаты \"от\" не может быть выше значения \"до\"");
+                if (!model.RequiredFilled())
+                {
+                    if (!model.PositionTypeId.HasValue)
+                        ModelState.AddModelError("PositionTypeId", "Для публикации Требуется выбрать Должность");
+                    if (!model.ResearchDirectionId.HasValue)
+                        ModelState.AddModelError("ResearchDirectionId", "Для публикации Требуется выбрать Отрасль науки");
+                    if (!model.RegionId.HasValue)
+                        ModelState.AddModelError("RegionId", "Для публикации Требуется выбрать регион");
+                    if (!model.SalaryFrom.HasValue)
+                        ModelState.AddModelError("SalaryFrom", "Для публикации Укажите минимальную зарплату");
+                    if (!model.SalaryTo.HasValue)
+                        ModelState.AddModelError("SalaryTo", "Для публикации Укажите максимальную зарплату");
+                    if (string.IsNullOrWhiteSpace(model.Tasks))
+                        ModelState.AddModelError("Tasks", "Для публикации Требуется описать Задачи");
+                    if (string.IsNullOrWhiteSpace(model.ContactName))
+                        ModelState.AddModelError("ContactName", "Для публикации Укажите контактное лицо");
+                    if (string.IsNullOrWhiteSpace(model.ContactEmail))
+                        ModelState.AddModelError("ContactEmail", "Для публикации Укажите E-mail");
+                    if (string.IsNullOrWhiteSpace(model.ContactPhone))
+                        ModelState.AddModelError("ContactPhone", "Для публикации Укажите номер телефона");
+                }
 
                 if (ModelState.ErrorCount > 0)
                 {
                     model.InitDictionaries(_mediator);
                     return View("Create", model);
                 }
-
-                var vacancyDataModel = Mapper.Map<VacancyDataModel>(model);
-
-                Organization organization = _mediator.Send(new SingleOrganizationQuery { OrganizationGuid = model.OrganizationGuid });
-                vacancyDataModel.OrganizationFoivId = organization.foiv_id;
-
-                if (ModelState.ErrorCount > 0)
-                {
-                    model.InitDictionaries(_mediator);
-                    return View("Create", model);
-                }
-                // раскоментировать когда будут прикреплённые файлы для вакансии
-                //присваиваем прикреплённым файлам тип "Прочее" (для соответствущей выборки)
-                //attachmentsList.ForEach(c => c.TypeId = 3);
-
-                var vacancyGuid = _mediator.Send(new CreateVacancyCommand { OrganizationGuid = model.OrganizationGuid, Data = vacancyDataModel });
-                if (model.ToPublish)
-                    return RedirectToAction("publish", new { id = vacancyGuid });
-
-                return RedirectToAction("details", new { id = vacancyGuid });
             }
-            model.InitDictionaries(_mediator);
-            return View("Create", model);
+
+            if (!ModelState.IsValid || ModelState.ErrorCount > 0)
+            {
+                model.InitDictionaries(_mediator);
+                return View("Create", model);
+            }
+
+            var vacancyDataModel = Mapper.Map<VacancyDataModel>(model);
+
+            Organization organization = _mediator.Send(new SingleOrganizationQuery { OrganizationGuid = model.OrganizationGuid });
+            vacancyDataModel.OrganizationFoivId = organization.foiv_id;
+
+            var vacancyGuid = _mediator.Send(new CreateVacancyCommand { OrganizationGuid = model.OrganizationGuid, Data = vacancyDataModel });
+            if (model.ToPublish)
+                return RedirectToAction("publish", new { id = vacancyGuid });
+
+            return RedirectToAction("details", new { id = vacancyGuid });
 
         }
 
@@ -137,7 +152,6 @@ namespace SciVacancies.WebApp.Controllers
 
         [PageTitle("Изменить вакансию")]
         [HttpPost]
-        //todo: ntemnikov [ValidateAntiForgeryToken]
         [BindOrganizationIdFromClaims("claimedUserGuid")]
         public IActionResult Edit(VacancyCreateViewModel model, Guid claimedUserGuid)
         {
@@ -147,7 +161,7 @@ namespace SciVacancies.WebApp.Controllers
             if (model.OrganizationGuid != claimedUserGuid)
                 return View("Error", "Вы не можете изменять вакансии других организаций");
 
-            if (ModelState.IsValid)
+            if (model.ToPublish)
             {
                 if (model.ContractType == ContractType.FixedTerm
                     && model.ContractTimeYears == 0
@@ -159,38 +173,57 @@ namespace SciVacancies.WebApp.Controllers
                     ModelState.AddModelError("SalaryTo", $"Значение зарплаты \"до\" не может быть меньше {_salaryMinValue}");
                 if (model.SalaryFrom > model.SalaryTo)
                     ModelState.AddModelError("SalaryFrom", "Значение зарплаты \"от\" не может быть выше значения \"до\"");
-
-                if (ModelState.ErrorCount > 0)
+                if (!model.RequiredFilled())
                 {
-                    model.InitDictionaries(_mediator);
-                    return View("Create", model);
+                    if (!model.PositionTypeId.HasValue)
+                        ModelState.AddModelError("PositionTypeId", "Для публикации Требуется выбрать Должность");
+                    if (!model.ResearchDirectionId.HasValue)
+                        ModelState.AddModelError("ResearchDirectionId", "Для публикации Требуется выбрать Отрасль науки");
+                    if (!model.RegionId.HasValue)
+                        ModelState.AddModelError("RegionId", "Для публикации Требуется выбрать регион");
+                    if (!model.SalaryFrom.HasValue)
+                        ModelState.AddModelError("SalaryFrom", "Для публикации Укажите минимальную зарплату");
+                    if (!model.SalaryTo.HasValue)
+                        ModelState.AddModelError("SalaryTo", "Для публикации Укажите максимальную зарплату");
+                    if (string.IsNullOrWhiteSpace(model.Tasks))
+                        ModelState.AddModelError("Tasks", "Для публикации Требуется описать Задачи");
+                    if (string.IsNullOrWhiteSpace(model.ContactName))
+                        ModelState.AddModelError("ContactName", "Для публикации Укажите контактное лицо");
+                    if (string.IsNullOrWhiteSpace(model.ContactEmail))
+                        ModelState.AddModelError("ContactEmail", "Для публикации Укажите E-mail");
+                    if (string.IsNullOrWhiteSpace(model.ContactPhone))
+                        ModelState.AddModelError("ContactPhone", "Для публикации Укажите номер телефона");
                 }
-
-                var vacancy = _mediator.Send(new SingleVacancyQuery { VacancyGuid = model.Guid });
-                if (vacancy == null)
-                    return HttpNotFound(); //throw new ObjectNotFoundException($"Не найдена вакансия с идентификатором {model.Guid}");
-
-                if (vacancy.status != VacancyStatus.InProcess)
-                    return View("Error", $"Вы не можете изменить вакансию с текущим статусом: {vacancy.status.GetDescription()}");
-
-
-                if (ModelState.ErrorCount > 0)
-                {
-                    model.InitDictionaries(_mediator);
-                    return View(model);
-                }
-
-                var vacancyDataModel = Mapper.Map<VacancyDataModel>(model);
-                var vacancyGuid = _mediator.Send(new UpdateVacancyCommand { VacancyGuid = model.Guid, Data = vacancyDataModel });
-
-                if (model.ToPublish)
-                    return RedirectToAction("publish", new { id = model.Guid });
-
-                return RedirectToAction("details", new { id = model.Guid });
             }
 
-            model.InitDictionaries(_mediator);
-            return View(model);
+            if (!ModelState.IsValid || ModelState.ErrorCount > 0)
+            {
+                model.InitDictionaries(_mediator);
+                return View("Create", model);
+            }
+
+            var vacancy = _mediator.Send(new SingleVacancyQuery { VacancyGuid = model.Guid });
+            if (vacancy == null)
+                return HttpNotFound(); //throw new ObjectNotFoundException($"Не найдена вакансия с идентификатором {model.Guid}");
+
+            if (vacancy.status != VacancyStatus.InProcess)
+                return View("Error", $"Вы не можете изменить вакансию с текущим статусом: {vacancy.status.GetDescription()}");
+
+
+            if (ModelState.ErrorCount > 0)
+            {
+                model.InitDictionaries(_mediator);
+                return View(model);
+            }
+
+            var vacancyDataModel = Mapper.Map<VacancyDataModel>(model);
+            var vacancyGuid = _mediator.Send(new UpdateVacancyCommand { VacancyGuid = model.Guid, Data = vacancyDataModel });
+
+            if (model.ToPublish && model.RequiredFilled())
+            { return RedirectToAction("publish", new { id = model.Guid }); }
+
+            return RedirectToAction("details", new { id = model.Guid });
+
         }
 
         [PageTitle("Подробно о вакансии")]
@@ -345,7 +378,6 @@ namespace SciVacancies.WebApp.Controllers
             return View(model);
         }
         [HttpPost]
-        //todo: ntemnikov [ValidateAntiForgeryToken]
         [BindOrganizationIdFromClaims]
         public IActionResult Cancel(Guid id, Guid organizationGuid, string reason)
         {
@@ -458,10 +490,10 @@ namespace SciVacancies.WebApp.Controllers
                 return HttpNotFound();
 
             if (vacancy.organization_guid != organizationGuid)
-                return View("Error", "Вы не можете изменять Заявки, поданные на вакансии других организаций.");
+                return View("Error", "Вы не можете изменять Вакансии, других организаций.");
 
             if (vacancy.status != VacancyStatus.InCommittee)
-                return View("Error", $"Вы не можете выбирать победителя для Заявки со статусом: {vacancy.status.GetDescription()}");
+                return View("Error", $"Вы не можете указать конкурсное обоснование для Вакансии со статусом: {vacancy.status.GetDescription()}");
 
             var vacancyInCommitteeAttachments = _mediator.Send(new SelectCommitteeVacancyAttachmentsQuery { VacancyGuid = vacancyGuid });
             if (!string.IsNullOrWhiteSpace(vacancy.committee_resolution)
@@ -520,7 +552,6 @@ namespace SciVacancies.WebApp.Controllers
         [HttpPost]
         [BindOrganizationIdFromClaims]
         [Authorize(Roles = ConstTerms.RequireRoleOrganizationAdmin)]
-        //todo: ntemnikov [ValidateAntiForgeryToken]
         public IActionResult AddCommitteeReason(VacancySetReasonViewModel model, Guid organizationGuid)
         {
             if (model.Guid == Guid.Empty)
@@ -747,7 +778,6 @@ namespace SciVacancies.WebApp.Controllers
 
         [PageTitle("Выбрать Победителя или Претендента")]
         [HttpPost]
-        //todo: ntemnikov [ValidateAntiForgeryToken]
         [BindOrganizationIdFromClaims]
         [Authorize(Roles = ConstTerms.RequireRoleOrganizationAdmin)]
         public IActionResult SetWinner(VacancyApplicationSetWinnerViewModel model, Guid organizationGuid)
@@ -894,7 +924,6 @@ namespace SciVacancies.WebApp.Controllers
         }
 
         [PageTitle("Закрыть вакансию")]
-        //todo: ntemnikov [ValidateAntiForgeryToken]
         [HttpPost]
         [BindOrganizationIdFromClaims]
         [Authorize(Roles = ConstTerms.RequireRoleOrganizationAdmin)]
@@ -946,11 +975,41 @@ namespace SciVacancies.WebApp.Controllers
             if (model == null)
                 return HttpNotFound(); //throw new ObjectNotFoundException($"Не найдена вакансия с идентификатором: {id}");
 
+            if (model.contract_type == ContractType.FixedTerm && (!model.contract_time.HasValue || model.contract_time.Value == 0.0m))
+                return View("Error", $"Для договора типа \"{ContractType.FixedTerm.GetDescription()}\" укажите срок трудового договора");
+            if (model.salary_from < _salaryMinValue)
+                return View("Error", $"Значение зарплаты \"от\" не может быть меньше {_salaryMinValue}");
+            if (model.salary_to < _salaryMinValue)
+                return View("Error", $"Значение зарплаты \"до\" не может быть меньше {_salaryMinValue}");
+            if (model.salary_from > model.salary_to)
+                return View("Error", "Значение зарплаты \"от\" не может быть выше значения \"до\"");
+            if (!model.positiontype_id.HasValue)
+                return View("Error", "Для публикации Требуется выбрать Должность");
+            if (!model.researchdirection_id.HasValue)
+                return View("Error", "Для публикации Требуется выбрать Отрасль науки");
+            if (!model.region_id.HasValue)
+                return View("Error", "Для публикации Требуется выбрать регион");
+            if (!model.salary_from.HasValue)
+                return View("Error", "Для публикации Укажите минимальную зарплату");
+            if (!model.salary_to.HasValue)
+                return View("Error", "Для публикации Укажите максимальную зарплату");
+            if (string.IsNullOrWhiteSpace(model.tasks))
+                return View("Error", "Для публикации Требуется описать Задачи");
+            if (string.IsNullOrWhiteSpace(model.contact_name))
+                return View("Error", "Для публикации Укажите контактное лицо");
+            if (string.IsNullOrWhiteSpace(model.contact_email))
+                return View("Error", "Для публикации Укажите E-mail");
+            if (string.IsNullOrWhiteSpace(model.contact_phone))
+                return View("Error", "Для публикации Укажите номер телефона");
+
             if (model.organization_guid != organizationGuid)
                 return View("Error", "Вы не можете публиковать вакансии других организаций");
 
             if (model.status != VacancyStatus.InProcess)
                 return View("Error", $"Вы не можете опубликовать вакансию со статусом: {model.status.GetDescription()}");
+
+
+
             return model;
         }
 
@@ -1040,7 +1099,7 @@ namespace SciVacancies.WebApp.Controllers
                 return HttpNotFound(); //throw new ObjectNotFoundException($"Не найдена заявка с идентификатором {id}");
 
             if (preModel.organization_guid != organizationGuid)
-                return View("Error", "Копировать можно только свои заявки");
+                return View("Error", "Копировать можно только свои Вакансии");
 
             var model = Mapper.Map<VacancyCreateViewModel>(preModel);
             model.Guid = Guid.Empty;
@@ -1052,7 +1111,6 @@ namespace SciVacancies.WebApp.Controllers
         [PageTitle("Новая вакансия")]
         [HttpPost]
         [Authorize(Roles = ConstTerms.RequireRoleOrganizationAdmin)]
-        //todo: ntemnikov [ValidateAntiForgeryToken]
         public IActionResult Copy(VacancyCreateViewModel model)
         {
             return Create(model);

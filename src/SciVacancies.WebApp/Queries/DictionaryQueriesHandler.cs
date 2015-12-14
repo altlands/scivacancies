@@ -351,11 +351,11 @@ namespace SciVacancies.WebApp.Queries
         }
         public ResearchDirection Handle(SelectResearchDirectionQuery message)
         {
-            if (message.Id == 0) throw new ArgumentNullException(nameof(message.Id));
-            ResearchDirection researchDirection;
+            if (!message.Id.HasValue
+                || message.Id.Value == 0)
+                return null;//throw new ArgumentNullException(nameof(message.Id));
 
-            researchDirection = GetCachedAllResearchDirections()?.First(f => f.id == message.Id);
-
+            var researchDirection = GetCachedAllResearchDirections()?.First(f => f.id == message.Id);
             return researchDirection;
         }
 

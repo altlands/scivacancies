@@ -40,7 +40,10 @@
         {
             <a asp-controller="vacancies" asp-action="edit" asp-route-id="@Model.Guid" class="green-btn middle-icon icon-edit default-link" title="Изменить">Изменить</a>
             <a asp-controller="vacancies" asp-action="delete" asp-route-id="@Model.Guid" onclick="javascript: return confirm('Вы уверены что хотите удалить вакансию?');" class="blue-btn middle-icon icon-close default-link" title="Удалить">Удалить</a>
-            <a asp-controller="vacancies" asp-action="publish" asp-route-id="@Model.Guid" class="green-btn middle-icon icon-ok default-link" title="Опубликовать">Опубликовать</a>
+            if (Model.RequiredFilled())
+            {
+                <a asp-controller="vacancies" asp-action="publish" asp-route-id="@Model.Guid" class="green-btn middle-icon icon-ok default-link" title="Опубликовать">Опубликовать</a>
+            }
         }
         @if (
                 Model.Status != VacancyStatus.InProcess

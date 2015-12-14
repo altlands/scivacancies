@@ -138,19 +138,19 @@ namespace SciVacancies.ReadModel.Core
         #region Dictionaries
 
         [Column]
-        public int positiontype_id { get; set; }
+        public int? positiontype_id { get; set; }
 
         /// <summary>
         /// Регион
         /// </summary>
         [Column]
-        public int region_id { get; set; }
+        public int? region_id { get; set; }
 
         /// <summary>
         /// Отрасль науки
         /// </summary>
         [Column]
-        public int researchdirection_id { get; set; }
+        public int? researchdirection_id { get; set; }
 
         #endregion
 

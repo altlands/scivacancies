@@ -75,7 +75,7 @@ namespace SciVacancies.WebApp.Queries
 
     public class SelectResearchDirectionQuery : IRequest<ResearchDirection>
     {
-        public int Id { get; set; }
+        public int? Id { get; set; }
     }
     public class SelectResearchDirectionsForAutocompleteQuery : IRequest<IEnumerable<ResearchDirection>>
     {

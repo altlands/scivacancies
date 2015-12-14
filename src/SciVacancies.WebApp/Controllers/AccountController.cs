@@ -453,7 +453,6 @@ namespace SciVacancies.WebApp.Controllers
 
         [PageTitle("Регистрация")]
         [HttpPost]
-        //todo: ntemnikov [ValidateAntiForgeryToken]
         public async Task<IActionResult> Register(AccountResearcherRegisterViewModel model)
         {
             if (!ModelState.IsValid)
@@ -558,7 +557,6 @@ namespace SciVacancies.WebApp.Controllers
         [PageTitle("Восстановление доступа к Системе")]
         [AllowAnonymous]
         [HttpPost]
-        //todo: ntemnikov [ValidateAntiForgeryToken]
         public async Task<IActionResult> ForgotPassword(ForgotPasswordViewModel model)
         {
             // Восстанавливаем пароль даже на неактивированную учётную запись
@@ -703,7 +701,6 @@ namespace SciVacancies.WebApp.Controllers
         /// <returns></returns>
         [PageTitle("Восстановление доступа к Системе")]
         [HttpPost]
-        //todo: ntemnikov [ValidateAntiForgeryToken]
         public async Task<IActionResult> RestorePasswordConfirm(RestorePasswordViewModel model)
         {
             if (!ModelState.IsValid)
@@ -792,7 +789,6 @@ namespace SciVacancies.WebApp.Controllers
         [Authorize]
         [PageTitle("Запрошено письмо для активации учетной записи")]
         [HttpPost]
-        //todo: ntemnikov [ValidateAntiForgeryToken]
         [BindResearcherIdFromClaims]
         public async Task<IActionResult> ActivationRequestPost(Guid researcherGuid)
         {

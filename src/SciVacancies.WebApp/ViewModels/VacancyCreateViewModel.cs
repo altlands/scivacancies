@@ -51,12 +51,12 @@ namespace SciVacancies.WebApp.ViewModels
             ResearchDirections = mediator.Send(new SelectAllResearchDirectionsQuery()).Select(c => new SelectListItem { Text = c.title, Value = c.id.ToString() });
             Regions = mediator.Send(new SelectAllRegionsQuery()).Select(c => new SelectListItem { Text = c.title, Value = c.id.ToString() });
 
-            if (PositionTypeId != 0)
-                PositionType = PositionTypes.Single(c => c.Value == PositionTypeId.ToString()).Text;
-            if (ResearchDirectionId != 0)
-                ResearchDirection = ResearchDirections.Single(c => c.Value == ResearchDirectionId.ToString()).Text;
-            if (RegionId != 0)
-                Region = Regions.Single(c => c.Value == RegionId.ToString()).Text;
+            if (PositionTypeId.HasValue && PositionTypeId != 0)
+                PositionType = PositionTypes.Single(c => c.Value == PositionTypeId.Value.ToString()).Text;
+            if (ResearchDirectionId.HasValue && ResearchDirectionId.Value != 0)
+                ResearchDirection = ResearchDirections.Single(c => c.Value == ResearchDirectionId.Value.ToString()).Text;
+            if (RegionId.HasValue && RegionId != 0)
+                Region = Regions.Single(c => c.Value == RegionId.Value.ToString()).Text;
 
             ContractTypes = new List<ContractType> { ContractType.Permanent, ContractType.FixedTerm }
                 .Select(c => new SelectListItem { Value = ((int)c).ToString(), Text = c.GetDescription() });
@@ -94,9 +94,9 @@ namespace SciVacancies.WebApp.ViewModels
         /// <summary>
         /// Guid должности из справочника
         /// </summary>
-        [Required(ErrorMessage = "Требуется выбрать Должность", AllowEmptyStrings = false)]
-        [Range(1, int.MaxValue, ErrorMessage = "Требуется выбрать Должность")]
-        public int PositionTypeId { get; set; }
+        //[Required(ErrorMessage = "Требуется выбрать Должность", AllowEmptyStrings = false)]
+        //[Range(1, int.MaxValue, ErrorMessage = "Требуется выбрать Должность")]
+        public int? PositionTypeId { get; set; }
         public string PositionType { get; set; }
         public IEnumerable<SelectListItem> PositionTypes { get; set; }
 
@@ -106,19 +106,13 @@ namespace SciVacancies.WebApp.ViewModels
         [Required(ErrorMessage = "Требуется заполнить поле Наименование")]
         public string Name { get; set; }
 
-        ///// <summary>
-        ///// Должность (Полное наименование)
-        ///// </summary>
-        //[Required(ErrorMessage = "Требуется заполнить поле Полное наименование")]
-        //public string FullName { get; set; }
-
         /// <summary>
         /// Отрасль науки
         /// </summary>
         public string ResearchDirection { get; set; }
-        [Required(ErrorMessage = "Требуется выбрать Отрасль науки")]
-        [Range(1, int.MaxValue, ErrorMessage = "Требуется выбрать Отрасль науки")]
-        public int ResearchDirectionId { get; set; }
+        //[Required(ErrorMessage = "Требуется выбрать Отрасль науки")]
+        //[Range(1, int.MaxValue, ErrorMessage = "Требуется выбрать Отрасль науки")]
+        public int? ResearchDirectionId { get; set; }
         public IEnumerable<SelectListItem> ResearchDirections { get; set; }
 
         /// <summary>
@@ -129,18 +123,18 @@ namespace SciVacancies.WebApp.ViewModels
         /// <summary>
         /// Задачи
         /// </summary>
-        [Required(ErrorMessage = "Требуется описать Задачи")]
+        //[Required(ErrorMessage = "Требуется описать Задачи")]
         public string Tasks { get; set; }
 
         /// <summary>
         /// Зарплата в месяц
         /// </summary>
 
-        [Required(ErrorMessage = "Укажите минимальную зарплату")]
+        //[Required(ErrorMessage = "Укажите минимальную зарплату")]
         [Range(0, int.MaxValue, ErrorMessage= "Зарплата не может быть ниже установленного значения")]
         public int? SalaryFrom { get; set; }
 
-        [Required(ErrorMessage = "Укажите максимальную зарплату")]
+        //[Required(ErrorMessage = "Укажите максимальную зарплату")]
         [Range(0, int.MaxValue, ErrorMessage = "Зарплата не может быть ниже установленного значения")]
         public int? SalaryTo { get; set; }
 
@@ -216,31 +210,30 @@ namespace SciVacancies.WebApp.ViewModels
         /// <summary>
         /// Лицо для получения дополнительных справок
         /// </summary>
-        [Required(ErrorMessage = "Укажите контактное лицо")]
+        //[Required(ErrorMessage = "Укажите контактное лицо")]
         public string ContactName { get; set; }
-        [Required(ErrorMessage = "Укажите E-mail")]
+        //[Required(ErrorMessage = "Укажите E-mail")]
         [EmailAddress(ErrorMessage = "Поле E-mail содержит не допустимый адрес электронной почты.")]
         public string ContactEmail { get; set; }
-        [Required(ErrorMessage = "Укажите номер телефона")]
+        //[Required(ErrorMessage = "Укажите номер телефона")]
         [Phone(ErrorMessage = "Поле Телефон содержит не допустимый номер телефона.")]
         public string ContactPhone { get; set; }
         public string ContactDetails { get; set; }
 
 
-        [Required(ErrorMessage = "Требуется выбрать тип занятости")]
+        //[Required(ErrorMessage = "Требуется выбрать тип занятости")]
         public EmploymentType EmploymentType { get; set; }
         public IEnumerable<SelectListItem> EmploymentTypes { get; set; }
 
-        [Required(ErrorMessage = "Требуется выбрать режим работы")]
+        //[Required(ErrorMessage = "Требуется выбрать режим работы")]
         public OperatingScheduleType OperatingScheduleType { get; set; }
         public IEnumerable<SelectListItem> OperatingScheduleTypes { get; set; }
 
-        [Required(ErrorMessage = "Требуется выбрать регион")]
-        [Range(1, int.MaxValue, ErrorMessage = "Требуется выбрать регион")]
-        public int RegionId { get; set; }
+        //[Required(ErrorMessage = "Требуется выбрать регион")]
+        //[Range(1, int.MaxValue, ErrorMessage = "Требуется выбрать регион")]
+        public int? RegionId { get; set; }
         public string Region { get; set; }
         public IEnumerable<SelectListItem> Regions { get; set; }
-
 
         public string CityName { get; set; }
 

@@ -75,7 +75,7 @@
     </thead>
     <tbody>
 
-        @if (Model.PagedVacancies != null && Model.PagedVacancies.Items!=null)
+        @if (Model.PagedVacancies != null && Model.PagedVacancies.Items != null)
         {
             var i = Model.PagedVacancies.FirstRowIndexOnPage - 1;
             foreach (var item in Model.PagedVacancies.Items)
@@ -87,84 +87,87 @@
                     <td>
                         @if (item.read_id == null)
                     {
-                        <text>VAC ...</text>
-                    }
-                    else
-                    {
-                        <text>VAC @item.read_id</text>
-                    }
-                </td>
-                <td>
-                    @item.name
-                    <br />
-                    <span style="color: lightgray;">
-                        @item.salary_from-@item.salary_to
-                    </span>
-                </td>
-                <!--TODO: проверить правильность информации-->
-                <td>@(item.creation_date.ToLocalMoscowVacancyDateTimeString())</td>
-                <td>@(item.publish_date?.ToLocalMoscowVacancyDateTimeString())</td>
-                <td>
-                    <span class="status @item.status.GetHtmlClass()">
-                        @if (item.status == VacancyStatus.Closed)
+                            <text>VAC ...</text>
+                        }
+                        else
                         {
-                            if (item.is_winner_accept.Value
-                                || item.is_pretender_accept.Value)
+                            <text>VAC @item.read_id</text>
+                        }
+                    </td>
+                    <td>
+                        @item.name
+                        <br />
+                        <span style="color: lightgray;">
+                            @item.salary_from-@item.salary_to
+                        </span>
+                    </td>
+                    <!--TODO: проверить правильность информации-->
+                    <td>@(item.creation_date.ToLocalMoscowVacancyDateTimeString())</td>
+                    <td>@(item.publish_date?.ToLocalMoscowVacancyDateTimeString())</td>
+                    <td>
+                        <span class="status @item.status.GetHtmlClass()">
+                            @if (item.status == VacancyStatus.Closed)
                             {
-                                <text>
-                                Контракт подписан
-                                </text>
+                                if (item.is_winner_accept.Value
+                                    || item.is_pretender_accept.Value)
+                                {
+                                    <text>
+                                    Контракт подписан
+                                    </text>
+                                }
+                                else
+                                {
+                                    <text>
+                                    Контракт отклонен
+                                    </text>
+                                }
                             }
                             else
                             {
                                 <text>
-                                Контракт отклонен
+                                @item.status.GetDescription()
                                 </text>
                             }
-                        }
-                        else
-                        {
-                            <text>
-                            @item.status.GetDescription()
-                            </text>
-                        }
-                    </span>
-                    <i style="font-style: italic !important;">@item.status.GetDescriptionRecommendation()</i>
-                </td>
-                <td>
-                    <a asp-controller="vacancies" asp-action="details" asp-route-id="@item.guid" class="view-td-icon" title="Просмотр вакансии"></a>
-                    <a asp-controller="vacancies" asp-action="copy" asp-route-id="@item.guid" class="pages-td-icon" title="Копировать вакансию"></a>
-                    @if (item.status == VacancyStatus.InProcess)
+                        </span>
+                        <i style="font-style: italic !important;">@item.status.GetDescriptionRecommendation()</i>
+                    </td>
+                    <td>
+                        <a asp-controller="vacancies" asp-action="details" asp-route-id="@item.guid" class="view-td-icon" title="Просмотр вакансии"></a>
+                        <a asp-controller="vacancies" asp-action="copy" asp-route-id="@item.guid" class="pages-td-icon" title="Копировать вакансию"></a>
+                        @if (item.status == VacancyStatus.InProcess)
                     {
-                        <a asp-controller="vacancies" asp-action="edit" asp-route-id="@item.guid" class="edit-td-icon" title="Изменить"></a>
+                            <a asp-controller="vacancies" asp-action="edit" asp-route-id="@item.guid" class="edit-td-icon" title="Изменить"></a>
                             <a asp-controller="vacancies" asp-action="delete" asp-route-id="@item.guid" onclick="javascript: return confirm('Вы уверены что хотите удалить вакансию?');" class="close-td-icon" title="Удалить"></a>
-                            <a asp-controller="vacancies" asp-action="publish" asp-route-id="@item.guid" class="class-td-icon" title="Опубликовать"></a>
-                    }
-                    @if (item.status != VacancyStatus.InProcess
-                            && item.status != VacancyStatus.Closed
-                            && item.status != VacancyStatus.Cancelled
-                            && item.status != VacancyStatus.Removed
-                            && item.status != VacancyStatus.Published
-                            && item.status != VacancyStatus.InCommittee
-                            && item.status != VacancyStatus.OfferResponseAwaitingFromWinner
-                            && item.status != VacancyStatus.OfferResponseAwaitingFromPretender
-                            )
+                            if (item.RequiredFilled())
+                            {
+                                <a asp-controller="vacancies" asp-action="publish" asp-route-id="@item.guid" class="class-td-icon" title="Опубликовать"></a>
+                            }
+                        }
+                        @if (item.status != VacancyStatus.InProcess
+                    && item.status != VacancyStatus.Closed
+                    && item.status != VacancyStatus.Cancelled
+                    && item.status != VacancyStatus.Removed
+                    && item.status != VacancyStatus.Published
+                    && item.status != VacancyStatus.InCommittee
+                    && item.status != VacancyStatus.OfferResponseAwaitingFromWinner
+                    && item.status != VacancyStatus.OfferResponseAwaitingFromPretender
+                    )
+                        {
+                            <a asp-controller="vacancies" asp-action="cancel" asp-route-id="@item.guid" onclick="javascript: return confirm('Вы уверены что хотите отменить вакансию?');" class="close-td-icon" title="Отменить вакансию"></a>
+                        }
+                        @*@if (item.status == VacancyStatus.Published)
+                            {
+                                <br />
+                                    <a asp-controller="vacancies" asp-action="startincommittee" asp-route-id="@item.guid" title="Перевести на рассмотрение">на рассмотрение</a>
+                            }*@
+                        @if (item.status == VacancyStatus.OfferAcceptedByWinner || item.status == VacancyStatus.OfferRejectedByPretender)
                     {
-                        <a asp-controller="vacancies" asp-action="cancel" asp-route-id="@item.guid" onclick="javascript: return confirm('Вы уверены что хотите отменить вакансию?');" class="close-td-icon" title="Отменить вакансию"></a>
-                    }
-                    @*@if (item.status == VacancyStatus.Published)
-                    {
-                        <br />
-                            <a asp-controller="vacancies" asp-action="startincommittee" asp-route-id="@item.guid" title="Перевести на рассмотрение">на рассмотрение</a>
-                    }*@
-                    @if (item.status == VacancyStatus.OfferAcceptedByWinner || item.status == VacancyStatus.OfferRejectedByPretender)
-                    {
-                        <br />
+                            <br />
                             <a asp-controller="vacancies" asp-action="close" asp-route-id="@item.guid" title="Выбрать победителя">Закрыть вакансию</a>
-                    }
-                </td>
-            </tr>
-            </text>
+                        }
+                    </td>
+                </tr>
+                </text>
             }
         }
     </tbody>

@@ -94,7 +94,6 @@ namespace SciVacancies.WebApp.Infrastructure
                 .ForMember(d => d.guid, o => o.MapFrom(s => s.VacancyGuid))
                 .ForMember(d => d.name, o => o.MapFrom(s => s.Data.Name))
                 .ForMember(d => d.fullname, o => o.MapFrom(s => s.Data.Name))
-                //.ForMember(d => d.fullname, o => o.MapFrom(s => s.Data.FullName))
                 .ForMember(d => d.tasks, o => o.MapFrom(s => s.Data.Tasks))
                 .ForMember(d => d.researchtheme, o => o.MapFrom(s => s.Data.ResearchTheme))
                 .ForMember(d => d.cityname, o => o.MapFrom(s => s.Data.CityName))
@@ -127,7 +126,6 @@ namespace SciVacancies.WebApp.Infrastructure
                 .ForMember(d => d.guid, o => o.MapFrom(s => s.VacancyGuid))
                 .ForMember(d => d.name, o => o.MapFrom(s => s.Data.Name))
                 .ForMember(d => d.fullname, o => o.MapFrom(s => s.Data.Name))
-                //.ForMember(d => d.fullname, o => o.MapFrom(s => s.Data.FullName))
                 .ForMember(d => d.tasks, o => o.MapFrom(s => s.Data.Tasks))
                 .ForMember(d => d.researchtheme, o => o.MapFrom(s => s.Data.ResearchTheme))
                 .ForMember(d => d.cityname, o => o.MapFrom(s => s.Data.CityName))
@@ -179,7 +177,6 @@ namespace SciVacancies.WebApp.Infrastructure
                 .ForMember(d => d.Guid, o => o.MapFrom(s => s.guid))
                 .ForMember(d => d.ReadId, o => o.MapFrom(s => s.read_id))
                 .ForMember(d => d.Name, o => o.MapFrom(s => s.name))
-                //.ForMember(d => d.FullName, o => o.MapFrom(s => s.fullname))
                 .ForMember(d => d.Tasks, o => o.MapFrom(s => s.tasks))
                 .ForMember(d => d.ResearchTheme, o => o.MapFrom(s => s.researchtheme))
                 .ForMember(d => d.CityName, o => o.MapFrom(s => s.cityname))
@@ -204,14 +201,13 @@ namespace SciVacancies.WebApp.Infrastructure
                 .ForMember(d => d.ResearchDirectionId, o => o.MapFrom(s => s.researchdirection_id))
                 .ForMember(d => d.Criterias, o => o.MapFrom(s => s.criterias))
                 .ForMember(d => d.CustomCriterias, o => o.MapFrom(s => !string.IsNullOrWhiteSpace(s.custom_criterias) ? JsonConvert.DeserializeObject<List<CustomCriteriaViewModel>>(s.custom_criterias) : new List<CustomCriteriaViewModel>()))
-                //.ForMember(d => d, o => o.MapFrom(s => s.attachments))
                 .ForMember(d => d.OrganizationGuid, o => o.MapFrom(s => s.organization_guid))
                 ;
+
             Mapper.CreateMap<Vacancy, VacancyDetailsViewModel>().IncludePagedResultMapping()
                 .ForMember(d => d.Guid, o => o.MapFrom(s => s.guid))
                 .ForMember(d => d.ReadId, o => o.MapFrom(s => s.read_id))
                 .ForMember(d => d.Name, o => o.MapFrom(s => s.name))
-                //.ForMember(d => d.FullName, o => o.MapFrom(s => s.fullname))
                 .ForMember(d => d.Tasks, o => o.MapFrom(s => s.tasks))
                 .ForMember(d => d.CancelReason, o => o.MapFrom(s => s.cancel_reason))
                 .ForMember(d => d.CommitteeReasolution, o => o.MapFrom(s => s.committee_resolution))
@@ -239,7 +235,6 @@ namespace SciVacancies.WebApp.Infrastructure
                 .ForMember(d => d.PositionTypeId, o => o.MapFrom(s => s.positiontype_id))
                 .ForMember(d => d.RegionId, o => o.MapFrom(s => s.region_id))
                 .ForMember(d => d.ResearchDirectionId, o => o.MapFrom(s => s.researchdirection_id))
-                //.ForMember(d => d., o => o.MapFrom(s => s.criterias))
                 .ForMember(d => d.CustomCriterias, o => o.MapFrom(s => !string.IsNullOrWhiteSpace(s.custom_criterias) ? JsonConvert.DeserializeObject<List<CustomCriteriaViewModel>>(s.custom_criterias) : new List<CustomCriteriaViewModel>()))
                 .ForMember(d => d.OrganizationGuid, o => o.MapFrom(s => s.organization_guid))
                 .ForMember(d => d.IsWinnerAccept, o => o.MapFrom(s => s.is_winner_accept))
@@ -256,7 +251,6 @@ namespace SciVacancies.WebApp.Infrastructure
             Mapper.CreateMap<VacancyCreateViewModel, VacancyDataModel>()
                 .ForMember(d => d.Name, o => o.MapFrom(s => s.Name))
                 .ForMember(d => d.FullName, o => o.MapFrom(s => s.Name))
-                //.ForMember(d => d.FullName, o => o.MapFrom(s => s.FullName))
                 .ForMember(d => d.Tasks, o => o.MapFrom(s => s.Tasks))
                 .ForMember(d => d.ResearchTheme, o => o.MapFrom(s => s.ResearchTheme))
                 .ForMember(d => d.CityName, o => o.MapFrom(s => s.CityName))
@@ -288,9 +282,6 @@ namespace SciVacancies.WebApp.Infrastructure
                 //.ForMember(d => d.OrganizationFoivId, o => o.MapFrom(s => s))
                 ;
             Mapper.CreateMap<ReadModel.ElasticSearchModel.Model.Vacancy, VacancyElasticResult>().IncludePagedResultMapping();
-            ;
-
-            //TODO - VACANCY EDIT VIEW MODEL MAPPINGS
         }
     }
 }
