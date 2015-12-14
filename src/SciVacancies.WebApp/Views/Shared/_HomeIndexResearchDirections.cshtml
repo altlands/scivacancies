@@ -61,15 +61,15 @@
                                     @foreach (var innerInnerItem in innerItem.Childs.OrderBy(c => c.Title).Take(leftColLength))
                                     {
                                         <text>
-                                            <div class="item-direction">
+                                            <div class="item-direction" data-researchdirectionid="@innerInnerItem.Id">
                                                 <a asp-controller="search" asp-action="index" asp-route-researchdirections="@innerInnerItem.Id" class="item-direction__title">
                                                     @innerInnerItem.Title
                                                 </a>
                                                 <div class="item-direction__desc">
-                                                    @*<div>
-                                                        1256 вакансий
+                                                    <div>
+                                                        <span class="totalvacancies"></span> вакансий
                                                     </div>
-                                                    Средняя заработная плата – 67000 руб.*@
+                                                    Средняя заработная плата – <span class="averagesalaries"></span> руб.
                                                 </div>
                                             </div>
                                         </text>
@@ -79,15 +79,15 @@
                                     @foreach (var innerInnerItem in innerItem.Childs.OrderBy(c => c.Title).Skip(leftColLength))
                                     {
                                         <text>
-                                            <div class="item-direction">
+                                            <div class="item-direction" data-researchdirectionid="@innerInnerItem.Id">
                                                 <a asp-controller="search" asp-action="index" asp-route-researchdirections="@innerInnerItem.Id" class="item-direction__title">
                                                     @innerInnerItem.Title
                                                 </a>
                                                 <div class="item-direction__desc">
-                                                    @*<div>
-                                                        1256 вакансий
+                                                    <div>
+                                                        <span class="totalvacancies"></span> вакансий
                                                     </div>
-                                                    Средняя заработная плата – 67000 руб.*@
+                                                    Средняя заработная плата – <span class="averagesalaries"></span> руб.
                                                 </div>
                                             </div>
                                         </text>

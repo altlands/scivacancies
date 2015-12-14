@@ -1,7 +1,9 @@
-﻿using SciVacancies.WebApp.ViewModels;
+﻿using System;
+using SciVacancies.WebApp.ViewModels;
 
 namespace SciVacancies.WebApp
 {
+
     public static class ViewModelsExtensions
     {
         private static bool CheckRequiredFilled(int? positionTypeId, int? researchDirectionId, int? regionId, string tasks, int? salaryFrom, int? salaryTo, string contactName, string contactEmail, string contactPhone)

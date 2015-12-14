@@ -526,6 +526,22 @@ $(document).ready(function () {
         }
     });
     /*
+     *для областей науки вывести количество вакансий и среднюю зарплату 
+     */
+    $('div.item-direction[data-researchdirectionid]').each(function () {
+        var id =$(this).attr('data-researchdirectionid');
+
+        $.ajax({
+            url: "/analytics/countbyresearchdirection/" + id,
+            success: function(data) {
+                var parentDiv = $('div.item-direction[data-researchdirectionid="' + data.Id + '"]');
+                $(parentDiv).find("span.totalvacancies").html(data.Count);
+                $(parentDiv).find("span.averagesalaries").html(data.AverageSalary);
+            }
+        });
+
+    });
+    /*
     end of the code
     */
 });

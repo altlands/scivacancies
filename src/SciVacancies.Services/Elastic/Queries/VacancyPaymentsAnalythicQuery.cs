@@ -8,4 +8,13 @@ namespace SciVacancies.Services.Elastic
         public DateInterval Interval { get; set; }
         public int BarsNumber { get; set; }
     }
+
+
+    public class VacancyPaymentsByResearchDirectionAnalythicQuery
+    {
+        public int ResearchDirectionId { get; set; }
+        //public int? RegionId { get; set; }
+        //public DateInterval Interval { get; set; }
+        //public int BarsNumber { get; set; }
+    }
 }

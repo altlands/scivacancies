@@ -37,6 +37,23 @@ namespace SciVacancies.Services.Elastic
 
             return aggregations;
         }
+        public IDictionary<string, IAggregation> VacancyPayments(VacancyPaymentsByResearchDirectionAnalythicQuery q)
+        {
+            Func<VacancyPaymentsByResearchDirectionAnalythicQuery, SearchDescriptor<Vacancy>> searchSelector = VacancyPaymentsSearchDescriptor;
+
+            IDictionary<string, IAggregation> aggregations;
+            try
+            {
+                aggregations = Elastic.Search<Vacancy>(searchSelector(q)).Aggregations;
+            }
+            catch (Exception e)
+            {
+                Logger.LogError(e.Message, e);
+                throw;
+            }
+
+            return aggregations;
+        }
 
         #region VacancyPaymentsQueryContainers
 
@@ -56,6 +73,24 @@ namespace SciVacancies.Services.Elastic
 
             return sdescriptor;
         }
+
+        SearchDescriptor<Vacancy> VacancyPaymentsSearchDescriptor(VacancyPaymentsByResearchDirectionAnalythicQuery q)
+        {
+            SearchDescriptor<Vacancy> sdescriptor = new SearchDescriptor<Vacancy>();
+
+            sdescriptor.Take(0);
+            sdescriptor.MinScore(0);
+
+            Func<VacancyPaymentsByResearchDirectionAnalythicQuery, QueryContainer> querySelector = VacancyPaymentsQueryContainer;
+            Func<AggregationDescriptor<Vacancy>, VacancyPaymentsByResearchDirectionAnalythicQuery, AggregationDescriptor<Vacancy>> aggregationSelector = VacancyPaymentsAggregationDescriptor;
+
+            sdescriptor.Query(querySelector(q));
+
+            sdescriptor.Aggregations(ag => aggregationSelector(ag, q));
+
+            return sdescriptor;
+        }
+
         AggregationDescriptor<Vacancy> VacancyPaymentsAggregationDescriptor(AggregationDescriptor<Vacancy> aggDescriptor, VacancyPaymentsAnalythicQuery q)
         {
             aggDescriptor.DateHistogram("histogram", dt => dt
@@ -70,7 +105,13 @@ namespace SciVacancies.Services.Elastic
                                     )
                                  )
                             );
-
+            return aggDescriptor;
+        }
+        AggregationDescriptor<Vacancy> VacancyPaymentsAggregationDescriptor(AggregationDescriptor<Vacancy> aggDescriptor, VacancyPaymentsByResearchDirectionAnalythicQuery q)
+        {
+            aggDescriptor
+                .Average("salary_from", av => av.Field(f => f.SalaryFrom))
+                .Average("salary_to", av => av.Field(f => f.SalaryTo));
             return aggDescriptor;
         }
         QueryContainer VacancyPaymentsQueryContainer(VacancyPaymentsAnalythicQuery q)
@@ -80,6 +121,14 @@ namespace SciVacancies.Services.Elastic
 
             return Query<Vacancy>.Filtered(flt => flt
                                     .Query(flq => querySelector(flq, q))
+                                    .Filter(flf => filterSelector(flf, q))
+                                );
+        }
+        QueryContainer VacancyPaymentsQueryContainer(VacancyPaymentsByResearchDirectionAnalythicQuery q)
+        {
+            Func<FilterDescriptor<Vacancy>, VacancyPaymentsByResearchDirectionAnalythicQuery, FilterContainer> filterSelector = VacancyPaymentsByResearchDirectionsFilteredFilterContainer;
+
+            return Query<Vacancy>.Filtered(flt => flt
                                     .Filter(flf => filterSelector(flf, q))
                                 );
         }
@@ -160,6 +209,33 @@ namespace SciVacancies.Services.Elastic
             return filterContainer;
         }
 
+        FilterContainer VacancyPaymentsByResearchDirectionsFilteredFilterContainer(FilterDescriptor<Vacancy> filterDescriptor, VacancyPaymentsByResearchDirectionAnalythicQuery q)
+        {
+            FilterContainer filterContainer;
+
+            List<FilterContainer> filters = new List<FilterContainer>();
+            
+
+            //filters.Add(new FilterDescriptor<Vacancy>().Bool(b => b
+            //                                                .Must(m => m
+            //                                                    .Term(t => t.ResearchDirectionId, q.ResearchDirectionId)
+            //                                                )
+            //                                            )
+            //                                        );
+
+            filters.Add(new FilterDescriptor<Vacancy>().Bool(b => b
+                                                            .Must(mn => mn
+                                                                .Terms(t => t.Status, new List<VacancyStatus> {
+                                                                    VacancyStatus.Published
+                                                                })
+                                                            )
+                                                        )
+                                                    );
+
+            filterContainer = filterDescriptor.Bool(b => b.Must(filters.ToArray()));
+
+            return filterContainer;
+        }
         #endregion
 
         public IDictionary<string, IAggregation> VacancyPositions(VacancyPositionsAnalythicQuery q)

@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Web;
 using MediatR;
 using Microsoft.AspNet.Authorization;
 using Microsoft.AspNet.Mvc;
@@ -170,42 +168,43 @@ namespace SciVacancies.WebApp.Controllers
                 model = JsonConvert.DeserializeObject<VacanciesFilterModel>(TempData["VacanciesFilterModel"].ToString());
 
 
-                var newSubscriptionGuid = _mediator.Send(new CreateSearchSubscriptionCommand
+            var newSubscriptionGuid = _mediator.Send(new CreateSearchSubscriptionCommand
+            {
+                ResearcherGuid = researcherGuid,
+                Data = new SearchSubscriptionDataModel
                 {
-                    ResearcherGuid = researcherGuid,
-                    Data = new SearchSubscriptionDataModel
-                    {
-                        OrderBy = model.OrderBy,
-                        Query = model.Search ?? string.Empty,
-                        Title = model.NewSubscriptionTitle,
-                        FoivIds = model.Foivs,
-                        PositionTypeIds = model.PositionTypes,
-                        RegionIds = model.Regions,
-                        ResearchDirectionIds = model.ResearchDirections,
-                        VacancyStatuses = model.VacancyStates?.Select(c => (VacancyStatus)c).ToList(),
-                        SalaryFrom = model.SalaryMin,
-                        SalaryTo = model.SalaryMax
-                    }
-                });
-
-                if (!model.NewSubscriptionNotifyByEmail)
-                    _mediator.Send(new CancelSearchSubscriptionCommand { ResearcherGuid = researcherGuid, SearchSubscriptionGuid = newSubscriptionGuid });
-
-                model.SubscriptionInfo = new SubscriptionInfoViewModel
-                {
-                    NewGuid = newSubscriptionGuid,
+                    OrderBy = model.OrderBy,
+                    Query = model.Search ?? string.Empty,
                     Title = model.NewSubscriptionTitle,
-                    NewJustAdded = true
-                };
-                //перезугружаем страницу с инофрмацией о добавленной подписке
-                model.NewSubscriptionTitle = string.Empty;
-                model.NewSubscriptionNotifyByEmail = false;
+                    FoivIds = model.Foivs,
+                    PositionTypeIds = model.PositionTypes,
+                    RegionIds = model.Regions,
+                    ResearchDirectionIds = model.ResearchDirections,
+                    VacancyStatuses = model.VacancyStates?.Select(c => (VacancyStatus)c).ToList(),
+                    SalaryFrom = model.SalaryMin,
+                    SalaryTo = model.SalaryMax
+                }
+            });
 
-                //var modelBase = Mapper.Map<VacanciesFilterModelBase>(model);
-                TempData["VacanciesFilterModel"] = JsonConvert.SerializeObject(model);
+            if (!model.NewSubscriptionNotifyByEmail)
+                _mediator.Send(new CancelSearchSubscriptionCommand { ResearcherGuid = researcherGuid, SearchSubscriptionGuid = newSubscriptionGuid });
 
-                return RedirectToAction("index");
+            model.SubscriptionInfo = new SubscriptionInfoViewModel
+            {
+                NewGuid = newSubscriptionGuid,
+                Title = model.NewSubscriptionTitle,
+                NewJustAdded = true
+            };
+            //перезугружаем страницу с инофрмацией о добавленной подписке
+            model.NewSubscriptionTitle = string.Empty;
+            model.NewSubscriptionNotifyByEmail = false;
+
+            //var modelBase = Mapper.Map<VacanciesFilterModelBase>(model);
+            TempData["VacanciesFilterModel"] = JsonConvert.SerializeObject(model);
+
+            return RedirectToAction("index");
 
         }
+
     }
 }
