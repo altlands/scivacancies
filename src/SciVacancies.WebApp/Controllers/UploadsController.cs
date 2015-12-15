@@ -136,16 +136,6 @@ namespace SciVacancies.WebApp.Controllers
             if (vacancy == null)
                 return HttpNotFound($"{nameof(vacancy)} not found");
 
-            //var isAuthorizationSuccessful = false;
-
-            ////by default, there are InCommittee Reason's files only could be
-            //var attachedFiles = _mediator.Send(new SelectAllVacancyAttachmentsQuery { VacancyGuid = vacancy.guid });
-
-            ////TODO: what logic should be here?
-
-            //if (!isAuthorizationSuccessful)
-            //    return HttpBadRequest("You have not access to the current file");
-
             var fullDirectoryPath = $"{_hostingEnvironment.WebRootPath}/uploads/vacancies/attachments/{pathGuid}";
             return GetFile(fullDirectoryPath, filename, extension);
         }

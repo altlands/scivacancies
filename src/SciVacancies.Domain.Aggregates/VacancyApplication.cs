@@ -11,7 +11,6 @@ namespace SciVacancies.Domain.Aggregates
         public Guid ResearcherGuid { get; private set; }
         public Guid VacancyGuid { get; private set; }
 
-        //todo: get - нигде не используется
         private VacancyApplicationDataModel Data { get; set; }
 
         public VacancyApplicationStatus Status { get; private set; }

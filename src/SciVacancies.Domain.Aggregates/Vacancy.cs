@@ -139,8 +139,8 @@ namespace SciVacancies.Domain.Aggregates
             if (string.IsNullOrEmpty(resolution)) throw new ArgumentNullException(nameof(resolution));
 
 
-            //todo: Vacancy -> SetCommitteeResolution -> нужно ли требовать 
             //по приказу не требуется, на данный момент, обязательно добавлять файл.
+            //todo: Vacancy -> SetCommitteeResolution -> нужно ли требовать 
             //if (attachments == null || attachments.Count == 0) throw new ArgumentNullException("attachments is null or empty");
 
             if ( (attachments == null || attachments.Count == 0)

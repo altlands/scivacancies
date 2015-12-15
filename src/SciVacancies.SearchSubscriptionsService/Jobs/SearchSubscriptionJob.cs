@@ -45,7 +45,6 @@ namespace SciVacancies.SearchSubscriptionsService.Jobs
             {
                 var dataBase = _lifetimeScope.Resolve<IDatabase>();
 
-                //TODO - загружать по частям, вызывая хранимую процедуру
                 Logger.LogInformation($"SearchSubscriptionJob: Select Subscriptions from DB");
                 Queue<SciVacancies.ReadModel.Core.SearchSubscription> subscriptionQueue = new Queue<ReadModel.Core.SearchSubscription>(dataBase.Fetch<SciVacancies.ReadModel.Core.SearchSubscription>(new Sql($"SELECT * FROM res_searchsubscriptions ss WHERE ss.status = @0", SearchSubscriptionStatus.Active)));
                 Logger.LogInformation($"SearchSubscriptionJob: Found {subscriptionQueue.Count} Subscriptions in DB");

@@ -91,20 +91,14 @@ namespace SciVacancies.WebApp.Controllers
             if (vacancy.status != VacancyStatus.Published)
                 return View("Error", $"Вы не можете подать Заявку на Вакансию в статусе: {vacancy.status.GetDescriptionByResearcher()}");
 
-            //TODO: оптимизировать запрос и его обработку
-            var appliedVacancyApplications =
-                _mediator.Send(new SelectPagedVacancyApplicationsByVacancyQuery
-                {
-                    PageSize = 1000,
-                    VacancyGuid = vacancyGuid,
-                    PageIndex = 1,
-                    OrderBy = nameof(VacancyApplication.creation_date),
-                    OrderDirection = ConstTerms.OrderByDescending
-                });
+            var appliedVacancyApplications = _mediator.Send(new SelectVacancyApplicationsByResearcherQuery
+            {
+                ResearcherGuid = researcherGuid
+            });
 
-            if (appliedVacancyApplications.Items.Count > 0
-                && appliedVacancyApplications.Items.Where(c => c.status == VacancyApplicationStatus.Applied).Select(c => c.researcher_guid).Distinct().ToList().Any(c => c == researcherGuid))
-                return View("Error", "Вы не можете подать повторную Заявку на Вакансию ");
+            if (appliedVacancyApplications != null && appliedVacancyApplications.Any()
+                && appliedVacancyApplications.Where(c => c.status == VacancyApplicationStatus.Applied).Select(c => c.researcher_guid).Distinct().ToList().Any(c => c == researcherGuid))
+                return View("Error", "Вы не можете подать повторную Заявку на Вакансию");
 
             var model = VacancyApplicationCreateViewModelHelper(researcherGuid, vacancy, null);
             //TODO: Applications -> Create : вернуть добавление дополнительнительных публикаций
@@ -126,19 +120,12 @@ namespace SciVacancies.WebApp.Controllers
             if (vacancy.status != VacancyStatus.Published)
                 return View("Error", $"Вы не можете подать Заявку на Вакансию в статусе: {vacancy.status.GetDescriptionByResearcher()}");
 
-            //TODO: оптимизировать запрос и его обработку
-            var appliedVacancyApplications =
-                _mediator.Send(new SelectPagedVacancyApplicationsByVacancyQuery
-                {
-                    PageSize = 1000,
-                    VacancyGuid = model.VacancyGuid,
-                    PageIndex = 1,
-                    OrderBy = nameof(VacancyApplication.creation_date),
-                    OrderDirection = ConstTerms.OrderByDescending
+            var appliedVacancyApplications = _mediator.Send(new SelectVacancyApplicationsByResearcherQuery {
+                    ResearcherGuid = researcherGuid
                 });
 
-            if (appliedVacancyApplications.Items.Count > 0
-                && appliedVacancyApplications.Items.Where(c => c.status == VacancyApplicationStatus.Applied).Select(c => c.researcher_guid).Distinct().ToList().Any(c => c == researcherGuid))
+            if (appliedVacancyApplications!=null && appliedVacancyApplications.Any()
+                && appliedVacancyApplications.Where(c => c.status == VacancyApplicationStatus.Applied).Select(c => c.researcher_guid).Distinct().ToList().Any(c => c == researcherGuid))
                 return View("Error", "Вы не можете подать повторную Заявку на Вакансию");
 
             //TODO: Application -> Attachments : как проверять безопасность, прикрепляемых файлов
@@ -188,9 +175,8 @@ namespace SciVacancies.WebApp.Controllers
                     //сценарий-А: сохранить файл на диск
                     try
                     {
-                        //TODO: Application -> Attachments : что делать с Директорией при удалении(отмене, отклонении) Заявки
                         //TODO: Application -> Attachments : как искать Текущую директорию при повторном добавлении(изменении текущего списка) файлов
-                        //TODO: Application -> Attachments : можно ли редактировать список файлов, или Заявки создаются разово и для каждой генеиртся новая папка с вложениями
+                        //TODO: Application -> Attachments : можно ли редактировать список файлов, или Заявки создаются разово и для каждой создаётся новая папка с вложениями
                         if (!isExists)
                             Directory.CreateDirectory(fullDirectoryPath);
                         var filePath =

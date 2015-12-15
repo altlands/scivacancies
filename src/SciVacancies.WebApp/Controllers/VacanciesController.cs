@@ -442,45 +442,45 @@ namespace SciVacancies.WebApp.Controllers
         }
 
         //TODO: удалить этот метод в действующем сайте
-        [BindOrganizationIdFromClaims]
-        [Authorize(Roles = ConstTerms.RequireRoleOrganizationAdmin)]
-        public IActionResult StartInCommittee(Guid id, Guid organizationGuid)
-        {
-            if (id == Guid.Empty)
-                throw new ArgumentNullException(nameof(id));
+        //[BindOrganizationIdFromClaims]
+        //[Authorize(Roles = ConstTerms.RequireRoleOrganizationAdmin)]
+        //public IActionResult StartInCommittee(Guid id, Guid organizationGuid)
+        //{
+        //    if (id == Guid.Empty)
+        //        throw new ArgumentNullException(nameof(id));
 
-            if (organizationGuid == Guid.Empty)
-                throw new ArgumentNullException(nameof(organizationGuid));
+        //    if (organizationGuid == Guid.Empty)
+        //        throw new ArgumentNullException(nameof(organizationGuid));
 
-            var preModel = _mediator.Send(new SingleVacancyQuery { VacancyGuid = id });
+        //    var preModel = _mediator.Send(new SingleVacancyQuery { VacancyGuid = id });
 
-            if (preModel == null)
-                return HttpNotFound(); //throw new ObjectNotFoundException($"Не найдена вакансия с идентификатором: {id}");
+        //    if (preModel == null)
+        //        return HttpNotFound(); //throw new ObjectNotFoundException($"Не найдена вакансия с идентификатором: {id}");
 
-            if (preModel.organization_guid != organizationGuid)
-                return View("Error", "Вы не можете менять Вакансии других организаций");
+        //    if (preModel.organization_guid != organizationGuid)
+        //        return View("Error", "Вы не можете менять Вакансии других организаций");
 
-            if (preModel.status != VacancyStatus.Published)
-                return View("Error", $"Вы не можете перевести Вакансию на рассмотрение комиссии со статусом: {preModel.status.GetDescription()}");
+        //    if (preModel.status != VacancyStatus.Published)
+        //        return View("Error", $"Вы не можете перевести Вакансию на рассмотрение комиссии со статусом: {preModel.status.GetDescription()}");
 
-            //TODO: Saga -> реализовать эту проверку при запуске Саг с таймерами
-            if ((DateTime.UtcNow - preModel.committee_start_date.Value.ToUniversalTime()).TotalMinutes < _sagaSettings.Value.Date.DeltaFromPublishToInCommitteeMinMinutes)
-                return View("Error", $"Вы не можете начать перевести вакансию на рассмотрение комиссии раньше чем через {_sagaSettings.Value.Date.DeltaFromPublishToInCommitteeMinMinutes} мин. Текущее время сервера в UTC: {DateTime.UtcNow}, Время начала комиссии в UTC: {preModel.committee_start_date.Value.ToUniversalTime()}");
+        //    //TODO: Saga -> реализовать эту проверку при запуске Саг с таймерами
+        //    if ((DateTime.UtcNow - preModel.committee_start_date.Value.ToUniversalTime()).TotalMinutes < _sagaSettings.Value.Date.DeltaFromPublishToInCommitteeMinMinutes)
+        //        return View("Error", $"Вы не можете начать перевести вакансию на рассмотрение комиссии раньше чем через {_sagaSettings.Value.Date.DeltaFromPublishToInCommitteeMinMinutes} мин. Текущее время сервера в UTC: {DateTime.UtcNow}, Время начала комиссии в UTC: {preModel.committee_start_date.Value.ToUniversalTime()}");
 
-            var vacancyApplications = _mediator.Send(new CountVacancyApplicationInVacancyQuery
-            {
-                VacancyGuid = preModel.guid,
-                Status = VacancyApplicationStatus.Applied
-            });
+        //    var vacancyApplications = _mediator.Send(new CountVacancyApplicationInVacancyQuery
+        //    {
+        //        VacancyGuid = preModel.guid,
+        //        Status = VacancyApplicationStatus.Applied
+        //    });
 
-            if (vacancyApplications == 0)
-                //если нет заявок, то закрыть вакансию
-                _mediator.Send(new CancelVacancyCommand { VacancyGuid = preModel.guid, Reason = "На Вакансию не подано ни одной Заявки." });
-            else
-                _mediator.Send(new SwitchVacancyInCommitteeCommand { VacancyGuid = id });
+        //    if (vacancyApplications == 0)
+        //        //если нет заявок, то закрыть вакансию
+        //        _mediator.Send(new CancelVacancyCommand { VacancyGuid = preModel.guid, Reason = "На Вакансию не подано ни одной Заявки." });
+        //    else
+        //        _mediator.Send(new SwitchVacancyInCommitteeCommand { VacancyGuid = id });
 
-            return RedirectToAction("details", new { id });
-        }
+        //    return RedirectToAction("details", new { id });
+        //}
 
         private object AddCommitteeReasonPreValidation(Guid vacancyGuid, Guid organizationGuid)
         {
@@ -617,7 +617,6 @@ namespace SciVacancies.WebApp.Controllers
                     //сценарий-А: сохранить файл на диск
                     try
                     {
-                        //TODO: Application -> Attachments : что делать с Директорией при удалении(отмене, отклонении) Заявки
                         //TODO: Application -> Attachments : как искать Текущую директорию при повторном добавлении(изменении текущего списка) файлов
                         //TODO: Application -> Attachments : можно ли редактировать список файлов, или Заявки создаются разово и для каждой генеиртся новая папка с вложениями
                         if (!isExists)
@@ -1142,8 +1141,8 @@ namespace SciVacancies.WebApp.Controllers
             //TODO: оптимизировать запрос и его обработку.
             var page = _mediator.Send(new SelectPagedVacancyApplicationsByVacancyQuery
             {
-                PageSize = pageSize,
-                PageIndex = currentPage,
+                PageSize = 1,
+                PageIndex = 1,
                 VacancyGuid = id,
                 OrderBy = "Guid"
             });

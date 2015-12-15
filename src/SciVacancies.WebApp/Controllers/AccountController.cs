@@ -34,7 +34,7 @@ namespace SciVacancies.WebApp.Controllers
         private readonly IOptions<OAuthSettings> _oauthSettings;
         private readonly IAuthorizeService _authorizeService;
         private readonly IOptions<ApiSettings> _apiSettings;
-        private readonly ILogger _loggerFactory;
+        private readonly ILogger _logger;
 
         public AccountController(SciVacUserManager userManager, IMediator mediator, IOptions<OAuthSettings> oAuthSettings, IOptions<ApiSettings> apiSettings, IAuthorizeService authorizeService, ILoggerFactory loggerFactory)
         {
@@ -43,7 +43,7 @@ namespace SciVacancies.WebApp.Controllers
             _oauthSettings = oAuthSettings;
             _authorizeService = authorizeService;
             _apiSettings = apiSettings;
-            _loggerFactory = loggerFactory.CreateLogger<AccountController>();
+            _logger = loggerFactory.CreateLogger<AccountController>();
         }
 
         public IActionResult LoginUser(string id)
@@ -290,7 +290,7 @@ namespace SciVacancies.WebApp.Controllers
                                     }
                                     else
                                     {
-                                        _loggerFactory.LogError("Token response is null");
+                                        _logger.LogError("Token response is null");
                                         throw new ArgumentNullException("Token response is null");
                                     }
                                 }
@@ -300,19 +300,19 @@ namespace SciVacancies.WebApp.Controllers
                                     {
                                         if (!string.IsNullOrWhiteSpace(GetErrorDescriptionFromQuery()))
                                         {
-                                            _loggerFactory.LogError(GetErrorDescriptionFromQuery());
+                                            _logger.LogError(GetErrorDescriptionFromQuery());
                                             return View("Error", GetErrorDescriptionFromQuery());
                                         }
-                                        _loggerFactory.LogError(GetErrorFromQuery());
+                                        _logger.LogError(GetErrorFromQuery());
                                         return View("Error", GetErrorFromQuery());
                                     }
-                                    _loggerFactory.LogError("Oauth authorization code is null or empty");
+                                    _logger.LogError("Oauth authorization code is null or empty");
                                     throw new ArgumentNullException("Oauth authorization code is null or empty");
                                 }
                             }
                             else
                             {
-                                _loggerFactory.LogError("Oauth state mismatch");
+                                _logger.LogError("Oauth state mismatch");
                                 throw new ArgumentException("Oauth state mismatch");
                             }
                             break;
@@ -359,7 +359,7 @@ namespace SciVacancies.WebApp.Controllers
                                                 !string.IsNullOrWhiteSpace(
                                                     accountResearcherRegisterDataModel.SciMapNumber))
                                             {
-                                                //TODO: если пользователь у нас есть пользователь с таким же идентификатором Карты Наук, то для него сделать обновление данных
+                                                //TODO: если у нас есть пользователь с таким же идентификатором Карты Наук, то для него сделать обновление данных
                                             }
 
                                             accountResearcherRegisterDataModel.UserName =
@@ -431,7 +431,7 @@ namespace SciVacancies.WebApp.Controllers
                                 }
                                 else
                                 {
-                                    //todo: логировать отказ от авторизации
+                                    _logger.LogError("Oauth authorization code is null or empty");
                                     return RedirectToAction("index", "home");
                                     throw new ArgumentNullException("Oauth authorization code is null or empty");
                                 }

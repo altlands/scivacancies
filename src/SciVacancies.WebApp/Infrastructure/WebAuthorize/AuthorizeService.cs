@@ -37,7 +37,6 @@ namespace SciVacancies.WebApp.Infrastructure.WebAuthorize
         //общаемся с картой науки
         public string GetResearcherProfile(string accessToken, string userProfile)
         {
-            //TODO url move to config
             var webRequest = WebRequest.Create(userProfile + "?access_token=" + accessToken);
             webRequest.Method = "GET";
             var httpWebResponse = webRequest.GetResponse() as HttpWebResponse;
@@ -49,13 +48,7 @@ namespace SciVacancies.WebApp.Infrastructure.WebAuthorize
             }
             return responseString;
         }
-        //public ClaimsPrincipal LogOutAndLogInUser(ClaimsIdentity identity)
-        //{
-        //    if (_response == null)
-        //        throw new ObjectNotFoundException($"Параметр {nameof(_response)} не инициализирован");
 
-        //    return LogOutAndLogInUser(_response, identity);
-        //}
         public ClaimsPrincipal LogOutAndLogInUser(HttpResponse response, ClaimsIdentity identity)
         {
             var cp = new ClaimsPrincipal(identity);

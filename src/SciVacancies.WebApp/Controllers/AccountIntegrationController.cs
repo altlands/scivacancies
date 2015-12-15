@@ -63,8 +63,6 @@ namespace SciVacancies.WebApp.Controllers
                 return View(model);
             }
 
-            //TODO: как обновлять профили пользователей, изначально зарегистрировавшихся через наш портал, а не через Карту Науки.
-
             //1-проверка access token expires in
             if (!User.Claims.Any(c => c.Type.Equals("expires_in"))
                 || DateTime.Parse(User.Claims.Single(c => c.Type.Equals("expires_in")).Value) < DateTime.Now)
@@ -129,9 +127,6 @@ namespace SciVacancies.WebApp.Controllers
             model.Original = researcherProfileEditModel;
             return View(model);
 
-            //TODO: продолжтиь обработку в отдельном Action
-            //5 - отправляем команду через медиатор
-            //_mediator.Send(new UpdateResearcherCommand {ResearcherGuid = researcherGuid, Data = researcherDataModel});
         }
 
 

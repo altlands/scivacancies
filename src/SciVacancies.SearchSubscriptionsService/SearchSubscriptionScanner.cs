@@ -85,8 +85,6 @@ namespace SciVacancies.SearchSubscriptionsService
 
             _logger.LogInformation($"SearchSubscriptionScanner: список подписок содержит -{_subscriptionQueue.Count()}- записей");
 
-            //todo добавить свойство int emailsToSentPerMinute
-            //todo: написать sql-процедуру, которая будет блокировать обрабатываемые подписки
             foreach (var searchSubscription in _subscriptionQueue)
             {
                 var searchQuery = new SearchQuery
