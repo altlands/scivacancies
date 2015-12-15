@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using SciVacancies.ReadModel.Pager;
-using SciVacancies.WebApp.Engine;
 
 namespace SciVacancies.WebApp.ViewModels
 {

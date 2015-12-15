@@ -3701,7 +3701,8 @@ table.table.request-table a.sort-order {
     height: 65px;
     overflow: hidden;
 }
-.line_five_content{
+
+.line_five_content {
     height: 100px;
     overflow: hidden;
 }
@@ -4187,4 +4188,39 @@ input.sub-form-item__input {
 
 .row-item-top {
     padding-top: 30px;
+}
+
+
+.status-fail {
+    /*padding: 0 0 0 17px;
+    font-style: italic;
+    color: #fe3000;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    -o-text-overflow: ellipsis;
+    background: url(../images/sprite.png) no-repeat -165px -336px;*/
+    font-family:Arial;
+}
+
+.status-fail:before {
+    content: "";
+    width: 24px;
+    height: 24px;
+    top: 0;
+    left: 0;
+    background: url(../images/sprite.png) no-repeat -165px -336px;
+    display: block;
+    position: absolute;
+}
+
+.status-fail {
+    position: relative;
+    padding: 0 0 0 17px;
+    font-style: italic;
+    color: #fe3000;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    -o-text-overflow: ellipsis;
 }

@@ -8,6 +8,11 @@
 @{
     int a, b;
     var labelForIndex = 0;
+    Guid? ViewingOrganizationGuid = null; //Guid организации, которая в настиоящий момент смотрит страницу
+    if (User.Identity.IsAuthenticated && User.IsInRole(ConstTerms.RequireRoleOrganizationAdmin) && User.HasClaim(c => c.Type == "organizationGuid"))
+    {
+        ViewingOrganizationGuid = Guid.Parse(User.Claims.First(c => c.Type == "organizationGuid").Value);
+    }
 }
 
 <div class="crumbs">
@@ -245,9 +250,13 @@
                                 </div>
                                 <div class="inform">
                                     <p>
-                                        <span class="status @item.Status.GetHtmlClass()">@item.Status.GetDescription()</span>
+                                        <span class="status @item.Status.GetHtmlClass()">@item.Status.GetDescription()</span>@if (ViewingOrganizationGuid.HasValue && item.OrganizationGuid == ViewingOrganizationGuid.Value){if (item.CommitteeStartDate < DateTime.UtcNow){<span class="status-fail">срок подведения итогов нарушен</span>
+                                            }
+                                        }
                                     </p>
-                                    <p>Дата размещения: @(item.PublishDate?.ToLocalMoscowVacancyDateString())</p>
+                                    <p>
+                                        Дата размещения: @(item.PublishDate?.ToLocalMoscowVacancyDateString())
+                                    </p>
                                     <p>
                                         Регион: <span>@item.Region</span>
                                     </p>
