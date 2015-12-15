@@ -83,7 +83,7 @@ namespace SciVacancies.WebApp.Controllers
 
             var model = new ResearchDirectionAggregationViewModel
             {
-                AverageSalary = items.TotalItems > 0 ? Convert.ToDecimal((max - min) / items.TotalItems) : 0,
+                AverageSalary = items.TotalItems > 0 ? Decimal.Round(Convert.ToDecimal((max - min) / items.TotalItems),0) : 0,
                 Count = items.TotalItems,
                 Id = id
             };
