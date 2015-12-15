@@ -43,27 +43,27 @@ namespace SciVacancies.SearchSubscriptionsService
 
         public SearchSubscriptionScanner(ILifetimeScope lifetimeScope, ISearchService elasticService, IDatabase db, IConfiguration configuration, ILoggerFactory loggerFactory)
         {
-            this._logger = loggerFactory.CreateLogger<SearchSubscriptionScanner>();
+            _logger = loggerFactory.CreateLogger<SearchSubscriptionScanner>();
             _logger.LogInformation("SearchSubscriptionScanner: ctor initializing");
             _lifetimeScope = lifetimeScope;
             _elasticService = elasticService;
-            this._db = db;
+            _db = db;
 
             if (configuration == null)
                 _logger.LogInformation("SearchSubscriptionScanner: configuration is null ");
 
             _logger.LogInformation("SearchSubscriptionScanner: getting EmailSettings:Login");
-            this._from = configuration["EmailSettings:Login"];
+            _from = configuration["EmailSettings:Login"];
             _logger.LogInformation("SearchSubscriptionScanner: getting EmailSettings:Domain");
-            this._domain = configuration["EmailSettings:Domain"];
+            _domain = configuration["EmailSettings:Domain"];
             _logger.LogInformation("SearchSubscriptionScanner: getting EmailSettings:PortalLink");
-            this._portalLink = configuration["EmailSettings:PortalLink"];
+            _portalLink = configuration["EmailSettings:PortalLink"];
 
-            if (string.IsNullOrEmpty(this._from)) throw new ArgumentNullException("From is null");
+            if (string.IsNullOrEmpty(_from)) throw new ArgumentNullException("From is null");
             _logger.LogInformation("SearchSubscriptionScanner: got From");
-            if (string.IsNullOrEmpty(this._domain)) throw new ArgumentNullException("Domain is null");
+            if (string.IsNullOrEmpty(_domain)) throw new ArgumentNullException("Domain is null");
             _logger.LogInformation("SearchSubscriptionScanner: got Domain");
-            if (string.IsNullOrEmpty(this._portalLink)) throw new ArgumentNullException("PortalLink is null");
+            if (string.IsNullOrEmpty(_portalLink)) throw new ArgumentNullException("PortalLink is null");
             _logger.LogInformation("SearchSubscriptionScanner: got PortalLink");
         }
 

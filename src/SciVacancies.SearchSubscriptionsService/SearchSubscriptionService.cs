@@ -16,7 +16,7 @@ namespace SciVacancies.SearchSubscriptionsService
         private readonly ILifetimeScope _lifetimeScope;
         private readonly ISchedulerService _schedulerService;
 
-        private readonly ILogger Logger;
+        private readonly ILogger _logger;
 
         public SearchSubscriptionService(IConfiguration configuration, ILifetimeScope lifetimeScope, ILoggerFactory loggerFactory)
         {
@@ -24,7 +24,7 @@ namespace SciVacancies.SearchSubscriptionsService
             _schedulerService = _lifetimeScope.Resolve<ISchedulerService>();
 
             MinuteInterval = configuration.Get<QuartzSettings>("QuartzSettings").Scheduler.ExecutionInterval;
-            this.Logger = loggerFactory.CreateLogger<SearchSubscriptionService>();
+            _logger = loggerFactory.CreateLogger<SearchSubscriptionService>();
         }
 
         /// <summary>
@@ -42,13 +42,13 @@ namespace SciVacancies.SearchSubscriptionsService
         {
             base.OnStart(args);
 
-            Logger.LogInformation("Starting quartz scheduler...");
+            _logger.LogInformation("Starting quartz scheduler...");
             //quartz
             try
             {
-                Logger.LogInformation("Resolving quartz sheduled job");
+                _logger.LogInformation("Resolving quartz sheduled job");
                 var searchSubscriptionJob = _lifetimeScope.Resolve<SearchSubscriptionJob>();
-                Logger.LogInformation("Resolved quartz sheduled job");
+                _logger.LogInformation("Resolved quartz sheduled job");
 
                 //var jobKey = new JobKey("SciVacancies.SearchSubscriptionJob", "SciVacancies.SearchSubscriptionService");
                 //var triggerKey = new TriggerKey("SciVacancies.SearchSubscriptionJobTrigger", "SciVacancies.SearchSubscriptionService");
@@ -56,9 +56,9 @@ namespace SciVacancies.SearchSubscriptionsService
 
                 //if (!_schedulerService.CheckExists(jobKey))
                 //{
-                //    Logger.LogInformation("Creating quartz sheduled job");
+                //    _logger.LogInformation("Creating quartz sheduled job");
                 //    _schedulerService.CreateSheduledJobWithStrongName(searchSubscriptionJob, jobKey, MinuteInterval);
-                //    Logger.LogInformation("Sheduled job has been created");
+                //    _logger.LogInformation("Sheduled job has been created");
                 //}
                 //else
                 //{
@@ -72,34 +72,34 @@ namespace SciVacancies.SearchSubscriptionsService
                 //    if (triggerHasChanges)
                 //    //recreate trigger
                 //    {
-                //        Logger.LogInformation("Recreating quartz sheduled job");
+                //        _logger.LogInformation("Recreating quartz sheduled job");
 
                 //        _schedulerService.DeleteJob(jobKey);
 
                 //        _schedulerService.CreateSheduledJobWithStrongName(searchSubscriptionJob, jobKey, MinuteInterval);
 
-                //        Logger.LogInformation("Sheduled job has been recreated");
+                //        _logger.LogInformation("Sheduled job has been recreated");
                 //    }
                 //}
 
                 //_schedulerService.StartScheduler();
 
-                Logger.LogInformation("Starting quartz sheduled job ExecuteJob");
+                _logger.LogInformation("Starting quartz sheduled job ExecuteJob");
                 searchSubscriptionJob.ExecuteJob();
-                Logger.LogInformation("Finnished quartz sheduled job ExecuteJob");
+                _logger.LogInformation("Finnished quartz sheduled job ExecuteJob");
 
             }
             catch (Exception e)
             {
-                Logger.LogError(e.Message, e);
+                _logger.LogError(e.Message, e);
             }
 
-            Logger.LogInformation("Quartz scheduler has been started");
+            _logger.LogInformation("Quartz scheduler has been started");
         }
 
         protected override void OnStop()
         {
-            Logger.LogInformation("Quartz scheduler is stopping");
+            _logger.LogInformation("Quartz scheduler is stopping");
 
             try
             {
@@ -108,10 +108,10 @@ namespace SciVacancies.SearchSubscriptionsService
             }
             catch (Exception e)
             {
-                Logger.LogError(e.Message, e);
+                _logger.LogError(e.Message, e);
             }
 
-            Logger.LogInformation("Quartz scheduler has been stopped");
+            _logger.LogInformation("Quartz scheduler has been stopped");
         }
     }
 }

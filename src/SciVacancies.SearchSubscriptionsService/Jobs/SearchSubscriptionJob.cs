@@ -18,12 +18,12 @@ namespace SciVacancies.SearchSubscriptionsService.Jobs
     public class SearchSubscriptionJob : IJob
     {
         private readonly ILifetimeScope _lifetimeScope;
-        private readonly ILogger Logger;
+        private readonly ILogger _logger;
 
         public SearchSubscriptionJob(ILifetimeScope lifetimeScope, ILoggerFactory loggerFactory)
         {
             _lifetimeScope = lifetimeScope;
-            this.Logger = loggerFactory.CreateLogger<SearchSubscriptionJob>();
+            _logger = loggerFactory.CreateLogger<SearchSubscriptionJob>();
         }
 
         /// <summary>
@@ -40,21 +40,21 @@ namespace SciVacancies.SearchSubscriptionsService.Jobs
         /// </summary>
         public void ExecuteJob()
         {
-            Logger.LogInformation("SearchSubscriptionJob started");
+            _logger.LogInformation("SearchSubscriptionJob started");
             try
             {
                 var dataBase = _lifetimeScope.Resolve<IDatabase>();
 
-                Logger.LogInformation($"SearchSubscriptionJob: Select Subscriptions from DB");
-                Queue<SciVacancies.ReadModel.Core.SearchSubscription> subscriptionQueue = new Queue<ReadModel.Core.SearchSubscription>(dataBase.Fetch<SciVacancies.ReadModel.Core.SearchSubscription>(new Sql($"SELECT * FROM res_searchsubscriptions ss WHERE ss.status = @0", SearchSubscriptionStatus.Active)));
-                Logger.LogInformation($"SearchSubscriptionJob: Found {subscriptionQueue.Count} Subscriptions in DB");
+                _logger.LogInformation($"SearchSubscriptionJob: Select Subscriptions from DB");
+                Queue<ReadModel.Core.SearchSubscription> subscriptionQueue = new Queue<ReadModel.Core.SearchSubscription>(dataBase.Fetch<ReadModel.Core.SearchSubscription>(new Sql($"SELECT * FROM res_searchsubscriptions ss WHERE ss.status = @0", SearchSubscriptionStatus.Active)));
+                _logger.LogInformation($"SearchSubscriptionJob: Found {subscriptionQueue.Count} Subscriptions in DB");
 
                 //int poolCount = 20;
                 //var threadSize = subscriptionQueue.Count > poolCount
                 //    ? (subscriptionQueue.Count / poolCount) + 1
                 //    : 1;
 
-                //Logger.LogInformation($"SearchSubscriptionJob: threadSize = {threadSize}");
+                //_logger.LogInformation($"SearchSubscriptionJob: threadSize = {threadSize}");
                 //var i = 0;
 
                 //var actions = new List<Action>();
@@ -72,23 +72,23 @@ namespace SciVacancies.SearchSubscriptionsService.Jobs
                 //}
                 //var actionsArray = actions.ToArray();
 
-                Logger.LogInformation("SearchSubscriptionJob: Обработка потоков началась");
+                _logger.LogInformation("SearchSubscriptionJob: Обработка потоков началась");
 
                 //Parallel.Invoke(actionsArray);
                 var scanner = _lifetimeScope.Resolve<ISearchSubscriptionScanner>();
 
-                Logger.LogInformation("SearchSubscriptionJob: Scanner initializaing");
+                _logger.LogInformation("SearchSubscriptionJob: Scanner initializaing");
                 scanner.Initialize(subscriptionQueue);
-                Logger.LogInformation("SearchSubscriptionJob: Scanner initialized");
-                Logger.LogInformation("SearchSubscriptionJob: Scanner subsciptions starting to invoke");
+                _logger.LogInformation("SearchSubscriptionJob: Scanner initialized");
+                _logger.LogInformation("SearchSubscriptionJob: Scanner subsciptions starting to invoke");
                 scanner.PoolHandleSubscriptions();
-                Logger.LogInformation("SearchSubscriptionJob: Scanner subsciptions finished to invoke");
+                _logger.LogInformation("SearchSubscriptionJob: Scanner subsciptions finished to invoke");
 
-                Logger.LogInformation("SearchSubscriptionJob: Обработка потоков завершена");
+                _logger.LogInformation("SearchSubscriptionJob: Обработка потоков завершена");
             }
             catch (Exception e)
             {
-                Logger.LogError(e.Message, e);
+                _logger.LogError(e.Message, e);
             }
         }
     }

@@ -31,9 +31,9 @@ namespace SciVacancies.SearchSubscriptionsService
 
         public IContainer Container { get; set; }
 
-        private string devEnv { get; set; }
+        private string devEnv { get; }
 
-        private Microsoft.Framework.Logging.ILogger Logger { get; set; }
+        private Microsoft.Framework.Logging.ILogger Logger { get; }
 
         public Program(IApplicationEnvironment appEnv)
         {
@@ -64,7 +64,7 @@ namespace SciVacancies.SearchSubscriptionsService
             Container = builder.Build();
 
             ILoggerFactory loggerFactory = Container.Resolve<ILoggerFactory>();
-            this.Logger = loggerFactory.CreateLogger<Program>();
+            Logger = loggerFactory.CreateLogger<Program>();
         }
 
         public void ConfigureContainer(ContainerBuilder builder)
