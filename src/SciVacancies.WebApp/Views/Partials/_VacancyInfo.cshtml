@@ -5,14 +5,14 @@
 @using SciVacancies.WebApp.ViewModels
 @model VacancyDetailsViewModel
 
-@if (User.Identity.IsAuthenticated &&  !string.IsNullOrWhiteSpace(Model.CommitteeReasolution) || (Model.AttachmentsCommittee != null && Model.AttachmentsCommittee.Any()))
+@if (User.Identity.IsAuthenticated && !string.IsNullOrWhiteSpace(Model.CommitteeReasolution) || (Model.AttachmentsCommittee != null && Model.AttachmentsCommittee.Any()))
 {
     <text>
 
     <div class="title-cat-inform">Решение комиссии:</div>
     <ul class="list-information layout-inform">
 
-        <li class="odd">
+        <li class="even">
 
             <div>
                 @if (!string.IsNullOrWhiteSpace(Model.CommitteeReasolution))
@@ -45,7 +45,7 @@
                                 <div>
                                     <div class="field">
                                         <div class="section-eval">
-                                            @item.name <span class="small-icon icon-sm-download"><a filelink=@item.url pathtocatalog=@Model.FolderVacanciesAttachmentsUrl  href="@(Model.FolderVacanciesAttachmentsUrl + item.url)">Скачать</a></span>
+                                            @item.name <span class="small-icon icon-sm-download"><a filelink=@item.url pathtocatalog=@Model.FolderVacanciesAttachmentsUrl href="@(Model.FolderVacanciesAttachmentsUrl + item.url)">Скачать</a></span>
                                         </div>
                                     </div>
                                 </div>
@@ -66,20 +66,18 @@
 <ul class="list-information layout-inform">
     <li class="odd">
         <span>Статус:</span><div class="layout-inform__right-col">@Model.Status.GetDescription(User)</div>
+    </li>
+    <li class="even">
         @if (Model.Status == VacancyStatus.Published)
         {
             <text>
-            <div>
-                Дата окончания публикации вакансии: @(Model.InCommitteeStartDate?.ToLocalMoscowVacancyDateString())
-            </div>
+            <span>Окончание публикации:</span><div class="layout-inform__right-col">@(Model.InCommitteeStartDate?.ToLocalMoscowVacancyDateString())</div>
             </text>
         }
         @if (Model.Status == VacancyStatus.InCommittee)
         {
             <text>
-            <div>
-                Дата окончания публикации вакансии: @(Model.InCommitteeEndDate?.ToLocalMoscowVacancyDateString())
-            </div>
+            <span>Окончание рассмотрения:</span><div class="layout-inform__right-col">@(Model.InCommitteeEndDate?.ToLocalMoscowVacancyDateString())</div>
             </text>
         }
     </li>
@@ -88,28 +86,25 @@
 
 <div class="title-cat-inform">Специализация:</div>
 <ul class="list-information layout-inform">
-    <li class="even">
+    <li class="odd">
         <span>Должность:</span><div class="layout-inform__right-col">@Model.Name</div>
     </li>
-    @*<li class="odd">
-        <span>Полное наименование:</span><div class="layout-inform__right-col">@Model.FullName</div>
-    </li>*@
-    <li class="odd">
+    <li class="even">
         <span>Отрасль науки:</span><div class="layout-inform__right-col">@(Model.ResearchDirection?.title)</div>
     </li>
-    <li class="even">
+    <li class="odd">
         <span>Тематика исследований:</span><div class="layout-inform__right-col">@Model.ResearchTheme</div>
     </li>
 </ul>
 
 <div class="title-cat-inform">Задачи и критерии:</div>
 <ul class="list-information layout-inform">
-    <li class="odd">
+    <li class="even">
         <span>Задачи:</span><div class="layout-inform__right-col">@Model.Tasks</div>
     </li>
-    <li class="even">
+    <li class="odd">
         <span>Критерии оценки:</span>
-        <div>
+        <div class="layout-inform__right-col">
             @if (Model.CriteriasHierarchy != null)
             {
                 foreach (CriteriaItemViewModel group in Model.CriteriasHierarchy.Where(c => c.Items.Sum(d => d.Count) > 0))
@@ -137,7 +132,7 @@
     </li>
     @if (Model.CustomCriterias != null)
             {
-        <li class="odd">
+        <li class="even">
             <span>Квалифицированные требования:</span>
             <div>
                 @foreach (var item in Model.CustomCriterias)
@@ -177,10 +172,10 @@
     <li class="even">
         <span>Компенсация проезда:</span><div class="layout-inform__right-col">@(Model.TransportCompensation ? "Да" : "Нет")</div>
     </li>
-    <li class="even">
+    <li class="odd">
         <span>Служебное жилье:</span><div class="layout-inform__right-col">@(Model.OfficeAccomodation ? "Да" : "Нет")</div>
     </li>
-    <li class="odd">
+    <li class="even">
         <span>Дополнительно:</span><div class="layout-inform__right-col">@Model.Details</div>
     </li>
 </ul>
@@ -196,7 +191,7 @@
                 @foreach (var item in Model.Attachments)
                 {
                     <div class="section-eval">
-                        @item.name <span class="small-icon icon-sm-download"><a filelink=@item.url pathtocatalog=@Model.FolderVacanciesAttachmentsUrl  href="@(Model.FolderVacanciesAttachmentsUrl + item.url)">Скачать</a></span>
+                        @item.name <span class="small-icon icon-sm-download"><a filelink=@item.url pathtocatalog=@Model.FolderVacanciesAttachmentsUrl href="@(Model.FolderVacanciesAttachmentsUrl + item.url)">Скачать</a></span>
                     </div>
                 }
             </div>
