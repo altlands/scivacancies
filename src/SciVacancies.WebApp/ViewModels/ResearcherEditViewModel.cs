@@ -13,21 +13,26 @@ namespace SciVacancies.WebApp.ViewModels
         public int ExtNumber { get; set; }
 
         [Required(ErrorMessage = "Необходимо заполнить Имя")]
+        [MaxLength(1500, ErrorMessage = "Длина строки не более 1500 символов")]
         public string FirstName { get; set; }
         [Required(ErrorMessage = "Необходимо заполнить Фамилию")]
+        [MaxLength(1500, ErrorMessage = "Длина строки не более 1500 символов")]
         public string SecondName { get; set; }
+        [MaxLength(1500, ErrorMessage = "Длина строки не более 1500 символов")]
         public string Patronymic { get; set; }
 
         [Required(ErrorMessage = "Необходимо заполнить Имя на английском")]
+        [MaxLength(1500, ErrorMessage = "Длина строки не более 1500 символов")]
         public string FirstNameEng { get; set; }
         [Required(ErrorMessage = "Необходимо заполнить Фамилию на английском")]
+        [MaxLength(1500, ErrorMessage = "Длина строки не более 1500 символов")]
         public string SecondNameEng { get; set; }
+        [MaxLength(1500, ErrorMessage = "Длина строки не более 1500 символов")]
         public string PatronymicEng { get; set; }
 
+        [MaxLength(1500, ErrorMessage = "Длина строки не более 1500 символов")]
         public string PreviousSecondName { get; set; }
-        ///// <summary>
-        ///// Прежняя фамилия
-        ///// </summary>
+        [MaxLength(1500, ErrorMessage = "Длина строки не более 1500 символов")]
         public string PreviousSecondNameEng { get; set; }
 
         //public DateTime BirthDate { get; set; }
@@ -41,11 +46,15 @@ namespace SciVacancies.WebApp.ViewModels
 
         [Required(ErrorMessage = "Укажите номер телефона")]
         [Phone(ErrorMessage = "Поле Телефон содержит не допустимый номер телефона.")]
+        [MaxLength(1500, ErrorMessage = "Длина строки не более 1500 символов")]
         public string Phone { get; set; }
         [Phone(ErrorMessage = "Поле Телефон содержит не допустимый номер телефона.")]
+        [MaxLength(1500, ErrorMessage = "Длина строки не более 1500 символов")]
         public string ExtraPhone { get; set; }
 
+        [MaxLength(1500, ErrorMessage = "Длина строки не более 1500 символов")]
         public string ScienceDegree { get; set; }
+        [MaxLength(1500, ErrorMessage = "Длина строки не более 1500 символов")]
         public string ScienceRank { get; set; }
         public List<RewardEditViewModel> Rewards { get; set; } = new List<RewardEditViewModel>();
         public List<MembershipEditViewModel> Memberships { get; set; } = new List<MembershipEditViewModel>();

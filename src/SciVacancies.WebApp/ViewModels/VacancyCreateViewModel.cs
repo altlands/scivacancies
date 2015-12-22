@@ -104,6 +104,7 @@ namespace SciVacancies.WebApp.ViewModels
         /// Должность
         /// </summary>
         [Required(ErrorMessage = "Требуется заполнить поле Наименование")]
+        [MaxLength(1500, ErrorMessage = "Длина строки не более 1500 символов")]
         public string Name { get; set; }
 
         /// <summary>
@@ -118,12 +119,14 @@ namespace SciVacancies.WebApp.ViewModels
         /// <summary>
         /// Тематика исследований
         /// </summary>
+        [MaxLength(1500, ErrorMessage = "Длина строки не более 1500 символов")]
         public string ResearchTheme { get; set; }
 
         /// <summary>
         /// Задачи
         /// </summary>
         //[Required(ErrorMessage = "Требуется описать Задачи")]
+        [MaxLength(1500, ErrorMessage = "Длина строки не более 1500 символов")]
         public string Tasks { get; set; }
 
         /// <summary>
@@ -141,11 +144,13 @@ namespace SciVacancies.WebApp.ViewModels
         /// <summary>
         /// Стимулирующие выплаты
         /// </summary>
+        [MaxLength(1500, ErrorMessage = "Длина строки не более 1500 символов")]
         public string Bonuses { get; set; }
 
         /// <summary>
         /// Дополнительно
         /// </summary>
+        [MaxLength(1500, ErrorMessage = "Длина строки не более 1500 символов")]
         public string Details { get; set; }
 
         public int ContractTypeValue { get; set; }
@@ -211,13 +216,17 @@ namespace SciVacancies.WebApp.ViewModels
         /// Лицо для получения дополнительных справок
         /// </summary>
         //[Required(ErrorMessage = "Укажите контактное лицо")]
+        [MaxLength(1500, ErrorMessage = "Длина строки не более 1500 символов")]
         public string ContactName { get; set; }
         //[Required(ErrorMessage = "Укажите E-mail")]
         [EmailAddress(ErrorMessage = "Поле E-mail содержит не допустимый адрес электронной почты.")]
+        [MaxLength(1500, ErrorMessage = "Длина строки не более 1500 символов")]
         public string ContactEmail { get; set; }
         //[Required(ErrorMessage = "Укажите номер телефона")]
         [Phone(ErrorMessage = "Поле Телефон содержит не допустимый номер телефона.")]
+        [MaxLength(1500, ErrorMessage = "Длина строки не более 1500 символов")]
         public string ContactPhone { get; set; }
+        [MaxLength(1500, ErrorMessage = "Длина строки не более 1500 символов")]
         public string ContactDetails { get; set; }
 
 
@@ -235,6 +244,7 @@ namespace SciVacancies.WebApp.ViewModels
         public string Region { get; set; }
         public IEnumerable<SelectListItem> Regions { get; set; }
 
+        [MaxLength(1500, ErrorMessage = "Длина строки не более 1500 символов")]
         public string CityName { get; set; }
 
         /// <summary>

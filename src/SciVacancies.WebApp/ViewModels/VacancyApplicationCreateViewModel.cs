@@ -1,5 +1,6 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNet.Http;
 using Microsoft.AspNet.Mvc;
 using Newtonsoft.Json;
@@ -68,12 +69,13 @@ namespace SciVacancies.WebApp.ViewModels
             ? JsonConvert.DeserializeObject<List<InterestEditViewModel>>(Interests)
             : new List<InterestEditViewModel>();
 
+        [MaxLength(4000, ErrorMessage = "Длина строки не более 4000 символов")]
         public string CoveringLetter { get; set; }
 
         public List<IFormFile> Attachments { get; set; } = new List<IFormFile>();
 
         /// <summary>
-        /// Autoincrimented field in DB - ����� ���� null
+        /// Autoincrimented field in DB - может быть null
         /// </summary>
         public long? ReadId { get; set; }
 

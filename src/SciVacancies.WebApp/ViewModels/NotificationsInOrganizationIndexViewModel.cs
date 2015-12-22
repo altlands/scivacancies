@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations;
 using SciVacancies.ReadModel.Core;
 using SciVacancies.ReadModel.Pager;
 

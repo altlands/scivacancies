@@ -20,6 +20,10 @@
     Вакансия: <a asp-controller="vacancies" asp-action="details" asp-route-id="@Model.Guid">@Model.Vacancy.Name</a>
 </div>
 
+
+
+<div asp-validation-summary="ValidationSummary.All"></div>
+
 <div class="content-slide">
 
     <form class="table-form" enctype="multipart/form-data" method="POST">
@@ -33,6 +37,7 @@
             </div>
             <div class="right-cell">
                 <textarea asp-for="Reason" required=""></textarea>
+                <span asp-validation-for="Reason"></span>
             </div>
         </div>
 
