@@ -1,11 +1,11 @@
 ﻿{
   "Data": {
-    "ReadModelDb": "Server=192.168.10.141;Database=scivacanciestest;User Id=postgres;Password=postgres",
+    "ReadModelDb": "Server=localhost;Database=scivacanciestest;User Id=postgres;Password=postgres",
     "QuartzDb": ""
   },
   "ElasticSettings": {
-    "ConnectionUrl": "http://192.168.10.141:9200/",
-    "DefaultIndex": "scivacancies-devtest",
+    "ConnectionUrl": "http://alt-dev003:9200/",
+    "DefaultIndex": "scivacancies-ntemnikov",
     "MinScore": "0.2"
   },
   "QuartzSettings": {
@@ -24,7 +24,7 @@
     },
     "DataSource": {
       "Default": {
-        "ConnectionString": "Server=192.168.10.141;Database=scivacanciestest;User Id=postgres;Password=postgres",
+        "ConnectionString": "Server=localhost; Database=scivacanciestest; User Id=postgres; Password=postgres",
         "Provider": "Npgsql-20"
       }
     }
