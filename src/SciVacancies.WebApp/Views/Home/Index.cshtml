@@ -85,9 +85,7 @@
                 <h4>Вакансии по областям науки</h4>
 
                 <div class="b-items-category panel-group" id="accordion">
-                    <cache expires-after="@TimeSpan.FromMinutes(90)">
-                        @Html.Partial("_HomeIndexResearchDirections", Model)
-                    </cache>
+                    @Html.Partial("_HomeIndexResearchDirections", Model)
                 </div>
             </div>
         </div>
@@ -105,7 +103,7 @@
             </form>
         </div>
 
-        <cache expires-after="@TimeSpan.FromSeconds(60)">
+        <cache expires-after="@TimeSpan.FromMinutes(240)">
             @Html.Partial("_HomeIndexGraphics", Model)
         </cache>
 

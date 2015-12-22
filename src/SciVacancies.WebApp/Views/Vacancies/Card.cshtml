@@ -26,44 +26,50 @@
 </div>
 
 <div class="content-popup b-buttons">
-    @if (User.IsInRole(ConstTerms.RequireRoleOrganizationAdmin) 
-        && User.Claims.Any(c=>c.Type == ConstTerms.ClaimTypeOrganizationId)
-        && User.Claims.Single(c=>c.Type == ConstTerms.ClaimTypeOrganizationId).Value == Model.OrganizationGuid.ToString()
-        )
-    {
-        <text>
-            <a asp-controller="vacancies" asp-action="details" asp-route-id="@Model.Guid" class="green-btn middle-icon icon-arr-right default-link">Подробнее</a>
-        </text>
-    }
-
-    @if (User.IsInRole(ConstTerms.RequireRoleResearcher))
-    {
-
-        if (!Model.AppliedByUserApplications.Select(c => c.vacancy_guid).Contains(Model.Guid))
+    <div class="ctr-buttons">
+        @if (User.IsInRole(ConstTerms.RequireRoleOrganizationAdmin)
+            && User.Claims.Any(c => c.Type == ConstTerms.ClaimTypeOrganizationId)
+            && User.Claims.Single(c => c.Type == ConstTerms.ClaimTypeOrganizationId).Value == Model.OrganizationGuid.ToString()
+            )
         {
-            if (Model.Status == VacancyStatus.Published)
+            <text>
+            <a asp-controller="vacancies" asp-action="details" asp-route-id="@Model.Guid" class="green-btn middle-icon icon-arr-right default-link">Подробнее</a>
+            </text>
+        }
+
+        @if (User.IsInRole(ConstTerms.RequireRoleResearcher))
+        {
+
+            if (!Model.AppliedByUserApplications.Select(c => c.vacancy_guid).Contains(Model.Guid))
+            {
+                if (Model.Status == VacancyStatus.Published)
+                {
+                    <text>
+                    <a asp-controller="applications" asp-action="create" asp-route-vacancyguid="@Model.Guid" class="green-btn middle-icon icon-arr-right default-link">Подать заявку</a>
+                    </text>
+                }
+            }
+
+
+            if (bool.Parse(ViewData["VacancyInFavorites"].ToString()))
             {
                 <text>
-                    <a asp-controller="applications" asp-action="create" asp-route-vacancyguid="@Model.Guid" class="green-btn middle-icon icon-arr-right default-link">Подать заявку</a>
+                <a asp-controller="researchers" asp-action="favorities" class="green-btn middle-icon icon-ok default-link">В избранном</a>
+                <a asp-controller="researchers" asp-action="removefavorite" asp-route-vacancyguid="@Model.Guid" class="blue-btn middle-icon icon-close default-link">Убрать из избранных</a>
+                </text>
+            }
+            else
+            {
+                <text>
+                <a asp-controller="researchers" asp-action="addtofavorite" asp-route-vacancyguid="@Model.Guid" class="blue-btn middle-icon icon-favorite default-link">Добавить в избранное</a>
                 </text>
             }
         }
-        
+    </div>
 
-        if (bool.Parse(ViewData["VacancyInFavorites"].ToString()))
-        {
-            <text>
-                <a asp-controller="researchers" asp-action="favorities" class="green-btn middle-icon icon-ok default-link">В избранном</a>
-                <a asp-controller="researchers" asp-action="removefavorite" asp-route-vacancyguid="@Model.Guid" class="blue-btn middle-icon icon-close default-link">Убрать из избранных</a>
-            </text>
-        }
-        else
-        {
-            <text>
-                <a asp-controller="researchers" asp-action="addtofavorite" asp-route-vacancyguid="@Model.Guid" class="blue-btn middle-icon icon-favorite default-link">Добавить в избранное</a>
-            </text>
-        }
-    }
+    <br />
+    <br />
+
 
     @Component.Invoke("VacancyInfo", Model)
 

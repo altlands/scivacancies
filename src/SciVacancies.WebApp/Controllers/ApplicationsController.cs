@@ -97,7 +97,7 @@ namespace SciVacancies.WebApp.Controllers
             });
 
             if (appliedVacancyApplications != null && appliedVacancyApplications.Any()
-                && appliedVacancyApplications.Where(c => c.status == VacancyApplicationStatus.Applied).Select(c => c.researcher_guid).Distinct().ToList().Any(c => c == researcherGuid))
+                && appliedVacancyApplications.Where(c => c.vacancy_guid == vacancyGuid && c.status == VacancyApplicationStatus.Applied).Select(c => c.researcher_guid).Distinct().ToList().Any(c => c == researcherGuid))
                 return View("Error", "Вы не можете подать повторную Заявку на Вакансию");
 
             var model = VacancyApplicationCreateViewModelHelper(researcherGuid, vacancy, null);
@@ -125,7 +125,7 @@ namespace SciVacancies.WebApp.Controllers
                 });
 
             if (appliedVacancyApplications!=null && appliedVacancyApplications.Any()
-                && appliedVacancyApplications.Where(c => c.status == VacancyApplicationStatus.Applied).Select(c => c.researcher_guid).Distinct().ToList().Any(c => c == researcherGuid))
+                && appliedVacancyApplications.Where(c => c.vacancy_guid == model.VacancyGuid && c.status == VacancyApplicationStatus.Applied).Select(c => c.researcher_guid).Distinct().ToList().Any(c => c == researcherGuid))
                 return View("Error", "Вы не можете подать повторную Заявку на Вакансию");
 
             //TODO: Application -> Attachments : как проверять безопасность, прикрепляемых файлов

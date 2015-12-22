@@ -60,7 +60,7 @@
                 <text>
                 <tr>
                     <td class="bold">@i</td>
-                    <td class="bold">@item.creation_date.ToLocalVacancyDateString()</td>
+                    <td class="bold">@item.creation_date.ToVacancyDateString()</td>
                     <td class="bold">
                         <a asp-controller="vacancies" asp-action="card" asp-route-id="@item.vacancy_guid">Вакансия</a>
                     </td>

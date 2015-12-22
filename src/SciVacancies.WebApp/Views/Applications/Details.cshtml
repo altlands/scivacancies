@@ -14,7 +14,7 @@
 
 <h4>
     Заявка на вакансию <small><a asp-controller="vacancies" asp-action="card" asp-route-id="@Model.VacancyGuid">@Model.Vacancy.Name</a></small>
-    от @Model.CreationDate.ToLocalVacancyDateString()
+    от @Model.CreationDate.ToVacancyDateString()
 </h4>
 
 

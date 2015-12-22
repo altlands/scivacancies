@@ -9,7 +9,7 @@ namespace SciVacancies.WebApp
         /// </summary>
         /// <param name="source"></param>
         /// <returns></returns>
-        public static string ToLocalVacancyDateString(this DateTime source)
+        public static string ToVacancyDateString(this DateTime source)
         {
             return $"{source.Day.ToString("00")}-{source.Month.ToString("00")}-{source.Year.ToString("0000")}";
         }
@@ -18,7 +18,7 @@ namespace SciVacancies.WebApp
         /// </summary>
         /// <param name="source"></param>
         /// <returns></returns>
-        public static string ToLocalVacancyDateTimeString(this DateTime source)
+        public static string ToVacancyDateTimeString(this DateTime source)
         {
             return $"{source.Day.ToString("00")}-{source.Month.ToString("00")}-{source.Year.ToString("0000")}, {source.Hour.ToString("00")}:{source.Minute.ToString("00")}";
         }
