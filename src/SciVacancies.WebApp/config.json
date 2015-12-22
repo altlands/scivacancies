@@ -108,8 +108,8 @@
     "CaptchaDurationSeconds": 120
   },
   "CacheSettings": {
-    "DictionaryExpiration": 20,
-    "MainPageExpiration": 20
+    "DictionaryExpiration": 36000,
+    "MainPageExpiration": 36000
   },
   "EmailSettings": {
     "Login": "noreply@informika.ru",

@@ -14,15 +14,13 @@
         <text>
         <div class="item-category panel panel-default">
             <div class="item-category__title panel-heading" role="tab" id="heading_@child.Id">
-                <a class="item-category__title-elem" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapse_@child.Id" aria-expanded="false" aria-controls="collapse_@child.Id">
+                <a class="item-category__title-elem" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapse_@child.Id" aria-expanded="false" aria-controls="collapse_@child.Id"
+                   onclick="getResearchDirectionsStatistics(@child.Id);">
                     @child.Title
                 </a>
             </div>
 
             <div id="collapse_@child.Id" class="panel-collapse collapse" role="tabpanel" aria-labelledby="heading_@child.Id">
-                <cache expires-after="@TimeSpan.FromMinutes(child.Id)">
-                    @*cache to random time*@
-
                     <div class="item-category__search">
                         <input type="text" class="item-category__input" placeholder="Поиск по научным направлениям" />
                         @*<div class="search-comment-italic">В данной категории – #### вакансий</div>*@
@@ -99,9 +97,6 @@
                         </div>
                         </text>
                                 }
-
-
-                </cache>
             </div>
         </div>
         </text>

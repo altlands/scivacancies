@@ -5,6 +5,7 @@ using SciVacancies.WebApp.Queries;
 
 using Microsoft.AspNet.Mvc;
 using Microsoft.Framework.OptionsModel;
+using Microsoft.Framework.Caching.Memory;
 
 using MediatR;
 using SciVacancies.Domain.Enums;
@@ -22,12 +23,23 @@ namespace SciVacancies.WebApp.Controllers
         private readonly IOptions<AnalythicSettings> _analythicSettings;
         private readonly IMediator _mediator;
         private readonly IAnalythicService _analythicService;
+        private readonly IMemoryCache _cache;
+        private readonly IOptions<CacheSettings> _cacheSettings;
+        private MemoryCacheEntryOptions _cacheOptions
+        {
+            get
+            {
+                return new MemoryCacheEntryOptions().SetAbsoluteExpiration(DateTimeOffset.Now.AddSeconds(_cacheSettings.Value.MainPageExpiration));
+            }
+        }
 
-        public AnalyticsController(IOptions<AnalythicSettings> analythicSettings, IMediator mediator, IAnalythicService analythicService)
+        public AnalyticsController(IOptions<AnalythicSettings> analythicSettings, IMediator mediator, IAnalythicService analythicService, IMemoryCache cache, IOptions<CacheSettings> cacheSettings)
         {
             _analythicSettings = analythicSettings;
             _mediator = mediator;
             _analythicService = analythicService;
+            _cache = cache;
+            _cacheSettings = cacheSettings;
         }
 
         /// <summary>
@@ -57,36 +69,40 @@ namespace SciVacancies.WebApp.Controllers
 
             return Json(result);
         }
-        [ResponseCache(Duration = 43200)]
         public IActionResult CountByResearchDirection(int id)
         {
-            var query = new VacancyPaymentsByResearchDirectionAnalythicQuery
+            ResearchDirectionAggregationViewModel model;
+            if (!_cache.TryGetValue($"vacancies_by_research_directions{id}", out model))
             {
-                ResearchDirectionId = id
-            };
-            var result = _analythicService.VacancyPayments(query);
+                var query = new VacancyPaymentsByResearchDirectionAnalythicQuery
+                {
+                    ResearchDirectionId = id
+                };
+                var result = _analythicService.VacancyPayments(query);
 
-            var min = (result["salary_from"] as Nest.ValueMetric).Value ?? 0D;
-            var max = (result["salary_to"] as Nest.ValueMetric).Value ?? 0D;
+                var min = (result["salary_from"] as Nest.ValueMetric).Value ?? 0D;
+                var max = (result["salary_to"] as Nest.ValueMetric).Value ?? 0D;
 
-            if (max < min) { min = max = 0; }
+                if (max < min) { min = max = 0; }
 
-            var items = _mediator.Send(new SearchQuery
-            {
-                Query = string.Empty,
-                PageSize = 1,
-                CurrentPage = 1,
-                OrderFieldByDirection = ConstTerms.OrderByFieldDate,
-                ResearchDirectionIds = new List<int> { id },
-                VacancyStatuses = new List<VacancyStatus> { VacancyStatus.Published }
-            });
+                var items = _mediator.Send(new SearchQuery
+                {
+                    Query = string.Empty,
+                    PageSize = 1,
+                    CurrentPage = 1,
+                    OrderFieldByDirection = ConstTerms.OrderByFieldDate,
+                    ResearchDirectionIds = new List<int> { id },
+                    VacancyStatuses = new List<VacancyStatus> { VacancyStatus.Published }
+                });
 
-            var model = new ResearchDirectionAggregationViewModel
-            {
-                AverageSalary = items.TotalItems > 0 ? Decimal.Round(Convert.ToDecimal((max - min) / items.TotalItems),0) : 0,
-                Count = items.TotalItems,
-                Id = id
-            };
+                model = new ResearchDirectionAggregationViewModel
+                {
+                    AverageSalary = items.TotalItems > 0 ? Decimal.Round(Convert.ToDecimal((max - min) / items.TotalItems), 0) : 0,
+                    Count = items.TotalItems,
+                    Id = id
+                };
+                _cache.Set($"vacancies_by_research_directions{id}", model, _cacheOptions);
+            }
 
             return Json(model);
 

@@ -526,14 +526,20 @@ $(document).ready(function () {
         }
     });
     /*
-     *для областей науки вывести количество вакансий и среднюю зарплату 
-     */
-    $('div.item-direction[data-researchdirectionid]').each(function () {
-        var id =$(this).attr('data-researchdirectionid');
+    end of the code
+    */
+});
+
+/*
+ *для областей науки вывести количество вакансий и среднюю зарплату 
+ */
+function getResearchDirectionsStatistics(childId) {
+    $("[aria-labelledby='heading_"+childId+"']").find('div.item-direction[data-researchdirectionid]').each(function () {
+        var id = $(this).attr('data-researchdirectionid');
 
         $.ajax({
             url: "/analytics/countbyresearchdirection/" + id,
-            success: function(data) {
+            success: function (data) {
                 var parentDiv = $('div.item-direction[data-researchdirectionid="' + data.Id + '"]');
                 $(parentDiv).find("span.totalvacancies").html(data.Count);
                 $(parentDiv).find("span.averagesalaries").html(data.AverageSalary);
@@ -541,10 +547,10 @@ $(document).ready(function () {
         });
 
     });
-    /*
-    end of the code
-    */
-});
+
+    $("[aria-controls='collapse_" + childId + "']").removeAttr("onclick");
+}
+
 /*
  * обработка каскадных выпадающих списков для Cusel (год окончания периода не может быть меньше года начала периода)
  */
