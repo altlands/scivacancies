@@ -15,28 +15,26 @@ using Microsoft.Framework.Caching.Memory;
 
 namespace SciVacancies.WebApp.Controllers
 {
-    [ResponseCache(NoStore = true)]
     public class HomeController : Controller
     {
         private readonly IMediator _mediator;
-        private readonly IMemoryCache cache;
-        private readonly IOptions<CacheSettings> cacheSettings;
-        private MemoryCacheEntryOptions cacheOptions
+        private readonly IMemoryCache _cache;
+        private readonly IOptions<CacheSettings> _cacheSettings;
+        private MemoryCacheEntryOptions _cacheOptions
         {
             get
             {
-                return new MemoryCacheEntryOptions().SetAbsoluteExpiration(DateTimeOffset.Now.AddSeconds(cacheSettings.Value.MainPageExpiration));
+                return new MemoryCacheEntryOptions().SetAbsoluteExpiration(DateTimeOffset.Now.AddSeconds(_cacheSettings.Value.MainPageExpiration));
             }
         }
 
         public HomeController(IMediator mediator, IMemoryCache cache, IOptions<CacheSettings> cacheSettings)
         {
             _mediator = mediator;
-            this.cache = cache;
-            this.cacheSettings = cacheSettings;
+            _cache = cache;
+            _cacheSettings = cacheSettings;
         }
 
-        //[ResponseCache(NoStore = true)]
         [PageTitle("Главная")]
         public IActionResult Index()
         {
@@ -44,7 +42,7 @@ namespace SciVacancies.WebApp.Controllers
             model = new IndexViewModel { CurrentMediator = _mediator };
 
             PagedList<OrganizationDetailsViewModel> organizationsList;
-            if (!cache.TryGetValue<PagedList<OrganizationDetailsViewModel>>("first_organizations_by_vacancycount", out organizationsList))
+            if (!_cache.TryGetValue<PagedList<OrganizationDetailsViewModel>>("first_organizations_by_vacancycount", out organizationsList))
             {
                 var sourceOrganizations = _mediator.Send(new SelectPagedOrganizationsQuery
                 {
@@ -55,13 +53,13 @@ namespace SciVacancies.WebApp.Controllers
                 if (sourceOrganizations != null)
                 {
                     organizationsList = sourceOrganizations.MapToPagedList<Organization, OrganizationDetailsViewModel>();
-                    cache.Set<PagedList<OrganizationDetailsViewModel>>("first_organizations_by_vacancycount", organizationsList, cacheOptions);
+                    _cache.Set<PagedList<OrganizationDetailsViewModel>>("first_organizations_by_vacancycount", organizationsList, _cacheOptions);
                 }
             }
             model.OrganizationsList = organizationsList;
 
             PagedList<VacancyDetailsViewModel> vacanciesList;
-            if (!cache.TryGetValue<PagedList<VacancyDetailsViewModel>>("last_published_vacancies", out vacanciesList))
+            if (!_cache.TryGetValue<PagedList<VacancyDetailsViewModel>>("last_published_vacancies", out vacanciesList))
             {
                 var sourceVacancy = _mediator.Send(new SelectPagedVacanciesQuery
                 {
@@ -88,7 +86,7 @@ namespace SciVacancies.WebApp.Controllers
                         }
                     });
                     }
-                    cache.Set<PagedList<VacancyDetailsViewModel>>("last_published_vacancies", vacanciesList, cacheOptions);
+                    _cache.Set<PagedList<VacancyDetailsViewModel>>("last_published_vacancies", vacanciesList, _cacheOptions);
                 }
             }
             model.VacanciesList = vacanciesList;
