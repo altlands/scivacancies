@@ -36,7 +36,7 @@ namespace SciVacancies.Services.Email
                     Port = int.Parse(_configuration["EmailSettings:Port"], CultureInfo.InvariantCulture),
                     EnableSsl = bool.Parse(_configuration["EmailSettings:EnableSSL"]),
                     DeliveryMethod = SmtpDeliveryMethod.Network,
-                    UseDefaultCredentials = bool.Parse(_configuration["EmailSettings:UseDefaultCredentials"]),
+                    //UseDefaultCredentials = bool.Parse(_configuration["EmailSettings:UseDefaultCredentials"]),
                     Credentials = new NetworkCredential(_configuration["EmailSettings:Login"], _configuration["EmailSettings:Password"])
                 });
 

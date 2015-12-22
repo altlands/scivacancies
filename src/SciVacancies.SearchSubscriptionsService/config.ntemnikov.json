@@ -30,15 +30,15 @@
     }
   },
   "EmailSettings": {
-    "Login": "mailer@alt-lan.com",
+	"Login": "mailer@alt-lan.com",
     "Password": "123456-mailer",
     "Host": "smtp.gmail.com",
     "Port": 587,
     "EnableSSL": true,
-    "UseDefaultCredentials": false,
+    "UseDefaultCredentials": true,
 
-    "Domain": "192.168.10.141:5004",
-    "PortalLink": "<a target='_blank' href='http://192.168.10.141:5004'>192.168.10.141:5004</a>"
+    "Domain": "localhost:59075",
+    "PortalLink": "<a target='_blank' href='http://localhost:59075'>localhost:59075</a>"
   },
   "LogSettings": {
     "FileName": "scitest-{Date}.log",

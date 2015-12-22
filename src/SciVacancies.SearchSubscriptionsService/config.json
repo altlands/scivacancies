@@ -30,11 +30,12 @@
     }
   },
   "EmailSettings": {
-    "Login": "mailer@alt-lan.com",
-    "Password": "123456-mailer",
-    "Host": "smtp.gmail.com",
-    "Port": 587,
-    "EnableSSL": true,
+    "Login": "noreply@informika.ru",
+    "Password": "",
+
+    "Host": "relay.informika.ru",
+    "Port": 25,
+    "EnableSSL": false,
     "UseDefaultCredentials": false,
 
     "Domain": "xn----8sbfhdabdwf1afqu5baxe0f2d.xn--p1ai",
