@@ -35,25 +35,10 @@
                 foreach (var item in Model.Educations)
                 {
                 <text>
-                <div class="row-profile__data">Город: @item.city</div>
-                <div class="row-profile__data">ВУЗ: @item.university_shortname</div>
-                <div class="row-profile__data">Факультет: @item.faculty_shortname</div>
-                <div class="row-profile__data">Год окончания: @(item.graduation_date)</div>
-                
-                @*<ul class="table-emulation">
-                    <li>
-                        <span class="w85 italic inline-block">Город</span> <span class="italic">@item.city</span>
-                    </li>
-                    <li>
-                        <span class="w85 italic inline-block">ВУЗ</span> <span class="italic">@item.university_shortname</span>
-                    </li>
-                    <li>
-                        <span class="w85 italic inline-block">Факультет</span> <span class="italic">@item.faculty_shortname</span>
-                    </li>
-                    <li>
-                        <span class="w85 italic inline-block">Год окончания</span> <span class="italic">@(item.graduation_date)</span>
-                    </li>
-                </ul>*@
+                <div class="row-profile__data">Город: @item.City</div>
+                <div class="row-profile__data">ВУЗ: @item.UniversityShortName</div>
+                <div class="row-profile__data">Факультет: @item.FacultyShortName</div>
+                <div class="row-profile__data">Год окончания: @(item.GraduationYear?.Year)</div>
                 <hr />
                 </text>
             }
@@ -111,7 +96,7 @@
                 foreach (var item in Model.Publications)
                 {
                     <text>
-                    <li>@item.name (авторы: @item.authors)</li>
+                    <li>@item.Name (авторы: @item.Authors)</li>
                     </text>
                 }
                 @:</ol>

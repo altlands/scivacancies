@@ -36,11 +36,11 @@ namespace SciVacancies.WebApp.ViewModels
         /// <summary>
         /// Образование
         /// </summary>
-        public List<Education> Educations { get; set; }
+        public List<EducationEditViewModel> Educations { get; set; }
         /// <summary>
         /// Публикации
         /// </summary>
-        public List<Publication> Publications { get; set; }
+        public List<PublicationEditViewModel> Publications { get; set; }
 
         public int PositionTypeId { get; set; }
         public string PositionTypeName { get; set; }

@@ -37,6 +37,7 @@ namespace SciVacancies.WebApp.ViewModels
         public List<ActivityEditViewModel> OtherActivity { get; set; }
 
         public string ScienceDegree { get; set; }
+        public string ScienceRank{ get; set; }
         public string AcademicStatus { get; set; }
         public List<RewardDetailsViewModel> Rewards { get; set; }
         public List<MembershipDetailsViewModel> Memberships { get; set; }
@@ -201,11 +202,11 @@ namespace SciVacancies.WebApp.ViewModels
         /// <summary>
         /// Образование
         /// </summary>
-        public List<Education> Educations { get; set; }
+        public List<SciVacancies.Domain.Core.Education> Educations { get; set; }
         /// <summary>
         /// Публикации
         /// </summary>
-        public List<Publication> Publications { get; set; }
+        public List<SciVacancies.Domain.Core.Publication> Publications { get; set; }
 
         public List<InterestDetailsViewModel> Interests { get; set; }
 
