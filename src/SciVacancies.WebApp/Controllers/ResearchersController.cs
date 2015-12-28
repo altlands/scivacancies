@@ -21,6 +21,7 @@ using SciVacancies.WebApp.Engine.CustomAttribute;
 using SciVacancies.WebApp.Infrastructure.Identity;
 using SciVacancies.WebApp.Queries;
 using SciVacancies.WebApp.ViewModels;
+using Microsoft.Framework.Logging;
 
 namespace SciVacancies.WebApp.Controllers
 {
@@ -32,13 +33,15 @@ namespace SciVacancies.WebApp.Controllers
         private readonly IHostingEnvironment _hostingEnvironment;
         private readonly IOptions<AttachmentSettings> _attachmentSettings;
         private readonly SciVacUserManager _userManager;
+        private readonly ILogger _logger;
 
-        public ResearchersController(IMediator mediator, IHostingEnvironment hostingEnvironment, IOptions<AttachmentSettings> attachmentSettings, SciVacUserManager userManager)
+        public ResearchersController(IMediator mediator, IHostingEnvironment hostingEnvironment, IOptions<AttachmentSettings> attachmentSettings, SciVacUserManager userManager, ILoggerFactory loggerFactory)
         {
             _mediator = mediator;
             _hostingEnvironment = hostingEnvironment;
             _attachmentSettings = attachmentSettings;
             _userManager = userManager;
+            _logger = loggerFactory.CreateLogger<ResearchersController>();
         }
 
         [ResponseCache(NoStore = true)]
@@ -379,7 +382,6 @@ namespace SciVacancies.WebApp.Controllers
                 throw new ArgumentNullException(nameof(researcherGuid));
             if (vacancyGuid == Guid.Empty)
                 throw new ArgumentNullException(nameof(vacancyGuid));
-
 
             var model = _mediator.Send(new SingleVacancyQuery { VacancyGuid = vacancyGuid });
             //если заявка на готовится к открытию или открыта

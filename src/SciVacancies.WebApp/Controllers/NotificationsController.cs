@@ -5,16 +5,25 @@ using Microsoft.AspNet.Authorization;
 using Microsoft.AspNet.Mvc;
 using SciVacancies.WebApp.Commands;
 using SciVacancies.WebApp.Queries;
+using Microsoft.Framework.Logging;
 
 namespace SciVacancies.WebApp.Controllers
 {
-        [ResponseCache(NoStore = true)]
+    [ResponseCache(NoStore = true)]
     [Authorize]
     public class NotificationsController : Controller
     {
+
+
         private const string ExceptionTextRemoveOnlyMyNotifications = "Вы можете изменять и удалять только свои уведомления";
         private readonly IMediator _mediator;
-        public NotificationsController(IMediator mediator) { _mediator = mediator; }
+        private readonly ILogger _logger;
+
+        public NotificationsController(IMediator mediator, ILoggerFactory loggerFactory)
+        {
+            _mediator = mediator;
+            _logger = loggerFactory.CreateLogger<NotificationsController>();
+        }
 
         [BindResearcherIdFromClaims]
         [BindOrganizationIdFromClaims]
@@ -79,14 +88,14 @@ namespace SciVacancies.WebApp.Controllers
                 if (isResearcher)
                 {
                     var userNotification = _mediator.Send(new SingleResearcherNotificationQuery { Guid = notificationGuid });
-                    if (userNotification.researcher_guid!= researcherGuid)
+                    if (userNotification.researcher_guid != researcherGuid)
                         return View("Error", ExceptionTextRemoveOnlyMyNotifications);
                     _mediator.Send(new RemoveResearcherNotificationCommand { NotificationGuid = notificationGuid });
                 }
                 else
                 {
                     var userNotification = _mediator.Send(new SingleOrganizationNotificationQuery { Guid = notificationGuid });
-                    if (userNotification.organization_guid!= organizationGuid)
+                    if (userNotification.organization_guid != organizationGuid)
                         return View("Error", ExceptionTextRemoveOnlyMyNotifications);
                     _mediator.Send(new RemoveOrganizationNotificationCommand { NotificationGuid = notificationGuid });
                 }

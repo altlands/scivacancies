@@ -17,6 +17,7 @@ using SciVacancies.ReadModel.Core;
 using SciVacancies.WebApp.Commands;
 using SciVacancies.WebApp.Queries;
 using SciVacancies.WebApp.ViewModels;
+using Microsoft.Framework.Logging;
 
 namespace SciVacancies.WebApp.Controllers
 {
@@ -27,12 +28,14 @@ namespace SciVacancies.WebApp.Controllers
         private readonly IMediator _mediator;
         private readonly IHostingEnvironment _hostingEnvironment;
         private readonly IOptions<AttachmentSettings> _attachmentSettings;
+        private readonly ILogger _logger;
 
-        public ApplicationsController(IMediator mediator, IHostingEnvironment hostingEnvironment, IOptions<AttachmentSettings> attachmentSettings)
+        public ApplicationsController(IMediator mediator, IHostingEnvironment hostingEnvironment, IOptions<AttachmentSettings> attachmentSettings, ILoggerFactory loggerFactory)
         {
             _mediator = mediator;
             _hostingEnvironment = hostingEnvironment;
             _attachmentSettings = attachmentSettings;
+            _logger = loggerFactory.CreateLogger<ApplicationsController>();
         }
 
         #region private VacancyApplicationCreateViewModelHelper

@@ -18,6 +18,7 @@ using SciVacancies.WebApp.Queries;
 using SciVacancies.WebApp.ViewModels;
 using Microsoft.AspNet.Http;
 using Microsoft.Net.Http.Headers;
+using Microsoft.Framework.Logging;
 
 namespace SciVacancies.WebApp.Controllers
 {
@@ -32,18 +33,20 @@ namespace SciVacancies.WebApp.Controllers
         private readonly IHostingEnvironment _hostingEnvironment;
         private readonly IOptions<AttachmentSettings> _attachmentSettings;
         private readonly IOptions<SagaSettings> _sagaSettings;
+        private readonly ILogger _logger;
 
         /// <summary>
         /// минимальное значнеие ЗП
         /// </summary>
         private int _salaryMinValue = 5965;
 
-        public VacanciesController(IMediator mediator, IOptions<SagaSettings> sagaSettings, IHostingEnvironment hostingEnvironment, IOptions<AttachmentSettings> attachmentSettings)
+        public VacanciesController(IMediator mediator, IOptions<SagaSettings> sagaSettings, IHostingEnvironment hostingEnvironment, IOptions<AttachmentSettings> attachmentSettings, ILoggerFactory loggerFactory)
         {
             _sagaSettings = sagaSettings;
             _mediator = mediator;
             _hostingEnvironment = hostingEnvironment;
             _attachmentSettings = attachmentSettings;
+            _logger = loggerFactory.CreateLogger<VacanciesController>();
         }
 
         [PageTitle("Новая вакансия")]

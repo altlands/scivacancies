@@ -11,6 +11,7 @@ using SciVacancies.WebApp.Engine;
 using SciVacancies.WebApp.Engine.CustomAttribute;
 using SciVacancies.WebApp.Queries;
 using SciVacancies.WebApp.ViewModels;
+using Microsoft.Framework.Logging;
 
 namespace SciVacancies.WebApp.Controllers
 {
@@ -19,10 +20,12 @@ namespace SciVacancies.WebApp.Controllers
     public class OrganizationsController : Controller
     {
         private readonly IMediator _mediator;
+        private readonly ILogger _logger;
 
-        public OrganizationsController(IMediator mediator)
+        public OrganizationsController(IMediator mediator, ILoggerFactory loggerFactory)
         {
             _mediator = mediator;
+            _logger = loggerFactory.CreateLogger<OrganizationsController>();
         }
 
         [AllowAnonymous]

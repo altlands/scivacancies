@@ -22,12 +22,12 @@ namespace SciVacancies.WebApp.Controllers
     public class SearchController : Controller
     {
         private readonly IMediator _mediator;
-        private ILogger Logger;
+        private readonly ILogger _logger;
 
         public SearchController(IMediator mediator, ILoggerFactory loggerFactory)
         {
             _mediator = mediator;
-            this.Logger = loggerFactory.CreateLogger<SearchController>();
+            _logger = loggerFactory.CreateLogger<SearchController>();
         }
 
         /// <summary>

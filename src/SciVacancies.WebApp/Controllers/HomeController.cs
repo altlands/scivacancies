@@ -12,6 +12,7 @@ using System;
 using SciVacancies.ReadModel.Pager;
 using Microsoft.Framework.OptionsModel;
 using Microsoft.Framework.Caching.Memory;
+using Microsoft.Framework.Logging;
 
 namespace SciVacancies.WebApp.Controllers
 {
@@ -27,12 +28,14 @@ namespace SciVacancies.WebApp.Controllers
                 return new MemoryCacheEntryOptions().SetAbsoluteExpiration(DateTimeOffset.Now.AddSeconds(_cacheSettings.Value.MainPageExpiration));
             }
         }
+        private readonly ILogger _logger;
 
-        public HomeController(IMediator mediator, IMemoryCache cache, IOptions<CacheSettings> cacheSettings)
+        public HomeController(IMediator mediator, IMemoryCache cache, IOptions<CacheSettings> cacheSettings, ILoggerFactory loggerFactory)
         {
             _mediator = mediator;
             _cache = cache;
             _cacheSettings = cacheSettings;
+            _logger = loggerFactory.CreateLogger<HomeController>();
         }
 
         [PageTitle("Главная")]
