@@ -250,9 +250,10 @@ namespace SciVacancies.WebApp.Controllers
                                             JsonConvert.DeserializeObject<OAuthOrgClaim>(
                                                 claims.Find(f => f.Type.Equals("org")).Value);
 
-                                        //var orgUser = _userManager.FindByName(orgClaim.Inn);
-                                        var orgUser =
-                                            _userManager.FindByEmail(claims.Find(f => f.Type.Equals("email")).Value);
+                                        var orgUser = _userManager.FindByName(orgClaim.Inn);
+
+                                        if (orgUser == null)
+                                            orgUser = _userManager.FindByEmail(claims.Find(f => f.Type.Equals("email")).Value);
 
                                         if (orgUser == null)
                                         {
@@ -339,8 +340,12 @@ namespace SciVacancies.WebApp.Controllers
                                                     _oauthSettings.Value.Mapofscience, tokenResponse);
 
                                         //ищем пользователя по Email в нашей БД
-                                        var resUser =
-                                            _userManager.FindByEmail(claims.Find(f => f.Type.Equals("email")).Value);
+
+
+                                        var resUser = _userManager.FindByName(claims.Find(f => f.Type.Equals("login")).Value);
+
+                                        if(resUser==null)
+                                            resUser = _userManager.FindByEmail(claims.Find(f => f.Type.Equals("email")).Value);
 
                                         //получаем информацию о Пользователе с Карты Наук
                                         var jsonUser = _authorizeService.GetResearcherProfile(tokenResponse.AccessToken, _apiSettings.Value.Mapofscience.UserProfile);
