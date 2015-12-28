@@ -28,9 +28,9 @@
 <div class="content-popup b-buttons">
     <div class="ctr-buttons">
         @if (User.IsInRole(ConstTerms.RequireRoleOrganizationAdmin)
-            && User.Claims.Any(c => c.Type == ConstTerms.ClaimTypeOrganizationId)
-            && User.Claims.Single(c => c.Type == ConstTerms.ClaimTypeOrganizationId).Value == Model.OrganizationGuid.ToString()
-            )
+                && User.Claims.Any(c => c.Type == ConstTerms.ClaimTypeOrganizationId)
+                && User.Claims.Single(c => c.Type == ConstTerms.ClaimTypeOrganizationId).Value == Model.OrganizationGuid.ToString()
+                )
         {
             <text>
             <a asp-controller="vacancies" asp-action="details" asp-route-id="@Model.Guid" class="green-btn middle-icon icon-arr-right default-link">Подробнее</a>
@@ -60,9 +60,12 @@
             }
             else
             {
-                <text>
-                <a asp-controller="researchers" asp-action="addtofavorite" asp-route-vacancyguid="@Model.Guid" class="blue-btn middle-icon icon-favorite default-link">Добавить в избранное</a>
-                </text>
+                if (Model.Status == VacancyStatus.Published)
+                {
+                    <text>
+                    <a asp-controller="researchers" asp-action="addtofavorite" asp-route-vacancyguid="@Model.Guid" class="blue-btn middle-icon icon-favorite default-link">Добавить в избранное</a>
+                    </text>
+                }
             }
         }
     </div>
