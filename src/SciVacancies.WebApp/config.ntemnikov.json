@@ -3,8 +3,6 @@
     "SiteTitle": "Портал вакансий"
   },
   "Data": {
-    //"ReadModelDb": "Server=192.168.10.141;Database=scivacanciestest;User Id=postgres;Password=postgres",
-    //"EventStoreDb": "Server=192.168.10.141;Database=scivacanciestest;User Id=postgres;Password=postgres"
     "ReadModelDb": "Server=localhost;Database=scivacanciestest;User Id=postgres;Password=postgres",
     "EventStoreDb": "Server=localhost;Database=scivacanciestest;User Id=postgres;Password=postgres"
   },
