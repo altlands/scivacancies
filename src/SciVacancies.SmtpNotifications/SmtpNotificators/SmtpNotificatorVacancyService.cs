@@ -34,7 +34,7 @@ namespace SciVacancies.SmtpNotifications.SmtpNotificators
 
     Здравствуйте, {vacancy.contact_name}
     <br/>
-    Для участия, в созданной вами вакансии <a target='_blank' href='http://{Domain}/vacancies/details/{vacancy.guid}'>{vacancy.fullname}</a>,
+    Для участия, в созданной вами вакансии <a target='_blank' href='http://{Domain}/vacancies/details/{vacancy.guid}'>{vacancy.name}</a>,
     <br/>
     подана новая <a target='_blank' href='http://{Domain}/applications/preview/{vacancyApplication.guid}'>заявка</a>
     <br/>
