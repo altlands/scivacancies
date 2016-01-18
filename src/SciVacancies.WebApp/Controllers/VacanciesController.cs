@@ -34,19 +34,22 @@ namespace SciVacancies.WebApp.Controllers
         private readonly IOptions<AttachmentSettings> _attachmentSettings;
         private readonly IOptions<SagaSettings> _sagaSettings;
         private readonly ILogger _logger;
+        private readonly IOptions<Holidays> _holidays;
 
         /// <summary>
         /// минимальное значнеие ЗП
         /// </summary>
         private int _salaryMinValue = 5965;
 
-        public VacanciesController(IMediator mediator, IOptions<SagaSettings> sagaSettings, IHostingEnvironment hostingEnvironment, IOptions<AttachmentSettings> attachmentSettings, ILoggerFactory loggerFactory)
+
+        public VacanciesController(IMediator mediator, IOptions<SagaSettings> sagaSettings, IOptions<Holidays> holidays, IHostingEnvironment hostingEnvironment, IOptions<AttachmentSettings> attachmentSettings, ILoggerFactory loggerFactory)
         {
             _sagaSettings = sagaSettings;
             _mediator = mediator;
             _hostingEnvironment = hostingEnvironment;
             _attachmentSettings = attachmentSettings;
             _logger = loggerFactory.CreateLogger<VacanciesController>();
+            _holidays = holidays;
         }
 
         [PageTitle("Новая вакансия")]
@@ -1081,7 +1084,7 @@ namespace SciVacancies.WebApp.Controllers
             {
                 VacancyGuid = id,
                 InCommitteeStartDate = inCommitteeDateValue,
-                InCommitteeEndDate = inCommitteeDateValue.AddMinutes(_sagaSettings.Value.Date.DeltaFromPublishToInCommitteeMinMinutes)
+                InCommitteeEndDate = inCommitteeDateValue.AddMinutesIncludingHolidays(_sagaSettings.Value.Date.DeltaFromPublishToInCommitteeMinMinutes, _holidays.Value.Dates)
             });
 
             return RedirectToAction("details", new { id });
@@ -1228,9 +1231,9 @@ namespace SciVacancies.WebApp.Controllers
             try
             {
                 if (preModel.committee_end_date.HasValue)
-                    _mediator.Send(new ProlongVacancyInCommitteeCommand { VacancyGuid = id, Reason = reason, InCommitteeEndDate = preModel.committee_end_date.Value.AddMinutes(_sagaSettings.Value.Date.Committee.ProlongingMinutes) });
+                    _mediator.Send(new ProlongVacancyInCommitteeCommand { VacancyGuid = id, Reason = reason, InCommitteeEndDate = preModel.committee_end_date.Value.AddMinutesIncludingHolidays(_sagaSettings.Value.Date.Committee.ProlongingMinutes, _holidays.Value.Dates) });
                 else
-                    _mediator.Send(new ProlongVacancyInCommitteeCommand { VacancyGuid = id, Reason = reason, InCommitteeEndDate = DateTime.UtcNow.AddMinutes(_sagaSettings.Value.Date.Committee.ProlongingMinutes) });
+                    _mediator.Send(new ProlongVacancyInCommitteeCommand { VacancyGuid = id, Reason = reason, InCommitteeEndDate = DateTime.UtcNow.AddMinutesIncludingHolidays(_sagaSettings.Value.Date.Committee.ProlongingMinutes, _holidays.Value.Dates) });
             }
             catch (Exception exception)
             {
