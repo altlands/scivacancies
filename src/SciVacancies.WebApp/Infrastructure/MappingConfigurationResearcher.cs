@@ -273,13 +273,15 @@ namespace SciVacancies.WebApp.Infrastructure
                 .ForMember(d => d.UniversityShortName, o => o.MapFrom(s => s.university_shortname))
                 .ForMember(d => d.FacultyShortName, o => o.MapFrom(s => s.faculty_shortname))
                 .ForMember(dest => dest.GraduationYear, src => src.MapFrom(c => c.graduation_date.HasValue ? c.graduation_date.Value.Year : 0))
-                .ForMember(d => d.Degree, o => o.MapFrom(s => s.degree));
+                .ForMember(d => d.Degree, o => o.Ignore()/*.MapFrom(s => s.Degree)*/)
+                ;
             Mapper.CreateMap<SciVacancies.Domain.Core.Education, EducationEditViewModel>()
                 .ForMember(d => d.City, o => o.MapFrom(s => s.City))
                 .ForMember(d => d.UniversityShortName, o => o.MapFrom(s => s.UniversityShortName))
                 .ForMember(d => d.FacultyShortName, o => o.MapFrom(s => s.FacultyShortName))
                 .ForMember(dest => dest.GraduationYear, src => src.MapFrom(c => c.GraduationYear.HasValue ? c.GraduationYear.Value.Year : 0))
-                .ForMember(d => d.Degree, o => o.MapFrom(s => s.Degree));
+                .ForMember(d => d.Degree, o => o.Ignore()/*.MapFrom(s => s.Degree)*/)
+                ;
             Mapper.CreateMap<EducationEditViewModel, SciVacancies.Domain.Core.Education>()
                 .ForMember(dest => dest.GraduationYear, src => src.MapFrom(c => (c.GraduationYear.HasValue && c.GraduationYear.Value != 0) ? new DateTime(c.GraduationYear.Value, 1, 1) : default(DateTime)));
 

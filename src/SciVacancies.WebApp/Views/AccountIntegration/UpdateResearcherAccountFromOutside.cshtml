@@ -286,7 +286,6 @@ else
                                 <input type="hidden" asp-for="New.ResearchActivity[i].title" />
                                 <input type="hidden" asp-for="New.ResearchActivity[i].yearFrom" />
                                 <input type="hidden" asp-for="New.ResearchActivity[i].yearTo" />
-                                <input type="hidden" asp-for="New.ResearchActivity[i].type" />
                                 <input asp-for="New.ResearchActivity[i].organization" class="disabled" disabled="disabled" />
                                 </text>
                             }
@@ -385,27 +384,6 @@ else
                             }
                         </div>
                     </div>
-                    <div class="row-item">
-                        <div class="row-item-label">
-                            Тип
-                        </div>
-                        <div class="row-item-data">
-                            @if (i < countLeft)
-                            {
-                                <text>
-                                <input asp-for="New.ResearchActivity[i].type" class="disabled" disabled="disabled" />
-                                </text>
-                            }
-                        </div>
-                        <div class="row-item-data">
-                            @if (i < countRight)
-                            {
-                                <text>
-                                <input asp-for="Original.ResearchActivity[i].type" class="disabled" disabled="disabled" />
-                                </text>
-                            }
-                        </div>
-                    </div>
                     </text>
                 }
             </div>
@@ -445,7 +423,6 @@ else
                                 <input type="hidden" asp-for="New.TeachingActivity[i].title" />
                                 <input type="hidden" asp-for="New.TeachingActivity[i].yearFrom" />
                                 <input type="hidden" asp-for="New.TeachingActivity[i].yearTo" />
-                                <input type="hidden" asp-for="New.TeachingActivity[i].type" />
                                 <input asp-for="New.TeachingActivity[i].organization" class="disabled" disabled="disabled" />
                                 </text>
                             }
@@ -545,27 +522,6 @@ else
                             }
                         </div>
                     </div>
-                    <div class="row-item">
-                        <div class="row-item-label">
-                            Тип
-                        </div>
-                        <div class="row-item-data">
-                            @if (i < countLeft)
-                            {
-                                <text>
-                                <input asp-for="New.TeachingActivity[i].type" class="disabled" disabled="disabled" />
-                                </text>
-                            }
-                        </div>
-                        <div class="row-item-data">
-                            @if (i < countRight)
-                            {
-                                <text>
-                                <input asp-for="Original.TeachingActivity[i].type" class="disabled" disabled="disabled" />
-                                </text>
-                            }
-                        </div>
-                    </div>
                     </text>
                 }
             </div>
@@ -604,7 +560,6 @@ else
                                 <input type="hidden" asp-for="New.OtherActivity[i].title" />
                                 <input type="hidden" asp-for="New.OtherActivity[i].yearFrom" />
                                 <input type="hidden" asp-for="New.OtherActivity[i].yearTo" />
-                                <input type="hidden" asp-for="New.OtherActivity[i].type" />
                                 <input asp-for="New.OtherActivity[i].organization" class="disabled" disabled="disabled" />
                                 </text>
                             }
@@ -703,28 +658,6 @@ else
                             {
                                 <text>
                                 <input asp-for="Original.OtherActivity[i].yearTo" class="disabled" disabled="disabled" />
-                                </text>
-                            }
-                        </div>
-                    </div>
-                    <div class="row-item">
-                        <div class="row-item-label">
-                            Тип
-                        </div>
-                        <div class="row-item-data">
-                            @if (i < countLeft)
-                            {
-                                <text>
-                                <input type="hidden" name="New.OtherActivity.Index" value="@i" />
-                                <input asp-for="New.OtherActivity[i].type" class="disabled" disabled="disabled" />
-                                </text>
-                            }
-                        </div>
-                        <div class="row-item-data">
-                            @if (i < countRight)
-                            {
-                                <text>
-                                <input asp-for="Original.OtherActivity[i].type" class="disabled" disabled="disabled" />
                                 </text>
                             }
                         </div>
@@ -961,7 +894,6 @@ else
                                 <input type="hidden" name="New.Educations.Index" value="@i" />
                                 <input type="hidden" asp-for="New.Educations[i].Guid" />
                                 <input type="hidden" asp-for="New.Educations[i].GraduationYear" />
-                                <input type="hidden" asp-for="New.Educations[i].Degree" />
                                 <input type="hidden" asp-for="New.Educations[i].FacultyShortName" />
                                 <input type="hidden" asp-for="New.Educations[i].UniversityShortName" />
                                 <input asp-for="New.Educations[i].City" class="disabled" disabled="disabled" />
@@ -1023,27 +955,6 @@ else
                     </div>
                     <div class="row-item">
                         <div class="row-item-label">
-                            Учёная степень
-                        </div>
-                        <div class="row-item-data">
-                            @if (i < countLeft)
-                            {
-                                <text>
-                                <input asp-for="New.Educations[i].Degree" class="disabled" disabled="disabled" />
-                                </text>
-                            }
-                        </div>
-                        <div class="row-item-data">
-                            @if (i < countRight)
-                            {
-                                <text>
-                                <input asp-for="Original.Educations[i].Degree" class="disabled" disabled="disabled" />
-                                </text>
-                            }
-                        </div>
-                    </div>
-                    <div class="row-item">
-                        <div class="row-item-label">
                             Год
                         </div>
                         <div class="row-item-data">
@@ -1097,7 +1008,6 @@ else
                                 <text>
                                 <input type="hidden" name="New.Conferences.Index" value="@i" />
                                 <input type="hidden" asp-for="New.Conferences[i].year" />
-                                <input type="hidden" asp-for="New.Conferences[i].categoryType" />
                                 <input type="hidden" asp-for="New.Conferences[i].title" />
                                 <input type="hidden" asp-for="New.Conferences[i].conference" />
                                 <input asp-for="New.Conferences[i].conference" class="disabled" disabled="disabled" />
@@ -1132,27 +1042,6 @@ else
                             {
                                 <text>
                                 <input asp-for="Original.Conferences[i].title" class="disabled" disabled="disabled" />
-                                </text>
-                            }
-                        </div>
-                    </div>
-                    <div class="row-item">
-                        <div class="row-item-label">
-                            Тип конференции
-                        </div>
-                        <div class="row-item-data">
-                            @if (i < countLeft)
-                            {
-                                <text>
-                                <input asp-for="New.Conferences[i].categoryType" class="disabled" disabled="disabled" />
-                                </text>
-                            }
-                        </div>
-                        <div class="row-item-data">
-                            @if (i < countRight)
-                            {
-                                <text>
-                                <input asp-for="Original.Conferences[i].categoryType" class="disabled" disabled="disabled" />
                                 </text>
                             }
                         </div>

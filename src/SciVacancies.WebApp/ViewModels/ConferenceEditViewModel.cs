@@ -8,8 +8,8 @@ namespace SciVacancies.WebApp.ViewModels
         public string conference { get; set; }
         [MaxLength(1500, ErrorMessage = "Длина строки не более 1500 символов")]
         public string title { get; set; }
-        [MaxLength(1500, ErrorMessage = "Длина строки не более 1500 символов")]
-        public string categoryType { get; set; }
+        //[MaxLength(1500, ErrorMessage = "Длина строки не более 1500 символов")]
+        //public string categoryType { get; set; }
         public int year { get; set; }
     }
 }

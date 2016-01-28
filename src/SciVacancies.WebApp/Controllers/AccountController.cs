@@ -19,6 +19,7 @@ using Microsoft.Framework.OptionsModel;
 using AutoMapper;
 using Microsoft.AspNet.Authorization;
 using Microsoft.Framework.Logging;
+using SciVacancies.Domain.DataModels;
 using SciVacancies.WebApp.Engine;
 using SciVacancies.WebApp.Infrastructure.WebAuthorize;
 using SciVacancies.WebApp.Models.DataModels;
@@ -287,44 +288,52 @@ namespace SciVacancies.WebApp.Controllers
                                                 _authorizeService.RefreshUserClaimTokensAndReauthorize(orgUser, claims,
                                                     Response);
 
-                                            //try
-                                            //{
-                                            //    var organizationGuid = Guid.Parse(orgUser.Claims.Single(c => c.ClaimType == ConstTerms.ClaimTypeOrganizationId).ClaimValue);
-                                            //    var organizationReadModel = _mediator.Send(new SingleOrganizationQuery { OrganizationGuid = organizationGuid });
-                                            //    if (organizationReadModel.address != organizationInformation.postAddress
-                                            //        || organizationReadModel.email != organizationInformation.email
-                                            //        || organizationReadModel.head_firstname != organizationInformation.headFirstName
-                                            //        || organizationReadModel.head_patronymic != organizationInformation.headPatronymic
-                                            //        || organizationReadModel.head_secondname != organizationInformation.headLastName
-                                            //        || organizationReadModel.inn != organizationInformation.inn
-                                            //        || organizationReadModel.ogrn != organizationInformation.ogrn
-                                            //        || organizationReadModel.name != organizationInformation.title
-                                            //        || organizationReadModel.shortname != organizationInformation.shortTitle
-                                            //        || organizationReadModel.foiv_id != int.Parse(organizationInformation.foiv.id)
-                                            //        || organizationReadModel.orgform_id != int.Parse(organizationInformation.opf.id)
-                                            //        //|| !(
-                                            //        //    (organizationReadModel.researchdirections==null || organizationReadModel.researchdirections.Count ==0)
-                                            //        //    && (organizationInformation.researchDirections == null || organizationInformation.researchDirections.Count == 0)
-                                            //        //    )
-                                            //        //|| (
-                                            //        //    organizationReadModel.researchdirections!=null
-                                            //        //    && organizationReadModel.researchdirections.Count>0
-                                            //        //    && organizationInformation.researchDirections != null
-                                            //        //    && organizationInformation.researchDirections.Count > 0
-                                            //        //    && organizationReadModel.researchdirections.First().id != int.Parse(organizationInformation.researchDirections.First().id)
-                                            //        //    )
-                                            //        )
-                                            //    {
-                                            //        _mediator.Send(new UpdateOrganizationCommand
-                                            //        {
+                                            try
+                                            {
+                                                var organizationGuid = Guid.Parse(orgUser.Claims.Single(c => c.ClaimType == ConstTerms.ClaimTypeOrganizationId).ClaimValue);
+                                                var organizationReadModel = _mediator.Send(new SingleOrganizationQuery { OrganizationGuid = organizationGuid });
+                                                if (organizationReadModel.address != organizationInformation.postAddress
+                                                    || organizationReadModel.email != organizationInformation.email
+                                                    || organizationReadModel.head_firstname != organizationInformation.headFirstName
+                                                    || organizationReadModel.head_patronymic != organizationInformation.headPatronymic
+                                                    || organizationReadModel.head_secondname != organizationInformation.headLastName
+                                                    || organizationReadModel.inn != organizationInformation.inn
+                                                    || organizationReadModel.ogrn != organizationInformation.ogrn
+                                                    || organizationReadModel.name != organizationInformation.title
+                                                    || organizationReadModel.shortname != organizationInformation.shortTitle
+                                                    || organizationReadModel.foiv_id != int.Parse(organizationInformation.foiv.id)
+                                                    || organizationReadModel.orgform_id != int.Parse(organizationInformation.opf.id)
+                                                   
+                                                    //|| !(
+                                                    //    (organizationReadModel.researchdirections == null || organizationReadModel.researchdirections.Count == 0)
+                                                    //    && (organizationInformation.researchDirections == null || organizationInformation.researchDirections.Count == 0)
+                                                    //    )
 
-                                            //        });
-                                            //    }
-                                            //}
-                                            //catch (Exception exception)
-                                            //{
+                                                    //|| (
+                                                    //    organizationReadModel.researchdirections != null
+                                                    //    && organizationReadModel.researchdirections.Count > 0
 
-                                            //}
+                                                    //    && organizationInformation.researchDirections != null
+                                                    //    && organizationInformation.researchDirections.Count > 0
+
+                                                    //    && organizationReadModel.researchdirections.First().id != int.Parse(organizationInformation.researchDirections.First().id)
+                                                    //    )
+
+                                                    )
+                                                {
+                                                    var organizationDataModel = Mapper.Map<OrganizationDataModel>(accountOrganizationRegisterViewModel);
+                                                    _mediator.Send(new UpdateOrganizationCommand
+                                                    {
+                                                        OrganizationGuid = organizationGuid,
+                                                        Data = organizationDataModel
+                                                    });
+                                                }
+                                            }
+                                            catch (Exception exception)
+                                            {
+                                                _logger.LogError($"Exception happend with updating organizaiton info: {exception.Message}");
+                                                throw exception;
+                                            }
                                         }
                                     }
                                     else

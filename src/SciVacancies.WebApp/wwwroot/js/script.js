@@ -781,13 +781,13 @@ function beforeFormSubmit(source, key) {
     if (key !== undefined && key === 'researcherEdit') {
         //свойства-коллекции, в которых могут быть суб-формы, нужно проверить на пустые поля, и удалить эти суб-формы из списков если они не заполнены
         var arrayProperties = [
-            { name: 'Educations', fieldsCouldBeEmpty: ['City', 'UniversityShortName', 'FacultyShortName', 'Degree'] },
-            { name: 'ResearchActivity', fieldsCouldBeEmpty: ['organization', 'position', 'title', 'type'] },
-            { name: 'TeachingActivity', fieldsCouldBeEmpty: ['organization', 'position', 'title', 'type'] },
-            { name: 'OtherActivity', fieldsCouldBeEmpty: ['organization', 'position', 'title', 'type'] },
+            { name: 'Educations', fieldsCouldBeEmpty: ['City', 'UniversityShortName', 'FacultyShortName'] },
+            { name: 'ResearchActivity', fieldsCouldBeEmpty: ['organization', 'position', 'title'] },
+            { name: 'TeachingActivity', fieldsCouldBeEmpty: ['organization', 'position', 'title'] },
+            { name: 'OtherActivity', fieldsCouldBeEmpty: ['organization', 'position', 'title'] },
             { name: 'Rewards', fieldsCouldBeEmpty: ['title', 'org'] },
             { name: 'Memberships', fieldsCouldBeEmpty: ['org', 'position'] },
-            { name: 'Conferences', fieldsCouldBeEmpty: ['conference', 'title', 'categoryType'] },
+            { name: 'Conferences', fieldsCouldBeEmpty: ['conference', 'title'] },
             { name: 'Publications', fieldsCouldBeEmpty: ['Name', 'Authors'] }
         ];
         checkEmptyProperties(form, arrayProperties);
