@@ -70,17 +70,6 @@
            {
                <a asp-controller="vacancies" asp-action="addcommitteereason" asp-route-id="@Model.Guid" class="btn btn-success" title="Указать решение комиссии">Указать решение комиссии</a>
            }
-        @if (Model.Status == VacancyStatus.InCommittee && Model.MaxProlongedDate.HasValue)
-        {
-            if (Model.MaxProlongedDate.Value.Date > DateTime.UtcNow)
-            {
-                <a asp-controller="vacancies" asp-action="prolongincommittee" asp-route-id="@Model.Guid" class="btn btn-default" title="Продлить рассмотрение">Продлить рассмотрение</a>
-            }
-            else
-            {
-                <span class="alert-info">Вы не можете продлить рассмотрение до даты позднее чем @Model.MaxProlongedDate.Value.Date.ToLocalMoscowVacancyDateString()</span>
-            }
-        }
         @if (Model.Status == VacancyStatus.OfferAcceptedByWinner)
         {
             <a asp-controller="vacancies" asp-action="close" asp-route-id="@Model.Guid" class="btn btn-success" title="Закрыть вакансию">Победитель принял предложение. Закрыть вакансию</a>
@@ -92,6 +81,16 @@
         @if (Model.Status == VacancyStatus.OfferRejectedByWinner && Model.PretenderResearcherGuid != Guid.Empty)
         {
             <a asp-controller="vacancies" asp-action="reoffertopretender" asp-route-id="@Model.Guid" class="btn btn-warning" title="Предложить вакансию претенденту">Победитель отказался от предложения. Предложить вакансию претенденту</a>
+        }
+        <br/>
+        <br/>
+        @if (Model.Status == VacancyStatus.InCommittee && Model.MaxProlongedDate.HasValue)
+        {
+            if (!Model.InCommitteeEndDate.HasValue || Model.InCommitteeEndDate.Value.Date < Model.MaxProlongedDate.Value.Date)
+            {
+                <a asp-controller="vacancies" asp-action="prolongincommittee" asp-route-id="@Model.Guid" class="btn btn-default" title="Продлить рассмотрение">Продлить рассмотрение</a>
+                <span class="alert-info">Срок рассмотрения заявок будет продлён до @Model.MaxProlongedDate.Value.Date.ToLocalMoscowVacancyDateString()</span>
+            }
         }
     </div>
 
