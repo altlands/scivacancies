@@ -10,8 +10,8 @@ using SciVacancies.ReadModel.Core;
 using SciVacancies.Services.Email;
 using SciVacancies.Services.Elastic;
 using SciVacancies.SmtpNotifications;
-using Microsoft.Framework.Configuration;
-using Microsoft.Framework.Logging;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 
 namespace SciVacancies.SearchSubscriptionsService
 {

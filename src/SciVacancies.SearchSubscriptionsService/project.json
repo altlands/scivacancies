@@ -11,23 +11,12 @@
     "SciVacancies.ReadModel.ElasticSearchModel": "1.0.0-*",
     "SciVacancies.SmtpNotifications": "1.0.0-*",
 
-    "Microsoft.Framework.Configuration.EnvironmentVariables": "1.0.0-beta8",
-    "Microsoft.Framework.Configuration.Json": "1.0.0-beta8",
-    "Microsoft.Dnx.Runtime": "1.0.0-beta8",
-    "Microsoft.Dnx.Runtime.Abstractions": "1.0.0-beta8",
-
-    "Autofac": "4.0.0-beta8-157",
-    "Autofac.Extras.Quartz": "1.5.1",
-    "Autofac.Extras.DynamicProxy": "4.0.0-beta8-231",
-    "Autofac.Framework.DependencyInjection": "4.0.0-beta8-157",
-
-    "NEST": "1.6.1",
-    "Npgsql.EntityFramework": "2.2.5",
-    "NPoco": "2.9.103",
-    "Quartz": "2.3.3",
+    "Microsoft.Extensions.Configuration.EnvironmentVariables": "1.0.0-rc1-final",
+    "Microsoft.Extensions.Configuration.Json": "1.0.0-rc1-final",
+    "Microsoft.Dnx.Runtime": "1.0.0-rc1-final",    
 
     "Serilog": "1.5.12",
-    "Serilog.Framework.Logging": "1.0.0-beta8-10065"
+    "Serilog.Framework.Logging": "1.0.0-rc1-final-10071"
 
   },
 

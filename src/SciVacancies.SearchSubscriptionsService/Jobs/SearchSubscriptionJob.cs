@@ -1,17 +1,11 @@
 ﻿using System;
-using Microsoft.Framework.Configuration;
-using Quartz;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 using Autofac;
-using Npgsql;
+using Microsoft.Extensions.Logging;
 using NPoco;
+using Quartz;
 using SciVacancies.Domain.Enums;
-using Microsoft.Framework.Logging;
-using SciVacancies.Services.Elastic;
-using Nest;
+using SciVacancies.ReadModel.Core;
 
 namespace SciVacancies.SearchSubscriptionsService.Jobs
 {
@@ -46,7 +40,7 @@ namespace SciVacancies.SearchSubscriptionsService.Jobs
                 var dataBase = _lifetimeScope.Resolve<IDatabase>();
 
                 _logger.LogInformation($"SearchSubscriptionJob: Select Subscriptions from DB");
-                Queue<ReadModel.Core.SearchSubscription> subscriptionQueue = new Queue<ReadModel.Core.SearchSubscription>(dataBase.Fetch<ReadModel.Core.SearchSubscription>(new Sql($"SELECT * FROM res_searchsubscriptions ss WHERE ss.status = @0", SearchSubscriptionStatus.Active)));
+                Queue<SearchSubscription> subscriptionQueue = new Queue<SearchSubscription>(dataBase.Fetch<SearchSubscription>(new Sql($"SELECT * FROM res_searchsubscriptions ss WHERE ss.status = @0", SearchSubscriptionStatus.Active)));
                 _logger.LogInformation($"SearchSubscriptionJob: Found {subscriptionQueue.Count} Subscriptions in DB");
 
                 //int poolCount = 20;

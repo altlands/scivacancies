@@ -2,7 +2,7 @@
 using SciVacancies.Services.Email;
 
 using System;
-using Microsoft.Framework.Configuration;
+using Microsoft.Extensions.Configuration;
 
 namespace SciVacancies.SmtpNotifications.SmtpNotificators
 {

@@ -4,8 +4,8 @@ using System.Web.Caching;
 using SciVacancies.WebApp.Queries;
 
 using Microsoft.AspNet.Mvc;
-using Microsoft.Framework.OptionsModel;
-using Microsoft.Framework.Caching.Memory;
+using Microsoft.Extensions.OptionsModel;
+using Microsoft.Extensions.Caching.Memory;
 
 using MediatR;
 using SciVacancies.Domain.Enums;

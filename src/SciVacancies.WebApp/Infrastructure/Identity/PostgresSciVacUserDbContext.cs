@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Data.Entity;
 using Microsoft.AspNet.Identity.EntityFramework;
-using Microsoft.Framework.OptionsModel;
+using Microsoft.Extensions.OptionsModel;
 //using SciVacancies.ApplicationInfrastructure;
 
 namespace SciVacancies.WebApp.Infrastructure.Identity

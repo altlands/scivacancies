@@ -2,9 +2,7 @@
 using System.Linq;
 using System.Text;
 using Microsoft.AspNet.Mvc.Rendering;
-using Microsoft.AspNet.Mvc.ViewFeatures;
-using Microsoft.AspNet.Mvc.ViewComponents;
-using Microsoft.AspNet.Razor.Runtime.TagHelpers;
+using Microsoft.AspNet.Razor.TagHelpers;
 
 namespace SciVacancies.WebApp
 {
@@ -92,7 +90,7 @@ namespace SciVacancies.WebApp
 
             var label = new TagBuilder("label");
             label.Attributes.Add("for", input.Attributes["id"]);
-            label.InnerHtml.AppendEncoded(item.Text);
+            label.InnerHtml.AppendHtml(item.Text);
 
             var li = new TagBuilder("li");
 

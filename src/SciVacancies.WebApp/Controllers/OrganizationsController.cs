@@ -11,7 +11,7 @@ using SciVacancies.WebApp.Engine;
 using SciVacancies.WebApp.Engine.CustomAttribute;
 using SciVacancies.WebApp.Queries;
 using SciVacancies.WebApp.ViewModels;
-using Microsoft.Framework.Logging;
+using Microsoft.Extensions.Logging;
 
 namespace SciVacancies.WebApp.Controllers
 {

@@ -10,9 +10,9 @@ using SciVacancies.WebApp.ViewModels;
 
 using System;
 using SciVacancies.ReadModel.Pager;
-using Microsoft.Framework.OptionsModel;
-using Microsoft.Framework.Caching.Memory;
-using Microsoft.Framework.Logging;
+using Microsoft.Extensions.OptionsModel;
+using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.Logging;
 
 namespace SciVacancies.WebApp.Controllers
 {

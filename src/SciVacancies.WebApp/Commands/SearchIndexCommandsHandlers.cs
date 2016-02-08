@@ -1,7 +1,7 @@
 ﻿using Nest;
 using MediatR;
 using SciVacancies.ReadModel.ElasticSearchModel.Model;
-using Microsoft.Framework.OptionsModel;
+using Microsoft.Extensions.OptionsModel;
 
 namespace SciVacancies.WebApp.Commands
 {

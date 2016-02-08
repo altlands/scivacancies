@@ -2,28 +2,19 @@
 using System.Collections;
 using System.Linq;
 using Autofac;
-using Autofac.Framework.DependencyInjection;
+using Autofac.Extensions.DependencyInjection;
 using Microsoft.AspNet.Builder;
-using Microsoft.AspNet.Diagnostics;
 using Microsoft.AspNet.Hosting;
 using Microsoft.AspNet.Identity;
-using Microsoft.Framework.Configuration;
-using Microsoft.Framework.DependencyInjection;
-using Microsoft.Framework.Logging;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.PlatformAbstractions;
+using Quartz.Spi;
 using SciVacancies.Services.Quartz;
 using SciVacancies.WebApp.Infrastructure;
-using Microsoft.Dnx.Runtime;
-
-using Microsoft.AspNet.StaticFiles;
-using Microsoft.AspNet.Session;
-using System.Globalization;
-
-using Quartz.Spi;
-
-using System.Diagnostics.Tracing;
-
-
 using Serilog;
+using Serilog.Events;
 
 namespace SciVacancies.WebApp
 {
@@ -31,8 +22,9 @@ namespace SciVacancies.WebApp
     {
         private readonly string devEnv;
 
-        public Startup(IHostingEnvironment env, IApplicationEnvironment appEnv, ILoggerFactory loggerFactory)
+        public Startup(IHostingEnvironment env, ILoggerFactory loggerFactory)
         {
+            var appEnv = PlatformServices.Default.Application;
             var vars = Environment.GetEnvironmentVariables();
             devEnv = (string)vars.Cast<DictionaryEntry>().FirstOrDefault(e => e.Key.Equals("dev_env")).Value;
             // Setup configuration sources.
@@ -61,7 +53,7 @@ namespace SciVacancies.WebApp
                 .WriteTo
                 .RollingFile(
                     Configuration["LogSettings:FileName"],
-                    (Serilog.Events.LogEventLevel)Enum.Parse(typeof(Serilog.Events.LogEventLevel), Configuration["LogSettings:LogLevel"], true),
+                    (LogEventLevel)Enum.Parse(typeof(LogEventLevel), Configuration["LogSettings:LogLevel"], true),
                     Configuration["LogSettings:TimeStampPattern"],
                     null,
                     long.Parse(Configuration["LogSettings:FileSizeBytes"]),
@@ -97,13 +89,7 @@ namespace SciVacancies.WebApp
             services.Configure<CacheSettings>(Configuration.GetSection("CacheSettings"));
             services.Configure<AnalythicSettings>(Configuration.GetSection("AnalythicSettings"));
 
-            services.AddCookieAuthentication(options =>
-            {
-                options.AutomaticAuthentication = false;
-            });
-
             services.AddMvc();
-
 
             //TODO -  remove
             services.AddSingleton(c => Configuration);
@@ -150,7 +136,7 @@ namespace SciVacancies.WebApp
 
             app.UseCookieAuthentication(options =>
             {
-                options.AutomaticAuthentication = true;
+                options.AutomaticAuthenticate = true;
                 options.AuthenticationScheme = DefaultAuthenticationTypes.ApplicationCookie;
             });
             //app.UseOpenIdConnectAuthentication();

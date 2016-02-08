@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-using Microsoft.Framework.Caching.Memory;
+using Microsoft.Extensions.Caching.Memory;
 
 using Autofac;
 

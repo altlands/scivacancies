@@ -2,8 +2,8 @@
 using System.Linq;
 using System.ServiceProcess;
 using Autofac;
-using Microsoft.Framework.Configuration;
-using Microsoft.Framework.Logging;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 using Quartz;
 using SciVacancies.SearchSubscriptionsService.Jobs;
 using SciVacancies.Services.Quartz;

@@ -1,19 +1,12 @@
-﻿using SciVacancies.Services.Logging;
-
-using System;
-using System.Linq;
+﻿using System.Linq;
 using System.Reflection;
 using Autofac;
 using Autofac.Core;
-using Autofac.Extras.DynamicProxy;
 using FluentValidation;
 using MediatR;
 using SciVacancies.Domain.Events;
-using SciVacancies.ReadModel.EventHandlers;
 using SciVacancies.WebApp.Commands;
-using SciVacancies.WebApp.Infrastructure.Saga;
 using Module = Autofac.Module;
-using Castle.Core.Internal;
 
 namespace SciVacancies.WebApp.Infrastructure
 {

@@ -5,6 +5,7 @@ using System.Text;
 using Microsoft.AspNet.Http;
 using Microsoft.AspNet.Mvc.Rendering;
 using Microsoft.AspNet.Razor.Runtime.TagHelpers;
+using Microsoft.AspNet.Razor.TagHelpers;
 using SciVacancies.ReadModel.Pager;
 using SciVacancies.WebApp.Engine;
 

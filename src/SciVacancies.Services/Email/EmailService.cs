@@ -1,13 +1,9 @@
 ﻿using System;
 using System.Globalization;
-using System.Linq;
 using System.Net;
 using System.Net.Mail;
-using System.Net.Security;
-using System.Security.Cryptography.X509Certificates;
-using Microsoft.Framework.Logging;
-using Microsoft.Framework.Configuration;
-
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 
 namespace SciVacancies.Services.Email
 {

@@ -10,7 +10,7 @@ using Microsoft.AspNet.Authorization;
 using Microsoft.AspNet.Hosting;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Mvc;
-using Microsoft.Framework.OptionsModel;
+using Microsoft.Extensions.OptionsModel;
 using Microsoft.Net.Http.Headers;
 using SciVacancies.Domain.DataModels;
 using SciVacancies.Domain.Enums;
@@ -21,7 +21,7 @@ using SciVacancies.WebApp.Engine.CustomAttribute;
 using SciVacancies.WebApp.Infrastructure.Identity;
 using SciVacancies.WebApp.Queries;
 using SciVacancies.WebApp.ViewModels;
-using Microsoft.Framework.Logging;
+using Microsoft.Extensions.Logging;
 
 namespace SciVacancies.WebApp.Controllers
 {

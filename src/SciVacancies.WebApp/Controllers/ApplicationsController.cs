@@ -9,7 +9,7 @@ using Microsoft.AspNet.Hosting;
 using Microsoft.AspNet.Http;
 using Microsoft.AspNet.Mvc;
 using Microsoft.AspNet.Razor;
-using Microsoft.Framework.OptionsModel;
+using Microsoft.Extensions.OptionsModel;
 using Microsoft.Net.Http.Headers;
 using SciVacancies.Domain.DataModels;
 using SciVacancies.Domain.Enums;
@@ -17,7 +17,7 @@ using SciVacancies.ReadModel.Core;
 using SciVacancies.WebApp.Commands;
 using SciVacancies.WebApp.Queries;
 using SciVacancies.WebApp.ViewModels;
-using Microsoft.Framework.Logging;
+using Microsoft.Extensions.Logging;
 
 namespace SciVacancies.WebApp.Controllers
 {

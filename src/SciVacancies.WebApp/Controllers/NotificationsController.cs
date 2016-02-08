@@ -5,7 +5,7 @@ using Microsoft.AspNet.Authorization;
 using Microsoft.AspNet.Mvc;
 using SciVacancies.WebApp.Commands;
 using SciVacancies.WebApp.Queries;
-using Microsoft.Framework.Logging;
+using Microsoft.Extensions.Logging;
 
 namespace SciVacancies.WebApp.Controllers
 {

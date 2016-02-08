@@ -9,7 +9,7 @@ using System.Linq;
 using Nest;
 using MediatR;
 using NPoco;
-using Microsoft.Framework.OptionsModel;
+using Microsoft.Extensions.OptionsModel;
 
 namespace SciVacancies.WebApp.Queries
 {

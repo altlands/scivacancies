@@ -12,7 +12,7 @@ using MediatR;
 using Microsoft.AspNet.Authorization;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Mvc;
-using Microsoft.Framework.OptionsModel;
+using Microsoft.Extensions.OptionsModel;
 using Newtonsoft.Json;
 using SciVacancies.Domain.DataModels;
 using SciVacancies.ReadModel.Core;

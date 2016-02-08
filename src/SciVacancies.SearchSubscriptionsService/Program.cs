@@ -1,27 +1,13 @@
 ﻿using System;
-using System.Linq;
 using System.Collections;
-using System.ServiceProcess;
-using System.Threading;
+using System.Linq;
 using Autofac;
-using Autofac.Framework.DependencyInjection;
-using Nest;
-using Npgsql;
-using NPoco;
-using Quartz;
-using Quartz.Spi;
-using SciVacancies.SearchSubscriptionsService.Jobs;
-using SciVacancies.Services.Email;
-using SciVacancies.Services.Quartz;
-using SciVacancies.Services.Elastic;
-using Microsoft.Framework.Configuration;
-using Microsoft.Framework.Logging;
-using Microsoft.Framework.DependencyInjection;
-//using Microsoft.rd
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.PlatformAbstractions;
 using SciVacancies.SearchSubscriptionsService.Modules;
-using Microsoft.Dnx.Runtime;
 
-using Serilog;
+//using Microsoft.rd
 
 namespace SciVacancies.SearchSubscriptionsService
 {
@@ -33,7 +19,7 @@ namespace SciVacancies.SearchSubscriptionsService
 
         private string devEnv { get; }
 
-        private Microsoft.Framework.Logging.ILogger Logger { get; }
+        private ILogger Logger { get; }
 
         public Program(IApplicationEnvironment appEnv)
         {

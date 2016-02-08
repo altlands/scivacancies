@@ -2,8 +2,8 @@
 using SciVacancies.Services.Logging;
 
 using System;
-using Microsoft.Framework.Configuration;
-using Microsoft.Framework.Logging;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 
 using Nest;
 using Autofac;

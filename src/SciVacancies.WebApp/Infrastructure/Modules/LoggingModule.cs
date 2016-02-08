@@ -1,6 +1,6 @@
 ﻿using SciVacancies.Services.Logging;
 
-using Microsoft.Framework.Logging;
+using Microsoft.Extensions.Logging;
 
 using Autofac;
 

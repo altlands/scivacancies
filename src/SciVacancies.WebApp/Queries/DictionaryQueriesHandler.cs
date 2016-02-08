@@ -3,9 +3,9 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Microsoft.Framework.OptionsModel;
-using Microsoft.Framework.Caching.Memory;
-using Microsoft.Framework.Logging;
+using Microsoft.Extensions.OptionsModel;
+using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.Logging;
 
 using MediatR;
 using NPoco;

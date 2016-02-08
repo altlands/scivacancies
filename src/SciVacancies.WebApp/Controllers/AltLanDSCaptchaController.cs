@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Drawing.Imaging;
 using Microsoft.AspNet.Mvc;
-using Microsoft.Framework.OptionsModel;
+using Microsoft.Extensions.OptionsModel;
 using SciVacancies.Captcha;
 
 namespace SciVacancies.WebApp.Controllers

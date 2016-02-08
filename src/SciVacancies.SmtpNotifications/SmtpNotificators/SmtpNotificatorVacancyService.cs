@@ -3,7 +3,7 @@ using SciVacancies.Services.Email;
 
 using System;
 using System.Globalization;
-using Microsoft.Framework.Configuration;
+using Microsoft.Extensions.Configuration;
 using SciVacancies.Domain.Enums;
 
 namespace SciVacancies.SmtpNotifications.SmtpNotificators

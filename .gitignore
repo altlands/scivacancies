@@ -26,6 +26,7 @@ nuget.exe
 *.ncrunchsolution
 *.*sdf
 *.ipch
+*.log
 *.sln.ide
 project.lock.json
 .vs/

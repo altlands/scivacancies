@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNet.Mvc;
-using Microsoft.Framework.OptionsModel;
+using Microsoft.Extensions.OptionsModel;
 using SciVacancies.WebApp.ViewModels;
 
 namespace SciVacancies.WebApp.ViewComponents

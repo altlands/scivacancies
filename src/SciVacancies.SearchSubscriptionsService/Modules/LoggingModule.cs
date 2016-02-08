@@ -1,8 +1,8 @@
 ﻿using SciVacancies.Services.Logging;
 
 using System;
-using Microsoft.Framework.Logging;
-using Microsoft.Framework.Configuration;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Configuration;
 
 using Autofac;
 using Serilog;

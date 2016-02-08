@@ -11,7 +11,7 @@ using System;
 using MediatR;
 using Quartz;
 using SciVacancies.Services.Quartz;
-using Microsoft.Framework.OptionsModel;
+using Microsoft.Extensions.OptionsModel;
 
 namespace SciVacancies.WebApp.Infrastructure
 {

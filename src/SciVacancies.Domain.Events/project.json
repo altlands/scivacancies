@@ -8,8 +8,7 @@
 
   "dependencies": {
     "SciVacancies.Domain": "1.0.0-*",
-
-    "MediatR": "2.0.0-beta-004"
+    "MediatR": "2.0.2"
   },
 
   "frameworks": {

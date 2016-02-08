@@ -1,16 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
-using Microsoft.Framework.Logging;
-
+using Castle.Core.Internal;
 using Castle.DynamicProxy;
+using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 
 namespace SciVacancies.Services.Logging
 {
-    public class CallLogger : Castle.Core.Internal.InternalsVisible, IInterceptor
+    public class CallLogger : InternalsVisible, IInterceptor
     {
         private readonly ILogger _logger;
 

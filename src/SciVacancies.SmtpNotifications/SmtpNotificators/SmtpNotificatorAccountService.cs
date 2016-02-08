@@ -1,9 +1,9 @@
 ﻿using SciVacancies.ReadModel.Core;
 using SciVacancies.Services.Email;
 
-using Microsoft.Framework.Configuration;
+using Microsoft.Extensions.Configuration;
 using System;
-using Microsoft.Framework.Logging;
+using Microsoft.Extensions.Logging;
 
 namespace SciVacancies.SmtpNotifications.SmtpNotificators
 {

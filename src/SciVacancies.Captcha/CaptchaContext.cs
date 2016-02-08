@@ -1,5 +1,6 @@
 ﻿using System;
 using Microsoft.AspNet.Http;
+using Microsoft.Extensions.Primitives;
 
 namespace SciVacancies.Captcha
 {
@@ -16,7 +17,7 @@ namespace SciVacancies.Captcha
         public string GetCaptchaKey()
         {
             var captchaCookie = _context.Request.Cookies[captchaKey];
-            if (captchaCookie == null) throw new InvalidOperationException("captcha key is not found");
+            if (captchaCookie == StringValues.Empty) throw new InvalidOperationException("captcha key is not found");
             return captchaCookie;
         }
 

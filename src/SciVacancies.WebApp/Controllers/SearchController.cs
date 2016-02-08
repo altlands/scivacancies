@@ -13,7 +13,7 @@ using SciVacancies.WebApp.Models;
 using SciVacancies.WebApp.Queries;
 using SciVacancies.WebApp.ViewModels;
 
-using Microsoft.Framework.Logging;
+using Microsoft.Extensions.Logging;
 
 namespace SciVacancies.WebApp.Controllers
 {

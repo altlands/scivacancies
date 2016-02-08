@@ -1,6 +1,6 @@
 ﻿using SciVacancies.Services.Logging;
 
-using Microsoft.Framework.Configuration;
+using Microsoft.Extensions.Configuration;
 
 using Autofac;
 using Autofac.Extras.DynamicProxy;

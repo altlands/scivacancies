@@ -3,7 +3,7 @@ using SciVacancies.Domain.Enums;
 
 using System;
 using System.Collections.Generic;
-using Microsoft.Framework.Logging;
+using Microsoft.Extensions.Logging;
 
 using Nest;
 

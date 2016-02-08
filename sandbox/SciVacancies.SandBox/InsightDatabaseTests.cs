@@ -2,15 +2,14 @@
 using System.Collections;
 using System.Linq;
 using Autofac;
-using Autofac.Dnx;
+using Autofac.Framework.DependencyInjection;
 using Insight.Database.Providers.PostgreSQL;
-using Microsoft.Framework.OptionsModel;
+using Microsoft.Extensions.OptionsModel;
 using Npgsql;
-//using SciVacancies.ApplicationInfrastructure;
 using Xunit;
 using Insight.Database;
-using Microsoft.Framework.ConfigurationModel;
-using Microsoft.Framework.DependencyInjection;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using SciVacancies.ReadModel;
 using SciVacancies.ReadModel.Core;
 using SciVacancies.WebApp;
@@ -28,17 +27,18 @@ namespace SciVacancies.SandBox
             var vars = Environment.GetEnvironmentVariables();
             var devEnv = vars.Cast<DictionaryEntry>().FirstOrDefault(e => e.Key.Equals("dev_env")).Value;
             // Setup configuration sources.
-            Configuration = new Configuration()
+            Configuration = new ConfigurationBuilder()
                 .AddJsonFile("config.json")
                 .AddJsonFile($"config.{devEnv}.json", optional: true)
-                .AddEnvironmentVariables();
+                .AddEnvironmentVariables()
+                .Build();
             _services = new ServiceCollection().AddOptions();
-            _services.Configure<AppSettings>(Configuration.GetSubKey("AppSettings"));
-            _services.Configure<DbSettings>(Configuration.GetSubKey("Data"));
+            _services.Configure<AppSettings>(Configuration.GetSection("AppSettings"));
+            _services.Configure<DbSettings>(Configuration.GetSection("Data"));
 
             var builder = new ContainerBuilder();
 
-            builder.Populate(_services);
+            builder.Populate(_services.AsEnumerable());
             var container = builder.Build();
             _serviceProvider = container.Resolve<IServiceProvider>();
             PostgreSQLInsightDbProvider.RegisterProvider();

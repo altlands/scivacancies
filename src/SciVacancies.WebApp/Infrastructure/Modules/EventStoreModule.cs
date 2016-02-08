@@ -1,22 +1,21 @@
-﻿using SciVacancies.Services.Logging;
-
-using System;
+﻿using System;
 using System.Data;
-using Microsoft.Framework.Configuration;
-using Microsoft.Framework.Logging;
-
 using Autofac;
 using CommonDomain;
 using CommonDomain.Core;
 using CommonDomain.Persistence;
-using CommonDomain.Persistence.EventStore;
 using MediatR;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 using NEventStore;
 using NEventStore.Dispatcher;
 using NEventStore.Persistence.Sql;
 using NEventStore.Persistence.Sql.SqlDialects;
 using Npgsql;
 using NPoco;
+using SciVacancies.WebApp.Infrastructure.Saga;
+using IConstructSagas = SciVacancies.WebApp.Infrastructure.Saga.IConstructSagas;
+using ISagaRepository = SciVacancies.WebApp.Infrastructure.Saga.ISagaRepository;
 
 namespace SciVacancies.WebApp.Infrastructure
 {
@@ -47,7 +46,7 @@ namespace SciVacancies.WebApp.Infrastructure
                 .As<IStoreEvents>()
                 .SingleInstance();
 
-            builder.Register(c => new SciVacancies.WebApp.Infrastructure.EventStoreRepository(c.Resolve<IStoreEvents>(), c.Resolve<IConstructAggregates>(), c.Resolve<IDetectConflicts>()))
+            builder.Register(c => new EventStoreRepository(c.Resolve<IStoreEvents>(), c.Resolve<IConstructAggregates>(), c.Resolve<IDetectConflicts>()))
                     .As<IRepository>()
                     .SingleInstance();
 
@@ -56,11 +55,11 @@ namespace SciVacancies.WebApp.Infrastructure
             //    .SingleInstance();
 
             //sagas start
-            builder.Register(c => new SciVacancies.WebApp.Infrastructure.Saga.SagaFactory())
-                .As<SciVacancies.WebApp.Infrastructure.Saga.IConstructSagas>()
+            builder.Register(c => new SagaFactory())
+                .As<IConstructSagas>()
                 .SingleInstance();
-            builder.Register(c => new SciVacancies.WebApp.Infrastructure.Saga.SagaEventStoreRepository(c.Resolve<IStoreEvents>(), c.Resolve<SciVacancies.WebApp.Infrastructure.Saga.IConstructSagas>()))
-                .As<SciVacancies.WebApp.Infrastructure.Saga.ISagaRepository>()
+            builder.Register(c => new SagaEventStoreRepository(c.Resolve<IStoreEvents>(), c.Resolve<IConstructSagas>()))
+                .As<ISagaRepository>()
                 .SingleInstance();
             //sagas end
         }
