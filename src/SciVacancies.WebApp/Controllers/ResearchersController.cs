@@ -140,6 +140,11 @@ namespace SciVacancies.WebApp.Controllers
                 ResearcherGuid = authorizedUserGuid
             });
 
+            //проверка изменения адреса электронной почты
+            var currentEmail = (await _userManager.GetEmailAsync(User.Identity.GetUserId()));
+            if (currentEmail != model.Email)
+                await _userManager.SetEmailAsync(User.Identity.GetUserId(), model.Email);
+
             return RedirectToAction("account");
         }
 
