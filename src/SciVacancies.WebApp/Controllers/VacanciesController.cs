@@ -453,43 +453,83 @@ namespace SciVacancies.WebApp.Controllers
             return View(model);
         }
 
-        //TODO: удалить этот метод в действующем сайте
-        //[BindOrganizationIdFromClaims]
+        ////TODO: удалить этот метод в действующем сайте
+        ////[BindOrganizationIdFromClaims]
         //[Authorize(Roles = ConstTerms.RequireRoleOrganizationAdmin)]
-        //public IActionResult StartInCommittee(Guid id, Guid organizationGuid)
+        //public IActionResult StartInCommittee(Guid id/*, Guid organizationGuid*/)
         //{
         //    if (id == Guid.Empty)
         //        throw new ArgumentNullException(nameof(id));
 
-        //    if (organizationGuid == Guid.Empty)
-        //        throw new ArgumentNullException(nameof(organizationGuid));
+        //    var badVacancies = new Guid[]
+        //    {
+        //        Guid.Parse("2ad57b62-ad5a-4db3-a187-41a618bcdb62"),
+        //        Guid.Parse("51e51541-76a0-42e3-b898-a630127dbf97"),
+        //        Guid.Parse("0ea32c4e-64d1-4445-87b8-164350d3d1e8")
+        //    };
+
+        //    if (!badVacancies.Contains(id))
+        //        return View("Error", "Для этой вакансии не разрешено менять статус, используя этот метод");
+
+        //    //if (organizationGuid == Guid.Empty)
+        //    //    throw new ArgumentNullException(nameof(organizationGuid));
 
         //    var preModel = _mediator.Send(new SingleVacancyQuery { VacancyGuid = id });
 
         //    if (preModel == null)
         //        return HttpNotFound(); //throw new ObjectNotFoundException($"Не найдена вакансия с идентификатором: {id}");
 
-        //    if (preModel.organization_guid != organizationGuid)
-        //        return View("Error", "Вы не можете менять Вакансии других организаций");
+        //    //if (preModel.organization_guid != organizationGuid)
+        //    //    return View("Error", "Вы не можете менять Вакансии других организаций");
 
         //    if (preModel.status != VacancyStatus.Published)
         //        return View("Error", $"Вы не можете перевести Вакансию на рассмотрение комиссии со статусом: {preModel.status.GetDescription()}");
 
         //    //TODO: Saga -> реализовать эту проверку при запуске Саг с таймерами
-        //    if ((DateTime.UtcNow - preModel.committee_start_date.Value.ToUniversalTime()).TotalMinutes < _sagaSettings.Value.Date.DeltaFromPublishToInCommitteeMinMinutes)
-        //        return View("Error", $"Вы не можете начать перевести вакансию на рассмотрение комиссии раньше чем через {_sagaSettings.Value.Date.DeltaFromPublishToInCommitteeMinMinutes} мин. Текущее время сервера в UTC: {DateTime.UtcNow}, Время начала комиссии в UTC: {preModel.committee_start_date.Value.ToUniversalTime()}");
+        //    if (preModel.committee_start_date.Value.ToUniversalTime() > DateTime.UtcNow)
+        //        return View("Error", $"Вы не можете перевести вакансию на рассмотрение комиссии раньше времени начала комиссии (в UTC): {preModel.committee_start_date.Value.ToUniversalTime()}");
 
-        //    var vacancyApplications = _mediator.Send(new CountVacancyApplicationInVacancyQuery
+        //    var vacancyApplications = _mediator.Send(new SelectVacancyApplicationInVacancyByStatusesQuery
         //    {
         //        VacancyGuid = preModel.guid,
-        //        Status = VacancyApplicationStatus.Applied
-        //    });
+        //        Statuses = new List<VacancyApplicationStatus> { VacancyApplicationStatus.Applied }
+        //    }).ToList();
 
-        //    if (vacancyApplications == 0)
+        //    if (vacancyApplications.Count == 0)
         //        //если нет заявок, то закрыть вакансию
-        //        _mediator.Send(new CancelVacancyCommand { VacancyGuid = preModel.guid, Reason = "На Вакансию не подано ни одной Заявки." });
+        //        _mediator.Send(new CancelVacancyCommand
+        //        {
+        //            VacancyGuid = preModel.guid,
+        //            Reason = "На Вакансию не подано ни одной Заявки."
+        //        });
         //    else
+        //    {
+        //        /* Костыль: Чистка вакансий от дублированных заявок*/
+
+        //        //if (vacancyApplications.Count > 1)
+        //        //    foreach (var groupedByResearcher in vacancyApplications.GroupBy(c => c.researcher_guid).Where(c => c.Count() > 1))
+        //        //    {
+        //        //        var latestApplicationCreationDate = groupedByResearcher.Max(c => c.creation_date);
+        //        //        foreach (var earlyApplication in groupedByResearcher.Where(c => c.creation_date < latestApplicationCreationDate))
+        //        //        {
+        //        //            try
+        //        //            {
+        //        //                _mediator.Send(new CancelVacancyApplicationCommand
+        //        //                {
+        //        //                    ResearcherGuid = earlyApplication.researcher_guid,
+        //        //                    VacancyApplicationGuid = earlyApplication.guid
+        //        //                });
+        //        //            }
+        //        //            catch (Exception)
+        //        //            {
+        //        //            }
+        //        //        }
+        //        //    }
+
+        //        /* /Костыль*/
+
         //        _mediator.Send(new SwitchVacancyInCommitteeCommand { VacancyGuid = id });
+        //    }
 
         //    return RedirectToAction("details", new { id });
         //}
