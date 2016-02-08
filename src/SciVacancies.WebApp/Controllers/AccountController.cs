@@ -517,9 +517,9 @@ namespace SciVacancies.WebApp.Controllers
             if (await _userManager.FindByNameAsync(model.UserName) != null)
                 ModelState.AddModelError("UserName", "Пользователь с таким логином уже существует");
 
-            if (await _userManager.FindByEmailAsync(model.Email) != null)
-                //TODO: что делать если пользователь еще не подтвердил email (удалить его?)
-                ModelState.AddModelError("Email", "Пользователь с таким Email уже существует");
+            //if (await _userManager.FindByEmailAsync(model.Email) != null)
+            //    //TODO: что делать если пользователь еще не подтвердил email (удалить его?)
+            //    ModelState.AddModelError("Email", "Пользователь с таким Email уже существует");
 
             if (ModelState.ErrorCount > 0)
             {
