@@ -229,15 +229,6 @@
                         </div>
                     </div>
                     <div class="table-row form-row">
-                        <div class="left-cell">
-                            <label>Учёная степень:</label>
-                        </div>
-                        <div class="right-cell">
-                            <input asp-for="Educations[i].Degree" class="big-input" />
-                            <span asp-validation-for="Educations[i].Degree"></span>
-                        </div>
-                    </div>
-                    <div class="table-row form-row">
                         <div class="right-cell">
                             @*<button class="btn btn-warning btn-sm" onclick="return removeItemFromList(this);">Удалить</button>*@
                             <span class="small-icon icon-sm-close" onclick="return removeItemFromList(this, 'Educations');">Очистить форму</span>
@@ -330,17 +321,6 @@
                                     asp-for="ResearchActivity[i].yearTo"
                                     asp-items="yearsActivity"></select>
                             <span asp-validation-for="ResearchActivity[i].yearTo"></span>
-                        </div>
-                    </div>
-
-
-                    <div class="table-row form-row">
-                        <div class="left-cell">
-                            <label>Тип:</label>
-                        </div>
-                        <div class="right-cell">
-                            <input asp-for="ResearchActivity[i].type" class="big-input" />
-                            <span asp-validation-for="ResearchActivity[i].type"></span>
                         </div>
                     </div>
 
@@ -439,17 +419,6 @@
                         </div>
                     </div>
 
-
-                    <div class="table-row form-row">
-                        <div class="left-cell">
-                            <label>Тип:</label>
-                        </div>
-                        <div class="right-cell">
-                            <input asp-for="TeachingActivity[i].type" class="big-input" />
-                            <span asp-validation-for="TeachingActivity[i].type"></span>
-                        </div>
-                    </div>
-
                     <div class="table-row form-row">
                         <div class="right-cell">
                             @*<button class="btn btn-warning btn-sm" onclick="return removeItemFromList(this);">Удалить</button>*@
@@ -541,17 +510,6 @@
                                     asp-for="OtherActivity[i].yearTo"
                                     asp-items="yearsActivity"></select>
                             <span asp-validation-for="OtherActivity[i].yearTo"></span>
-                        </div>
-                    </div>
-
-
-                    <div class="table-row form-row">
-                        <div class="left-cell">
-                            <label>Тип:</label>
-                        </div>
-                        <div class="right-cell">
-                            <input asp-for="OtherActivity[i].type" class="big-input" />
-                            <span asp-validation-for="OtherActivity[i].type"></span>
                         </div>
                     </div>
 
@@ -705,11 +663,6 @@
                                     <div class="mt10">
                                         <div class="sub-form-item__title-field"><span>Доклад</span></div>
                                         <input asp-for="Conferences[i].title" class="w366" />
-                                    </div>
-
-                                    <div class="mt10">
-                                        <div class="sub-form-item__title-field"><span>Тип</span></div>
-                                        <input asp-for="Conferences[i].categoryType" class="w366" />
                                     </div>
 
                                     <div class="mt10">

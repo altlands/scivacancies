@@ -18,6 +18,7 @@ using SciVacancies.WebApp.Models.OAuth;
 using Microsoft.Extensions.OptionsModel;
 using AutoMapper;
 using Microsoft.AspNet.Authorization;
+using SciVacancies.Domain.DataModels;
 using Microsoft.Extensions.Logging;
 using SciVacancies.WebApp.Engine;
 using SciVacancies.WebApp.Infrastructure.WebAuthorize;
@@ -255,19 +256,18 @@ namespace SciVacancies.WebApp.Controllers
                                         if (orgUser == null)
                                             orgUser = _userManager.FindByEmail(claims.Find(f => f.Type.Equals("email")).Value);
 
+                                        var serializedOrganizationRawInfo = GetOrganizationInfo(orgClaim.Inn);
+                                        OAuthOrgInformation organizationInformation = JsonConvert.DeserializeObject<OAuthOrgInformation>(serializedOrganizationRawInfo);
+
+                                        var accountOrganizationRegisterViewModel = Mapper.Map<AccountOrganizationRegisterViewModel>(organizationInformation);
+
                                         if (orgUser == null)
                                         {
-                                            OAuthOrgInformation organizationInformation =
-                                                JsonConvert.DeserializeObject<OAuthOrgInformation>(
-                                                    GetOrganizationInfo(orgClaim.Inn));
-                                            AccountOrganizationRegisterViewModel orgModel =
-                                                Mapper.Map<AccountOrganizationRegisterViewModel>(organizationInformation);
-
                                             //TODO - сделать всё в маппинге
                                             //orgModel.UserName = claims.Find(f => f.Type.Equals("username")).Value;
-                                            orgModel.UserName = orgClaim.Inn;
+                                            accountOrganizationRegisterViewModel.UserName = orgClaim.Inn;
 
-                                            orgModel.Claims = claims.Where(w => w.Type.Equals("lastname")
+                                            accountOrganizationRegisterViewModel.Claims = claims.Where(w => w.Type.Equals("lastname")
                                                                                 || w.Type.Equals("firstname")
                                                                                 || w.Type.Equals("access_token")
                                                                                 || w.Type.Equals("expires_in")
@@ -276,7 +276,7 @@ namespace SciVacancies.WebApp.Controllers
 
 
                                             var user =
-                                                _mediator.Send(new RegisterUserOrganizationCommand { Data = orgModel });
+                                                _mediator.Send(new RegisterUserOrganizationCommand { Data = accountOrganizationRegisterViewModel });
 
                                             claimsPrincipal = _authorizeService.LogOutAndLogInUser(Response,
                                                 _userManager.CreateIdentity(user,
@@ -287,6 +287,53 @@ namespace SciVacancies.WebApp.Controllers
                                             claimsPrincipal =
                                                 _authorizeService.RefreshUserClaimTokensAndReauthorize(orgUser, claims,
                                                     Response);
+
+                                            try
+                                            {
+                                                var organizationGuid = Guid.Parse(orgUser.Claims.Single(c => c.ClaimType == ConstTerms.ClaimTypeOrganizationId).ClaimValue);
+                                                var organizationReadModel = _mediator.Send(new SingleOrganizationQuery { OrganizationGuid = organizationGuid });
+                                                if (organizationReadModel.address != organizationInformation.postAddress
+                                                    || organizationReadModel.email != organizationInformation.email
+                                                    || organizationReadModel.head_firstname != organizationInformation.headFirstName
+                                                    || organizationReadModel.head_patronymic != organizationInformation.headPatronymic
+                                                    || organizationReadModel.head_secondname != organizationInformation.headLastName
+                                                    || organizationReadModel.inn != organizationInformation.inn
+                                                    || organizationReadModel.ogrn != organizationInformation.ogrn
+                                                    || organizationReadModel.name != organizationInformation.title
+                                                    || organizationReadModel.shortname != organizationInformation.shortTitle
+                                                    || organizationReadModel.foiv_id != int.Parse(organizationInformation.foiv.id)
+                                                    || organizationReadModel.orgform_id != int.Parse(organizationInformation.opf.id)
+                                                   
+                                                    //|| !(
+                                                    //    (organizationReadModel.researchdirections == null || organizationReadModel.researchdirections.Count == 0)
+                                                    //    && (organizationInformation.researchDirections == null || organizationInformation.researchDirections.Count == 0)
+                                                    //    )
+
+                                                    //|| (
+                                                    //    organizationReadModel.researchdirections != null
+                                                    //    && organizationReadModel.researchdirections.Count > 0
+
+                                                    //    && organizationInformation.researchDirections != null
+                                                    //    && organizationInformation.researchDirections.Count > 0
+
+                                                    //    && organizationReadModel.researchdirections.First().id != int.Parse(organizationInformation.researchDirections.First().id)
+                                                    //    )
+
+                                                    )
+                                                {
+                                                    var organizationDataModel = Mapper.Map<OrganizationDataModel>(accountOrganizationRegisterViewModel);
+                                                    _mediator.Send(new UpdateOrganizationCommand
+                                                    {
+                                                        OrganizationGuid = organizationGuid,
+                                                        Data = organizationDataModel
+                                                    });
+                                                }
+                                            }
+                                            catch (Exception exception)
+                                            {
+                                                _logger.LogError($"Exception happend with updating organizaiton info: {exception.Message}");
+                                                throw exception;
+                                            }
                                         }
                                     }
                                     else
@@ -344,7 +391,7 @@ namespace SciVacancies.WebApp.Controllers
 
                                         var resUser = _userManager.FindByName(claims.Find(f => f.Type.Equals("login")).Value);
 
-                                        if(resUser==null)
+                                        if (resUser == null)
                                             resUser = _userManager.FindByEmail(claims.Find(f => f.Type.Equals("email")).Value);
 
                                         //получаем информацию о Пользователе с Карты Наук
@@ -470,9 +517,9 @@ namespace SciVacancies.WebApp.Controllers
             if (await _userManager.FindByNameAsync(model.UserName) != null)
                 ModelState.AddModelError("UserName", "Пользователь с таким логином уже существует");
 
-            if (await _userManager.FindByEmailAsync(model.Email) != null)
-                //TODO: что делать если пользователь еще не подтвердил email (удалить его?)
-                ModelState.AddModelError("Email", "Пользователь с таким Email уже существует");
+            //if (await _userManager.FindByEmailAsync(model.Email) != null)
+            //    //TODO: что делать если пользователь еще не подтвердил email (удалить его?)
+            //    ModelState.AddModelError("Email", "Пользователь с таким Email уже существует");
 
             if (ModelState.ErrorCount > 0)
             {

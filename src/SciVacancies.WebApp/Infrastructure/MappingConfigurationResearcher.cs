@@ -273,13 +273,15 @@ namespace SciVacancies.WebApp.Infrastructure
                 .ForMember(d => d.UniversityShortName, o => o.MapFrom(s => s.university_shortname))
                 .ForMember(d => d.FacultyShortName, o => o.MapFrom(s => s.faculty_shortname))
                 .ForMember(dest => dest.GraduationYear, src => src.MapFrom(c => c.graduation_date.HasValue ? c.graduation_date.Value.Year : 0))
-                .ForMember(d => d.Degree, o => o.MapFrom(s => s.degree));
+                .ForMember(d => d.Degree, o => o.Ignore()/*.MapFrom(s => s.Degree)*/)
+                ;
             Mapper.CreateMap<SciVacancies.Domain.Core.Education, EducationEditViewModel>()
                 .ForMember(d => d.City, o => o.MapFrom(s => s.City))
                 .ForMember(d => d.UniversityShortName, o => o.MapFrom(s => s.UniversityShortName))
                 .ForMember(d => d.FacultyShortName, o => o.MapFrom(s => s.FacultyShortName))
                 .ForMember(dest => dest.GraduationYear, src => src.MapFrom(c => c.GraduationYear.HasValue ? c.GraduationYear.Value.Year : 0))
-                .ForMember(d => d.Degree, o => o.MapFrom(s => s.Degree));
+                .ForMember(d => d.Degree, o => o.Ignore()/*.MapFrom(s => s.Degree)*/)
+                ;
             Mapper.CreateMap<EducationEditViewModel, SciVacancies.Domain.Core.Education>()
                 .ForMember(dest => dest.GraduationYear, src => src.MapFrom(c => (c.GraduationYear.HasValue && c.GraduationYear.Value != 0) ? new DateTime(c.GraduationYear.Value, 1, 1) : default(DateTime)));
 
@@ -433,8 +435,8 @@ namespace SciVacancies.WebApp.Infrastructure
                 .ForSourceMember(s => s.extraemail, o => o.Ignore())
                 .ForMember(d => d.BirthDate, o => o.MapFrom(s => s.birthdate))
                 .ForMember(d => d.ImageUrl, o => o.MapFrom(s => s.image_url))
-                .ForMember(d => d.Educations, o => o.MapFrom(s => !string.IsNullOrWhiteSpace(s.educations) ? JsonConvert.DeserializeObject<List<EducationEditViewModel>>(s.educations) : new List<EducationEditViewModel>()))
-                .ForMember(d => d.Publications, o => o.MapFrom(s => !string.IsNullOrWhiteSpace(s.publications) ? JsonConvert.DeserializeObject<List<PublicationEditViewModel>>(s.publications) : new List<PublicationEditViewModel>()))
+                .ForMember(d => d.Educations, o => o.MapFrom(s => !string.IsNullOrWhiteSpace(s.educations) ? JsonConvert.DeserializeObject<List<SciVacancies.Domain.Core.Education>>(s.educations) : new List<SciVacancies.Domain.Core.Education>()))
+                .ForMember(d => d.Publications, o => o.MapFrom(s => !string.IsNullOrWhiteSpace(s.publications) ? JsonConvert.DeserializeObject<List<SciVacancies.Domain.Core.Publication>>(s.publications) : new List<SciVacancies.Domain.Core.Publication>()))
                 .ForMember(d => d.AcademicStatus, o => o.MapFrom(s => s.science_rank))
                 .ForMember(d => d.Conferences, o => o.MapFrom(s => s.conferences))
                 .ForMember(d => d.CoveringLetter, o => o.MapFrom(s => s.covering_letter))

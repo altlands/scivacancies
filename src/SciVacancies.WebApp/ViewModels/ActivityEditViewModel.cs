@@ -15,7 +15,7 @@ namespace SciVacancies.WebApp.ViewModels
         public string title { get; set; }
         public int yearFrom { get; set; }
         public int yearTo { get; set; }
-        [MaxLength(1500, ErrorMessage = "Длина строки не более 1500 символов")]
-        public string type { get; set; }
+        //[MaxLength(1500, ErrorMessage = "Длина строки не более 1500 символов")]
+        //public string type { get; set; }
     }
 }

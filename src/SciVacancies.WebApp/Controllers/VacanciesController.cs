@@ -34,19 +34,22 @@ namespace SciVacancies.WebApp.Controllers
         private readonly IOptions<AttachmentSettings> _attachmentSettings;
         private readonly IOptions<SagaSettings> _sagaSettings;
         private readonly ILogger _logger;
+        private readonly IOptions<Holidays> _holidays;
 
         /// <summary>
         /// минимальное значнеие ЗП
         /// </summary>
         private int _salaryMinValue = 5965;
 
-        public VacanciesController(IMediator mediator, IOptions<SagaSettings> sagaSettings, IHostingEnvironment hostingEnvironment, IOptions<AttachmentSettings> attachmentSettings, ILoggerFactory loggerFactory)
+
+        public VacanciesController(IMediator mediator, IOptions<SagaSettings> sagaSettings, IOptions<Holidays> holidays, IHostingEnvironment hostingEnvironment, IOptions<AttachmentSettings> attachmentSettings, ILoggerFactory loggerFactory)
         {
             _sagaSettings = sagaSettings;
             _mediator = mediator;
             _hostingEnvironment = hostingEnvironment;
             _attachmentSettings = attachmentSettings;
             _logger = loggerFactory.CreateLogger<VacanciesController>();
+            _holidays = holidays;
         }
 
         [PageTitle("Новая вакансия")]
@@ -274,6 +277,12 @@ namespace SciVacancies.WebApp.Controllers
 
             var model = Mapper.Map<VacancyDetailsViewModel>(preModel);
 
+            if (preModel.committee_start_date.HasValue)
+                model.MaxProlongedDate = preModel.committee_start_date.Value.AddMinutesIncludingHolidays(
+                    _sagaSettings.Value.Date.Committee.ProlongingMinutes + _sagaSettings.Value.Date.DeltaFromInCommitteeStartToEndMinutes
+                    , _holidays.Value.Dates
+                    );
+
             ViewBag.VacancyInFavorites = false;
 
             if (organizationGuid != model.OrganizationGuid)
@@ -444,43 +453,83 @@ namespace SciVacancies.WebApp.Controllers
             return View(model);
         }
 
-        //TODO: удалить этот метод в действующем сайте
-        //[BindOrganizationIdFromClaims]
+        ////TODO: удалить этот метод в действующем сайте
+        ////[BindOrganizationIdFromClaims]
         //[Authorize(Roles = ConstTerms.RequireRoleOrganizationAdmin)]
-        //public IActionResult StartInCommittee(Guid id, Guid organizationGuid)
+        //public IActionResult StartInCommittee(Guid id/*, Guid organizationGuid*/)
         //{
         //    if (id == Guid.Empty)
         //        throw new ArgumentNullException(nameof(id));
 
-        //    if (organizationGuid == Guid.Empty)
-        //        throw new ArgumentNullException(nameof(organizationGuid));
+        //    var badVacancies = new Guid[]
+        //    {
+        //        Guid.Parse("2ad57b62-ad5a-4db3-a187-41a618bcdb62"),
+        //        Guid.Parse("51e51541-76a0-42e3-b898-a630127dbf97"),
+        //        Guid.Parse("0ea32c4e-64d1-4445-87b8-164350d3d1e8")
+        //    };
+
+        //    if (!badVacancies.Contains(id))
+        //        return View("Error", "Для этой вакансии не разрешено менять статус, используя этот метод");
+
+        //    //if (organizationGuid == Guid.Empty)
+        //    //    throw new ArgumentNullException(nameof(organizationGuid));
 
         //    var preModel = _mediator.Send(new SingleVacancyQuery { VacancyGuid = id });
 
         //    if (preModel == null)
         //        return HttpNotFound(); //throw new ObjectNotFoundException($"Не найдена вакансия с идентификатором: {id}");
 
-        //    if (preModel.organization_guid != organizationGuid)
-        //        return View("Error", "Вы не можете менять Вакансии других организаций");
+        //    //if (preModel.organization_guid != organizationGuid)
+        //    //    return View("Error", "Вы не можете менять Вакансии других организаций");
 
         //    if (preModel.status != VacancyStatus.Published)
         //        return View("Error", $"Вы не можете перевести Вакансию на рассмотрение комиссии со статусом: {preModel.status.GetDescription()}");
 
         //    //TODO: Saga -> реализовать эту проверку при запуске Саг с таймерами
-        //    if ((DateTime.UtcNow - preModel.committee_start_date.Value.ToUniversalTime()).TotalMinutes < _sagaSettings.Value.Date.DeltaFromPublishToInCommitteeMinMinutes)
-        //        return View("Error", $"Вы не можете начать перевести вакансию на рассмотрение комиссии раньше чем через {_sagaSettings.Value.Date.DeltaFromPublishToInCommitteeMinMinutes} мин. Текущее время сервера в UTC: {DateTime.UtcNow}, Время начала комиссии в UTC: {preModel.committee_start_date.Value.ToUniversalTime()}");
+        //    if (preModel.committee_start_date.Value.ToUniversalTime() > DateTime.UtcNow)
+        //        return View("Error", $"Вы не можете перевести вакансию на рассмотрение комиссии раньше времени начала комиссии (в UTC): {preModel.committee_start_date.Value.ToUniversalTime()}");
 
-        //    var vacancyApplications = _mediator.Send(new CountVacancyApplicationInVacancyQuery
+        //    var vacancyApplications = _mediator.Send(new SelectVacancyApplicationInVacancyByStatusesQuery
         //    {
         //        VacancyGuid = preModel.guid,
-        //        Status = VacancyApplicationStatus.Applied
-        //    });
+        //        Statuses = new List<VacancyApplicationStatus> { VacancyApplicationStatus.Applied }
+        //    }).ToList();
 
-        //    if (vacancyApplications == 0)
+        //    if (vacancyApplications.Count == 0)
         //        //если нет заявок, то закрыть вакансию
-        //        _mediator.Send(new CancelVacancyCommand { VacancyGuid = preModel.guid, Reason = "На Вакансию не подано ни одной Заявки." });
+        //        _mediator.Send(new CancelVacancyCommand
+        //        {
+        //            VacancyGuid = preModel.guid,
+        //            Reason = "На Вакансию не подано ни одной Заявки."
+        //        });
         //    else
+        //    {
+        //        /* Костыль: Чистка вакансий от дублированных заявок*/
+
+        //        //if (vacancyApplications.Count > 1)
+        //        //    foreach (var groupedByResearcher in vacancyApplications.GroupBy(c => c.researcher_guid).Where(c => c.Count() > 1))
+        //        //    {
+        //        //        var latestApplicationCreationDate = groupedByResearcher.Max(c => c.creation_date);
+        //        //        foreach (var earlyApplication in groupedByResearcher.Where(c => c.creation_date < latestApplicationCreationDate))
+        //        //        {
+        //        //            try
+        //        //            {
+        //        //                _mediator.Send(new CancelVacancyApplicationCommand
+        //        //                {
+        //        //                    ResearcherGuid = earlyApplication.researcher_guid,
+        //        //                    VacancyApplicationGuid = earlyApplication.guid
+        //        //                });
+        //        //            }
+        //        //            catch (Exception)
+        //        //            {
+        //        //            }
+        //        //        }
+        //        //    }
+
+        //        /* /Костыль*/
+
         //        _mediator.Send(new SwitchVacancyInCommitteeCommand { VacancyGuid = id });
+        //    }
 
         //    return RedirectToAction("details", new { id });
         //}
@@ -1060,7 +1109,7 @@ namespace SciVacancies.WebApp.Controllers
                 ModelState.AddModelError("InCommitteeDateString", "Вы установили дату ранее текущей");
 
             if ((inCommitteeDateValue - DateTime.UtcNow).TotalMinutes < _sagaSettings.Value.Date.DeltaFromPublishToInCommitteeMinMinutes)
-                ModelState.AddModelError("InCommitteeDateString", $"Вы не можете установить дату перевода вакансии на рассмотрение комиссии раньше, чем через {_sagaSettings.Value.Date.DeltaFromPublishToInCommitteeMinMinutes / (24 * 60)} дн.");
+                ModelState.AddModelError("InCommitteeDateString", $"Вы не можете установить дату перевода вакансии на рассмотрение комиссии раньше, чем через {_sagaSettings.Value.Date.DeltaFromPublishToInCommitteeMinMinutes / (24 * 60)} календарных дн.");
 
             if (!ModelState.IsValid)
             {
@@ -1081,7 +1130,7 @@ namespace SciVacancies.WebApp.Controllers
             {
                 VacancyGuid = id,
                 InCommitteeStartDate = inCommitteeDateValue,
-                InCommitteeEndDate = inCommitteeDateValue.AddMinutes(_sagaSettings.Value.Date.DeltaFromPublishToInCommitteeMinMinutes)
+                InCommitteeEndDate = inCommitteeDateValue.AddMinutesIncludingHolidays(_sagaSettings.Value.Date.DeltaFromInCommitteeStartToEndMinutes, _holidays.Value.Dates)
             });
 
             return RedirectToAction("details", new { id });
@@ -1188,10 +1237,20 @@ namespace SciVacancies.WebApp.Controllers
             if (preModel.status != VacancyStatus.InCommittee)
                 return View("Error", "Продлять рассмотрение можно только для вакансий, находящихся на рассмотрении");
 
-            if (preModel.committee_start_date.HasValue
-                && preModel.committee_end_date.HasValue
-                && (preModel.committee_end_date.Value - preModel.committee_start_date.Value).Days >= 29)
-                return View("Error", "Вы не можете продлить рассмотрение до более чем 30 дней");
+            if (preModel.status != VacancyStatus.InCommittee)
+                return View("Error", "Продлять рассмотрение можно только для вакансий, находящихся на рассмотрении");
+
+            if (!preModel.committee_start_date.HasValue)
+                return View("Error", "Не указано начало периода рассмотрения вакансии");
+
+            var maxProlongedDate = preModel.committee_start_date.Value.AddMinutesIncludingHolidays(
+                _sagaSettings.Value.Date.Committee.ProlongingMinutes + _sagaSettings.Value.Date.DeltaFromInCommitteeStartToEndMinutes
+                , _holidays.Value.Dates
+                );
+
+            if (preModel.committee_end_date.HasValue
+                && preModel.committee_end_date.Value.Date >= maxProlongedDate.Date) //проверяем, что заданная дата окончания Рассмотрения находится в пределах максимального значения
+                return View("Error", $"Вы не можете продлить рассмотрение до даты позднее чем 30 рабочих дней с начала рассмотрения. Т.е. с {maxProlongedDate.ToLocalMoscowVacancyDateString()} по {maxProlongedDate.ToLocalMoscowVacancyDateString()}");
 
             var model = Mapper.Map<VacancyDetailsViewModel>(preModel);
 
@@ -1220,17 +1279,25 @@ namespace SciVacancies.WebApp.Controllers
             if (preModel.status != VacancyStatus.InCommittee)
                 return View("Error", "Продлять рассмотрение можно только для вакансий, находящихся на рассмотрении");
 
-            if (preModel.committee_start_date.HasValue
-                && preModel.committee_end_date.HasValue
-                && (preModel.committee_end_date.Value - preModel.committee_start_date.Value).Days >= 29)
-                return View("Error", "Вы не можете продлить рассмотрение до более чем 30 дней");
+            if (!preModel.committee_start_date.HasValue)
+                return View("Error", "Не указано начало периода рассмотрения вакансии");
+
+            var maxProlongedDate = preModel.committee_start_date.Value.AddMinutesIncludingHolidays(
+                _sagaSettings.Value.Date.Committee.ProlongingMinutes + _sagaSettings.Value.Date.DeltaFromInCommitteeStartToEndMinutes
+                , _holidays.Value.Dates
+                );
+
+            if (preModel.committee_end_date.HasValue
+                && preModel.committee_end_date.Value.Date >= maxProlongedDate.Date) //проверяем, что заданная дата окончания Рассмотрения находится в пределах максимального значения
+                return View("Error", $"Вы не можете продлить рассмотрение до даты позднее чем 30 рабочих дней с начала рассмотрения. Т.е. с {maxProlongedDate.ToLocalMoscowVacancyDateString()} по {maxProlongedDate.ToLocalMoscowVacancyDateString()}");
 
             try
             {
-                if (preModel.committee_end_date.HasValue)
-                    _mediator.Send(new ProlongVacancyInCommitteeCommand { VacancyGuid = id, Reason = reason, InCommitteeEndDate = preModel.committee_end_date.Value.AddMinutes(_sagaSettings.Value.Date.Committee.ProlongingMinutes) });
-                else
-                    _mediator.Send(new ProlongVacancyInCommitteeCommand { VacancyGuid = id, Reason = reason, InCommitteeEndDate = DateTime.UtcNow.AddMinutes(_sagaSettings.Value.Date.Committee.ProlongingMinutes) });
+                //if (preModel.committee_end_date.HasValue)
+                //    _mediator.Send(new ProlongVacancyInCommitteeCommand { VacancyGuid = id, Reason = reason, InCommitteeEndDate = preModel.committee_end_date.Value.AddMinutesIncludingHolidays(_sagaSettings.Value.Date.Committee.ProlongingMinutes, _holidays.Value.Dates) });
+                //else
+                //    _mediator.Send(new ProlongVacancyInCommitteeCommand { VacancyGuid = id, Reason = reason, InCommitteeEndDate = DateTime.UtcNow.AddMinutesIncludingHolidays(_sagaSettings.Value.Date.Committee.ProlongingMinutes, _holidays.Value.Dates) });
+                _mediator.Send(new ProlongVacancyInCommitteeCommand { VacancyGuid = id, Reason = reason, InCommitteeEndDate = maxProlongedDate });
             }
             catch (Exception exception)
             {

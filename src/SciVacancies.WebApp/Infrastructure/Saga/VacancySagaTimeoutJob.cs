@@ -33,18 +33,21 @@ namespace SciVacancies.WebApp.Infrastructure
 
         readonly ISmtpNotificatorVacancyService smtpService;
 
+        readonly IOptions<Holidays> _holidays;
+
         public VacancySagaTimeoutJob()
         {
             //оставляем пустым
         }
 
-        public VacancySagaTimeoutJob(ISagaRepository sagaRepository, IMediator mediator, ISchedulerService scheduler, IOptions<SagaSettings> settings, ISmtpNotificatorVacancyService smtpService)
+        public VacancySagaTimeoutJob(ISagaRepository sagaRepository, IMediator mediator, ISchedulerService scheduler, IOptions<SagaSettings> settings, ISmtpNotificatorVacancyService smtpService, IOptions<Holidays> holidays)
         {
             this.sagaRepository = sagaRepository;
             this.mediator = mediator;
             this.scheduler = scheduler;
             this.settings = settings;
             this.smtpService = smtpService;
+            _holidays = holidays;
         }
 
         public void Execute(IJobExecutionContext context)
@@ -94,7 +97,7 @@ namespace SciVacancies.WebApp.Infrastructure
                     break;
 
                 case VacancyStatus.InCommittee:
-                    if (!saga.FirstInCommitteeNotificationSent && saga.InCommitteeEndDate.AddMinutes(settings.Value.Date.Committee.FirstNotificationMinutes) <= DateTime.UtcNow)
+                    if (!saga.FirstInCommitteeNotificationSent && saga.InCommitteeEndDate.AddMinutesIncludingHolidays(settings.Value.Date.Committee.FirstNotificationMinutes, _holidays.Value.Dates) <= DateTime.UtcNow)
                     {
                         saga.Transition(new VacancySagaFirstInCommitteeNotificationSent
                         {
@@ -104,7 +107,7 @@ namespace SciVacancies.WebApp.Infrastructure
                         });
                         sagaRepository.Save("vacancysaga", saga, Guid.NewGuid(), null);
                     }
-                    if (saga.InCommitteeEndDate.AddMinutes(settings.Value.Date.Committee.SecondNotificationMinutes) <= DateTime.UtcNow)
+                    if (saga.InCommitteeEndDate.AddMinutesIncludingHolidays(settings.Value.Date.Committee.SecondNotificationMinutes, _holidays.Value.Dates) <= DateTime.UtcNow)
                     {
                         saga.Transition(new VacancySagaSecondInCommitteeNotificationSent
                         {
@@ -126,7 +129,7 @@ namespace SciVacancies.WebApp.Infrastructure
 
                 case VacancyStatus.OfferResponseAwaitingFromWinner:
                     //высылаем победителю уведомление, что пора бы принять решение по предложению контракта
-                    if (!saga.OfferResponseNotificationSentToWinner && saga.OfferResponseAwaitingFromWinnerEndDate.AddMinutes(settings.Value.Date.OfferResponseAwaiting.WinnerNotificationMinutes) <= DateTime.UtcNow)
+                    if (!saga.OfferResponseNotificationSentToWinner && saga.OfferResponseAwaitingFromWinnerEndDate.AddMinutesIncludingHolidays(settings.Value.Date.OfferResponseAwaiting.WinnerNotificationMinutes, _holidays.Value.Dates) <= DateTime.UtcNow)
                     {
                         saga.Transition(new VacancySagaOfferResponseNotificationSentToWinner
                         {
@@ -167,7 +170,7 @@ namespace SciVacancies.WebApp.Infrastructure
 
                 case VacancyStatus.OfferResponseAwaitingFromPretender:
                     //высылаем претенденту уведомление, что пора бы принять решение по предложению контракта
-                    if (!saga.OfferResponseNotificationSentToPretender && saga.OfferResponseAwaitingFromPretenderEndDate.AddMinutes(settings.Value.Date.OfferResponseAwaiting.PretenderNotificationMinutes) <= DateTime.UtcNow)
+                    if (!saga.OfferResponseNotificationSentToPretender && saga.OfferResponseAwaitingFromPretenderEndDate.AddMinutesIncludingHolidays(settings.Value.Date.OfferResponseAwaiting.PretenderNotificationMinutes, _holidays.Value.Dates) <= DateTime.UtcNow)
                     {
                         saga.Transition(new VacancySagaOfferResponseNotificationSentToPretender
                         {

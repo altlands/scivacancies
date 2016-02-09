@@ -173,15 +173,6 @@
 
                         <div class="table-row form-row">
                             <div class="left-cell">
-                                <label>Ученая степень:</label>
-                            </div>
-                            <div class="right-cell">
-                                <input asp-for="Educations[index].Degree" class="disabled big-input" />
-                            </div>
-                        </div>
-
-                        <div class="table-row form-row">
-                            <div class="left-cell">
                                 <label>Год окончания:</label>
                             </div>
                             <div class="right-cell">
@@ -389,7 +380,7 @@
                                     {
                                         <text>
                                         <li class="property-list-item">
-                                            @item.conference - доклад "@item.title" (год @item.year, тип @item.categoryType)
+                                            @item.conference - доклад "@item.title" (год @item.year)
                                         </li>
                                         </text>
                                     }

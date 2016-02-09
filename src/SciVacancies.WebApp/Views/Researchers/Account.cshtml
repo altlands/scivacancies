@@ -84,21 +84,6 @@
                 <div class="row-profile__data">ВУЗ: @item.UniversityShortName</div>
                 <div class="row-profile__data">Факультет: @item.FacultyShortName</div>
                 <div class="row-profile__data">Год окончания: @(item.GraduationYear)</div>
-
-                @*<ul class="table-emulation">
-                        <li>
-                            <span class="w85 italic inline-block">Город</span> <span class="italic">@item.City</span>
-                        </li>
-                        <li>
-                            <span class="w85 italic inline-block">ВУЗ</span> <span class="italic">@item.UniversityShortName</span>
-                        </li>
-                        <li>
-                            <span class="w85 italic inline-block">Факультет</span> <span class="italic">@item.FacultyShortName</span>
-                        </li>
-                        <li>
-                            <span class="w85 italic inline-block">Год окончания</span> <span class="italic">@(item.GraduationYear)</span>
-                        </li>
-                    </ul>*@
             }
         }
         else
@@ -190,7 +175,7 @@
                 {
                     <text>
                     <span>
-                        @item.conference - доклад "@item.title" (год @item.year, тип @item.categoryType)
+                        @item.conference - доклад "@item.title" (год @item.year)
                     </span>
                     </text>
                 }

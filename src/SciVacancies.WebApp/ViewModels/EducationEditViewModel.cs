@@ -23,8 +23,12 @@ namespace SciVacancies.WebApp.ViewModels
         [Required(ErrorMessage = "Укажите год выпуска")]
         public int? GraduationYear { get; set; }
 
-        [Required(ErrorMessage = "Укажите учёную степень")]
-        [MaxLength(1500, ErrorMessage = "Длина строки не более 1500 символов")]
-        public string Degree { get; set; }
+        //[Required(ErrorMessage = "Укажите учёную степень")]
+        //[MaxLength(1500, ErrorMessage = "Длина строки не более 1500 символов")]
+        [Obsolete("свойство не должно отображаться и храниться")]
+        public string Degree
+        {
+            get { return "не задано"; }
+        }
     }
 }

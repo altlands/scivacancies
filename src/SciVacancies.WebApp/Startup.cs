@@ -88,6 +88,7 @@ namespace SciVacancies.WebApp
             services.Configure<SagaSettings>(Configuration.GetSection("SagaSettings"));
             services.Configure<CacheSettings>(Configuration.GetSection("CacheSettings"));
             services.Configure<AnalythicSettings>(Configuration.GetSection("AnalythicSettings"));
+            services.Configure<Holidays>(Configuration.GetSection("Holidays"));
 
             services.AddMvc();
 

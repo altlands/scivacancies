@@ -213,5 +213,10 @@ namespace SciVacancies.WebApp.ViewModels
         /// Autoincrimented field in DB - может быть null
         /// </summary>
         public long? ReadId { get; set; }
+
+        /// <summary>
+        /// Максимальная дата, до которой можно продлить рассмотрение с учётом рабочих дней.
+        /// </summary>
+        public DateTime? MaxProlongedDate { get; set; }
     }
 }
