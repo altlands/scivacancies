@@ -49,7 +49,7 @@ namespace SciVacancies.WebApp.Models
             {
                 return _mediator.Send(new SelectAllFoivsQuery())?
                     .Where(c => c.parent_id == null)
-                    .Where(c=>!c.title.ToLower().Contains("не") && !c.title.ToLower().Contains("указан"))
+                    .Where(c => !c.title.ToLower().Contains("не ") && !c.title.ToLower().Contains(" указан"))
                     .Select(c => new SelectListItem { Value = c.id.ToString(), Text = c.title }).OrderBy(c=>c.Text);
             }
         }
