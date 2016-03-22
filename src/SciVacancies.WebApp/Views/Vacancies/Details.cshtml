@@ -46,183 +46,187 @@
             }
         }
         @if (
-            Model.Status != VacancyStatus.InProcess
-            && Model.Status != VacancyStatus.Closed
-            && Model.Status != VacancyStatus.Cancelled
-            && Model.Status != VacancyStatus.Removed
-            && Model.Status != VacancyStatus.Published
-            && Model.Status != VacancyStatus.InCommittee
-            && Model.Status != VacancyStatus.OfferResponseAwaitingFromWinner
-            && Model.Status != VacancyStatus.OfferResponseAwaitingFromPretender
-            )
+                Model.Status != VacancyStatus.InProcess
+                && Model.Status != VacancyStatus.Closed
+                && Model.Status != VacancyStatus.Cancelled
+                && Model.Status != VacancyStatus.Removed
+                && Model.Status != VacancyStatus.Published
+                && Model.Status != VacancyStatus.InCommittee
+                && Model.Status != VacancyStatus.OfferResponseAwaitingFromWinner
+                && Model.Status != VacancyStatus.OfferResponseAwaitingFromPretender
+                )
         {
             <a asp-controller="vacancies" asp-action="cancel" asp-route-id="@Model.Guid" onclick="javascript: return confirm('Вы уверены что хотите отменить вакансию?');" class="btn btn-danger" title="Отменить вакансию">Отменить вакансию</a>
         }
         @*@if (Model.Status == VacancyStatus.Published
-                && Model.Applications.Items != null
-                && Model.Applications.Items.Any())
-        {
-            <a asp-controller="vacancies" asp-action="startincommittee" asp-route-id="@Model.Guid" class="btn btn-success" title="Перевести на рассмотрение">Перевести на рассмотрение</a>
-        }*@@if (Model.Status == VacancyStatus.InCommittee
-                && string.IsNullOrWhiteSpace(Model.CommitteeReasolution)
-                && (Model.AttachmentsCommittee == null || !Model.AttachmentsCommittee.Any())
-               )
-           {
-               <a asp-controller="vacancies" asp-action="addcommitteereason" asp-route-id="@Model.Guid" class="btn btn-success" title="Указать решение комиссии">Указать решение комиссии</a>
-           }
-        @if (Model.Status == VacancyStatus.OfferAcceptedByWinner)
-        {
-            <a asp-controller="vacancies" asp-action="close" asp-route-id="@Model.Guid" class="btn btn-success" title="Закрыть вакансию">Победитель принял предложение. Закрыть вакансию</a>
-        }
-        @if (Model.Status == VacancyStatus.OfferAcceptedByPretender)
-        {
-            <a asp-controller="vacancies" asp-action="close" asp-route-id="@Model.Guid" class="btn btn-success" title="Закрыть вакансию">Претендент принял предложение. Закрыть вакансию</a>
-        }
-        @if (Model.Status == VacancyStatus.OfferRejectedByWinner && Model.PretenderResearcherGuid != Guid.Empty)
-        {
-            <a asp-controller="vacancies" asp-action="reoffertopretender" asp-route-id="@Model.Guid" class="btn btn-warning" title="Предложить вакансию претенденту">Победитель отказался от предложения. Предложить вакансию претенденту</a>
-        }
-        <br/>
-        <br/>
-        @if (Model.Status == VacancyStatus.InCommittee && Model.MaxProlongedDate.HasValue)
-        {
-            if (!Model.InCommitteeEndDate.HasValue || Model.InCommitteeEndDate.Value.Date < Model.MaxProlongedDate.Value.Date)
+                    && Model.Applications.Items != null
+                    && Model.Applications.Items.Any())
             {
-                <a asp-controller="vacancies" asp-action="prolongincommittee" asp-route-id="@Model.Guid" class="btn btn-default" title="Продлить рассмотрение">Продлить рассмотрение</a>
-                <span class="alert-info">Срок рассмотрения заявок будет продлён до @Model.MaxProlongedDate.Value.Date.ToLocalMoscowVacancyDateString()</span>
+                <a asp-controller="vacancies" asp-action="startincommittee" asp-route-id="@Model.Guid" class="btn btn-success" title="Перевести на рассмотрение">Перевести на рассмотрение</a>
+            }*@@if (Model.Status == VacancyStatus.InCommittee)
+            {
+                if (string.IsNullOrWhiteSpace(Model.CommitteeReasolution) && (Model.AttachmentsCommittee == null || !Model.AttachmentsCommittee.Any()))
+                {
+                    <a asp-controller="vacancies" asp-action="addcommitteereason" asp-route-id="@Model.Guid" class="btn btn-success" title="Указать решение комиссии">Указать решение комиссии</a>
+                }
+                else
+                {
+                    <a asp-controller="vacancies" asp-action="checkincommitteefinishedandmovenext" asp-route-id="@Model.Guid" class="btn btn-success" title="Перейти к следующему этапу">Перейти к следующему этапу</a>
+                }
             }
-        }
-    </div>
+            @if (Model.Status == VacancyStatus.OfferAcceptedByWinner)
+            {
+                <a asp-controller="vacancies" asp-action="close" asp-route-id="@Model.Guid" class="btn btn-success" title="Закрыть вакансию">Победитель принял предложение. Закрыть вакансию</a>
+            }
+            @if (Model.Status == VacancyStatus.OfferAcceptedByPretender)
+            {
+                <a asp-controller="vacancies" asp-action="close" asp-route-id="@Model.Guid" class="btn btn-success" title="Закрыть вакансию">Претендент принял предложение. Закрыть вакансию</a>
+            }
+            @if (Model.Status == VacancyStatus.OfferRejectedByWinner && Model.PretenderResearcherGuid != Guid.Empty)
+            {
+                <a asp-controller="vacancies" asp-action="reoffertopretender" asp-route-id="@Model.Guid" class="btn btn-warning" title="Предложить вакансию претенденту">Победитель отказался от предложения. Предложить вакансию претенденту</a>
+            }
+            <br />
+            <br />
+            @if (Model.Status == VacancyStatus.InCommittee && Model.MaxProlongedDate.HasValue)
+            {
+                if (!Model.InCommitteeEndDate.HasValue || Model.InCommitteeEndDate.Value.Date < Model.MaxProlongedDate.Value.Date)
+                {
+                    <a asp-controller="vacancies" asp-action="prolongincommittee" asp-route-id="@Model.Guid" class="btn btn-default" title="Продлить рассмотрение">Продлить рассмотрение</a>
+                    <span class="alert-info">Срок рассмотрения заявок будет продлён до @Model.MaxProlongedDate.Value.Date.ToLocalMoscowVacancyDateString()</span>
+                }
+            }
+        </div>
 
-    <br/>
-    <br/>
+        <br />
+        <br />
 
-    @Component.Invoke("VacancyInfo", Model)
-    <h4 class="mt45 mb12">Поданные заявки</h4>
+        @Component.Invoke("VacancyInfo", Model)
+        <h4 class="mt45 mb12">Поданные заявки</h4>
 
-    <table class="table request-table tbl-vac">
-        <thead>
-            <tr>
-                <th>
-                    <div class="inline-block">
-                    </div>
-                    <div class="inline-block ml6 va-middle">
-                        №
-                    </div>
-                </th>
-                <th>
-                    <a class="sort-order" href="@(Context.Request.Path.Value+"?"+Context.Request.ToQueryStringDictionary().SetDefaultOrInvertOrderParameter(ConstTerms.OrderByFieldApplyDate).CreateString())">
+        <table class="table request-table tbl-vac">
+            <thead>
+                <tr>
+                    <th>
                         <div class="inline-block">
-                            <img title="Сортировка" src="@Context.Request.GetOrderIcon(ConstTerms.OrderByFieldApplyDate)" class="va-middle" />
                         </div>
                         <div class="inline-block ml6 va-middle">
-                            Дата подачи заявки
+                            №
                         </div>
-                    </a>
-                </th>
-                <th>
-                    <a class="sort-order" href="@(Context.Request.Path.Value+"?"+Context.Request.ToQueryStringDictionary().SetDefaultOrInvertOrderParameter(ConstTerms.OrderByFieldFullName).CreateString())">
-                        <div class="inline-block">
-                            <img title="Сортировка" src="@Context.Request.GetOrderIcon(ConstTerms.OrderByFieldFullName)" class="va-middle" />
-                        </div>
-                        <div class="inline-block ml6 va-middle">
-                            Фамилия, имя, отчество
-                        </div>
-                    </a>
-                </th>
-                <th class="align-center">
-                    Победители
-                </th>
-                <th width="200">
-                    Действия
-                </th>
-            </tr>
-        </thead>
-        <tbody>
+                    </th>
+                    <th>
+                        <a class="sort-order" href="@(Context.Request.Path.Value+"?"+Context.Request.ToQueryStringDictionary().SetDefaultOrInvertOrderParameter(ConstTerms.OrderByFieldApplyDate).CreateString())">
+                            <div class="inline-block">
+                                <img title="Сортировка" src="@Context.Request.GetOrderIcon(ConstTerms.OrderByFieldApplyDate)" class="va-middle" />
+                            </div>
+                            <div class="inline-block ml6 va-middle">
+                                Дата подачи заявки
+                            </div>
+                        </a>
+                    </th>
+                    <th>
+                        <a class="sort-order" href="@(Context.Request.Path.Value+"?"+Context.Request.ToQueryStringDictionary().SetDefaultOrInvertOrderParameter(ConstTerms.OrderByFieldFullName).CreateString())">
+                            <div class="inline-block">
+                                <img title="Сортировка" src="@Context.Request.GetOrderIcon(ConstTerms.OrderByFieldFullName)" class="va-middle" />
+                            </div>
+                            <div class="inline-block ml6 va-middle">
+                                Фамилия, имя, отчество
+                            </div>
+                        </a>
+                    </th>
+                    <th class="align-center">
+                        Победители
+                    </th>
+                    <th width="200">
+                        Действия
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
 
-            @if (Model.Applications != null && Model.Applications.Items != null)
+                @if (Model.Applications != null && Model.Applications.Items != null)
             {
                 foreach (var item in Model.Applications.Items.Where(c => c.Status != VacancyApplicationStatus.Removed && c.Status != VacancyApplicationStatus.Cancelled && c.Status != VacancyApplicationStatus.InProcess))
                 {
-                    <text>
-                    <tr>
-                        <td>@(Model.Applications.Items.IndexOf(item) + 1)</td>
-                        <td>@(item.SentDate?.ToLocalMoscowVacancyDateTimeString())</td>
-                        <td class="pl0">@item.FullName</td>
-                        <td class="pl0 align-center">
-                            @if (Model.WinnerVacancyApplicationGuid == item.Guid)
+                        <text>
+                        <tr>
+                            <td>@(Model.Applications.Items.IndexOf(item) + 1)</td>
+                            <td>@(item.SentDate?.ToLocalMoscowVacancyDateTimeString())</td>
+                            <td class="pl0">@item.FullName</td>
+                            <td class="pl0 align-center">
+                                @if (Model.WinnerVacancyApplicationGuid == item.Guid)
                     {
-                                <text>
-                                <span class="status-request win">
-                                    1
-                                </span> Победитель
-                                </text>
-                                if (Model.IsWinnerAccept.HasValue)
-                                {
-                                    <br />
-
-                                    if (Model.PretenderRequestDate.HasValue)
-                                    {
-                                        <text>
-                                        <del>
-                                            (@(Model.IsWinnerAccept.Value ? "принял предложение" : "отказался от предложения"))
-                                        </del>
-                                        <br /> Предложение отозвано в пользу претендента
-                                        </text>
-                                    }
-                                    else
-                                    {
-                                        <text>
-                                        (@(Model.IsWinnerAccept.Value ? "принял предложение" : "отказался от предложения"))
-                                        </text>
-                                    }
-                                }
-                            }
-                            @if (Model.PretenderVacancyApplicationGuid == item.Guid)
-                    {
-                                <text>
-                                <span class="status-request win">
-                                    2
-                                </span> Претендент
-                                </text>
-                                if (Model.IsPretenderAccept.HasValue)
-                                {
                                     <text>
-                                    <br />
-                                    (@(Model.IsPretenderAccept.Value ? "принял предложение" : "отказался от предложения"))
+                                    <span class="status-request win">
+                                        1
+                                    </span> Победитель
                                     </text>
+                                    if (Model.IsWinnerAccept.HasValue)
+                                    {
+                                        <br />
+
+                                        if (Model.PretenderRequestDate.HasValue)
+                                        {
+                                            <text>
+                                            <del>
+                                                (@(Model.IsWinnerAccept.Value ? "принял предложение" : "отказался от предложения"))
+                                            </del>
+                                            <br /> Предложение отозвано в пользу претендента
+                                            </text>
+                                        }
+                                        else
+                                        {
+                                            <text>
+                                            (@(Model.IsWinnerAccept.Value ? "принял предложение" : "отказался от предложения"))
+                                            </text>
+                                        }
+                                    }
                                 }
-                            }
-                        </td>
-                        <td>
-                            <a asp-controller="applications" asp-action="preview" asp-route-id="@item.Guid" class="view-td-icon" title="Просмотр заявки"></a>
-                            <a asp-controller="applications" asp-action="print" asp-route-id="@item.Guid" class="print-td-icon" title="Распечатать Заявку" target="_blank"></a>
-                        </td>
-                    </tr>
-                    </text>
+                                @if (Model.PretenderVacancyApplicationGuid == item.Guid)
+                    {
+                                    <text>
+                                    <span class="status-request win">
+                                        2
+                                    </span> Претендент
+                                    </text>
+                                    if (Model.IsPretenderAccept.HasValue)
+                                    {
+                                        <text>
+                                        <br />
+                                        (@(Model.IsPretenderAccept.Value ? "принял предложение" : "отказался от предложения"))
+                                        </text>
+                                    }
+                                }
+                            </td>
+                            <td>
+                                <a asp-controller="applications" asp-action="preview" asp-route-id="@item.Guid" class="view-td-icon" title="Просмотр заявки"></a>
+                                <a asp-controller="applications" asp-action="print" asp-route-id="@item.Guid" class="print-td-icon" title="Распечатать Заявку" target="_blank"></a>
+                            </td>
+                        </tr>
+                        </text>
+                    }
                 }
-            }
 
-        </tbody>
-    </table>
+            </tbody>
+        </table>
 
-</div>
+    </div>
 
-<div pagedlist="Model.Applications"
-     request="Context.Request">
-</div>
+    <div pagedlist="Model.Applications"
+         request="Context.Request">
+    </div>
 
-@if (Model.Applications != null && Model.Applications.Items != null && Model.Applications.Items.Any())
-{
-    <a asp-controller="vacancies" asp-action="print" asp-route-id="@Model.Guid" class="blue-btn middle-icon icon-print-button default-link" style="margin-right: 15px;" rel="tooltip" target="_blank" title="Распечатать все заявки">Распечатать все заявки</a>
-}
-<br />
+    @if (Model.Applications != null && Model.Applications.Items != null && Model.Applications.Items.Any())
+    {
+        <a asp-controller="vacancies" asp-action="print" asp-route-id="@Model.Guid" class="blue-btn middle-icon icon-print-button default-link" style="margin-right: 15px;" rel="tooltip" target="_blank" title="Распечатать все заявки">Распечатать все заявки</a>
+    }
+    <br />
 
 
-<br />
+    <br />
 
-<div class="b-bottom-nav">
-    <a href="/" class="small-icon icon-prev">Главная</a>
-    <a asp-controller="organizations" asp-action="account" class="small-icon icon-prev">Карточка организации</a>
-    <a asp-controller="organizations" asp-action="vacancies" class="small-icon icon-prev">Вакансии</a>
-</div>
+    <div class="b-bottom-nav">
+        <a href="/" class="small-icon icon-prev">Главная</a>
+        <a asp-controller="organizations" asp-action="account" class="small-icon icon-prev">Карточка организации</a>
+        <a asp-controller="organizations" asp-action="vacancies" class="small-icon icon-prev">Вакансии</a>
+    </div>

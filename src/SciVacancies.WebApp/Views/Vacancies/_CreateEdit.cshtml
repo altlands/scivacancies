@@ -26,7 +26,7 @@
 
             <div class="table-row form-row">
                 <div class="left-cell">
-                    <label>Должность <span class="require-marker" ></span> :</label>
+                    <label>Должность <span class="require-marker"></span> :</label>
                 </div>
                 <div class="right-cell">
                     <input type="text" disabled asp-for="PositionType" clas="big-input" />
@@ -40,7 +40,7 @@
 
             <div class="table-row form-row">
                 <div class="left-cell">
-                    <label>Наименование <span class="require-marker" ></span> :</label>
+                    <label>Наименование <span class="require-marker"></span> :</label>
                 </div>
                 <div class="right-cell">
                     <input asp-for="Name" class="big-input" data-setnewvalue="PositionType" />
@@ -51,7 +51,7 @@
             <div class="table-row form-row ">
                 <!--mt35-->
                 <div class="left-cell">
-                    <label>Отрасль науки <span class="require-marker" ></span> :</label>
+                    <label>Отрасль науки <span class="require-marker"></span> :</label>
                 </div>
                 <div class="right-cell">
                     <input type="text" disabled asp-for="ResearchDirection" clas="big-input" />
@@ -80,7 +80,7 @@
 
             <div class="table-row form-row">
                 <div class="left-cell">
-                    <label>Регион <span class="require-marker" ></span> :</label>
+                    <label>Регион <span class="require-marker"></span> :</label>
                 </div>
                 <div class="right-cell">
                     <input type="text" disabled asp-for="Region" clas="big-input" />
@@ -110,7 +110,7 @@
         <div class="table-form">
             <div class="table-row form-row">
                 <div class="left-cell">
-                    <label>Задачи <span class="require-marker" ></span> :</label>
+                    <label>Задачи <span class="require-marker"></span> :</label>
                 </div>
                 <div class="right-cell">
                     <textarea asp-for="Tasks"></textarea>
@@ -137,9 +137,9 @@
                         var @group = Model.CriteriasHierarchy[groupIndex];
                         <div class="b-publication">
 
-                            <input type="hidden" name="CriteriasHierarchy.Index" value="@groupIndex"/>
-                            <input type="hidden" asp-for="CriteriasHierarchy[groupIndex].Id"/>
-                            <input type="hidden" asp-for="CriteriasHierarchy[groupIndex].Title"/>
+                            <input type="hidden" name="CriteriasHierarchy.Index" value="@groupIndex" />
+                            <input type="hidden" asp-for="CriteriasHierarchy[groupIndex].Id" />
+                            <input type="hidden" asp-for="CriteriasHierarchy[groupIndex].Title" />
 
                             <div class="b-publication__name"><span class="name-section">@group.Title (@group.Items.Count)</span></div>
                             <div class="list-fields">
@@ -148,13 +148,13 @@
                                 {
                                     var item = @group.Items[itemIndex];
                                     <div>
-                                        <input type="hidden" name="CriteriasHierarchy[groupIndex].Items.Index" value="@itemIndex"/>
-                                        <input type="hidden" asp-for="CriteriasHierarchy[groupIndex].Items[itemIndex].Id"/>
-                                        <input type="hidden" asp-for="CriteriasHierarchy[groupIndex].Items[itemIndex].ParentId"/>
-                                        <input type="hidden" asp-for="CriteriasHierarchy[groupIndex].Items[itemIndex].Code"/>
-                                        <input type="hidden" asp-for="CriteriasHierarchy[groupIndex].Items[itemIndex].Title"/>
+                                        <input type="hidden" name="CriteriasHierarchy[groupIndex].Items.Index" value="@itemIndex" />
+                                        <input type="hidden" asp-for="CriteriasHierarchy[groupIndex].Items[itemIndex].Id" />
+                                        <input type="hidden" asp-for="CriteriasHierarchy[groupIndex].Items[itemIndex].ParentId" />
+                                        <input type="hidden" asp-for="CriteriasHierarchy[groupIndex].Items[itemIndex].Code" />
+                                        <input type="hidden" asp-for="CriteriasHierarchy[groupIndex].Items[itemIndex].Title" />
                                         <div class="field">
-                                            <input type="number" asp-for="CriteriasHierarchy[groupIndex].Items[itemIndex].Count"/>
+                                            <input type="number" asp-for="CriteriasHierarchy[groupIndex].Items[itemIndex].Count" />
                                             <span>@item.Title (шт.)</span>
                                             <span asp-validation-for="CriteriasHierarchy[groupIndex].Items[itemIndex].Count"></span>
                                         </div>
@@ -183,7 +183,7 @@
 
                                     <div>
                                         <div class="sub-form-item__title-field"><span>Название</span></div>
-                                        <input asp-for="CustomCriterias[i].Title" class="w366"/>
+                                        <input asp-for="CustomCriterias[i].Title" class="w366" />
                                         <span asp-validation-for="CustomCriterias[i].Title"></span>
                                     </div>
 
@@ -220,7 +220,7 @@
         <div class="table-form">
             <div class="table-row form-row">
                 <div class="left-cell">
-                    <label>Зарплата в месяц <span class="require-marker" ></span> :</label>
+                    <label>Зарплата в месяц <span class="require-marker"></span> :</label>
                 </div>
                 <div class="right-cell interval">
                     <span class="italic fs14">от</span>
@@ -263,10 +263,10 @@
 
             <div class="table-row form-row contract-time-period">
                 <div class="left-cell">
-                    
+
                     <label>
                         Срок трудового договора
-                        <br/>
+                        <br />
                         (для срочного договора):
                     </label>
                 </div>
@@ -308,17 +308,14 @@
                     </ul>
                 </div>
             </div>
-            @if (!String.IsNullOrEmpty(Model.Details))
-            {
-                <div class="table-row form-row">
-                    <div class="left-cell">
-                        <label>Дополнительно:</label>
-                    </div>
-                    <div class="right-cell">
-                        <textarea asp-for="Details"></textarea>
-                    </div>
+            <div class="table-row form-row">
+                <div class="left-cell">
+                    <label>Дополнительно:</label>
                 </div>
-            }
+                <div class="right-cell">
+                    <textarea asp-for="Details"></textarea>
+                </div>
+            </div>
 
             <div class="table-row form-row">
                 <div class="left-cell">
@@ -354,7 +351,7 @@
         <div class="table-form">
             <div class="table-row form-row">
                 <div class="left-cell">
-                    <label>Фамилия, имя, отчество <span class="require-marker" ></span> :</label>
+                    <label>Фамилия, имя, отчество <span class="require-marker"></span> :</label>
                 </div>
                 <div class="right-cell">
                     <input asp-for="ContactName" class="big-input" />
@@ -364,7 +361,7 @@
 
             <div class="table-row form-row">
                 <div class="left-cell">
-                    <label>E-mail <span class="require-marker" ></span> :</label>
+                    <label>E-mail <span class="require-marker"></span> :</label>
                 </div>
                 <div class="right-cell">
                     <input asp-for="ContactEmail" class="big-input" />
@@ -374,7 +371,7 @@
 
             <div class="table-row form-row">
                 <div class="left-cell">
-                    <label>Телефон <span class="require-marker" ></span> :</label>
+                    <label>Телефон <span class="require-marker"></span> :</label>
                 </div>
                 <div class="right-cell">
                     <input asp-for="ContactPhone" class="big-input" />
@@ -395,9 +392,10 @@
 
     <div class="row without-border">
         <div class="ctr-buttons button-align">
-            <span class="green-btn middle-icon icon-ok">Сохранить и опубликовать<input type="submit" class="bt-default" onclick="javascript: vacancySaveOptions({ publish: true }); return beforeFormSubmit(this, 'vacancyEdit');"  value="" /></span>
+            <span class="green-btn middle-icon icon-ok">Сохранить и опубликовать<input type="submit" class="bt-default" onclick="javascript: vacancySaveOptions({ publish: true }); return beforeFormSubmit(this, 'vacancyEdit');" value="" /></span>
             <span class="blue-btn middle-icon icon-ok">Сохранить как черновик<input type="submit" class="bt-default" onclick="javascript: vacancySaveOptions({ saveDraft: true }); return beforeFormSubmit(this, 'vacancyEdit');" value="" /></span>
-            <a asp-controller="organizations" asp-action="vacancies"><span class="blue-btn middle-icon icon-close">Закрыть</span>
+            <a asp-controller="organizations" asp-action="vacancies">
+                <span class="blue-btn middle-icon icon-close">Закрыть</span>
             </a>
         </div>
     </div>
@@ -412,7 +410,7 @@
     </div>
     <div class="content-popup" style="overflow-y: scroll;">
         <div>
-            @if (Model.PositionTypes!=null)
+            @if (Model.PositionTypes != null)
             {
                 foreach (var item in Model.PositionTypes.OrderBy(c => c.Text))
                 {
@@ -438,7 +436,7 @@
     </div>
     <div class="content-popup" style="overflow-y: scroll;">
         <div>
-            @if (Model.ResearchDirections!=null)
+            @if (Model.ResearchDirections != null)
             {
                 foreach (var item in Model.ResearchDirections.OrderBy(c => c.Text))
                 {
@@ -464,7 +462,7 @@
     </div>
     <div class="content-popup" style="overflow-y: scroll;">
         <div>
-            @if (Model.Regions!=null)
+            @if (Model.Regions != null)
             {
                 foreach (var item in Model.Regions)
                 {

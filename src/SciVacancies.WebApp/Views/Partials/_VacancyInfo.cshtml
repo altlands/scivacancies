@@ -158,10 +158,10 @@
     </li>
     <li class="odd">
         <span>Трудовой договор:</span><div class="layout-inform__right-col">@Model.ContractType.GetDescription()</div>
-        @*@if (Model.ContractType == ContractType.FixedTerm)
+        @if (Model.ContractType == ContractType.FixedTerm)
             {
-                @: - на период @Model.ContractTime.ToString("0.##") (годы и месяцы)
-            }*@
+            @: - на период @Model.ContractTime.ToString("0.##") (годы и месяцы)
+            }
     </li>
     <li class="even">
         <span>Социальный пакет:</span><div class="layout-inform__right-col">@(Model.SocialPackage ? "Да" : "Нет")</div>
@@ -177,6 +177,12 @@
     </li>
     <li class="even">
         <span>Дополнительно:</span><div class="layout-inform__right-col">@Model.Details</div>
+    </li>
+    <li class="odd">
+        <span>Тип занятости:</span><div class="layout-inform__right-col">@(Model.EmploymentType.GetDescription())</div>
+    </li>
+    <li class="even">
+        <span>Режим роаботы:</span><div class="layout-inform__right-col">@Model.OperatingScheduleType.GetDescription()</div>
     </li>
 </ul>
 
