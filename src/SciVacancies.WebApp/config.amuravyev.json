@@ -112,6 +112,8 @@
     "MainPageExpiration": 3600
   },
   "EmailSettings": {
+    "SendEmailEnabled": "false",
+
     "Login": "mailer@alt-lan.com",
     "Password": "123456-mailer",
     "Host": "smtp.gmail.com",

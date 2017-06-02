@@ -6,6 +6,7 @@ using Microsoft.AspNet.Mvc;
 using SciVacancies.WebApp.Controllers;
 using SciVacancies.WebApp.Queries;
 using System.Linq;
+using Microsoft.Extensions.Caching.Memory;
 using SciVacancies.WebApp.ViewModels;
 
 namespace SciVacancies.WebApp.ViewComponents
@@ -13,10 +14,16 @@ namespace SciVacancies.WebApp.ViewComponents
     public class Login : ViewComponent
     {
         private readonly IMediator _mediator;
+        private readonly IMemoryCache _cache;
+        private MemoryCacheEntryOptions _cacheOptions => new MemoryCacheEntryOptions().SetAbsoluteExpiration(DateTimeOffset.Now.AddSeconds(120));
 
-        public Login(IMediator mediator)
+        public Login(
+            IMediator mediator,
+            IMemoryCache cache
+            )
         {
             _mediator = mediator;
+            _cache = cache;
         }
 
         [BindResearcherIdFromClaims]
@@ -29,7 +36,14 @@ namespace SciVacancies.WebApp.ViewComponents
                 if (idClaim != null)
                 {
                     var userGuid = (Guid)TypeDescriptor.GetConverter(typeof(Guid)).ConvertFrom(idClaim.Value);
-                    model.UnreadNotificationCount = _mediator.Send(new CountResearcherNotificationsUnreadQuery { ResearcherGuid = userGuid });
+
+                    int unreadNotificationCount;
+                    if (!_cache.TryGetValue<int>("UnreadNotificationCount"+idClaim.Value, out unreadNotificationCount))
+                    {
+                        unreadNotificationCount = _mediator.Send(new CountResearcherNotificationsUnreadQuery { ResearcherGuid = userGuid });
+                        _cache.Set<int>("UnreadNotificationCount" + idClaim.Value, unreadNotificationCount, _cacheOptions);
+                    }
+                    model.UnreadNotificationCount = unreadNotificationCount;
                 }
             }
             else if (User.IsInRole(ConstTerms.RequireRoleOrganizationAdmin))
@@ -38,7 +52,15 @@ namespace SciVacancies.WebApp.ViewComponents
                 if (idClaim != null)
                 {
                     var userGuid = (Guid)TypeDescriptor.GetConverter(typeof(Guid)).ConvertFrom(idClaim.Value);
-                    model.UnreadNotificationCount = _mediator.Send(new CountOrganizationNotificationsUnreadQuery { OrganizationGuid = userGuid });
+
+                    int unreadNotificationCount;
+                    if (!_cache.TryGetValue<int>("UnreadNotificationCount" + idClaim.Value, out unreadNotificationCount))
+                    {
+                        unreadNotificationCount = _mediator.Send(new CountOrganizationNotificationsUnreadQuery { OrganizationGuid = userGuid });
+                        _cache.Set<int>("UnreadNotificationCount" + idClaim.Value, unreadNotificationCount, _cacheOptions);
+                    }
+                    model.UnreadNotificationCount = unreadNotificationCount;
+
                 }
             }
 

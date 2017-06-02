@@ -1,11 +1,11 @@
 ﻿{
   "Data": {
-    "ReadModelDb": "Server=localhost;Database=scivacanciestest;User Id=postgres;Password=postgres",
+    "ReadModelDb": "Server=Db_IP;Port=Db_PORT;Database=scivacancies;User Id=postgres;Password=postgres",
     "QuartzDb": ""
   },
   "ElasticSettings": {
-    "ConnectionUrl": "http://localhost:9200/",
-    "DefaultIndex": "scivacancies-devtest",
+    "ConnectionUrl": "http://ElasticSearch_IP:ElasticSearch_PORT/",
+    "DefaultIndex": "scivacancies-dev",
     "MinScore": 0.2
   },
   "QuartzSettings": {
@@ -24,12 +24,14 @@
     },
     "DataSource": {
       "Default": {
-        "ConnectionString": "Server=localhost;Database=scivacanciestest;User Id=postgres;Password=postgres",
+        "ConnectionString": "Server=Db_IP;Port=Db_PORT;Database=scivacancies;User Id=postgres;Password=postgres",
         "Provider": "Npgsql-20"
       }
     }
   },
   "EmailSettings": {
+    "SendEmailEnabled": "false",
+
     "Login": "mailer@alt-lan.com",
     "Password": "123456-mailer",
     "Host": "smtp.gmail.com",
@@ -37,14 +39,20 @@
     "EnableSSL": true,
     "UseDefaultCredentials": true,
 
-    "Domain": "192.168.10.141:5004",
-    "PortalLink": "<a target='_blank' href='http://192.168.10.141:5004'>192.168.10.141:5004</a>"
+    "Domain": "Host_Out_Adress",
+    "PortalLink": "<a target='_blank' href='http://Host_Out_Adress'>Host_Out_Adress</a>"
   },
   "LogSettings": {
-    "FileName": "scitest-{Date}.log",
+    "FileName": "scidump-{Date}.log",
+    "FileNameDebug": "scidump-{Date}-Debug.log",
+    "FileNameVerbose": "scidump-{Date}-Verbose.log",
+    "FileNameInformation": "scidump-{Date}-Information.log",
+    "FileNameWarning": "scidump-{Date}-Warning.log",
+    "FileNameError": "scidump-{Date}-Error.log",
+    "FileNameFatal": "scidump-{Date}-Fatal.log",
     "LogLevel": "Information",
     "TimeStampPattern": "{Timestamp:yyyy-MM-dd HH:mm:ss.fff} [{Level}] {Message}{NewLine}{Exception}",
-    "FileSizeBytes": "1048576",
+    "FileSizeBytes": "150485760",
     "FileCountLimit": "31"
   }
 }

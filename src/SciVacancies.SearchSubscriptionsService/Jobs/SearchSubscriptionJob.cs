@@ -39,7 +39,7 @@ namespace SciVacancies.SearchSubscriptionsService.Jobs
             {
                 var dataBase = _lifetimeScope.Resolve<IDatabase>();
 
-                _logger.LogInformation($"SearchSubscriptionJob: Select Subscriptions from DB");
+                _logger.LogInformation("SearchSubscriptionJob: Select Subscriptions from DB");
                 Queue<SearchSubscription> subscriptionQueue = new Queue<SearchSubscription>(dataBase.Fetch<SearchSubscription>(new Sql($"SELECT * FROM res_searchsubscriptions ss WHERE ss.status = @0", SearchSubscriptionStatus.Active)));
                 _logger.LogInformation($"SearchSubscriptionJob: Found {subscriptionQueue.Count} Subscriptions in DB");
 

@@ -4,8 +4,10 @@ using System;
 
 using Quartz;
 using MediatR;
+using Microsoft.Extensions.Logging;
 using SciVacancies.Services.Quartz;
 using Microsoft.Extensions.OptionsModel;
+using Newtonsoft.Json;
 
 namespace SciVacancies.WebApp.Infrastructure.Saga
 {
@@ -26,17 +28,24 @@ namespace SciVacancies.WebApp.Infrastructure.Saga
         readonly ISagaRepository _sagaRepository;
         readonly ISchedulerService _schedulerService;
         readonly IOptions<QuartzSettings> _settings;
+        private readonly ILogger _logger;
 
-        public VacancySagaActivator(ISagaRepository sagaRepository, ISchedulerService schedulerService, IOptions<QuartzSettings> settings)
+        public VacancySagaActivator(
+            ISagaRepository sagaRepository, 
+            ISchedulerService schedulerService, 
+            IOptions<QuartzSettings> settings,
+            ILoggerFactory loggerFactory)
         {
             _sagaRepository = sagaRepository;
             _schedulerService = schedulerService;
             _settings = settings;
+            _logger = loggerFactory.CreateLogger<VacancySagaTimeoutJob>();
         }
         public void Handle(VacancyPublished msg)
         {
             var saga = new VacancySaga(msg.VacancyGuid);
-            saga.Transition(new VacancySagaCreated
+
+            var eventVacancySagaCreated = new VacancySagaCreated
             {
                 SagaGuid = saga.Id,
                 VacancyGuid = msg.VacancyGuid,
@@ -44,11 +53,16 @@ namespace SciVacancies.WebApp.Infrastructure.Saga
 
                 InCommitteeStartDate = msg.InCommitteeStartDate,
                 InCommitteeEndDate = msg.InCommitteeEndDate
-            });
+            };
+
+            saga.Transition(eventVacancySagaCreated);
 
             _sagaRepository.Save("vacancysaga", saga, Guid.NewGuid(), null);
 
-            var job = new VacancySagaTimeoutJob()
+            _logger.LogInformation($"[VacancySagaActivator] VacancyGuid[{msg.VacancyGuid}] created event VacancySagaCreated: {JsonConvert.SerializeObject(eventVacancySagaCreated)}");
+            _logger.LogInformation($"[VacancySagaActivator] VacancyGuid[{msg.VacancyGuid}] event VacancySagaCreated added to saga: {JsonConvert.SerializeObject(saga)}");
+
+            var job = new VacancySagaTimeoutJob
             {
                 SagaGuid = saga.Id
             };

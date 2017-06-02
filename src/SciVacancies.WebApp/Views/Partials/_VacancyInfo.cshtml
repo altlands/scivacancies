@@ -95,6 +95,12 @@
     <li class="odd">
         <span>Тематика исследований:</span><div class="layout-inform__right-col">@Model.ResearchTheme</div>
     </li>
+    <li class="even">
+        <span>Регион:</span><div class="layout-inform__right-col">@Model.Region</div>
+    </li>
+    <li class="odd">
+        <span>Населенный пункт:</span><div class="layout-inform__right-col">@Model.CityName</div>
+    </li>
 </ul>
 
 <div class="title-cat-inform">Задачи и критерии:</div>
@@ -182,7 +188,7 @@
         <span>Тип занятости:</span><div class="layout-inform__right-col">@(Model.EmploymentType.GetDescription())</div>
     </li>
     <li class="even">
-        <span>Режим роаботы:</span><div class="layout-inform__right-col">@Model.OperatingScheduleType.GetDescription()</div>
+        <span>Режим работы:</span><div class="layout-inform__right-col">@Model.OperatingScheduleType.GetDescription()</div>
     </li>
 </ul>
 

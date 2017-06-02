@@ -22,6 +22,14 @@ namespace SciVacancies.WebApp.Queries
         {
             _db = db;
         }
+
+        ~NotificationQueriesHandler()
+        {
+            _db.Connection.Close();
+            _db.Connection.Dispose();
+            _db.Dispose();
+        }
+
         public ResearcherNotification Handle(SingleResearcherNotificationQuery msg)
         {
             if (msg.Guid == Guid.Empty) throw new ArgumentNullException($"Guid is empty: {msg.Guid}");
@@ -46,7 +54,7 @@ namespace SciVacancies.WebApp.Queries
         {
             if (msg.ResearcherGuid == Guid.Empty) throw new ArgumentNullException($"ResearcherGuid is empty: {msg.ResearcherGuid}");
             var notifications = _db.Fetch<ResearcherNotification>(new Sql($"SELECT n.guid , n.status FROM res_notifications n WHERE n.researcher_guid = @0 AND n.status != @1", msg.ResearcherGuid, NotificationStatus.Removed));
-            if (notifications != null && notifications.Count() > 0)
+            if (notifications != null && notifications.Any())
             {
                 return notifications.Where(c => c.status != NotificationStatus.Read && c.status != NotificationStatus.Removed).ToList().Count;
             }
@@ -81,7 +89,7 @@ namespace SciVacancies.WebApp.Queries
             if (msg.OrganizationGuid == Guid.Empty) throw new ArgumentNullException($"OrganizationGuid is empty: {msg.OrganizationGuid}");
             var notifications = _db.Fetch<ResearcherNotification>(new Sql($"SELECT n.guid , n.status FROM org_notifications n WHERE n.organization_guid = @0 AND n.status != @1", msg.OrganizationGuid, NotificationStatus.Removed));
 
-            if (notifications != null && notifications.Count() > 0)
+            if (notifications != null && notifications.Any())
             {
                 return notifications.Where(c => c.status != NotificationStatus.Read && c.status != NotificationStatus.Removed).ToList().Count;
             }

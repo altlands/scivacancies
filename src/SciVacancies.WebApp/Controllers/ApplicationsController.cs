@@ -290,6 +290,7 @@ namespace SciVacancies.WebApp.Controllers
             if (id == Guid.Empty)
                 throw new ArgumentNullException(nameof(id));
 
+
             var preModel = _mediator.Send(new SingleVacancyApplicationQuery { VacancyApplicationGuid = id });
 
             if (preModel == null)
@@ -297,7 +298,6 @@ namespace SciVacancies.WebApp.Controllers
 
             if (preModel.status == VacancyApplicationStatus.InProcess
                 || preModel.status == VacancyApplicationStatus.Cancelled
-                || preModel.status == VacancyApplicationStatus.Lost
                 || preModel.status == VacancyApplicationStatus.Removed)
                 return View("Error", $"Вы не можете просматривать Заявку со статусом: {preModel.status.GetDescription()}");
 

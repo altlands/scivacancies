@@ -7,7 +7,9 @@
     "licenseUrl": "",
 
     "dependencies": {
-        "SciVacancies.Services": "1.0.0-*"
+      "SciVacancies.Services": "1.0.0-*",
+      "Elasticsearch.Net": "1.7.1",
+      "NEST": "1.7.1"
     },
 
     "frameworks": {

@@ -1,7 +1,5 @@
 ﻿using SciVacancies.Services.Logging;
 
-using Microsoft.Extensions.Configuration;
-
 using Autofac;
 using Autofac.Extras.DynamicProxy;
 using Npgsql;
@@ -11,16 +9,9 @@ namespace SciVacancies.SearchSubscriptionsService.Modules
 {
     public class ReadModelModule : Module
     {
-        public IConfiguration Config { get; set; }
-
-        public ReadModelModule(IConfiguration cfg)
-        {
-            Config = cfg;
-        }
-
         protected override void Load(ContainerBuilder builder)
         {
-            builder.Register(c => new Database(Config["Data:ReadModelDb"], NpgsqlFactory.Instance))
+            builder.Register(c => new Database(c.Resolve<DataSettings>().ReadModelDb, NpgsqlFactory.Instance))
             .As<IDatabase>()
             .InstancePerDependency()
             .EnableInterfaceInterceptors()

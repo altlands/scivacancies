@@ -8,8 +8,7 @@
 
   "dependencies": {
     "Microsoft.AspNet.Http": "1.0.0-rc1-final",
-    "Microsoft.AspNet.Mvc": "6.0.0-rc1-final",
-    "Microsoft.AspNet.Mvc.Core": "6.0.0-rc1-final"
+    "Microsoft.AspNet.Mvc": "6.0.0-rc1-final"
   },
 
   "frameworks": {
@@ -17,8 +16,9 @@
       "frameworkAssemblies": {
         "System.Core": "4.0.0.0",
         "System.Data": "4.0.0.0",
-        "System.Drawing": "4.0.0.0"
+        "System.Drawing": "4.0.0.0",
+        "System.Web": "4.0.0.0"
       }
     }
-  }
+  },
 }

@@ -29,7 +29,36 @@ function guid() {
     return s4() + s4() + '-' + s4() + '-' + s4() + '-' + s4() + '-' + s4() + s4() + s4();
 }
 
+function testConnection(guid, count) {
+    count = count || 10;
+    for (var i = 0; i < count; i++) {
+        var number = i;
+
+        $.get("/vacancies/card/"+guid, function (data) {
+            console.log(number + ": " + data.substring(0, 10));
+        });
+
+    }
+}
+
+function testConnectionDetails(guid, count) {
+    count = count || 10;
+    for (var i = 0; i < count; i++) {
+        var number = i;
+
+        $.get("/vacancies/details/" + guid, function (data) {
+            console.log(number + ": " + data.substring(0, 10));
+        });
+
+    }
+}
+
 $(document).ready(function () {
+
+
+
+
+
 
     //dotdotdot
     $(".line_three").dotdotdot({
@@ -534,7 +563,7 @@ $(document).ready(function () {
  *для областей науки вывести количество вакансий и среднюю зарплату 
  */
 function getResearchDirectionsStatistics(childId) {
-    $("[aria-labelledby='heading_"+childId+"']").find('div.item-direction[data-researchdirectionid]').each(function () {
+    $("[aria-labelledby='heading_" + childId + "']").find('div.item-direction[data-researchdirectionid]').each(function () {
         var id = $(this).attr('data-researchdirectionid');
 
         $.ajax({
@@ -722,8 +751,7 @@ function selectedItemFromModalDictionary(hiddenInputName, textInput, newValue, d
 function isEmptyOrSpaces(str) {
     return str === undefined || str === null || str === 0 || str === "0" || str.match(/^ *$/) !== null;
 }
-function checkEmptyProperties(form, arrayProperties)
-{
+function checkEmptyProperties(form, arrayProperties) {
     var itemsToDelete = [];
     //проверяем каждое свойство-коллекцию
     $(arrayProperties).each(function (index) {

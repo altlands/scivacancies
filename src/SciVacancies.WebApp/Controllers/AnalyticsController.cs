@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Web.Caching;
 using SciVacancies.WebApp.Queries;
 
 using Microsoft.AspNet.Mvc;
@@ -8,10 +7,11 @@ using Microsoft.Extensions.OptionsModel;
 using Microsoft.Extensions.Caching.Memory;
 
 using MediatR;
+using Microsoft.Extensions.Logging;
 using SciVacancies.Domain.Enums;
 using SciVacancies.Services.Elastic;
+using SciVacancies.WebApp.Models.Analythic;
 using SciVacancies.WebApp.ViewModels;
-using SciVacancies.Services.Elastic;
 using SearchQuery = SciVacancies.WebApp.Queries.SearchQuery;
 
 // For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
@@ -25,6 +25,8 @@ namespace SciVacancies.WebApp.Controllers
         private readonly IAnalythicService _analythicService;
         private readonly IMemoryCache _cache;
         private readonly IOptions<CacheSettings> _cacheSettings;
+        private readonly ILogger _logger;
+
         private MemoryCacheEntryOptions _cacheOptions
         {
             get
@@ -33,13 +35,22 @@ namespace SciVacancies.WebApp.Controllers
             }
         }
 
-        public AnalyticsController(IOptions<AnalythicSettings> analythicSettings, IMediator mediator, IAnalythicService analythicService, IMemoryCache cache, IOptions<CacheSettings> cacheSettings)
+        public AnalyticsController(
+            IOptions<AnalythicSettings> analythicSettings,
+            IMediator mediator,
+            IAnalythicService analythicService,
+            IMemoryCache cache,
+            IOptions<CacheSettings> cacheSettings,
+            ILoggerFactory loggerFactory
+            )
         {
             _analythicSettings = analythicSettings;
             _mediator = mediator;
             _analythicService = analythicService;
             _cache = cache;
             _cacheSettings = cacheSettings;
+
+            _logger = loggerFactory.CreateLogger<AnalyticsController>();
         }
 
         /// <summary>
@@ -48,26 +59,38 @@ namespace SciVacancies.WebApp.Controllers
         /// <returns></returns>
         public JsonResult VacancyPositions(int? regionId, Nest.DateInterval interval)
         {
-            var result = _mediator.Send(new AverageVacancyAndPositionAnalythicQuery
+            List<PositionsHistogram> result;
+            var cacheKey = $"VacancyPositions_{regionId??0}_{interval}";
+            if (!_cache.TryGetValue(cacheKey, out result))
             {
-                RegionId = regionId,
-                Interval = interval,
-                BarsNumber = _analythicSettings.Value.BarsNumber
-            });
+                result = _mediator.Send(new AverageVacancyAndPositionAnalythicQuery
+                {
+                    RegionId = regionId,
+                    Interval = interval,
+                    BarsNumber = _analythicSettings.Value.BarsNumber
+                });
 
+                _cache.Set(cacheKey, result, _cacheOptions);
+            }
             return Json(result);
         }
 
         public JsonResult VacancyPayments(int? regionId, Nest.DateInterval interval)
         {
-            var result = _mediator.Send(new AveragePaymentAndVacancyCountByRegionAnalythicQuery
+            List<PaymentsHistogram> result;
+            var cacheKey = $"VacancyPayments_{regionId ?? 0}_{interval}";
+            if (!_cache.TryGetValue(cacheKey, out result))
             {
-                RegionId = regionId,
-                Interval = interval,
-                BarsNumber = _analythicSettings.Value.BarsNumber
-            });
-
+                result = _mediator.Send(new AveragePaymentAndVacancyCountByRegionAnalythicQuery
+                {
+                    RegionId = regionId,
+                    Interval = interval,
+                    BarsNumber = _analythicSettings.Value.BarsNumber
+                });
+                _cache.Set(cacheKey, result, _cacheOptions);
+            }
             return Json(result);
+
         }
         public IActionResult CountByResearchDirection(int id)
         {

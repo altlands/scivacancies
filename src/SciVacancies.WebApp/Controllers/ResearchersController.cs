@@ -278,6 +278,7 @@ namespace SciVacancies.WebApp.Controllers
         public ViewResult Applications(Guid researcherGuid, int pageSize = 10, int currentPage = 1,
             string sortField = ConstTerms.OrderByFieldApplyDate, string sortDirection = ConstTerms.OrderByDescending)
         {
+            
             if (researcherGuid == Guid.Empty)
                 throw new ArgumentNullException(nameof(researcherGuid));
 

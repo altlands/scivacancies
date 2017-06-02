@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data.Entity.Core;
 using AutoMapper;
 using MediatR;
 using Microsoft.AspNet.Authorization;
 using Microsoft.AspNet.Mvc;
+using Microsoft.Extensions.Caching.Memory;
 using SciVacancies.Domain.Enums;
 using SciVacancies.ReadModel.Core;
 using SciVacancies.WebApp.Engine;
@@ -12,6 +12,7 @@ using SciVacancies.WebApp.Engine.CustomAttribute;
 using SciVacancies.WebApp.Queries;
 using SciVacancies.WebApp.ViewModels;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.OptionsModel;
 
 namespace SciVacancies.WebApp.Controllers
 {
@@ -21,10 +22,19 @@ namespace SciVacancies.WebApp.Controllers
     {
         private readonly IMediator _mediator;
         private readonly ILogger _logger;
+        private readonly IMemoryCache _cache;
+        private readonly IOptions<CacheSettings> _cacheSettings;
+        private MemoryCacheEntryOptions _cacheOptions => new MemoryCacheEntryOptions().SetAbsoluteExpiration(DateTimeOffset.Now.AddSeconds(_cacheSettings.Value.MainPageExpiration));
 
-        public OrganizationsController(IMediator mediator, ILoggerFactory loggerFactory)
+        public OrganizationsController(
+            IMediator mediator,
+            IMemoryCache cache,
+            IOptions<CacheSettings> cacheSettings,
+            ILoggerFactory loggerFactory)
         {
             _mediator = mediator;
+            _cache = cache;
+            _cacheSettings = cacheSettings;
             _logger = loggerFactory.CreateLogger<OrganizationsController>();
         }
 
@@ -37,32 +47,39 @@ namespace SciVacancies.WebApp.Controllers
             if (id == Guid.Empty)
                 throw new ArgumentNullException(nameof(id));
 
-            var preModel = _mediator.Send(new SingleOrganizationQuery { OrganizationGuid = id });
+            OrganizationDetailsViewModel model;
 
-            if (preModel == null)
-                return HttpNotFound(); //throw new ObjectNotFoundException($"Не найдена организация по идентификатору: {id}");
-
-            var model = Mapper.Map<OrganizationDetailsViewModel>(preModel);
-
-            model.VacanciesInOrganization = new VacanciesInOrganizationIndexViewModel
+            if (!_cache.TryGetValue($"OrganizationDetailsViewModelGuid{id}pageSize{pageSize}currentPage{currentPage}", out model))
             {
-                OrganizationGuid = id,
-                PagedVacancies = _mediator.Send(new SelectPagedVacanciesByOrganizationAndStatusesQuery
+                var preModel = _mediator.Send(new SingleOrganizationQuery { OrganizationGuid = id });
+
+                if (preModel == null)
+                    return HttpNotFound(); //throw new ObjectNotFoundException($"Не найдена организация по идентификатору: {id}");
+
+                model = Mapper.Map<OrganizationDetailsViewModel>(preModel);
+
+                model.VacanciesInOrganization = new VacanciesInOrganizationIndexViewModel
                 {
                     OrganizationGuid = id,
-                    PageSize = pageSize,
-                    PageIndex = currentPage,
-                    OrderBy = new SortFilterHelper().GetSortField<Vacancy>(sortField),
-                    OrderDirection = sortDirection,
-                    Statuses = new List<VacancyStatus>
+                    PagedVacancies = _mediator.Send(new SelectPagedVacanciesByOrganizationAndStatusesQuery
+                    {
+                        OrganizationGuid = id,
+                        PageSize = pageSize,
+                        PageIndex = currentPage,
+                        OrderBy = new SortFilterHelper().GetSortField<Vacancy>(sortField),
+                        OrderDirection = sortDirection,
+                        Statuses = new List<VacancyStatus>
                     {
                         VacancyStatus.Published,
                         VacancyStatus.InCommittee,
                         VacancyStatus.Closed,
                         VacancyStatus.Cancelled
                     }
-                }).MapToPagedList()
-            };
+                    }).MapToPagedList()
+                };
+
+                _cache.Set<OrganizationDetailsViewModel>($"OrganizationDetailsViewModelGuid{id}pageSize{pageSize}currentPage{currentPage}", model, _cacheOptions);
+            }
 
             return View(model);
         }
@@ -120,8 +137,7 @@ namespace SciVacancies.WebApp.Controllers
                         VacancyStatus.OfferResponseAwaitingFromWinner,
                         VacancyStatus.Published
                     }
-                }).MapToPagedList(),
-                Name = preModel.name
+                }).MapToPagedList()
             };
 
             return View(model);
@@ -137,8 +153,6 @@ namespace SciVacancies.WebApp.Controllers
             if (organizationGuid == Guid.Empty)
                 throw new ArgumentNullException(nameof(organizationGuid));
 
-            var preModel = _mediator.Send(new SingleOrganizationQuery { OrganizationGuid = organizationGuid });
-
             var model = new VacanciesInOrganizationIndexViewModel
             {
                 PagedVacancies = _mediator.Send(new SelectPagedVacanciesByOrganizationAndStatusesQuery
@@ -153,8 +167,7 @@ namespace SciVacancies.WebApp.Controllers
                         VacancyStatus.Cancelled,
                         VacancyStatus.Closed
                     }
-                }).MapToPagedList(),
-                Name = preModel.name
+                }).MapToPagedList()
             };
             return View(model);
         }
@@ -171,18 +184,22 @@ namespace SciVacancies.WebApp.Controllers
 
             var preModel = _mediator.Send(new SingleOrganizationQuery { OrganizationGuid = organizationGuid });
 
-            var model = new NotificationsInOrganizationIndexViewModel
+            var model = new NotificationsInOrganizationIndexViewModel();
+
+            var notifications = _mediator.Send(new SelectPagedOrganizationNotificationsQuery
             {
-                PagedItems = _mediator.Send(new SelectPagedOrganizationNotificationsQuery
-                {
-                    OrganizationGuid = organizationGuid,
-                    PageSize = pageSize,
-                    PageIndex = currentPage,
-                    OrderBy = new SortFilterHelper().GetSortField<OrganizationNotification>(sortField),
-                    OrderDirection = sortDirection
-                }).MapToPagedList(),
-                Name = preModel.name
-            };
+                OrganizationGuid = organizationGuid,
+                PageSize = pageSize,
+                PageIndex = currentPage,
+                OrderBy = new SortFilterHelper().GetSortField<OrganizationNotification>(sortField),
+                OrderDirection = sortDirection
+            });
+
+            if (notifications != null)
+                model.PagedItems = notifications.MapToPagedList();
+
+
+            model.Name = preModel.name;
             return View(model);
         }
 

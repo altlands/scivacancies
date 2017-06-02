@@ -162,7 +162,6 @@ namespace SciVacancies.WebApp.Infrastructure
                 .ForMember(d => d.TeachingActivity, o => o.MapFrom(s => !string.IsNullOrWhiteSpace(s.teaching_activity) ? JsonConvert.DeserializeObject<List<ActivityEditViewModel>>(s.teaching_activity) : new List<ActivityEditViewModel>()))
                 .ForMember(d => d.OtherActivity, o => o.MapFrom(s => !string.IsNullOrWhiteSpace(s.other_activity) ? JsonConvert.DeserializeObject<List<ActivityEditViewModel>>(s.other_activity) : new List<ActivityEditViewModel>()))
                 .ForMember(d => d.Conferences, o => o.MapFrom(s => !string.IsNullOrWhiteSpace(s.conferences) ? JsonConvert.DeserializeObject<List<ConferenceEditViewModel>>(s.conferences) : new List<ConferenceEditViewModel>()))
-                .ForMember(d => d.ExtNumber, o => o.MapFrom(s => s.ext_number))
                 .ForMember(d => d.ScienceDegree, o => o.MapFrom(s => s.science_degree))
                 .ForMember(d => d.ScienceRank, o => o.MapFrom(s => s.science_rank))
                 .ForMember(d => d.Rewards, o => o.MapFrom(s => !string.IsNullOrWhiteSpace(s.rewards) ? JsonConvert.DeserializeObject<List<RewardDetailsViewModel>>(s.rewards) : new List<RewardDetailsViewModel>()))

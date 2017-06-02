@@ -1,10 +1,10 @@
-﻿{
+{
   "AppSettings": {
     "SiteTitle": "Портал вакансий"
   },
   "Data": {
-    "ReadModelDb": "Server=localhost;Database=scivacancies;User Id=postgres;Password=postgres",
-    "EventStoreDb": "Server=localhost;Database=scivacancies;User Id=postgres;Password=postgres"
+    "ReadModelDb": "Server=192.168.10.19;Port=32777;Database=scivacancies;User Id=postgres;Password=postgres;CONNECTIONLIFETIME=15;MINPOOLSIZE=5;MAXPOOLSIZE=20;",
+    "EventStoreDb": "Server=192.168.10.19;Port=32777;Database=scivacancies;User Id=postgres;Password=postgres;CONNECTIONLIFETIME=15;MINPOOLSIZE=0;MAXPOOLSIZE=20;"
   },
   "OAuthSettings": {
     "Sciencemon": {
@@ -14,7 +14,7 @@
       "ClientId": "1_ikniwc909y8kog4k4sc00oogg0g8scc8o4k0wocgw4cg84k00",
       "ClientSecret": "67sq61c6xekgw0wgkosg04gwo488osk48ogks4og40cgws8ook",
       "Scope": "",
-      "RedirectUrl": "http://192.168.10.141:5004/account/callback"
+      "RedirectUrl": "http://localhost:59075/account/callback"
     },
     "Mapofscience": {
       "AuthorizationEndpoint": "http://scimap-sso.alt-lan.com/scimap-sso/oauth/authorize",
@@ -23,7 +23,7 @@
       "ClientId": "my-trusted-client",
       "ClientSecret": "secret",
       "Scope": "",
-      "RedirectUrl": "http://192.168.10.141:5004/account/callback"
+      "RedirectUrl": "http://localhost:59075/account/callback"
     }
   },
   //TODO
@@ -37,29 +37,29 @@
     }
   },
   "ElasticSettings": {
-    "ConnectionUrl": "http://localhost:9200/",
+    "ConnectionUrl": "http://192.168.10.19:9200/",
     "DefaultIndex": "scivacancies-dev",
-    "MinScore": 0.2
+    "MinScore": "0.2"
   },
   "SagaSettings": { //TODO сделать только с положительными днями, обозвать соответствующе
     "Date": {
       "Committee": {
         "FirstNotificationMinutes": -1,
         "SecondNotificationMinutes": 2,
-        "ProlongingMinutes": 15
+        "ProlongingMinutes": 21600
       },
       "OfferResponseAwaiting": {
         "WinnerNotificationMinutes": -2,
         "PretenderNotificationMinutes": -2
       },
       "DeltaFromPublishToInCommitteeMinMinutes": 15,
-      "DeltaFromInCommitteeStartToEndMinutes": 8
+      "DeltaFromInCommitteeStartToEndMinutes": 15
     }
   },
   "QuartzSettings": {
     "Scheduler": {
       "InstanceName": "SciVacanciesScheduler",
-      "ExecutionInterval": 10
+      "ExecutionInterval": 1
     },
     "JobStore": {
       "Type": "Quartz.Impl.AdoJobStore.JobStoreTX, Quartz",
@@ -72,7 +72,7 @@
     },
     "DataSource": {
       "Default": {
-        "ConnectionString": "Server=localhost; Database=scivacancies; User Id=postgres; Password=postgres",
+        "ConnectionString": "Server=192.168.10.19;Port=32777; Database=scivacancies; User Id=postgres; Password=postgres",
         "Provider": "Npgsql-20"
       }
     }
@@ -108,25 +108,34 @@
     "CaptchaDurationSeconds": 120
   },
   "CacheSettings": {
-    "DictionaryExpiration": 20,
-    "MainPageExpiration": 20
+    "DictionaryExpiration": 2000,
+    "MainPageExpiration": 2000
   },
   "EmailSettings": {
+    "SendEmailEnabled": "false",
+
     "Login": "mailer@alt-lan.com",
     "Password": "123456-mailer",
+
     "Host": "smtp.gmail.com",
     "Port": 587,
     "EnableSSL": true,
-    "UseDefaultCredentials": false,
+    "UseDefaultCredentials": true,
 
-    "Domain": "192.168.10.141:5004",
-    "PortalLink": "<a target='_blank' href='http://192.168.10.141:5004'>192.168.10.141:5004</a>"
+    "Domain": "localhost:59075",
+    "PortalLink": "<a target='_blank' href='http://localhost:59075'>localhost:59075</a>"
   },
   "LogSettings": {
-    "FileName": "sci-{Date}.log",
+    "FileName": "scidump-{Date}.log",
+    "FileNameDebug": "scidump-{Date}-Debug.log",
+    "FileNameVerbose": "scidump-{Date}-Verbose.log",
+    "FileNameInformation": "scidump-{Date}-Information.log",
+    "FileNameWarning": "scidump-{Date}-Warning.log",
+    "FileNameError": "scidump-{Date}-Error.log",
+    "FileNameFatal": "scidump-{Date}-Fatal.log",
     "LogLevel": "Information",
     "TimeStampPattern": "{Timestamp:yyyy-MM-dd HH:mm:ss.fff} [{Level}] {Message}{NewLine}{Exception}",
-    "FileSizeBytes": "1048576",
+    "FileSizeBytes": "15048576",
     "FileCountLimit": "31"
   },
   "AnalythicSettings": {
@@ -216,7 +225,70 @@
       "21 May 2016",
       "22 May 2016",
       "28 May 2016",
-      "29 May 2016"
+      "29 May 2016",
+      "04 Jun 2016",
+      "05 Jun 2016",
+      "11 Jun 2016",
+      "12 Jun 2016",
+      "13 Jun 2016",
+      "18 Jun 2016",
+      "19 Jun 2016",
+      "25 Jun 2016",
+      "26 Jun 2016",
+      "02 Jul 2016",
+      "03 Jul 2016",
+      "09 Jul 2016",
+      "10 Jul 2016",
+      "16 Jul 2016",
+      "17 Jul 2016",
+      "23 Jul 2016",
+      "24 Jul 2016",
+      "30 Jul 2016",
+      "31 Jul 2016",
+      "06 Aug 2016",
+      "07 Aug 2016",
+      "13 Aug 2016",
+      "14 Aug 2016",
+      "20 Aug 2016",
+      "21 Aug 2016",
+      "27 Aug 2016",
+      "28 Aug 2016",
+      "03 Sep 2016",
+      "04 Sep 2016",
+      "10 Sep 2016",
+      "11 Sep 2016",
+      "17 Sep 2016",
+      "18 Sep 2016",
+      "24 Sep 2016",
+      "25 Sep 2016",
+      "02 Oct 2016",
+      "01 Oct 2016",
+      "08 Oct 2016",
+      "09 Oct 2016",
+      "15 Oct 2016",
+      "16 Oct 2016",
+      "22 Oct 2016",
+      "23 Oct 2016",
+      "29 Oct 2016",
+      "30 Oct 2016",
+      "04 Nov 2016",
+      "05 Nov 2016",
+      "06 Nov 2016",
+      "12 Nov 2016",
+      "13 Nov 2016",
+      "19 Nov 2016",
+      "20 Nov 2016",
+      "26 Nov 2016",
+      "27 Nov 2016",
+      "03 Dec 2016",
+      "04 Dec 2016",
+      "10 Dec 2016",
+      "11 Dec 2016",
+      "17 Dec 2016",
+      "18 Dec 2016",
+      "24 Dec 2016",
+      "25 Dec 2016",
+      "31 Dec 2016"
     ]
   }
 }

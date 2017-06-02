@@ -7,6 +7,7 @@ using CommonDomain.Persistence;
 using MediatR;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.OptionsModel;
 using NEventStore;
 using NEventStore.Dispatcher;
 using NEventStore.Persistence.Sql;
@@ -23,16 +24,6 @@ namespace SciVacancies.WebApp.Infrastructure
     {
         private readonly byte[] encryptionKey = new byte[] { 0x45, 0x1a, 0x5, 0xf3, 0x4b, 0x55, 0x21, 0xaf, 0x22, 0x9f, 0x11, 0x2, 0x4, 0x4, 0xde, 0x0 };
 
-        public IConfiguration Config { get; set; }
-        private readonly ILogger _logger;
-
-        public EventStoreModule(IConfiguration cfg, ILoggerFactory loggerFactory)
-        {
-            Config = cfg;
-            _logger = loggerFactory.CreateLogger<EventBusModule>();
-            _logger.LogDebug("Constructing EventStoreModule");
-        }
-
         protected override void Load(ContainerBuilder builder)
         {
             builder.Register(c => new AggregateFactory())
@@ -42,17 +33,14 @@ namespace SciVacancies.WebApp.Infrastructure
                 .As<IDetectConflicts>()
                 .SingleInstance();
 
-            builder.Register(c => GetEventStore(c.Resolve<IMediator>()))
+            builder.Register(c => GetEventStore(c.Resolve<IMediator>(), c.Resolve<IOptions<DbSettings>>(), c.Resolve<ILoggerFactory>().CreateLogger<EventBusModule>()))
                 .As<IStoreEvents>()
-                .SingleInstance();
+                //.SingleInstance()
+                ;
 
             builder.Register(c => new EventStoreRepository(c.Resolve<IStoreEvents>(), c.Resolve<IConstructAggregates>(), c.Resolve<IDetectConflicts>()))
-                    .As<IRepository>()
-                    .SingleInstance();
-
-            //builder.Register(c => new EventStoreRepository(c.Resolve<IStoreEvents>(), c.Resolve<IConstructAggregates>(), c.Resolve<IDetectConflicts>()))
-            //    .As<IRepository>()
-            //    .SingleInstance();
+                .As<IRepository>()
+                .SingleInstance();
 
             //sagas start
             builder.Register(c => new SagaFactory())
@@ -63,10 +51,11 @@ namespace SciVacancies.WebApp.Infrastructure
                 .SingleInstance();
             //sagas end
         }
-        private IStoreEvents GetEventStore(IMediator mediator)
+
+        private IStoreEvents GetEventStore(IMediator mediator, IOptions<DbSettings> config, ILogger _logger)
         {
             return Wireup.Init()
-                .UsingSqlPersistence(new NpgsqlConnectionFactory(Config["Data:EventStoreDb"]))
+                .UsingSqlPersistence(new NpgsqlConnectionFactory(config.Value.EventStoreDb))
                 .WithDialect(new PostgreSqlDialect())
                 .EnlistInAmbientTransaction()
                 .InitializeStorageEngine()
@@ -89,7 +78,7 @@ namespace SciVacancies.WebApp.Infrastructure
                         _logger.LogError("Error during dispatching commit", exception);
                         try
                         {
-                            using (var db = new Database(Config["Data:ReadModelDb"], NpgsqlFactory.Instance))
+                            using (var db = new Database(config.Value.ReadModelDb, NpgsqlFactory.Instance))
                             {
                                 using (var transaction = db.GetTransaction())
                                 {
@@ -98,6 +87,9 @@ namespace SciVacancies.WebApp.Infrastructure
 
                                     transaction.Complete();
                                 }
+
+                                db.Connection.Close();
+                                db.Connection.Dispose();
                             }
                         }
                         catch (Exception dbException)
@@ -111,7 +103,7 @@ namespace SciVacancies.WebApp.Infrastructure
     }
     public class NpgsqlConnectionFactory : IConnectionFactory
     {
-        private string _connectionString;
+        private readonly string _connectionString;
         public NpgsqlConnectionFactory(string connectionString)
         {
             _connectionString = connectionString;

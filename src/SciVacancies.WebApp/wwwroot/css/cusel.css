@@ -64,7 +64,7 @@
 */
 .classDisCusel,
 .classDisCusel .cuselFrameRight {
-    background-image: url(../images/selects-2-dis.png) !important;
+    /*background-image: url(../images/selects-2-dis.png) !important;*/
     cursor: default;
     color: #ccc;
 }

@@ -21,10 +21,19 @@
     "Autofac.Extras.Quartz": "1.5.1",
     "Autofac.Extensions.DependencyInjection": "4.0.0-rc1-177",
     "Quartz": "2.3.3",
+
     "Newtonsoft.Json": "7.0.1"
   },
 
   "frameworks": {
-    "dnx451": { }
+    "dnx451": {
+      "frameworkAssemblies": {
+        "System": "4.0.0.0",
+        "System.Core": "4.0.0.0",
+        "System.Data": "4.0.0.0",
+        "System.Drawing": "4.0.0.0",
+        "System.Web": "4.0.0.0"
+      }
+    }
   }
 }

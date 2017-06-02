@@ -100,7 +100,7 @@ namespace SciVacancies.Services.Quartz
 
         public void StartScheduler()
         {
-            if (!_scheduler.IsStarted) _scheduler.Start();
+           // if (!_scheduler.IsStarted) _scheduler.Start();
         }
 
         public void StopScheduler()

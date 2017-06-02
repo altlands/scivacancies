@@ -39,6 +39,7 @@ namespace SciVacancies.WebApp.Queries
         {
             this._mediator = mediator;
             this.Logger = loggerFactory.CreateLogger<AnalythicQueriesHandler>();
+            //Logger.LogInformation("Test FOR ANALITYC QUERY HANDLER");
             this.AnalythicSettings = analythicSettings;
             this.AnalythicService = analythicService;
             this.Cache = cache;
@@ -51,16 +52,16 @@ namespace SciVacancies.WebApp.Queries
             string positionsCacheKey = "a_positions_" + message.Interval.ToString() + "_region_" + message.RegionId.ToString();
             if (!Cache.TryGetValue<List<PositionsHistogram>>(positionsCacheKey, out histograms))
             {
-                IEnumerable<PositionType> positionTypes;
-                try
-                {
-                    positionTypes = _mediator.Send(new SelectAllPositionTypesQuery());
-                }
-                catch (Exception e)
-                {
-                    Logger.LogError(e.Message, e);
-                    throw;
-                }
+                //IEnumerable<PositionType> positionTypes;
+                //try
+                //{
+                //    positionTypes = _mediator.Send(new SelectAllPositionTypesQuery());
+                //}
+                //catch (Exception e)
+                //{
+                //    Logger.LogError(e.Message, e);
+                //    throw;
+                //}
 
                 IDictionary<string, IAggregation> aggregations;
                 try
@@ -79,10 +80,13 @@ namespace SciVacancies.WebApp.Queries
                 if (aggregations == null)
                     throw new Exception($"{nameof(aggregations)} is null");
 
+                if (!aggregations.ContainsKey("histogram"))
+                    throw new Exception("aggregations[\"histogram\"] is null");
+
                 Bucket dateBucket = aggregations["histogram"] as Bucket;
 
                 int k = AnalythicSettings.Value.BarsNumber - 1;
-                if (dateBucket?.Items?.Count() > 0)
+                if ((bool) dateBucket?.Items?.Any())
                 {
                     for (int i = dateBucket.Items.Count() - 1; i >= 0 && k >= 0; i--, k--)
                     {
@@ -469,6 +473,9 @@ namespace SciVacancies.WebApp.Queries
                 if (aggregations == null)
                     throw new Exception($"{nameof(aggregations)} is null");
 
+                if (!aggregations.ContainsKey("histogram"))
+                    throw new Exception("aggregations[\"histogram\"] is null");
+
                 Bucket dateBucket = aggregations["histogram"] as Bucket;
 
                 PaymentsHistogram averageHistogram = new PaymentsHistogram
@@ -496,7 +503,7 @@ namespace SciVacancies.WebApp.Queries
                     dataPoints = new PaymentDataPoint[AnalythicSettings.Value.BarsNumber]
                 };
                 int k = AnalythicSettings.Value.BarsNumber - 1;
-                if (dateBucket?.Items?.Count() > 0)
+                if ((bool) dateBucket?.Items?.Any())
                 {
                     for (int i = dateBucket.Items.Count() - 1; i >= 0 && k >= 0; i--, k--)
                     {

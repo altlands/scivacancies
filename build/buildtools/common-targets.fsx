@@ -45,7 +45,7 @@ Target "RestoreDeployPackages" (fun _ ->
      "buildtools/packages.config"      
      |> RestorePackage (fun p ->
          { p with
-             Sources = "https://www.myget.org/F/altlan-ds/" :: "https://www.nuget.org/api/v2/" :: p.Sources
+             Sources = "https://www.myget.org/F/altlan-ds/" :: "https://api.nuget.org/v3/index.json" :: p.Sources
              OutputPath = "./build/deployment"                         
              Retries = 1 })
  )

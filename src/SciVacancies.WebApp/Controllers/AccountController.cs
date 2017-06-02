@@ -17,6 +17,7 @@ using System.IO;
 using SciVacancies.WebApp.Models.OAuth;
 using Microsoft.Extensions.OptionsModel;
 using AutoMapper;
+using CommonDomain.Persistence;
 using Microsoft.AspNet.Authorization;
 using SciVacancies.Domain.DataModels;
 using Microsoft.Extensions.Logging;
@@ -36,8 +37,18 @@ namespace SciVacancies.WebApp.Controllers
         private readonly IAuthorizeService _authorizeService;
         private readonly IOptions<ApiSettings> _apiSettings;
         private readonly ILogger _logger;
+        private readonly IRepository _repository;
 
-        public AccountController(SciVacUserManager userManager, IMediator mediator, IOptions<OAuthSettings> oAuthSettings, IOptions<ApiSettings> apiSettings, IAuthorizeService authorizeService, ILoggerFactory loggerFactory)
+
+        public AccountController(
+            SciVacUserManager userManager,
+            IMediator mediator,
+            IOptions<OAuthSettings> oAuthSettings,
+            IOptions<ApiSettings> apiSettings,
+            IAuthorizeService authorizeService,
+            ILoggerFactory loggerFactory,
+            IRepository repository
+            )
         {
             _mediator = mediator;
             _userManager = userManager;
@@ -45,6 +56,7 @@ namespace SciVacancies.WebApp.Controllers
             _authorizeService = authorizeService;
             _apiSettings = apiSettings;
             _logger = loggerFactory.CreateLogger<AccountController>();
+            _repository = repository;
         }
 
         public IActionResult LoginUser(string id)
@@ -231,7 +243,11 @@ namespace SciVacancies.WebApp.Controllers
                     switch (authorizationCookies.Item2)
                     {
                         case AuthorizeResourceTypes.Sciencemon:
-                            if (!string.IsNullOrEmpty(GetStateFromQuery()) && !string.IsNullOrEmpty(GetStateCookie()) && GetStateFromQuery().Equals(GetStateCookie()))
+
+
+                            if (!string.IsNullOrEmpty(GetStateFromQuery()) &&
+                                !string.IsNullOrEmpty(GetStateCookie()) &&
+                                GetStateFromQuery().Equals(GetStateCookie()))
                             {
                                 if (!string.IsNullOrEmpty(GetCodeFromQuery()))
                                 {
@@ -242,41 +258,64 @@ namespace SciVacancies.WebApp.Controllers
 
                                     if (!string.IsNullOrEmpty(tokenResponse.AccessToken))
                                     {
-                                        var claims =
-                                            await
+
+                                        List<Claim> claims;
+                                        OAuthOrgClaim orgClaim;
+                                        SciVacUser orgUser;
+                                        string serializedOrganizationRawInfo;
+                                        OAuthOrgInformation organizationInformation;
+                                        AccountOrganizationRegisterViewModel accountOrganizationRegisterViewModel;
+                                        try
+                                        {
+
+
+
+                                            claims = await
                                                 _authorizeService.GetOAuthUserAndTokensClaimsAsync(
                                                     _oauthSettings.Value.Sciencemon, tokenResponse);
 
-                                        OAuthOrgClaim orgClaim =
-                                            JsonConvert.DeserializeObject<OAuthOrgClaim>(
+                                            orgClaim = JsonConvert.DeserializeObject<OAuthOrgClaim>(
                                                 claims.Find(f => f.Type.Equals("org")).Value);
 
-                                        var orgUser = _userManager.FindByName(orgClaim.Inn);
+                                            orgUser = _userManager.FindByName(orgClaim.Inn);
 
-                                        if (orgUser == null)
-                                            orgUser = _userManager.FindByEmail(claims.Find(f => f.Type.Equals("email")).Value);
+                                            if (orgUser == null)
+                                                orgUser =
+                                                    _userManager.FindByEmail(
+                                                        claims.Find(f => f.Type.Equals("email")).Value);
 
-                                        var serializedOrganizationRawInfo = GetOrganizationInfo(orgClaim.Inn);
-                                        OAuthOrgInformation organizationInformation = JsonConvert.DeserializeObject<OAuthOrgInformation>(serializedOrganizationRawInfo);
+                                            serializedOrganizationRawInfo = GetOrganizationInfo(orgClaim.Inn);
+                                            organizationInformation = JsonConvert.DeserializeObject<OAuthOrgInformation>(
+                                                serializedOrganizationRawInfo);
 
-                                        var accountOrganizationRegisterViewModel = Mapper.Map<AccountOrganizationRegisterViewModel>(organizationInformation);
+                                            accountOrganizationRegisterViewModel = Mapper.Map<AccountOrganizationRegisterViewModel>(organizationInformation);
+                                        }
+                                        catch (Exception exception)
+                                        {
+                                            _logger.LogError("exception in getting info");
+                                            _logger.LogError(exception.Message);
+                                            _logger.LogError(exception.StackTrace);
+                                            throw exception;
+                                        }
+
 
                                         if (orgUser == null)
                                         {
-                                            //TODO - сделать всё в маппинге
                                             //orgModel.UserName = claims.Find(f => f.Type.Equals("username")).Value;
                                             accountOrganizationRegisterViewModel.UserName = orgClaim.Inn;
 
-                                            accountOrganizationRegisterViewModel.Claims = claims.Where(w => w.Type.Equals("lastname")
-                                                                                || w.Type.Equals("firstname")
-                                                                                || w.Type.Equals("access_token")
-                                                                                || w.Type.Equals("expires_in")
-                                                                                || w.Type.Equals("refresh_token"))
-                                                .ToList();
-
-
+                                            accountOrganizationRegisterViewModel.Claims =
+                                                claims.Where(w => w.Type.Equals("lastname")
+                                                                  || w.Type.Equals("firstname")
+                                                                  || w.Type.Equals("access_token")
+                                                                  || w.Type.Equals("expires_in")
+                                                                  || w.Type.Equals("refresh_token"))
+                                                    .ToList();
                                             var user =
-                                                _mediator.Send(new RegisterUserOrganizationCommand { Data = accountOrganizationRegisterViewModel });
+                                                _mediator.Send(new RegisterUserOrganizationCommand
+                                                {
+                                                    Data = accountOrganizationRegisterViewModel
+                                                });
 
                                             claimsPrincipal = _authorizeService.LogOutAndLogInUser(Response,
                                                 _userManager.CreateIdentity(user,
@@ -285,53 +324,98 @@ namespace SciVacancies.WebApp.Controllers
                                         else
                                         {
                                             claimsPrincipal =
-                                                _authorizeService.RefreshUserClaimTokensAndReauthorize(orgUser, claims,
+                                                _authorizeService.RefreshUserClaimTokensAndReauthorize(orgUser,
+                                                    claims,
                                                     Response);
 
                                             try
                                             {
-                                                var organizationGuid = Guid.Parse(orgUser.Claims.Single(c => c.ClaimType == ConstTerms.ClaimTypeOrganizationId).ClaimValue);
-                                                var organizationReadModel = _mediator.Send(new SingleOrganizationQuery { OrganizationGuid = organizationGuid });
-                                                if (organizationReadModel.address != organizationInformation.postAddress
-                                                    || organizationReadModel.email != organizationInformation.email
-                                                    || organizationReadModel.head_firstname != organizationInformation.headFirstName
-                                                    || organizationReadModel.head_patronymic != organizationInformation.headPatronymic
-                                                    || organizationReadModel.head_secondname != organizationInformation.headLastName
-                                                    || organizationReadModel.inn != organizationInformation.inn
-                                                    || organizationReadModel.ogrn != organizationInformation.ogrn
-                                                    || organizationReadModel.name != organizationInformation.title
-                                                    || organizationReadModel.shortname != organizationInformation.shortTitle
-                                                    || organizationReadModel.foiv_id != int.Parse(organizationInformation.foiv.id)
-                                                    || organizationReadModel.orgform_id != int.Parse(organizationInformation.opf.id)
-                                                   
-                                                    //|| !(
-                                                    //    (organizationReadModel.researchdirections == null || organizationReadModel.researchdirections.Count == 0)
-                                                    //    && (organizationInformation.researchDirections == null || organizationInformation.researchDirections.Count == 0)
-                                                    //    )
-
-                                                    //|| (
-                                                    //    organizationReadModel.researchdirections != null
-                                                    //    && organizationReadModel.researchdirections.Count > 0
-
-                                                    //    && organizationInformation.researchDirections != null
-                                                    //    && organizationInformation.researchDirections.Count > 0
-
-                                                    //    && organizationReadModel.researchdirections.First().id != int.Parse(organizationInformation.researchDirections.First().id)
-                                                    //    )
-
-                                                    )
-                                                {
-                                                    var organizationDataModel = Mapper.Map<OrganizationDataModel>(accountOrganizationRegisterViewModel);
-                                                    _mediator.Send(new UpdateOrganizationCommand
+                                                var organizationGuid =
+                                                    Guid.Parse(
+                                                        orgUser.Claims.Single(
+                                                            c => c.ClaimType == ConstTerms.ClaimTypeOrganizationId)
+                                                            .ClaimValue);
+                                                var organizationReadModel =
+                                                    _mediator.Send(new SingleOrganizationQuery
                                                     {
-                                                        OrganizationGuid = organizationGuid,
-                                                        Data = organizationDataModel
+                                                        OrganizationGuid = organizationGuid
                                                     });
+
+                                                //организация могла быть создана без сохранения данных об организации
+                                                if (organizationReadModel == null)
+                                                {
+                                                    accountOrganizationRegisterViewModel.UserName = orgClaim.Inn;
+                                                    accountOrganizationRegisterViewModel.Claims =
+                                                        claims.Where(w => w.Type.Equals("lastname")
+                                                                          || w.Type.Equals("firstname")
+                                                                          || w.Type.Equals("access_token")
+                                                                          || w.Type.Equals("expires_in")
+                                                                          || w.Type.Equals("refresh_token"))
+                                                            .ToList();
+                                                    /*ДОСОЗДАЁМ ОРГАНИЗАЦИЮ*/
+                                                    var organizationDataModel = Mapper.Map<AccountOrganizationRegisterViewModel, OrganizationDataModel>(accountOrganizationRegisterViewModel);
+                                                    //organizationDataModel.UserId = user.Id;
+                                                    var organization = new SciVacancies.Domain.Aggregates.Organization(organizationGuid, organizationDataModel);
+                                                    _repository.Save(organization, Guid.NewGuid(), null);
+                                                   /**/
+                                                }
+                                                else
+                                                {
+                                                    if (organizationReadModel.address !=
+                                                        organizationInformation.postAddress
+                                                        || organizationReadModel.email != organizationInformation.email
+                                                        ||
+                                                        organizationReadModel.head_firstname !=
+                                                        organizationInformation.headFirstName
+                                                        ||
+                                                        organizationReadModel.head_patronymic !=
+                                                        organizationInformation.headPatronymic
+                                                        ||
+                                                        organizationReadModel.head_secondname !=
+                                                        organizationInformation.headLastName
+                                                        || organizationReadModel.inn != organizationInformation.inn
+                                                        || organizationReadModel.ogrn != organizationInformation.ogrn
+                                                        || organizationReadModel.name != organizationInformation.title
+                                                        ||
+                                                        organizationReadModel.shortname !=
+                                                        organizationInformation.shortTitle
+                                                        ||
+                                                        organizationReadModel.foiv_id !=
+                                                        int.Parse(organizationInformation.foiv.id)
+                                                        ||
+                                                        organizationReadModel.orgform_id !=
+                                                        int.Parse(organizationInformation.opf.id)
+
+                                                        //|| !(
+                                                        //    (organizationReadModel.researchdirections == null || organizationReadModel.researchdirections.Count == 0)
+                                                        //    && (organizationInformation.researchDirections == null || organizationInformation.researchDirections.Count == 0)
+                                                        //    )
+
+                                                        //|| (
+                                                        //    organizationReadModel.researchdirections != null
+                                                        //    && organizationReadModel.researchdirections.Count > 0
+
+                                                        //    && organizationInformation.researchDirections != null
+                                                        //    && organizationInformation.researchDirections.Count > 0
+
+                                                        //    && organizationReadModel.researchdirections.First().id != int.Parse(organizationInformation.researchDirections.First().id)
+                                                        //    )
+
+                                                        )
+                                                    {
+                                                        var organizationDataModel = Mapper.Map<OrganizationDataModel>(accountOrganizationRegisterViewModel);
+                                                        _mediator.Send(new UpdateOrganizationCommand
+                                                        {
+                                                            OrganizationGuid = organizationGuid,
+                                                            Data = organizationDataModel
+                                                        });
+                                                    }
                                                 }
                                             }
                                             catch (Exception exception)
                                             {
-                                                _logger.LogError($"Exception happend with updating organizaiton info: {exception.Message}");
+                                                _logger.LogError(
+                                                    $"Exception happend with updating organizaiton info: {exception.Message}");
                                                 throw exception;
                                             }
                                         }
@@ -363,6 +447,7 @@ namespace SciVacancies.WebApp.Controllers
                                 _logger.LogError("Oauth state mismatch");
                                 throw new ArgumentException("Oauth state mismatch");
                             }
+                            _logger.LogError("Oauth state mismatch");
                             break;
                     }
                     break;

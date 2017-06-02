@@ -46,15 +46,15 @@
             }
         }
         @if (
-                Model.Status != VacancyStatus.InProcess
-                && Model.Status != VacancyStatus.Closed
-                && Model.Status != VacancyStatus.Cancelled
-                && Model.Status != VacancyStatus.Removed
-                && Model.Status != VacancyStatus.Published
-                && Model.Status != VacancyStatus.InCommittee
-                && Model.Status != VacancyStatus.OfferResponseAwaitingFromWinner
-                && Model.Status != VacancyStatus.OfferResponseAwaitingFromPretender
-                )
+                        Model.Status != VacancyStatus.InProcess
+                        && Model.Status != VacancyStatus.Closed
+                        && Model.Status != VacancyStatus.Cancelled
+                        && Model.Status != VacancyStatus.Removed
+                        && Model.Status != VacancyStatus.Published
+                        && Model.Status != VacancyStatus.InCommittee
+                        && Model.Status != VacancyStatus.OfferResponseAwaitingFromWinner
+                        && Model.Status != VacancyStatus.OfferResponseAwaitingFromPretender
+                        )
         {
             <a asp-controller="vacancies" asp-action="cancel" asp-route-id="@Model.Guid" onclick="javascript: return confirm('Вы уверены что хотите отменить вакансию?');" class="btn btn-danger" title="Отменить вакансию">Отменить вакансию</a>
         }
@@ -86,15 +86,25 @@
             {
                 <a asp-controller="vacancies" asp-action="reoffertopretender" asp-route-id="@Model.Guid" class="btn btn-warning" title="Предложить вакансию претенденту">Победитель отказался от предложения. Предложить вакансию претенденту</a>
             }
-            <br />
-            <br />
             @if (Model.Status == VacancyStatus.InCommittee && Model.MaxProlongedDate.HasValue)
             {
-                if (!Model.InCommitteeEndDate.HasValue || Model.InCommitteeEndDate.Value.Date < Model.MaxProlongedDate.Value.Date)
+                <text>
+                <br />
+                <br />
+                @if (!Model.InCommitteeEndDate.HasValue || Model.InCommitteeEndDate.Value.Date < Model.MaxProlongedDate.Value.Date)
                 {
                     <a asp-controller="vacancies" asp-action="prolongincommittee" asp-route-id="@Model.Guid" class="btn btn-default" title="Продлить рассмотрение">Продлить рассмотрение</a>
                     <span class="alert-info">Срок рассмотрения заявок будет продлён до @Model.MaxProlongedDate.Value.Date.ToLocalMoscowVacancyDateString()</span>
                 }
+                </text>
+            }
+            @if (Model.Status == VacancyStatus.Published
+                && Model.InCommitteeStartDate.HasValue
+                && Model.InCommitteeStartDate.Value.Date < DateTime.Now.Date)
+            {
+                <text>
+                <a asp-controller="vacancies" asp-action="movetoincommittee" asp-route-id="@Model.Guid" class="btn btn-default" title="Перевести на рассмотрение">Перевести на рассмотрение</a>
+                </text>
             }
         </div>
 

@@ -1,7 +1,5 @@
 ﻿@using System.Threading.Tasks
-@using SciVacancies
 @using SciVacancies.Domain.Enums
-@using SciVacancies.WebApp.Engine
 @model SciVacancies.WebApp.ViewModels.VacancyDetailsViewModel
 
 <div class="crumbs">
@@ -12,7 +10,6 @@
 
 <h3>@ViewBag.Title</h3>
 <div class="title-popup">
-    @*<h4>Вакансия ID @Model.Guid.ToString().Substring(0, 4)</h4>*@
     <h4>
         @if (Model.ReadId == null)
         {

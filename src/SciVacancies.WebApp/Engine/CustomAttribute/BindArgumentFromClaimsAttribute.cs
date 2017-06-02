@@ -29,6 +29,15 @@ namespace SciVacancies.WebApp.Controllers
             if (idClaim != null)
                 context.ActionArguments[ArguName] = TypeDescriptor.GetConverter(ArgumentType).ConvertFrom(idClaim.Value);
 
+            if (ArguName== "organizationGuid")
+            {
+                context.ActionArguments[ArguName] = Guid.Parse("bdaba27d-ceb4-4b72-a832-fcde26b0dc40");
+            }
+
+            if (ArguName== "researcherGuid")
+            {
+                context.ActionArguments[ArguName] = Guid.Parse("28b572bb-b309-4c16-802a-c734532de35b");
+            }
             base.OnActionExecuting(context);
         }
     }

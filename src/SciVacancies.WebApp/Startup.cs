@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
@@ -11,16 +13,18 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.PlatformAbstractions;
 using Quartz.Spi;
+using SciVacancies.Services;
 using SciVacancies.Services.Quartz;
 using SciVacancies.WebApp.Infrastructure;
-using Serilog;
-using Serilog.Events;
+using SciVacancies.WebApp.Infrastructure.Modules;
 
 namespace SciVacancies.WebApp
 {
     public class Startup
     {
         private readonly string devEnv;
+        public IConfiguration Configuration { get; set; }
+        public IContainer Container { get; set; }
 
         public Startup(IHostingEnvironment env, ILoggerFactory loggerFactory)
         {
@@ -31,51 +35,54 @@ namespace SciVacancies.WebApp
 
             IConfigurationBuilder configurationBuilder;
 
+            var useNonTemplateConfigFile = new UpdateConfigService().VerifyIfChangeEnvInFile(vars, PlatformServices.Default.Application.ApplicationBasePath, Path.DirectorySeparatorChar, devEnv, new Dictionary<string, string>
+            {
+                {"Db_IP", "WEBAPPPOSTGRESALIAS_PORT_5432_TCP_ADDR"},
+                {"Db_PORT", "WEBAPPPOSTGRESALIAS_PORT_5432_TCP_PORT"},
+                {"ElasticSearch_IP", "WEBAPPELASTICSEARCHALIAS_PORT_9200_TCP_ADDR"},
+                {"ElasticSearch_PORT", "WEBAPPELASTICSEARCHALIAS_PORT_9200_TCP_PORT"},
+                {"Host_Out_Adress", "HOST_IP"}
+            });
+
+
             if (String.IsNullOrEmpty(devEnv))
             {
-                configurationBuilder = new ConfigurationBuilder()
-                    .SetBasePath(appEnv.ApplicationBasePath)
-                    .AddJsonFile("config.json")
-                    .AddEnvironmentVariables();
+                if (useNonTemplateConfigFile)
+                    configurationBuilder = new ConfigurationBuilder()
+                        .SetBasePath(appEnv.ApplicationBasePath)
+                        .AddJsonFile("config.modified.json")
+                        .AddEnvironmentVariables();
+                else
+                    configurationBuilder = new ConfigurationBuilder()
+                        .SetBasePath(appEnv.ApplicationBasePath)
+                        .AddJsonFile("config.json")
+                        .AddEnvironmentVariables();
             }
             else
             {
-                configurationBuilder = new ConfigurationBuilder()
-                     .SetBasePath(appEnv.ApplicationBasePath)
-                     .AddJsonFile($"config.{devEnv}.json", optional: false)
-                     .AddEnvironmentVariables();
+                if (useNonTemplateConfigFile)
+                    configurationBuilder = new ConfigurationBuilder()
+                         .SetBasePath(appEnv.ApplicationBasePath)
+                         .AddJsonFile($"config.{devEnv}.modified.json", optional: false)
+                         .AddEnvironmentVariables();
+                else
+                    configurationBuilder = new ConfigurationBuilder()
+                         .SetBasePath(appEnv.ApplicationBasePath)
+                         .AddJsonFile($"config.{devEnv}.json", optional: false)
+                         .AddEnvironmentVariables();
             }
 
             Configuration = configurationBuilder.Build();
 
-
-            var serilogLogger = new LoggerConfiguration()
-                .WriteTo
-                .RollingFile(
-                    Configuration["LogSettings:FileName"],
-                    (LogEventLevel)Enum.Parse(typeof(LogEventLevel), Configuration["LogSettings:LogLevel"], true),
-                    Configuration["LogSettings:TimeStampPattern"],
-                    null,
-                    long.Parse(Configuration["LogSettings:FileSizeBytes"]),
-                    int.Parse(Configuration["LogSettings:FileCountLimit"])
-                )
-                //.MinimumLevel.Information()
-                .CreateLogger();
-
-            loggerFactory.MinimumLevel = (LogLevel)Enum.Parse(typeof(LogLevel), Configuration["LogSettings:LogLevel"], true);
-            loggerFactory.AddSerilog(serilogLogger);
-
-            LoggerFactory = loggerFactory;
+            //DI to Controllers, http-requests, etc.
+            loggerFactory.AddSerilog(LoggingModule.LoggerConfiguration(Configuration).CreateLogger());
         }
-
-        public IConfiguration Configuration { get; set; }
-
-        public IContainer Container { get; set; }
-        public ILoggerFactory LoggerFactory { get; set; }
+        
 
         // This method gets called by the runtime.
         public IServiceProvider ConfigureServices(IServiceCollection services)
         {
+
             services.Configure<AppSettings>(Configuration.GetSection("AppSettings"));
             services.Configure<DbSettings>(Configuration.GetSection("Data"));
             services.Configure<OAuthSettings>(Configuration.GetSection("OAuthSettings"));
@@ -107,24 +114,23 @@ namespace SciVacancies.WebApp
             ConfigureContainer(builder);
 
             builder.Populate(services);
-
             Container = builder.Build();
-
             return Container.Resolve<IServiceProvider>();
         }
 
         public void ConfigureContainer(ContainerBuilder builder)
         {
-            builder.RegisterModule(new EventStoreModule(Configuration, LoggerFactory));
+            builder.RegisterModule(new ReadModelModule());
+            builder.RegisterModule(new ServicesModule());
+            builder.RegisterModule(new EventStoreModule());
             builder.RegisterModule(new EventBusModule());
             builder.RegisterModule(new EventHandlersModule());
-            builder.RegisterModule(new ReadModelModule(Configuration));
-            builder.RegisterModule(new ServicesModule(Configuration));
             builder.RegisterModule(new QuartzModule());
             builder.RegisterModule(new IdentityModule());
             builder.RegisterModule(new SmtpNotificationModule());
-            builder.RegisterModule(new LoggingModule());
             builder.RegisterModule(new CacheModule());
+            builder.RegisterModule(new LoggingModule());
+
         }
 
         // Configure is called after ConfigureServices is called.
@@ -146,8 +152,8 @@ namespace SciVacancies.WebApp
             // Configure the HTTP request pipeline.          
 
             // Add the console logger.
-            loggerfactory.MinimumLevel = LogLevel.Information;
-            loggerfactory.AddConsole();
+            //loggerfactory.MinimumLevel = LogLevel.Information;
+            //loggerfactory.AddConsole();
 
             // Add the following to the request pipeline only in development environment.
             if (env.IsEnvironment("Development"))

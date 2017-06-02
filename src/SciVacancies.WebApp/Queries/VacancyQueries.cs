@@ -91,7 +91,7 @@ namespace SciVacancies.WebApp.Queries
         //public string AddressFilterValue { get; set; }
     }
 
-    public class SelectVacancyCriteriasQuery : IRequest<IEnumerable<VacancyCriteria>>
+    public class SelectVacancyCriteriasQuery : IRequest<IEnumerable<VacancyCriteria>>, IAsyncRequest<IEnumerable<VacancyCriteria>>
     {
         public Guid VacancyGuid { get; set; }
     }

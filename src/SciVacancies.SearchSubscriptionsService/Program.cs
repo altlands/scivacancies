@@ -1,25 +1,24 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using Autofac;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.PlatformAbstractions;
 using SciVacancies.SearchSubscriptionsService.Modules;
+using SciVacancies.Services;
 
-//using Microsoft.rd
 
 namespace SciVacancies.SearchSubscriptionsService
 {
     public class Program
     {
-        public IConfiguration Configuration { get; set; }
-
-        public IContainer Container { get; set; }
-
         private string devEnv { get; }
-
-        private ILogger Logger { get; }
+        public IConfiguration Configuration { get; set; }
+        public IContainer Container { get; set; }
+        private readonly ILoggerFactory _loggerFactory;
 
         public Program(IApplicationEnvironment appEnv)
         {
@@ -28,45 +27,90 @@ namespace SciVacancies.SearchSubscriptionsService
 
             IConfigurationBuilder configurationBuilder;
 
+            var useNonTemplateConfigFile = new UpdateConfigService().VerifyIfChangeEnvInFile(vars, PlatformServices.Default.Application.ApplicationBasePath, Path.DirectorySeparatorChar, devEnv, new Dictionary<string, string>
+            {
+                {"Db_IP", "SUBSPOSTGRESALIAS_PORT_5432_TCP_ADDR"},
+                {"Db_PORT", "SUBSPOSTGRESALIAS_PORT_5432_TCP_PORT"},
+                {"ElasticSearch_IP", "SUBSELASTICSEARCHALIAS_PORT_9200_TCP_ADDR"},
+                {"ElasticSearch_PORT", "SUBSELASTICSEARCHALIAS_PORT_9200_TCP_PORT"},
+                {"Host_Out_Adress", "HOST_IP"}
+            });
+
             if (String.IsNullOrEmpty(devEnv))
             {
-                configurationBuilder = new ConfigurationBuilder()
-                    .SetBasePath(appEnv.ApplicationBasePath)
-                    .AddJsonFile("config.json")
-                    .AddEnvironmentVariables();
+                if (useNonTemplateConfigFile)
+                    configurationBuilder = new ConfigurationBuilder()
+                        .SetBasePath(appEnv.ApplicationBasePath)
+                        .AddJsonFile("config.modified.json")
+                        .AddEnvironmentVariables();
+                else
+                    configurationBuilder = new ConfigurationBuilder()
+                        .SetBasePath(appEnv.ApplicationBasePath)
+                        .AddJsonFile("config.json")
+                        .AddEnvironmentVariables();
             }
             else
             {
-                configurationBuilder = new ConfigurationBuilder()
-                     .SetBasePath(appEnv.ApplicationBasePath)
-                     .AddJsonFile($"config.{devEnv}.json", optional: false)
-                     .AddEnvironmentVariables();
+                if (useNonTemplateConfigFile)
+                    configurationBuilder = new ConfigurationBuilder()
+                         .SetBasePath(appEnv.ApplicationBasePath)
+                         .AddJsonFile($"config.{devEnv}.modified.json", optional: false)
+                         .AddEnvironmentVariables();
+                else
+                    configurationBuilder = new ConfigurationBuilder()
+                         .SetBasePath(appEnv.ApplicationBasePath)
+                         .AddJsonFile($"config.{devEnv}.json", optional: false)
+                         .AddEnvironmentVariables();
             }
+
 
             Configuration = configurationBuilder.Build();
 
+            //DI to Controllers, http-requests, etc.
+            _loggerFactory = new LoggerFactory();
+            _loggerFactory.AddSerilog(LoggingModule.LoggerConfiguration(Configuration).CreateLogger());
+
+
             var builder = new ContainerBuilder();
-            ConfigureContainer(builder);
-            Container = builder.Build();
 
-            ILoggerFactory loggerFactory = Container.Resolve<ILoggerFactory>();
-            Logger = loggerFactory.CreateLogger<Program>();
-        }
+            builder.Register(c => _loggerFactory)
+                .As<ILoggerFactory>()
+                .SingleInstance();
 
-        public void ConfigureContainer(ContainerBuilder builder)
-        {
+            var dataSettings = Configuration.Get<DataSettings>("Data");
+            var quartzSettings = Configuration.Get<QuartzSettings>("QuartzSettings");
+            var elasticSettings = Configuration.Get<ElasticSettings>("ElasticSettings");
+          
+            builder.Register(c => dataSettings)
+                .As<DataSettings>()
+                .SingleInstance();
+            builder.Register(c => quartzSettings)
+                .As<QuartzSettings>()
+                .SingleInstance();
+            builder.Register(c => elasticSettings)
+                .As<ElasticSettings>()
+                .SingleInstance();
+
+
             builder.Register(c => Configuration).As<IConfiguration>().SingleInstance();
-
-            builder.RegisterModule(new ReadModelModule(Configuration));
-            builder.RegisterModule(new ServicesModule(Configuration));
+            builder.RegisterModule(new ReadModelModule());
+            builder.RegisterModule(new ServicesModule());
             builder.RegisterModule(new QuartzModule());
             builder.RegisterModule(new SmtpNotificationModule());
-            builder.RegisterModule(new LoggingModule(Configuration));
+            builder.RegisterModule(new LoggingModule());
+
+
+
+            Container = builder.Build();
         }
+
 
         public void Main(string[] args)
         {
-            Logger.LogInformation("Resolving from container");
+
+            ILoggerFactory loggerFactory = Container.Resolve<ILoggerFactory>();
+            var logger = loggerFactory.CreateLogger<Program>();
+            logger.LogInformation("Resolving from container");
 
             var service = Container.Resolve<SearchSubscriptionService>();
             try
@@ -75,24 +119,14 @@ namespace SciVacancies.SearchSubscriptionsService
             }
             catch (Exception e)
             {
-                Logger.LogError(e.Message, e);
+                logger.LogError(e.Message, e);
             }
 
-            //var wroteCommand = Console.ReadLine();
-            //while (wroteCommand == null || !wroteCommand.Equals("stop"))
-            //{
-            //    Thread.Sleep(2000);
-            //    wroteCommand = Console.ReadLine();
-            //}
-
-            //while (!service.CanStop)
-            //{
-            //    Thread.Sleep(500);
-            //}
-
-            Logger.LogInformation("Service is stopping");
+            logger.LogInformation("Service is stopping");
             service.Stop();
-            Logger.LogInformation("Service has been stopped");
+            logger.LogInformation("Service has been stopped");
         }
     }
+
+
 }

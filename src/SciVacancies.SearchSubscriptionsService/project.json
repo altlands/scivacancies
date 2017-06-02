@@ -10,14 +10,13 @@
     "SciVacancies.ReadModel": "1.0.0-*",
     "SciVacancies.ReadModel.ElasticSearchModel": "1.0.0-*",
     "SciVacancies.SmtpNotifications": "1.0.0-*",
-
     "Microsoft.Extensions.Configuration.EnvironmentVariables": "1.0.0-rc1-final",
     "Microsoft.Extensions.Configuration.Json": "1.0.0-rc1-final",
-    "Microsoft.Dnx.Runtime": "1.0.0-rc1-final",    
-
+    "Microsoft.Dnx.Runtime": "1.0.0-rc1-final",
     "Serilog": "1.5.12",
-    "Serilog.Framework.Logging": "1.0.0-rc1-final-10071"
-
+    "Serilog.Framework.Logging": "1.0.0-rc1-final-10071",
+    "Autofac.Extensions.DependencyInjection": "4.0.0-rc1-177",
+    "Microsoft.Extensions.DependencyInjection": "1.0.0-rc1-final"
   },
 
   "commands": {
@@ -32,6 +31,18 @@
       }
     }
   },
+  "exclude": [
+    "wwwroot",
+    "node_modules",
+    "bower_components"
+  ],
+  "publishExclude": [
+    "node_modules",
+    "bower_components",
+    "**.xproj",
+    "**.user",
+    "**.vspscc"
+  ],
 
   "configurations": {
     "net45": { },

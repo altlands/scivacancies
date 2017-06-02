@@ -2,32 +2,33 @@
 using SciVacancies.Services.Logging;
 
 using System;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 
 using Nest;
 using Autofac;
 using Autofac.Extras.DynamicProxy;
+using Microsoft.Extensions.OptionsModel;
 
 namespace SciVacancies.WebApp.Infrastructure
 {
     public class ServicesModule : Module
     {
-        private readonly IConfiguration _configuration;
-
-        public ServicesModule(IConfiguration configuration)
-        {
-            _configuration = configuration;
-        }
-
         protected override void Load(ContainerBuilder builder)
         {
-            ConnectionSettings elasticConnectionSettings = new ConnectionSettings(new Uri(_configuration["ElasticSettings:ConnectionUrl"]), defaultIndex: _configuration["ElasticSettings:DefaultIndex"]);
-
-            builder.Register(c => new ElasticClient(elasticConnectionSettings))
+            builder.Register(c =>
+                new ElasticClient(
+                    new ConnectionSettings(
+                            new Uri(c.Resolve<IOptions<ElasticSettings>>().Value.ConnectionUrl),
+                            defaultIndex: c.Resolve<IOptions<ElasticSettings>>().Value.DefaultIndex
+                        )
+                ))
                 .As<IElasticClient>()
                 ;
-            builder.Register(c => new SearchService(_configuration, c.Resolve<IElasticClient>(), c.Resolve<ILoggerFactory>()))
+            builder.Register(c => new SearchService(
+                c.Resolve<IOptions<ElasticSettings>>().Value.MinScore, 
+                c.Resolve<IElasticClient>(), 
+                c.Resolve<ILoggerFactory>()
+                ))
                 .As<ISearchService>()
                 .EnableInterfaceInterceptors()
                 .InterceptedBy(typeof(CallLogger))

@@ -2,35 +2,35 @@
 using SciVacancies.Services.Logging;
 
 using System;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 
 using Nest;
 using Autofac;
 using Autofac.Extras.DynamicProxy;
+using Microsoft.Extensions.OptionsModel;
 
 namespace SciVacancies.SearchSubscriptionsService.Modules
 {
     public class ServicesModule : Module
     {
-        private readonly IConfiguration _configuration;
-
-        public ServicesModule(IConfiguration configuration)
-        {
-            _configuration = configuration;
-        }
 
         protected override void Load(ContainerBuilder builder)
         {
-            ConnectionSettings elasticConnectionSettings = new ConnectionSettings(new Uri(_configuration["ElasticSettings:ConnectionUrl"]), defaultIndex: _configuration["ElasticSettings:DefaultIndex"]);
 
-            builder.Register(c => new ElasticClient(elasticConnectionSettings))
+            builder.Register(c => new ElasticClient(
+                    new ConnectionSettings(
+                            new Uri(c.Resolve<ElasticSettings>().ConnectionUrl),
+                            defaultIndex: c.Resolve<ElasticSettings>().DefaultIndex
+                        )
+                ))
                 .As<IElasticClient>()
-                //.SingleInstance()
-                //.EnableInterfaceInterceptors()
-                //.InterceptedBy(typeof(CallLogger))
                 ;
-            builder.Register(c => new SearchService(_configuration, c.Resolve<IElasticClient>(), c.Resolve<ILoggerFactory>()))
+            builder.Register(c => new SearchService(
+                    c.Resolve<ElasticSettings>().MinScore, 
+                    c.Resolve<IElasticClient>(), 
+                    c.Resolve<ILoggerFactory>()
+                    )
+                    )
                 .As<ISearchService>()
                 .EnableInterfaceInterceptors()
                 .InterceptedBy(typeof(CallLogger))
@@ -38,8 +38,6 @@ namespace SciVacancies.SearchSubscriptionsService.Modules
 
             builder.RegisterType<SearchSubscriptionService>()
                 .AsSelf()
-                //.EnableInterfaceInterceptors()
-                //.InterceptedBy(typeof(CallLogger))
                 ;
 
             builder.RegisterType<SearchSubscriptionScanner>()

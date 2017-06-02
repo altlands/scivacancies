@@ -2,6 +2,7 @@
 {
     public class EmailSettings
     {
+        public string SendEmailEnabled { get; set; }
         public string Login { get; set; }
         public string Password { get; set; }
         public string Host { get; set; }

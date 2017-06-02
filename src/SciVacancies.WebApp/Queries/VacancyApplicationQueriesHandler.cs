@@ -76,11 +76,11 @@ namespace SciVacancies.WebApp.Queries
         {
             if (message.VacancyGuid == Guid.Empty) throw new ArgumentNullException($"{nameof(message.VacancyGuid)} is empty");
 
-            var vacancyApplication = _db.Fetch<VacancyApplication>(new Sql("Select * FROM res_vacancyapplications va WHERE va.vacancy_guid = @0 AND va.status = @1", message.VacancyGuid, (int)message.Status));
+            var vacancyApplication = _db.Fetch<VacancyApplication>(new Sql("SELECT * FROM res_vacancyapplications va WHERE va.vacancy_guid = @0 AND va.status = @1", message.VacancyGuid, (int)message.Status));
 
             if (vacancyApplication != null && vacancyApplication.Count > 0)
             {
-                return vacancyApplication.Count();
+                return vacancyApplication.Count;
             }
             return 0;
         }
@@ -89,7 +89,7 @@ namespace SciVacancies.WebApp.Queries
         {
             if (message.VacancyGuid == Guid.Empty) throw new ArgumentNullException($"{nameof(message.VacancyGuid)} is empty");
 
-            var vacancyApplications = _db.Fetch<VacancyApplication>(new Sql("Select * FROM res_vacancyapplications va WHERE va.vacancy_guid = @0 AND va.status in (@1)", message.VacancyGuid, message.Statuses.Select(c => (int)c).ToList()));
+            var vacancyApplications = _db.Fetch<VacancyApplication>(new Sql("SELECT * FROM res_vacancyapplications va WHERE va.vacancy_guid = @0 AND va.status in (@1)", message.VacancyGuid, message.Statuses.Select(c => (int)c).ToList()));
 
             return vacancyApplications;
         }

@@ -43,7 +43,13 @@ namespace SciVacancies.ReadModel.EventHandlers
                     }
                 }
 
-                transaction.Complete();
+                try
+                {
+                    transaction.Complete();
+                }
+                catch (Exception exception)
+                {
+                }
             }
         }
         public void Handle(VacancyApplicationUpdated message)

@@ -4,32 +4,29 @@ using SciVacancies.Domain.Enums;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Globalization;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
-
 using Nest;
 
 namespace SciVacancies.Services.Elastic
 {
     public class SearchService : ISearchService
     {
-        readonly IElasticClient elastic;
-        readonly IConfiguration configuration;
-        readonly ILogger Logger;
+        private readonly IElasticClient _elastic;
+        private readonly ILogger _logger;
+        private readonly double _minscore;
 
-        public SearchService(IConfiguration configuration, IElasticClient elastic, ILoggerFactory loggerFactory)
+        public SearchService(double minScore, IElasticClient elastic, ILoggerFactory loggerFactory)
         {
-            this.configuration = configuration;
-            this.elastic = elastic;
-            this.Logger = loggerFactory.CreateLogger<SearchService>();
+            _minscore = minScore;
+            _elastic = elastic;
+            _logger = loggerFactory.CreateLogger<SearchService>();
         }
 
         public ISearchResponse<Vacancy> VacancySearch(SearchQuery sq)
         {
             Func<SearchQuery, SearchDescriptor<Vacancy>> searchSelector = VacancySearchDescriptor;
 
-            return elastic.Search<Vacancy>(searchSelector(sq));
+            return _elastic.Search<Vacancy>(searchSelector(sq));
         }
 
         #region VacancyQueryContainers
@@ -45,9 +42,8 @@ namespace SciVacancies.Services.Elastic
                 sdescriptor.Take((int)sq.PageSize);
             }
 
-            var minscore = double.Parse(configuration["ElasticSettings:MinScore"], CultureInfo.InvariantCulture);
-            Logger.LogInformation($" Parsed minscore from config : {minscore}");
-            sdescriptor.MinScore(minscore);
+            _logger.LogInformation($" Parsed minscore from config : {_minscore}");
+            sdescriptor.MinScore(_minscore);
 
             switch (sq.OrderFieldByDirection)
             {
@@ -103,11 +99,9 @@ namespace SciVacancies.Services.Elastic
         }
         public FilterContainer VacancyFilteredFilterContainer(FilterDescriptor<Vacancy> filterDescriptor, SearchQuery sq)
         {
-            FilterContainer filterContainer;
+            var filters = new List<FilterContainer>();
 
-            List<FilterContainer> filters = new List<FilterContainer>();
-
-            if (sq.FoivIds != null && sq.FoivIds.Count() > 0)
+            if (sq.FoivIds != null && sq.FoivIds.Any())
             {
                 filters.Add(new FilterDescriptor<Vacancy>().Bool(b => b
                                                                 .Must(m => m
@@ -116,7 +110,7 @@ namespace SciVacancies.Services.Elastic
                                                             )
                                                         );
             }
-            if (sq.PositionTypeIds != null && sq.PositionTypeIds.Count() > 0)
+            if (sq.PositionTypeIds != null && sq.PositionTypeIds.Any())
             {
                 filters.Add(new FilterDescriptor<Vacancy>().Bool(b => b
                                                                 .Must(m => m
@@ -125,7 +119,7 @@ namespace SciVacancies.Services.Elastic
                                                             )
                                                         );
             }
-            if (sq.RegionIds != null && sq.RegionIds.Count() > 0)
+            if (sq.RegionIds != null && sq.RegionIds.Any())
             {
                 filters.Add(new FilterDescriptor<Vacancy>().Bool(b => b
                                                                 .Must(m => m
@@ -134,7 +128,7 @@ namespace SciVacancies.Services.Elastic
                                                             )
                                                         );
             }
-            if (sq.ResearchDirectionIds != null && sq.ResearchDirectionIds.Count() > 0)
+            if (sq.ResearchDirectionIds != null && sq.ResearchDirectionIds.Any())
             {
                 filters.Add(new FilterDescriptor<Vacancy>().Bool(b => b
                                                                 .Must(m => m
@@ -213,7 +207,7 @@ namespace SciVacancies.Services.Elastic
                 //                                            )
                 //                                        );
             }
-            if (sq.VacancyStatuses != null && sq.VacancyStatuses.Count() > 0)
+            if (sq.VacancyStatuses != null && sq.VacancyStatuses.Any())
             {
                 filters.Add(new FilterDescriptor<Vacancy>().Bool(b => b
                                                                 .Must(m => m
@@ -243,9 +237,7 @@ namespace SciVacancies.Services.Elastic
                                                         )
                                                     );
 
-            filterContainer = filterDescriptor.Bool(b => b.Must(filters.ToArray()));
-
-            return filterContainer;
+            return filterDescriptor.Bool(b => b.Must(filters.ToArray()));
         }
 
         #endregion

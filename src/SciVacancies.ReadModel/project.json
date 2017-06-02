@@ -10,7 +10,8 @@
     "SciVacancies.Domain": "1.0.0-*",
     "SciVacancies.Domain.Events": "1.0.0-*",
     "NPoco": "2.9.103",
-    "AutoMapper": "4.1.1"
+    "AutoMapper": "4.1.1",
+    "MediatR":  "2.0.2"
   },
 
   "frameworks": {
